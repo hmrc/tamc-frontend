@@ -1,0 +1,96 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(changeRelationshipForm: Form[ChangeRelationship])(implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.make-a-change")),
+    mainConfig = views.helpers.MainConfig()) {
+    @templates.form_error_notification(changeRelationshipForm, formErrorMessage = Messages("pages.form.error.mandatory.data"))
+    <h1 class="heading-xlarge">@Html(Messages("change.status.cancel-your.h1"))</h1>
+    <p>@Html(Messages("change.status.cancel-your.p"))</p>
+    @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
+        <div>
+        @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
+          @if(changeRelationshipForm.get.historicActiveRecord.get) {
+            @templates.input_radio_group(
+                changeRelationshipForm("endReason"),
+                Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")), 
+                    (EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
+                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio"))),
+                '_legend -> Html(Messages("title.change.reason")),
+                '_legendClass -> "visuallyhidden",
+                '_labelClass -> "block-label",
+                '_labelAfter -> true
+            )
+          } else {
+            @templates.input_radio_group(
+                changeRelationshipForm("endReason"),
+                Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")),
+                    (EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
+                    (EndReasonCode.CANCEL, Messages("change.status.cancel.radio")),
+                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio"))),
+                '_legend -> Html(Messages("title.change.reason")),
+                '_legendClass -> "visuallyhidden",
+                '_labelClass -> "block-label",
+                '_labelAfter -> true
+            )
+          }
+        } else {
+        	@if(changeRelationshipForm.get.historicActiveRecord.get) {
+        		@templates.input_radio_group(
+	                changeRelationshipForm("endReason"),
+	                Seq((EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
+	                    (EndReasonCode.REJECT, Messages("change.status.reject.radio")),
+	                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio")) ),
+	                '_legend -> Html(Messages("title.change.reason")),
+                    '_legendClass -> "visuallyhidden",
+	                '_labelClass -> "block-label",
+	                '_labelAfter -> true
+            	)
+        	} else {
+        		@templates.input_radio_group(
+	                changeRelationshipForm("endReason"),
+	                Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")),
+	                    (EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
+	                    (EndReasonCode.REJECT, Messages("change.status.reject.radio")),
+	                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio"))),
+	                '_legend -> Html(Messages("title.change.reason")),
+                    '_legendClass -> "visuallyhidden",    
+	                '_labelClass -> "block-label",
+	                '_labelAfter -> true
+            	)
+        	}
+            
+        }
+        
+        <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
+        <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
+        </div>
+
+        <p>
+            <button class="button" type="submit" >@Html(Messages("generic.continue"))</button>
+        </p>
+
+    }
+
+}

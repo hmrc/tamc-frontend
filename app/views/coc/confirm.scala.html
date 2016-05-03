@@ -1,0 +1,62 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(data: models.UpdateRelationshipConfirmationModel,
+    relevantDate: Option[org.joda.time.LocalDate] = None
+   )(implicit lang: Lang, 
+      request: Request[_],
+      breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+      user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.confirm-transferor")),
+        mainConfig = views.helpers.MainConfig(
+        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))) {
+<h1 id="confirm-page" class="heading-xlarge">@Html(Messages("title.confirm-transferor"))</h1>
+<h2 class="heading-medium">@Html(Messages("change.status.confirm-change"))</h2>
+<table>
+    <tr class="blue-overline-large">
+@data.fullName.map[Option[String]](_.fullName).flatten.map {name =>
+        <td>@Html(Messages("change.status.confirm.field.your-name"))</td>
+        <td id="transferor-name">@name</td>
+        <td>&nbsp;</td>
+      </tr>
+    <tr>
+}.getOrElse("")
+      <td>@Html(Messages("generic.email"))</th>
+      <td id="email">@data.email</td>
+      <td><a href="confirm-email" id="edit-email">@Html(Messages("pages.confirm.edit-email"))</a></td>
+    </tr>
+    <tr class="blue-underline-large">
+      <td>@Html(Messages("change.status.realtionship-end"))</td>
+      <td id="end-reason">@Html(Messages(s"change.status.reason-${data.endRelationshipReason.endReason}"))</td>
+      <td>&nbsp;</td>
+    </tr>
+</table>
+<div class="confirmation-notice">
+	<div class="icon-important"></div>
+	<strong>@Html(Messages(s"change.status.relevantDate-${data.endRelationshipReason.endReason}", TextGenerators.ukDateTransformer(relevantDate)))</strong>
+</div>
+<div class="form-group">
+<p>
+  <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("generic.confirm.button"))</a>
+</p>
+</div>
+}
+

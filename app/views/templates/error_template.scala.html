@@ -1,0 +1,82 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(pageTitle: String, heading: String, message: String, appConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_])
+
+@import play.api.Play.current
+@import play.api.Play
+@import uk.gov.hmrc.play.config.RunMode._
+
+@import layouts.{govuk_template => hmrcGovUkTemplate}
+@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+
+@contentHeader = {
+    <h1>@heading</h1>
+}
+
+@mainContent = {
+    <p>@message</p>
+}
+
+@head = {
+  @uiLayouts.head(
+    assetsPrefix = appConfig.assetsPrefix,
+    linkElem = None,
+    headScripts = None)
+  <meta name="format-detection" content="telephone=no" />
+}
+
+@betaBanner = {
+  @uiLayouts.betaBanner(
+    userLoggedIn = false,
+    appConfig.betaFeedbackUnauthenticatedUrl,
+    appConfig.betaFeedbackUnauthenticatedUrl,
+    showFeedbackLinkInBetaBanner = true)
+}
+
+@serviceInfo = {
+  @uiLayouts.serviceInfo(
+    betaBanner = betaBanner,
+    includeGridWrapper = false,
+    serviceInfoContent = None)
+}
+
+
+@content = {
+  @uiLayouts.main_content(
+    article = uiLayouts.article(mainContent),
+    serviceInfo = serviceInfo,
+    mainContentHeader = contentHeader)
+}
+
+@bodyEnd = {
+  @uiLayouts.footer(
+    analyticsToken = Some(appConfig.analyticsToken),
+    analyticsHost = appConfig.analyticsHost,
+    assetsPrefix = appConfig.assetsPrefix,
+    ssoUrl = None,
+    scriptElem = None,
+    gaCalls = None)
+}
+
+@footerTop = {}
+@footerLinks = {}
+
+@insideHeader = {}
+@afterHeader = {}
+
+
+@hmrcGovUkTemplate(Some(pageTitle), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)

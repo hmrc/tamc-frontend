@@ -1,0 +1,37 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@()(implicit lang: Lang, request: Request[_], breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb)
+
+@import play.twirl.api.Html
+
+@templates.tamc_main(
+title = Messages("title.pattern", Messages("title.no-tax-years")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:non-eligible")))) {
+<h1>@Html(Messages("eligibility.check.header"))</h1>
+<p id="description">@Html(Messages("transferor.no-previous-years-available"))</p>
+
+<p>
+    <a id="button-finished" class="button" role="button" href="https://www.gov.uk/marriage-allowance-guide/how-it-works">
+        @Html(Messages("generic.finish"))
+    </a>
+</p>
+<a href="@controllers.routes.UpdateRelationshipController.history" data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back">
+    @Html(Messages("generic.back"))
+</a>
+}
+
