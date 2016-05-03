@@ -1,5 +1,5 @@
 
-# tamc-frontend.
+# tamc-frontend
 
 [![Build Status](https://travis-ci.org/hmrc/tamc-frontend.svg?branch=master)](https://travis-ci.org/hmrc/tamc-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/tamc-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/tamc-frontend/_latestVersion)
 
