@@ -1,0 +1,95 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(recipientForm: Form[models.RegistrationFormInput], name: Option[models.CitizenName] = None)(
+    implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import models.Gender
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.play.views.html._
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.transfer")),
+    mainConfig = views.helpers.MainConfig(
+        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))) {
+    <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
+    <p class="blue-underline-large">@Html(Messages("pages.form.details", name.map{ _.fullName}.flatten.fold("")(name => s"(${name})")))</p>
+    <h3 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h3>
+@templates.form_error_notification(recipientForm)
+    @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
+        <fieldset>
+            <div class="form-group">
+            @templates.input(recipientForm("name"),
+                '_label -> Html(Messages("pages.form.field.name")),
+                '_labelClass -> "form-label",
+                '_inputClass -> "form-control",
+                '_dataAttributes -> "autocomplete=off"
+            )
+            </div>
+            <div class="form-group">
+            @templates.input(recipientForm("last-name"),
+                '_label -> Html(Messages("pages.form.field.last-name")),
+                '_labelClass -> "form-label",
+                '_inputClass -> "form-control",
+                '_dataAttributes -> "autocomplete=off"
+            )
+            </div>
+            <div class="form-group">
+            @templates.input_radio_group(
+                recipientForm("gender"),
+                Seq((Gender("M").gender, "Male"), (Gender("F").gender, "Female")),
+                '_legend -> Html(Messages("pages.form.field.gender")),
+                '_labelClass -> "block-label",
+                '_labelAfter -> true,
+                '_fieldHelper -> Html(Messages("pages.form.field-helper.gender")),
+                '_groupClass -> "inline spacingBottom"
+            )
+            </div>
+            <div class="form-group">
+            @templates.input(recipientForm("nino"),
+                '_label -> Html(Messages("pages.form.field.nino")),
+                '_labelClass -> "form-label",
+                '_inputClass -> "form-control",
+                '_fieldHelper -> Html(Messages("pages.form.field-helper.nino-example")),
+                '_dataAttributes -> "autocomplete=off"
+            )
+            <details>
+             <summary><span class="summary">@Html(Messages("pages.form.field-helper.nino-where"))</span></summary>
+             <div class="panel-indent panel panel-border-narrow">
+             <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
+             </div>
+            </details>
+            </div>  
+		    <div class="form-group client-validated">
+		        @templates.dateFields(
+		        recipientForm,
+		        "dateOfMarriage",
+		        Html(Messages("pages.form.field.dom")),
+		        None,
+		        '_hintText -> Messages("pages.form.field-helper.dom"),
+		        '_label -> Messages("collect_user_data.dob.error"),
+		        '_labelTextClass -> "client-error-notification")
+		    </div>            
+        </fieldset>
+        <p class="get-started group" id="get-started">
+            <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-registration">@Html(Messages("generic.continue"))</button>
+        </p>
+    }
+}

@@ -1,0 +1,4 @@
+->    /marriage-allowance-application   app.Routes
+->    /template                         template.Routes
+->    /                                 health.Routes
+GET   /admin/metrics                    com.kenshoo.play.metrics.MetricsController.metrics

@@ -1,0 +1,90 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+
+@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress, reason: models.EndRelationshipReason,
+    effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None
+)(implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.change.complete")),
+    mainConfig = views.helpers.MainConfig(
+        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))) {
+
+    @if(reason.endReason == EndReasonCode.CANCEL) {
+        <div class="highlighted-event">
+            <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">
+             @Html(Messages("change.status.finish.will-be-current"))</h1>
+        </div>
+        <p>An email acknowledging your change will be sent to you at <strong>@transferorEmail</strong> from <strong>
+            noreply&#64;tax.service.gov.uk</strong> within 24 hours.</p>
+        <p>If it doesn't appear in your inbox, please check your spam or junk folder.</p>
+        <h2 class="heading-medium">What happens next</h2>
+        <p>If your spouse or civil partner usually completes a Self Assessment tax return, HMRC will remove Marriage Allowance from their Personal Allowance at the end of the tax year (@TextGenerators.ukDateTransformer(effectiveUntilDate)). Their Personal Allowance will be adjusted on @TextGenerators.ukDateTransformer(effectiveDate).</p>
+        <p>If your spouse or civil partner is employed and pays tax via PAYE, we'll send them a revised notice of tax coding. We'll also tell their employer to start using their new tax code from @TextGenerators.ukDateTransformer(effectiveDate).</p>
+        }
+
+    @if(reason.endReason == EndReasonCode.REJECT) {
+        <div class="highlighted-event">
+            <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">
+                Your Marriage Allowance transfer has been removed.</h1>
+        </div>
+        <p>An email acknowledging your change will be sent to you at <strong>@transferorEmail</strong> from <strong>
+            noreply&#64;tax.service.gov.uk</strong> within 24 hours.</p>
+        <p>If it doesn't appear in your inbox, please check your spam or junk folder.</p>
+        <h2>What happens next</h2>
+        <p>If your spouse or civil partner usually completes a Self Assessment tax return, HMRC will return Marriage Allowance to their Personal Allowance. If they're employed and pay tax via PAYE, we'll amend their tax code and tell their employer to start using the new tax code.</p>
+        <p>Removing Marriage Allowance could also result in you underpaying tax. We'll let you know if you've paid the right amount when we check your pay and tax information at the end of the tax year. Any underpayment of tax will be collected through an adjustment to your tax code.</p>
+        <p>Your revised notice of tax coding will show in the Income tax section of your personal tax account within 24 hours.</p>
+        }
+
+    @if(reason.endReason == EndReasonCode.DIVORCE_CY) {
+        <div class="highlighted-event"><!-- End Of Year-->
+            <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">
+            @Html(Messages("change.status.finish.will-be-current"))</h1>
+        </div>
+        <p>An email acknowledging your change will be sent to you at <strong>@transferorEmail</strong> from <strong>
+            noreply&#64;tax.service.gov.uk</strong> within 24 hours.</p>
+        <p>If it doesn't appear in your inbox, please check your spam or junk folder.</p>
+        <h2>What happens next</h2>
+        <p>If your spouse or civil partner usually completes a Self Assessment tax return, HMRC will remove Marriage Allowance from their Personal Allowance at the end of the tax year (@TextGenerators.ukDateTransformer(effectiveUntilDate)). Their Personal Allowance will be adjusted on @TextGenerators.ukDateTransformer(effectiveDate).</p>
+        <p>If they're employed and pay tax via PAYE, we'll send them a revised notice of tax coding. We'll also tell their employer to start using the new tax code from @TextGenerators.ukDateTransformer(effectiveDate).</p>
+        <p>There is no need to contact us.</p>
+        }
+
+    @if(reason.endReason == EndReasonCode.DIVORCE_PY) {
+        <div class="highlighted-event"><!-- Begin Of Year -->
+            <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">
+             @Html(Messages("change.status.finish.will-be-next"))</h1>
+        </div>
+        <p>An email acknowledging your change will be sent to you at <strong>@transferorEmail</strong> from <strong>
+            noreply&#64;tax.service.gov.uk</strong> within 24 hours.</p>
+        <p>If it doesn't appear in your inbox, please check your spam or junk folder.</p>
+        <h2>What happens next</h2>
+        <p>If your spouse or civil partner usually completes a Self Assessment tax return, HMRC will remove Marriage Allowance from their Personal Allowance from the start of this tax year. If they're employed and pay tax via PAYE, we'll amend their tax code and tell their employer to start using the new tax code.</p>
+        <p>Removing Marriage Allowance could also result in them underpaying tax. We'll let them know if they've paid the right amount when we check their pay and tax information at the end of the tax year. Any underpayment of tax will be collected through an adjustment to their tax code.</p>
+        <p>Your revised notice of tax coding will show in the Income tax section of your personal tax account within 24 hours.</p>     
+        }
+
+ <div class="form-group">
+    <a id="button-finished" class="button" role="button" href="/marriage-allowance-application/history">Back to Marriage Allowance</a></div>
+}

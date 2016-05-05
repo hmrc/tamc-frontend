@@ -1,0 +1,94 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(form: Form[models.CurrentYearInput],
+    historicYearsAvailable: Boolean,
+    recipientName: String,
+    dom: Option[org.joda.time.LocalDate],
+    cy: Option[org.joda.time.LocalDate])(
+    implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.time.TaxYearResolver
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.play.views.html._
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.eligible-years")),
+    mainConfig = views.helpers.MainConfig(
+        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:current-year-select")))) {
+
+
+  <h1 class="heading-xlarge">Tax years you are eligible for</h1>
+
+   @templates.form_error_notification(form)
+
+  <p class="lede">You've told us you married or formed a civil partnership with <span id="firstNameOnly">@recipientName</span> on <span id="marriageDate">@TextGenerators.ukDateTransformer(dom)</span></p>
+
+  <h2 class="heading-medium"><span style="color:grey">This current tax year</span><br>@TextGenerators.ukDateTransformer(cy) onwards</h2>   
+  <ul class="list list-bullet">
+    <li><span id="firstNameOnly2">@recipientName</span> will pay up to £220 less tax each year</li>
+    <li>we'll adjust <span id="firstNameOnly3">@TextGenerators.formPossessive(recipientName)</span> tax code to include this extra allowance</li>
+    <li>it'll automatically renew every year until you or <span id="firstNameOnly4">@recipientName</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a></li>
+  </ul>
+
+  @helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
+    <div @if(historicYearsAvailable) {class="form-group grey-underline-large-thick"} else {class="form-group"} id="applyForCurrentYear">
+      <h3 class="heading-small">Do you want to apply for this current tax year onwards?</h3>
+      @templates.input_radio_group(
+          form("applyForCurrentYear"),
+          Seq(("true", "Yes"), ("false", "No")),
+            '_labelClass -> "block-label",
+            '_labelAfter -> true,
+            '_fieldsetAttributes -> "data-inline-error=current-year-error",
+            '_groupClass -> "inline spacingBottom"
+      )
+        
+        @if(historicYearsAvailable) {
+            <div class="tamc-js-hidden error-inline validation-summary" id="current-year-error">
+                You can still apply for earlier tax years below.
+            </div>
+            <script>
+                    var _gaq = [];
+            </script>
+        }
+        <br><br>
+    </div>
+
+    @if(historicYearsAvailable) {
+    <div class="form-group" id="applyForHistoricYears">
+      <h3 class="heading-medium">You might also be eligible for earlier tax years</h3>
+      <h4 class="heading-small">Do you want to apply for these additional years also?</h4>
+      @templates.input_radio_group(
+          form("applyForHistoricYears"),
+          Seq(("true", "Yes"), ("false", "No")),   
+            '_labelClass -> "block-label",
+            '_labelAfter -> true,
+            '_groupClass -> "inline spacingBottom"
+      )
+    </div>
+    }
+
+    <p class="get-started group" id="get-started">
+     <button class="button" type="submit">@Html(Messages("generic.continue"))</button>
+    </p>
+  }
+}

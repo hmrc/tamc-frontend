@@ -1,0 +1,40 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(
+    implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import config.ApplicationConfig
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.finished")),
+    mainConfig = views.helpers.MainConfig(
+        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))) {
+    <div class="highlighted-event">
+        <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">@Html(Messages("pages.finished.successful"))</h1>
+    </div>
+
+    <p id="paragraph-1">@Html(Messages("pages.finished.para1.email1", transferorEmail)) @Html(Messages("pages.finished.para1.email2"))</p>
+    <p id="paragraph-2">@Html(Messages("pages.finished.para2"))</p>
+    <h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
+    <p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
+    <p id="paragraph-5">@Html(Messages("pages.finished.check-link-para", "https://www.gov.uk/personal-tax-account"))</p>
+    <p id="paragraph-6">@Html(Messages("pages.finished.survey-link", "https://www.gov.uk/done/marriage-allowance"))</p>
+}

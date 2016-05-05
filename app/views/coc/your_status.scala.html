@@ -1,0 +1,140 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(changeRelationshipForm: Form[ChangeRelationship], 
+    activeRelationship: Option[RelationshipRecord], 
+    historicRelationships: Option[Seq[RelationshipRecord]], 
+    loggedInUserInfo: Option[LoggedInUserInfo], 
+    activeRecord: Boolean, 
+    historicRecord: Boolean, 
+    historicActiveRecord: Boolean,
+    canApplyPreviousYears: Boolean,
+    endOfYear: Option[org.joda.time.LocalDate]
+    )(implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import views.helpers.TextGenerators
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.history")),
+    mainConfig = views.helpers.MainConfig()) {
+    <h1 class="heading-xlarge">@Html(Messages("generic.ma"))
+        <div class="secondary-text-colour bold-large">@loggedInUserInfo.get.name.get.firstName @loggedInUserInfo.get.name.get.lastName</div>
+    </h1>
+    @helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
+        @if(activeRecord) {
+            @if(activeRelationship.get.participant == "Transferor") {
+                <p class="lede" id="activeRecord">You are currently helping your partner benefit from Marriage Allowance.</p>
+                <p>You can stop Marriage Allowance if you:</p>
+                <ul class="list-bullet">
+					<li>have divorced or ended your civil partnership</li>
+					<li>have had a change in your income</li>
+					<li>want to cancel the allowance</li>
+					<li>have suffered a bereavement</li>
+				</ul>
+            } else {
+                <p class="lede" id="activeRecord">Your partner is currently helping you benefit from Marriage Allowance.</p>
+                <p>You can cancel Marriage Allowance if you:</p>
+                <ul class="list-bullet">
+					<li>have divorced or ended your civil partnership</li>
+					<li>have had a change in your income</li>
+					<li>want to reject the allowance</li>
+					<li>have suffered a bereavement</li>
+                </ul>
+            }
+
+            <input name="role" id="role" type="hidden" value="@activeRelationship.get.participant"/>
+            <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
+            <div class="form-group">
+                <button class="button" type="submit" >@Html(Messages("change.status.button"))</button>
+            </div>
+
+        } else {
+        	@if(historicActiveRecord) {
+        		@if(historicRelationships.get(0).participant == "Transferor") {
+	                <p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount", TextGenerators.ukDateTransformer(endOfYear)))</p>
+	                <p>@Html(Messages("change.status.transferor.stop-sooner"))</p>
+	                <p>
+                      <button class="button" type="submit" >@Html(Messages("change.status.transferor.ha.button"))</button>
+                    </p>
+	            } else {
+	                <p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount", TextGenerators.ukDateTransformer(endOfYear)))</p>
+	                <p>@Html(Messages("change.status.recipient.stop-sooner"))</p>
+	                <p>
+                      <button class="button" type="submit" >@Html(Messages("change.status.recipient.ha.button"))</button>
+                    </p>
+	            }
+        		<input name="role" id="role" type="hidden" value="@historicRelationships.get(0).participant"/>
+		        <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
+        	} else {
+        		
+	        	<p class="lede" style="margin-top:-30px">@Html(Messages("change.status.have-not-applied"))</p>
+			    <p class="heading-medium">@Html(Messages("change.status.apply"))</p>
+			    <p>@Html(Messages("change.status.ask-to-check"))</p>
+			    <a class="button button-start" id="start-now" href="@controllers.routes.MultiYearPtaEligibilityController.howItWorks()" role="button">@Html(Messages("generic.start-now"))</a>
+		    }
+        }
+    }
+                 @if(canApplyPreviousYears) {
+        <div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
+        <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">Apply for previous years</a></div>
+         }   
+        @if(historicRecord) {
+            <div id="historicRecords">
+                <section>
+                    <h2 class="heading-medium booster">@Html(Messages("change.status.history.h4"))</h2>
+                    <table>
+                        <tr>
+                            <th>@Html(Messages("change.status.start-date"))</th><th>@Html(Messages("change.status.end-date"))</th><th>@Html(Messages("change.status.allowance"))</th><th>@Html(Messages("change.status.history.reason"))</th><th></th>
+                        </tr>
+                        @for(index <- 0 until historicRelationships.get.size) {
+                            
+                            <tr>
+                                <td id="line@index-start">@historicRelationships.get(index).participant1StartDate</td> 
+                                <td id="line@index-end">@historicRelationships.get(index).participant1EndDate</td> 
+                                <td id="line@index-action">@if(historicRelationships.get(index).participant == "Transferor") {
+                                  @Html(Messages("generic.transferor-action"))	
+                                } else {
+                                  @Html(Messages("generic.recipient-action"))
+                                }</td>
+                                <td id="line@index-reason">
+                                  @Html(Messages(s"coc.end-reason.${historicRelationships.get(index).relationshipEndReason.getOrElse("")}"))
+                                </td>
+                                @if(List[String]("DIVORCE","CANCELLED", "RETROSPECTIVE").contains(historicRelationships.get(index).relationshipEndReason.get)&&historicRelationships.get(index).participant == "Recipient"){     
+                                    <td>
+                                        @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> s"line${index}-remove")) {
+                                            <input name="role" id="role" type="hidden" value="@historicRelationships.get(index).participant"/>
+                                            <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
+                                            <input name="endReason" id="endReason-reject" type="hidden" value="@EndReasonCode.REJECT"/>
+                                            <input name="creationTimestamp" id="creationTimestamp" type="hidden" value="@historicRelationships.get(index).creationTimestamp"/>
+                                            <button class="remove-block" type="submit">Remove</button>
+                                        }
+                                    </td>
+                                } else {
+                                    <td></td>
+                                }
+                            </tr>
+                        }
+                    </table></section>
+            </div> 
+        }
+
+
+}

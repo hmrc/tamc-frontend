@@ -1,0 +1,56 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(changeRelationshipForm: Form[ChangeRelationship])(implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.divorce")),
+    mainConfig = views.helpers.MainConfig()) {
+   
+    @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
+        
+        <h1 class="heading-xlarge text mainpage">There is a problem with the dates you entered</h1>
+        <p style="margin-top:-15px">The date you divorced or dissolved your civil partnership can't be before the date you started claiming marriage allowance.</p>
+        <p>You can go back and check the information you've entered is correct.</p>
+        <p>Contact HMRC if you think we have the wrong date for the start of your marriage or civil partnership.</p>
+
+        <strong>@Html(Messages("hmrc.contact-details-1"))</strong>
+	    <ul>
+	        <li>@Html(Messages("hmrc.contact-details-2"))</li>
+	        <li>@Html(Messages("hmrc.contact-details-3"))</li>
+	        <li>@Html(Messages("hmrc.contact-details-4"))</li>
+	        <li>@Html(Messages("hmrc.contact-details-5"))</li>
+	        <li>@Html(Messages("hmrc.contact-details-6"))</li>
+	        <li>@Html(Messages("hmrc.contact-details-7"))</li>
+	        <li>@Html(Messages("hmrc.contact-details-8"))</li>
+	        <li>@Html(Messages("hmrc.contact-details-9"))</li>
+	    </ul>
+
+        <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
+        <input name="historicActiveRecord" type="hidden" id="historicActiveRecord" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
+        <input name="endReason" id="endReason" type="hidden" value="@EndReasonCode.DIVORCE"/>
+        <p>
+            <button class="button" type="submit" >@Html(Messages("generic.back"))</button>
+        </p>
+    }
+
+}

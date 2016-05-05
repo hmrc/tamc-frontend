@@ -1,0 +1,45 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@()(implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.bereavement")),
+    mainConfig = views.helpers.MainConfig()) {
+    
+    <h1 class="heading-xlarge" id="bereavement-recipient">@Html(Messages("change.status.bereavement.sorry"))</h1>
+
+    <p>@Html(Messages("change.status.bereavement.rec.instruction"))</p>
+    <ul class="list list-bullet">
+      <li>@Html(Messages("change.status.bereavement.rec.instruction-1"))</li>
+      <li>@Html(Messages("change.status.bereavement.rec.instruction-2"))</li>
+    </ul>
+    <h2 class="heading-medium">@Html(Messages("change.status.bereavement.notify-hmrc"))</h2>
+
+    <p>@Html(Messages("hmrc.contact-details-2")) <br>
+        @Html(Messages("hmrc.contact-details-3")) <br>
+        @Html(Messages("hmrc.contact-details-4"))</p>
+    <p>@Html(Messages("hmrc.contact-details-5")) <br>
+    @Html(Messages("hmrc.contact-details-6"))</p>
+    <p>@Html(Messages("hmrc.contact-details-7")) <br>
+    @Html(Messages("hmrc.contact-details-8"))</p>
+    <p>@Html(Messages("hmrc.contact-details-9"))</p>
+}

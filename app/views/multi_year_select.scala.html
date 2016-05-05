@@ -1,0 +1,71 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(form: Form[models.MultiYearInput], 
+    input:RegistrationFormInput, 
+    availableYears:List[TaxYear] = List[TaxYear]())(
+    implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+@import models.Gender
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.time.TaxYearResolver
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.extra-years")),
+    mainConfig = views.helpers.MainConfig(
+        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:multi-year-select")))) {
+
+    <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
+    
+    @templates.form_error_notification(form)
+
+    @helpers.form(action = routes.TransferController.extraYearsAction, args = ('id -> "eligible-years-form")) {
+      <fieldset class="inline spacingBottom" id="gender">
+      @for(index <- 0 until availableYears.size) {
+        <div class="form-group" id="year-@availableYears(index).year-">
+          
+          <h3 class="heading-medium"><span style="color:grey">@TextGenerators.taxDateIntervalShort(availableYears(index).year) tax year</span><br>@TextGenerators.taxDateInterval(availableYears(index).year)</h3>
+            <div style="margin-top:30px">
+              <p>You and <span id="firstNameOnly">@input.name</span> can claim Marriage Allowance for the @TextGenerators.taxDateIntervalShort(availableYears(index).year) tax year if:</p>
+                <ul class="list list-bullet">
+                    <li>your income was £10,600 or less </li>
+                    <li><span id="firstNameOnly2">@TextGenerators.formPossessive(input.name)</span> income was between £10,601 and £42,385</li>
+                </ul>
+              <p>If your application is successful, Marriage Allowance will be backdated for the @TextGenerators.taxDateIntervalShort(availableYears(index).year)  tax year and 
+              <span id="firstNameOnly3">@input.name</span> will receive a cheque for up to £212.</p>
+            </div>
+           <p class="bold-small">Do you want to apply for this extra tax year too?</p>
+            @templates.input_radio_group(
+                form(s"year[${availableYears(index).year}]"),
+                Seq((availableYears(index).year.toString, "Yes"), ("0", "No")),
+                '_labelClass -> "block-label",
+                '_labelAfter -> true,
+                '_groupClass -> "inline spacingBottom"
+            )
+        </div>
+      }
+      </fieldset>
+    <p class="get-started group" id="get-started">
+        <button class="button" type="submit">@Html(Messages("generic.continue"))</button>
+    </p>
+    }
+}
+

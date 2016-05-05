@@ -1,0 +1,57 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)]
+)(implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+    @import play.twirl.api.Html
+    @import uk.gov.hmrc.play.views.html._
+
+    @templates.tamc_main(
+        title = Messages("title.pattern", Messages("title.eligibility")),
+        mainConfig = views.helpers.MainConfig(
+            maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:eligibility-check")))) {
+        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
+        @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = Messages("pages.form.error.mandatory.data"))
+        @helpers.form(action = routes.MultiYearPtaEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
+            <div class="form-group inline">
+                <p class="bold-small">@Html(Messages("eligibility.check.married"))</p>
+                @templates.input_radio_group(
+                    eligibilityCheckForm("marriage-criteria"),
+                    Seq(("true", "Yes"), ("false", "No")),
+                    '_labelClass -> "block-label",
+                    '_labelAfter -> true,
+                    '_fieldsetAttributes -> "data-inline-error=married-js-error",
+                    '_groupClass -> "inline spacingBottom"
+                )
+            </div>
+            <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
+            @Html(Messages("eligibility.check.married.error"))
+            </div>
+
+            <script>
+                    var _gaq = [];
+            </script>
+            <div class="form-group">
+                <button class="button button-calculate" data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue" type="submit">
+                    @Html(Messages("generic.continue"))
+                </button>
+            </div>
+        }
+    }

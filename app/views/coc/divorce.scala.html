@@ -1,0 +1,108 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(changeRelationshipForm: Form[ChangeRelationship], 
+    cyEffectiveUntilDate: Option[org.joda.time.LocalDate] = None,
+    cyEffectiveDate: Option[org.joda.time.LocalDate] = None,
+    pyEffectiveDate: Option[org.joda.time.LocalDate] = None
+    )(implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.time.TaxYearResolver
+@import views.helpers.TextGenerators
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.divorce")),
+    mainConfig = views.helpers.MainConfig()) {
+    <style>
+    .panel-indent
+    {
+    margin-top:30px;
+    margin-bottom:30px;
+    }
+    </style>
+    @helpers.form(action = routes.UpdateRelationshipController.divorceAction, args = ('id -> "change-relationship-form")) {
+        <div>
+        @templates.form_error_notification(changeRelationshipForm, formErrorMessage = Messages("pages.form.error.mandatory.data"), prefix = "pages.form.field.description-alt.")
+        <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
+        <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
+        <input name="dateOfDivorce.day" id="dayOfDateOfDivorce" type="hidden" value="@changeRelationshipForm.get.dateOfDivorce.get.dayOfMonth.get"/>
+        <input name="dateOfDivorce.month" id="monthOfDateOfDivorce" type="hidden" value="@changeRelationshipForm.get.dateOfDivorce.get.monthOfYear.get"/>
+        <input name="dateOfDivorce.year" id="yearOfDateOfDivorce" type="hidden" value="@changeRelationshipForm.get.dateOfDivorce.get.year.get"/>
+        @if(changeRelationshipForm.get.historicActiveRecord.getOrElse(false)) {
+            <h1 class="heading-large">@Html(Messages("change.status.divorce.h1"))</h1>
+            <p>@Html(Messages("change.status.historic-active.directions", 
+                        "https://www.gov.uk/divorce/apply-for-a-decree-absolute", 
+                        "https://www.gov.uk/end-civil-partnership/apply-for-a-final-order",
+                        TextGenerators.ukDateTransformer(pyEffectiveDate)
+                        ))</p>
+            <p>@Html(Messages("change.status.historic-active.result"))</p>
+            <input name="endReason" id="endReason-divorce_py" type="hidden" value="@EndReasonCode.DIVORCE_PY"/>
+        } else {
+           @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
+               @if(TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)){
+               <h1 class="heading-xlarge">Divorce or end of civil partnership in current tax year</h1>
+               <p>@Html(Messages("change.status.divorce.transferor.directions", "https://www.gov.uk/divorce/apply-for-a-decree-absolute", "https://www.gov.uk/end-civil-partnership/apply-for-a-final-order"))</p>
+	           After you tell us you've divorced or ended your civil partnership, Marriage Allowance will remain in place until the end of this tax year (5 April). Or, you can choose to withdraw Marriage Allowance from the start of this tax year.
+               <p class="bold-small"> @Html(Messages("change.status.reason-for-divorce"))</p>
+	           @templates.input_radio_group(
+	            changeRelationshipForm("endReason"),
+	            Seq((EndReasonCode.DIVORCE_CY, Messages("generic.yes")),
+	                (EndReasonCode.DIVORCE_PY, Messages("generic.no"))),
+	            '_legend -> Html(Messages("change.status.reason-for-divorce")),
+                '_legendClass -> "visuallyhidden",    
+	            '_labelClass -> "block-label",
+	            '_labelAfter -> true,
+	            '_fieldsetAttributes -> "data-inline-instruction=eoy-yes",
+	            '_groupClass -> "inline spacingBottom"
+	        	)
+                <div class="tamc-js-hidden panel-indent" id="eoy-yes">
+                  @Html(Messages("change.status.divorce.transferor.eoy-yes",
+                               TextGenerators.ukDateTransformer(cyEffectiveUntilDate),
+                               TextGenerators.ukDateTransformer(cyEffectiveDate) 
+                  ))
+                </div>
+        
+                <div class="tamc-js-hidden panel-indent" id="eoy-no">
+                 @Html(Messages("change.status.divorce.transferor.eoy-no"))
+                </div>
+	        	} else {
+                  <h1 class="heading-xlarge">Divorce or end of civil partnership in previous tax year</h1>
+                  <p style="margin-top:-15px">You should tell us if you legally end your marriage or civil partnership. This means if you've divorced and have a <a href="https://www.gov.uk/divorce/apply-for-a-decree-absolute" rel="external">decree absolute</a>, or if your civil partnership has ended and you have a <a href="https://www.gov.uk/end-civil-partnership/apply-for-a-final-order" rel="external">final order</a>.</p>
+                  <p>Marriage Allowance will be removed from @TextGenerators.ukDateTransformer(cyEffectiveUntilDate), the end of the tax year you divorced. This could result in your partner not paying enough tax. We'll let them know whether they've paid the right amount at the end of the tax year. If they've not paid enough, we'll collect it by adjusting their tax code.</p>
+	        	  <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
+	        	}
+           	} else {
+               <h1 class="heading-xlarge">Divorce or end of civil partnership</h1>
+               <p style="margin-top:-15px">You should tell us if you legally end your marriage or civil partnership. This means if you've divorced and have a <a href="https://www.gov.uk/divorce/apply-for-a-decree-absolute" rel="external">decree absolute</a>, or if your civil partnership has ended and you have a <a href="https://www.gov.uk/end-civil-partnership/apply-for-a-final-order" rel="external">final order</a>.</p>
+               <p>You can keep Marriage Allowance until @TextGenerators.ukDateTransformer(cyEffectiveUntilDate), the end of the tax year you divorced. Your Personal Allowance will return to normal from @TextGenerators.ukDateTransformer(cyEffectiveDate), the start of the next tax year.</p>
+               <p>We'll let you know if you've paid the right amount of tax at the end of the tax year. If you've not paid enough, we'll collect it by adjusting your tax code.</p>
+               <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
+           	}
+        }
+        </div>
+
+        <p>
+            <button class="button" type="submit" >@Html(Messages("generic.continue"))</button>
+        </p>
+
+    }
+
+}
