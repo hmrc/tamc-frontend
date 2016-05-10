@@ -477,53 +477,54 @@ class RoutesTest extends UnitSpec with TestUtility {
 //    }
 //  }
 //
-//  "No tax years for transferor error page" should {
-//    "have back and finish buttons with correct destinations" in new WithApplication(fakeApplication) {
+  "No tax years for transferor error page" should {
+    "have back and finish buttons with correct destinations" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20160415"), "", "")
+      val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "20100401", Some(""), Some("20100403"), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
+        activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
+
+      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
+      val controllerToTest = testParams.controller
+      val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
+      val result = controllerToTest.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val finished = document.getElementById("button-finished")
+      finished shouldNot be(null)
+      finished.attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide/how-it-works"
+
+      val back = document.getElementById("back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe "/marriage-allowance-application/history"
+    }
+ }
+
+//  "No tax years for recipient error page" should {
+//    "have back button with correct destinations" in new WithApplication(fakeApplication) {
 //      val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
 //      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20160415"), "", "")
-//      val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "20100401", Some(""), Some("20100403"), "", "")
+//      val historic1Record = RelationshipRecord(Role.RECIPIENT, "56789", "20100401", Some(""), Some("20160403"), "", "")
 //      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
 //        activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 //
 //      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
 //      val controllerToTest = testParams.controller
-//      val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
+//      val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithRelationship), ("dateOfMarriage.day" -> "01"), ("dateOfMarriage.month" -> "01"), ("dateOfMarriage.year" -> "2015"))
 //      val result = controllerToTest.transferAction(request)
 //
-//      status(result) shouldBe BAD_REQUEST
+//      //status(result) shouldBe OK
 //      val document = Jsoup.parse(contentAsString(result))
-//      val finished = document.getElementById("button-finished")
-//      finished shouldNot be(null)
-//      finished.attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide/how-it-works"
+//
+//      println("stuff here!" + document.toString())
 //
 //      val back = document.getElementById("back")
 //      back shouldNot be(null)
 //      back.attr("href") shouldBe "/marriage-allowance-application/history"
 //    }
 //  }
-
-  "No tax years for recipient error page" should {
-    "have back button with correct destinations" in new WithApplication(fakeApplication) {
-      val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20160415"), "", "")
-      val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "20100401", Some(""), Some("20100403"), "", "")
-      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser), activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
-
-      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
-      val controllerToTest = testParams.controller
-      val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino4), ("dateOfMarriage.day" -> "01"), ("dateOfMarriage.month" -> "01"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
-
-      //status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      println("stuff here!" + document.toString())
-
-      val back = document.getElementById("back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe "/marriage-allowance-application/history"
-    }
-  }
 //
 //
 //  "Signout page" should {
