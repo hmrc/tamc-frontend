@@ -58,7 +58,6 @@ object TestData {
     val ninoCitizenNotFound: String = ninos(20)
     val ninoForBadRequest: String = ninos(21)
     val ninoWithCL100: String = ninos(22)
-    val ninoWithNoPreviousYearsAvailable: String = ninos(23)
   }
 
 

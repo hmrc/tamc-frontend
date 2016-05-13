@@ -41,8 +41,6 @@ object TestConstants {
 
   private val TRANSFEROR_DECEASED = """{"status": {"status_code":"TAMC:ERROR:TRANSFEROR-DECEASED"}}"""
 
-  //private val NO_PREVIOUS_YEARS_AVAILABLE =
-
   private val COC_NO_RELATIONSHIP = """{"relationship_record":{"relationships":[],
     "userRecord":{"cid":999700100,"timestamp":"2015","name":{"firstName":"Foo","lastName":"Bar"}}},
     "status":{"status_code":"OK"}}"""
@@ -123,7 +121,6 @@ object TestConstants {
   val dummyHttpGetResponseJsonMap = Map(Ninos.ninoHappyPath -> Future.successful(new DummyHttpResponse(TestConstants.USER_HAPPY_PATH, OK)),
     Ninos.ninoWithRelationship -> Future.successful(new DummyHttpResponse(TestConstants.USER_HAS_RELATIONSHIP, OK)),
     Ninos.ninoWithLOA1_5 -> Future.successful(new DummyHttpResponse(TestConstants.USER_LOA_1_5, OK)),
-    Ninos.ninoWithNoPreviousYearsAvailable -> Future.successful(new DummyHttpResponse(TestConstants.))
     Ninos.ninoTransferorNotFound -> Future.successful(new DummyHttpResponse(TestConstants.TRANSFEROR_CID_NOT_FOUND, OK)),
     Ninos.ninoTransferorDeceased -> Future.successful(new DummyHttpResponse(TestConstants.TRANSFEROR_DECEASED, OK)),
     Ninos.ninoWithNoRelationship -> Future.successful(new DummyHttpResponse(TestConstants.COC_NO_RELATIONSHIP, OK)),
