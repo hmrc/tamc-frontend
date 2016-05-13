@@ -19,7 +19,7 @@ This service is written in [Scala](http://www.scala-lang.org/) and [Play](http:/
 Authentication
 ------------
 
-This customer logs into this service using [GOV.UK Verify](https://www.gov.uk/government/publications/introducing-govuk-verify/introducing-govuk-verify)
+This customer logs into this service using [GOV.UK Verify](https://www.gov.uk/government/publications/introducing-govuk-verify/introducing-govuk-verify).
 
 
 Acronyms

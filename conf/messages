@@ -311,7 +311,7 @@ pages.finished.survey-link=<a id="survey-link" href="{0}">What did you think of 
 
 #Registration page - Your spouse details
 pages.form.h1=Your spouse or civil partner''s details
-pages.form.details=As the lower earner you <span id="transferor-name">{0}</span> can now apply to help your spouse or civil partner save up to £220 of tax each year.
+pages.form.details=As the lower earner you <span id="transferor-name">{0}</span> can now apply to help your partner reduce the amount of tax they pay.
 pages.form.enter-data=Enter your spouse or civil partner''s details:
 pages.form.field.name=What is their first name?
 pages.form.field.last-name=What is their last name?
