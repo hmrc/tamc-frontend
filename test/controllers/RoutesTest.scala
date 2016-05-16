@@ -501,32 +501,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe "/marriage-allowance-application/history"
     }
  }
-
-//  "No tax years for recipient error page" should {
-//    "have back button with correct destinations" in new WithApplication(fakeApplication) {
-//      val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-//      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20160415"), "", "")
-//      val historic1Record = RelationshipRecord(Role.RECIPIENT, "56789", "20100401", Some(""), Some("20160403"), "", "")
-//      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
-//        activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
-//
-//      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
-//      val controllerToTest = testParams.controller
-//      val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithRelationship), ("dateOfMarriage.day" -> "01"), ("dateOfMarriage.month" -> "01"), ("dateOfMarriage.year" -> "2015"))
-//      val result = controllerToTest.transferAction(request)
-//
-//      //status(result) shouldBe OK
-//      val document = Jsoup.parse(contentAsString(result))
-//
-//      println("stuff here!" + document.toString())
-//
-//      val back = document.getElementById("back")
-//      back shouldNot be(null)
-//      back.attr("href") shouldBe "/marriage-allowance-application/history"
-//    }
-//  }
-
-
+  
   "Signout page" should {
     "redirect to IDA signout" in new WithApplication(fakeApplication) {
       val controllerToTest = makeFakeHomeController()
