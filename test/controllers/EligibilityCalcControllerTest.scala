@@ -93,7 +93,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility {
       document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £212 a year."
     }
 
-    "---------------" in new WithApplication(fakeApplication) {
+    "Transferor not eligible if transferor income is more than maximum limit" in new WithApplication(fakeApplication) {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "43100", "recipient-income" -> "45000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
