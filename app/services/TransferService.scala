@@ -39,7 +39,7 @@ import uk.gov.hmrc.play.audit.model.AuditEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.http.SessionKeys
 import play.api.Logger
-import events.TransferorRelationshipDataInconsistent
+//import events.TransferorRelationshipDataInconsistent
 import uk.gov.hmrc.time.TaxYearResolver
 
 object TransferService extends TransferService {
