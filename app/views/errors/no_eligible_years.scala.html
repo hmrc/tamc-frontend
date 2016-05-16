@@ -26,4 +26,7 @@
     mainConfig = views.helpers.MainConfig(
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:no-eligible-years")))) {
     <p id="error">@Html(Messages("transferor.no-eligible-years"))</p>
+    <a href="@controllers.routes.UpdateRelationshipController.history" id="back">
+        @Html(Messages("generic.back"))
+    </a>
 }

@@ -500,9 +500,8 @@ class RoutesTest extends UnitSpec with TestUtility {
       back shouldNot be(null)
       back.attr("href") shouldBe "/marriage-allowance-application/history"
     }
-  }
-
-
+ }
+  
   "Signout page" should {
     "redirect to IDA signout" in new WithApplication(fakeApplication) {
       val controllerToTest = makeFakeHomeController()
@@ -669,7 +668,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
   }
-  
+
   "PTA Eligibility check page for multi year" should {
 
     "authenticate the user " in new WithApplication(fakeApplication) {
@@ -758,7 +757,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       continue shouldNot be(null)
       continue.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
     }
-  }  
+  }
 
   "PTA lower earner check page for multi year" should {
 
@@ -812,7 +811,7 @@ class RoutesTest extends UnitSpec with TestUtility {
     }
 
   }
-  
+
   "GDS Eligibility check page for multi year" should {
 
     "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
