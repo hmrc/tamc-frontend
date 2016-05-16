@@ -93,6 +93,13 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility {
       document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £212 a year."
     }
 
+    "---------------" in new WithApplication(fakeApplication) {
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "43100", "recipient-income" -> "45000")
+      val result = makeEligibilityController().calculatorAction()(request)
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £43,000."
+    }
+        
     "be GBP 220 if transferor income=9000 (< 9540) and recipient income=12000 (> 11660)" in new WithApplication(fakeApplication) {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "16000")
       val result = makeEligibilityController().calculatorAction()(request)
