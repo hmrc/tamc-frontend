@@ -278,6 +278,27 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-name").text() shouldBe "Foo"
     }
 
+    "retrieve correct keystore data for recipient when only last name is avaliable" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(None, Some("Bar"))))
+      val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
+      val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
+      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
+      val selectedYears = Some(List(2014, 2015))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirm(request)
+
+      status(result) shouldBe OK
+      controllerToTest.cachingRetrievalCount shouldBe 1
+
+      val document = Jsoup.parse(contentAsString(result))
+
+      document.getElementById("transferor-name").text() shouldBe "Bar"
+    }
+    
     "retrieve correct keystore data for recipient when first name and last name is not avaliable" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(None, None)))
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)

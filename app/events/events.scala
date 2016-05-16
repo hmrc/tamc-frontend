@@ -93,6 +93,7 @@ object UpdateRelationshipCacheFailureEvent {
         "error" -> error.toString()))
 }
 
+/*
 object TransferorRelationshipDataInconsistent {
   def apply(transferorRecord: UserRecord, cache: Option[CacheData])(implicit hc: HeaderCarrier) =
     new BusinessEvent(
@@ -103,6 +104,7 @@ object TransferorRelationshipDataInconsistent {
         "transferor" -> transferorRecord.toString(),
         "cache" -> cache.toString()))
 }
+*/
 
 object RecipientFailureEvent {
   def apply(nino: Nino, error: Throwable)(implicit hc: HeaderCarrier) =
@@ -112,16 +114,6 @@ object RecipientFailureEvent {
         "event" -> "recipient-error",
         "error" -> error.toString(),
         "data" -> nino.value))
-}
-
-object CheckRecipientRelationshipEvent {
-  def apply(recipient: UserRecord)(implicit hc: HeaderCarrier) =
-    new BusinessEvent(
-      AuditType.Tx_FAILED,
-      Map(
-        "event" -> "check-recipient-relationship",
-        "error" -> "ExistingRelationshipForRecipient",
-        "data" -> recipient.toString()))
 }
 
 object RiskTriageRedirectEvent {
