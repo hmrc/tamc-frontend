@@ -29,7 +29,6 @@ object EligibilityCalculatorService {
     val transferableAllowance = ApplicationConfig.PERSONAL_ALLOWANCE - transIncome
 
     input match {
-    //adding new check and messages on basis of transferor income
       case incorrectRoles if (transIncome > recIncome) =>
         EligibilityCalculatorResult(messageKey = "eligibility.feedback.incorrect-role")
       case transferor_not_eligible if (transIncome > ApplicationConfig.MAX_LIMIT || transIncome < 0) =>
