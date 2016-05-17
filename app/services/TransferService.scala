@@ -23,15 +23,10 @@ import scala.concurrent.Future
 import connectors.ApplicationAuditConnector
 import connectors.MarriageAllowanceConnector
 import errors._
-//import events.AuthSuccessEvent
-import events.CheckRecipientRelationshipEvent
-import events.CheckTransferorRelationshipEvent
 import events.CreateRelationshipCacheFailureEvent
 import events.CreateRelationshipFailureEvent
 import events.CreateRelationshipSuccessEvent
 import events.RecipientFailureEvent
-import events.TransferorDetailsExistEvent
-//import events.TransferorFailureEvent
 import events.RelationshipAlreadyCreatedEvent
 import models._
 import play.api.libs.json.Json
@@ -44,7 +39,7 @@ import uk.gov.hmrc.play.audit.model.AuditEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.http.SessionKeys
 import play.api.Logger
-import events.TransferorRelationshipDataInconsistent
+//import events.TransferorRelationshipDataInconsistent
 import uk.gov.hmrc.time.TaxYearResolver
 
 object TransferService extends TransferService {
@@ -82,7 +77,7 @@ trait TransferService {
         case Some(CacheData(Some(UserRecord(_, _, _, name)), _, _, _, _)) => name
       }
     }
-
+/*
   private def checkCreateActionLock(trrecord: UserRecord, initialCacheState: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     (trrecord, initialCacheState) match {
       case (UserRecord(_, _, _, _), Some(CacheData(_, _, _, Some(true), _))) =>
@@ -92,16 +87,7 @@ trait TransferService {
       case _ =>
         Future { trrecord }
     }
-
-  private def auditTransferor(transferorNino: Nino, trrecord: UserRecord, transferor: TransferorEligibilityHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] = {
-    val auditEvent = transferor match {
-      case TransferorEligibilityHolder(true, name) => TransferorDetailsExistEvent(name, transferorNino)
-      case _                                       => CheckTransferorRelationshipEvent(trrecord)
-    }
-    handleAudit(auditEvent)
-    Future { trrecord }
-  }
-
+*/
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     checkRecipientEligible(transferorNino, recipientData).map(eligible => eligible) recoverWith {
       case error =>

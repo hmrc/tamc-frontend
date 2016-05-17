@@ -93,35 +93,7 @@ object UpdateRelationshipCacheFailureEvent {
         "error" -> error.toString()))
 }
 
-/*object TransferorFailureEvent {
-  def apply(nino: Nino, error: Throwable)(implicit hc: HeaderCarrier) =
-    new BusinessEvent(
-      AuditType.Tx_FAILED,
-      Map(
-        "event" -> "transferor-error",
-        "error" -> error.toString(),
-        "data" -> nino.value))
-}*/
-
-object TransferorDetailsExistEvent {
-  def apply(transferorName: Option[CitizenName], nino: Nino)(implicit hc: HeaderCarrier) =
-    new BusinessEvent(AuditType.Tx_SUCCESSFUL,
-      Map(
-        "event" -> "transferor-details-found",
-        "transferorName" -> transferorName.toString(),
-        "transferorNino" -> nino.value))
-}
-
-object CheckTransferorRelationshipEvent {
-  def apply(transferorRecord: UserRecord)(implicit hc: HeaderCarrier) =
-    new BusinessEvent(
-      AuditType.Tx_FAILED,
-      Map(
-        "event" -> "check-transferor-relationship",
-        "error" -> "ExistingRelationshipForTransferor",
-        "data" -> transferorRecord.toString()))
-}
-
+/*
 object TransferorRelationshipDataInconsistent {
   def apply(transferorRecord: UserRecord, cache: Option[CacheData])(implicit hc: HeaderCarrier) =
     new BusinessEvent(
@@ -132,6 +104,7 @@ object TransferorRelationshipDataInconsistent {
         "transferor" -> transferorRecord.toString(),
         "cache" -> cache.toString()))
 }
+*/
 
 object RecipientFailureEvent {
   def apply(nino: Nino, error: Throwable)(implicit hc: HeaderCarrier) =
@@ -143,16 +116,6 @@ object RecipientFailureEvent {
         "data" -> nino.value))
 }
 
-object CheckRecipientRelationshipEvent {
-  def apply(recipient: UserRecord)(implicit hc: HeaderCarrier) =
-    new BusinessEvent(
-      AuditType.Tx_FAILED,
-      Map(
-        "event" -> "check-recipient-relationship",
-        "error" -> "ExistingRelationshipForRecipient",
-        "data" -> recipient.toString()))
-}
-
 object RiskTriageRedirectEvent {
   def apply()(implicit hc: HeaderCarrier) =
     new BusinessEvent(
@@ -161,17 +124,6 @@ object RiskTriageRedirectEvent {
         "event" -> "authorisation-attempt",
         "data" -> "TRIAGE"))
 }
-
-/*object AuthSuccessEvent {
-  def apply(loa: String, sid: String)(implicit hc: HeaderCarrier) =
-    new BusinessEvent(
-      AuditType.Tx_SUCCESSFUL,
-      Map(
-        "event" -> "authorisation-success",
-        "LOA" -> loa,
-        "authorisation" -> "TRIAGE",
-        "sid" -> sid)) //FIXME - sid is in hc.headers
-}*/
 
 private object AuditType {
   val Tx_FAILED = "TxFailed"
