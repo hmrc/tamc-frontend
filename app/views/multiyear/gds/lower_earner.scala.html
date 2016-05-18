@@ -52,7 +52,7 @@ import config.ApplicationConfigired by applicable law or agreed to in writing, s
         </div>
 
         <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
-        @Html(Messages("eligibility.check.lower.earner.error"))
+        @Html(Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
         </div>
         <script>
                 var _gaq = [];
@@ -63,4 +63,4 @@ import config.ApplicationConfigired by applicable law or agreed to in writing, s
             </button>
         </div>
     }
-}
+} 
