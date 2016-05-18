@@ -237,8 +237,6 @@ pages.multi-year-select.heading=Confirm the earlier years you want to apply for
 pages.confirm.html.h1=Check your details and confirm the application
 pages.confirm.html.check-details=Check the details you''ve entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,060 of your Personal Allowance to them.
 pages.confirm.html.current-tax=This will apply for the current tax year and will continue into future tax years.
-pages.confirm.edit-email=Edit your email
-
 
 #Eligibility Check
 eligibility.check.header=Your eligibility
