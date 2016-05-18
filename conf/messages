@@ -172,7 +172,7 @@ generic.no=No
 generic.recipient-action=Received £1,060
 generic.transferor-action=Transferred £1,060
 
- 
+
 #Titles
 title.pattern=Marriage Allowance - {0}
 title.who-transfers=Who should transfer
@@ -248,7 +248,7 @@ eligibility.feedback.transferor-not-eligible-2017=You are not eligible for Marri
 eligibility.feedback.recipient-not-eligible-2016=You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,001 and £43,000.
 eligibility.feedback.recipient-not-eligible-2017=You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,501 and £45,000.
 eligibility.check.unlike-benefit-as-couple-2016=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,000.
-eligibility.check.unlike-benefit-as-couple-2017=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £15,000.
+eligibility.check.unlike-benefit-as-couple-2017=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,500.
 
 #Confirmation Message
 pages.confirm.html.h1=Check your details and confirm the application
