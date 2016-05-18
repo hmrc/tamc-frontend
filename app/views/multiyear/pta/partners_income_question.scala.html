@@ -22,17 +22,19 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
+@import java.text.NumberFormat
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility")),
     mainConfig = views.helpers.MainConfig(
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:income-eligibility-check")))) {
     <h1 class="heading-xlarge">@Html(Messages("eligibility.check.partners.income.h1"))</h1>
-    <p class="information">@Html(Messages("eligibility.check.partners.income.information"))</p>
+    <p class="information">@Html(Messages("eligibility.check.partners.income.information", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
     @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = Messages("pages.form.error.mandatory.data"))
     @helpers.form(action = routes.MultiYearPtaEligibilityController.partnersIncomeCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
-            <p class="bold-small">@Html(Messages("eligibility.check.partners.income.h2"))</p>
+            <p class="bold-small">@Html(Messages("eligibility.check.partners.income.h2",  NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
             <p class="form-hint">@Html(Messages("eligibility.check.partners.income.before.tax"))</p>
             @templates.input_radio_group(
                 partnersIncomeFormInput("partners-income"),
