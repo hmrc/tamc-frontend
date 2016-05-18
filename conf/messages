@@ -45,21 +45,20 @@ pages.form.field.transferor-email.error.error.email=Give a valid email address.
 pages.form.field.transferor-email.error.error.required=Tell us your email address.
 
 pages.form.field.description.marriage-criteria=Confirm if you are married or in a legally registered civil partnership
-pages.form.field.description.recipient-income-criteria=Confirm if your spouse or civil partner has an annual income of between £10,601 and £42,385
-pages.form.field.description.transferor-income-criteria=Confirm if your annual income is £10,600 or less
+#pages.form.field.description.recipient-income-criteria=Confirm if your spouse or civil partner has an annual income of between £10,601 and £42,385
+#pages.form.field.description.transferor-income-criteria=Confirm if your annual income is £10,600 or less
 pages.form.field.description.lower-earner=Confirm if you are the lower earner in the relationship
 
 pages.form.field.description.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
 pages.form.field.description.multiyear-recipient-income-criteria=Tell us if your spouse or civil partner is a basic rate tax payer since 6 April 2015?
-pages.form.field.description.partners-income=Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000
+
 
 pages.form.field-required.marriage-criteria=Tell us if you are married or in a legally registered civil partnership.
-pages.form.field-required.recipient-income-criteria=Tell us if your spouse or civil partner has an annual income of between £10,601 and £42,385.
-pages.form.field-required.transferor-income-criteria=Tell us if your annual income is £10,600 or less.
+#pages.form.field-required.recipient-income-criteria=Tell us if your spouse or civil partner has an annual income of between £10,601 and £42,385.
+#pages.form.field-required.transferor-income-criteria=Tell us if your annual income is £10,600 or less.
 pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your spouse or civil partner is a basic rate tax payer since 6 April 2015?
 pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
-pages.form.field-required.partners-income=Tell us if your spouse or civil partner has an annual income of between £11,001 and £43,000
-pages.form.field-required.partners-income=Tell us if your spouse or civil partner has an annual income of between £11,001 and £43,000
+
 
 pages.form.field-required.lower-earner=Tell us if you are the lower earner in the relationship.
 
@@ -128,6 +127,17 @@ coc.end-reason.MERGER=Customer accounts merged
 coc.end-reason.RETROSPECTIVE=Applied for Marriage Allowance retrospectively
 coc.end-reason.SYSTEM=Ended by HMRC
 coc.end-reason.DEFAULT=Marriage Allowance Ended
+
+############################
+#Should be added every year#
+############################
+pages.form.field-required.2016.partners-income=Tell us if your spouse or civil partner has an annual income of between £11,001 and £43,000
+pages.form.field-required.2017.partners-income=Tell us if your spouse or civil partner has an annual income of between £11,501 and £45,000
+
+############################
+#     Change every year    #
+############################
+pages.form.field.description.partners-income=Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000
 
 #███████████████████████████████████████████████████████████████████████████████████████████████████
 #█                                                                                                 █
@@ -216,7 +226,6 @@ hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about
 #Eligibility Calculator
 pages.calc.header=Marriage Allowance calculator
 pages.calc.para1=As a couple, find out how much tax you''d save if you applied for Marriage Allowance in this tax year.
-pages.calc.para2=If both your incomes are around the £10,600 Personal Allowance level, it''s worth using the calculator to see how much you might benefit by.
 pages.form.field.income=Lower earner''s yearly pre-tax income 
 pages.form.field.recipient-income=Higher earner''s yearly pre-tax income
 pages.calc.field-helper.income=This is your income figure before any tax is deducted.
@@ -225,20 +234,26 @@ pages.calc.how-to-apply=How to apply
 pages.calc.skip-it.pre=The step is optional,
 pages.calc.skip-it=skip it
 estimate.tax.saving=Calculate
-eligibility.feedback.transferor-not-eligible=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £43,000.
-eligibility.feedback.recipient-not-eligible=You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,001 and £43,000.
 eligibility.feedback.gain=Based on the information you have given us, as a couple you would benefit by around <strong>£{0}</strong> a year.
 eligibility.feedback.loose=Based on the details you have provided you will not benefit from making the transfer.
 
 #Multi-year select
 pages.multi-year-select.heading=Confirm the earlier years you want to apply for
 
+############################
+#Should be added every year#
+############################
+eligibility.feedback.transferor-not-eligible-2016=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £43,000.
+eligibility.feedback.transferor-not-eligible-2017=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £45,000.
+eligibility.feedback.recipient-not-eligible-2016=You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,001 and £43,000.
+eligibility.feedback.recipient-not-eligible-2017=You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,501 and £45,000.
+eligibility.check.unlike-benefit-as-couple-2016=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,000.
+eligibility.check.unlike-benefit-as-couple-2017=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £15,000.
+
 #Confirmation Message
 pages.confirm.html.h1=Check your details and confirm the application
 pages.confirm.html.check-details=Check the details you''ve entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,060 of your Personal Allowance to them.
 pages.confirm.html.current-tax=This will apply for the current tax year and will continue into future tax years.
-pages.confirm.edit-email=Edit your email
-
 
 #Eligibility Check
 eligibility.check.header=Your eligibility
@@ -252,29 +267,18 @@ income.check.couples-allowance=To benefit as a couple for Marriage Allowance you
 eligibility.check.married=Are you currently married or in a legally registered <a id="civil-partnership" href="https://www.gov.uk/marriages-civil-partnerships/overview" rel="external">civil partnership</a>?
 eligibility.check.married.legend=Are you married or in a legally registered civil partnership?
 eligibility.check.married.error=You aren''t eligible for Marriage Allowance because you aren''t married or in a legally registered civil partnership.
-eligibility.check.income=Does your spouse or civil partner have an annual income of between £10,601 and £42,385?
 multiyear.check.income=Since 6 April 2015 was your annual income at or below the Personal Allowance level?
-eligibility.check.income.error=You are not eligible for Marriage Allowance. To be able to transfer your Personal Allowance to your spouse or civil partner they must have an annual income of between £10,601 and £42,385.
-eligibility.check.transferor.income.error=You will only benefit as a couple for tax years when your income was at or below the Personal Allowance level.
 mutliyear.check.recipient=Since 6 April 2015 was your spouse or civil partner a basic rate tax payer?
 eligibility.check.recipient.income.error=You cannot apply for Marriage Allowance is your partner is a higher rate taxpayer. You should only apply for Marriage Allowance for tax years when your partner was a basic rate taxpayer.
-eligibility.check.transferor=Is your annual income £10,600 or less? (Don''t include savings interest under £5,000)
 eligibility.check.non-eligible=Based on your answers, you aren''t eligible for Marriage Allowance.
 eligibility.check.no-benefit-as-couple=Based on your answers you are eligible, but you may not benefit as a couple
-eligibility.check.unlike-benefit-as-couple=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,000.
-eligibility.check.benefit-criteria=You''d only benefit as a couple if the lower earner in the relationship has an income of £10,600 or less (not including savings interest under £5,000).
 eligibility.check.calc-para-pre=To check if you may benefit as a couple, use the
 eligibility.check.calc-para-in=calculator tool
 eligibility.check.calc-para-post=in the Marriage Allowance guidance.
 eligibility.check.who.transfers.h1=You are eligible for Marriage Allowance
 eligibility.check.who.transfers.h2=Who should make the transfer?
-eligibility.check.who.transfers.p=For Marriage Allowance to benefit you as a couple, the person making this transfer must be the lower earner and have an income of £10,600 or less (this does not include any savings interest under £5,000).
-eligibility.check.who.transfers.2016.p=For Marriage Allowance to benefit you as a couple, the person making this transfer must be the lower earner and have an income of £11,000 or less (this does not include any savings interest under £5,000).
-eligibility.check.who.transfers.p.lower=Are you the lower earner in your relationship?
 eligibility.check.who.transfers.eligible=Based on your answers, as a couple you are eligible for Marriage Allowance
 eligibility.check.who.transfers.continue-as-lower-earner=Continue as lower earner
-eligibility.check.who.transfers.however=However, the person making this transfer must be the lower earner and have an income of £10,600 or less (not including savings interest under £5,000).
-eligibility.check.who.transfers.however.2016=However, the person making this transfer must be the lower earner and have an income of £11,000 or less (not including savings interest under £5,000).
 eligibility.check.lower.earner.information=To apply for Marriage Allowance, you must be the lower earner in the relationship and earn £{0} or less a year.
 eligibility.check.lower.earner.h1=Your income
 eligibility.check.lower.earner.h2=Are you the lower earner with a pre-tax income currently £{0} or less a year?
@@ -332,10 +336,10 @@ pages.form.field.dod=When did you get divorced?<p>We need to know so we can make
 
 #How it works
 pages.how-it-works.heading=How It Works
-pages.how-it-works.lede-pre1=Marriage Allowance lets you transfer £1,100 of your Personal Allowance to your husband, wife or civil partner.
-pages.how-it-works.lede-pre2=This can reduce their tax by up to £220 this tax year (6 April to 5 April the next year). 
+pages.how-it-works.lede-pre1=Marriage Allowance lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
+pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year). 
 pages.how-it-works.lede-pre3=Marriage Allowance was introduced on 6 April 2015, so you can apply for the current tax year as well as the previous tax year.
-pages.how-it-works.lede-pre4=To benefit as a couple, you need to earn less than your partner and have an income of £11,000 or less. 
+pages.how-it-works.lede-pre4=To benefit as a couple, you need to earn less than your partner and have an income of £{0} or less. 
 pages.how-it-works.lede-in=Personal Allowance
 pages.how-it-works.lede-post=to your spouse or civil partner.
 pages.how-it-works.tse=to see if you''re eligible for Marriage Allowance
@@ -355,8 +359,6 @@ pages.how-it-works.ty.item4=details from any of your 3 most recent payslips
 change.status.button=Make a change
 change.status.transferor.ha.button=End Marriage Allowance
 change.status.recipient.ha.button=Stop Marriage Allowance
-change.status.transferor.h2=You are currently transferring £1,100 of your tax-free Personal Allowance to your spouse or civil partner.
-change.status.receiver.h2=You are currently receiving £1,100 of tax-free Personal Allowance from your spouse or civil partner.
 change.status.transferor.p1=If one of the following applies, you can remove Marriage Allowance because you:
 change.status.receiver.p1=If one of the following applies, you can cancel Marriage Allowance because you:
 change.status.transferor.list=<li>have divorced or ended your civil partnership</li><li>have had a change in your income</li><li>want to cancel the allowance</li><li>have suffered a bereavement</li>
@@ -369,14 +371,14 @@ change.status.confirm.field.your-email=We''ll send you confirmation of your canc
 change.status.confirm.field.your-name=Your name
 change.status.earnings.h1=Change in income
 change.status.earnings.h2=You''ll need to call us to discuss this further if:
-change.status.earnings.tr.instruction-1=your partner expects their income over the whole tax year to be more than £43,000, because you''ll no longer be eligible as a couple in this tax year
-change.status.earnings.tr.instruction-2=you expect your income over the whole tax year to be more than £11,000, because you might not benefit from Marriage Allowance as a couple
-change.status.earnings.rec.instruction-1=you expect your income over the whole tax year to be more than £43,000, because you''ll no longer be eligible as a couple in this tax year
-change.status.earnings.rec.instruction-2=your partner expects their income over the whole tax year to be more than £11,000, because you might not benefit from Marriage Allowance as a couple
+change.status.earnings.tr.instruction-1=your partner expects their income over the whole tax year to be more than £{0}, because you''ll no longer be eligible as a couple in this tax year
+change.status.earnings.tr.instruction-2=you expect your income over the whole tax year to be more than £{0}, because you might not benefit from Marriage Allowance as a couple
+change.status.earnings.rec.instruction-1=you expect your income over the whole tax year to be more than £{0}, because you''ll no longer be eligible as a couple in this tax year
+change.status.earnings.rec.instruction-2=your partner expects their income over the whole tax year to be more than £{0}, because you might not benefit from Marriage Allowance as a couple
 change.status.divorce.h1=The date of your divorce
 change.status.divorce.header=The date of your divorce
 change.status.divorce-py-heading=Remove this Marriage Allowance transfer
-change.status.divorce-py-content=This will be removed from the beginning of the current tax year, April 6 2015.
+change.status.divorce-py-content=This will be removed from the beginning of the current tax year, April 6 {0}.
 change.status.divorce.transferor.directions=You need to tell us if you''ve divorced and you have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.divorce.transferor.options=After you tell us you''ve divorced or ended your civil partnership, Marriage Allowance will remain in place until the end of this tax year ({0}). Or, you can choose to withdraw Marriage Allowance from the start of this tax year.
 change.status.divorce.transferor.keep=Would you like to keep Marriage Allowance until the end of the tax year?
@@ -396,7 +398,7 @@ change.status.allowance=Allowance status
 change.status.realtionship-end=Reason for change
 change.status.confirm-removal.button=Confirm removal
 change.status.divorce-cy-heading=Remove this Marriage Allowance transfer
-change.status.divorce-cy-content=This will be removed at the end of the current tax year, April 5 2016.
+change.status.divorce-cy-content=This will be removed at the end of the current tax year, April 5 {0}.
 change.status.cancel-your.h1=Make a change to your Marriage Allowance
 change.status.cancel-your.p=Why do you want to change your Marriage Allowance?
 change.status.confirm.email=Enter your email to confirm
@@ -407,8 +409,6 @@ change.status.history.allowance-status=Allowance status
 change.status.history.status=Status
 change.status.history.role=Allowance role
 change.status.history.reason=Reason for change
-change.status.history.year=2015 to 2016
-change.status.current-period=6 April 2015 to 5 April 2016
 change.status.active=Active
 change.status.transferor.amount=You''ll stop transferring Marriage Allowance to your spouse or civil partner at end of the tax year ({0}).
 change.status.receiving.amount=You''ll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year ({0}).
