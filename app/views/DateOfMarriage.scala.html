@@ -28,7 +28,7 @@ user: details.TamcUser)
 title = Messages("title.pattern", Messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))) {
-
+<h1 class="heading-xlarge">@Html(Messages("pages.date-of-marriage.heading"))</h1>
 @templates.form_error_notification(marriageForm)
 @helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 <fieldset>
@@ -36,7 +36,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
         @templates.dateFields(
         marriageForm,
         "dateOfMarriage",
-        Html(Messages("pages.form.field.dom")),
+        Html(Messages("pages.date-of-marriage.h2")),
         None,
         '_hintText -> Messages("pages.form.field-helper.dom"),
         '_label -> Messages("collect_user_data.dob.error"),

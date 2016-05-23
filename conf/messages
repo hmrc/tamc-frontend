@@ -346,8 +346,8 @@ pages.form.field.dom=On what date did you marry or form a civil partnership with
 pages.form.field.dod=When did you get divorced?<p>We need to know so we can make sure you benefit from Marriage Allowance for the correct period of time.</p>
 
 #Date of Marriage
-pages.date-of-marriage.h1=On what date did you marry or form a civil partnership with your current partner?
-pages.date-of-marriage.h2=This is to ensure we allow you to benefit from Marriage Allowance for the correct period of time. Marriage Allowance began on 6 April 2015, so you might be able to claim for previous tax years.
+pages.date-of-marriage.heading=Date Of Marriage
+pages.date-of-marriage.h2=On what date did you marry or form a civil partnership with your current partner?<p>This is to ensure we allow you to benefit from Marriage Allowance for the correct period of time. Marriage Allowance began on 6 April 2015, so you might be able to claim for previous tax years.</p>
 
 #How it works
 pages.how-it-works.heading=How It Works
