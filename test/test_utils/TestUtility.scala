@@ -336,6 +336,7 @@ trait TestUtility extends UnitSpec {
     def cachingRecipientRecordToTest(): Option[UserRecord] = ???
     def cachingRecipientRecordToTestCount(): Int = ???
     def cachingRecipientDataToTest(): Option[RegistrationFormInput] = ???
+    def cachingRecipientFormDataToTest(): Option[RecipientDetailsFormInput] = ???
 
     def notificationToTest: Option[NotificationRecord] = ???
     def saveNotificationCount: Int = ???
@@ -364,21 +365,22 @@ trait TestUtility extends UnitSpec {
     dataId: String,
     recipientData: Option[RegistrationFormInput] = None,
     transferorRecipientData: Option[CacheData] = None,
+    recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
     riskTriageRouteBiasPercentageParam: Int = 0,
     cocEnabledTestInput: Boolean = false,
     pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name")))),
     testingTime: DateTime = TestConstants.TEST_CURRENT_DATE,
     testCacheData: Option[UpdateRelationshipCacheData] = None): TestComponent = {
     Map(
-      ("user_happy_path" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeController(Some(Ninos.ninoHappyPath), recipientData, transferorRecipientData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("user_LOA_1" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1), makeController(Some(Ninos.ninoWithLOA1), recipientData, transferorRecipientData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("user_LOA_1_5" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1_5), makeController(Some(Ninos.ninoWithLOA1_5), recipientData, transferorRecipientData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("user_has_relationship" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithRelationship), makeController(Some(Ninos.ninoWithRelationship), recipientData, transferorRecipientData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("transferor_cid_not_found" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorNotFound), makeController(Some(Ninos.ninoTransferorNotFound), recipientData, transferorRecipientData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("transferor_deceased" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorDeceased), makeController(Some(Ninos.ninoTransferorDeceased), recipientData, transferorRecipientData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("throw_error" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoError), makeController(Some(Ninos.ninoError), recipientData, transferorRecipientData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("not_logged_in" -> TestComponent(FakeRequest(), makeController(None, None, None, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("not_authorised" -> TestComponent(makeFakeRequest("ID-NOT_AUTHORISED"), makeController(Some("NINO_NOT_AUTHORISED"), None, None, cocEnabledTestInput, pd, testingTime, testCacheData))))
+      ("user_happy_path" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeController(Some(Ninos.ninoHappyPath), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("user_LOA_1" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1), makeController(Some(Ninos.ninoWithLOA1), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("user_LOA_1_5" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1_5), makeController(Some(Ninos.ninoWithLOA1_5), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("user_has_relationship" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithRelationship), makeController(Some(Ninos.ninoWithRelationship), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("transferor_cid_not_found" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorNotFound), makeController(Some(Ninos.ninoTransferorNotFound), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("transferor_deceased" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorDeceased), makeController(Some(Ninos.ninoTransferorDeceased), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("throw_error" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoError), makeController(Some(Ninos.ninoError), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("not_logged_in" -> TestComponent(FakeRequest(), makeController(None, None, None, None, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("not_authorised" -> TestComponent(makeFakeRequest("ID-NOT_AUTHORISED"), makeController(Some("NINO_NOT_AUTHORISED"), None, None, None, cocEnabledTestInput, pd, testingTime, testCacheData))))
       .get(dataId).get
   }
 
@@ -391,6 +393,7 @@ trait TestUtility extends UnitSpec {
     nino: Option[String],
     recipientData: Option[RegistrationFormInput],
     transferorRecipientData: Option[CacheData],
+    recipientDetailsFormData: Option[RecipientDetailsFormInput],
     cocEnabledTestInput: Boolean,
     pd: PersonDetailsSuccessResponse,
     testingTime: DateTime,
@@ -523,6 +526,8 @@ trait TestUtility extends UnitSpec {
 
       var recipientDataToTest: Option[RegistrationFormInput] = None
 
+      var recipientDetailsFormInputDataToTest: Option[RecipientDetailsFormInput] = None
+
       var notificationToTest: Option[NotificationRecord] = None
 
       var saveYearsToTest: Option[List[Int]] = None
@@ -546,6 +551,11 @@ trait TestUtility extends UnitSpec {
         recipientDataToTest = Some(recipientData)
         recipientRecordToTestCount = recipientRecordToTestCount + 1
         Future.successful(recipientRecord)
+      }
+
+      override def saveRecipientDetails(recipientDetails: RecipientDetailsFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientDetailsFormInput] = {
+        recipientDetailsFormInputDataToTest = Some(recipientDetails)
+        Future.successful(recipientDetails)
       }
 
       override def saveNotificationRecord(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
@@ -584,6 +594,10 @@ trait TestUtility extends UnitSpec {
 
       override def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] = {
         Future.successful(testingCacheData)
+      }
+
+      override def getRecipientDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientDetailsFormInput]] = {
+        Future.successful(recipientDetailsFormInputDataToTest)
       }
     }
 
@@ -624,6 +638,7 @@ trait TestUtility extends UnitSpec {
       override def cachingRecipientRecordToTest = fakeCachingService.recipientRecordToTest
       override def cachingRecipientRecordToTestCount = fakeCachingService.recipientRecordToTestCount
       override def cachingRecipientDataToTest = fakeCachingService.recipientDataToTest
+      override def cachingRecipientFormDataToTest = fakeCachingService.recipientDetailsFormInputDataToTest
       override def cachingRecipientRecordRetrievalCount = fakeCachingService.recipientRecordRetrieval
       override def cachingRetrievalCount = fakeCachingService.retrieveAllCount
       override def createRelationshipCallCountToTest = fakeHttpPut.createRelationshipCallCountToTest

@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(recipientForm: Form[models.RegistrationFormInput], name: Option[models.CitizenName] = None)(
+@(recipientForm: Form[models.RecipientDetailsFormInput], name: Option[models.CitizenName] = None)(
     implicit lang: Lang,
         request: Request[_],
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -34,7 +34,7 @@
     <h3 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h3>
 @templates.form_error_notification(recipientForm)
     @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
-        <fieldset>
+    <fieldset>
             <div class="form-group">
             @templates.input(recipientForm("name"),
                 '_label -> Html(Messages("pages.form.field.name")),
@@ -76,20 +76,10 @@
              <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
              </div>
             </details>
-            </div>  
-		    <div class="form-group client-validated">
-		        @templates.dateFields(
-		        recipientForm,
-		        "dateOfMarriage",
-		        Html(Messages("pages.form.field.dom")),
-		        None,
-		        '_hintText -> Messages("pages.form.field-helper.dom"),
-		        '_label -> Messages("collect_user_data.dob.error"),
-		        '_labelTextClass -> "client-error-notification")
-		    </div>            
-        </fieldset>
-        <p class="get-started group" id="get-started">
-            <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-registration">@Html(Messages("generic.continue"))</button>
-        </p>
+            </div>
+    </fieldset>
+    <p class="get-started group" id="get-started">
+        <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-registration">@Html(Messages("generic.continue"))</button>
+    </p>
     }
 }

@@ -1,0 +1,51 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(marriageForm: Form[models.DateOfMarriageFormInput], name: Option[models.CitizenName] = None)(
+implicit lang: Lang,
+request: Request[_],
+breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import views.helpers.TextGenerators
+
+@templates.tamc_main(
+title = Messages("title.pattern", Messages("title.date-of-marriage")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))) {
+
+@templates.form_error_notification(marriageForm)
+@helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
+<fieldset>
+    <div class="form-group client-validated">
+        @templates.dateFields(
+        marriageForm,
+        "dateOfMarriage",
+        Html(Messages("pages.form.field.dom")),
+        None,
+        '_hintText -> Messages("pages.form.field-helper.dom"),
+        '_label -> Messages("collect_user_data.dob.error"),
+        '_labelTextClass -> "client-error-notification")
+    </div>
+</fieldset>
+
+<p class="get-started group" id="get-started">
+    <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-registration">@Html(Messages("generic.continue"))</button>
+</p>
+}
+}

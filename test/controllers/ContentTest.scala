@@ -39,7 +39,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transfer(request)
       
       status(result) shouldBe OK
@@ -56,7 +56,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -70,7 +70,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -99,7 +99,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("form-error-message").text() shouldBe "Check your information is correct, in the right place and in the right format."
       document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
 
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(dateOfMarriage,gender,last-name,name,nino)").size() shouldBe 1
+      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender,last-name,name,nino)").size() shouldBe 1
     }
   }
 
@@ -109,7 +109,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -130,7 +130,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> ""), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> ""), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -148,7 +148,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> " "), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> " "), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -166,7 +166,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -184,7 +184,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "12345"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "12345"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -202,7 +202,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc123"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc123"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -220,7 +220,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoHappyPath), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoHappyPath))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -238,7 +238,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoHappyPathWithSpaces), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoHappyPathWithSpaces))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -250,48 +250,6 @@ class ContentTest extends UnitSpec with TestUtility {
       labelNino.getElementsByClass("error-message").first().text() shouldBe "You can't enter your own details."
       document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
     }
-
-    "display form error message (date of marriage is before 1900)" in new WithApplication(fakeApplication) {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "1899"))
-      val result = controllerToTest.transferAction(request)
-
-      status(result) shouldBe BAD_REQUEST
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-
-      val field = form.getElementById("dateOfMarriage")
-      field shouldNot be(null)
-
-      val err = field.getElementsByClass("client-error-notification")
-      err.size() shouldBe 1
-    }
-
-    "display form error message (date of marriage is after today's date)" in new WithApplication(fakeApplication) {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent(
-        "user_happy_path",
-        transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2017"))
-      val result = controllerToTest.transferAction(request)
-
-      status(result) shouldBe BAD_REQUEST
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-
-      val field = form.getElementById("dateOfMarriage")
-      field shouldNot be(null)
-
-      val err = field.getElementsByClass("client-error-notification")
-      err.size() shouldBe 1
-    }
   }
 
   "Calling Transfer Submit page with error in last-name field" should {
@@ -300,7 +258,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -319,7 +277,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> ""), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> ""), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -337,7 +295,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> " "), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> " "), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -355,7 +313,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -373,7 +331,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "12345"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "12345"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -391,7 +349,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "abc123"), ("gender" -> "M"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "abc123"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -411,7 +369,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("nino" -> Ninos.nino1), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("nino" -> Ninos.nino1), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -430,7 +388,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "X"), ("nino" -> Ninos.nino1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "X"), ("nino" -> Ninos.nino1))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -450,7 +408,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -469,7 +427,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> ""), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> ""))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -487,7 +445,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> "ZZ"), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> "ZZ"))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -498,6 +456,51 @@ class ContentTest extends UnitSpec with TestUtility {
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Check their National Insurance number and enter it correctly."
       document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
+    }
+  }
+
+  "Calling Date Of Marriage page with error in dom field" should {
+
+    "display form error message (date of marriage is before 1900)" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "1899"))
+      val result = controllerToTest.dateOfMarriageAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("date-of-marriage-form")
+      form shouldNot be(null)
+
+      val field = form.getElementById("dateOfMarriage")
+      field shouldNot be(null)
+
+      val err = field.getElementsByClass("client-error-notification")
+      err.size() shouldBe 1
+    }
+
+    "display form error message (date of marriage is after today's date)" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
+      val testComponent = makeTestComponent(
+        "user_happy_path",
+        transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2017"))
+      val result = controllerToTest.dateOfMarriageAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("date-of-marriage-form")
+      form shouldNot be(null)
+
+      val field = form.getElementById("dateOfMarriage")
+      field shouldNot be(null)
+
+      val err = field.getElementsByClass("client-error-notification")
+      err.size() shouldBe 1
     }
   }
 

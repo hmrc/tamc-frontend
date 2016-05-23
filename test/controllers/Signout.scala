@@ -175,7 +175,7 @@ class Signout extends UnitSpec with TestUtility {
       val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
       val controllerToTest = testParams.controller
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoTransferorNotFound), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -194,7 +194,7 @@ class Signout extends UnitSpec with TestUtility {
       val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
       val controllerToTest = testParams.controller
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoError), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
