@@ -59,7 +59,9 @@
             '_labelClass -> "block-label",
             '_labelAfter -> true,
             '_fieldsetAttributes -> "data-inline-error=current-year-error",
-            '_groupClass -> "inline spacingBottom"
+        '_legend -> "Do you want to apply?",
+        '_legendClass -> "visuallyhidden",
+        '_groupClass -> "inline spacingBottom"
       )
         
         @if(historicYearsAvailable) {
@@ -82,6 +84,8 @@
           Seq(("true", "Yes"), ("false", "No")),   
             '_labelClass -> "block-label",
             '_labelAfter -> true,
+        '_legend -> "Earlier years",
+        '_legendClass -> "visuallyhidden",
             '_groupClass -> "inline spacingBottom"
       )
     </div>
