@@ -20,6 +20,7 @@ import play.api.Play.configuration
 import play.api.Play.current
 import uk.gov.hmrc.play.config.ServicesConfig
 import org.joda.time.LocalDate
+import uk.gov.hmrc.time.TaxYearResolver
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
@@ -42,7 +43,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
 
-  val TAMC_BEGINNING_YEAR = configuration.getInt("ma-start-tax-year").getOrElse(2015)
+  val TAMC_BEGINNING_YEAR = 2015
   val TAMC_MIN_DATE = new LocalDate(1900, 1, 1)
 
   val CACHE_TRANSFEROR_RECORD = "TRANSFEROR_RECORD"
@@ -58,10 +59,10 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_SOURCE = "SOURCE"
   val CACHE_LOCKED_UPDATE = "LOCKED_UPDATE"
 
-  val PERSONAL_ALLOWANCE = 11000
-  val MAX_ALLOWED_TRANSFER = 1100
+  val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-"+TaxYearResolver.currentTaxYear).get
+  val MAX_LIMIT = configuration.getInt("max-limit-"+TaxYearResolver.currentTaxYear).get
+  val MAX_ALLOWED_TRANSFER = PERSONAL_ALLOWANCE / 10
   val MAX_BENEFIT = MAX_ALLOWED_TRANSFER / 5
-  val MAX_LIMIT = 43000
   val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_TRANSFER
   val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_TRANSFER
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"

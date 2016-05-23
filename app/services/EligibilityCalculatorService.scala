@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ 
 package services
 
 import config.ApplicationConfig
 import models.EligibilityCalculatorInput
 import models.EligibilityCalculatorResult
+import uk.gov.hmrc.time.TaxYearResolver
 
 object EligibilityCalculatorService {
 
@@ -27,17 +28,16 @@ object EligibilityCalculatorService {
     val transIncome = input.transferorIncome
     val recIncome = input.recipientIncome
     val transferableAllowance = ApplicationConfig.PERSONAL_ALLOWANCE - transIncome
-
+    val currentTaxYear = TaxYearResolver.currentTaxYear
     input match {
-    //adding new check and messages on basis of transferor income
       case incorrectRoles if (transIncome > recIncome) =>
         EligibilityCalculatorResult(messageKey = "eligibility.feedback.incorrect-role")
       case transferor_not_eligible if (transIncome > ApplicationConfig.MAX_LIMIT || transIncome < 0) =>
-        EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible")
+        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.transferor-not-eligible-"+currentTaxYear))
       case recipient_not_eligible if (recIncome > ApplicationConfig.MAX_LIMIT || recIncome <= ApplicationConfig.PERSONAL_ALLOWANCE) =>
-        EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible")
+        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-"+currentTaxYear))
       case transferor_not_benefit if (transIncome > ApplicationConfig.PERSONAL_ALLOWANCE && transIncome < ApplicationConfig.MAX_LIMIT) =>
-        EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple")
+        EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-"+currentTaxYear))
       case benefit => getEligibilityBenefitResult(transIncome: Int, recIncome: Int)
     }
   }

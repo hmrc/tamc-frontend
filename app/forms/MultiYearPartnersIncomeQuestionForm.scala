@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ 
 package forms
 
 import models.MultiYearPartnersIncomeQuestionInput
 import play.api.data.{Form, FormError}
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
+import uk.gov.hmrc.time.TaxYearResolver
 
 object MultiYearPartnersIncomeQuestionForm {
 
-  private val PRE_ERROR_KEY = "pages.form.field-required."
+  private val PRE_ERROR_KEY = ("pages.form.field-required."+TaxYearResolver.currentTaxYear+".")
 
   implicit def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
     override val format = Some(("format.boolean", Nil))

@@ -22,22 +22,24 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
+@import java.text.NumberFormat
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility")),
     mainConfig = views.helpers.MainConfig(
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:income-eligibility-check")))) {
     <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1"))</h1>
-    <p class="information">@Html(Messages("eligibility.check.lower.earner.information"))</p>
+    <p class="information">@Html(Messages("eligibility.check.lower.earner.information", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</p>
     @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = Messages("pages.form.error.mandatory.data"))
     @helpers.form(action = routes.MultiYearPtaEligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
-            <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.h2"))</p>
+            <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.h2", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</p>
             <p class="form-hint">@Html(Messages("eligibility.check.lower.earner.before.tax"))</p>
             @templates.input_radio_group(
                 lowerEarnerFormInput("lower-earner"),
                 Seq(("true", "Yes"), ("false", "No")),
-                '_legend -> Html(Messages("multiyear.check.income")),
+                '_legend -> Html(Messages("eligibility.check.lower.earner.h2")),
                 '_legendClass -> "visuallyhidden", 
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
@@ -47,7 +49,7 @@
         </div>
 
         <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
-        @Html(Messages("eligibility.check.lower.earner.error"))
+        @Html(Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
         </div>
         <script>
                 var _gaq = [];

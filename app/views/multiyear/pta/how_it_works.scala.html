@@ -13,13 +13,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
+ 
 @()(implicit lang: Lang,
         request: Request[_],
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         user: details.TamcUser)
 
 @import play.twirl.api.Html
+@import config.ApplicationConfig
+@import java.text.NumberFormat
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.how-it-works")),
@@ -28,16 +30,16 @@
 
     <h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
     <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre1"))
+        @Html(Messages("pages.how-it-works.lede-pre1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
     </p>
     <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre2"))
+        @Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))
     </p>
     <p class="lede">
         @Html(Messages("pages.how-it-works.lede-pre3"))
     </p>
     <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre4"))
+        @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
     </p>
     <p>
         @Html(Messages("pages.how-it-works.find"))

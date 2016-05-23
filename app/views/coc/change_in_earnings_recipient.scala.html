@@ -13,13 +13,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
+ 
 @()(implicit lang: Lang,
         request: Request[_],
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         user: details.TamcUser)
 
 @import play.twirl.api.Html
+@import config.ApplicationConfig
+@import java.text.NumberFormat
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.earnings")),
@@ -27,8 +29,8 @@
     <h1 class="heading-large">@Html(Messages("change.status.earnings.h1"))</h1>
     <h2 class="heading-medium">@Html(Messages("change.status.earnings.h2"))</h2>
         <ul class="list list-bullet">
-      <li>@Html(Messages("change.status.earnings.rec.instruction-1"))</li>
-      <li>@Html(Messages("change.status.earnings.rec.instruction-2"))</li>
+      <li>@Html(Messages("change.status.earnings.rec.instruction-1", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</li>
+      <li>@Html(Messages("change.status.earnings.rec.instruction-2", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</li>
     </ul>
         <h3>@Html(Messages("hmrc.contact-details-1"))</h3>
     <p>@Html(Messages("hmrc.contact-details-2")) <br>
