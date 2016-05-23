@@ -250,6 +250,16 @@ eligibility.feedback.recipient-not-eligible-2016=You are not eligible for Marria
 eligibility.feedback.recipient-not-eligible-2017=You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,501 and £45,000.
 eligibility.check.unlike-benefit-as-couple-2016=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,000.
 eligibility.check.unlike-benefit-as-couple-2017=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,500.
+max-benefit-2014=£212
+max-benefit-2015=£212
+max-benefit-2016=£220
+max-benefit-2017=£230
+your-income-2015=your income was £10,600 or less
+your-income-2016=your income was £11,000 or less
+your-income-2017=your income was £11,500 or less
+income-between-2015=income was between £10,601 and £42,385
+income-between-2016=income was between £11,001 and £43,000
+income-between-2017=income was between £11,601 and £45,000
 
 #Confirmation Message
 pages.confirm.html.h1=Check your details and confirm the application

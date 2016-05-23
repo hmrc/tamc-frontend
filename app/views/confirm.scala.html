@@ -24,7 +24,8 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.time.TaxYearResolver
 @import views.helpers.TextGenerators
-
+@import config.ApplicationConfig
+@import java.text.NumberFormat
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.confirm-recipient")),
@@ -78,10 +79,10 @@
           <tr>
               @if(taxYear.isCurrent) {
                   <td id="year-@taxYear.year">Current tax year: @TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year))) onwards</td>
-                  <td id="outcome-@taxYear.year">HMRC will change your and @TextGenerators.formPossessive(data.recipientFirstName) tax codes to save @data.recipientFirstName up to £220. Marriage Allowance will automatically continue until you or @data.recipientFirstName cancel it or are no longer eligible as a couple.
+                  <td id="outcome-@taxYear.year">HMRC will change your and @TextGenerators.formPossessive(data.recipientFirstName) tax codes to save @data.recipientFirstName up to £@NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT). Marriage Allowance will automatically continue until you or @data.recipientFirstName cancel it or are no longer eligible as a couple.
               } else {
                   <td id="year-@taxYear.year">Previous tax year: @TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year))) to @TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear.year)))</td>
-                  <td id="outcome-@taxYear.year">HMRC will check the details you've supplied before sending @data.recipientFirstName a cheque by post for up to £212.</td>
+                  <td id="outcome-@taxYear.year">HMRC will check the details you've supplied before sending @data.recipientFirstName a cheque by post for up to @Html(Messages("max-benefit-"+taxYear.year)).</td>
               }
             <td>
                 <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">

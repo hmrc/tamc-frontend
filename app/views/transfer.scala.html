@@ -31,7 +31,7 @@
         maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))) {
     <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
     <p class="blue-underline-large">@Html(Messages("pages.form.details", name.map{ _.fullName}.flatten.fold("")(name => s"(${name})")))</p>
-    <h3 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h3>
+    <h2 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h2>
 @templates.form_error_notification(recipientForm)
     @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
     <fieldset>

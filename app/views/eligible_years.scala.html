@@ -30,6 +30,8 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 @import views.helpers.TextGenerators
 @import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
+@import java.text.NumberFormat
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligible-years")),
@@ -45,7 +47,7 @@
 
   <h2 class="heading-medium"><span style="color:grey">This current tax year</span><br>@TextGenerators.ukDateTransformer(cy) onwards</h2>   
   <ul class="list list-bullet">
-    <li><span id="firstNameOnly2">@recipientName</span> will pay up to £220 less tax each year</li>
+    <li><span id="firstNameOnly2">@recipientName</span> will pay up to £@NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT) less tax each year</li>
     <li>we'll adjust <span id="firstNameOnly3">@TextGenerators.formPossessive(recipientName)</span> tax code to include this extra allowance</li>
     <li>it'll automatically renew every year until you or <span id="firstNameOnly4">@recipientName</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a></li>
   </ul>
@@ -59,7 +61,9 @@
             '_labelClass -> "block-label",
             '_labelAfter -> true,
             '_fieldsetAttributes -> "data-inline-error=current-year-error",
-            '_groupClass -> "inline spacingBottom"
+        '_legend -> "Do you want to apply?",
+        '_legendClass -> "visuallyhidden",
+        '_groupClass -> "inline spacingBottom"
       )
         
         @if(historicYearsAvailable) {
@@ -82,6 +86,8 @@
           Seq(("true", "Yes"), ("false", "No")),   
             '_labelClass -> "block-label",
             '_labelAfter -> true,
+        '_legend -> "Earlier years",
+        '_legendClass -> "visuallyhidden",
             '_groupClass -> "inline spacingBottom"
       )
     </div>
