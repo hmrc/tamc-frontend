@@ -51,7 +51,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     cache[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD, RecipientRecord(record = recipientRecord, data = recipientData, aivailableTaxYears = aivailableYears)) map
       (_.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD).get.record)
 
-  // NEW
   def saveRecipientDetails(details: RecipientDetailsFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[RecipientDetailsFormInput] =
     cache[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS, details) map
       (_.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS).get)
@@ -91,7 +90,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def getPersonDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[PersonDetails]] =
     fetchAndGetEntry[PersonDetails](ApplicationConfig.CACHE_PERSON_DETAILS)
 
-  // NEW
   def getRecipientDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientDetailsFormInput]] =
     fetchAndGetEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS)
 

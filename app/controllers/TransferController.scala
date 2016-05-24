@@ -128,12 +128,6 @@ trait TransferController extends FrontendController with AuthorisedActions with 
               }) recover (handleError)
   }
 
-  private def getOptionalLocalDate(day: Option[String], month: Option[String], year: Option[String]): Option[LocalDate] =
-    (day, month, year) match {
-      case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y.toInt, m.toInt, d.toInt))
-      case _                           => None
-    }
-
   def eligibleYears = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
