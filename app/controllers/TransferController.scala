@@ -16,6 +16,9 @@
 
 package controllers
 
+import org.joda.time.LocalDate
+import uk.gov.hmrc.domain.Nino
+
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import actions.AuthorisedActions
@@ -29,7 +32,9 @@ import errors.RecipientNotFound
 import errors.TransferorNotFound
 import forms.EmailForm.emailForm
 import forms.RegistrationForm.registrationForm
-import models.TransferorEligibilityHolder
+import forms.RecipientDetailsForm.recipientDetailsForm
+import forms.DateOfMarriageForm.dateOfMarriageForm
+import models._
 import play.Logger
 import play.api.mvc.AnyContent
 import play.api.mvc.Request
@@ -40,10 +45,8 @@ import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import config.ApplicationConfig
-import models.CitizenName
 import play.api.mvc.Cookie
 import utils.TamcBreadcrumb
-import models.NotificationRecord
 import errors.CacheTransferorInRelationship
 import errors.CacheRecipientInRelationship
 import errors.CacheRelationshipAlreadyCreated
@@ -55,11 +58,10 @@ import uk.gov.hmrc.play.http.SessionKeys
 import errors.TransferorDeceased
 import details.CitizenDetailsService
 import details.TamcUser
-import models.RelationshipRecordWrapper
-import models.RelationshipRecordList
 import scala.concurrent.ExecutionContext.Implicits.global
 import forms.MultiYearForm.multiYearForm
 import services.TimeService
+import services.CachingService
 import forms.CurrentYearForm.currentYearForm
 import errors.NoTaxYearsSelected
 import errors.NoTaxYearsAvailable
@@ -86,7 +88,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
       implicit request =>
         implicit details =>
           registrationService.getEligibleTransferorName map {
-            name => { Ok(views.html.transfer(registrationForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)), name)) }
+            name => { Ok(views.html.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)), name)) }
           } recover (handleError)
   }
 
@@ -94,14 +96,35 @@ trait TransferController extends FrontendController with AuthorisedActions with 
     implicit auth =>
       implicit request =>
         implicit details =>
-          registrationForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)).bindFromRequest.fold(
+          recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)).bindFromRequest.fold(
             formWithErrors =>
               registrationService.getEligibleTransferorName map {
                 name => { BadRequest(views.html.transfer(formWithErrors, name)) }
               },
-            recipientData =>
-              registrationService.isRecipientEligible(utils.getUserNino(auth), recipientData) map {
-                _ => Redirect(controllers.routes.TransferController.eligibleYears())
+            recipientData => {
+              CachingService.saveRecipientDetails(recipientData)
+              registrationService.getEligibleTransferorName map {
+                name => Ok(views.html.DateOfMarriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), name))
+              }}) recover (handleError)
+  }
+
+  def dateOfMarriageAction = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
+            formWithErrors =>
+              registrationService.getEligibleTransferorName map {
+                name => { BadRequest(views.html.DateOfMarriage(formWithErrors, name)) }
+              },
+            marriageData =>
+              registrationService.getRecipientDetailsFormData flatMap {
+                case RecipientDetailsFormInput(name, lastName, gender, nino) => {
+                  val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
+                  registrationService.isRecipientEligible(utils.getUserNino(auth), dataToSend) flatMap {
+                    _ => Future.successful(Redirect(controllers.routes.TransferController.eligibleYears()))
+                  }
+                }
               }) recover (handleError)
   }
 

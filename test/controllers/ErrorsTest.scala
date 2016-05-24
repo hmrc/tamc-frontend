@@ -46,15 +46,27 @@ class ErrorsTest extends UnitSpec with TestUtility {
 
   "Error handling in transfer page when submitting form" should {
     "show 'Recipient details not found' page" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2015)),
+        recipientDetailsFormData = cacheRecipientFormData))
+
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("20140101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 
-      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
+      val testParams = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData, testCacheData = Some(updateRelationshipCacheData))
       val controllerToTest = testParams.controller
-      val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoTransferorNotFound), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
+      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -70,7 +82,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
       val controllerToTest = testParams.controller
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoError), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -78,15 +90,27 @@ class ErrorsTest extends UnitSpec with TestUtility {
     }
 
     "send audit event if recipient can not be found" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2015)),
+        recipientDetailsFormData = cacheRecipientFormData))
+
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("20140101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 
-      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
+      val testParams = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData, testCacheData = Some(updateRelationshipCacheData))
       val controllerToTest = testParams.controller
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoTransferorNotFound), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val event = controllerToTest.auditEventsToTest.head
@@ -99,15 +123,27 @@ class ErrorsTest extends UnitSpec with TestUtility {
     }
 
     "send audit event if there is a technical error" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoError)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoError), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2015)),
+        recipientDetailsFormData = cacheRecipientFormData))
+
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("20140101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 
-      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
+      val testParams = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData, testCacheData = Some(updateRelationshipCacheData))
       val controllerToTest = testParams.controller
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoError), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val event = controllerToTest.auditEventsToTest.head
@@ -120,16 +156,29 @@ class ErrorsTest extends UnitSpec with TestUtility {
     }
 
     "show 'no tax years for transferor' page if transferor enters date of marriage as current tax year" in new WithApplication(fakeApplication) {
+
+      val cachedRecipientData = Some(RecipientDetailsFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1)))
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2015)),
+        recipientDetailsFormData=cachedRecipientData))
+
       val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20160415"), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "20100401", Some(""), Some("20100403"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 
-      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
+      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData),transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
-      val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
-      val result = controllerToTest.transferAction(request)
+      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
 
@@ -183,7 +232,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val detailsToCheck = Map(
         "event" -> "create-relationship-GDS",
         "error" -> "errors.CannotCreateRelationship",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)))"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
 
@@ -218,7 +267,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val detailsToCheck = Map(
         "event" -> "create-relationship-PTA",
         "error" -> "errors.CannotCreateRelationship",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)))"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
 

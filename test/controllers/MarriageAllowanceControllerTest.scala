@@ -90,32 +90,42 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
     }
 
     "accept NINO with spaces and mixed case and save it in cannonical form (no spaces, upper case)" in new WithApplication(fakeApplication) {
-      val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("20140101"), "", "")
-      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
-        activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
+      val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
+      val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 3, 24)))
+      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, aivailableTaxYears = List(TaxYear(2014)))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com")))))
 
-      val testComponent = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("transferor-email" -> "example@example.com"), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transferAction(request)
 
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligible-years")
-
-      controllerToTest.cachingRecipientDataToTest shouldBe Some(RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
+      status(result) shouldBe OK
     }
 
     "store data if recipient exists and is not in relationship" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2016, 4, 10))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2015)),
+        recipientDetailsFormData = cacheRecipientFormData))
+
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("20140101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 
-      val testComponent = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData))
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData, testCacheData = Some(updateRelationshipCacheData))
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
-      val result = controllerToTest.transferAction(request)
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
+      val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligible-years")
@@ -298,7 +308,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
 
       document.getElementById("transferor-name").text() shouldBe "Bar"
     }
-    
+
     "retrieve correct keystore data for recipient when first name and last name is not avaliable" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(None, None)))
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
@@ -510,7 +520,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "create-relationship-GDS",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)))"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxSuccessful", detailsToCheck, tags)
     }
@@ -538,11 +548,11 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "create-relationship-PTA",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)))"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxSuccessful", detailsToCheck, tags)
     }
-
+//
     "send audit event if relationship is already created" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
@@ -562,7 +572,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "relationship-exists",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),Some(true),None)"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),Some(true),None,None)"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
     }

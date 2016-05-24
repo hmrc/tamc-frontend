@@ -19,25 +19,16 @@ package services
 import scala.annotation.implicitNotFound
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-import models.RecipientRecord
-import models.RegistrationFormInput
-import models.CacheData
-import models.UserRecord
+import models._
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.play.http.HeaderCarrier
 import config.ApplicationConfig
-import models.NotificationRecord
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
 import utils.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.config.AppName
-import models.LoggedInUserInfo
-import models.RelationshipRecord
-import models.UpdateRelationshipCacheData
 import details.PersonDetails
-import models.TaxYear
-import models.EndRelationshipReason
 
 object CachingService extends CachingService {
   override lazy val http = WSHttp
@@ -59,6 +50,10 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def saveRecipientRecord(recipientRecord: UserRecord, recipientData: RegistrationFormInput, aivailableYears: List[TaxYear])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cache[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD, RecipientRecord(record = recipientRecord, data = recipientData, aivailableTaxYears = aivailableYears)) map
       (_.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD).get.record)
+
+  def saveRecipientDetails(details: RecipientDetailsFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[RecipientDetailsFormInput] =
+    cache[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS, details) map
+      (_.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS).get)
 
   def saveNotificationRecord(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     cache[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD, notificationRecord) map
@@ -95,6 +90,9 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def getPersonDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[PersonDetails]] =
     fetchAndGetEntry[PersonDetails](ApplicationConfig.CACHE_PERSON_DETAILS)
 
+  def getRecipientDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientDetailsFormInput]] =
+    fetchAndGetEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS)
+
   def savePersonDetails(personDetails: PersonDetails)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[PersonDetails] =
     cache[PersonDetails](ApplicationConfig.CACHE_PERSON_DETAILS, personDetails) map
       (_.getEntry[PersonDetails](ApplicationConfig.CACHE_PERSON_DETAILS).get)
@@ -112,7 +110,8 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             recipient = cacheMap.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD),
             notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
             relationshipCreated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE),
-            selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS))))
+            selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
+            recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS))))
 
   def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     fetch() map (
