@@ -16,27 +16,18 @@
 
 package forms
 
-import models.Gender
-import models.RegistrationFormInput
-import play.api.data.FormError
-import play.api.data.Form
-import play.api.data.Forms.mapping
-import play.api.data.Forms.number
-import play.api.data.Forms.of
-import play.api.data.Forms.optional
-import play.api.data.Mapping
-import play.api.data.format.Formatter
-import play.api.data.validation.Constraint
-import play.api.data.validation.Constraints.pattern
-import play.api.data.validation.Invalid
-import play.api.data.validation.Valid
-import play.api.data.validation.ValidationError
-import uk.gov.hmrc.domain.Nino
-import org.joda.time.LocalDate
-import uk.gov.hmrc.play.mappers.DateTuple._
 import config.ApplicationConfig
+import models.{RecipientDetailsFormInput, Gender, RegistrationFormInput}
+import org.joda.time.LocalDate
+import play.api.data.Forms.{mapping, of}
+import play.api.data.{Form, FormError, Mapping}
+import play.api.data.format.Formatter
+import play.api.data.validation.Constraints.pattern
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.play.mappers.DateTuple._
 
-object RegistrationForm {
+object RecipientDetailsForm {
 
   private def maxLengthWithError(maxLength: Int, error: String = "error.maxLength"): Constraint[String] = Constraint[String]("constraint.maxLength", maxLength) { o =>
     if (o == null) Invalid(ValidationError(error, maxLength)) else if (o.size <= maxLength) Valid else Invalid(ValidationError(error, maxLength))
@@ -93,17 +84,11 @@ object RegistrationForm {
     ninoMapping(
       errorRequired = ninoMessageCustomizer("error.required"),
       errorInvalid = ninoMessageCustomizer("error.invalid"))
-      
-  private def dateOfMarriageValidator(today: LocalDate) = {
-    mandatoryDateTuple("pages.form.field.dom.error.required").
-      verifying(error = "pages.form.field.dom.error.min-date", constraint = _.isAfter(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1))).
-      verifying(error = "pages.form.field.dom.error.max-date", constraint = _.isBefore(today.plusDays(1))) }
 
-  def registrationForm(today: LocalDate, transferorNino: Nino) = Form[RegistrationFormInput](
+  def recipientDetailsForm(today: LocalDate, transferorNino: Nino) = Form[RecipientDetailsFormInput](
     mapping(
       "name" -> firstName,
       "last-name" -> lastName,
       "gender" -> gender,
-      "nino" -> nino.verifying("pages.form.field.nino.error.self", recipientNino => !utils.areEqual(transferorNino, recipientNino)),
-      "dateOfMarriage" -> dateOfMarriageValidator(today))(RegistrationFormInput.apply)(RegistrationFormInput.unapply))
+      "nino" -> nino.verifying("pages.form.field.nino.error.self", recipientNino => !utils.areEqual(transferorNino, recipientNino)))(RecipientDetailsFormInput.apply)(RecipientDetailsFormInput.unapply))
 }
