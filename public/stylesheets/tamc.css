@@ -77,9 +77,6 @@ table {
     max-width: 13em;
     text-transform: none;
 }
-#calculator-result{
-	font-weight:900;
-}
 .pagination li.previous {
     float: left;
     text-align: left;
