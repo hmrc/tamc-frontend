@@ -30,7 +30,7 @@
         maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))) {
 
     @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
-        <fieldset><legend class="visuallyhidden">@Html(Messages("pages.form.field.enter-email"))</legend>
+        <fieldset>
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
                 <h1 class="heading-large">@Html(Messages("pages.form.field.your-confirmation"))</h1>
