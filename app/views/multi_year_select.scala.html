@@ -41,7 +41,7 @@
       <fieldset class="inline spacingBottom" id="gender">
       @for(index <- 0 until availableYears.size) {
         <div class="form-group" id="year-@availableYears(index).year-">
-          <h3 class="heading-medium"><span style="color:grey">@TextGenerators.taxDateIntervalShort(availableYears(index).year) tax year</span><br>@TextGenerators.taxDateInterval(availableYears(index).year)</h3>
+          <h2 class="heading-medium"><span style="color:grey">@TextGenerators.taxDateIntervalShort(availableYears(index).year) tax year</span><br>@TextGenerators.taxDateInterval(availableYears(index).year)</h2>
             <div style="margin-top:30px">
               <p>You and <span id="firstNameOnly">@input.name</span> can claim Marriage Allowance for the @TextGenerators.taxDateIntervalShort(availableYears(index).year) tax year if:</p>
                 <ul class="list list-bullet">
@@ -57,6 +57,8 @@
                 Seq((availableYears(index).year.toString, "Yes"), ("0", "No")),
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
+            '_legend -> "Extra years",
+            '_legendClass -> "visuallyhidden",
                 '_groupClass -> "inline spacingBottom"
             )
         </div>
