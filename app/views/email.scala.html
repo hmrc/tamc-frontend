@@ -31,7 +31,6 @@
 
     @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
         <fieldset>
-            <legend class="visuallyhidden">@Html(Messages("pages.form.field.enter-email"))</legend>
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
                 <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
