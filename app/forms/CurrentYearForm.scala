@@ -41,7 +41,6 @@ import models.CurrentYearInput
 object CurrentYearForm {
   def currentYearForm(historicYearsAvailable: Boolean = false) = Form[CurrentYearInput](mapping(
     "applyForCurrentYear" ->
-      optional(boolean).verifying("pages.form.field-required.applyForCurrentYear", _.isDefined),
-    "applyForHistoricYears" ->
-      optional(boolean).verifying("pages.form.field-required.applyForHistoricYears", selection => !(historicYearsAvailable && selection.isEmpty)))(CurrentYearInput.apply)(CurrentYearInput.unapply))
+      optional(boolean).verifying("pages.form.field-required.applyForCurrentYear", _.isDefined)
+    )(CurrentYearInput.apply)(CurrentYearInput.unapply))
 }
