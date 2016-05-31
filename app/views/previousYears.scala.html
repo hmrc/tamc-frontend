@@ -1,0 +1,46 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(input:RegistrationFormInput,
+availableYears:List[TaxYear] = List[TaxYear]())(
+    implicit lang: Lang,
+        request: Request[_],
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
+
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.time.TaxYearResolver
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
+@import java.text.NumberFormat
+
+@templates.tamc_main(
+    title = Messages("title.pattern", Messages("title.extra-years")),
+    mainConfig = views.helpers.MainConfig(
+        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:current-year-select")))) {
+
+
+  <h1 class="heading-xlarge" id="heading">You can apply for earlier tax years</h1>
+  <p class="lede">You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.</p>
+
+
+  <p>You told us you married or formed a civil partnership with <span id="firstNameOnly">@input.name</span> on <span id="marriageDate">@TextGenerators.ukDateTransformer(Some(input.dateOfMarriage))</span>. This means you can apply for earlier tax years.</p>
+ <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" type="submit">@Html(Messages("generic.continue"))</a>
+  }
+

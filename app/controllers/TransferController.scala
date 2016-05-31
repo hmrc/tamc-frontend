@@ -59,7 +59,7 @@ import errors.TransferorDeceased
 import details.CitizenDetailsService
 import details.TamcUser
 import scala.concurrent.ExecutionContext.Implicits.global
-import forms.MultiYearForm.multiYearForm
+import forms.MultiYearForm._
 import services.TimeService
 import services.CachingService
 import forms.CurrentYearForm.currentYearForm
@@ -136,7 +136,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
             case (false, extraYears, recipient) if (extraYears.isEmpty) =>
               throw new NoTaxYearsAvailable
             case (false, extraYears, recipient) if (!extraYears.isEmpty) =>
-              Ok(views.html.multi_year_select(multiYearForm(), recipient.data, extraYears))
+              Ok(views.html.previousYears(recipient.data, extraYears))
             case (currentYearAvailable, extraYears, recipient) =>
               Ok(views.html.eligible_years(
                 currentYearForm(!extraYears.isEmpty),
@@ -168,16 +168,24 @@ trait TransferController extends FrontendController with AuthorisedActions with 
                     _ =>
                       if (extraYears.isEmpty && currentYearAvailable && (success.applyForCurrentYear != Some(true))) {
                         throw new NoTaxYearsSelected
-                      } else if (!extraYears.isEmpty && currentYearAvailable && !(success.applyForCurrentYear == Some(true) || success.applyForRetrospectiveYears == Some(true))) {
-                        throw new NoTaxYearsSelected
-                      } else if (!extraYears.isEmpty && success.applyForRetrospectiveYears == Some(true)) {
-                        Ok(views.html.multi_year_select(multiYearForm(), recipient.data, extraYears))
+                      } else if (!extraYears.isEmpty) {
+                        Ok(views.html.previousYears(recipient.data, extraYears))
                       } else {
                         Redirect(controllers.routes.TransferController.confirmYourEmail())
                       }
                   }
                 })
           } recover (handleError)
+  }
+
+  def previousYears =  TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          registrationService.getCurrentAndExtraYearEligibility flatMap {
+            case (currentYearAvailable, extraYears, recipient) =>
+                 Future.successful(Ok(views.html.multi_year_select(multiYearForm(), recipient.data, extraYears)))
+          }recover (handleError)
   }
 
   def extraYearsAction = TamcAuthPersonalDetailsAction {

@@ -39,7 +39,7 @@
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:current-year-select")))) {
 
 
-  <h1 class="heading-xlarge">Tax years you are eligible for</h1>
+  <h1 class="heading-xlarge">You can apply for the current tax year</h1>
 
    @templates.form_error_notification(form)
 
@@ -53,7 +53,7 @@
   </ul>
 
   @helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
-    <div @if(historicYearsAvailable) {class="form-group grey-underline-large-thick"} else {class="form-group"} id="applyForCurrentYear">
+    <div @if(historicYearsAvailable) {class="form-group"} id="applyForCurrentYear">
       <h3 class="heading-small">Do you want to apply for this current tax year onwards?</h3>
       @templates.input_radio_group(
           form("applyForCurrentYear"),
@@ -65,33 +65,18 @@
         '_legendClass -> "visuallyhidden",
         '_groupClass -> "inline spacingBottom"
       )
-        
+
         @if(historicYearsAvailable) {
-            <div class="tamc-js-hidden error-inline validation-summary" id="current-year-error">
-                You can still apply for earlier tax years below.
-            </div>
-            <script>
+        <div class="tamc-js-hidden error-inline validation-summary" id="current-year-error">
+            You can apply for earlier years if you continue.
+        </div>
+        <script>
                     var _gaq = [];
             </script>
         }
         <br><br>
     </div>
 
-    @if(historicYearsAvailable) {
-    <div class="form-group" id="applyForHistoricYears">
-      <h3 class="heading-medium">You might also be eligible for earlier tax years</h3>
-      <h4 class="heading-small">Do you want to apply for these additional years also?</h4>
-      @templates.input_radio_group(
-          form("applyForHistoricYears"),
-          Seq(("true", "Yes"), ("false", "No")),   
-            '_labelClass -> "block-label",
-            '_labelAfter -> true,
-        '_legend -> "Earlier years",
-        '_legendClass -> "visuallyhidden",
-            '_groupClass -> "inline spacingBottom"
-      )
-    </div>
-    }
 
     <p class="get-started group" id="get-started">
      <button class="button" type="submit">@Html(Messages("generic.continue"))</button>

@@ -18,6 +18,7 @@ POST   /transfer-allowance           controllers.TransferController.transferActi
 POST   /date-of-marriage             controllers.TransferController.dateOfMarriageAction
 GET    /eligible-years               controllers.TransferController.eligibleYears
 POST   /eligible-years               controllers.TransferController.eligibleYearsAction
+GET    /previous-years               controllers.TransferController.previousYears
 POST   /extra-years                  controllers.TransferController.extraYearsAction
 GET    /confirm-your-email           controllers.TransferController.confirmYourEmail
 POST   /confirm-your-email           controllers.TransferController.confirmYourEmailAction

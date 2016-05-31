@@ -41,7 +41,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transfer(request)
-      
+
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       val transferor = document.getElementById("transferor-name")
@@ -232,7 +232,7 @@ class ContentTest extends UnitSpec with TestUtility {
       labelNino.getElementsByClass("error-message").first().text() shouldBe "You can't enter your own details."
       document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
     }
-    
+
     "display form error message when recipient nino equals transferor nino (including mixed case and spaces)" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
@@ -501,6 +501,33 @@ class ContentTest extends UnitSpec with TestUtility {
 
       val err = field.getElementsByClass("client-error-notification")
       err.size() shouldBe 1
+    }
+  }
+
+  "Calling Previous year page " should {
+    "display dynamic message " in new WithApplication(fakeApplication) {
+
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        recipientDetailsFormData = cacheRecipientFormData))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("applyForCurrentYear" -> "true"))
+      val result = controllerToTest.eligibleYearsAction(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("firstNameOnly").text() shouldBe "foo"
+      document.getElementById("marriageDate").text() shouldBe "10 April 2011"
+
     }
   }
 

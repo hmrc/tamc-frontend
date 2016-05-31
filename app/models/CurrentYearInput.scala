@@ -16,4 +16,4 @@
 
 package models
 
-case class CurrentYearInput(applyForCurrentYear: Option[Boolean], applyForRetrospectiveYears: Option[Boolean])
+case class CurrentYearInput(applyForCurrentYear: Option[Boolean])
