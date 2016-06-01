@@ -18,14 +18,11 @@ package services
 
 import java.text.SimpleDateFormat
 import java.util.Date
-
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-
 import config.ApplicationConfig
 import connectors.ApplicationAuditConnector
 import connectors.MarriageAllowanceConnector
@@ -68,6 +65,7 @@ import uk.gov.hmrc.play.audit.model.AuditEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.time.TaxYearResolver
+import errors.RecipientNotFound
 
 object UpdateRelationshipService extends UpdateRelationshipService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
@@ -292,7 +290,7 @@ trait UpdateRelationshipService {
           case UpdateRelationshipResponse(ResponseStatus("OK"))                                    => data
           case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CANNOT-UPDATE-RELATIONSHIP")) => throw CannotUpdateRelationship() //TODO handle the errors
           case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CITIZEN-NOT-FOUND"))          => throw CitizenNotFound()
-          case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:BAD-REQUEST"))                => throw BadFetchRequest()
+          case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:BAD-REQUEST"))                => throw RecipientNotFound()
         }
     } recover {
       case error =>
