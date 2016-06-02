@@ -60,17 +60,12 @@ $(function() {
     });
 });
 
-
 $(function() {
 
      var $radio = $("input:radio[name=marriage-criteria]");
   	 $radio.click(function(){
-
         var $input = $("input:radio[value=true]:checked").val();
-
         if ($input) {
-
-
           ga('send', {
             			hitType: 'event',
             			eventCategory: 'marriage-allowance',
@@ -78,21 +73,15 @@ $(function() {
            			    eventLabel: 'married_yes'
 
           });
-
         } else {
-
              ga('send', {
-                                    hitType: 'event',
-                                    eventCategory: 'marriage-allowance',
-                                    eventAction: 'radio selection',
-                            	    eventLabel: 'married_no'
-
+                             hitType: 'event',
+                             eventCategory: 'marriage-allowance',
+                             eventAction: 'radio selection',
+                             eventLabel: 'married_no'
              });
-
         }
-
    	 });
-
  });
 
  $(function() {
@@ -112,90 +101,67 @@ $(function() {
             			eventLabel: 'lowerearner_yes'
 
            });
-
          } else {
 
               ga('send', {
-                                     hitType: 'event',
-                                     eventCategory: 'marriage-allowance',
-                                     eventAction: 'radio selection',
-                             	     eventLabel: 'lowerearner_no'
-
+                             hitType: 'event',
+                             eventCategory: 'marriage-allowance',
+                             eventAction: 'radio selection',
+                             eventLabel: 'lowerearner_no'
               });
-
          }
-
     	 });
-
   });
 
   $(function() {
 
        var $radio = $("input:radio[name=partners-income]");
     	 $radio.click(function(){
-
-          var $input = $("input:radio[value=true]:checked").val();
-
+         var $input = $("input:radio[value=true]:checked").val();
           if ($input) {
-
-
             ga('send', {
               			hitType: 'event',
               			eventCategory: 'marriage-allowance',
               			eventAction: 'radio selection',
              			eventLabel: 'partnersincome_yes'
-
             });
-
           } else {
 
                ga('send', {
-                                      hitType: 'event',
-                                      eventCategory: 'marriage-allowance',
-                                      eventAction: 'radio selection',
-                              	      eventLabel: 'partnersincome_no'
-
+                              hitType: 'event',
+                              eventCategory: 'marriage-allowance',
+                              eventAction: 'radio selection',
+                              eventLabel: 'partnersincome_no'
                });
-
           }
-
      	 });
-
    });
 
    $(function() {
 
         var $radio = $("input:radio[name=applyForCurrentYear]");
      	 $radio.click(function(){
-
-
            var $input = $("input:radio[value=true]:checked").val();
 
            if ($input) {
-
-
              ga('send', {
                			hitType: 'event',
                			eventCategory: 'marriage-allowance',
                			eventAction: 'radio selection',
               			eventLabel: 'currentyear_yes'
-
              });
 
            } else {
 
                 ga('send', {
-                                       hitType: 'event',
-                                       eventCategory: 'marriage-allowance',
-                                       eventAction: 'radio selection',
-                               	       eventLabel: 'currentyear_no'
-
+                              hitType: 'event',
+                              eventCategory: 'marriage-allowance',
+                              eventAction: 'radio selection',
+                              eventLabel: 'currentyear_no'
                 });
-
            }
 
       	 });
-
     });
 
      $(function() {
@@ -212,7 +178,7 @@ $(function() {
           			eventAction: 'outboundlink',
           			eventLabel: "'"+$path+"" + "click'",
         				hitCallback: function() {
-//             			window.location.href = $href;
+             			window.location.href = $href;
         				}
         		});
 
