@@ -153,7 +153,7 @@ $(function() {
                                       hitType: 'event',
                                       eventCategory: 'marriage-allowance',
                                       eventAction: 'radio selection',
-                              	     eventLabel: 'partnersincome_no'
+                              	      eventLabel: 'partnersincome_no'
 
                });
 
@@ -167,6 +167,7 @@ $(function() {
 
         var $radio = $("input:radio[name=applyForCurrentYear]");
      	 $radio.click(function(){
+
 
            var $input = $("input:radio[value=true]:checked").val();
 
@@ -196,6 +197,28 @@ $(function() {
       	 });
 
     });
+
+     $(function() {
+
+        var $breadCrumb = $("#global-breadcrumb nav ol li a");
+        	$breadCrumb.click(function(){
+
+        		event.preventDefault();
+        		$href = $(this).attr('href')
+        		$path = $href.substring($href.lastIndexOf("/")+1);
+        		ga('send', {
+          			hitType: 'event',
+          			eventCategory: 'marriage-allowance',
+          			eventAction: 'outboundlink',
+          			eventLabel: "'"+$path+"" + "click'",
+        				hitCallback: function() {
+//             			window.location.href = $href;
+        				}
+        		});
+
+        	});
+
+        });
 
 function toggle_div(divId) {
 	$("#" + divId).toggle();

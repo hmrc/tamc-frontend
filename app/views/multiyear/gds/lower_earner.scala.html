@@ -29,9 +29,7 @@ import config.ApplicationConfigired by applicable law or agreed to in writing, s
 @import java.text.NumberFormat
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligibility")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:income-eligibility-check")))) {
+    title = Messages("title.pattern", Messages("title.eligibility"))){
     <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1"))</h1>
     <p class="information">@Html(Messages("eligibility.check.lower.earner.information", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</p>
     @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = Messages("pages.form.error.mandatory.data"))

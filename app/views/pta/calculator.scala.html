@@ -25,9 +25,7 @@
 @import uk.gov.hmrc.play.views.html._
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligibility-criteria")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:calculator")))) {
+    title = Messages("title.pattern", Messages("title.eligibility-criteria"))){
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p>@Html(Messages("pages.calc.skip-it.pre")) <a href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.skip-it"))</a></p>
 

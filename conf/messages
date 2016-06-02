@@ -321,7 +321,7 @@ pages.finished.para7=There is no need to contact us.
 pages.finished.back-pta=Back to Personal Tax Account
 pages.finished.para8=You can check the personal tax account to view your marriage allowance and make changes at any time.
 pages.finished.check-marriage-allowance-button=Check your Marriage Allowance
-pages.finished.check-link-para=You can <a id="pta-link" href="{0}">check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
+pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
 pages.finished.survey-link=<a id="survey-link" href="{0}">What did you think of this service?</a> (takes 30 seconds)
 
 

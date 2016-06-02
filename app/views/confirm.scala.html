@@ -28,9 +28,7 @@
 @import java.text.NumberFormat
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.confirm-recipient")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))) {
+    title = Messages("title.pattern", Messages("title.confirm-recipient"))){
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
     <table>
     <col width="30%">

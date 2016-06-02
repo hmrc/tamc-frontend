@@ -19,19 +19,18 @@
 @import play.twirl.api.Html
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.non-eligible")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:non-eligible")))) {
+    title = Messages("title.pattern", Messages("title.non-eligible"))){
     <h1>@Html(Messages("eligibility.check.header"))</h1>
     <p class="panel-indent">@Html(Messages("eligibility.check.non-eligible"))</p>
 
     <p>
-        <a id="button-finished" class="button" role="button" href="https://www.gov.uk/marriage-allowance-guide">
+        <a id="button-finished" class="button" role="button" href="https://www.gov.uk/marriage-allowance-guide" data-journey-click="marriage-allowance:button:finished_via_eligibilitycheck" >
             @Html(Messages("generic.finish"))
         </a>
     </p>
-    <a href="@controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck" data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back">
+    <a href="@controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck" data-journey-click="marriage-allowance:click:back-on-to-eligibilitycheck" id="back">
         @Html(Messages("generic.back"))
     </a>
 }
 
+click

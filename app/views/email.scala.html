@@ -25,10 +25,7 @@
 @import views.helpers.TextGenerators
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.confirm-email")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))) {
-
+    title = Messages("title.pattern", Messages("title.confirm-email"))){
     @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
         <fieldset>
             @templates.form_error_notification(recipientForm)

@@ -24,9 +24,7 @@
     @import uk.gov.hmrc.play.views.html._
 
     @templates.tamc_main(
-        title = Messages("title.pattern", Messages("title.eligibility")),
-        mainConfig = views.helpers.MainConfig(
-            maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:eligibility-check")))) {
+        title = Messages("title.pattern", Messages("title.eligibility"))){
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
         @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = Messages("pages.form.error.mandatory.data"))
         @helpers.form(action = routes.MultiYearPtaEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {

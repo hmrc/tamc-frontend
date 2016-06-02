@@ -24,9 +24,7 @@
 @import config.ApplicationConfig
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.finished")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))) {
+    title = Messages("title.pattern", Messages("title.finished"))){
     <div class="highlighted-event">
         <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">@Html(Messages("pages.finished.successful"))</h1>
     </div>

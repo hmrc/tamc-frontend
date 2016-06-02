@@ -31,11 +31,7 @@ availableYears:List[TaxYear] = List[TaxYear]())(
 @import java.text.NumberFormat
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.extra-years")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:current-year-select")))) {
-
-
+    title = Messages("title.pattern", Messages("title.extra-years"))){
   <h1 class="heading-xlarge" id="heading">You can apply for earlier tax years</h1>
   <p class="lede">You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.</p>
 

@@ -19,12 +19,10 @@
 @import play.twirl.api.Html
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.error")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:timed-out")))) {
+    title = Messages("title.pattern", Messages("title.error"))){
     <p id="error"><strong>@Html(Messages("pages.errors.timeout-pta.header"))</strong></p>
     <p>@Html(Messages("pages.errors.timeout-pta.action"))</p>
     <p class="get-started group" id="continue-to-application">
-        <a href="/personal-account" class="button" role="button" id="timed-out">@Html(Messages("pages.errors.timeout-pta.back"))</a>
+        <a href="/personal-account" class="button" role="button" id="timed-out" data-journey-click="marriage-allowance:button:back-to-pta">@Html(Messages("pages.errors.timeout-pta.back"))</a>
     </p>
 }
