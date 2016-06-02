@@ -502,6 +502,31 @@ class ContentTest extends UnitSpec with TestUtility {
       val err = field.getElementsByClass("client-error-notification")
       err.size() shouldBe 1
     }
+
+    "display form error message (date of marriage is left empty)" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
+      val testComponent = makeTestComponent(
+        "user_happy_path",
+        transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> ""), ("dateOfMarriage.month" -> ""), ("dateOfMarriage.year" -> ""))
+      val result = controllerToTest.dateOfMarriageAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("date-of-marriage-form")
+      form shouldNot be(null)
+
+      val field = form.getElementById("dateOfMarriage")
+      field shouldNot be(null)
+
+      val err = field.getElementsByClass("client-error-notification")
+      val labelName = form.select("fieldset[id=dateOfMarriage]").first()
+      err.size() shouldBe 1
+      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us your date of marriage."
+      document.getElementById("dateOfMarriage-error").text() shouldBe "Confirm your date of marriage"
+    }
   }
 
   "Calling Previous year page " should {
@@ -528,6 +553,34 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("firstNameOnly").text() shouldBe "foo"
       document.getElementById("marriageDate").text() shouldBe "10 April 2011"
 
+    }
+    "display form error message (no year choice made )" in new WithApplication(fakeApplication) {
+
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        recipientDetailsFormData = cacheRecipientFormData))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("year" -> "List(0)"))
+      val result = controllerToTest.extraYearsAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
+      val form = document.getElementById("eligible-years-form")
+      form shouldNot be(null)
+      val labelName = form.select("fieldset[id=year_2015]").first()
+      labelName.getElementsByClass("error-notification").first() shouldNot be(null)
+      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us whether you'd like to apply for the previous 2015 to 2016 tax year"
+      document.getElementById("year-2015--error").text() shouldBe "Confirm whether you'd like to apply for the previous 2015 to 2016 tax year"
     }
   }
 
