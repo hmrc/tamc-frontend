@@ -598,7 +598,6 @@ class ContentTest extends UnitSpec with TestUtility {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your email address."
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:email-erroneous(transferor-email)").size() shouldBe 1
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
     }
 
