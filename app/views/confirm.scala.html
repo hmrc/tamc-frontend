@@ -28,9 +28,7 @@
 @import java.text.NumberFormat
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.confirm-recipient")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))) {
+    title = Messages("title.pattern", Messages("title.confirm-recipient"))){
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
     <table>
     <col width="30%">
@@ -99,7 +97,7 @@
     </div>
     @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
         <p>
-            <button data-journey-click="marriage-allowance:click:advance-from-confirm" id="create" type="submit">Confirm your application</button>
+            <button data-journey-click="marriage-allowance:button:application_confirm" id="create" type="submit">Confirm your application</button>
         </p>
     }
 }

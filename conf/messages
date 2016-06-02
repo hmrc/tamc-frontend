@@ -275,8 +275,9 @@ income.check.information=Your income is what you expect to recieve each tax year
 income.check.information1=You can find previous tax year earnings on a P60. You don''t need to include any tax-free savings interest up to £5,000. <a id="calculator" href="#TODBADDED">You can calculate how much tax you''ll pay as a couple.</a>
 eligibility.check.couples-allowance=If one of you was born before 6 April 1935, you may benefit more by applying for <a id="married-couples" href="https://www.gov.uk/married-couples-allowance" rel="external">Married Couple''s Allowance</a> instead.
 income.check.couples-allowance=To benefit as a couple for Marriage Allowance your income should be at or below the <a id="personal-allowance" href="#TODBADDED" rel="external">Personal Allowance</a> level.
-eligibility.check.married=Are you currently married or in a legally registered <a id="civil-partnership" href="https://www.gov.uk/marriages-civil-partnerships/overview" rel="external">civil partnership</a>?
+eligibility.check.married=Are you currently married or in a legally registered <a id="civil-partnership" href="https://www.gov.uk/marriages-civil-partnerships/overview" rel="external" data-journey-click="marriage-allowance:outboundlink:civil partnership">civil partnership</a>?
 eligibility.check.married.legend=Are you married or in a legally registered civil partnership?
+eligibility.check.yes = Yes
 eligibility.check.married.error=You aren''t eligible for Marriage Allowance because you aren''t married or in a legally registered civil partnership.
 multiyear.check.income=Since 6 April 2015 was your annual income at or below the Personal Allowance level?
 mutliyear.check.recipient=Since 6 April 2015 was your spouse or civil partner a basic rate tax payer?
@@ -320,7 +321,7 @@ pages.finished.para7=There is no need to contact us.
 pages.finished.back-pta=Back to Personal Tax Account
 pages.finished.para8=You can check the personal tax account to view your marriage allowance and make changes at any time.
 pages.finished.check-marriage-allowance-button=Check your Marriage Allowance
-pages.finished.check-link-para=You can <a id="pta-link" href="{0}">check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
+pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
 pages.finished.survey-link=<a id="survey-link" href="{0}">What did you think of this service?</a> (takes 30 seconds)
 
 

@@ -137,7 +137,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRecipientDataToTest shouldBe Some(RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
     }
 
-    "display noeligibleyears page if user user is eligible for none years on eligibleYears page" in new WithApplication(fakeApplication) {
+    "display no eligible years page if user user is eligible for none years on eligibleYears page" in new WithApplication(fakeApplication) {
 
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
@@ -171,6 +171,26 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("heading").text() shouldBe "You can apply for earlier tax years"
+    }
+    "display the current eligible years page" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        recipientDetailsFormData = cacheRecipientFormData))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.eligibleYears(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
     }
 
     "show No Tax Years selected page if user is only eligible for current year and chooses no" in new WithApplication(fakeApplication) {
@@ -260,6 +280,27 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("heading").text() shouldBe "You can apply for earlier tax years"
     }
+
+    "previous year form with error" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        recipientDetailsFormData = cacheRecipientFormData))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("applyForCurrentYear" -> ""))
+      val result = controllerToTest.eligibleYearsAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+
+    }
   }
 
   "Calling earlier years select page" should {
@@ -285,6 +326,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
     }
+
   }
 
 

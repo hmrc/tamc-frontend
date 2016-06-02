@@ -23,14 +23,12 @@
     @import uk.gov.hmrc.play.views.html._
 
     @templates.tamc_main(
-        title = Messages("title.pattern", Messages("title.eligibility")),
-        mainConfig = views.helpers.MainConfig(
-            maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:eligibility-check")))) {
+        title = Messages("title.pattern", Messages("title.eligibility"))){
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
         @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = Messages("pages.form.error.mandatory.data"))
         @helpers.form(action = routes.MultiYearGdsEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
             <div class="form-group inline">
-                <p class="bold-small">@Html(Messages("eligibility.check.married"))</p>
+                <p class="bold-small" >@Html(Messages("eligibility.check.married"))</p>
                 @templates.input_radio_group(
                     eligibilityCheckForm("marriage-criteria"),
                     Seq(("true", "Yes"), ("false", "No")),
@@ -46,11 +44,8 @@
             @Html(Messages("eligibility.check.married.error"))
             </div>
 
-            <script>
-                    var _gaq = [];
-            </script>
             <div class="form-group">
-                <button class="button button-calculate" data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue" type="submit">
+                <button class="button button-calculate" data-journey-click="marriage-allowance:button:married_continue" id="continue" type="submit">
                     @Html(Messages("generic.continue"))
                 </button>
             </div>

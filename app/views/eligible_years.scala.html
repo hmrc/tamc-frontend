@@ -34,11 +34,7 @@
 @import java.text.NumberFormat
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligible-years")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:current-year-select")))) {
-
-
+    title = Messages("title.pattern", Messages("title.eligible-years"))){
   <h1 class="heading-xlarge">You can apply for the current tax year</h1>
 
    @templates.form_error_notification(form)
@@ -79,7 +75,7 @@
 
 
     <p class="get-started group" id="get-started">
-     <button class="button" type="submit">@Html(Messages("generic.continue"))</button>
+     <button class="button" type="submit" data-journey-click="marriage-allowance:button:currentyear_continue">@Html(Messages("generic.continue"))</button>
     </p>
   }
 }

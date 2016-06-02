@@ -29,10 +29,7 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.extra-years")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:multi-year-select")))) {
-
+    title = Messages("title.pattern", Messages("title.extra-years"))){
     <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
     
     @templates.form_error_notification(form)
@@ -65,7 +62,7 @@
       }
       </fieldset>
     <p class="get-started group" id="get-started">
-        <button class="button" type="submit">@Html(Messages("generic.continue"))</button>
+        <button class="button" type="submit" data-journey-click="marriage-allowance:button:previousyear_continue">@Html(Messages("generic.continue"))</button>
     </p>
     }
 }

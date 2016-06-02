@@ -21,16 +21,14 @@
 @import play.twirl.api.Html
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.verify")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:verify")))) {
+    title = Messages("title.pattern", Messages("title.verify"))){
     <h1 class="heading-xlarge">@Html(Messages("pages.verify_triage.header"))</h1>
     <p>@Html(Messages("pages.verify_triage.para1"))</p>
     <p>@Html(Messages("pages.verify_triage.para2"))</p>
     <div class="form-group">
         <a href="@{
             controllers.routes.UpdateRelationshipController.history
-        }" id="verify" data-journey-click="marriage-allowance:click:triage-verify" class="button" role="button">
+        }" id="verify" data-journey-click="marriage-allowance:button:ivpage_continue" class="button" role="button">
         @Html(Messages("generic.start-now"))
         </a>
     </div>

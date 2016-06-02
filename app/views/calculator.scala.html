@@ -24,9 +24,7 @@
 @import uk.gov.hmrc.play.views.html._
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligibility-criteria")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:calculator")))) {
+    title = Messages("title.pattern", Messages("title.eligibility-criteria"))){
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p>@Html(Messages("pages.calc.para1"))</p>
     @helpers.form(action = routes.GdsEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
@@ -55,7 +53,7 @@
             </div>
         </fieldset>
         @templates.calculator_result(calculationResult)
-        <p><button class="button button-calculate" data-journey-click="marriage-allowance:click:calculate" id="calculate" type="submit">@Html(Messages("estimate.tax.saving"))</button>
+        <p><button class="button button-calculate" data-journey-click="marriage-allowance:button:calculate" id="calculate" type="submit">@Html(Messages("estimate.tax.saving"))</button>
         </p>
     }
     <div class="blue-underline-large"></div>

@@ -33,8 +33,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version")
 
-  override lazy val analyticsToken: String = loadConfig("google-analytics.token")
-  override lazy val analyticsHost: String = loadConfig("google-analytics.host")
+  override lazy val analyticsToken: Option[String] = configuration.getString("google-analytics.token")
+  override lazy val analyticsHost: String = configuration.getString("google-analytics.host").getOrElse("auto")
 
   override lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
   override lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
@@ -80,12 +80,12 @@ trait ApplicationConfig {
 
   val assetsPrefix: String
 
-  val analyticsToken: String
-  val analyticsHost: String
-
   val loginUrl: String
   val logoutUrl: String
   val callbackUrl: String
+
+  val analyticsToken: Option[String]
+  val analyticsHost: String
 
   def ivNotAuthorisedUrl: String
   private def createUrl(action: String) = s"${loginUrl}/${action}?origin=ma&confidenceLevel=100&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
