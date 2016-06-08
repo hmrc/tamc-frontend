@@ -483,3 +483,7 @@ technical.cannot-find-details.h1 = We cannot find your Marriage Allowance detail
 technical.cannot-find-details.para1 = Call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call
 technical.technical-error.h1 = There has been a technical error
 technical.technical-error.para1 = Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.
+
+generic.translation.text=This page is also available in
+generic.translation.english=English
+generic.translation.welsh=Welsh (Cymraeg)

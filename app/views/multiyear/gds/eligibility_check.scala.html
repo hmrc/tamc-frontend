@@ -24,6 +24,8 @@
 
     @templates.tamc_main(
         title = Messages("title.pattern", Messages("title.eligibility"))){
+        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(), 
+                           controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString())
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
         @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = Messages("pages.form.error.mandatory.data"))
         @helpers.form(action = routes.MultiYearGdsEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {

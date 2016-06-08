@@ -22,6 +22,8 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.verify"))){
+     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishVerify.toString(), 
+                controllers.routes.LanguageController.switchToWelshVerify.toString())    
     <h1 class="heading-xlarge">@Html(Messages("pages.verify_triage.header"))</h1>
     <p>@Html(Messages("pages.verify_triage.para1"))</p>
     <p>@Html(Messages("pages.verify_triage.para2"))</p>
