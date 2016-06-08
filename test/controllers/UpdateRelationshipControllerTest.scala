@@ -128,7 +128,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason(EndReasonCode.CANCEL))
     }
 
-    "have update relationship details in cache " in new WithApplication(fakeApplication) {
+    "have update relationship details in cache with Cancel end reason" in new WithApplication(fakeApplication) {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -142,6 +142,21 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe OK
 
+    }
+
+    "have update relationship details in cache with rejection reason and end date from service call" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "", "20150101", Some(""), Some(""), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
+        activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT)), relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmUpdate()(request)
+
+      status(result) shouldBe OK
     }
 
     "have update relationship action details in cache " in new WithApplication(fakeApplication) {
@@ -196,6 +211,63 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished-change")
+    }
+
+    "confirm rejection of relationship" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "", Some(""), Some(""), "", "")
+      val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "", Some(""), Some(""), "", "")
+      val historic2Record = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("1-01-2014"), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(
+        loggedInUserInfo = Some(loggedInUser),
+        activeRelationshipRecord = Some(relationshipRecord),
+        historicRelationships = Some(Seq(historic1Record, historic2Record)),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.REJECT, timestamp = Some("98765"))),
+        relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmReject()(request)
+
+      status(result) shouldBe OK
+    }
+
+    "Finish update after change of circumstances journey for recipient rejection" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "", Some(""), Some(""), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(
+        loggedInUserInfo = Some(loggedInUser),
+        activeRelationshipRecord = Some(relationshipRecord),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.REJECT, timestamp = Some("98765"))),
+        relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.finishUpdate()(request)
+
+      status(result) shouldBe OK
+    }
+
+    "Finish update after change of circumstances journey for transferor rejects" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "123456", "", Some(""), Some(""), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(
+        loggedInUserInfo = Some(loggedInUser),
+        activeRelationshipRecord = Some(relationshipRecord),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.CANCEL, timestamp = Some("98765"))),
+        relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.finishUpdate()(request)
+
+      status(result) shouldBe OK
     }
   }
 

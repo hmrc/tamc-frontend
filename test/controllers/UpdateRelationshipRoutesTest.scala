@@ -16,14 +16,17 @@
 
 package controllers
 
+import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import play.api.test.Helpers.{ OK, SEE_OTHER, BAD_REQUEST, contentAsString, defaultAwaitTimeout, redirectLocation }
 import play.api.test.WithApplication
-import test_utils.UpdateRelationshipTestUtility
+import test_utils.TestData.{Ninos, Cids}
+import test_utils.{TestConstants, UpdateRelationshipTestUtility}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 import play.api.test.WithApplication
-import models.{ Role, EndReasonCode }
-import models.EndRelationshipReason
+import models._
 
 class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility {
 
@@ -173,6 +176,39 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val request = testComponent.request
       val result = controllerToTest.confirmCancel()(request)
       status(result) shouldBe OK
+    }
+  }
+
+  "Date of divorce page" should {
+    "display error entering no date on date of divorce page" in new WithApplication(fakeApplication) {
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(
+        "role" -> "Transferor",
+        "endReason" -> EndReasonCode.DIVORCE_PY,
+        "dateOfDivorce.day" -> "",
+        "dateOfDivorce.month" -> "",
+        "dateOfDivorce.year" -> "")
+      val result = controllerToTest.divorceSelectYear()(request)
+
+      status(result) shouldBe BAD_REQUEST
+    }
+
+    "display divorce info page if correct but invalid date entered" in new WithApplication(fakeApplication) {
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(
+        "role" -> Role.TRANSFEROR,
+        "endReason" -> EndReasonCode.DIVORCE_CY,
+        "historicActiveRecord" -> "true",
+        "dateOfDivorce.day" -> "1",
+        "dateOfDivorce.month" -> "1",
+        "dateOfDivorce.year" -> "2016")
+      val result = controllerToTest.divorceSelectYear()(request)
+      status(result) shouldBe OK
+
+      val document = Jsoup.parse(contentAsString(result))
+      val hiddenDay = document.getElementsByAttributeValue("name", "dateOfDivorce.day") shouldNot be(null)
     }
   }
 

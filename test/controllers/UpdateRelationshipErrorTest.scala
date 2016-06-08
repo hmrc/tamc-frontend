@@ -16,14 +16,16 @@
 
 package controllers
 
+import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import play.api.test.Helpers.{ BAD_REQUEST, contentAsString, defaultAwaitTimeout }
 import play.api.test.WithApplication
+import test_utils.TestData.{Ninos, Cids}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import models.{ NotificationRecord, UpdateRelationshipCacheData, LoggedInUserInfo, RelationshipRecord, Role, EndReasonCode }
+import models._
 import test_utils.{ UpdateRelationshipTestUtility, TestConstants }
-import models.EndRelationshipReason
 
 class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility {
 
@@ -64,7 +66,6 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
       error should be("Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.")
 
     }
-
   }
 
   "Update relationship" should {
@@ -118,6 +119,5 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
       error should be("Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.")
 
     }
-
   }
 }
