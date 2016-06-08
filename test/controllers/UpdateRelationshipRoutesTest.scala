@@ -22,11 +22,9 @@ import play.api.test.Helpers.{ OK, SEE_OTHER, BAD_REQUEST, contentAsString, defa
 import play.api.test.WithApplication
 import test_utils.TestData.{Ninos, Cids}
 import test_utils.{TestConstants, UpdateRelationshipTestUtility}
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 import play.api.test.WithApplication
-import models._
+import models.{ Role, EndReasonCode, EndRelationshipReason }
 
 class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility {
 

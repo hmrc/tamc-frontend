@@ -296,7 +296,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("heading").text() shouldBe "You can apply for earlier tax years"
     }
 
-    "current year form with error" in new WithApplication(fakeApplication) {
+    "previous year form with error" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))

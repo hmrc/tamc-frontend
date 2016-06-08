@@ -24,7 +24,7 @@ import test_utils.TestData.{Ninos, Cids}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import models._
+import models.{ NotificationRecord, UpdateRelationshipCacheData, LoggedInUserInfo, RelationshipRecord, Role, EndReasonCode, EndRelationshipReason }
 import test_utils.{ UpdateRelationshipTestUtility, TestConstants }
 
 class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility {
