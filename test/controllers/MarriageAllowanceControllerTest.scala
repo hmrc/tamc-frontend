@@ -70,6 +70,21 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       form.getElementsByClass("error-notification").first() shouldNot be(null)
     }
 
+    "Invalid gender error" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "X"), ("nino" -> Ninos.ninoWithLOA1))
+      val result = controllerToTest.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      form.getElementsByClass("error-notification").first() shouldNot be(null)
+    }
+
     "not store data if recipient form data is not provided" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
@@ -172,6 +187,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("heading").text() shouldBe "You can apply for earlier tax years"
     }
+
     "display the current eligible years page" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
@@ -210,7 +226,6 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("message").text() shouldBe "You haven't selected any tax years to apply for"
     }
-
   }
 
   "Calling previous year page" should{
@@ -326,9 +341,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
     }
-
   }
-
 
   "Calling confirm and apply page" should {
 
