@@ -95,7 +95,7 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
 
     }
 
-    "return an error on bad request" in new WithApplication(fakeApplication) {
+    "return an error on bad request/recipient deceased/recipient not found" in new WithApplication(fakeApplication) {
 
       val loggedInUser = LoggedInUserInfo(999700102, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
@@ -112,11 +112,9 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
 
       val document = Jsoup.parse(contentAsString(result))
 
-      val heading = document.getElementsByClass("heading-large").text()
       val error = document.getElementById("error").text()
 
-      heading should be("There has been a technical error")
-      error should be("Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.")
+      error should be("We were unable to find a HMRC record of your spouse or civil partner.")
 
     }
   }

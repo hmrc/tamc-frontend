@@ -19,9 +19,7 @@ package controllers
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 import org.joda.time.LocalDate
-
 import actions.AuthorisedActions
 import actions.JourneyEnforcers
 import actions.MarriageAllowanceRegime
@@ -63,6 +61,7 @@ import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.TamcBreadcrumb
+import errors.RecipientNotFound
 
 object UpdateRelationshipController extends UpdateRelationshipController with RunMode {
   override lazy val registrationService = TransferService
@@ -313,6 +312,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
           case _: CitizenNotFound                 => handle(message, Logger.warn, BadRequest(views.html.errors.citizen_not_found()))
           case _: BadFetchRequest                 => handle(message, Logger.warn, BadRequest(views.html.errors.bad_request()))
           case _: TransferorNotFound              => handle(message, Logger.warn, BadRequest(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound               => handle(message, Logger.warn, BadRequest(views.html.errors.recipient_not_found()))
           case _                                  => handle(message, Logger.error, BadRequest(views.html.errors.try_later()))
         }
     }
