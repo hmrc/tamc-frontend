@@ -60,6 +60,7 @@ GET    /partners-income                       controllers.MultiYearGdsEligibilit
 POST   /partners-income                       controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
 GET    /verify                                controllers.MultiYearGdsEligibilityController.verify
 
+#Welsh translation
 GET    /switch-to-welsh-eligibility-check     controllers.LanguageController.switchToWelshEligibilityCheck
 GET    /switch-to-english-eligibility-check   controllers.LanguageController.switchToEnglishEligibilityCheck
 GET    /switch-to-welsh-lower-earner          controllers.LanguageController.switchToWelshLowerEarnerCheck
@@ -68,5 +69,9 @@ GET    /switch-to-welsh-partners-income       controllers.LanguageController.swi
 GET    /switch-to-english-partners-income     controllers.LanguageController.switchToEnglishPartnersIncomeCheck
 GET    /switch-to-welsh-verify                controllers.LanguageController.switchToWelshVerify
 GET    /switch-to-english-verify              controllers.LanguageController.switchToEnglishVerify	
+
+GET    /switch-to-welsh-history               controllers.LanguageController.switchToWelshHistory
+GET    /switch-to-english-history             controllers.LanguageController.switchToEnglishHistory	
+
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                          controllers.Assets.at(path="/public", file)

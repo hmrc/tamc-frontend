@@ -41,4 +41,12 @@ class LanguageController extends FrontendController {
   def switchToEnglishVerify = Action { implicit request =>
     Redirect(routes.MultiYearGdsEligibilityController.verify()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
   }  
+  
+  def switchToWelshHistory = Action { implicit request =>
+    Redirect(routes.UpdateRelationshipController.history()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishHistory = Action { implicit request =>
+    Redirect(routes.UpdateRelationshipController.history()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }  
 }

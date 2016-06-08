@@ -5,14 +5,14 @@
 @import utils.LanguageUtils
 
 <div class="panel-indent your-details">
-@Html(Messages("generic.translation.text"))
-@if(LanguageUtils.isWelsh(lang)){
-@Link.toInternalPage(url = urlEnglish,
-    value = Some(Messages("generic.translation.english")),
-    id = Some("switch-to-english")).toHtml
-} else {
-@Link.toInternalPage(url = urlWelsh,
-    value = Some(Messages("generic.translation.welsh")),
-    id = Some("switch-to-welsh")).toHtml
-}
+	@Html(Messages("generic.translation.text"))
+	@if(LanguageUtils.isWelsh(lang)){
+		@Link.toInternalPage(url = urlEnglish,
+		    value = Some(Messages("generic.translation.english")),
+		    id = Some("switch-to-english")).toHtml
+	} else {
+		@Link.toInternalPage(url = urlWelsh,
+		    value = Some(Messages("generic.translation.welsh")),
+		    id = Some("switch-to-welsh")).toHtml
+	}
 </div>

@@ -54,7 +54,7 @@
             <div class="form-group">
             @templates.input_radio_group(
                 recipientForm("gender"),
-                Seq((Gender("M").gender, "Male"), (Gender("F").gender, "Female")),
+                Seq((Gender("M").gender, Messages("pages.form.field.gender.male")), (Gender("F").gender, Messages("pages.form.field.gender.female"))),
                 '_legend -> Html(Messages("pages.form.field.gender")),
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,

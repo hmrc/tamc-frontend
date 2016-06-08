@@ -60,6 +60,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-ui" % "4.10.0",
     "uk.gov.hmrc" %% "time" % "2.1.0",
     "uk.gov.hmrc" %% "domain" % "3.3.0",
+    "uk.gov.hmrc" %% "url-builder" % "1.0.0",
     "com.codahale.metrics" % "metrics-graphite" % "3.0.2",
     "com.kenshoo" %% "metrics-play" % "2.3.0_0.1.8")
 

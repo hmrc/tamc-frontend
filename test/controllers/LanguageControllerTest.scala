@@ -70,5 +70,20 @@ class LanguageControllerTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/verify")
       header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }    
-  }    
+  }  
+  
+  "Hitting language selection endpoint on history/status page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshHistory(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishHistory(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }    
+  }   
 }
