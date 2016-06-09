@@ -21,9 +21,14 @@
 
     @import play.twirl.api.Html
     @import uk.gov.hmrc.play.views.html._
+    @import config.ApplicationConfig
 
     @templates.tamc_main(
         title = Messages("title.pattern", Messages("title.eligibility"))){
+        @if(ApplicationConfig.isWelshEnabled){
+	        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(), 
+	                           controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString())
+        }
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
         @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = Messages("pages.form.error.mandatory.data"))
         @helpers.form(action = routes.MultiYearGdsEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
@@ -31,7 +36,7 @@
                 <p class="bold-small" >@Html(Messages("eligibility.check.married"))</p>
                 @templates.input_radio_group(
                     eligibilityCheckForm("marriage-criteria"),
-                    Seq(("true", "Yes"), ("false", "No")),
+                    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
                     '_legend -> Html(Messages("eligibility.check.married.legend")),
                     '_legendClass -> "visuallyhidden", 
                     '_labelClass -> "block-label",

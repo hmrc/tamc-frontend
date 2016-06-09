@@ -26,9 +26,14 @@
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
 @import java.text.NumberFormat
+@import utils.LanguageUtils
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.confirm-recipient"))){
+    @if(ApplicationConfig.isWelshEnabled){
+	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirm.toString(), 
+	               controllers.routes.LanguageController.switchToWelshConfirm.toString()) 
+    }
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
     <table>
     <col width="30%">
@@ -36,7 +41,7 @@
     <col width="10%"
       <thead>
         <tr>
-          <th colspan="3">The lower earner</th>
+          <th colspan="3">@Html(Messages("pages.confirm.lower.earner"))</th>
         </tr>
       </thead>
       <tr>
@@ -61,7 +66,7 @@
   <col width="60%">
   <col width="10%"> 
         <tr>
-          <th colspan="3">The higher earner</th>
+          <th colspan="3">@Html(Messages("pages.confirm.higher.earner"))</th>
         </tr>
         <tr>
             <td>@Html(Messages("generic.to"))</td>
@@ -76,11 +81,11 @@
         @for(taxYear <- data.availableYears) {
           <tr>
               @if(taxYear.isCurrent) {
-                  <td id="year-@taxYear.year">Current tax year: @TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year))) onwards</td>
-                  <td id="outcome-@taxYear.year">HMRC will change your and @TextGenerators.formPossessive(data.recipientFirstName) tax codes to save @data.recipientFirstName up to £@NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT). Marriage Allowance will automatically continue until you or @data.recipientFirstName cancel it or are no longer eligible as a couple.
+                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang))))</td>
+                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName), data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT), data.recipientFirstName))
               } else {
-                  <td id="year-@taxYear.year">Previous tax year: @TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year))) to @TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear.year)))</td>
-                  <td id="outcome-@taxYear.year">HMRC will check the details you've supplied before sending @data.recipientFirstName a cheque by post for up to @Html(Messages("max-benefit-"+taxYear.year)).</td>
+                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang)), TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang))))</td>
+                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName, Messages("max-benefit-"+taxYear.year)))</td>
               }
             <td>
                 <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">
@@ -92,12 +97,12 @@
     </table>
     <div class="panel-indent panel panel-border-wide">
         <p>
-            Check the details you've entered and make sure this is the person you want to help pay less tax.
+            @Html(Messages("pages.confirm.warning"))
         </p>
     </div>
     @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
         <p>
-            <button data-journey-click="marriage-allowance:button:application_confirm" id="create" type="submit">Confirm your application</button>
+            <button data-journey-click="marriage-allowance:button:application_confirm" id="create" type="submit"> @Html(Messages("pages.confirm.button"))</button>
         </p>
     }
 }

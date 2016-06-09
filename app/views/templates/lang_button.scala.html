@@ -1,0 +1,18 @@
+@(urlEnglish: String, urlWelsh: String)(implicit lang: Lang, request: Request[_])
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.urls.Link
+@import utils.LanguageUtils
+
+<div class="panel-indent your-details">
+	@Html(Messages("generic.translation.text"))
+	@if(LanguageUtils.isWelsh(lang)){
+		@Link.toInternalPage(url = urlEnglish,
+		    value = Some(Messages("generic.translation.english")),
+		    id = Some("switch-to-english")).toHtml
+	} else {
+		@Link.toInternalPage(url = urlWelsh,
+		    value = Some(Messages("generic.translation.welsh")),
+		    id = Some("switch-to-welsh")).toHtml
+	}
+</div>

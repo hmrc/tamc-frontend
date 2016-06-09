@@ -23,9 +23,14 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.TextGenerators
+@import config.ApplicationConfig
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.confirm-email"))){
+	@if(ApplicationConfig.isWelshEnabled){
+		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmYourEmail.toString(), 
+		               controllers.routes.LanguageController.switchToWelshConfirmYourEmail.toString())    
+    }
     @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
         <fieldset>
             @templates.form_error_notification(recipientForm)
