@@ -657,9 +657,6 @@ class RoutesTest extends UnitSpec with TestUtility {
       eligibilityForm shouldNot be(null)
       eligibilityForm.attr("action") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
 
-      val civilPartnership = document.getElementById("civil-partnership")
-      civilPartnership shouldNot be(null)
-      civilPartnership.attr("href") shouldBe "https://www.gov.uk/marriages-civil-partnerships/overview"
     }
 
     "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {

@@ -268,14 +268,16 @@ pages.confirm.html.current-tax=This will apply for the current tax year and will
 
 #Eligibility Check
 eligibility.check.header=Your eligibility
-eligibility.check.h1=Check if you''re eligible as a couple
+eligibility.check.h1=Your relationship
+eligibility.check.span.h1=Check your eligibility
+eligibility.check.span.para=To apply for Marriage Allowance, you must be married or in a civil partnership.
 income.check.h1=You and your spouse or civil partner''s income
 eligibility.check.information=To check your eligibility for Marriage Allowance, we''ll need some information about you and your spouse or civil partner.
 income.check.information=Your income is what you expect to recieve each tax year whether you work, have savings or recieve a pension.
 income.check.information1=You can find previous tax year earnings on a P60. You don''t need to include any tax-free savings interest up to £5,000. <a id="calculator" href="#TODBADDED">You can calculate how much tax you''ll pay as a couple.</a>
 eligibility.check.couples-allowance=If one of you was born before 6 April 1935, you may benefit more by applying for <a id="married-couples" href="https://www.gov.uk/married-couples-allowance" rel="external">Married Couple''s Allowance</a> instead.
 income.check.couples-allowance=To benefit as a couple for Marriage Allowance your income should be at or below the <a id="personal-allowance" href="#TODBADDED" rel="external">Personal Allowance</a> level.
-eligibility.check.married=Are you currently married or in a legally registered <a id="civil-partnership" href="https://www.gov.uk/marriages-civil-partnerships/overview" rel="external" data-journey-click="marriage-allowance:outboundlink:civil partnership">civil partnership</a>?
+eligibility.check.married=Does this apply to you?
 eligibility.check.married.legend=Are you married or in a legally registered civil partnership?
 eligibility.check.yes = Yes
 eligibility.check.married.error=You aren''t eligible for Marriage Allowance because you aren''t married or in a legally registered civil partnership.
@@ -291,14 +293,15 @@ eligibility.check.who.transfers.h1=You are eligible for Marriage Allowance
 eligibility.check.who.transfers.h2=Who should make the transfer?
 eligibility.check.who.transfers.eligible=Based on your answers, as a couple you are eligible for Marriage Allowance
 eligibility.check.who.transfers.continue-as-lower-earner=Continue as lower earner
-eligibility.check.lower.earner.information=To apply for Marriage Allowance, you must be the lower earner in the relationship and earn £{0} or less a year.
+eligibility.check.lower.earner.information1=To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £{0} or less a year.
+eligibility.check.lower.earner.information2=This is your income figure before any tax is deducted.
 eligibility.check.lower.earner.h1=Your income
-eligibility.check.lower.earner.h2=Are you the lower earner with a pre-tax income currently £{0} or less a year?
-eligibility.check.lower.earner.before.tax=This is your income figure before any tax is deducted.
+eligibility.check.lower.earner.question=Does this apply to you?
 eligibility.check.lower.earner.error=You might not benefit from Marriage Allowance in this tax year because your income is above £{0}. You can still continue to check whether you''ll benefit for previous years if your income was lower in the past.
-eligibility.check.partners.income.h1=Your spouse or civil partner''s income
-eligibility.check.partners.income.information=To be eligible for Marriage Allowance, your partner must earn between £{0} and £{1} a year.
-eligibility.check.partners.income.h2=Is your spouse or civil partner''s pre-tax income currently between £{0} and £{1} a year?
+eligibility.check.partners.income.h1=Your partner''s income
+eligibility.check.partners.income.information1=To be eligible for Marriage Allowance, your partner must earn between £{0} and £{1} a year.
+eligibility.check.partners.income.information2=This is their income figure before any tax is deducted.
+eligibility.check.partners.income.h2=Does this apply to your partner?
 eligibility.check.partners.income.before.tax=This is their income figure before any tax is deducted.
 eligibility.check.partners.income.error=You''re not eligible for Marriage Allowance in this tax year because your partner''s income is too high or too low. You can still continue to check your eligibility for previous years.
 
@@ -347,9 +350,10 @@ pages.form.field.dom=On what date did you marry or form a civil partnership with
 pages.form.field.dod=When did you get divorced?<p>We need to know so we can make sure you benefit from Marriage Allowance for the correct period of time.</p>
 
 #Date of Marriage
-pages.date-of-marriage.heading=Date Of Marriage
-pages.date-of-marriage.h2=On what date did you marry or form a civil partnership with your current partner?<p>This is to ensure we allow you to benefit from Marriage Allowance for the correct period of time. Marriage Allowance began on 6 April 2015, so you might be able to claim for previous tax years.</p>
-
+pages.date-of-marriage.heading=Date of Marriage or civil partnership
+pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
+pages.date-of-marriage.para2=Marriage Allowance was first introduced on 6 April 2015, so you might be able to claim for previous tax years.
+pages.date-of-marriage.h2=When did you marry or form a civil partnership with your current partner?
 #How it works
 pages.how-it-works.heading=How It Works
 pages.how-it-works.lede-pre1=Marriage Allowance lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.

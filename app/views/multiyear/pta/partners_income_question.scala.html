@@ -27,13 +27,15 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility"))){
-    <h1 class="heading-xlarge">@Html(Messages("eligibility.check.partners.income.h1"))</h1>
-    <p class="information">@Html(Messages("eligibility.check.partners.income.information", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
+    <h1 class="heading-xlarge">
+        <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
+        @Html(Messages("eligibility.check.partners.income.h1"))</h1>
+    <p class="information">@Html(Messages("eligibility.check.partners.income.information1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</br>
+        @Html(Messages("eligibility.check.partners.income.information2"))</p>
     @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = Messages("pages.form.error.mandatory.data"))
     @helpers.form(action = routes.MultiYearPtaEligibilityController.partnersIncomeCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
             <p class="bold-small">@Html(Messages("eligibility.check.partners.income.h2",  NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
-            <p class="form-hint">@Html(Messages("eligibility.check.partners.income.before.tax"))</p>
             @templates.input_radio_group(
                 partnersIncomeFormInput("partners-income"),
                 Seq(("true", "Yes"), ("false", "No")),
