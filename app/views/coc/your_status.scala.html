@@ -43,22 +43,22 @@
     @helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
         @if(activeRecord) {
             @if(activeRelationship.get.participant == "Transferor") {
-                <p class="lede" id="activeRecord">You are currently helping your partner benefit from Marriage Allowance.</p>
-                <p>You can stop Marriage Allowance if you:</p>
+                <p class="lede" id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
+                <p>@Html(Messages("pages.history.stop"))</p>
                 <ul class="list-bullet">
-					<li>have divorced or ended your civil partnership</li>
-					<li>have had a change in your income</li>
-					<li>want to cancel the allowance</li>
-					<li>have suffered a bereavement</li>
+					<li>@Html(Messages("pages.history.stop1"))</li>
+					<li>@Html(Messages("pages.history.stop2"))</li>
+					<li>@Html(Messages("pages.history.stop3"))</li>
+					<li>@Html(Messages("pages.history.stop4"))</li>
 				</ul>
             } else {
                 <p class="lede" id="activeRecord">Your partner is currently helping you benefit from Marriage Allowance.</p>
-                <p>You can cancel Marriage Allowance if you:</p>
+                <p>@Html(Messages("pages.history.cancel"))</p>
                 <ul class="list-bullet">
-					<li>have divorced or ended your civil partnership</li>
-					<li>have had a change in your income</li>
-					<li>want to reject the allowance</li>
-					<li>have suffered a bereavement</li>
+					<li>@Html(Messages("pages.history.cancel1"))</li>
+					<li>@Html(Messages("pages.history.cancel"))</li>
+					<li>@Html(Messages("pages.history.cancel3"))</li>
+					<li>@Html(Messages("pages.history.cancel4"))</li>
                 </ul>
             }
 
@@ -126,7 +126,7 @@
                                             <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
                                             <input name="endReason" id="endReason-reject" type="hidden" value="@EndReasonCode.REJECT"/>
                                             <input name="creationTimestamp" id="creationTimestamp" type="hidden" value="@historicRelationships.get(index).creationTimestamp"/>
-                                            <button class="remove-block" type="submit">Remove</button>
+                                            <button class="remove-block" type="submit">@Html(Messages("pages.history.button.remove"))</button>
                                         }
                                     </td>
                                 } else {
@@ -137,6 +137,4 @@
                     </table></section>
             </div> 
         }
-
-
 }

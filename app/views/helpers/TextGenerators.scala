@@ -33,15 +33,23 @@ object TextGenerators {
 
   def dateTransformer(date: LocalDate): String = date.toString("dd/MM/yyyy")
 
-  def ukDateTransformer(date: Option[LocalDate]): String = 
-    date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK)))
-    
+  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean = false): String =
+    isWelsh match {
+      case false => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK)))
+      case true  => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))).replaceAll("April", "Ebrill")
+    }
+
   def formPossessive(noun: String): String =
     s"${noun}'s"
-  
-  def taxDateInterval(taxYear: Int): String =
-    ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))
-    
-  def taxDateIntervalShort(taxYear: Int): String =
-    TaxYearResolver.startOfTaxYear(taxYear).getYear + " to " + TaxYearResolver.endOfTaxYear(taxYear).getYear
+
+  def taxDateInterval(taxYear: Int, isWelsh: Boolean = false): String =
+    isWelsh match {
+      case false => ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))
+      case true  => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))).replaceAll("April", "Ebrill")
+    }
+  def taxDateIntervalShort(taxYear: Int, isWelsh: Boolean = false): String =
+    isWelsh match {
+      case false => TaxYearResolver.startOfTaxYear(taxYear).getYear + " to " + TaxYearResolver.endOfTaxYear(taxYear).getYear
+      case true  => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxYear).getYear).replaceAll("April", "Ebrill")
+    }
 }

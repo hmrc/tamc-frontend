@@ -29,6 +29,8 @@
     title = Messages("title.pattern", Messages("title.change.complete")),
     mainConfig = views.helpers.MainConfig(
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))) {
+    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishFinishUpdate.toString(), 
+               controllers.routes.LanguageController.switchToWelshFinishUpdate.toString()) 
 
     @if(reason.endReason == EndReasonCode.CANCEL) {
         <div class="highlighted-event">

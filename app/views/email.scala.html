@@ -26,6 +26,8 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.confirm-email"))){
+	@templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmYourEmail.toString(), 
+	               controllers.routes.LanguageController.switchToWelshConfirmYourEmail.toString())    
     @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
         <fieldset>
             @templates.form_error_notification(recipientForm)

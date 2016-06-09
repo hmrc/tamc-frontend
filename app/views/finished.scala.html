@@ -25,6 +25,8 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.finished"))){
+    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishFinished.toString(), 
+               controllers.routes.LanguageController.switchToWelshFinished.toString())     
     <div class="highlighted-event">
         <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">@Html(Messages("pages.finished.successful"))</h1>
     </div>

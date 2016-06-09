@@ -33,7 +33,7 @@
                 <p class="bold-small" >@Html(Messages("eligibility.check.married"))</p>
                 @templates.input_radio_group(
                     eligibilityCheckForm("marriage-criteria"),
-                    Seq(("true", "Yes"), ("false", "No")),
+                    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
                     '_legend -> Html(Messages("eligibility.check.married.legend")),
                     '_legendClass -> "visuallyhidden", 
                     '_labelClass -> "block-label",

@@ -250,10 +250,10 @@ eligibility.feedback.recipient-not-eligible-2016=CY_You are not eligible for Mar
 eligibility.feedback.recipient-not-eligible-2017=CY_You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,501 and £45,000.
 eligibility.check.unlike-benefit-as-couple-2016=CY_You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,000.
 eligibility.check.unlike-benefit-as-couple-2017=CY_You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,500.
-max-benefit-2014=CY_£212
-max-benefit-2015=CY_£212
-max-benefit-2016=CY_£220
-max-benefit-2017=CY_£230
+max-benefit-2014=£212
+max-benefit-2015=£212
+max-benefit-2016=£220
+max-benefit-2017=£230
 your-income-2015=CY_your income was £10,600 or less
 your-income-2016=CY_your income was £11,000 or less
 your-income-2017=CY_your income was £11,500 or less
@@ -489,3 +489,50 @@ technical.technical-error.para1 =CY_ Try again. If the problem persists, call us
 generic.translation.text=This page is also available in
 generic.translation.english=English
 generic.translation.welsh=Welsh (Cymraeg)
+radio.yes=CY_Yes
+radio.no=CY_No
+
+#history page
+pages.history.help.partner=CY_You are currently helping your partner benefit from Marriage Allowance.
+pages.history.stop=CY_You can stop Marriage Allowance if you:
+pages.history.stop1=CY_have divorced or ended your civil partnership
+pages.history.stop2=CY_have had a change in your income
+pages.history.stop3=CY_want to cancel the allowance
+pages.history.stop4=CY_have suffered a bereavement
+pages.history.partner.help=CY_Your partner is currently helping you benefit from Marriage Allowance.
+pages.history.cancel=CY_You can cancel Marriage Allowance if you:
+pages.history.cancel1=CY_have divorced or ended your civil partnership
+pages.history.cancel2=CY_have had a change in your income
+pages.history.cancel3=CY_want to reject the allowance
+pages.history.cancel4=CY_have suffered a bereavement
+pages.history.button.remove=CY_Remove
+
+#eligible year page
+pages.eligibleyear.currentyear=CY_You can apply for the current tax year
+pages.eligibleyear.toldus=CY_You''ve told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
+pages.eligibleyear.thisyear=CY_This current tax year</span><br>{0} onwards
+pages.eligibleyear.li1=CY_will pay up to £{0} less tax each year
+pages.eligibleyear.li2=CY_we''ll adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
+pages.eligibleyear.li3=CY_it''ll automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
+pages.eligibleyear.doyou.want=CY_Do you want to apply for this current tax year onwards?
+
+#multi-year
+pages.multiyear.taxyear=CY_tax year
+pages.multiyear.canclaim=CY_You and <span id="firstNameOnly">{0}</span> can claim Marriage Allowance for the {1} tax year if:
+pages.multiyear.successful=CY_If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
+pages.multiyear.extrayears=CY_Do you want to apply for this extra tax year too?
+
+#previous-years
+pages.previousyear.header=CY_You can apply for earlier tax years
+pages.previousyear.lede=CY_You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.
+pages.previousyear.para=CY_You told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on <span id="marriageDate">{1}</span>. This means you can apply for earlier tax years.
+
+#confirm-page
+pages.confirm.lower.earner=CY_The lower earner
+pages.confirm.higher.earner=CY_The higher earner
+pages.confirm.current.tax=CY_Current tax year: {0} onwards
+pages.confirm.current.tax.desc=CY_HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
+pages.confirm.previous.tax=CY_Previous tax year: {0} to {1}
+pages.confirm.previous.tax.desc=CY_HMRC will check the details you've supplied before sending {0} a cheque by post for up to {1}.
+pages.confirm.warning=CY_Check the details you've entered and make sure this is the person you want to help pay less tax.
+pages.confirm.button=CY_Confirm your application
