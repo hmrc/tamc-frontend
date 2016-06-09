@@ -33,10 +33,13 @@ import utils.LanguageUtils
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
+@import config.ApplicationConfig
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.extra-years"))){
-	@templates.lang_button(controllers.routes.LanguageController.switchToEnglishPreviousYears.toString(), 
-	               controllers.routes.LanguageController.switchToWelshPreviousYears.toString())
+    @if(ApplicationConfig.isWelshEnabled){
+		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishPreviousYears.toString(), 
+		               controllers.routes.LanguageController.switchToWelshPreviousYears.toString())
+    }
     <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
     
     @templates.form_error_notification(form)

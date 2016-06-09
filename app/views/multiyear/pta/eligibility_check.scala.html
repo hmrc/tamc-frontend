@@ -22,11 +22,14 @@
 
     @import play.twirl.api.Html
     @import uk.gov.hmrc.play.views.html._
-
+	@import config.ApplicationConfig
+    
     @templates.tamc_main(
         title = Messages("title.pattern", Messages("title.eligibility"))){
-    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheckPta.toString(), 
-               controllers.routes.LanguageController.switchToWelshEligibilityCheckPta.toString())         
+    @if(ApplicationConfig.isWelshEnabled){
+	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheckPta.toString(), 
+	               controllers.routes.LanguageController.switchToWelshEligibilityCheckPta.toString())         
+    }    
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
         @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = Messages("pages.form.error.mandatory.data"))
         @helpers.form(action = routes.MultiYearPtaEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {

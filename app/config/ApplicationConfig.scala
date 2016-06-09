@@ -74,6 +74,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val LANG_CODE_ENGLISH = "en-GB"
   override val LANG_CODE_WELSH = "cy-GB"
   override val LANG_LANG_WELSH = "cy"
+  
+  override val isWelshEnabled = configuration.getBoolean("welsh-translation").getOrElse(false)
 }
 
 trait ApplicationConfig {
@@ -108,4 +110,6 @@ trait ApplicationConfig {
   val LANG_CODE_ENGLISH: String
   val LANG_CODE_WELSH: String
   val LANG_LANG_WELSH: String
+  
+  val isWelshEnabled: Boolean
 }

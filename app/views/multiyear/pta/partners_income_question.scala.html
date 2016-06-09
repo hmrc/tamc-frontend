@@ -27,8 +27,10 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility"))){
-    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishPartnersIncomeCheckPta.toString(), 
-               controllers.routes.LanguageController.switchToWelshPartnersIncomeCheckPta.toString())      
+    @if(ApplicationConfig.isWelshEnabled){
+	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishPartnersIncomeCheckPta.toString(), 
+	               controllers.routes.LanguageController.switchToWelshPartnersIncomeCheckPta.toString())      
+    }
     <h1 class="heading-xlarge">@Html(Messages("eligibility.check.partners.income.h1"))</h1>
     <p class="information">@Html(Messages("eligibility.check.partners.income.information", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
     @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = Messages("pages.form.error.mandatory.data"))

@@ -27,8 +27,10 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility"))){
-    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishLowerEarnerCheckPta.toString(), 
-               controllers.routes.LanguageController.switchToWelshLowerEarnerCheckPta.toString())     
+    @if(ApplicationConfig.isWelshEnabled){
+	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishLowerEarnerCheckPta.toString(), 
+	               controllers.routes.LanguageController.switchToWelshLowerEarnerCheckPta.toString())     
+    }
     <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1"))</h1>
     <p class="information">@Html(Messages("eligibility.check.lower.earner.information", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</p>
     @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = Messages("pages.form.error.mandatory.data"))

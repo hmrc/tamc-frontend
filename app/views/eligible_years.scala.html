@@ -35,9 +35,10 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligible-years"))){
-	@templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibleYears.toString(), 
-	               controllers.routes.LanguageController.switchToWelshEligibleYears.toString())        
-    
+	@if(ApplicationConfig.isWelshEnabled){
+		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibleYears.toString(), 
+		               controllers.routes.LanguageController.switchToWelshEligibleYears.toString())        
+    }
   <h1 class="heading-xlarge">@Html(Messages("pages.eligibleyear.currentyear"))</h1>
 
    @templates.form_error_notification(form)
