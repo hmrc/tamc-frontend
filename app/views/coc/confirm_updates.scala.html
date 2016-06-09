@@ -22,16 +22,24 @@
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import uk.gov.hmrc.time.TaxYearResolver
-
+@import config.ApplicationConfig
+    
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.reason")),
     mainConfig = views.helpers.MainConfig()) {
-
     @if(reason == EndReasonCode.CANCEL) {
+    	@if(ApplicationConfig.isWelshEnabled){
+		     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmCancel.toString(), 
+		                controllers.routes.LanguageController.switchToWelshConfirmCancel.toString())     	
+		}
         <h1 class="heading-large" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
         <p id="cancel-content">@Html(Messages("change.status.cancel.content", TextGenerators.ukDateTransformer(effectiveUntilDate), TextGenerators.ukDateTransformer(effectiveDate)))</p>
     }
     @if(reason == EndReasonCode.REJECT) {
+    	@if(ApplicationConfig.isWelshEnabled){
+		     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmReject.toString(), 
+		                controllers.routes.LanguageController.switchToWelshConfirmReject.toString())     
+		}	
         <h1 class="heading-large" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
         <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
         <div class="confirmation-notice">

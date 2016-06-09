@@ -60,8 +60,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_SOURCE = "SOURCE"
   val CACHE_LOCKED_UPDATE = "LOCKED_UPDATE"
 
-  val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-"+TaxYearResolver.currentTaxYear).get
-  val MAX_LIMIT = configuration.getInt("max-limit-"+TaxYearResolver.currentTaxYear).get
+  val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-" + TaxYearResolver.currentTaxYear).get
+  val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get
   val MAX_ALLOWED_TRANSFER = PERSONAL_ALLOWANCE / 10
   val MAX_BENEFIT = MAX_ALLOWED_TRANSFER / 5
   val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_TRANSFER
@@ -70,6 +70,12 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
   override val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
+
+  override val LANG_CODE_ENGLISH = "en-GB"
+  override val LANG_CODE_WELSH = "cy-GB"
+  override val LANG_LANG_WELSH = "cy"
+  
+  override val isWelshEnabled = configuration.getBoolean("welsh-translation").getOrElse(false)
 }
 
 trait ApplicationConfig {
@@ -100,4 +106,10 @@ trait ApplicationConfig {
 
   val gdsFinishedUrl: String
   val ptaFinishedUrl: String
+
+  val LANG_CODE_ENGLISH: String
+  val LANG_CODE_WELSH: String
+  val LANG_LANG_WELSH: String
+  
+  val isWelshEnabled: Boolean
 }

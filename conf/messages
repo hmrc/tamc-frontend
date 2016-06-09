@@ -335,6 +335,8 @@ pages.form.enter-data=Enter your spouse or civil partner''s details:
 pages.form.field.name=What is their first name?
 pages.form.field.last-name=What is their last name?
 pages.form.field.gender=What is their gender?
+pages.form.field.gender.male=Male
+pages.form.field.gender.female=Female
 pages.form.field-helper.gender=This information will help us confirm their identity
 pages.form.field.nino=What is their National Insurance number?
 pages.form.field-helper.nino-example=For example, QQ 12 34 56 C
@@ -487,3 +489,62 @@ technical.cannot-find-details.h1 = We cannot find your Marriage Allowance detail
 technical.cannot-find-details.para1 = Call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call
 technical.technical-error.h1 = There has been a technical error
 technical.technical-error.para1 = Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.
+
+generic.translation.text=This page is also available in
+generic.translation.english=English
+generic.translation.welsh=Welsh (Cymraeg)
+radio.yes=Yes
+radio.no=No
+
+#history page
+pages.history.help.partner=You are currently helping your partner benefit from Marriage Allowance.
+pages.history.stop=You can stop Marriage Allowance if you:
+pages.history.stop1=have divorced or ended your civil partnership
+pages.history.stop2=have had a change in your income
+pages.history.stop3=want to cancel the allowance
+pages.history.stop4=have suffered a bereavement
+pages.history.partner.help=Your partner is currently helping you benefit from Marriage Allowance.
+pages.history.cancel=You can cancel Marriage Allowance if you:
+pages.history.cancel1=have divorced or ended your civil partnership
+pages.history.cancel2=have had a change in your income
+pages.history.cancel3=want to reject the allowance
+pages.history.cancel4=have suffered a bereavement
+pages.history.button.remove=Remove
+
+#eligible year page
+pages.eligibleyear.currentyear=You can apply for the current tax year
+pages.eligibleyear.toldus=You''ve told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
+pages.eligibleyear.thisyear=This current tax year</span><br>{0} onwards
+pages.eligibleyear.li1=will pay up to £{0} less tax each year
+pages.eligibleyear.li2=we''ll adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
+pages.eligibleyear.li3=it''ll automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
+pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
+
+#multi-year
+pages.multiyear.taxyear=tax year
+pages.multiyear.canclaim=You and <span id="firstNameOnly">{0}</span> can claim Marriage Allowance for the {1} tax year if:
+pages.multiyear.successful=If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
+pages.multiyear.extrayears=Do you want to apply for this extra tax year too?
+
+#previous-years
+pages.previousyear.header=You can apply for earlier tax years
+pages.previousyear.lede=You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.
+pages.previousyear.para=You told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on <span id="marriageDate">{1}</span>. This means you can apply for earlier tax years.
+
+#confirm-page
+pages.confirm.lower.earner=The lower earner
+pages.confirm.higher.earner=The higher earner
+pages.confirm.current.tax=Current tax year: {0} onwards
+pages.confirm.current.tax.desc=HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
+pages.confirm.previous.tax=Previous tax year: {0} to {1}
+pages.confirm.previous.tax.desc=HMRC will check the details you''ve supplied before sending {0} a cheque by post for up to {1}.
+pages.confirm.warning=Check the details you've entered and make sure this is the person you want to help pay less tax.
+pages.confirm.button=Confirm your application
+
+#change-of-circs-finish-page
+pages.coc.finish.header=Marriage Allowance cancelled
+pages.coc.finish.acknowledgement=An email acknowledging your change will be sent to you at <strong>{0}</strong> from <strong>noreply&#64;tax.service.gov.uk</strong> within 24 hours.
+pages.coc.finish.junk=If it doesn't appear in your inbox, please check your spam or junk folder.
+pages.coc.finish.whn=What happens next
+pages.coc.finish.para1=HMRC will now process your cancellation. Please check the email we've sent you for full details.
+pages.coc.finish.para2=There's no need to contact us. You can <a href="history">check the status</a> of your Marriage Allowance online.

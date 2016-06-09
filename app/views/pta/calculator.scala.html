@@ -23,9 +23,14 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility-criteria"))){
+    @if(ApplicationConfig.isWelshEnabled){
+	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishCalculatorPta.toString(), 
+	               controllers.routes.LanguageController.switchToWelshCalculatorPta.toString())         
+    }
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p>@Html(Messages("pages.calc.skip-it.pre")) <a href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.skip-it"))</a></p>
 
