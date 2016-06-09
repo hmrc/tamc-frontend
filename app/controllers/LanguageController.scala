@@ -136,5 +136,53 @@ class LanguageController extends FrontendController {
 
   def switchToEnglishFinished = Action { implicit request =>
     Redirect(routes.TransferController.finished()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
-  }  
+  }
+
+  def switchToWelshHowItWorks = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.howItWorks()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishHowItWorks = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.howItWorks()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
+  def switchToWelshEligibilityCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.eligibilityCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishEligibilityCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.eligibilityCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
+  def switchToWelshLowerEarnerCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.lowerEarnerCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishLowerEarnerCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.lowerEarnerCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
+  def switchToWelshPartnersIncomeCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.partnersIncomeCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishPartnersIncomeCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.partnersIncomeCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
+  def switchToWelshCalculator = Action { implicit request =>
+    Redirect(routes.GdsEligibilityController.calculator()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishCalculator = Action { implicit request =>
+    Redirect(routes.GdsEligibilityController.calculator()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
+  def switchToWelshCalculatorPta = Action { implicit request =>
+    Redirect(routes.PtaEligibilityController.calculator()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishCalculatorPta = Action { implicit request =>
+    Redirect(routes.PtaEligibilityController.calculator()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
 }

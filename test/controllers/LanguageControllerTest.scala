@@ -251,4 +251,94 @@ class LanguageControllerTest extends UnitSpec with TestUtility {
       header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
+
+  "Hitting language selection endpoint on PTA journey how it works page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshHowItWorks(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/how-it-works")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishHowItWorks(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/how-it-works")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
+  "Hitting language selection endpoint on PTA journey eligibility page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshEligibilityCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishEligibilityCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
+  "Hitting language selection endpoint on PTA journey lower earner page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshLowerEarnerCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/lower-earner-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishLowerEarnerCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/lower-earner-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
+  "Hitting language selection endpoint on PTA journey partner's income page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshPartnersIncomeCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/partners-income-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishPartnersIncomeCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/partners-income-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
+  "Hitting language selection endpoint on GDS journey benefit calculator page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshCalculator(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishCalculator(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
+  "Hitting language selection endpoint on PTA journey benefit calculator page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshCalculatorPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishCalculatorPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
 }

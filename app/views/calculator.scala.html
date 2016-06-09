@@ -25,6 +25,8 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility-criteria"))){
+    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishCalculator.toString(), 
+               controllers.routes.LanguageController.switchToWelshCalculator.toString())     
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p>@Html(Messages("pages.calc.para1"))</p>
     @helpers.form(action = routes.GdsEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
