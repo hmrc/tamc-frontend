@@ -9,7 +9,7 @@
     }
 
     <fieldset class="@elements.args.get('_groupClass) touch @if(elements.hasErrors) {form-field--error}" id="@fieldName.replaceAll("[.]", "_")">
-        <legend class="form-label-bold">@label</legend>
+        <legend class="form-label-bold"> <p class="bold-small" >@label</p></legend>
         <div class="form-date">
             @if(elements.args.get('_hintText).isDefined) {
                 <p class="form-hint">@elements.args.get('_hintText)</p>

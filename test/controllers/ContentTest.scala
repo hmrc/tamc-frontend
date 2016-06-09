@@ -795,10 +795,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
       val elements = document.getElementById("eligibility-form").getElementsByTag("p")
       elements shouldNot be(null)
-      elements.get(0).text shouldBe "Are you currently married or in a legally registered civil partnership?"
-      val civilPartnership = document.getElementById("civil-partnership")
-      civilPartnership shouldNot be(null)
-      civilPartnership.attr("href") shouldBe "https://www.gov.uk/marriages-civil-partnerships/overview"
+      elements.get(0).text shouldBe "Does this apply to you?"
     }
 
     "diplay errors as none of the radio buttons are selected " in new WithApplication(fakeApplication) {
@@ -834,10 +831,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
       val elements = document.getElementById("eligibility-form").getElementsByTag("p")
       elements shouldNot be(null)
-      elements.get(0).text shouldBe "Are you currently married or in a legally registered civil partnership?"
-      val civilPartnership = document.getElementById("civil-partnership")
-      civilPartnership shouldNot be(null)
-      civilPartnership.attr("href") shouldBe "https://www.gov.uk/marriages-civil-partnerships/overview"
+      elements.get(0).text shouldBe "Does this apply to you?"
     }
 
     "diplay errors as none of the radio buttons are selected " in new WithApplication(fakeApplication) {
@@ -871,8 +865,8 @@ class ContentTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
 
-      document.getElementsByClass("bold-small").text shouldBe "Are you the lower earner with a pre-tax income currently £11,000 or less a year?"
-      document.getElementsByClass("information").text shouldBe "To apply for Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year."
+      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
+      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year. This is your income figure before any tax is deducted."
     }
 
   }
@@ -889,9 +883,9 @@ class ContentTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
 
-      document.getElementsByClass("bold-small").text shouldBe "Is your spouse or civil partner's pre-tax income currently between £11,001 and £43,000 a year?"
-      document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year."
-      document.getElementsByClass("heading-xlarge").text shouldBe "Your spouse or civil partner's income"
+      document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
+      document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
+      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Your partner's income"
     }
 
   }
@@ -906,9 +900,8 @@ class ContentTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
-      document.getElementsByClass("bold-small").text shouldBe "Are you the lower earner with a pre-tax income currently £11,000 or less a year?"
-      document.getElementsByClass("form-hint").text shouldBe "This is your income figure before any tax is deducted."
-      document.getElementsByClass("Information").text shouldBe "To apply for Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year."
+      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
+      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year. This is your income figure before any tax is deducted."
     }
   }
 
@@ -922,9 +915,8 @@ class ContentTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
-      document.getElementsByClass("bold-small").text shouldBe "Is your spouse or civil partner's pre-tax income currently between £11,001 and £43,000 a year?"
-      document.getElementsByClass("form-hint").text shouldBe "This is their income figure before any tax is deducted."
-      document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year."
+      document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
+      document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
     }
   }
 }
