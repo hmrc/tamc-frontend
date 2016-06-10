@@ -55,7 +55,7 @@
 					<li>@Html(Messages("pages.history.stop4"))</li>
 				</ul>
             } else {
-                <p class="lede" id="activeRecord">Your partner is currently helping you benefit from Marriage Allowance.</p>
+                <p class="lede" id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
                 <p>@Html(Messages("pages.history.cancel"))</p>
                 <ul class="list-bullet">
 					<li>@Html(Messages("pages.history.cancel1"))</li>
@@ -99,7 +99,7 @@
     }
                  @if(canApplyPreviousYears) {
         <div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
-        <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">Apply for previous years</a></div>
+        <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a></div>
          }   
         @if(historicRecord) {
             <div id="historicRecords">

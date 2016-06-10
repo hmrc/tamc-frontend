@@ -58,10 +58,10 @@
         } else {
            @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
                @if(TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)){
-               <h1 class="heading-xlarge">Divorce or end of civil partnership in current tax year</h1>
+               <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
                <p>@Html(Messages("change.status.divorce.transferor.directions", "https://www.gov.uk/divorce/apply-for-a-decree-absolute", "https://www.gov.uk/end-civil-partnership/apply-for-a-final-order"))</p>
-	           After you tell us you've divorced or ended your civil partnership, Marriage Allowance will remain in place until the end of this tax year (5 April). Or, you can choose to withdraw Marriage Allowance from the start of this tax year.
-               <p class="bold-small"> @Html(Messages("change.status.reason-for-divorce"))</p>
+               <p>@Html(Messages("change.status.divorce.transferor.options"))</p>
+            <p class="bold-small"> @Html(Messages("change.status.reason-for-divorce"))</p>
 	           @templates.input_radio_group(
 	            changeRelationshipForm("endReason"),
 	            Seq((EndReasonCode.DIVORCE_CY, Messages("generic.yes")),
@@ -84,16 +84,16 @@
                  @Html(Messages("change.status.divorce.transferor.eoy-no"))
                 </div>
 	        	} else {
-                  <h1 class="heading-xlarge">Divorce or end of civil partnership in previous tax year</h1>
-                  <p style="margin-top:-15px">You should tell us if you legally end your marriage or civil partnership. This means if you've divorced and have a <a href="https://www.gov.uk/divorce/apply-for-a-decree-absolute" rel="external">decree absolute</a>, or if your civil partnership has ended and you have a <a href="https://www.gov.uk/end-civil-partnership/apply-for-a-final-order" rel="external">final order</a>.</p>
-                  <p>Marriage Allowance will be removed from @TextGenerators.ukDateTransformer(cyEffectiveUntilDate), the end of the tax year you divorced. This could result in your partner not paying enough tax. We'll let them know whether they've paid the right amount at the end of the tax year. If they've not paid enough, we'll collect it by adjusting their tax code.</p>
+                  <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.conditional1.h1"))</h1>
+                  <p style="margin-top:-15px">@Html(Messages("change.status.divorce.transferor.conditional1.para1"))</p>
+                  <p>@Html(Messages("change.status.divorce.transferor.conditional1.para2",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</p>
 	        	  <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
 	        	}
            	} else {
-               <h1 class="heading-xlarge">Divorce or end of civil partnership</h1>
-               <p style="margin-top:-15px">You should tell us if you legally end your marriage or civil partnership. This means if you've divorced and have a <a href="https://www.gov.uk/divorce/apply-for-a-decree-absolute" rel="external">decree absolute</a>, or if your civil partnership has ended and you have a <a href="https://www.gov.uk/end-civil-partnership/apply-for-a-final-order" rel="external">final order</a>.</p>
-               <p>You can keep Marriage Allowance until @TextGenerators.ukDateTransformer(cyEffectiveUntilDate), the end of the tax year you divorced. Your Personal Allowance will return to normal from @TextGenerators.ukDateTransformer(cyEffectiveDate), the start of the next tax year.</p>
-               <p>We'll let you know if you've paid the right amount of tax at the end of the tax year. If you've not paid enough, we'll collect it by adjusting your tax code.</p>
+               <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.conditional2.h1"))</h1>
+               <p style="margin-top:-15px">@Html(Messages("change.status.divorce.transferor.conditional1.para1"))</p>
+               <p>@Html(Messages("change.status.divorce.transferor.conditional2.para2",TextGenerators.ukDateTransformer(cyEffectiveUntilDate),TextGenerators.ukDateTransformer(cyEffectiveDate)))</p>
+               <p>@Html(Messages("change.status.divorce.transferor.conditional2.para3"))</p>
                <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
            	}
         }
