@@ -547,7 +547,7 @@ pages.coc.finish.acknowledgement=An email acknowledging your change will be sent
 pages.coc.finish.junk=If it doesn''t appear in your inbox, please check your spam or junk folder.
 pages.coc.finish.whn=What happens next
 pages.coc.finish.para1=HMRC will now process your cancellation. Please check the email we''ve sent you for full details.
-pages.coc.finish.para2=There's no need to contact us. You can <a href="history">check the status</a> of your Marriage Allowance online.
+pages.coc.finish.para2=There''s no need to contact us. You can <a href="history">check the status</a> of your Marriage Allowance online.
 
 date.fields.day=Day
 date.fields.month=Month
