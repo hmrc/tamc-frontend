@@ -546,7 +546,7 @@ pages.confirm.button=CY_Confirm your application
 #change-of-circs-finish-page
 pages.coc.finish.header=CY_Marriage Allowance cancelled
 pages.coc.finish.acknowledgement=CY_An email acknowledging your change will be sent to you at <strong>{0}</strong> from <strong>noreply&#64;tax.service.gov.uk</strong> within 24 hours.
-pages.coc.finish.junk=CY_If it doesn't appear in your inbox, please check your spam or junk folder.
+pages.coc.finish.junk=CY_If it doesn''t appear in your inbox, please check your spam or junk folder.
 pages.coc.finish.whn=CY_What happens next
 pages.coc.finish.para1=CY_HMRC will now process your cancellation. Please check the email we've sent you for full details.
 pages.coc.finish.para2=CY_There's no need to contact us. You can <a href="history">check the status</a> of your Marriage Allowance online.
