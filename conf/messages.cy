@@ -269,13 +269,15 @@ pages.confirm.html.current-tax=CY_This will apply for the current tax year and w
 #Eligibility Check
 eligibility.check.header=CY_Your eligibility
 eligibility.check.h1=CY_Check if you''re eligible as a couple
+eligibility.check.span.h1=CY_Check your eligibility
+eligibility.check.span.para=CY_To apply for Marriage Allowance, you must be married or in a civil partnership.
 income.check.h1=CY_You and your spouse or civil partner''s income
 eligibility.check.information=CY_To check your eligibility for Marriage Allowance, we''ll need some information about you and your spouse or civil partner.
 income.check.information=CY_Your income is what you expect to recieve each tax year whether you work, have savings or recieve a pension.
 income.check.information1=CY_You can find previous tax year earnings on a P60. You don''t need to include any tax-free savings interest up to £5,000. <a id=CY_"calculator" href=CY_"#TODBADDED">You can calculate how much tax you''ll pay as a couple.</a>
 eligibility.check.couples-allowance=CY_If one of you was born before 6 April 1935, you may benefit more by applying for <a id=CY_"married-couples" href=CY_"https://www.gov.uk/married-couples-allowance" rel=CY_"external">Married Couple''s Allowance</a> instead.
 income.check.couples-allowance=CY_To benefit as a couple for Marriage Allowance your income should be at or below the <a id=CY_"personal-allowance" href=CY_"#TODBADDED" rel=CY_"external">Personal Allowance</a> level.
-eligibility.check.married=CY_Are you currently married or in a legally registered <a id=CY_"civil-partnership" href=CY_"https://www.gov.uk/marriages-civil-partnerships/overview" rel=CY_"external" data-journey-click=CY_"marriage-allowance:outboundlink:civil partnership">civil partnership</a>?
+eligibility.check.married=CY_Does this apply to you?
 eligibility.check.married.legend=CY_Are you married or in a legally registered civil partnership?
 eligibility.check.yes =CY_ Yes
 eligibility.check.married.error=CY_You aren''t eligible for Marriage Allowance because you aren''t married or in a legally registered civil partnership.
@@ -291,14 +293,15 @@ eligibility.check.who.transfers.h1=CY_You are eligible for Marriage Allowance
 eligibility.check.who.transfers.h2=CY_Who should make the transfer?
 eligibility.check.who.transfers.eligible=CY_Based on your answers, as a couple you are eligible for Marriage Allowance
 eligibility.check.who.transfers.continue-as-lower-earner=CY_Continue as lower earner
-eligibility.check.lower.earner.information=CY_To apply for Marriage Allowance, you must be the lower earner in the relationship and earn £{0} or less a year.
+eligibility.check.lower.earner.information1=CY_To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £{0} or less a year.
+eligibility.check.lower.earner.information2=CY_This is your income figure before any tax is deducted.
 eligibility.check.lower.earner.h1=CY_Your income
-eligibility.check.lower.earner.h2=CY_Are you the lower earner with a pre-tax income currently £{0} or less a year?
-eligibility.check.lower.earner.before.tax=CY_This is your income figure before any tax is deducted.
+eligibility.check.lower.earner.question=CY_Does this apply to you?
 eligibility.check.lower.earner.error=CY_You might not benefit from Marriage Allowance in this tax year because your income is above £{0}. You can still continue to check whether you''ll benefit for previous years if your income was lower in the past.
-eligibility.check.partners.income.h1=CY_Your spouse or civil partner''s income
-eligibility.check.partners.income.information=CY_To be eligible for Marriage Allowance, your partner must earn between £{0} and £{1} a year.
-eligibility.check.partners.income.h2=CY_Is your spouse or civil partner''s pre-tax income currently between £{0} and £{1} a year?
+eligibility.check.partners.income.h1=CY_Your partner''s income
+eligibility.check.partners.income.information1=CY_To be eligible for Marriage Allowance, your partner must earn between £{0} and £{1} a year.
+eligibility.check.partners.income.information2=CY_This is their income figure before any tax is deducted.
+eligibility.check.partners.income.h2=CY_Does this apply to your partner?
 eligibility.check.partners.income.before.tax=CY_This is their income figure before any tax is deducted.
 eligibility.check.partners.income.error=CY_You''re not eligible for Marriage Allowance in this tax year because your partner''s income is too high or too low. You can still continue to check your eligibility for previous years.
 
@@ -349,8 +352,10 @@ pages.form.field.dom=CY_On what date did you marry or form a civil partnership w
 pages.form.field.dod=CY_When did you get divorced?<p>We need to know so we can make sure you benefit from Marriage Allowance for the correct period of time.</p>
 
 #Date of Marriage
-pages.date-of-marriage.heading=CY_Date Of Marriage
-pages.date-of-marriage.h2=CY_On what date did you marry or form a civil partnership with your current partner?<p>This is to ensure we allow you to benefit from Marriage Allowance for the correct period of time. Marriage Allowance began on 6 April 2015, so you might be able to claim for previous tax years.</p>
+pages.date-of-marriage.heading=CY_Date of Marriage or civil partnership
+pages.date-of-marriage.para1=CY_This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
+pages.date-of-marriage.para2=CY_Marriage Allowance was first introduced on 6 April 2015, so you might be able to claim for previous tax years.
+pages.date-of-marriage.h2=CY_When did you marry or form a civil partnership with your current partner?
 
 #How it works
 pages.how-it-works.heading=CY_How It Works
@@ -545,3 +550,7 @@ pages.coc.finish.junk=CY_If it doesn't appear in your inbox, please check your s
 pages.coc.finish.whn=CY_What happens next
 pages.coc.finish.para1=CY_HMRC will now process your cancellation. Please check the email we've sent you for full details.
 pages.coc.finish.para2=CY_There's no need to contact us. You can <a href="history">check the status</a> of your Marriage Allowance online.
+
+date.fields.day=dydd
+date.fields.month=mis
+date.fields.year=blwyddyn
