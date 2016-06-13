@@ -28,10 +28,10 @@
    
     @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
         
-        <h1 class="heading-xlarge text mainpage">There is a problem with the dates you entered</h1>
-        <p style="margin-top:-15px">The date you divorced or dissolved your civil partnership can't be before the date you started claiming marriage allowance.</p>
-        <p>You can go back and check the information you've entered is correct.</p>
-        <p>Contact HMRC if you think we have the wrong date for the start of your marriage or civil partnership.</p>
+        <h1 class="heading-xlarge text mainpage">@Html(Messages("change.status.divorce.date.invalid.h1"))</h1>
+        <p style="margin-top:-15px">@Html(Messages("change.status.divorce.date.invalid.para1"))</p>
+        <p>@Html(Messages("change.status.divorce.date.invalid.para2"))</p>
+        <p>@Html(Messages("change.status.divorce.date.invalid.para3"))</p>
 
         <strong>@Html(Messages("hmrc.contact-details-1"))</strong>
 	    <ul>
