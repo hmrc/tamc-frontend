@@ -45,8 +45,8 @@ pages.form.field.transferor-email.error.error.email=CY_Give a valid email addres
 pages.form.field.transferor-email.error.error.required=CY_Tell us your email address.
 
 pages.form.field.description.marriage-criteria=CY_Confirm if you are married or in a legally registered civil partnership
-#pages.form.field.description.recipient-income-criteria=CY_Confirm if your spouse or civil partner has an annual income of between £10,601 and £42,385
-#pages.form.field.description.transferor-income-criteria=CY_Confirm if your annual income is £10,600 or less
+##pages.form.field.description.recipient-income-criteria=CY_Confirm if your spouse or civil partner has an annual income of between £10,601 and £42,385
+##pages.form.field.description.transferor-income-criteria=CY_Confirm if your annual income is £10,600 or less
 pages.form.field.description.lower-earner=CY_Confirm if you are the lower earner in the relationship
 
 pages.form.field.description.multiyear-transferor-income-criteria=CY_Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
@@ -54,8 +54,8 @@ pages.form.field.description.multiyear-recipient-income-criteria=CY_Tell us if y
 
 
 pages.form.field-required.marriage-criteria=CY_Tell us if you are married or in a legally registered civil partnership.
-#pages.form.field-required.recipient-income-criteria=CY_Tell us if your spouse or civil partner has an annual income of between £10,601 and £42,385.
-#pages.form.field-required.transferor-income-criteria=CY_Tell us if your annual income is £10,600 or less.
+##pages.form.field-required.recipient-income-criteria=CY_Tell us if your spouse or civil partner has an annual income of between £10,601 and £42,385.
+##pages.form.field-required.transferor-income-criteria=CY_Tell us if your annual income is £10,600 or less.
 pages.form.field-required.multiyear-recipient-income-criteria=CY_Tell us if your spouse or civil partner is a basic rate tax payer since 6 April 2015?
 pages.form.field-required.multiyear-transferor-income-criteria=CY_Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
 
@@ -90,15 +90,15 @@ eligibility.feedback.incorrect-role=CY_Check the numbers you''ve entered. Please
 pages.form.field.recipient-income.error.field-required=CY_Tell us your spouse or civil partner''s annual income.
 pages.form.field.recipient-income.error.field-invalid=CY_Use numbers only.
 
-change.status.confirm-CANCEL.h1=CY_Confirm cancellation
-change.status.confirm-REJECT.h1=CY_Confirm rejection
-change.status.confirm-DIVORCE_CY.h1=CY_Confirm cancellation
-change.status.confirm-DIVORCE_PY.h1=CY_Confirm cancellation
+##change.status.confirm-CANCEL.h1=CY_Confirm cancellation
+##change.status.confirm-REJECT.h1=CY_Confirm rejection
+##change.status.confirm-DIVORCE_CY.h1=CY_Confirm cancellation
+##change.status.confirm-DIVORCE_PY.h1=CY_Confirm cancellation
 
-change.status.confirm-CANCEL=CY_Confirm you want to cancel this Marriage Allowance transfer.
-change.status.confirm-REJECT=CY_Confirm you want to reject this Marriage Allowance.
-change.status.confirm-DIVORCE_CY=CY_Confirm you want to remove this Marriage Allowance transfer.
-change.status.confirm-DIVORCE_PY=CY_Confirm you want to remove this Marriage Allowance transfer.
+##change.status.confirm-CANCEL=CY_Confirm you want to cancel this Marriage Allowance transfer.
+##change.status.confirm-REJECT=CY_Confirm you want to reject this Marriage Allowance.
+##change.status.confirm-DIVORCE_CY=CY_Confirm you want to remove this Marriage Allowance transfer.
+##change.status.confirm-DIVORCE_PY=CY_Confirm you want to remove this Marriage Allowance transfer.
 
 change.status.reason-CANCEL=CY_No longer required
 change.status.reason-REJECT=CY_Rejected
@@ -175,8 +175,8 @@ generic.transferor-action=CY_Transferred Marriage Allowance
 
 #Titles
 title.pattern=CY_Marriage Allowance - {0}
-title.who-transfers=CY_Who should transfer
-title.who-transfers-non-eligible=CY_You are eligible - lower earner
+##title.who-transfers=CY_Who should transfer
+##title.who-transfers-non-eligible=CY_You are eligible - lower earner
 title.verify=CY_Confirm Your Personal Details
 title.eligible-years=CY_Eligible years
 title.extra-years=CY_Extra years
@@ -186,7 +186,7 @@ title.finished=CY_Complete
 title.confirm-email=CY_Confirm your email
 title.non-eligible=CY_You are not eligible
 title.no-tax-years=CY_No tax years available
-title.non-beneficial=CY_No Benefit
+##title.non-beneficial=CY_No Benefit
 title.eligibility=CY_Eligibility Questions
 title.confirm-transferor=CY_Confirm change
 title.confirm-recipient=CY_Confirm the Recipient Details
@@ -264,35 +264,35 @@ income-between-2017=CY_income was between £11,601 and £45,000
 #Confirmation Message
 pages.confirm.html.h1=CY_Check your details and confirm the application
 pages.confirm.html.check-details=CY_Check the details you''ve entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,060 of your Personal Allowance to them.
-pages.confirm.html.current-tax=CY_This will apply for the current tax year and will continue into future tax years.
+##pages.confirm.html.current-tax=CY_This will apply for the current tax year and will continue into future tax years.
 
 #Eligibility Check
 eligibility.check.header=CY_Your eligibility
 eligibility.check.h1=CY_Check if you''re eligible as a couple
 eligibility.check.span.h1=CY_Check your eligibility
 eligibility.check.span.para=CY_To apply for Marriage Allowance, you must be married or in a civil partnership.
-income.check.h1=CY_You and your spouse or civil partner''s income
-eligibility.check.information=CY_To check your eligibility for Marriage Allowance, we''ll need some information about you and your spouse or civil partner.
-income.check.information=CY_Your income is what you expect to recieve each tax year whether you work, have savings or recieve a pension.
-income.check.information1=CY_You can find previous tax year earnings on a P60. You don''t need to include any tax-free savings interest up to £5,000. <a id=CY_"calculator" href=CY_"#TODBADDED">You can calculate how much tax you''ll pay as a couple.</a>
-eligibility.check.couples-allowance=CY_If one of you was born before 6 April 1935, you may benefit more by applying for <a id=CY_"married-couples" href=CY_"https://www.gov.uk/married-couples-allowance" rel=CY_"external">Married Couple''s Allowance</a> instead.
-income.check.couples-allowance=CY_To benefit as a couple for Marriage Allowance your income should be at or below the <a id=CY_"personal-allowance" href=CY_"#TODBADDED" rel=CY_"external">Personal Allowance</a> level.
+##income.check.h1=CY_You and your spouse or civil partner''s income
+##eligibility.check.information=CY_To check your eligibility for Marriage Allowance, we''ll need some information about you and your spouse or civil partner.
+##income.check.information=CY_Your income is what you expect to recieve each tax year whether you work, have savings or recieve a pension.
+##income.check.information1=CY_You can find previous tax year earnings on a P60. You don''t need to include any tax-free savings interest up to £5,000. <a id=CY_"calculator" href=CY_"#TODBADDED">You can calculate how much tax you''ll pay as a couple.</a>
+##eligibility.check.couples-allowance=CY_If one of you was born before 6 April 1935, you may benefit more by applying for <a id=CY_"married-couples" href=CY_"https://www.gov.uk/married-couples-allowance" rel=CY_"external">Married Couple''s Allowance</a> instead.
+##income.check.couples-allowance=CY_To benefit as a couple for Marriage Allowance your income should be at or below the <a id=CY_"personal-allowance" href=CY_"#TODBADDED" rel=CY_"external">Personal Allowance</a> level.
 eligibility.check.married=CY_Does this apply to you?
 eligibility.check.married.legend=CY_Are you married or in a legally registered civil partnership?
 eligibility.check.yes =CY_ Yes
 eligibility.check.married.error=CY_You aren''t eligible for Marriage Allowance because you aren''t married or in a legally registered civil partnership.
 multiyear.check.income=CY_Since 6 April 2015 was your annual income at or below the Personal Allowance level?
-mutliyear.check.recipient=CY_Since 6 April 2015 was your spouse or civil partner a basic rate tax payer?
-eligibility.check.recipient.income.error=CY_You cannot apply for Marriage Allowance is your partner is a higher rate taxpayer. You should only apply for Marriage Allowance for tax years when your partner was a basic rate taxpayer.
+##mutliyear.check.recipient=CY_Since 6 April 2015 was your spouse or civil partner a basic rate tax payer?
+##eligibility.check.recipient.income.error=CY_You cannot apply for Marriage Allowance is your partner is a higher rate taxpayer. You should only apply for Marriage Allowance for tax years when your partner was a basic rate taxpayer.
 eligibility.check.non-eligible=CY_Based on your answers, you aren''t eligible for Marriage Allowance.
-eligibility.check.no-benefit-as-couple=CY_Based on your answers you are eligible, but you may not benefit as a couple
-eligibility.check.calc-para-pre=CY_To check if you may benefit as a couple, use the
-eligibility.check.calc-para-in=CY_calculator tool
-eligibility.check.calc-para-post=CY_in the Marriage Allowance guidance.
-eligibility.check.who.transfers.h1=CY_You are eligible for Marriage Allowance
-eligibility.check.who.transfers.h2=CY_Who should make the transfer?
-eligibility.check.who.transfers.eligible=CY_Based on your answers, as a couple you are eligible for Marriage Allowance
-eligibility.check.who.transfers.continue-as-lower-earner=CY_Continue as lower earner
+##eligibility.check.no-benefit-as-couple=CY_Based on your answers you are eligible, but you may not benefit as a couple
+##eligibility.check.calc-para-pre=CY_To check if you may benefit as a couple, use the
+##eligibility.check.calc-para-in=CY_calculator tool
+##eligibility.check.calc-para-post=CY_in the Marriage Allowance guidance.
+##eligibility.check.who.transfers.h1=CY_You are eligible for Marriage Allowance
+##eligibility.check.who.transfers.h2=CY_Who should make the transfer?
+##eligibility.check.who.transfers.eligible=CY_Based on your answers, as a couple you are eligible for Marriage Allowance
+##eligibility.check.who.transfers.continue-as-lower-earner=CY_Continue as lower earner
 eligibility.check.lower.earner.information1=CY_To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £{0} or less a year.
 eligibility.check.lower.earner.information2=CY_This is your income figure before any tax is deducted.
 eligibility.check.lower.earner.h1=CY_Your income
@@ -322,8 +322,8 @@ pages.finished.para5=CY_If they''re employed and pay tax via PAYE, we''ll send t
 pages.finished.para6=CY_Your revised notice of tax coding will show in your personal tax account within 24 hours.
 pages.finished.para7=CY_There is no need to contact us.
 pages.finished.back-pta=CY_Back to Personal Tax Account
-pages.finished.para8=CY_You can check the personal tax account to view your marriage allowance and make changes at any time.
-pages.finished.check-marriage-allowance-button=CY_Check your Marriage Allowance
+##pages.finished.para8=CY_You can check the personal tax account to view your marriage allowance and make changes at any time.
+##pages.finished.check-marriage-allowance-button=CY_Check your Marriage Allowance
 pages.finished.check-link-para=CY_You can <a id=CY_"pta-link" href=CY_"{0}" data-journey-click=CY_"marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
 pages.finished.survey-link=CY_<a id=CY_"survey-link" href=CY_"{0}">What did you think of this service?</a> (takes 30 seconds)
 
@@ -348,7 +348,7 @@ pages.form.field.your-confirmation=CY_Confirmation email
 pages.form.field.yourDetails=CY_We''ll email confirmation of your Marriage Allowance application within 24 hours. We won''t share your email with anyone else.
 pages.form.field.transferor-email=CY_Your email address
 pages.form.field.enter-email=CY_Enter email address
-pages.form.field.dom=CY_On what date did you marry or form a civil partnership with your current partner?<p>This is to ensure we allow you to benefit from Marriage Allowance for the correct period of time. Marriage Allowance began on 6 April 2015, so you might be able to claim for previous tax years.</p>
+##pages.form.field.dom=CY_On what date did you marry or form a civil partnership with your current partner?<p>This is to ensure we allow you to benefit from Marriage Allowance for the correct period of time. Marriage Allowance began on 6 April 2015, so you might be able to claim for previous tax years.</p>
 pages.form.field.dod=CY_When did you get divorced?<p>We need to know so we can make sure you benefit from Marriage Allowance for the correct period of time.</p>
 
 #Date of Marriage
