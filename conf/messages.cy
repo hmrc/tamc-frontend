@@ -359,24 +359,16 @@ pages.date-of-marriage.h2=CY_When did you marry or form a civil partnership with
 
 #How it works
 pages.how-it-works.heading=CY_How It Works
-pages.how-it-works.lede-pre1=CY_Marriage Allowance lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
+pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">CY_Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
 pages.how-it-works.lede-pre2=CY_This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year). 
-pages.how-it-works.lede-pre3=CY_Marriage Allowance was introduced on 6 April 2015, so you can apply for the current tax year as well as the previous tax year.
-pages.how-it-works.lede-pre4=CY_To benefit as a couple, you need to earn less than your partner and have an income of £{0} or less. 
+pages.how-it-works.lede-pre4=CY_To benefit as a couple, you need to earn less than your partner and have an income of £{0} or less.
+pages.how-it-works.lede-pre5=CY_If you were eligible in the 2015 to 2016 tax year, you can backdate your claim to when Marriage Allowance was first introduced on 6 April 2015. 
 pages.how-it-works.lede-in=CY_Personal Allowance
 pages.how-it-works.lede-post=CY_to your spouse or civil partner.
 pages.how-it-works.tse=CY_to see if you''re eligible for Marriage Allowance
-pages.how-it-works.find=CY_You can
-pages.how-it-works.find.link=CY_find out how it works.
 pages.how-it-works.apply.heading=CY_Before you apply
-pages.how-it-works.identity=CY_You also need a way to prove your identity. This can be one of the following:
-pages.how-it-works.email=CY_You''ll get an email confirming your application so you will need your email address.
-pages.how-it-works.detail=CY_You need your and your partner''s National Insurance numbers and your date of marriage.
-pages.how-it-works.ty.item1=CY_the last 4 digits of the account that your child benefit, tax credits or pension is paid into
-pages.how-it-works.ty.item2=CY_the last 4 digits of an account that pays you interest
-pages.how-it-works.ty.item3=CY_details from your
-pages.how-it-works.ty.item3.post=CY_P60
-pages.how-it-works.ty.item4=CY_details from any of your 3 most recent payslips
+pages.how-it-works.email=CY_You''ll get an email confirming your application.
+pages.how-it-works.detail=CY_You need you and your partner''s National Insurance numbers.
 
 #Change of Circumstances
 change.status.button=CY_Make a change

@@ -386,4 +386,8 @@ p.blue-underline-large {
 .service-info {
     text-align: initial;
 }    
+.indent{
+	padding-left: 60px;
+	border-left: none;
+}
   
