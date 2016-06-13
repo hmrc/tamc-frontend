@@ -37,31 +37,14 @@
         @Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))
     </p>
     <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre3"))
-    </p>
-    <p class="lede">
         @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
     </p>
-    <p>
-        @Html(Messages("pages.how-it-works.find"))
-        <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">
-            @Html(Messages("pages.how-it-works.find.link"))
-        </a>
-    </p>
+    <div class="indent">
+    	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5"))</p>
+    </div>
     <h4 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h4>
-    <p>@Html(Messages("pages.how-it-works.detail"))</p>
-    <p>@Html(Messages("pages.how-it-works.identity"))</p>
-    <ul class="list-bullet">
-        <li>@Html(Messages("pages.how-it-works.ty.item1"))</li>
-        <li>@Html(Messages("pages.how-it-works.ty.item2"))</li>
-        <li>@Html(Messages("pages.how-it-works.ty.item3"))
- 			<a href="https://www.gov.uk/paye-forms-p45-p60-p11d/p60">
-            	@Html(Messages("pages.how-it-works.ty.item3.post"))
-        	</a>        
-        </li>
-        <li>@Html(Messages("pages.how-it-works.ty.item4"))</li>
-    </ul>
-    <p>@Html(Messages("pages.how-it-works.email"))</p>
+    <p class="lede">@Html(Messages("pages.how-it-works.detail"))</p>
+    <p class="lede">@Html(Messages("pages.how-it-works.email"))</p>
     <p id="get-started" class="get-started group">
         <a href="/marriage-allowance-application/benefit-calculator-pta" rel="external" data-transaction-slug="marriage-allowance" class="button" role="button" id="start-now">
             @Html(Messages("generic.start-now"))
