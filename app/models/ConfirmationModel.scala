@@ -16,6 +16,7 @@
 
 package models
 
+
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.domain.Nino
 
@@ -25,6 +26,7 @@ case class ConfirmationModel(
   recipientFirstName: String,
   recipientLastName: String,
   recipientNino: Nino,
-  availableYears: List[TaxYear])
+  availableYears: List[TaxYear],
+  dateOfMarriage : DateOfMarriageFormInput)
 
 case class UpdateRelationshipConfirmationModel(fullName: Option[CitizenName], email: EmailAddress, endRelationshipReason: EndRelationshipReason, historicRelationships: Option[Seq[RelationshipRecord]] = None)

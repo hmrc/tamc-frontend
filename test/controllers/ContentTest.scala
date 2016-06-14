@@ -919,4 +919,30 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
     }
   }
+
+  "Display Confirm page " should {
+
+    "have marriage date and name displayed" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(Some("JIM"),Some("FERGUSON"))))
+      val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
+      val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val selectedYears = Some(List(2014, 2015))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirm(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      val applicantName = document.getElementById("transferor-name")
+      val recipientName = document.getElementById("recipient-name")
+      val marriageDate = document.getElementById("marriage-date")
+      applicantName.ownText() shouldBe "Jim Ferguson"
+      recipientName.ownText() shouldBe "foo bar"
+      marriageDate.ownText() shouldBe "1 January 2015"
+    }
+  }
 }

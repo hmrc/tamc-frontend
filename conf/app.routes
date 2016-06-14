@@ -15,6 +15,7 @@ POST   /benefit-calculator-pta                     controllers.PtaEligibilityCon
 # Transfer Allowance
 GET    /transfer-allowance                         controllers.TransferController.transfer
 POST   /transfer-allowance                         controllers.TransferController.transferAction
+GET    /date-of-marriage                           controllers.TransferController.dateOfMarriage
 POST   /date-of-marriage                           controllers.TransferController.dateOfMarriageAction
 GET    /eligible-years                             controllers.TransferController.eligibleYears
 POST   /eligible-years                             controllers.TransferController.eligibleYearsAction

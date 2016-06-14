@@ -116,7 +116,8 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transferAction(request)
 
-      status(result) shouldBe OK
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-marriage")
     }
 
     "store data if recipient exists and is not in relationship" in new WithApplication(fakeApplication) {
@@ -351,7 +352,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -408,7 +409,8 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
         transferor = Some(trrec),
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-        selectedYears = selectedYears))
+        selectedYears = selectedYears,
+        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -441,7 +443,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -462,7 +464,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -483,7 +485,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -504,7 +506,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -674,7 +676,8 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
         transferor = Some(trrec),
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-        selectedYears = Some(List(2015))))
+        selectedYears = Some(List(2015)),
+        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -688,7 +691,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "create-relationship-GDS",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None,Some(DateOfMarriageFormInput(2015-01-01)))"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxSuccessful", detailsToCheck, tags)
     }
@@ -702,7 +705,8 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
         transferor = Some(trrec),
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-        selectedYears = Some(List(2015))))
+        selectedYears = Some(List(2015)),
+        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -716,7 +720,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "create-relationship-PTA",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None,Some(DateOfMarriageFormInput(2015-01-01)))"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxSuccessful", detailsToCheck, tags)
     }
@@ -726,7 +730,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example123@example.com"))), relationshipCreated = (Some(true))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example123@example.com"))), relationshipCreated = (Some(true)), dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -740,7 +744,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "relationship-exists",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),Some(true),None,None)"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,None)),Some(RecipientRecord(UserRecord(" + Cids.cid2 + ",2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoWithLOA1 + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),Some(true),None,None,Some(DateOfMarriageFormInput(2015-01-01)))"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
     }

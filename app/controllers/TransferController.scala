@@ -104,8 +104,17 @@ trait TransferController extends FrontendController with AuthorisedActions with 
             recipientData => {
               CachingService.saveRecipientDetails(recipientData)
               registrationService.getEligibleTransferorName map {
-                name => Ok(views.html.DateOfMarriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), name))
+                name => Redirect(controllers.routes.TransferController.dateOfMarriage())
               }}) recover (handleError)
+  }
+
+  def dateOfMarriage = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          registrationService.getEligibleTransferorName map {
+            name => Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), name))
+          } recover (handleError)
   }
 
   def dateOfMarriageAction = TamcAuthPersonalDetailsAction {
@@ -115,9 +124,10 @@ trait TransferController extends FrontendController with AuthorisedActions with 
           dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
             formWithErrors =>
               registrationService.getEligibleTransferorName map {
-                name => { BadRequest(views.html.DateOfMarriage(formWithErrors, name)) }
+                name => { BadRequest(views.html.date_of_marriage(formWithErrors, name)) }
               },
-            marriageData =>
+            marriageData => {
+              CachingService.saveDateOfMarriage(marriageData)
               registrationService.getRecipientDetailsFormData flatMap {
                 case RecipientDetailsFormInput(name, lastName, gender, nino) => {
                   val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
@@ -125,7 +135,8 @@ trait TransferController extends FrontendController with AuthorisedActions with 
                     _ => Future.successful(Redirect(controllers.routes.TransferController.eligibleYears()))
                   }
                 }
-              }) recover (handleError)
+              }
+            }) recover (handleError)
   }
 
   def eligibleYears = TamcAuthPersonalDetailsAction {
@@ -136,7 +147,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
             case (false, extraYears, recipient) if (extraYears.isEmpty) =>
               throw new NoTaxYearsAvailable
             case (false, extraYears, recipient) if (!extraYears.isEmpty) =>
-              Ok(views.html.previousYears(recipient.data, extraYears))
+              Ok(views.html.previous_years(recipient.data, extraYears))
             case (currentYearAvailable, extraYears, recipient) =>
               Ok(views.html.eligible_years(
                 currentYearForm(!extraYears.isEmpty),
@@ -169,7 +180,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
                       if (extraYears.isEmpty && currentYearAvailable && (success.applyForCurrentYear != Some(true))) {
                         throw new NoTaxYearsSelected
                       } else if (!extraYears.isEmpty) {
-                        Ok(views.html.previousYears(recipient.data, extraYears))
+                        Ok(views.html.previous_years(recipient.data, extraYears))
                       } else {
                         Redirect(controllers.routes.TransferController.confirmYourEmail())
                       }

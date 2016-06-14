@@ -134,7 +134,8 @@ class Signout extends UnitSpec with TestUtility {
         transferor = Some(trrec),
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-        selectedYears = selectedYears))
+        selectedYears = selectedYears,
+        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -333,7 +334,8 @@ class Signout extends UnitSpec with TestUtility {
         transferor = Some(trrec),
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-        selectedYears = selectedYears))
+        selectedYears = selectedYears,
+        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
