@@ -116,7 +116,8 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transferAction(request)
 
-      status(result) shouldBe OK
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-marriage")
     }
 
     "store data if recipient exists and is not in relationship" in new WithApplication(fakeApplication) {

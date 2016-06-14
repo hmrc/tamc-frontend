@@ -399,6 +399,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       changeLink shouldNot be(null)
       marriageLink shouldNot be(null)
       changeLink.attr("href") shouldBe "/marriage-allowance-application/transfer-allowance"
+      marriageLink.attr("href") shouldBe "/marriage-allowance-application/date-of-marriage"
     }
   }
 

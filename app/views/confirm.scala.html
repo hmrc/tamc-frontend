@@ -97,7 +97,7 @@
           <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
           <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage))</td>
           <td>
-              <a href="@controllers.routes.TransferController.transferAction()" data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
+              <a href="@controllers.routes.TransferController.dateOfMarriage()" data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
                   @Html(Messages("generic.change"))
               </a>
           </td>

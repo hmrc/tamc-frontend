@@ -77,17 +77,7 @@ trait TransferService {
         case Some(CacheData(Some(UserRecord(_, _, _, name)), _, _, _, _, _,_)) => name
       }
     }
-/*
-  private def checkCreateActionLock(trrecord: UserRecord, initialCacheState: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
-    (trrecord, initialCacheState) match {
-      case (UserRecord(_, _, _, _), Some(CacheData(_, _, _, Some(true), _))) =>
-        Logger.warn("Backend System returned eligible transferor although transfer is already in place")
-        handleAudit(TransferorRelationshipDataInconsistent(trrecord, initialCacheState))
-        cachingService.unlockCreateRelationship().map { _ => trrecord }
-      case _ =>
-        Future { trrecord }
-    }
-*/
+
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     checkRecipientEligible(transferorNino, recipientData).map(eligible => eligible) recoverWith {
       case error =>
