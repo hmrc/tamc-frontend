@@ -327,7 +327,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -346,7 +346,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -366,7 +366,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -378,6 +378,27 @@ class RoutesTest extends UnitSpec with TestUtility {
       val signout = document.getElementById("edit-email")
       signout shouldNot be(null)
       signout.attr("href") shouldBe "/marriage-allowance-application/confirm-your-email"
+    }
+    "have link to edit partner details and edit marriage details" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
+      val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
+      val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val selectedYears = Some(List(2014, 2015))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirm(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      val changeLink = document.getElementById("edit-partner-details")
+      val marriageLink = document.getElementById("edit-marriage-date")
+      changeLink shouldNot be(null)
+      marriageLink shouldNot be(null)
+      changeLink.attr("href") shouldBe "/marriage-allowance-application/transfer-allowance"
     }
   }
 

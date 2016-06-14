@@ -149,8 +149,7 @@ generic.change=Change
 generic.confirm-apply=Confirm and apply
 generic.confirm.button=Confirm
 generic.start-now=Start now
-generic.from=From
-generic.to=To
+generic.name=Name
 generic.email=Email
 generic.nino-full=National Insurance number
 generic.yes=Yes
@@ -500,14 +499,16 @@ pages.previousyear.lede=You can apply for Marriage Allowance from when it was fi
 pages.previousyear.para=You told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on <span id="marriageDate">{1}</span>. This means you can apply for earlier tax years.
 
 #confirm-page
-pages.confirm.lower.earner=The lower earner
-pages.confirm.higher.earner=The higher earner
+pages.confirm.lower.earner=Your details(the lower earner)
+pages.confirm.higher.earner=Your partner''s details (the higher earner)
 pages.confirm.current.tax=Current tax year: {0} onwards
 pages.confirm.current.tax.desc=HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
 pages.confirm.previous.tax=Previous tax year: {0} to {1}
 pages.confirm.previous.tax.desc=HMRC will check the details you''ve supplied before sending {0} a cheque by post for up to {1}.
-pages.confirm.warning=Check the details you''ve entered and make sure this is the person you want to help pay less tax.
+pages.confirm.warning=Check the details you''ve entered and make sure this is the person you want to claim Marriage Allowance with.
 pages.confirm.button=Confirm your application
+pages.confirm.marriage.details=Your Marriage Allowance details
+pages.confirm.date.of.marriage=Date of marriage or formation of civil partnership
 
 #change-of-circs-finish-page
 pages.coc.finish.header=Marriage Allowance cancelled

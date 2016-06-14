@@ -117,7 +117,8 @@ trait TransferController extends FrontendController with AuthorisedActions with 
               registrationService.getEligibleTransferorName map {
                 name => { BadRequest(views.html.DateOfMarriage(formWithErrors, name)) }
               },
-            marriageData =>
+            marriageData => {
+              CachingService.saveDateOfMarriage(marriageData)
               registrationService.getRecipientDetailsFormData flatMap {
                 case RecipientDetailsFormInput(name, lastName, gender, nino) => {
                   val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
@@ -125,7 +126,8 @@ trait TransferController extends FrontendController with AuthorisedActions with 
                     _ => Future.successful(Redirect(controllers.routes.TransferController.eligibleYears()))
                   }
                 }
-              }) recover (handleError)
+              }
+            }) recover (handleError)
   }
 
   def eligibleYears = TamcAuthPersonalDetailsAction {

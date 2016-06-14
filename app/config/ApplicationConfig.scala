@@ -59,6 +59,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_SELECTED_YEARS = "SELECTED_YEARS"
   val CACHE_SOURCE = "SOURCE"
   val CACHE_LOCKED_UPDATE = "LOCKED_UPDATE"
+  val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
 
   val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get

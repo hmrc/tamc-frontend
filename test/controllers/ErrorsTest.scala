@@ -218,7 +218,8 @@ class ErrorsTest extends UnitSpec with TestUtility {
         transferor = Some(trrec),
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-        selectedYears = Some(List(2015))))
+        selectedYears = Some(List(2015)),
+        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testParams = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
@@ -232,7 +233,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val detailsToCheck = Map(
         "event" -> "create-relationship-GDS",
         "error" -> "errors.CannotCreateRelationship",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None,Some(DateOfMarriageFormInput(2015-01-01)))"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
 
@@ -253,7 +254,8 @@ class ErrorsTest extends UnitSpec with TestUtility {
         transferor = Some(trrec),
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-        selectedYears = Some(List(2015))))
+        selectedYears = Some(List(2015)),
+        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testParams = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
@@ -267,7 +269,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val detailsToCheck = Map(
         "event" -> "create-relationship-PTA",
         "error" -> "errors.CannotCreateRelationship",
-        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None)"))
+        "data" -> ("CacheData(Some(UserRecord(" + Cids.cid1 + ",2015,None,Some(CitizenName(Some(Foo),Some(Bar))))),Some(RecipientRecord(UserRecord(123456,2015,None,None),RegistrationFormInput(foo,bar,Gender(M)," + Ninos.ninoTransferorNotFound + ",2015-01-01),List())),Some(NotificationRecord(example123@example.com)),None,Some(List(2015)),None,Some(DateOfMarriageFormInput(2015-01-01)))"))
       val tags = Map("X-Session-ID" -> ("session-ID-" + Ninos.ninoHappyPath))
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
 

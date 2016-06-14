@@ -72,9 +72,9 @@ trait TransferService {
     Future {
       cache match {
         case None => throw CacheMissingTransferor()
-        case Some(CacheData(_, _, _, Some(true), _, _)) => throw CacheRelationshipAlreadyCreated()
-        case Some(CacheData(None, _, _, _, _, _)) => throw CacheMissingTransferor()
-        case Some(CacheData(Some(UserRecord(_, _, _, name)), _, _, _, _, _)) => name
+        case Some(CacheData(_, _, _, Some(true), _, _,_)) => throw CacheRelationshipAlreadyCreated()
+        case Some(CacheData(None, _, _, _, _, _,_)) => throw CacheMissingTransferor()
+        case Some(CacheData(Some(UserRecord(_, _, _, name)), _, _, _, _, _,_)) => name
       }
     }
 /*
@@ -132,7 +132,7 @@ trait TransferService {
   private def validateFinishedData(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     Future {
       cacheData match {
-        case Some(CacheData(_, _, Some(notification), Some(true), _, _)) => notification
+        case Some(CacheData(_, _, Some(notification), Some(true), _, _,_)) => notification
         case _ => throw new CacheCreateRequestNotSent()
       }
     }
@@ -160,8 +160,8 @@ trait TransferService {
   private def validateRegistrationData(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientDetailsFormInput] =
     Future {
       cacheData match {
-        case Some(CacheData(_,_,_,_,_,Some(registrationData))) => registrationData
-        case Some(CacheData(_,None,_,_,_,_)) => throw new CacheMissingRecipient()
+        case Some(CacheData(_,_,_,_,_,Some(registrationData),_)) => registrationData
+        case Some(CacheData(_,None,_,_,_,_,_)) => throw new CacheMissingRecipient()
       }
     }
 
@@ -171,15 +171,15 @@ trait TransferService {
 
   def getTransferorNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] =
     cachingService.getCachedData map {
-      case Some(CacheData(_, _, _, Some(true), _, _)) => throw CacheRelationshipAlreadyCreated()
+      case Some(CacheData(_, _, _, Some(true), _, _,_)) => throw CacheRelationshipAlreadyCreated()
       case Some(
         CacheData(
           Some(UserRecord(_, _, _, _)),
           Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
-          notificationRecord, _, _,_)) => notificationRecord
+          notificationRecord, _, _,_,_)) => notificationRecord
       case None                              => throw CacheMissingTransferor()
-      case Some(CacheData(None, _, _, _, _, _)) => throw CacheMissingTransferor()
-      case Some(CacheData(_, None, _, _, _, _)) => throw CacheMissingRecipient()
+      case Some(CacheData(None, _, _, _, _, _,_)) => throw CacheMissingTransferor()
+      case Some(CacheData(_, None, _, _, _, _,_)) => throw CacheMissingRecipient()
     }
 
   def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext, user: AuthContext): Future[NotificationRecord] =
@@ -195,7 +195,7 @@ trait TransferService {
   private def validateCompleteCache(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] =
     {
       cacheData match {
-        case Some(CacheData(_, _, _, Some(true), _, _)) => {
+        case Some(CacheData(_, _, _, Some(true), _, _,_)) => {
           handleAudit(RelationshipAlreadyCreatedEvent(cacheData.get))
           throw CacheRelationshipAlreadyCreated()
         }
@@ -205,13 +205,13 @@ trait TransferService {
             Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
             Some(notification: NotificationRecord),
             _,
-            Some(selectedTaxYears), _)) if (selectedTaxYears.size > 0) => Future.successful(cacheData.get)
+            Some(selectedTaxYears), _,_)) if (selectedTaxYears.size > 0) => Future.successful(cacheData.get)
         case None => throw CacheMissingTransferor()
-        case Some(CacheData(None, _, _, _, _, _)) => throw CacheMissingTransferor()
-        case Some(CacheData(_, None, _, _, _, _)) => throw CacheMissingRecipient()
-        case Some(CacheData(_, _, None, _, _, _)) => throw CacheMissingEmail()
-        case Some(CacheData(_, _, _, _, None, _)) => throw NoTaxYearsSelected()
-        case Some(CacheData(_, _, _, _, Some(selectedTaxYears), _)) if (selectedTaxYears.size == 0) => throw NoTaxYearsSelected()
+        case Some(CacheData(None, _, _, _, _, _,_)) => throw CacheMissingTransferor()
+        case Some(CacheData(_, None, _, _, _, _,_)) => throw CacheMissingRecipient()
+        case Some(CacheData(_, _, None, _, _, _,_)) => throw CacheMissingEmail()
+        case Some(CacheData(_, _, _, _, None, _,_)) => throw NoTaxYearsSelected()
+        case Some(CacheData(_, _, _, _, Some(selectedTaxYears), _,_)) if (selectedTaxYears.size == 0) => throw NoTaxYearsSelected()
       }
     }
 
@@ -223,7 +223,8 @@ trait TransferService {
         recipientFirstName = cacheData.recipient.get.data.name,
         recipientLastName = cacheData.recipient.get.data.lastName,
         recipientNino = cacheData.recipient.get.data.nino,
-        availableYears = getAvailableTaxYears(cacheData.selectedYears.get))
+        availableYears = getAvailableTaxYears(cacheData.selectedYears.get),
+        dateOfMarriage = cacheData.dateOfMarriage.get)
     }
 
   private def getAvailableTaxYears(selectedYears: List[Int]): List[TaxYear] =

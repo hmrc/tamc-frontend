@@ -27,6 +27,7 @@
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 @import utils.LanguageUtils
+@import org.joda.time.LocalDate
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.confirm-recipient"))){
@@ -38,7 +39,7 @@
     <table>
     <col width="30%">
     <col width="60%">
-    <col width="10%"
+    <col width="10%">
       <thead>
         <tr>
           <th colspan="3">@Html(Messages("pages.confirm.lower.earner"))</th>
@@ -46,7 +47,7 @@
       </thead>
       <tr>
 @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
-        <td>@Html(Messages("generic.from"))</td>
+        <td>@Html(Messages("generic.name"))</td>
         <td id="transferor-name">@name</td>
         <td>&nbsp;</td>
       </tr>
@@ -69,16 +70,39 @@
           <th colspan="3">@Html(Messages("pages.confirm.higher.earner"))</th>
         </tr>
         <tr>
-            <td>@Html(Messages("generic.to"))</td>
+            <td>@Html(Messages("generic.name"))</td>
             <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
-            <td>&nbsp;</td>
+            <td>
+                <a href="@controllers.routes.TransferController.transfer()" data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
+                    @Html(Messages("generic.change"))
+                </a>
+            </td>
         </tr>
-        <tr>
+        <tr class="grey-underline-large-thick">
             <td>@Html(Messages("generic.nino-full"))</td>
             <td id="recipient-nino">@templates.ninoRenderer(data.recipientNino)</td>
             <td>&nbsp;</td>
         </tr>
-        @for(taxYear <- data.availableYears) {
+        </table>
+  <table  class="grey-underline-large-thick">
+      <col width="30%">
+      <col width="60%">
+      <col width="10%">
+      <thead>
+      <tr>
+          <th colspan="3">@Html(Messages("pages.confirm.marriage.details"))</th>
+      </tr>
+      </thead>
+      <tr>
+          <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
+          <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage))</td>
+          <td>
+              <a href="@controllers.routes.TransferController.transferAction()" data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
+                  @Html(Messages("generic.change"))
+              </a>
+          </td>
+      </tr>
+      @for(taxYear <- data.availableYears) {
           <tr>
               @if(taxYear.isCurrent) {
                   <td id="year-@taxYear.year">@Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang))))</td>
