@@ -499,7 +499,7 @@ pages.previousyear.lede=You can apply for Marriage Allowance from when it was fi
 pages.previousyear.para=You told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on <span id="marriageDate">{1}</span>. This means you can apply for earlier tax years.
 
 #confirm-page
-pages.confirm.lower.earner=Your details(the lower earner)
+pages.confirm.lower.earner=Your details (the lower earner)
 pages.confirm.higher.earner=Your partner''s details (the higher earner)
 pages.confirm.current.tax=Current tax year: {0} onwards
 pages.confirm.current.tax.desc=HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
