@@ -114,6 +114,14 @@ class LanguageController extends FrontendController {
     Redirect(routes.TransferController.transfer()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
   }
 
+  def switchToWelshDateOfMarriage = Action { implicit request =>
+    Redirect(routes.TransferController.dateOfMarriage()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishDateOfMarriage = Action { implicit request =>
+    Redirect(routes.TransferController.dateOfMarriage()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
   def switchToWelshEligibleYears = Action { implicit request =>
     Redirect(routes.TransferController.eligibleYears()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
   }

@@ -83,7 +83,9 @@ GET    /switch-to-english-reject                   controllers.LanguageControlle
 GET    /switch-to-welsh-finished-change            controllers.LanguageController.switchToWelshFinishUpdate
 GET    /switch-to-english-finished-change          controllers.LanguageController.switchToEnglishFinishUpdate	
 GET    /switch-to-welsh-transfer-allowance         controllers.LanguageController.switchToWelshTransfer
-GET    /switch-to-english-transfer-allowance       controllers.LanguageController.switchToEnglishTransfer	
+GET    /switch-to-english-transfer-allowance       controllers.LanguageController.switchToEnglishTransfer
+GET    /switch-to-welsh-date-of-marriage           controllers.LanguageController.switchToWelshDateOfMarriage
+GET    /switch-to-english-date-of-marriage         controllers.LanguageController.switchToEnglishDateOfMarriage
 GET    /switch-to-welsh-eligible-years             controllers.LanguageController.switchToWelshEligibleYears
 GET    /switch-to-english-eligible-years           controllers.LanguageController.switchToEnglishEligibleYears
 GET    /switch-to-welsh-previous-years             controllers.LanguageController.switchToWelshPreviousYears
