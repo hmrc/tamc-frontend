@@ -54,5 +54,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
     <p class="get-started group" id="get-started">
         <button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofmarriage_continue">@Html(Messages("generic.continue"))</button>
     </p>
-}
+    }
+    <br>
+    <a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>
 }

@@ -32,11 +32,14 @@ availableYears:List[TaxYear] = List[TaxYear]())(
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.extra-years"))){
-  <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
-  <p class="lede">@Html(Messages("pages.previousyear.lede"))</p>
+        <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
+        <p class="lede">@Html(Messages("pages.previousyear.lede"))</p>
 
 
-  <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage))))</p>
- <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" type="submit" data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
+        <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage))))</p>
+        <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" type="submit" data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
+        <br>
+        <br>
+        <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
   }
 

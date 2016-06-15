@@ -150,6 +150,10 @@ class RoutesTest extends UnitSpec with TestUtility {
       continue shouldNot be(null)
       continue.text() shouldBe "Start now"
       continue.attr("href") shouldBe "/marriage-allowance-application/history"
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/partners-income")
     }
   }
 
@@ -337,6 +341,10 @@ class RoutesTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("create").text() shouldBe "Confirm your application"
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/confirm-your-email")
     }
 
 
@@ -828,9 +836,13 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe ("https://www.gov.uk/apply-marriage-allowance")
     }
 
-    "redirect to lower earner page if answer is yes" in new WithApplication(fakeApplication) {
+    "redirect to lower earner page if answer is yes and have back button" in new WithApplication(fakeApplication) {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("marriage-criteria" -> "true")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheckAction()(request)
@@ -850,9 +862,6 @@ class RoutesTest extends UnitSpec with TestUtility {
       val finish = document.getElementById("button-finished")
       finish shouldNot be(null)
       finish.attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide"
-      val continue = document.getElementById("back")
-      continue shouldNot be(null)
-      continue.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
     }
   }
 
@@ -870,6 +879,10 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("lower-earner-error").text shouldBe "Confirm if you are the lower earner in the relationship"
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
     }
 
     "redirect to who should transfer page irrespective of selection" in new WithApplication(fakeApplication) {
@@ -896,6 +909,10 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementsByClass("partners-inc-error").text shouldBe "You're not eligible for Marriage Allowance in this tax year because your partner's income is too high or too low. You can still continue to check your eligibility for previous years."
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner")
     }
 
     "redirect to verify page irrespective of selection" in new WithApplication(fakeApplication) {
