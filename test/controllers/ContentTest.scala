@@ -479,6 +479,10 @@ class ContentTest extends UnitSpec with TestUtility {
 
       val err = field.getElementsByClass("client-error-notification")
       err.size() shouldBe 1
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/transfer-allowance")
     }
 
     "display form error message (date of marriage is after today's date)" in new WithApplication(fakeApplication) {
@@ -552,7 +556,9 @@ class ContentTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("firstNameOnly").text() shouldBe "foo"
       document.getElementById("marriageDate").text() shouldBe "10 April 2011"
-
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligible-years")
     }
     "display form error message (no year choice made )" in new WithApplication(fakeApplication) {
 
@@ -599,6 +605,10 @@ class ContentTest extends UnitSpec with TestUtility {
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your email address."
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/previous-years")
     }
 
     "display form error message (transferor email is empty)" in new WithApplication(fakeApplication) {

@@ -33,7 +33,7 @@ import config.ApplicationConfigired by applicable law or agreed to in writing, s
     @if(ApplicationConfig.isWelshEnabled){
 	     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishLowerEarnerCheck.toString(), 
 	                controllers.routes.LanguageController.switchToWelshLowerEarnerCheck.toString())
-	}	                
+	}
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.lower.earner.h1"))</h1>
@@ -67,4 +67,5 @@ import config.ApplicationConfigired by applicable law or agreed to in writing, s
             </button>
         </div>
     }
+    <a href="@controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
 } 

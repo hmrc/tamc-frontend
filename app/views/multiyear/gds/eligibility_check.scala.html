@@ -26,7 +26,7 @@
     @templates.tamc_main(
         title = Messages("title.pattern", Messages("title.eligibility"))){
         @if(ApplicationConfig.isWelshEnabled){
-	        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(), 
+	        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(),
 	                           controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString())
         }
         <h1 class="heading-xlarge">
@@ -58,4 +58,5 @@
                 </button>
             </div>
         }
+        <a href="https://www.gov.uk/apply-marriage-allowance" class="link-back">@Html(Messages("generic.back"))</a>
     }

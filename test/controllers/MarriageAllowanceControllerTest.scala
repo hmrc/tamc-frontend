@@ -208,6 +208,9 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-marriage")
     }
 
     "show No Tax Years selected page if user is only eligible for current year and chooses no" in new WithApplication(fakeApplication) {
