@@ -138,25 +138,6 @@ class RoutesTest extends UnitSpec with TestUtility {
     }
   }
 
-  "Hitting verify page" should {
-    "have a link to register page (if user has seen eligibility check page)" in new WithApplication(fakeApplication) {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.verify()(request)
-      status(result) shouldBe OK
-
-      val document = Jsoup.parse(contentAsString(result))
-      val continue = document.getElementById("verify")
-      continue shouldNot be(null)
-      continue.text() shouldBe "Start now"
-      continue.attr("href") shouldBe "/marriage-allowance-application/history"
-
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/partners-income")
-    }
-  }
-
   "Transfer page" should {
     "redirect to status page if relationship creation is locked" in new WithApplication(fakeApplication) {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
@@ -192,14 +173,14 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect to verify page if user tries to hit any authorized page directly and user has not seen eligibility or verify page" in new WithApplication(fakeApplication) {
+    "redirect to iv page if user tries to hit any authorized page directly and user has not seen eligibility or verify page" in new WithApplication(fakeApplication) {
       val testComponent = makeTestComponent(dataId = "not_logged_in", riskTriageRouteBiasPercentageParam = 100)
       val controllerToTest = testComponent.controller
       val request = FakeRequest()
       val result = controllerToTest.transfer()(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/verify")
+      redirectLocation(result) shouldBe Some("bar")
     }
 
     "redirect to IV if user tries to hit any authorized page directly and user has seen eligibility page" in new WithApplication(fakeApplication) {
@@ -556,7 +537,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val controllerToTest = testComponent.controller
       val result = controllerToTest.howItWorks()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/verify")
+      redirectLocation(result) shouldBe Some("bar")
     }
 
     "successfully authenticate the user " in new WithApplication(fakeApplication) {
@@ -583,7 +564,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val controllerToTest = testComponent.controller
       val result = controllerToTest.calculator()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/verify")
+      redirectLocation(result) shouldBe Some("bar")
     }
 
     "successfully authenticate the user " in new WithApplication(fakeApplication) {
@@ -609,7 +590,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val controllerToTest = testComponent.controller
       val result = controllerToTest.eligibilityCheck()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/verify")
+      redirectLocation(result) shouldBe Some("bar")
     }
 
     "go to finish in 'nyn' scenario" in new WithApplication(fakeApplication) {
@@ -672,7 +653,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val controllerToTest = testComponent.controller
       val result = controllerToTest.eligibilityCheck()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/verify")
+      redirectLocation(result) shouldBe Some("bar")
     }
 
     "successfully authenticate the user and have eligibility-check page action" in new WithApplication(fakeApplication) {
@@ -920,7 +901,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.partnersIncomeCheckAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/verify"))
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/history"))
     }
   }
 }

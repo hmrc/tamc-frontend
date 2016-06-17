@@ -59,7 +59,6 @@ GET    /lower-earner                               controllers.MultiYearGdsEligi
 POST   /lower-earner                               controllers.MultiYearGdsEligibilityController.lowerEarnerCheckAction
 GET    /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheck
 POST   /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
-GET    /verify                                     controllers.MultiYearGdsEligibilityController.verify
 
 #Welsh Translation
 GET    /switch-to-welsh-eligibility-check          controllers.LanguageController.switchToWelshEligibilityCheck
@@ -68,8 +67,6 @@ GET    /switch-to-welsh-lower-earner               controllers.LanguageControlle
 GET    /switch-to-english-lower-earner             controllers.LanguageController.switchToEnglishLowerEarnerCheck
 GET    /switch-to-welsh-partners-income            controllers.LanguageController.switchToWelshPartnersIncomeCheck
 GET    /switch-to-english-partners-income          controllers.LanguageController.switchToEnglishPartnersIncomeCheck
-GET    /switch-to-welsh-verify                     controllers.LanguageController.switchToWelshVerify
-GET    /switch-to-english-verify                   controllers.LanguageController.switchToEnglishVerify	
 GET    /switch-to-welsh-history                    controllers.LanguageController.switchToWelshHistory
 GET    /switch-to-english-history                  controllers.LanguageController.switchToEnglishHistory	
 GET    /switch-to-welsh-confirm-email              controllers.LanguageController.switchToWelshConfirmEmail

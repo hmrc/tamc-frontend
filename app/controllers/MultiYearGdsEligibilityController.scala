@@ -94,16 +94,8 @@ trait MultiYearGdsEligibilityController extends FrontendController with Unauthor
           BadRequest(views.html.multiyear.gds.partners_income_question(formWithErrors)),
         partnersIncomeInput => {
           partnersIncomeInput.partnersIncomeQuestion match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.verify())
+            case _ => Redirect(controllers.routes.UpdateRelationshipController.history())
           }
         })
   }
-
-  def verify = unauthorisedAction {
-    implicit request =>
-      setPtaAwareGdsJourney(
-        request = request,
-        Ok(views.html.verify()))
-  }
-
 }

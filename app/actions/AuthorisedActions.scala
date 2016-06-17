@@ -65,14 +65,9 @@ trait IdaAuthentificationProvider extends Verify with RunMode with TamcBreadcrum
   val customAuditConnector: AuditConnector
 
   override def redirectToLogin(implicit request: Request[_]): Future[Result] =
-    isGdsOrPtaJourney(request) match {
-      case true =>
-        Logger.info("User has visited eligibility or verify page, redirecting to login")
+ {
         customAuditConnector.sendEvent(RiskTriageRedirectEvent())
         super.redirectToLogin
-      case _ =>
-        Logger.info("User has not visited eligibility page or verify page, redirecting to verify page")
-        Future(Redirect(controllers.routes.MultiYearGdsEligibilityController.verify()))
     }
 
   override def handleSessionTimeout(implicit request: Request[_]): Future[Result] =
