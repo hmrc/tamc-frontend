@@ -386,6 +386,38 @@ p.blue-underline-large {
 .service-info {
     text-align: initial;
 }
-
+/** Link Back class **/
+.link-back::before {
+    border-bottom: 5px solid transparent;
+    border-right: 6px solid #0b0c0c;
+    border-top: 5px solid transparent;
+    content: "";
+    display: block;
+    height: 0;
+    left: 0;
+    margin-top: -6px;
+    position: absolute;
+    top: 50%;
+    width: 0;
 }
+.link-back:link, .link-back:visited, .link-back:hover, .link-back:active {
+    color: #0b0c0c;
+}
+.link-back {
+    border-bottom: 1px solid #0b0c0c;
+    color: #0b0c0c;
+    display: inline-block;
+    font-family: "nta",Arial,sans-serif;
+    font-size: 14px;
+    font-size-adjust: 0.5;
+    font-weight: 400;
+    line-height: 1.14286;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding-left: 14px;
+    position: relative;
+    text-decoration: none;
+    text-transform: none;
+}
+
   
