@@ -24,6 +24,5 @@ import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailMaxLength
 import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailPattern
 
 object EmptyForm {
-  //TODO we do not need this form, can we use csrf token functionality differently?
   val form = Form[Option[String]]("value" -> optional(text))
 }

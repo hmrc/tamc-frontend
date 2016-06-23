@@ -305,10 +305,10 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
         }
 
         throwable match {
-          case _: CacheRelationshipAlreadyUpdated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())) //TODO to decide what to display
-          case _: CacheMissingUpdateRecord        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later())) //TODO to decide what to display
-          case _: CacheUpdateRequestNotSent       => handle(message, Logger.warn, BadRequest(views.html.errors.try_later())) //TODO to decide what to display
-          case _: CannotUpdateRelationship        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later())) //TODO to decide what to display
+          case _: CacheRelationshipAlreadyUpdated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+          case _: CacheMissingUpdateRecord        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later()))
+          case _: CacheUpdateRequestNotSent       => handle(message, Logger.warn, BadRequest(views.html.errors.try_later()))
+          case _: CannotUpdateRelationship        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later()))
           case _: CitizenNotFound                 => handle(message, Logger.warn, BadRequest(views.html.errors.citizen_not_found()))
           case _: BadFetchRequest                 => handle(message, Logger.warn, BadRequest(views.html.errors.bad_request()))
           case _: TransferorNotFound              => handle(message, Logger.warn, BadRequest(views.html.errors.transferor_not_found()))

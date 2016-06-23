@@ -196,7 +196,6 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       }
     }
 
-    //TODO Have the name part of the JSON response here use the transferorRecipientData passed in the make controller method
     val fakeHttpGet = new HttpGet {
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val nino: String = url.split("/")(2)

@@ -86,9 +86,6 @@ trait UpdateRelationshipService {
       customAuditConnector.sendEvent(event)
     }
 
-  /*
-   * TODO: consider auditing
-   */
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordList, Boolean)] =
     for {
       relationshipRecordWrapper <- fetchListRelationship(transferorNino)
@@ -191,9 +188,6 @@ trait UpdateRelationshipService {
         name = rec.name))
     }
 
-  /*
-   * TODO: handle the errors
-   */
   private def fetchListRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordWrapper] =
     marriageAllowanceConnector.listRelationship(transferorNino) map {
       case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK"))      => relationshipRecordWrapper
@@ -238,18 +232,14 @@ trait UpdateRelationshipService {
       updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
       validated <- validateupdateRelationshipCompleteCache(updateRelationshipCacheData)
       postUpdateData <- sendUpdateRelationship(transferorNino, validated)
-      //_ <- lockUpdateRelationship() //TODO to remove later
       _ <- auditUpdateRelationship(postUpdateData)
     } yield (validated.notification.get)
 
-  private def lockUpdateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+  private def lockUpdateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     cachingService.lockUpdateRelationship()
-  }
 
   private def transformUpdateData(sessionData: UpdateRelationshipCacheData): UpdateRelationshipRequestHolder = {
-
     val loggedInUser = sessionData.loggedInUserInfo.get
-
     val relationshipRecord = sessionData.relationshipEndReasonRecord.get
     val endReason = getEndReasonCode(relationshipRecord)
 
@@ -288,7 +278,7 @@ trait UpdateRelationshipService {
       httpResponse =>
         Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
           case UpdateRelationshipResponse(ResponseStatus("OK"))                                    => data
-          case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CANNOT-UPDATE-RELATIONSHIP")) => throw CannotUpdateRelationship() //TODO handle the errors
+          case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CANNOT-UPDATE-RELATIONSHIP")) => throw CannotUpdateRelationship()
           case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CITIZEN-NOT-FOUND"))          => throw CitizenNotFound()
           case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:BAD-REQUEST"))                => throw RecipientNotFound()
         }
