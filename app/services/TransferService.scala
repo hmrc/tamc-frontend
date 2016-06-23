@@ -151,7 +151,8 @@ trait TransferService {
     Future {
       cacheData match {
         case Some(CacheData(_,_,_,_,_,Some(registrationData),_)) => registrationData
-        case Some(CacheData(_,None,_,_,_,_,_)) => throw new CacheMissingRecipient()
+        case Some(CacheData(_,None,_,_,_,_,_)) => throw CacheMissingRecipient()
+        case _ => throw BadFetchRequest()
       }
     }
 

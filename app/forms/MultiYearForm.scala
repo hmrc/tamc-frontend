@@ -41,7 +41,6 @@ import play.api.data.RepeatedMapping
 
 object MultiYearForm {
 
-  @deprecated("do not reuse", "any version")
   object HackedRepeatedMapping {
     def indexes(key: String, data: Map[String, String]): Seq[Int] = {
       val KeyPattern = ("^" + java.util.regex.Pattern.quote(key) + """\[(\d+)\].*$""").r
@@ -49,7 +48,6 @@ object MultiYearForm {
     }
   }
 
-  @deprecated("do not reuse", "any version")
   case class HackedRepeatedMapping[T](wrapped: Mapping[T], val key: String = "", val constraints: Seq[Constraint[List[T]]] = Nil, extraYears: List[Int]) extends Mapping[List[T]] {
 
     override val format: Option[(String, Seq[Any])] = wrapped.format
@@ -93,7 +91,6 @@ object MultiYearForm {
 
   }
 
-  @deprecated("do not reuse", "any version")
   def hackedList[A](mapping: Mapping[A], extraYears: List[Int]): Mapping[List[A]] = HackedRepeatedMapping(mapping, extraYears = extraYears)
 
   def multiYearForm(extraYears: List[Int] = List()) = Form[MultiYearInput](
