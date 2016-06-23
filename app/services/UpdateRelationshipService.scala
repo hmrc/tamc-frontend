@@ -331,8 +331,6 @@ trait UpdateRelationshipService {
       requiredData <- transformUpdateRelationshipCache(validatedUpdateRelationship)
     } yield (requiredData, updateRelationshipCache)
 
-  //FIXME refactor this, do not call directly
-  @deprecated("FIXME refactor this, do not call directly")
   def getUpdateRelationshipCacheForReject(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     cachingService.getUpdateRelationshipCachedData
 
@@ -387,8 +385,6 @@ trait UpdateRelationshipService {
         historicRelationships = updateRelationshipCacheData.historicRelationships)
     }
 
-  //FIXME Use TimerService instead
-  @deprecated("Use TimerService instead")
   def getEndDate(endRelationshipReason: EndRelationshipReason, selectedRelationship: RelationshipRecord): LocalDate =
     (endRelationshipReason match {
       case EndRelationshipReason(EndReasonCode.DIVORCE_PY, _, _) => LocalDate.now().minusYears(1)
@@ -397,8 +393,6 @@ trait UpdateRelationshipService {
       case EndRelationshipReason(EndReasonCode.REJECT, _, _)     => TaxYearResolver.startOfTaxYear(TaxYearResolver.taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
     })
 
-  //FIXME Use TimerService instead
-  @deprecated("Use TimerService instead")
   private def parseRelationshipStartDate(date: String) =
     LocalDate.parse(date, DateTimeFormat.forPattern("yyyyMMdd"))
 
