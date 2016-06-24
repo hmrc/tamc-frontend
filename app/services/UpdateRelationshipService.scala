@@ -304,11 +304,11 @@ trait UpdateRelationshipService {
   def getUpdateNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] =
     cachingService.getUpdateRelationshipCachedData map {
       case Some(
-      UpdateRelationshipCacheData(
-      Some(LoggedInUserInfo(_, _, _, _)),
-      active,
-      historic,
-      notificationRecord, _, _)) if (active.isDefined || historic.isDefined) => notificationRecord
+        UpdateRelationshipCacheData(
+        Some(LoggedInUserInfo(_, _, _, _)),
+        active,
+        historic,
+        notificationRecord, _, _)) if (active.isDefined || historic.isDefined) => notificationRecord
       case _ => throw CacheMissingUpdateRecord()
     }
 
@@ -328,12 +328,12 @@ trait UpdateRelationshipService {
   private def validateupdateRelationshipCompleteCache(cacheData: Option[UpdateRelationshipCacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
     cacheData match {
       case Some(
-      UpdateRelationshipCacheData(
-      Some(LoggedInUserInfo(_, _, _, Some(CitizenName(_, _)))),
-      active,
-      historic,
-      Some(notification: NotificationRecord),
-      Some(_), _)) if (active.isDefined || historic.isDefined) => Future.successful(cacheData.get)
+        UpdateRelationshipCacheData(
+        Some(LoggedInUserInfo(_, _, _, Some(CitizenName(_, _)))),
+        active,
+        historic,
+        Some(notification: NotificationRecord),
+        Some(_), _)) if (active.isDefined || historic.isDefined) => Future.successful(cacheData.get)
       case _ => throw CacheMissingUpdateRecord()
     }
 
