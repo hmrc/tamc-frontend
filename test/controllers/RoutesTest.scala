@@ -119,6 +119,16 @@ class RoutesTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
+    "check back link on calculator page" in new WithApplication(fakeApplication){
+      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.calculator()(request)
+      val document = Jsoup.parse(contentAsString(result))
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/how-it-works")
+    }
   }
 
   "Hitting calculator page" should {
@@ -606,9 +616,9 @@ class RoutesTest extends UnitSpec with TestUtility {
       val finish = document.getElementById("button-finished")
       finish shouldNot be(null)
       finish.attr("href") shouldBe ApplicationConfig.ptaFinishedUrl
-      val continue = document.getElementById("back")
-      continue shouldNot be(null)
-      continue.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
     }
 
   }
@@ -667,6 +677,9 @@ class RoutesTest extends UnitSpec with TestUtility {
       val eligibilityForm = document.getElementById("eligibility-form")
       eligibilityForm shouldNot be(null)
       eligibilityForm.attr("action") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/benefit-calculator-pta")
 
     }
 
@@ -726,9 +739,9 @@ class RoutesTest extends UnitSpec with TestUtility {
       val finish = document.getElementById("button-finished")
       finish shouldNot be(null)
       finish.attr("href") shouldBe ApplicationConfig.ptaFinishedUrl
-      val continue = document.getElementById("back")
-      continue shouldNot be(null)
-      continue.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
     }
   }
 
@@ -745,6 +758,9 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
     }
 
     "redirect to who should transfer page irrespective of selection" in new WithApplication(fakeApplication) {
@@ -772,6 +788,9 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
       document.getElementById("partners-income-error").text() shouldBe "Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000"
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
     }
 
     "redirect to transfer controller page irrespective of selection" in new WithApplication(fakeApplication) {

@@ -37,27 +37,27 @@ object ChangeRelationshipForm {
       "role" -> optional(text),
       "endReason" -> optional(text),
       "historicActiveRecord" -> optional(boolean))(
-        (role, endReason, historicActiveRecord) => ChangeRelationship(role, endReason, historicActiveRecord))(
-          (input: ChangeRelationship) => Some(input.role, input.endReason, input.historicActiveRecord)))
+      (role, endReason, historicActiveRecord) => ChangeRelationship(role, endReason, historicActiveRecord))(
+      (input: ChangeRelationship) => Some((input.role, input.endReason, input.historicActiveRecord))))
 
   private def getOptionalLocalDate(day: Option[Int], month: Option[Int], year: Option[Int]): Option[LocalDate] =
     (day, month, year) match {
       case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y, m, d))
-      case _                           => None
+      case _ => None
     }
 
-  private def dateOfDivorce() = {
-    dateTuple()
-  }
+  private def dateOfDivorce() = dateTuple()
 
   private def checkDateRange(): Constraint[Option[LocalDate]] = Constraint[Option[LocalDate]]("date.range") { dod =>
-    if (dod == None) Invalid(ValidationError("pages.form.field.dod.error.required")) else if (dod.get.isAfter(TimeService.getCurrentDate)) Invalid(ValidationError("pages.form.field.dom.error.max-date")) 
-    else if (dod.get.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1))) Invalid(ValidationError("pages.form.field.dom.error.min-date")) else Valid
+    dod match {
+      case None => Invalid(ValidationError("pages.form.field.dod.error.required"))
+      case Some(date) if date.isAfter(TimeService.getCurrentDate) => Invalid(ValidationError("pages.form.field.dom.error.max-date"))
+      case Some(date) if date.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)) => Invalid (ValidationError ("pages.form.field.dom.error.min-date") )
+      case _ => Valid
+    }
   }
 
-  private def dateOfDivorceValidator() = {
-    dateTuple().verifying(checkDateRange())
-  }
+  private def dateOfDivorceValidator() = dateTuple().verifying(checkDateRange())
 
   val updateRelationshipDivorceNoDodForm = Form[ChangeRelationship](
     mapping(
@@ -65,9 +65,9 @@ object ChangeRelationshipForm {
       "endReason" -> optional(text),
       "historicActiveRecord" -> optional(boolean),
       "creationTimestamp" -> optional(text))(
-        (role:Option[String], endReason: Option[String], historicActiveRecord: Option[Boolean],creationTimestamp: Option[String]) => ChangeRelationship(role, endReason, historicActiveRecord, creationTimestamp))(
-          (input: ChangeRelationship) => Some(input.role, input.endReason, input.historicActiveRecord, input.endReason)))
-  
+      (role: Option[String], endReason: Option[String], historicActiveRecord: Option[Boolean], creationTimestamp: Option[String]) => ChangeRelationship(role, endReason, historicActiveRecord, creationTimestamp))(
+      (input: ChangeRelationship) => Some((input.role, input.endReason, input.historicActiveRecord, input.endReason))))
+
   val updateRelationshipDivorceForm = Form[ChangeRelationship](
     mapping(
       "role" -> optional(text),

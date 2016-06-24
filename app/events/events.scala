@@ -127,7 +127,7 @@ object RiskTriageRedirectEvent {
 
 private object AuditType {
   val Tx_FAILED = "TxFailed"
-  val Tx_SUCCESSFUL = "TxSuccessful" //TODO this is incorrect value, should be TxSucceeded instead (any changes would impact reports)
+  val Tx_SUCCESSFUL = "TxSuccessful" //TxSuccessful should be TxSucceeded but any changes would impact previous reports
 }
 
 class BusinessEvent(auditType: String, detail: Map[String, String])(implicit hc: HeaderCarrier)
