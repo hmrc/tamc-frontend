@@ -19,7 +19,7 @@ package details
 import metrics.Metrics
 import play.api.Logger
 import services.CachingService
-import connectors.CitizenDetailsConnector._
+import connectors.CitizenDetailsConnector
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.http.{HeaderCarrier, NotFoundException}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
@@ -32,11 +32,13 @@ case class PersonDetailsNotFoundResponse() extends PersonDetailsResponse
 case class PersonDetailsErrorResponse(cause: Exception) extends PersonDetailsResponse
 
 object CitizenDetailsService extends CitizenDetailsService {
-  override def cachingService = CachingService
+  override def cachingService: CachingService = CachingService
+  override def citizenDetailsConnector: CitizenDetailsConnector = CitizenDetailsConnector
 }
 
 trait CitizenDetailsService {
 
+  def citizenDetailsConnector: CitizenDetailsConnector
   def cachingService: CachingService
 
   def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] =
@@ -56,7 +58,7 @@ trait CitizenDetailsService {
 
   def getDetailsFromCid(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
     val timer = Metrics.citizenDetailStartTimer()
-    citizenDetailsFromNino(nino) map {
+    citizenDetailsConnector.citizenDetailsFromNino(nino) map {
       personDetails =>
         timer.stop()
         Metrics.incrementSuccessCitizenDetail()
