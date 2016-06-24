@@ -16,32 +16,27 @@
 
 package details
 
-import scala.concurrent.Future
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HttpGet
-import uk.gov.hmrc.play.http.NotFoundException
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
-import utils.WSHttp
 import metrics.Metrics
-import services.CachingService
 import play.api.Logger
+import services.CachingService
+import connectors.CitizenDetailsConnector._
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.play.http.{HeaderCarrier, NotFoundException}
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
+
+import scala.concurrent.Future
 
 sealed trait PersonDetailsResponse
 case class PersonDetailsSuccessResponse(personDetails: PersonDetails) extends PersonDetailsResponse
 case class PersonDetailsNotFoundResponse() extends PersonDetailsResponse
 case class PersonDetailsErrorResponse(cause: Exception) extends PersonDetailsResponse
 
-object CitizenDetailsService extends CitizenDetailsService with uk.gov.hmrc.play.config.ServicesConfig {
-  override def httpGet = WSHttp
-  override def citizenDetailsUrl = baseUrl("citizen-details")
+object CitizenDetailsService extends CitizenDetailsService {
   override def cachingService = CachingService
 }
 
 trait CitizenDetailsService {
 
-  def httpGet: HttpGet
-  def citizenDetailsUrl: String
   def cachingService: CachingService
 
   def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] =
@@ -61,7 +56,7 @@ trait CitizenDetailsService {
 
   def getDetailsFromCid(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
     val timer = Metrics.citizenDetailStartTimer()
-    httpGet.GET[PersonDetails](s"$citizenDetailsUrl/citizen-details/$nino/designatory-details") map {
+    citizenDetailsFromNino(nino) map {
       personDetails =>
         timer.stop()
         Metrics.incrementSuccessCitizenDetail()
