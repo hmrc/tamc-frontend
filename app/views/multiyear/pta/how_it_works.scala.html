@@ -42,7 +42,7 @@
         @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
     </p>
     <div class="application-notice info-notice">
-    	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5", (TaxYearResolver.currentTaxYear-1), TaxYearResolver.currentTaxYear, TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(TaxYearResolver.currentTaxYear-1)))))</p>
+    	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5", (TaxYearResolver.currentTaxYear-1).toString(), TaxYearResolver.currentTaxYear.toString(), TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(TaxYearResolver.currentTaxYear-1)))))</p>
     </div>
     <h4 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h4>
     <p class="lede">@Html(Messages("pages.how-it-works.detail"))</p>
