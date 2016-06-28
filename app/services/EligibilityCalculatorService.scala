@@ -20,27 +20,22 @@ package services
 import config.ApplicationConfig._
 import models.EligibilityCalculatorInput
 import models.EligibilityCalculatorResult
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time.TaxYearResolver._
 
 object EligibilityCalculatorService {
 
-  def calculate(input: EligibilityCalculatorInput): EligibilityCalculatorResult = {
-
-    val transIncome = input.transferorIncome
-    val recIncome = input.recipientIncome
-    val currentTaxYear = TaxYearResolver.currentTaxYear
-    input match {
-      case incorrectRoles if (transIncome > recIncome) =>
+  def calculate(input: EligibilityCalculatorInput): EligibilityCalculatorResult =
+    (input.transferorIncome, input.recipientIncome) match {
+      case (transIncome, recIncome) if (transIncome > recIncome) =>
         EligibilityCalculatorResult(messageKey = "eligibility.feedback.incorrect-role")
-      case transferor_not_eligible if (transIncome > MAX_LIMIT || transIncome < 0) =>
+      case (transIncome, recIncome) if (transIncome > MAX_LIMIT || transIncome < 0) =>
         EligibilityCalculatorResult(messageKey = ("eligibility.feedback.transferor-not-eligible-" + currentTaxYear))
-      case recipient_not_eligible if (recIncome > MAX_LIMIT || recIncome <= PERSONAL_ALLOWANCE) =>
+      case (transIncome, recIncome) if (recIncome > MAX_LIMIT || recIncome <= PERSONAL_ALLOWANCE) =>
         EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear))
-      case transferor_not_benefit if (transIncome > PERSONAL_ALLOWANCE && transIncome < MAX_LIMIT) =>
+      case (transIncome, recIncome) if (transIncome > PERSONAL_ALLOWANCE && transIncome < MAX_LIMIT) =>
         EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear))
-      case benefit => getEligibilityBenefitResult(transIncome: Int, recIncome: Int)
+      case benefit => getEligibilityBenefitResult(input.transferorIncome, input.recipientIncome)
     }
-  }
 
   private def getEligibilityBenefitResult(transIncome: Int, recIncome: Int): EligibilityCalculatorResult =
     calculateGain(transIncome, recIncome) match {
@@ -69,7 +64,6 @@ object EligibilityCalculatorService {
       val excludeLowerLimit = 1
       (lower + excludeLowerLimit) to upper contains value
     }
-
   }
 
 }
