@@ -114,9 +114,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "30-12-2001"
-      document.getElementById("line0-end").text shouldBe "30-12-2010"
-      document.getElementById("line0-action").text shouldBe "Received Marriage Allowance"
+      document.getElementById("line0-start").text shouldBe "2001 to 2010"
       document.getElementById("line0-reason").text shouldBe "Bereavement"
       document.getElementById("line0-remove") shouldBe null
     }
@@ -141,15 +139,11 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "30-12-2013"
-      document.getElementById("line0-end").text shouldBe "30-12-2014"
-      document.getElementById("line0-action").text shouldBe "Transferred Marriage Allowance"
+      document.getElementById("line0-start").text shouldBe "2013 to 2014"
       document.getElementById("line0-reason").text shouldBe "Divorce or end of Civil Partnership"
       document.getElementById("line0-remove") shouldBe null
 
-      document.getElementById("line1-start").text shouldBe "30-12-2002"
-      document.getElementById("line1-end").text shouldBe "30-12-2012"
-      document.getElementById("line1-action").text shouldBe "Received Marriage Allowance"
+      document.getElementById("line1-start").text shouldBe "2002 to 2012"
       document.getElementById("line1-reason").text shouldBe "Divorce or end of Civil Partnership"
       document.getElementById("line1-remove") shouldNot be(null)
     }
@@ -168,7 +162,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       prevYearsButton shouldNot be(null)
     }
 
-    "display 'apply for previous years' button if historicyear is available" in new WithApplication(fakeApplication) {
+    "display 'apply for previous years' button if historic year is available" in new WithApplication(fakeApplication) {
       val testComponent = makeUpdateRelationshipTestComponent("coc_gap_in_years")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -210,8 +204,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      historicRecord.toString().contains("30-12-2001") should be(true)
-      historicRecord.toString().contains("30-12-2010") should be(true)
+      historicRecord.toString().contains("2001 to 2010") should be(true)
     }
 
     "not display active or historic relationship details " in new WithApplication(fakeApplication) {
@@ -251,11 +244,39 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
     }
+
+    "display bereavement and change of income related details " in new WithApplication(fakeApplication) {
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.history()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+
+      val activeRecord = document.getElementById("activeRecord")
+      activeRecord shouldNot be(null)
+
+      val historicRecord = document.getElementById("historicRecords")
+      historicRecord shouldNot be(null)
+
+      historicRecord.toString().contains("2001 to 2010") should be(true)
+
+      val incomeMessage = document.getElementById("incomeMessage")
+      val bereavementMessage = document.getElementById("bereavementMessage")
+      val incomeLink = document.getElementById("incomeLink")
+      val bereavementLink = document.getElementById("bereavementLink")
+      incomeMessage.text() shouldBe "To let us know about a change in income, contact HMRC."
+      bereavementMessage.text() shouldBe "To let us know about a bereavement, contact HMRC."
+      incomeLink.attr("href") shouldBe "/marriage-allowance-application/change-of-income"
+      bereavementLink.attr("href") shouldBe "/marriage-allowance-application/bereavement"
+    }
   }
 
   "Update relationship make changes page " should {
 
-    "show transferor data when user is trasnferor " in new WithApplication(fakeApplication) {
+    "show transferor data when user is transferor " in new WithApplication(fakeApplication) {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -270,18 +291,18 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
       val endReasonCancel = endReason.getElementById("endReason-cancel")
       val endReasonDivorce = endReason.getElementById("endReason-divorce")
-      val endReasonEarnings = endReason.getElementById("endReason-earnings")
+
 
       endReasonCancel shouldNot be(null)
       endReasonDivorce shouldNot be(null)
-      endReasonEarnings shouldNot be(null)
+
 
       endReasonCancel.toString.contains(EndReasonCode.CANCEL) should be(true)
       endReasonDivorce.toString.contains(EndReasonCode.DIVORCE) should be(true)
-      endReasonEarnings.toString.contains(EndReasonCode.EARNINGS) should be(true)
+
     }
 
-    "show transferor data when user is transferor " in new WithApplication(fakeApplication) {
+    "show transferor data when user is recipient " in new WithApplication(fakeApplication) {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -326,7 +347,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       cancelContent shouldNot be(null)
 
       cancelHeading.toString contains ("Cancelling Marriage Allowance") should be(true)
-      cancelContent.text() shouldBe "Marriage Allowance will be cancelled, but will remain in place until the end of the current tax year (5 April 2017). Your Personal Allowance will be adjusted at the start of the new tax year on 6 April 2017."
+      cancelContent.text() shouldBe "We'll cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year."
 
     }
     
@@ -347,7 +368,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       cancelContent shouldNot be(null)
 
       cancelHeading.toString contains ("Cancelling Marriage Allowance") should be(true)
-      cancelContent.text() shouldBe "Marriage Allowance will be cancelled, but will remain in place until the end of the current tax year (5 April 2017). Your Personal Allowance will be adjusted at the start of the new tax year on 6 April 2017."
+      cancelContent.text() shouldBe "We'll cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year."
 
     }
 
@@ -377,7 +398,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
   "Update relationship make changes" should {
 
-    "return successful on histrocial active record for transferror" in new WithApplication(fakeApplication) {
+    "return successful on historical active record for transferror" in new WithApplication(fakeApplication) {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -390,18 +411,12 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReason shouldNot be(null)
 
       val endReasonCancel = endReason.getElementById("endReason-cancel")
-      val endReasonEarnings = endReason.getElementById("endReason-earnings")
       val endReasonDivorce = endReason.getElementById("endReason-divorce")
-      val endReasonBereavement = endReason.getElementById("endReason-bereavement")
 
       endReasonCancel should be(null)
-      endReasonEarnings shouldNot be(null)
       endReasonDivorce shouldNot be(null)
-      endReasonBereavement shouldNot be(null)
 
       endReasonDivorce.toString.contains(EndReasonCode.DIVORCE) should be(true)
-      endReasonEarnings.toString.contains(EndReasonCode.EARNINGS) should be(true)
-      endReasonBereavement.toString.contains(EndReasonCode.BEREAVEMENT) should be(true)
     }
 
     "return successful on non historically active record for transferror" in new WithApplication(fakeApplication) {
@@ -417,22 +432,16 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReason shouldNot be(null)
 
       val endReasonCancel = endReason.getElementById("endReason-cancel")
-      val endReasonEarnings = endReason.getElementById("endReason-earnings")
       val endReasonDivorce = endReason.getElementById("endReason-divorce")
-      val endReasonBereavement = endReason.getElementById("endReason-bereavement")
 
       endReasonCancel shouldNot be(null)
-      endReasonEarnings shouldNot be(null)
       endReasonDivorce shouldNot be(null)
-      endReasonBereavement shouldNot be(null)
 
       endReasonDivorce.toString.contains(EndReasonCode.DIVORCE) should be(true)
       endReasonCancel.toString.contains(EndReasonCode.CANCEL) should be(true)
-      endReasonEarnings.toString.contains(EndReasonCode.EARNINGS) should be(true)
-      endReasonBereavement.toString.contains(EndReasonCode.BEREAVEMENT) should be(true)
     }
 
-    "return successful on histrocial active record for recipient" in new WithApplication(fakeApplication) {
+    "return successful on historical active record for recipient" in new WithApplication(fakeApplication) {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -460,7 +469,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReasonBereavement.toString.contains(EndReasonCode.BEREAVEMENT) should be(true)
     }
 
-    "return successful on non histrocial active record for recipient" in new WithApplication(fakeApplication) {
+    "return successful on non historical active record for recipient" in new WithApplication(fakeApplication) {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller

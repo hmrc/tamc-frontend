@@ -38,7 +38,8 @@
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
                 <h1 class="heading-large">@Html(Messages("pages.form.field.your-confirmation"))</h1>
-                <p>@Html(Messages("change.status.confirm.info"))</p>
+                <p class="lede">@Html(Messages("change.status.confirm.info"))</p>
+                <p>@Html(Messages("change.status.confirm.more.info"))</p>
                    @templates.input(recipientForm("transferor-email"),
                     '_label -> Html(Messages("pages.form.field.transferor-email")),
                     '_labelClass -> "form-label",
@@ -52,4 +53,5 @@
             <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">@Html(Messages("generic.continue"))</button>
         </p>
     }
+        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

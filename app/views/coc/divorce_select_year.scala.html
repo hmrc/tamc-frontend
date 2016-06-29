@@ -35,17 +35,17 @@
     </style>
     @helpers.form(action = routes.UpdateRelationshipController.divorceSelectYear, args = ('id -> "change-relationship-form")) {
         <div>
-        @templates.form_error_notification(changeRelationshipForm, formErrorMessage = Messages("pages.form.error.mandatory.data"), prefix = "pages.form.field.description-alt.")
         <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
         <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
         <input name="endReason" id="endReason" type="hidden" value="@changeRelationshipForm.get.endReason.get"/>
         </div>
-
+        <p class="information">@Html(Messages("pages.form.field.dod"))</p>
+    @templates.form_error_notification(changeRelationshipForm, formErrorMessage = Messages("pages.form.error.mandatory.data"), prefix = "pages.form.field.description-alt.")
 	    <div class="form-group client-validated">
 	        @templates.dateFields(
 	        changeRelationshipForm,
 	        "dateOfDivorce",
-	        Html(Messages("pages.form.field.dod")),
+	        Html(Messages("pages.form.field.dod.question")),
 	        None,
 	        '_hintText -> Messages("pages.form.field-helper.dod"),
 	        '_label -> Messages("collect_user_data.dod.error"),
@@ -57,5 +57,5 @@
         </p>
 
     }
-
+        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }
