@@ -32,7 +32,7 @@
 		     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmCancel.toString(), 
 		                controllers.routes.LanguageController.switchToWelshConfirmCancel.toString())     	
 		}
-        <h1 class="heading-large" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
+        <h1 class="heading-xlarge" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
         <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate)))</p>
         <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate)))</p>
     }

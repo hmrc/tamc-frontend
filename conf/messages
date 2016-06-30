@@ -365,7 +365,7 @@ change.status.divorce-py-heading=Remove this Marriage Allowance transfer
 change.status.divorce-py-content=This will be removed from the beginning of the current tax year, April 6 {0}.
 change.status.divorce.transferor.directions=If you cancel Marriage Allowance, you can choose either to keep it in place until {0} (the end of the current tax year) or to stop it from {1} (the start of the current tax year).
 change.status.divorce.transferor.h1=Cancelling Marriage Allowance due to divorce or the end of a civil partnership
-change.status.divorce.transferor.conditional1.h1=Cancelling Marriage Allowance due to divorce or end of a civil partnership
+change.status.divorce.transferor.conditional1.h1=Cancelling Marriage Allowance due to divorce or the end of a civil partnership
 change.status.divorce.recipient.condition.h1=Divorce or end of civil partnership
 change.status.divorce.transferor.conditional1.para1=You''ve told us you divorced or ended your civil partnership on {0}.
 change.status.divorce.transferor.conditional1.para2=As this date falls within the previous tax year:
@@ -405,6 +405,8 @@ change.status.history.status=Status
 change.status.history.role=Allowance role
 change.status.history.reason=Status
 change.status.active=Active
+change.status.active.present.year=to Present
+change.status.active.to=to
 change.status.transferor.amount=You''ll stop transferring Marriage Allowance to your spouse or civil partner at end of the tax year ({0}).
 change.status.receiving.amount=You''ll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year ({0}).
 change.status.transferor.stop-sooner=You can end your Marriage Allowance transfer sooner.
@@ -530,7 +532,7 @@ pages.confirm.date.of.marriage=Date of marriage or formation of civil partnershi
 
 #change-of-circs-finish-page
 pages.coc.finish.header=Marriage Allowance cancelled
-pages.coc.finish.acknowledgement=An email acknowledging your change will be sent to you at <strong>{0}</strong> from <strong>noreply&#64;tax.service.gov.uk</strong> within 24 hours.
+pages.coc.finish.acknowledgement=An email acknowledging your cancellation will be sent to you at <strong>{0}</strong> from <strong>noreply&#64;tax.service.gov.uk</strong> within 24 hours.
 pages.coc.finish.junk=If it doesn''t appear in your inbox, please check your spam or junk folder.
 pages.coc.finish.whn=What happens next
 pages.coc.finish.para1=HMRC will now process your cancellation. Please check the email we''ve sent you for full details.
@@ -543,9 +545,12 @@ date.fields.year=Year
 
 change.other.caption=Other changes that affect Marriage Allowance
 change.other.sub.caption1=Change of income
-change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn {0} or less a year. To be eligible, your partner must earn between {1} and {2} a year.
+change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year.
 change.other.income.link=To let us know about a change in income, contact HMRC
 change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
 change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 change.status.active=Active
+
+
+error.invalid.date.format=You must specify a valid date
