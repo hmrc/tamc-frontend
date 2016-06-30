@@ -144,13 +144,13 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("line0-start").text shouldBe "30-12-2013"
       document.getElementById("line0-end").text shouldBe "30-12-2014"
       document.getElementById("line0-action").text shouldBe "Transferred Marriage Allowance"
-      document.getElementById("line0-reason").text shouldBe "Divorce or end of Civil Partnership"
+      document.getElementById("line0-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line0-remove") shouldBe null
 
       document.getElementById("line1-start").text shouldBe "30-12-2002"
       document.getElementById("line1-end").text shouldBe "30-12-2012"
       document.getElementById("line1-action").text shouldBe "Received Marriage Allowance"
-      document.getElementById("line1-reason").text shouldBe "Divorce or end of Civil Partnership"
+      document.getElementById("line1-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line1-remove") shouldNot be(null)
     }
     

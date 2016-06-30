@@ -102,13 +102,13 @@ error.divorce-reason.required=CY_Select an answer for keeping your Marriage Allo
 pages.form.field.description-alt.endReason=CY_Select an answer for keeping your Marriage Allowance until the end of the tax year
 
 coc.end-reason.DEATH=CY_Bereavement
-coc.end-reason.DIVORCE=CY_Divorce or end of Civil Partnership
+coc.end-reason.DIVORCE=CY_Divorce or end of civil partnership
 coc.end-reason.INELIGIBLE_PARTICIPANT=CY_Claiming Married Couple''s Allowance
-coc.end-reason.INVALID_PARTICIPANT=CY_Higher earner ineligible for Marriage Allowance
+coc.end-reason.INVALID_PARTICIPANT=CY_Higher earner not eligible for Marriage Allowance
 coc.end-reason.CANCELLED=CY_Allowance cancelled
-coc.end-reason.REJECTED=CY_Allowance rejected
+coc.end-reason.REJECTED=CY_Allowance cancelled
 coc.end-reason.HMRC=CY_Ended by HMRC
-coc.end-reason.CLOSED=CY_Lower earner ineligible for Marriage Allowance
+coc.end-reason.CLOSED=CY_Lower earner not eligible for Marriage Allowance
 coc.end-reason.MERGER=CY_Customer accounts merged
 coc.end-reason.RETROSPECTIVE=CY_Applied for Marriage Allowance retrospectively
 coc.end-reason.SYSTEM=CY_Ended by HMRC
