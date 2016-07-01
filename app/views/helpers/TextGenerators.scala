@@ -22,6 +22,7 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Locale
+import services.TimeService
 import uk.gov.hmrc.time.TaxYearResolver
 
 object TextGenerators {
@@ -34,13 +35,11 @@ object TextGenerators {
   def dateTransformer(date: LocalDate): String = date.toString("dd/MM/yyyy")
 
   def dateTransformer(date: String): LocalDate = {
-    val formatter: DateTimeFormatter  = DateTimeFormat.forPattern("dd-mm-yyyy")
-    formatter.parseLocalDate(date)
+    LocalDate.parse(date, DateTimeFormat.forPattern("dd-MM-yyyy"))
   }
 
   def dateTransformerActive(date: String): LocalDate = {
-    val formatter: DateTimeFormatter  = DateTimeFormat.forPattern("yyyymmdd")
-    formatter.parseLocalDate(date)
+    LocalDate.parse(date, DateTimeFormat.forPattern("yyyymmdd"))
   }
 
   def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean = false): String =
@@ -68,7 +67,7 @@ object TextGenerators {
     isWelsh match
     {
       case false if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " to Present"
-      case false => TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " to " + TaxYearResolver.endOfTaxYear(dateTransformer(taxAnotherYear.get).getYear).getYear
+      case false => TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " to " + TaxYearResolver.endOfTaxYear(TimeService.getTaxYearForDate(dateTransformer(taxAnotherYear.get))).getYear
       case true if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " i Yn bresennol"
       case true => (TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " i " + TaxYearResolver.endOfTaxYear(dateTransformer(taxAnotherYear.get).getYear).getYear)
     }

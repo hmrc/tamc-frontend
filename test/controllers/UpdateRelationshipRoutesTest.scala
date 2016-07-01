@@ -214,7 +214,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val result = controllerToTest.divorceYear()(request)
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading= document.getElementsByClass("heading-large").text()
+      val heading= document.getElementsByClass("heading-xlarge").text()
       heading should be("Date of divorce or end of civil partnership")
     }
   }

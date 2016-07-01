@@ -110,9 +110,9 @@
                     }
                 }
             }
-                         @if(canApplyPreviousYears) {
-                <div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
-                <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a></div>
+                @if(canApplyPreviousYears) {
+                    <div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
+                    <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a></div>
                  }
                 @if(historicRecord) {
                             <div id="historicRecords">
@@ -124,7 +124,7 @@
                                         </tr>
                                         @if(activeRecord) {
                                         <tr>
-                                            <td>@TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh =LanguageUtils.isWelsh(lang))</td>
+                                            <td id="active">@TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh =LanguageUtils.isWelsh(lang))</td>
                                             <td>@Html(Messages("change.status.active"))</td>
                                         </tr>
                                         }

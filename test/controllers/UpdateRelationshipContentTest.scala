@@ -114,7 +114,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "2001 to 2010"
+      document.getElementById("line0-start").text shouldBe "2001 to 2011"
       document.getElementById("line0-reason").text shouldBe "Bereavement"
       document.getElementById("line0-remove") shouldBe null
     }
@@ -139,15 +139,15 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "2013 to 2014"
-      document.getElementById("line0-reason").text shouldBe "Divorce or end of Civil Partnership"
+      document.getElementById("line0-start").text shouldBe "2013 to 2015"
+      document.getElementById("line0-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line0-remove") shouldBe null
 
-      document.getElementById("line1-start").text shouldBe "2002 to 2012"
-      document.getElementById("line1-reason").text shouldBe "Divorce or end of Civil Partnership"
+      document.getElementById("line1-start").text shouldBe "2002 to 2013"
+      document.getElementById("line1-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line1-remove") shouldNot be(null)
     }
-    
+
     "don't display apply for previous years button when previous years are available" in new WithApplication(fakeApplication) {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historic_rejectable_relationship")
@@ -204,7 +204,8 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      historicRecord.toString().contains("2001 to 2010") should be(true)
+      document.getElementById("active").text shouldBe "2001 to Present"
+      historicRecord.toString().contains("2001 to 2011") should be(true)
     }
 
     "not display active or historic relationship details " in new WithApplication(fakeApplication) {
@@ -261,7 +262,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      historicRecord.toString().contains("2001 to 2010") should be(true)
+      historicRecord.toString().contains("2001 to 2011") should be(true)
 
       val incomeMessage = document.getElementById("incomeMessage")
       val bereavementMessage = document.getElementById("bereavementMessage")
@@ -350,7 +351,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       cancelContent.text() shouldBe "We'll cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year."
 
     }
-    
+
     "confirm cancellation with future date" in new WithApplication(fakeApplication) {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship",
