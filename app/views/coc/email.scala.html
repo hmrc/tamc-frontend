@@ -34,7 +34,6 @@
 		               controllers.routes.LanguageController.switchToWelshConfirmEmail.toString()) 
     }
     @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
-        <fieldset>
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
                 <h1 class="heading-large">@Html(Messages("pages.form.field.your-confirmation"))</h1>
@@ -46,7 +45,6 @@
                     '_dataAttributes -> "autocomplete=on"
                 )
             </div>
-        </fieldset>
 
         <p class="get-started group" id="get-started">
             <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">@Html(Messages("generic.continue"))</button>
