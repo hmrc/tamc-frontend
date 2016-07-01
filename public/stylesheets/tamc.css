@@ -419,5 +419,8 @@ p.blue-underline-large {
     text-decoration: none;
     text-transform: none;
 }
+caption .align-left{
+    display: table-caption;
+    text-align: left;
+    }
 
-  
