@@ -24,7 +24,8 @@
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
-
+@import services.TimeService
+@import uk.gov.hmrc.time.TaxYearResolver
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.confirm-transferor")),
         mainConfig = views.helpers.MainConfig(
@@ -34,35 +35,74 @@
 		               controllers.routes.LanguageController.switchToWelshConfirmUpdate.toString())
 		} 
         
-<h1 id="confirm-page" class="heading-xlarge">@Html(Messages("title.confirm-transferor"))</h1>
-<h2 class="heading-medium">@Html(Messages("change.status.confirm-change"))</h2>
+<h1 id="confirm-page" class="heading-xlarge">@Html(Messages("confirm.transferor.heading"))</h1>
 <table>
-    <tr class="blue-overline-large">
-@data.fullName.map[Option[String]](_.fullName).flatten.map {name =>
+    <tr>
+       @data.fullName.map[Option[String]](_.fullName).flatten.map {name =>
         <td>@Html(Messages("change.status.confirm.field.your-name"))</td>
         <td id="transferor-name">@name</td>
         <td>&nbsp;</td>
       </tr>
     <tr>
-}.getOrElse("")
+     }.getOrElse("")
       <td>@Html(Messages("generic.email"))</th>
       <td id="email">@data.email</td>
       <td><a href="confirm-email" id="edit-email">@Html(Messages("generic.change"))</a></td>
     </tr>
-    <tr class="blue-underline-large">
+    <tr>
       <td>@Html(Messages("change.status.realtionship-end"))</td>
       <td id="end-reason">@Html(Messages(s"change.status.reason-${data.endRelationshipReason.endReason}"))</td>
       <td>&nbsp;</td>
     </tr>
+    @if(data.endRelationshipReason.endReason == "DIVORCE_CY" || data.endRelationshipReason.endReason == "DIVORCE_PY") {
+    <tr>
+        <td>@Html(Messages("change.status.divorce.h1"))</td>
+        <td id="divorce-date">@TextGenerators.ukDateTransformer(data.endRelationshipReason.dateOfDivorce)</td>
+        <td><a href="divorce-select-year" id="edit-divorce">@Html(Messages("generic.change"))</a></td>
+    </tr>
+    }
 </table>
-<div class="confirmation-notice">
-	<div class="icon-important"></div>
-	<strong>@Html(Messages(s"change.status.relevantDate-${data.endRelationshipReason.endReason}", TextGenerators.ukDateTransformer(relevantDate)))</strong>
-</div>
+@if(data.endRelationshipReason.endReason == "CANCEL") {
+    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+        <strong class="bold-small">@Html(Messages("pages.confirm.message"))</strong>
+    </div>
+    <ul class="list-bullet space-smaller">
+        <li>@Html(Messages("pages.confirm.message1",TextGenerators.ukDateTransformer(relevantDate)))</li>
+        <li>@Html(Messages("pages.confirm.message2",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)))))</li></ul>
+}
+@if(data.endRelationshipReason.endReason == "DIVORCE_CY") {
+ @if(data.endRelationshipReason.dateOfDivorce.get.getYear != TimeService.getCurrentTaxYear){
+    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+        <strong class="bold-small">@Html(Messages("pages.confirm.divorce.cy.prev.message"))</strong>
+    </div>
+    <ul class="list-bullet space-smaller">
+        <li>@Html(Messages("pages.confirm.divorce.cy.prev.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get))))</li>
+        <li>@Html(Messages("pages.confirm.divorce.cy.prev.message2"))</li>
+    </ul>
+} else {
+    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+        <strong class="bold-small">@Html(Messages("pages.confirm.divorce.cy.message",TextGenerators.ukDateTransformer(relevantDate)))</strong>
+    </div>
+    <ul class="list-bullet space-smaller">
+        <li>@Html(Messages("pages.confirm.divorce.cy.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)))))</li>
+    </ul>
+ }
+}
+@if(data.endRelationshipReason.endReason == "DIVORCE_PY"){
+    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+        <strong class="bold-small">@Html(Messages("pages.confirm.divorce.py.message",TextGenerators.ukDateTransformer(relevantDate)))</strong>
+    </div>
+    <ul class="list-bullet space-smaller">
+        <li>@Html(Messages("pages.confirm.divorce.py.message1"))</li>
+        <li>@Html(Messages("pages.confirm.divorce.py.message2",TextGenerators.ukDateTransformer(relevantDate)))</li>
+    </ul>
+}
+<br>
 <div class="form-group">
 <p>
-  <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("generic.confirm.button"))</a>
+  <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("confirm.cancellation.button"))</a>
 </p>
 </div>
+<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }
 

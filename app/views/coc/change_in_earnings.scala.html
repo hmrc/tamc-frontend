@@ -26,19 +26,26 @@
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.earnings")),
     mainConfig = views.helpers.MainConfig()) {
+@if(ApplicationConfig.isWelshEnabled){
+@templates.lang_button(controllers.routes.LanguageController.switchToEnglishIncomeChange.toString(),
+controllers.routes.LanguageController.switchToWelshIncomeChange.toString())
+}
     <h1 class="heading-large">@Html(Messages("change.status.earnings.h1"))</h1>
-    <h2 class="heading-medium">@Html(Messages("change.status.earnings.h2"))</h2>
+    <p class="lede">@Html(Messages("change.status.earnings.h2"))</p>
         <ul class="list list-bullet">
       <li>@Html(Messages("change.status.earnings.tr.instruction-1", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</li>
       <li>@Html(Messages("change.status.earnings.tr.instruction-2", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</li>
     </ul>
         <h3 class="heading-medium">@Html(Messages("hmrc.contact-details-1"))</h3>
-    <p>@Html(Messages("hmrc.contact-details-2")) <br>
-        @Html(Messages("hmrc.contact-details-3")) <br>
+    <p>@Html(Messages("hmrc.contact-details-2")) <br><br>
+        @Html(Messages("hmrc.contact-details-3")) <br><br>
         @Html(Messages("hmrc.contact-details-4"))</p>
+    <h3>@Html(Messages("hmrc.contact-detials.time"))</h3>
     <p>@Html(Messages("hmrc.contact-details-5")) <br>
     @Html(Messages("hmrc.contact-details-6"))</p>
     <p>@Html(Messages("hmrc.contact-details-7")) <br>
+    <h3>@Html(Messages("hmrc.contact-detials.calling.time"))</h3>
     @Html(Messages("hmrc.contact-details-8"))</p>
     <p>@Html(Messages("hmrc.contact-details-9"))</p>
+    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

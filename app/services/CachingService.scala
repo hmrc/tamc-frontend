@@ -16,6 +16,8 @@
 
 package services
 
+import com.sun.glass.ui.Application
+
 import scala.annotation.implicitNotFound
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
@@ -80,6 +82,10 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     cache[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD, relationshipEndReason) map
       (_.getEntry[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD).get)
 
+  def saveRoleRecord(roleRecord: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
+    cache[String](ApplicationConfig.CACHE_ROLE_RECORD, roleRecord) map
+      (_.getEntry[String](ApplicationConfig.CACHE_ROLE_RECORD).get)
+
   def lockCreateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     cache[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE, true) map
       (_.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE).get)
@@ -126,6 +132,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
         cacheMap =>
           UpdateRelationshipCacheData(
             loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD),
+            roleRecord = cacheMap.getEntry[String](ApplicationConfig.CACHE_ROLE_RECORD),
             activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD),
             historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD),
             notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),

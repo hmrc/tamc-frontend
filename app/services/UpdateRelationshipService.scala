@@ -17,7 +17,6 @@
 package services
 
 import java.text.SimpleDateFormat
-import java.util.Date
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,7 +40,6 @@ import models.EndRelationshipReason
 import models.LoggedInUserInfo
 import models.NotificationRecord
 import models.RecipientInformation
-import models.RecipientInformation
 import models.RelationshipInformation
 import models.RelationshipRecord
 import models.RelationshipRecordList
@@ -58,7 +56,6 @@ import models.UpdateRelationshipRequestHolder
 import models.UpdateRelationshipResponse
 import models.UserRecord
 import play.api.libs.json.Json
-import play.api.mvc.AnyContent
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.AuditEvent
@@ -102,7 +99,7 @@ trait UpdateRelationshipService {
     } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo), canApplyForPreviousYears(historicRelationships, activeRelationship))
 
   def canApplyForPreviousYears(
-      historicRelationships: Option[Seq[RelationshipRecord]],
+      historicRelationships: Option[Seq[RelationshipRecord]], 
       activeRelationship: Option[RelationshipRecord],
       startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
     val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
@@ -265,7 +262,7 @@ trait UpdateRelationshipService {
 
   def getRelationship(sessionData: UpdateRelationshipCacheData) = {
     sessionData match {
-      case UpdateRelationshipCacheData(_, _, historic, _, Some(EndRelationshipReason(EndReasonCode.REJECT, _, Some(timestamp))), _) => {
+      case UpdateRelationshipCacheData(_, _, _, historic, _, Some(EndRelationshipReason(EndReasonCode.REJECT, _, Some(timestamp))), _) => {
         historic.get.filter { relation => relation.creationTimestamp == timestamp && relation.participant == Role.RECIPIENT }.head
       }
       case _ => {
@@ -292,7 +289,7 @@ trait UpdateRelationshipService {
   private def validateUpdateRelationshipFinishedData(cacheData: Option[UpdateRelationshipCacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(NotificationRecord, EndRelationshipReason)] =
     Future {
       cacheData match {
-        case Some(UpdateRelationshipCacheData(_, _, _, Some(notification), Some(reason), _)) => (notification, reason)
+        case Some(UpdateRelationshipCacheData(_, _, _, _, Some(notification), Some(reason), _)) => (notification, reason)
         case _ => throw new CacheUpdateRequestNotSent()
       }
     }
@@ -306,6 +303,7 @@ trait UpdateRelationshipService {
       case Some(
         UpdateRelationshipCacheData(
         Some(LoggedInUserInfo(_, _, _, _)),
+        _,
         active,
         historic,
         notificationRecord, _, _)) if (active.isDefined || historic.isDefined) => notificationRecord
@@ -322,6 +320,12 @@ trait UpdateRelationshipService {
       requiredData <- transformUpdateRelationshipCache(validatedUpdateRelationship)
     } yield (requiredData, updateRelationshipCache)
 
+  def getUpdateRelationshipCacheDataForDateOfDivorce(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
+    for {
+      updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
+      validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
+    } yield (updateRelationshipCache)
+  
   def getUpdateRelationshipCacheForReject(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     cachingService.getUpdateRelationshipCachedData
 
@@ -329,11 +333,12 @@ trait UpdateRelationshipService {
     cacheData match {
       case Some(
         UpdateRelationshipCacheData(
-        Some(LoggedInUserInfo(_, _, _, Some(CitizenName(_, _)))),
-        active,
-        historic,
-        Some(notification: NotificationRecord),
-        Some(_), _)) if (active.isDefined || historic.isDefined) => Future.successful(cacheData.get)
+          Some(LoggedInUserInfo(_, _, _, Some(CitizenName(_, _)))),
+          _,
+          active,
+          historic,
+          Some(notification: NotificationRecord),
+          Some(_), _)) if (active.isDefined || historic.isDefined) => Future.successful(cacheData.get)
       case _ => throw CacheMissingUpdateRecord()
     }
 
@@ -354,7 +359,7 @@ trait UpdateRelationshipService {
 
   private def isValidDivorceDate(dod: Option[LocalDate], cacheData: Option[UpdateRelationshipCacheData]): Boolean =
     (dod, cacheData) match {
-      case (Some(dayOfDivorce), Some(UpdateRelationshipCacheData(_, Some(RelationshipRecord(_, _, startDate, _, _, _, _)), _, _, _, _))) =>
+      case (Some(dayOfDivorce), Some(UpdateRelationshipCacheData(_, _, Some(RelationshipRecord(_, _, startDate, _, _, _, _)), _, _, _, _))) =>
         transformDateAgain(startDate).exists { !_.isAfter(dayOfDivorce) }
       case _ =>
         false

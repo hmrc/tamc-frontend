@@ -34,9 +34,7 @@
           @if(changeRelationshipForm.get.historicActiveRecord.get) {
             @templates.input_radio_group(
                 changeRelationshipForm("endReason"),
-                Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")), 
-                    (EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
-                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio"))),
+                Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio"))),
                 '_legend -> Html(Messages("title.change.reason")),
                 '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
@@ -46,9 +44,7 @@
             @templates.input_radio_group(
                 changeRelationshipForm("endReason"),
                 Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")),
-                    (EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
-                    (EndReasonCode.CANCEL, Messages("change.status.cancel.radio")),
-                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio"))),
+                    (EndReasonCode.CANCEL, Messages("change.status.cancel.radio"))),
                 '_legend -> Html(Messages("title.change.reason")),
                 '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
@@ -92,5 +88,5 @@
         </p>
 
     }
-
+        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }
