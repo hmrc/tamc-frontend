@@ -58,6 +58,22 @@ class LanguageController extends FrontendController {
     Redirect(routes.UpdateRelationshipController.history()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
   }
 
+  def switchToWelshIncomeChange = Action { implicit request =>
+    Redirect(routes.UpdateRelationshipController.changeOfIncome()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishIncomeChange = Action { implicit request =>
+    Redirect(routes.UpdateRelationshipController.changeOfIncome()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
+  def switchToWelshBereavement = Action { implicit request =>
+    Redirect(routes.UpdateRelationshipController.bereavement()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishBereavement = Action { implicit request =>
+    Redirect(routes.UpdateRelationshipController.bereavement()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
   def switchToWelshConfirmEmail = Action { implicit request =>
     Redirect(routes.UpdateRelationshipController.confirmEmail()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
   }

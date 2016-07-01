@@ -18,7 +18,7 @@
 @import play.twirl.api.Html
 
 @if(form.hasErrors) {
-<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary column-two-thirds validation-summary">
+<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary validation-summary">
   <h1 id="form-error-heading" class="heading-medium error-summary-heading">@Messages("pages.form.error-header")</h1>
   <ul class="error-summary-list">
   	<li id="form-error-message"><p>@formErrorMessage</p></li>

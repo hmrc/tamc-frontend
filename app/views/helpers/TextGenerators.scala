@@ -22,21 +22,30 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import java.text.SimpleDateFormat
 import java.util.Locale
+import services.TimeService
 import uk.gov.hmrc.time.TaxYearResolver
 
 object TextGenerators {
   def formPageDataJourney(prefix: String, form: Form[_]): String =
     form.hasErrors match {
-      case true => s"${prefix}-erroneous(${form.errors.map { x => x.key }.sorted.distinct.mkString(",")})"
-      case _    => prefix
+      case true => s"${prefix}-erroneous(${form.errors.map { x => x.key}.sorted.distinct.mkString(",")})"
+      case _ => prefix
     }
 
   def dateTransformer(date: LocalDate): String = date.toString("dd/MM/yyyy")
 
+  def dateTransformer(date: String): LocalDate = {
+    LocalDate.parse(date, DateTimeFormat.forPattern("dd-MM-yyyy"))
+  }
+
+  def dateTransformerActive(date: String): LocalDate = {
+    LocalDate.parse(date, DateTimeFormat.forPattern("yyyymmdd"))
+  }
+
   def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean = false): String =
     isWelsh match {
       case false => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK)))
-      case true  => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))).replaceAll("April", "Ebrill")
+      case true => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))).replaceAll("April", "Ebrill")
     }
 
   def formPossessive(noun: String): String =
@@ -45,11 +54,22 @@ object TextGenerators {
   def taxDateInterval(taxYear: Int, isWelsh: Boolean = false): String =
     isWelsh match {
       case false => ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))
-      case true  => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))).replaceAll("April", "Ebrill")
+      case true => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))).replaceAll("April", "Ebrill")
     }
+
   def taxDateIntervalShort(taxYear: Int, isWelsh: Boolean = false): String =
     isWelsh match {
       case false => TaxYearResolver.startOfTaxYear(taxYear).getYear + " to " + TaxYearResolver.endOfTaxYear(taxYear).getYear
-      case true  => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxYear).getYear).replaceAll("April", "Ebrill")
+      case true => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxYear).getYear).replaceAll("April", "Ebrill")
     }
+
+  def taxDateIntervalString(taxYear: String, taxAnotherYear: Option[String] = None, isWelsh: Boolean = false): String = {
+    isWelsh match
+    {
+      case false if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " to Present"
+      case false => TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " to " + TaxYearResolver.endOfTaxYear(TimeService.getTaxYearForDate(dateTransformer(taxAnotherYear.get))).getYear
+      case true if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " i Yn bresennol"
+      case true => (TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " i " + TaxYearResolver.endOfTaxYear(dateTransformer(taxAnotherYear.get).getYear).getYear)
+    }
+}
 }

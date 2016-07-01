@@ -163,6 +163,15 @@ table {
     margin-top: 45px;
     border-bottom: 5px solid #005EA5;
 }
+.blue-underline-no-padding {
+    font-family: "nta",Arial,sans-serif;
+    line-height: 1.25;
+    text-transform: none;
+    font-weight: 700;
+    margin-bottom: 0.5em;
+    margin-top: 45px;
+    border-bottom: 5px solid #005EA5;
+}
 .highlighted-event {
 	margin: 0 -0.1em 1em
 }
@@ -418,6 +427,53 @@ p.blue-underline-large {
     position: relative;
     text-decoration: none;
     text-transform: none;
+}
+.column-third,
+.column-one-third {
+  padding: 0 15px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media (min-width: 641px) {
+  .column-third,
+  .column-one-third {
+    float: left;
+    width: 33.3333333333%;
+  }
+}
+
+.column-two-thirds {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media (min-width: 641px) {
+  .column-two-thirds {
+    float: left;
+    width: 66.6666666667%;
+  }
+}
+
+.icon {
+  vertical-align: middle;
+  margin-right: 20px;
+}
+
+.icon-information {
+  width: 27px;
+  height: 27px;
+}
+
+
+
+.notice strong {
+    display: block;
+    padding-left: 65px;
+    margin-left: -15px;
+    margin-top:-28px;
 }
 
   

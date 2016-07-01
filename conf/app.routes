@@ -30,8 +30,11 @@ GET    /finished                                   controllers.TransferControlle
 #Change of Circumstances
 GET    /history                                    controllers.UpdateRelationshipController.history
 POST   /make-changes                               controllers.UpdateRelationshipController.makeChange
+GET    /change-of-income                           controllers.UpdateRelationshipController.changeOfIncome
+GET    /bereavement                                controllers.UpdateRelationshipController.bereavement
 POST   /reason-for-change                          controllers.UpdateRelationshipController.updateRelationshipAction
 POST   /divorce                                    controllers.UpdateRelationshipController.divorceAction
+GET    /divorce-select-year                        controllers.UpdateRelationshipController.divorceYear
 POST   /divorce-select-year                        controllers.UpdateRelationshipController.divorceSelectYear
 GET    /confirm-email                              controllers.UpdateRelationshipController.confirmEmail
 GET    /confirm-change                             controllers.UpdateRelationshipController.confirmUpdate
@@ -68,7 +71,11 @@ GET    /switch-to-english-lower-earner             controllers.LanguageControlle
 GET    /switch-to-welsh-partners-income            controllers.LanguageController.switchToWelshPartnersIncomeCheck
 GET    /switch-to-english-partners-income          controllers.LanguageController.switchToEnglishPartnersIncomeCheck
 GET    /switch-to-welsh-history                    controllers.LanguageController.switchToWelshHistory
-GET    /switch-to-english-history                  controllers.LanguageController.switchToEnglishHistory	
+GET    /switch-to-english-history                  controllers.LanguageController.switchToEnglishHistory
+GET    /switch-to-welsh-income-change              controllers.LanguageController.switchToWelshIncomeChange
+GET    /switch-to-english-income-change            controllers.LanguageController.switchToEnglishIncomeChange
+GET    /switch-to-welsh-bereavement                controllers.LanguageController.switchToWelshBereavement
+GET    /switch-to-english-bereavement              controllers.LanguageController.switchToEnglishBereavement
 GET    /switch-to-welsh-confirm-email              controllers.LanguageController.switchToWelshConfirmEmail
 GET    /switch-to-english-confirm-email            controllers.LanguageController.switchToEnglishConfirmEmail	
 GET    /switch-to-welsh-confirm-change             controllers.LanguageController.switchToWelshConfirmUpdate
