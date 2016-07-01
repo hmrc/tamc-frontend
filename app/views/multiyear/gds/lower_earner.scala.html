@@ -39,7 +39,7 @@ import config.ApplicationConfigired by applicable law or agreed to in writing, s
         @Html(Messages("eligibility.check.lower.earner.h1"))</h1>
     <p class="information">@Html(Messages("eligibility.check.lower.earner.information1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</br>
         @Html(Messages("eligibility.check.lower.earner.information2")) </p>
-        @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = Messages("pages.form.error.mandatory.data"))
+        @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data")
         @helpers.form(action = routes.MultiYearGdsEligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
             <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.question", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</p>
