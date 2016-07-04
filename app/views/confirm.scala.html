@@ -50,7 +50,7 @@
     <tr class="grey-underline-large-thick">
 }.getOrElse("")
             <td>@Html(Messages("generic.email"))</td>
-              <th id="transferor-email"><span class="visuallyhidden">email</span>@data.transferorEmail</th>
+              <td id="transferor-email"><span class="visuallyhidden">email</span>@data.transferorEmail</td>
             <td>
                 <a href="@controllers.routes.TransferController.confirmYourEmail()" data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                     @Html(Messages("generic.change"))
