@@ -29,4 +29,4 @@ case class ConfirmationModel(
   availableYears: List[TaxYear],
   dateOfMarriage : DateOfMarriageFormInput)
 
-case class UpdateRelationshipConfirmationModel(fullName: Option[CitizenName], email: EmailAddress, endRelationshipReason: EndRelationshipReason, historicRelationships: Option[Seq[RelationshipRecord]] = None)
+case class UpdateRelationshipConfirmationModel(fullName: Option[CitizenName], email: EmailAddress, endRelationshipReason: EndRelationshipReason, historicRelationships: Option[Seq[RelationshipRecord]] = None,role: Option[String]=None)

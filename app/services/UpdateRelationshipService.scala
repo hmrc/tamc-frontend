@@ -378,7 +378,8 @@ trait UpdateRelationshipService {
         fullName = updateRelationshipCacheData.loggedInUserInfo.get.name,
         email = updateRelationshipCacheData.notification.get.transferor_email,
         endRelationshipReason = updateRelationshipCacheData.relationshipEndReasonRecord.get,
-        historicRelationships = updateRelationshipCacheData.historicRelationships)
+        historicRelationships = updateRelationshipCacheData.historicRelationships,
+        role= updateRelationshipCacheData.roleRecord)
     }
 
   def getEndDate(endRelationshipReason: EndRelationshipReason, selectedRelationship: RelationshipRecord): LocalDate =
@@ -389,6 +390,11 @@ trait UpdateRelationshipService {
       case EndRelationshipReason(EndReasonCode.CANCEL, _, _) => getCurrentDate
       case EndRelationshipReason(EndReasonCode.REJECT, _, _) => startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
     })
+
+  def getRelationEndDate(endRelationshipReason: EndRelationshipReason, selectedRelationship: RelationshipRecord): LocalDate ={
+     endOfTaxYear(taxYearFor(LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyymmdd"))))
+    }
+
 
   private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {
     endReasonCode.endReason match {

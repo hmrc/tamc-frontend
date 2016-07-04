@@ -254,7 +254,8 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
             cache =>
               val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
               val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
-              Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate))
+              Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate,isEnded=Some(selectedRelationship.participant1EndDate != None
+                && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
           }
   }
 
@@ -274,6 +275,8 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
         implicit details =>
           updateRelationshipService.getConfirmationUpdateData map {
             case (data, updateCache) => {
+              var isEnded:Option[Boolean]= None
+              var relationEndDate:Option[LocalDate]= None
               val reason = data.endRelationshipReason
               val relevantDate: Option[LocalDate] = reason match {
                 case EndRelationshipReason(EndReasonCode.DIVORCE_PY, _, _) => Some(timeService.getEffectiveDate(reason))
@@ -281,9 +284,14 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
                 case EndRelationshipReason(EndReasonCode.CANCEL, _, _)     => timeService.getEffectiveUntilDate(reason)
                 case EndRelationshipReason(EndReasonCode.REJECT, _, _) =>
                   val selectedRelationship = updateRelationshipService.getRelationship(updateCache.get)
+                  isEnded=Some(selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty
+                          && !selectedRelationship.participant1EndDate.get.equals(""))
+                  if(isEnded.get){
+                    relationEndDate=Some(updateRelationshipService.getRelationEndDate(reason, selectedRelationship))
+                  }
                   Some(updateRelationshipService.getEndDate(reason, selectedRelationship))
               }
-              Ok(views.html.coc.confirm(data, relevantDate))
+              Ok(views.html.coc.confirm(data, relevantDate ,isEnded=isEnded,relationEndDate=relationEndDate))
             }
           } recover (handleError)
   }

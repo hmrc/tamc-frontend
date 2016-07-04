@@ -55,9 +55,7 @@
         	@if(changeRelationshipForm.get.historicActiveRecord.get) {
         		@templates.input_radio_group(
 	                changeRelationshipForm("endReason"),
-	                Seq((EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
-	                    (EndReasonCode.REJECT, Messages("change.status.reject.radio")),
-	                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio")) ),
+	                Seq((EndReasonCode.REJECT, Messages("change.status.cancel.radio"))),
 	                '_legend -> Html(Messages("title.change.reason")),
                     '_legendClass -> "visuallyhidden",
 	                '_labelClass -> "block-label",
@@ -67,9 +65,7 @@
         		@templates.input_radio_group(
 	                changeRelationshipForm("endReason"),
 	                Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")),
-	                    (EndReasonCode.EARNINGS, Messages("change.status.earnings.radio")),
-	                    (EndReasonCode.REJECT, Messages("change.status.reject.radio")),
-	                    (EndReasonCode.BEREAVEMENT, Messages("change.status.bereavement.radio"))),
+	                    (EndReasonCode.REJECT, Messages("change.status.cancel.radio"))),
 	                '_legend -> Html(Messages("title.change.reason")),
                     '_legendClass -> "visuallyhidden",    
 	                '_labelClass -> "block-label",

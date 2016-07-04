@@ -87,7 +87,7 @@ pages.form.field.recipient-income.error.field-required=Tell us your spouse or ci
 pages.form.field.recipient-income.error.field-invalid=Use numbers only.
 
 change.status.reason-CANCEL=I want to stop Marriage Allowance payments
-change.status.reason-REJECT=Rejected
+change.status.reason-REJECT=I want to stop Marriage Allowance payments
 change.status.reason-DIVORCE_CY=Divorce or end of civil partnership
 change.status.reason-DIVORCE_PY=Divorce or end of civil partnership
 
@@ -366,7 +366,6 @@ change.status.divorce-py-content=This will be removed from the beginning of the 
 change.status.divorce.transferor.directions=If you cancel Marriage Allowance, you can choose either to keep it in place until {0} (the end of the current tax year) or to stop it from {1} (the start of the current tax year).
 change.status.divorce.transferor.h1=Cancelling Marriage Allowance due to divorce or the end of a civil partnership
 change.status.divorce.transferor.conditional1.h1=Cancelling Marriage Allowance due to divorce or the end of a civil partnership
-change.status.divorce.recipient.condition.h1=Divorce or end of civil partnership
 change.status.divorce.transferor.conditional1.para1=You''ve told us you divorced or ended your civil partnership on {0}.
 change.status.divorce.transferor.conditional1.para2=As this date falls within the previous tax year:
 change.status.divorce.transferor.conditional1.para3=your Allowance will remain in place until {0}, the end of the tax year you got divorced
@@ -378,6 +377,10 @@ change.status.divorce.transferor.option2=If you choose to stop it from {0}, your
 change.status.divorce.transferor.keep=Would you like to keep Marriage Allowance until the end of the tax year?
 change.status.divorce.transferor.eoy-yes=Your Marriage Allowance will remain until the end of this tax year ({0}). Your Personal Allowance will be adjusted at the start of the new tax year on {1}.
 change.status.divorce.transferor.eoy-no=Your Marriage Allowance will stop from {0}.<br><p>This could result in your ex-partner having to pay back any tax they owe.</p>
+change.status.divorce.recipient.para1=your Marriage Allowance will be cancelled from {0}, the end of the current tax year
+change.status.divorce.recipient.previous.para1=your Marriage Allowance will be cancelled from {0}
+change.status.divorce.recipient.previous.para2=if you haven''t paid enough tax, we''ll collect it by adjusting your tax code
+change.status.divorce.recipient.content1=As this date falls within the current tax year:
 change.status.divorce.recipient.options=Once you''ve told us, Marriage Allowance will remain in place until the end of the tax year ({0}). HMRC won''t ask you to pay back this extra allowance.
 change.status.divorce.recipient.directions=You should tell us if you''ve divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.historic-active.result=Removing Marriage Allowance from the start of the tax year could result in your partner underpaying tax. We''ll notify them at the end of the tax year. Any underpayment will usually be collected through an adjustment to their tax code.
@@ -385,10 +388,11 @@ change.status.historic-active.directions=You can remove Marriage Allowance from 
 change.status.cancel.h1=Cancelling Marriage Allowance
 change.status.cancel.content=We''ll cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
 change.status.cancel.content1=Your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
-change.status.reject.h1=Rejecting Marriage Allowance
-change.status.reject.content=Marriage Allowance will be removed from the start of the tax year you first received it ({0}).
-change.status.reject.warning=This could result in you underpaying tax. We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. Any underpayment will usually be collected through an adjustment to your tax code.
-
+change.status.reject.h1=Remove a previous Marriage Allowance claim
+change.status.reject.content=Your Marriage Allowance will be cancelled from ({0}), the start of the tax year you first received it.
+change.status.reject.warning=This could result in you not paying enough tax. We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. If you haven''t paid enough, we'll usually collect it by adjusting your tax code.
+change.status.reject.previous.content=You can remove the Marriage Allowance you claimed previously. The allowance will be removed from {0}, the start of the tax year you first received it.
+change.status.reject.previous.warning=This could result in you underpaying tax. We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. Any underpayment will usually be collected through an adjustment to your tax code.
 change.status.allowance=Allowance status
 change.status.realtionship-end=Reason for cancellation
 change.status.confirm-removal.button=Confirm removal
@@ -428,14 +432,20 @@ change.status.bereavement.tr.instruction-2=your Personal Allowance will go back 
 change.status.divorce.radio=Divorce or end of civil partnership
 change.status.bereavement.radio=Bereavement
 change.status.earnings.radio=Change in your income
-change.status.reject.radio=I want to reject this allowance
 change.status.cancel.radio=I want to stop Marriage Allowance payments
 change.status.confirm-change=Confirm you want to change this Marriage Allowance transfer.
 change.status.previous-years=We''ve noticed you might be able to claim Marriage Allowance for previous tax years. If you''re eligible we''ll backdate it and send your partner a cheque in the post.
 confirm.transferor.heading=Confirm cancellation of Marriage Allowance
+confirm.recipient.ended.reject.heading=Confirm removal of a previous Marriage Allowance claim
+pages.ended.reject.message=You''ve asked us to remove your Marriage Allowance from tax year {0} to {1}. This means:
+pages.ended.reject.message1=your Marriage Allowance will be removed from {0}, the start of the tax year you first received it
+pages.ended.reject.message2=if you haven''t paid enough tax, we''ll collect it by adjusting your tax code
 pages.confirm.message=You''ve asked us to cancel your Marriage Allowance. This means:
 pages.confirm.message1=your Marriage Allowance will remain in place until {0}, the end of the current tax year
 pages.confirm.message2=your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year
+pages.reject.message1=your Marriage Allowance will be cancelled from {0}, the start of the tax year you first received it
+pages.reject.message2=we''ll let you know if you''ve paid the right amount of tax at the end of tax year
+pages.reject.message3=if you haven't paid enough tax, we'll usually collect it by adjusting your tax code
 confirm.cancellation.button=Confirm cancellation
 pages.confirm.divorce.cy.message=You''ve asked us to keep Marriage Allowance in place until {0}, the end of the current tax year. This means:
 pages.confirm.divorce.cy.message1=your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year
@@ -445,6 +455,11 @@ pages.confirm.divorce.cy.prev.message2=if your ex-partner has not paid enough ta
 pages.confirm.divorce.py.message=You''ve asked us to cancel your Marriage Allowance from {0}, the start of the current tax year. This means:
 pages.confirm.divorce.py.message1=if your ex-partner has not paid enough tax, we''ll collect it by adjusting their tax code
 pages.confirm.divorce.py.message2=your Personal Allowance will go back to the previous amount from {0}, the start of the current tax year
+pages.confirm.recipient.divorce.cy.prev.message1=your Marriage Allowance will be cancelled from {0}, the end of the tax year you divorced
+pages.confirm.recipient.divorce.cy.prev.message2=if you haven''t paid enough tax, we''ll collect it by adjusting your tax code
+pages.confirm.recipient.divorce.cy.message1=your Marriage Allowance will remain in place until {0}, the end of the current tax year
+pages.confirm.recipient.divorce.cy.message2=your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year
+
 #application errors
 pages.form.error-header=There is a problem
 pages.errors.timeout-pta.header=You have been logged out of your Personal Tax Account.
@@ -496,7 +511,7 @@ pages.history.cancel1=have divorced or ended your civil partnership
 pages.history.cancel2=have had a change in your income
 pages.history.cancel3=want to reject the allowance
 pages.history.cancel4=have suffered a bereavement
-pages.history.button.remove=Remove
+pages.history.button.remove=Remove allowance
 
 #eligible year page
 pages.eligibleyear.currentyear=You can apply for the current tax year
