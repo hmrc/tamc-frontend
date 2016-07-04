@@ -51,7 +51,7 @@
     <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName)))</li>
     <li>@Html(Messages("pages.eligibleyear.li3",recipientName))</li>
   </ul>
-`
+
   @helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
     <div @if(historicYearsAvailable) {class="form-group"} id="apply-For-CurrentYear">
       <h3 class="heading-small">@Html(Messages("pages.eligibleyear.doyou.want"))</h3>
