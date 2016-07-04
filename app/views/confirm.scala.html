@@ -40,11 +40,7 @@
     <col width="30%">
     <col width="60%">
     <col width="10%">
-      <thead>
-        <tr>
-            <caption>@Html(Messages("pages.confirm.lower.earner"))</caption>
-        </tr>
-      </thead>
+            <caption class="align-left">@Html(Messages("pages.confirm.lower.earner"))</caption>
       <tr>
 @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
         <td>@Html(Messages("generic.name"))</td>
@@ -54,7 +50,7 @@
     <tr class="grey-underline-large-thick">
 }.getOrElse("")
             <td>@Html(Messages("generic.email"))</td>
-            <td id="transferor-email">@data.transferorEmail</td>
+              <th id="transferor-email"><span class="visuallyhidden">email</span>@data.transferorEmail</th>
             <td>
                 <a href="@controllers.routes.TransferController.confirmYourEmail()" data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                     @Html(Messages("generic.change"))
@@ -88,11 +84,7 @@
       <col width="30%">
       <col width="60%">
       <col width="10%">
-      <thead>
-      <tr>
-          <caption>@Html(Messages("pages.confirm.lower.earner"))</caption>
-      </tr>
-      </thead>
+          <caption class="align-left">@Html(Messages("pages.confirm.lower.earner"))</caption>
       <tr>
           <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
           <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage))</td>
