@@ -18,11 +18,9 @@ package test_utils
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-import connectors.ApplicationAuditConnector
-import connectors.ApplicationAuthConnector
+import connectors.{ApplicationAuditConnector, ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
 import actions.IdaAuthentificationProvider
 import actions.MarriageAllowanceRegime
-import connectors.MarriageAllowanceConnector
 import controllers.GdsEligibilityController
 import controllers.AuthorisationController
 import controllers.TransferController
@@ -165,6 +163,22 @@ trait TestUtility extends UnitSpec {
       }
     }
 
+    val fakeHttpGet = new HttpGet {
+      override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        val nino: String = url.split("/")(2)
+        val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
+        response.getOrElse(throw new IllegalArgumentException("transferor not supported for :" + url))
+      }
+      def appName: String = ???
+      val hooks = NoneRequired
+
+    }
+
+    val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
+      override def httpGet: HttpGet = fakeHttpGet
+      override def citizenDetailsUrl: String = "foo"
+    }
+
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
 
@@ -202,9 +216,9 @@ trait TestUtility extends UnitSpec {
     }
 
     val fakeCitizenDetailsService = new CitizenDetailsService {
-      override def httpGet = ???
       def citizenDetailsUrl = ???
       override def cachingService = ???
+      override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
       override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
         return Future.successful(pd)
       }
@@ -253,6 +267,7 @@ trait TestUtility extends UnitSpec {
   private def makeMultiYearPtaEligibilityController(
     nino: Option[String],
     pd: PersonDetailsSuccessResponse) = {
+
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
@@ -261,6 +276,21 @@ trait TestUtility extends UnitSpec {
         auditEventsToTest = auditEventsToTest :+ event
         Future { AuditResult.Success }
       }
+    }
+
+    val fakeHttpGet = new HttpGet {
+      override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        val nino: String = url.split("/")(2)
+        val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
+        response.getOrElse(throw new IllegalArgumentException("transferor not supported for :" + url))
+      }
+      def appName: String = ???
+      val hooks = NoneRequired
+    }
+
+    val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
+      override def httpGet: HttpGet = fakeHttpGet
+      override def citizenDetailsUrl: String = "foo"
     }
 
     val fakeIDACustomAuditConnector = new AuditConnector {
@@ -310,9 +340,9 @@ trait TestUtility extends UnitSpec {
     }
 
     val fakeCitizenDetailsService = new CitizenDetailsService {
-      override def httpGet = ???
       def citizenDetailsUrl = ???
       override def cachingService = ???
+      override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
       override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
         return Future.successful(pd)
       }
@@ -398,6 +428,7 @@ trait TestUtility extends UnitSpec {
     pd: PersonDetailsSuccessResponse,
     testingTime: DateTime,
     testingCacheData: Option[UpdateRelationshipCacheData]) = {
+
     val fakeIDACustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
@@ -453,7 +484,6 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    //TODO Have the name part of the JSON response here use the transferorRecipientData passed in the make controller method
     val fakeHttpGet = new HttpGet {
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val nino: String = url.split("/")(2)
@@ -468,8 +498,6 @@ trait TestUtility extends UnitSpec {
     val fakeHttpPost = new HttpPost {
       protected def doPost[A](url: String, body: A, headers: Seq[(String, String)])(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] = {
         body match {
-          case RegistrationFormInput(_, _, _, Nino(Ninos.ninoWithLOA1), _) =>
-            Future.successful(new DummyHttpResponse(s"""{"user_record":{"cid": ${Cids.cid2}, "timestamp": "2015", "has_allowance": false}, "status": {"status_code":"OK"}}""", 200))
           case RegistrationFormInput(_, _, _, Nino(Ninos.ninoWithLOA1), _) =>
             Future.successful(new DummyHttpResponse(s"""{"user_record":{"cid": ${Cids.cid2}, "timestamp": "2015", "has_allowance": false}, "status": {"status_code":"OK"}}""", 200))
           case RegistrationFormInput(_, _, _, Nino(Ninos.nino4), _) =>
@@ -510,6 +538,11 @@ trait TestUtility extends UnitSpec {
       override def httpPost: HttpPost = fakeHttpPost
       override def httpPut: HttpPut = fakeHttpPut
       override val marriageAllowanceUrl = "foo"
+    }
+
+    val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
+      override def httpGet: HttpGet = fakeHttpGet
+      override def citizenDetailsUrl: String = "foo"
     }
 
     val fakeCachingService = new CachingService {
@@ -615,9 +648,9 @@ trait TestUtility extends UnitSpec {
     }
 
     val fakeCitizenDetailsService = new CitizenDetailsService {
-      override def httpGet = ???
       def citizenDetailsUrl = ???
       override def cachingService = fakeCachingService
+      override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
       var citizenDetailsCallsCount = 0
       override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
         citizenDetailsCallsCount = citizenDetailsCallsCount + 1

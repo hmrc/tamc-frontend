@@ -31,15 +31,12 @@ package object utils {
   def encodeQueryStringValue(value: String) =
     URLEncoder.encode(value, "UTF8")
 
-  @deprecated(message = "Nino should handle this functionality", since = "")
   def normaliseNino(nino: String): String =
     nino.replaceAll(" ", "").toUpperCase()
 
-  @deprecated(message = "Nino should handle this functionality", since = "")
   private def normalise(nino: Nino): Nino =
     Nino(normaliseNino(nino.nino))
 
-  @deprecated(message = "Nino should handle this functionality", since = "")
   def areEqual(source: Nino, target: Nino) =
     normalise(source) == normalise(target)
 

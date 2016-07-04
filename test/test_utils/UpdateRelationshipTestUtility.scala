@@ -16,21 +16,22 @@
 
 package test_utils
 
-import actions.{ IdaAuthentificationProvider, MarriageAllowanceRegime }
-import connectors.{ ApplicationAuthConnector, MarriageAllowanceConnector }
-import controllers.{ AuthorisationController, UpdateRelationshipController }
-import details.{ CitizenDetailsService, PersonDetailsResponse, Person, PersonDetails, PersonDetailsSuccessResponse }
-import models.{ LoggedInUserInfo, NotificationRecord, RegistrationFormInput, RelationshipRecord, UpdateRelationshipCacheData, UserRecord }
+import actions.{IdaAuthentificationProvider, MarriageAllowanceRegime}
+import connectors.{ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
+import controllers.{AuthorisationController, UpdateRelationshipController}
+import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsResponse, PersonDetailsSuccessResponse}
+import models.{LoggedInUserInfo, NotificationRecord, RegistrationFormInput, RelationshipRecord, UpdateRelationshipCacheData, UserRecord}
 import play.api.libs.json.Writes
-import play.api.mvc.{ Request, Result }
-import play.api.test.{ FakeApplication, FakeRequest }
-import scala.concurrent.{ ExecutionContext, Future }
-import services.{ CachingService, TransferService, UpdateRelationshipService }
+import play.api.mvc.{Request, Result}
+import play.api.test.{FakeApplication, FakeRequest}
+
+import scala.concurrent.{ExecutionContext, Future}
+import services.{CachingService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.audit.http.connector.{ AuditConnector, AuditResult }
-import uk.gov.hmrc.play.audit.model.{ AuditEvent, DataEvent }
+import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.{ HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse, SessionKeys }
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse, SessionKeys}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
 import models.TaxYear
@@ -40,6 +41,7 @@ import uk.gov.hmrc.time.TaxYearResolver
 import org.joda.time.LocalDate
 import org.joda.time.DateTimeZone
 import org.joda.time.DateTime
+import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 
 trait UpdateRelationshipTestUtility extends UnitSpec {
@@ -196,7 +198,6 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       }
     }
 
-    //TODO Have the name part of the JSON response here use the transferorRecipientData passed in the make controller method
     val fakeHttpGet = new HttpGet {
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val nino: String = url.split("/")(2)
@@ -205,7 +206,15 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       }
       def appName: String = ???
       val hooks = NoneRequired
+    }
 
+    val fakeHttpCititzenGet = new HttpGet {
+      import play.api.libs.json.Json
+      override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        new DummyHttpResponse(Json.toJson(cidPd.personDetails).toString, OK)
+      }
+      def appName: String = ???
+      val hooks = NoneRequired
     }
 
     val fakeHttpPost = new HttpPost {
@@ -355,13 +364,15 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       override val timeService = fakeTimeService
     }
 
+    val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
+      override def httpGet: HttpGet = fakeHttpCititzenGet
+      override def citizenDetailsUrl: String = "foo"
+    }
+
     val fakeCitizenDetailsService = new CitizenDetailsService {
-      override def httpGet = ???
       def citizenDetailsUrl = ???
+      override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
       override def cachingService = fakeCachingService
-      override def getDetailsFromCid(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
-        return Future.successful(cidPd)
-      }
     }
 
     new UpdateRelationshipControllerWithDebug {

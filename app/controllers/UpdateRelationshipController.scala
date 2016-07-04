@@ -42,21 +42,12 @@ import forms.ChangeRelationshipForm.updateRelationshipForm
 import forms.EmailForm
 import forms.EmailForm.emailForm
 import forms.EmptyForm
-import models.ChangeRelationship
-import models.ChangeRelationship
-import models.ChangeRelationship
-import models.EndReasonCode
-import models.EndRelationshipReason
-import models.NotificationRecord
-import models.RelationshipRecordList
-import models.Role
+import models._
 import play.Logger
 import play.api.mvc.AnyContent
 import play.api.mvc.Request
 import play.api.mvc.Result
-import services.TimeService
-import services.TransferService
-import services.UpdateRelationshipService
+import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -135,7 +126,8 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
               val form = formWithErrors.fill(ChangeRelationship(formWithErrors.data.get("role"), None, Some(formWithErrors.data.get("historicActiveRecord").forall { _.equals("true") })))
               BadRequest(views.html.coc.reason_for_change(form))
             },
-            formData =>
+            formData => {
+              CachingService.saveRoleRecord(formData.role.get)
               (formData.endReason.get, formData.role) match {
                 case (EndReasonCode.CANCEL, _) => Future { Redirect(controllers.routes.UpdateRelationshipController.confirmCancel) }
                 case (EndReasonCode.REJECT, _) =>
@@ -143,13 +135,25 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
                     _ => Redirect(controllers.routes.UpdateRelationshipController.confirmReject)
                   }
                 case (EndReasonCode.DIVORCE, _) => Future { Ok(views.html.coc.divorce_select_year(changeRelationshipForm.fill(formData))) }
-                case (EndReasonCode.EARNINGS, Some(Role.TRANSFEROR)) => Future { Ok(views.html.coc.change_in_earnings()) }
                 case (EndReasonCode.EARNINGS, _) => Future { Ok(views.html.coc.change_in_earnings_recipient()) }
-                case (EndReasonCode.BEREAVEMENT, Some(Role.TRANSFEROR)) => Future { Ok(views.html.coc.bereavement_transferor()) }
                 case (EndReasonCode.BEREAVEMENT, _) => Future { Ok(views.html.coc.bereavement_recipient()) }
                 case _ => Future { BadRequest(views.html.coc.reason_for_change(updateRelationshipForm.fill(formData))) }
-              })
+              }})
 
+  }
+
+  def changeOfIncome = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future { Ok(views.html.coc.change_in_earnings()) }
+  }
+
+  def bereavement = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future { Ok(views.html.coc.bereavement_transferor())}
   }
 
   def confirmYourEmailActionUpdate = TamcAuthPersonalDetailsAction {
@@ -164,6 +168,20 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
                 _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
               }) recover (handleError)
   }
+
+  def divorceYear = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+            updateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce map {
+              case Some(UpdateRelationshipCacheData(_, roleRecord, _, historicRelationships, _, relationshipEndReasonRecord,_)) => {
+                val divorceForm = updateRelationshipDivorceForm.fill(ChangeRelationship(role= roleRecord, endReason = Some(relationshipEndReasonRecord.get.endReason), historicActiveRecord = Some(historicRelationships.isEmpty)))
+                Ok(views.html.coc.divorce_select_year(changeRelationshipForm = divorceForm))
+              }
+              case _ => throw CacheMissingUpdateRecord()
+          } recover (handleError)
+  }
+
 
   def divorceSelectYear() = TamcAuthPersonalDetailsAction {
     implicit user =>
@@ -207,7 +225,10 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
                   Some(EndReasonCode.DIVORCE),
                   Some(formWithErrors.data.get("historicActiveRecord").forall { _.equals("true") }),
                   dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year"))))
-                BadRequest(views.html.coc.divorce(form))
+                BadRequest(views.html.coc.divorce(form,
+                  cyEffectiveUntilDate = timeService.getEffectiveUntilDate(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year")))),
+                  cyEffectiveDate = Some(timeService.getEffectiveDate(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year"))))),
+                  pyEffectiveDate = Some(timeService.getEffectiveDate(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_PY,dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year")))))))
               },
             formData =>
               updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(formData.endReason.get, formData.dateOfDivorce)) map {
@@ -305,10 +326,10 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
         }
 
         throwable match {
-          case _: CacheRelationshipAlreadyUpdated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())) //TODO to decide what to display
-          case _: CacheMissingUpdateRecord        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later())) //TODO to decide what to display
-          case _: CacheUpdateRequestNotSent       => handle(message, Logger.warn, BadRequest(views.html.errors.try_later())) //TODO to decide what to display
-          case _: CannotUpdateRelationship        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later())) //TODO to decide what to display
+          case _: CacheRelationshipAlreadyUpdated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+          case _: CacheMissingUpdateRecord        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later()))
+          case _: CacheUpdateRequestNotSent       => handle(message, Logger.warn, BadRequest(views.html.errors.try_later()))
+          case _: CannotUpdateRelationship        => handle(message, Logger.warn, BadRequest(views.html.errors.try_later()))
           case _: CitizenNotFound                 => handle(message, Logger.warn, BadRequest(views.html.errors.citizen_not_found()))
           case _: BadFetchRequest                 => handle(message, Logger.warn, BadRequest(views.html.errors.bad_request()))
           case _: TransferorNotFound              => handle(message, Logger.warn, BadRequest(views.html.errors.transferor_not_found()))

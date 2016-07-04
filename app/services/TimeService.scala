@@ -20,6 +20,7 @@ import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYearResolver
 import models.EndRelationshipReason
 import models.EndReasonCode
+import org.joda.time.format.DateTimeFormat
 
 object TimeService extends TimeService {
   
@@ -45,15 +46,15 @@ trait TimeService {
       case EndReasonCode.DIVORCE_PY => taxYearResolver.startOfTaxYear(taxYearResolver.taxYearFor(endReason.dateOfDivorce.get))
     }
   
-  def getCurrentDate = 
-    LocalDate.now()
+  def getCurrentDate = LocalDate.now()
     
-  def getCurrentTaxYear =
-    taxYearResolver.currentTaxYear
+  def getCurrentTaxYear = taxYearResolver.currentTaxYear
     
-  def getTaxYearForDate(date: LocalDate) =
-    taxYearResolver.taxYearFor(date)
+  def getTaxYearForDate(date: LocalDate) = taxYearResolver.taxYearFor(date)
     
-   def getStartDateForTaxYear(year: Int) =
-    taxYearResolver.startOfTaxYear(year)
+  def getStartDateForTaxYear(year: Int) = taxYearResolver.startOfTaxYear(year)
+
+  def getPreviousYearDate() = LocalDate.now().minusYears(1)
+
+  def parseDateWtihFormat(date: String, format: String) = LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

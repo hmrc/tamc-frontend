@@ -88,6 +88,36 @@ class LanguageControllerTest extends UnitSpec with TestUtility {
     }
   }
 
+  "Hitting change of income page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshIncomeChange(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/change-of-income")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishIncomeChange(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/change-of-income")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
+  "Hitting bereavement page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshBereavement(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/bereavement")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishBereavement(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/bereavement")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
   "Hitting language selection endpoint on GDS journey date of marriage page" should {
     "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
       val request = FakeRequest()

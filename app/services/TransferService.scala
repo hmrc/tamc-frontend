@@ -98,10 +98,10 @@ trait TransferService {
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     (recipientData, cache) match {
-      case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, activeRelationshipRecord, historicRelationships, _, _, _)))
+      case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, _,activeRelationshipRecord, historicRelationships, _, _, _)))
         if UpdateRelationshipService.canApplyForPreviousYears(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
           Future { cache }
-      case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, activeRelationshipRecord, historicRelationships, _, _, _))) =>
+      case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_,_, activeRelationshipRecord, historicRelationships, _, _, _))) =>
         Future.failed(new NoTaxYearsForTransferor())
       case _ => throw CacheMissingTransferor()
     }
@@ -151,7 +151,8 @@ trait TransferService {
     Future {
       cacheData match {
         case Some(CacheData(_,_,_,_,_,Some(registrationData),_)) => registrationData
-        case Some(CacheData(_,None,_,_,_,_,_)) => throw new CacheMissingRecipient()
+        case Some(CacheData(_,None,_,_,_,_,_)) => throw CacheMissingRecipient()
+        case _ => throw BadFetchRequest()
       }
     }
 

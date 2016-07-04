@@ -14,54 +14,55 @@
  * limitations under the License.
  */
 
- 
 package services
 
-import config.ApplicationConfig
+import config.ApplicationConfig._
 import models.EligibilityCalculatorInput
 import models.EligibilityCalculatorResult
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time.TaxYearResolver._
 
 object EligibilityCalculatorService {
 
-  def calculate(input: EligibilityCalculatorInput): EligibilityCalculatorResult = {
-
-    val transIncome = input.transferorIncome
-    val recIncome = input.recipientIncome
-    val transferableAllowance = ApplicationConfig.PERSONAL_ALLOWANCE - transIncome
-    val currentTaxYear = TaxYearResolver.currentTaxYear
-    input match {
-      case incorrectRoles if (transIncome > recIncome) =>
+  def calculate(input: EligibilityCalculatorInput): EligibilityCalculatorResult =
+    (input.transferorIncome, input.recipientIncome) match {
+      case (transIncome, recIncome) if (transIncome > recIncome) =>
         EligibilityCalculatorResult(messageKey = "eligibility.feedback.incorrect-role")
-      case transferor_not_eligible if (transIncome > ApplicationConfig.MAX_LIMIT || transIncome < 0) =>
-        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.transferor-not-eligible-"+currentTaxYear))
-      case recipient_not_eligible if (recIncome > ApplicationConfig.MAX_LIMIT || recIncome <= ApplicationConfig.PERSONAL_ALLOWANCE) =>
-        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-"+currentTaxYear))
-      case transferor_not_benefit if (transIncome > ApplicationConfig.PERSONAL_ALLOWANCE && transIncome < ApplicationConfig.MAX_LIMIT) =>
-        EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-"+currentTaxYear))
-      case benefit => getEligibilityBenefitResult(transIncome: Int, recIncome: Int)
+      case (transIncome, recIncome) if (transIncome > MAX_LIMIT || transIncome < 0) =>
+        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.transferor-not-eligible-" + currentTaxYear))
+      case (transIncome, recIncome) if (recIncome > MAX_LIMIT || recIncome <= PERSONAL_ALLOWANCE) =>
+        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear))
+      case (transIncome, recIncome) if (transIncome > PERSONAL_ALLOWANCE && transIncome < MAX_LIMIT) =>
+        EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear))
+      case benefit => getEligibilityBenefitResult(input.transferorIncome, input.recipientIncome)
+    }
+
+  private def getEligibilityBenefitResult(transIncome: Int, recIncome: Int): EligibilityCalculatorResult =
+    calculateGain(transIncome, recIncome) match {
+      case gain if gain > 0 => EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(gain))
+      case _ => EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
+    }
+
+  private def calculateGain(transIncome: Int, recIncome: Int): Int = {
+    (transIncome, recIncome) match {
+      case (tIncome, rIncome) if (tIncome <= TRANSFEROR_ALLOWANCE) &&
+        recIncome.fromTo(PERSONAL_ALLOWANCE, RECIPIENT_ALLOWANCE) => (recIncome - PERSONAL_ALLOWANCE) / 5
+      case (tIncome, rIncome) if (tIncome <= TRANSFEROR_ALLOWANCE) &&
+        recIncome.fromTo(RECIPIENT_ALLOWANCE, MAX_LIMIT) => MAX_BENEFIT
+      case (tIncome, rIncome) if (tIncome.fromTo(TRANSFEROR_ALLOWANCE, PERSONAL_ALLOWANCE) &&
+        recIncome.fromTo(PERSONAL_ALLOWANCE, RECIPIENT_ALLOWANCE)) => ((recIncome - PERSONAL_ALLOWANCE) / 5) + ((TRANSFEROR_ALLOWANCE - transIncome) / 5)
+      case (tIncome, rIncome) if (tIncome.fromTo(TRANSFEROR_ALLOWANCE, PERSONAL_ALLOWANCE) &&
+        recIncome.fromTo(RECIPIENT_ALLOWANCE, MAX_LIMIT)) => MAX_BENEFIT + ((TRANSFEROR_ALLOWANCE - transIncome) / 5)
+      case _ => 0
     }
   }
 
-  private def getEligibilityBenefitResult(transIncome: Int, recIncome: Int): EligibilityCalculatorResult = {
-    var gain = 0
-    if (transIncome <= ApplicationConfig.TRANSFEROR_ALLOWANCE) {
-      if (ApplicationConfig.PERSONAL_ALLOWANCE < recIncome && recIncome <= ApplicationConfig.RECIPIENT_ALLOWANCE)
-        gain = (recIncome - ApplicationConfig.PERSONAL_ALLOWANCE) / 5
-      else if (recIncome > ApplicationConfig.RECIPIENT_ALLOWANCE && recIncome <= ApplicationConfig.MAX_LIMIT)
-        gain = ApplicationConfig.MAX_BENEFIT
-    }
+  implicit class Between(value: Int) {
 
-    if (transIncome > ApplicationConfig.TRANSFEROR_ALLOWANCE && transIncome <= ApplicationConfig.PERSONAL_ALLOWANCE) {
-      if (recIncome > ApplicationConfig.PERSONAL_ALLOWANCE && recIncome <= ApplicationConfig.RECIPIENT_ALLOWANCE)
-        gain = ((recIncome - ApplicationConfig.PERSONAL_ALLOWANCE) / 5) + ((ApplicationConfig.TRANSFEROR_ALLOWANCE - transIncome) / 5)
-      else if (recIncome > ApplicationConfig.RECIPIENT_ALLOWANCE && recIncome <= ApplicationConfig.MAX_LIMIT)
-        gain = ApplicationConfig.MAX_BENEFIT + ((ApplicationConfig.TRANSFEROR_ALLOWANCE - transIncome) / 5)
-    }
-    if (gain > 0) {
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(gain))
-    } else {
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
+    // The method excludes the lower limit from range
+    def fromTo(lower: Int, upper: Int): Boolean = {
+      val excludeLowerLimit = 1
+      (lower + excludeLowerLimit) to upper contains value
     }
   }
+
 }

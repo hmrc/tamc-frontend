@@ -14,14 +14,15 @@
 * limitations under the License.
 *@
 
-@(form: Form[_], formErrorMessage:String = Messages("pages.form.error.confirm.data"), prefix: String = "pages.form.field.description.")(implicit lang: Lang, request: Request[_])
+@(form: Form[_], formErrorMessage:String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.")(implicit lang: Lang, request: Request[_])
 @import play.twirl.api.Html
 
 @if(form.hasErrors) {
-<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary column-two-thirds validation-summary">
+<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary validation-summary">
   <h1 id="form-error-heading" class="heading-medium error-summary-heading">@Messages("pages.form.error-header")</h1>
   <ul class="error-summary-list">
-  	<li id="form-error-message"><p>@formErrorMessage</p></li>
+
+  	<li id="form-error-message"><p>@Messages(formErrorMessage)</p></li>
     @form.errors.map(_.key).distinct.map { errorKey =>
     <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
       <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")' data-focuses="@errorKey">
