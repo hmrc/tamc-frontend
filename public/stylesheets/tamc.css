@@ -476,4 +476,6 @@ p.blue-underline-large {
     margin-top:-28px;
 }
 
-  
+.align-left {
+    text-align: left;
+}
