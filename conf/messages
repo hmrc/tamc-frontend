@@ -195,6 +195,7 @@ user-status.sign-out=Sign out
 
 
 #Contact Details
+hmrc.contact-details = You can contact HMRC on:
 hmrc.contact-details-1=You can let HMRC know of a change in income on:
 hmrc.contact-details-2=Telephone: 0300 200 3300
 hmrc.contact-details-3=Textphone: 0300 200 3319

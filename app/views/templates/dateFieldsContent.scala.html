@@ -6,7 +6,7 @@
 @import uk.gov.hmrc.play.mappers.DateFormatSymbols
 
 @dayElem = @{ fieldName + "." + day }
-@dayInputId = @{ fieldName + "-" + day }
+@dayInputId = @{ fieldName + "." + day }
 
 @dateInputText(
 formItem(dayElem),
@@ -18,7 +18,7 @@ formItem(dayElem),
 '_autoComplete -> "off"
 )
 @monthElem = @{ fieldName + "." + month }
-@monthInputId = @{ fieldName + "-" + month }
+@monthInputId = @{ fieldName + "." + month }
 
 @dateInputText(
 formItem(monthElem),
@@ -30,7 +30,7 @@ formItem(monthElem),
 '_autoComplete -> "off"
 )
 @yearElem = @{ fieldName + "." + year }
-@yearInputId = @{ fieldName + "-" + year }
+@yearInputId = @{ fieldName + "." + year }
 
 @dateInputText(
 formItem(yearElem),
