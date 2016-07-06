@@ -195,7 +195,8 @@ user-status.sign-out=CY_Sign out
 
 
 #Contact Details
-hmrc.contact-details-1=CY_You can contact HMRC on:
+hmrc.contact-details  =CY_You can contact HMRC on:
+hmrc.contact-details-1=CY_You can let HMRC know of a change in income on:
 hmrc.contact-details-2=CY_Telephone: 0300 200 3300
 hmrc.contact-details-3=CY_Textphone: 0300 200 3319
 hmrc.contact-details-4=CY_Outside UK: +44 135 535 9022
