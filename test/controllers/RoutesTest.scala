@@ -144,7 +144,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       previous.attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide/how-it-works"
       val next = document.getElementById("next")
       next shouldNot be(null)
-      next.attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide/how-to-apply"
+      next.attr("href") shouldBe "https://www.gov.uk/marriage-allowance/how-to-apply"
     }
   }
 
