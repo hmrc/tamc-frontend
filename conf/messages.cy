@@ -480,7 +480,7 @@ technical.cannot-find-details.para1 =CY_ Call us to make a change to your Marria
 technical.technical-error.h1 =CY_ There has been a technical error
 technical.technical-error.para1 =CY_ Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.
 
-generic.translation.text=This page is also available in
+generic.translation.text=CY_This page is also available in
 generic.translation.english=English
 generic.translation.welsh=Welsh (Cymraeg)
 radio.yes=CY_Yes
