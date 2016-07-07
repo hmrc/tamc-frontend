@@ -25,4 +25,4 @@ object CreateRelationshipNotificationRequest {
   implicit val formats = Json.format[CreateRelationshipNotificationRequest]
 }
 
-case class CreateRelationshipNotificationRequest(full_name: String, email: EmailAddress)
+case class CreateRelationshipNotificationRequest(full_name: String, email: EmailAddress, welsh: Boolean = false)
