@@ -260,7 +260,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
               Logger.error(s"unexpected error in emty form, SID [${utils.getSid(request)}]"),
             success =>
               success)
-          registrationService.createRelationship(utils.getUserNino(auth), getJourneyName()) map {
+          registrationService.createRelationship(utils.getUserNino(auth), getJourneyName(), request2lang(request)) map {
             _ => Redirect(controllers.routes.TransferController.finished())
           } recover (handleError)
   }
