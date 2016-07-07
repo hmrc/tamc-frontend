@@ -327,7 +327,7 @@ pages.how-it-works.heading=CY_How It Works
 pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">CY_Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
 pages.how-it-works.lede-pre2=CY_This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year). 
 pages.how-it-works.lede-pre4=CY_To benefit as a couple, you need to earn less than your partner and have an income of £{0} or less.
-pages.how-it-works.lede-pre5=CY_If you were eligible in the 2015 to 2016 tax year, you can backdate your claim to when Marriage Allowance was first introduced on 6 April 2015. 
+pages.how-it-works.lede-pre5=CY_If you were eligible for Marriage Allowance in the  {0} to {1} tax year, you can backdate your claim to {2} and reduce the tax paid by up to £432.
 pages.how-it-works.lede-in=CY_Personal Allowance
 pages.how-it-works.lede-post=CY_to your spouse or civil partner.
 pages.how-it-works.tse=CY_to see if you''re eligible for Marriage Allowance
