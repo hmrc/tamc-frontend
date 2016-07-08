@@ -34,7 +34,7 @@
 		    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmUpdate.toString(), 
 		               controllers.routes.LanguageController.switchToWelshConfirmUpdate.toString())
 		}
-@if(data.endRelationshipReason.endReason == "REJECT" && isEnded.get) {
+@if(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false)) {
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("confirm.recipient.ended.reject.heading"))</h1>
     <table>
         <tr>
@@ -156,7 +156,7 @@
 }
 <br>
 }
-@if(data.endRelationshipReason.endReason == "CANCEL" || data.endRelationshipReason.endReason == "REJECT" && !isEnded.get) {
+@if(!isEnded.getOrElse(false)) {
     <div class="form-group">
         <p>
             <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("confirm.cancellation.button"))</a>

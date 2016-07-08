@@ -159,13 +159,14 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       status(result) shouldBe OK
     }
 
-    "have update relationship details in cache with rejection reason and history" in new WithApplication(fakeApplication) {
+    "list correct tax year and have update relationship details in cache with rejection reason and history" in new WithApplication(fakeApplication) {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "", Some(""), Some(""), "", "")
+      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "20100406", Some(""), Some(""), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "", Some(""), Some(""), "", "")
       val historic2Record = RelationshipRecord(Role.RECIPIENT, "98765", "20100406", Some(""), Some("20150405"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(
         loggedInUserInfo = Some(loggedInUser),
+        roleRecord = Some(Role.RECIPIENT),
         activeRelationshipRecord = Some(relationshipRecord),
         historicRelationships = Some(Seq(historic1Record, historic2Record)),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
@@ -179,9 +180,9 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe OK
 
-          val document = Jsoup.parse(contentAsString(result))
-         document.getElementById("confirm-page").text() shouldBe "Confirm removal of a previous Marriage Allowance claim"
-         document.getElementById("confirm-note").text() shouldBe "You've asked us to remove your Marriage Allowance from tax year 2,010 to 2,015. This means:"
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("confirm-page").text() shouldBe "Confirm removal of a previous Marriage Allowance claim"
+      document.getElementById("confirm-note").text() shouldBe "You've asked us to remove your Marriage Allowance from tax year 2010 to 2011. This means:"
     }
 
     "have update relationship action details in cache " in new WithApplication(fakeApplication) {

@@ -284,9 +284,9 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
                 case EndRelationshipReason(EndReasonCode.CANCEL, _, _)     => timeService.getEffectiveUntilDate(reason)
                 case EndRelationshipReason(EndReasonCode.REJECT, _, _) =>
                   val selectedRelationship = updateRelationshipService.getRelationship(updateCache.get)
-                  isEnded=Some(selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty
+                  isEnded=Some(selectedRelationship.participant1EndDate.isDefined && selectedRelationship.participant1EndDate.nonEmpty
                           && !selectedRelationship.participant1EndDate.get.equals(""))
-                  if(isEnded.get){
+                  if(isEnded.getOrElse(false)){
                     relationEndDate=Some(updateRelationshipService.getRelationEndDate(reason, selectedRelationship))
                   }
                   Some(updateRelationshipService.getEndDate(reason, selectedRelationship))
