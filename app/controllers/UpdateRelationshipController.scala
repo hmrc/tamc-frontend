@@ -305,7 +305,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
               Logger.warn(s"unexpected error in emty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
             success =>
               success)
-          updateRelationshipService.updateRelationship(utils.getUserNino(auth)) map {
+          updateRelationshipService.updateRelationship(utils.getUserNino(auth), request2lang(request)) map {
             _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
           } recover (handleError)
   }
