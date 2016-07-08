@@ -34,7 +34,7 @@
 		    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmUpdate.toString(), 
 		               controllers.routes.LanguageController.switchToWelshConfirmUpdate.toString())
 		}
-@if(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false)) {
+@if(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false) && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) {
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("confirm.recipient.ended.reject.heading"))</h1>
     <table>
         <tr>
@@ -51,7 +51,8 @@
         </tr>
     </table>
     <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
-        <strong id=confirm-note class="bold-small">@Html(Messages("pages.ended.reject.message",TextGenerators.taxDateIntervalShort(TaxYearResolver.startOfTaxYear(relevantDate.get.getYear).getYear)))</strong>
+        <strong id=confirm-note class="bold-small">@Html(Messages("pages.ended.reject.message",TextGenerators.taxDateIntervalMultiYear(relevantDate.get.getYear,
+            TimeService.getTaxYearForDate(relationEndDate.get))))</strong>
     </div>
     <ul class="list-bullet space-smaller">
         <li>@Html(Messages("pages.ended.reject.message1",TextGenerators.ukDateTransformer(relevantDate)))</li>
@@ -156,16 +157,16 @@
 }
 <br>
 }
-@if(!isEnded.getOrElse(false)) {
+@if(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false) && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) {
     <div class="form-group">
         <p>
-            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("confirm.cancellation.button"))</a>
+            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("change.status.confirm-removal.button"))</a>
         </p>
     </div>
 } else {
     <div class="form-group">
         <p>
-            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("change.status.confirm-removal.button"))</a>
+            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("confirm.cancellation.button"))</a>
         </p>
     </div>
 }

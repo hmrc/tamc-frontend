@@ -28,49 +28,46 @@
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.reason")),
     mainConfig = views.helpers.MainConfig()) {
-    @if(reason == EndReasonCode.CANCEL) {
-    	@if(ApplicationConfig.isWelshEnabled){
-		     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmCancel.toString(), 
-		                controllers.routes.LanguageController.switchToWelshConfirmCancel.toString())     	
-		}
-        <h1 class="heading-xlarge" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
-        <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate)))</p>
-        <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate)))</p>
-    }
-    @if(reason == EndReasonCode.REJECT) {
-    	@if(ApplicationConfig.isWelshEnabled){
-		     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmReject.toString(), 
-		                controllers.routes.LanguageController.switchToWelshConfirmReject.toString())     
-		}
-        @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
-            <h1 class="heading-large" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
-            <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
-            <div class="confirmation-notice">
-                <div class="icon-important"></div>
-                <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning" ))</strong>
-            </div>
-         }else {
-            <h1 class="heading-large" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
-            <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
-            <div class="confirmation-notice">
-                <div class="icon-important"></div>
-                <strong class="bold-small">@Html(Messages("change.status.reject.warning" ))</strong>
-            </div>
+        @if(ApplicationConfig.isWelshEnabled){
+            @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmReject.toString(),
+            controllers.routes.LanguageController.switchToWelshConfirmReject.toString())
         }
+        @if(reason == EndReasonCode.CANCEL) {
 
-    }
-    @if(reason == EndReasonCode.DIVORCE_PY) {
-        <h1 class="heading-large" id="divorce-py-heading">@Html(Messages("change.status.divorce-py-heading"))</h1>
-        <p id="divorce-py-content">@Html(Messages("change.status.divorce-py-content", (TaxYearResolver.currentTaxYear-1)))</p>
-    }
-    @if(reason == EndReasonCode.DIVORCE_CY) {
-        <h1 class="heading-large" id="divorce-cy-heading">@Html(Messages("change.status.divorce-cy-heading"))</h1>
-        <p id="divorce-cy-content">@Html(Messages("change.status.divorce-cy-content", TaxYearResolver.currentTaxYear))</p>
-    }
-    <div class="form-group booster">
-        <p>
-        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-           id="confirmUpdate" class="button" role="button">@Html(Messages("generic.continue"))</a>
-    </div>
-    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+            <h1 class="heading-xlarge" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
+            <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate)))</p>
+            <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate)))</p>
+        }
+        @if(reason == EndReasonCode.REJECT) {
+            @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
+                <h1 class="heading-large" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
+                <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
+                <div class="confirmation-notice">
+                    <div class="icon-important"></div>
+                    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning" ))</strong>
+                </div>
+             }else {
+                <h1 class="heading-large" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
+                <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
+                <div class="confirmation-notice">
+                    <div class="icon-important"></div>
+                    <strong class="bold-small">@Html(Messages("change.status.reject.warning" ))</strong>
+                </div>
+            }
+
+        }
+        @if(reason == EndReasonCode.DIVORCE_PY) {
+            <h1 class="heading-large" id="divorce-py-heading">@Html(Messages("change.status.divorce-py-heading"))</h1>
+            <p id="divorce-py-content">@Html(Messages("change.status.divorce-py-content", (TaxYearResolver.currentTaxYear-1)))</p>
+        }
+        @if(reason == EndReasonCode.DIVORCE_CY) {
+            <h1 class="heading-large" id="divorce-cy-heading">@Html(Messages("change.status.divorce-cy-heading"))</h1>
+            <p id="divorce-cy-content">@Html(Messages("change.status.divorce-cy-content", TaxYearResolver.currentTaxYear))</p>
+        }
+        <div class="form-group booster">
+            <p>
+            <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+               id="confirmUpdate" class="button" role="button">@Html(Messages("generic.continue"))</a>
+        </div>
+        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

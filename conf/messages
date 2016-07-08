@@ -31,7 +31,7 @@ pages.form.field.dod.error.required=Tell us your date of divorce.
 pages.form.field.dom.error.min-date=This date is too far in the past.
 pages.form.field.dom.error.max-date=This date is in the future.
 
-pages.form.field.description.nino=Confirm your spouse or civil partner''s National Insurance number.
+pages.form.field.description.nino=Confirm your spouse or civil partner''s National Insurance number
 pages.form.field.nino.error.error.required=Tell us your spouse or civil partner''s National Insurance number.
 pages.form.field.nino.error.error.invalid=Check their National Insurance number and enter it correctly.
 pages.form.field.nino.error.self=You can''t enter your own details.
@@ -569,4 +569,4 @@ change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 change.status.active=Active
 
 
-error.invalid.date.format=You must specify a valid date
+error.invalid.date.format=You must specify a valid date.

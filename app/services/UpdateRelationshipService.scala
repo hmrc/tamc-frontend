@@ -20,8 +20,8 @@ import java.text.SimpleDateFormat
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import org.joda.time.{DateTime, LocalDate}
+import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 import config.ApplicationConfig
 import connectors.ApplicationAuditConnector
 import connectors.MarriageAllowanceConnector
@@ -393,8 +393,8 @@ trait UpdateRelationshipService {
       case EndRelationshipReason(EndReasonCode.REJECT, _, _) => startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
     })
 
-  def getRelationEndDate(endRelationshipReason: EndRelationshipReason, selectedRelationship: RelationshipRecord): LocalDate ={
-     endOfTaxYear(taxYearFor(LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyymmdd"))))
+  def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate = {
+     (LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd")))
     }
 
 

@@ -287,7 +287,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
                   isEnded=Some(selectedRelationship.participant1EndDate.isDefined && selectedRelationship.participant1EndDate.nonEmpty
                           && !selectedRelationship.participant1EndDate.get.equals(""))
                   if(isEnded.getOrElse(false)){
-                    relationEndDate=Some(updateRelationshipService.getRelationEndDate(reason, selectedRelationship))
+                    relationEndDate=Some(updateRelationshipService.getRelationEndDate(selectedRelationship))
                   }
                   Some(updateRelationshipService.getEndDate(reason, selectedRelationship))
               }

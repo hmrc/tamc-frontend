@@ -31,7 +31,7 @@ pages.form.field.dod.error.required=CY_Tell us your date of divorce.
 pages.form.field.dom.error.min-date=CY_This date is too far in the past.
 pages.form.field.dom.error.max-date=CY_This date is in the future.
 
-pages.form.field.description.nino=CY_Confirm your spouse or civil partner''s National Insurance number.
+pages.form.field.description.nino=CY_Confirm your spouse or civil partner''s National Insurance number
 pages.form.field.nino.error.error.required=CY_Tell us your spouse or civil partner''s National Insurance number.
 pages.form.field.nino.error.error.invalid=CY_Check their National Insurance number and enter it correctly.
 pages.form.field.nino.error.self=CY_You can''t enter your own details.
@@ -440,7 +440,7 @@ change.status.confirm-change=CY_Confirm you want to change this Marriage Allowan
 change.status.previous-years=CY_We''ve noticed you might be able to claim Marriage Allowance for previous tax years. If you''re eligible we''ll backdate it and send your partner a cheque in the post.
 confirm.transferor.heading=CY_Confirm cancellation of Marriage Allowance
 confirm.recipient.ended.reject.heading=CY_Confirm removal of a previous Marriage Allowance claim
-pages.ended.reject.message=CY_You''ve asked us to remove your Marriage Allowance from tax year {0} to {1}. This means:
+pages.ended.reject.message=CY_You''ve asked us to remove your Marriage Allowance from tax year {0}. This means:
 pages.ended.reject.message1=CY_your Marriage Allowance will be removed from {0}, the start of the tax year you first received it
 pages.ended.reject.message2=CY_if you haven''t paid enough tax, we''ll collect it by adjusting your tax code
 pages.confirm.message=CY_You''ve asked us to cancel your Marriage Allowance. This means:
@@ -569,4 +569,4 @@ change.other.bereavement.content=CY_If your partner dies, your Marriage Allowanc
 change.other.bereavement.link=CY_To let us know about a bereavement, contact HMRC
 change.status.active=CY_Active
 
-error.invalid.date.format=CY_You must specify a valid date
+error.invalid.date.format=CY_You must specify a valid date.

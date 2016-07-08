@@ -97,7 +97,7 @@ class ContentTest extends UnitSpec with TestUtility {
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
       document.getElementById("form-error-message").text() shouldBe "Check your information is correct, in the right place and in the right format."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
 
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender,last-name,name,nino)").size() shouldBe 1
     }
@@ -230,7 +230,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val labelNino = form.select("label[for=nino]").first()
       labelNino.getElementsByClass("error-message").first() shouldNot be(null)
       labelNino.getElementsByClass("error-message").first().text() shouldBe "You can't enter your own details."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
     }
 
     "display form error message when recipient nino equals transferor nino (including mixed case and spaces)" in new WithApplication(fakeApplication) {
@@ -248,7 +248,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val labelNino = form.select("label[for=nino]").first()
       labelNino.getElementsByClass("error-message").first() shouldNot be(null)
       labelNino.getElementsByClass("error-message").first().text() shouldBe "You can't enter your own details."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
     }
   }
 
@@ -418,7 +418,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's National Insurance number."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(nino)").size() shouldBe 1
     }
 
@@ -437,7 +437,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's National Insurance number."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
     }
 
     "display form error message (NINO is invalid)" in new WithApplication(fakeApplication) {
@@ -455,7 +455,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Check their National Insurance number and enter it correctly."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
     }
   }
 
