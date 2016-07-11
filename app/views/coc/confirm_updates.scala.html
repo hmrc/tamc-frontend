@@ -40,14 +40,14 @@
         }
         @if(reason == EndReasonCode.REJECT) {
             @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
-                <h1 class="heading-large" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
+                <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
                 <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
                     <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning" ))</strong>
                 </div>
              }else {
-                <h1 class="heading-large" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
+                <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
                 <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>

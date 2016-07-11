@@ -448,20 +448,20 @@ pages.confirm.message1=CY_your Marriage Allowance will remain in place until {0}
 pages.confirm.message2=CY_your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year
 pages.reject.message1=CY_your Marriage Allowance will be cancelled from {0}, the start of the tax year you first received it
 pages.reject.message2=CY_we''ll let you know if you''ve paid the right amount of tax at the end of tax year
-pages.reject.message3=CY_if you haven't paid enough tax, we'll usually collect it by adjusting your tax code
+pages.reject.message3=CY_if you haven''t paid enough tax, we''ll usually collect it by adjusting your tax code
 confirm.cancellation.button=CY_Confirm cancellation
 pages.confirm.divorce.cy.message=CY_You''ve asked us to keep Marriage Allowance in place until {0}, the end of the current tax year. This means:
-pages.confirm.divorce.cy.message1=CY_your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year
+pages.confirm.divorce.cy.message1=CY_your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
 pages.confirm.divorce.cy.prev.message=CY_You''ve asked us to cancel your Marriage Allowance. This means:
 pages.confirm.divorce.cy.prev.message1=CY_your Allowance will remain in place until {0}, the end of the tax year you got divorced
 pages.confirm.divorce.cy.prev.message2=CY_if your ex-partner has not paid enough tax, we''ll collect it by adjusting their tax code
 pages.confirm.divorce.py.message=CY_You''ve asked us to cancel your Marriage Allowance from {0}, the start of the current tax year. This means:
 pages.confirm.divorce.py.message1=CY_if your ex-partner has not paid enough tax, we''ll collect it by adjusting their tax code
-pages.confirm.divorce.py.message2=CY_your Personal Allowance will go back to the previous amount from {0}, the start of the current tax year
+pages.confirm.divorce.py.message2=CY_your Personal Allowance will go back to the normal amount from {0}, the start of the current tax year
 pages.confirm.recipient.divorce.cy.prev.message1=CY_your Marriage Allowance will be cancelled from {0}, the end of the tax year you divorced
 pages.confirm.recipient.divorce.cy.prev.message2=CY_if you haven''t paid enough tax, we''ll collect it by adjusting your tax code
 pages.confirm.recipient.divorce.cy.message1=CY_your Marriage Allowance will remain in place until {0}, the end of the current tax year
-pages.confirm.recipient.divorce.cy.message2=CY_your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year
+pages.confirm.recipient.divorce.cy.message2=CY_your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
 
 #application errors
 pages.form.error-header=CY_There is a problem

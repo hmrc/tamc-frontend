@@ -139,8 +139,8 @@
                     <strong class="bold-small">@Html(Messages("pages.confirm.divorce.cy.prev.message",TextGenerators.ukDateTransformer(relevantDate)))</strong>
                 </div>
                 <ul class="list-bullet space-smaller">
-                    <li>@Html(Messages("pages.confirm.recipient.divorce.cy.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get))))</li>
-                    <li>@Html(Messages("pages.confirm.recipient.divorce.cy.message2",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)))))</li>
+                    <li id="message1">@Html(Messages("pages.confirm.recipient.divorce.cy.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get))))</li>
+                    <li id="message2">@Html(Messages("pages.confirm.recipient.divorce.cy.message2",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)))))</li>
                 </ul>
             }
         }
