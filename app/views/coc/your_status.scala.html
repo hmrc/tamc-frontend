@@ -63,7 +63,7 @@
                     }"</style>
                 @if(activeRecord) {
                                     <div class="notice add-spacing-small">
-                                        <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")"> @Html(Messages("pages.history.cancellation"))</p>
+                                        <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("pages.history.cancellation"))</p>
                                     </div>
                                     <div class="panel-indent panel panel-border-narrow">
                                         <p>@Html(Messages("pages.history.cancellation1"))</p>
@@ -117,6 +117,7 @@
                                         <tr>
                                             <td id="active">@TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh =LanguageUtils.isWelsh(lang))</td>
                                             <td>@Html(Messages("change.status.active"))</td>
+                                            <td></td>
                                         </tr>
                                         }
                                         @for(index <- 0 until historicRelationships.get.size) {

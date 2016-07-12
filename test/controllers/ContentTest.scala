@@ -585,7 +585,7 @@ class ContentTest extends UnitSpec with TestUtility {
       form shouldNot be(null)
       val labelName = form.select("fieldset[id=year_2015]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us whether you'd like to apply for the previous 2015 to 2016 tax year"
+      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us whether you'd like to apply for the previous 2015 to 2016 tax year."
       document.getElementById("year-2015--error").text() shouldBe "Confirm whether you'd like to apply for the previous 2015 to 2016 tax year"
     }
   }

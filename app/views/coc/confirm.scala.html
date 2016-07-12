@@ -50,7 +50,7 @@
             <td><a href="confirm-email" id="edit-email">@Html(Messages("generic.change"))</a></td>
         </tr>
     </table>
-    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
         <strong id=confirm-note class="bold-small">@Html(Messages("pages.ended.reject.message",TextGenerators.taxDateIntervalMultiYear(relevantDate.get.getYear,
             TimeService.getTaxYearForDate(relationEndDate.get))))</strong>
     </div>
@@ -87,7 +87,7 @@
         }
     </table>
     @if(data.endRelationshipReason.endReason == "CANCEL") {
-        <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+        <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
             <strong class="bold-small">@Html(Messages("pages.confirm.message"))</strong>
         </div>
         <ul class="list-bullet space-smaller">
@@ -96,7 +96,7 @@
     }
 
     @if(data.endRelationshipReason.endReason == "REJECT"){
-        <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+        <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
             <strong class="bold-small">@Html(Messages("pages.confirm.message"))</strong>
         </div>
         <ul class="list-bullet space-smaller">
@@ -109,7 +109,7 @@
     @if(data.endRelationshipReason.endReason == "DIVORCE_CY") {
         @if(data.role.get == "Transferor"){
             @if(data.endRelationshipReason.dateOfDivorce.get.getYear != TimeService.getCurrentTaxYear){
-                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
                     <strong class="bold-small">@Html(Messages("pages.confirm.divorce.cy.prev.message"))</strong>
                 </div>
                 <ul class="list-bullet space-smaller">
@@ -117,7 +117,7 @@
                     <li>@Html(Messages("pages.confirm.divorce.cy.prev.message2"))</li>
                 </ul>
             } else {
-                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
                     <strong class="bold-small">@Html(Messages("pages.confirm.divorce.cy.message",TextGenerators.ukDateTransformer(relevantDate)))</strong>
                 </div>
                 <ul class="list-bullet space-smaller">
@@ -127,7 +127,7 @@
         }
         @if(data.role.get == "Recipient") {
             @if(data.endRelationshipReason.dateOfDivorce.get.getYear != TimeService.getCurrentTaxYear){
-                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
                     <strong class="bold-small">@Html(Messages("pages.confirm.divorce.cy.prev.message"))</strong>
                 </div>
                 <ul class="list-bullet space-smaller">
@@ -135,7 +135,7 @@
                     <li>@Html(Messages("pages.confirm.recipient.divorce.cy.prev.message2"))</li>
                 </ul>
             } else {
-                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+                <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
                     <strong class="bold-small">@Html(Messages("pages.confirm.divorce.cy.prev.message",TextGenerators.ukDateTransformer(relevantDate)))</strong>
                 </div>
                 <ul class="list-bullet space-smaller">
@@ -147,7 +147,7 @@
 }
 
 @if(data.endRelationshipReason.endReason == "DIVORCE_PY"){
-    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")">
+    <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
         <strong class="bold-small">@Html(Messages("pages.confirm.divorce.py.message",TextGenerators.ukDateTransformer(relevantDate)))</strong>
     </div>
     <ul class="list-bullet space-smaller">
