@@ -3,17 +3,27 @@ Frontend of the Marriage Allowance application
 
 [![Build Status](https://travis-ci.org/hmrc/tamc-frontend.svg?branch=master)](https://travis-ci.org/hmrc/tamc-frontend) [ ![Download](https://api.bintray.com/packages/hmrc/releases/tamc-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/tamc-frontend/_latestVersion)
 
-This service provides the frontend endpoint for the [Marriage Allowance project](https://github.com/hmrc/tamc).
-
-Summary
------------
-
-This service allow a customer to apply for apply for Marriage Allowance as we as to modify existing Marriage Allowance application.
-
 Requirements
 ------------
 
 This service is written in [Scala](http://www.scala-lang.org/) and [Play](http://playframework.com/), so needs at least a [JRE] to run.
+
+
+How to contribute
+-----------
+
+If you want to contribute any changes to Marriage Allowance Frontend application, then
+ * Go to the [tamc-front](https://github.com/hmrc/tamc-frontend) repository on github.
+ * Click the “Fork” button at the top right.
+ * You’ll now have your own copy of that repository in your github account.
+ * Open a terminal/shell and clone directory using below command
+
+  > '$ git clone git@github.com:username/tamc-frontend.git'
+
+  where 'username' is your name
+
+* You’ll now have a local copy of your version of that repository.
+* Change into that project directory (the_repo):
 
 
 Authentication
