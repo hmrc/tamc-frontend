@@ -608,7 +608,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/previous-years")
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligible-years")
     }
 
     "display form error message (transferor email is empty)" in new WithApplication(fakeApplication) {
