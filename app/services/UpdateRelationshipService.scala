@@ -20,8 +20,8 @@ import java.text.SimpleDateFormat
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import org.joda.time.{DateTime, LocalDate}
+import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
 import config.ApplicationConfig
 import connectors.ApplicationAuditConnector
 import connectors.MarriageAllowanceConnector
@@ -380,7 +380,8 @@ trait UpdateRelationshipService {
         fullName = updateRelationshipCacheData.loggedInUserInfo.get.name,
         email = updateRelationshipCacheData.notification.get.transferor_email,
         endRelationshipReason = updateRelationshipCacheData.relationshipEndReasonRecord.get,
-        historicRelationships = updateRelationshipCacheData.historicRelationships)
+        historicRelationships = updateRelationshipCacheData.historicRelationships,
+        role= updateRelationshipCacheData.roleRecord)
     }
 
   def getEndDate(endRelationshipReason: EndRelationshipReason, selectedRelationship: RelationshipRecord): LocalDate =
@@ -391,6 +392,11 @@ trait UpdateRelationshipService {
       case EndRelationshipReason(EndReasonCode.CANCEL, _, _) => getCurrentDate
       case EndRelationshipReason(EndReasonCode.REJECT, _, _) => startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
     })
+
+  def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate = {
+     (LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd")))
+    }
+
 
   private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {
     endReasonCode.endReason match {

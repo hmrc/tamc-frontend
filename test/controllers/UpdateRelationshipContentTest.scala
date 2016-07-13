@@ -318,15 +318,12 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
       val endReasonReject = endReason.getElementById("endReason-reject")
       val endReasonDivorce = endReason.getElementById("endReason-divorce")
-      val endReasonEarnings = endReason.getElementById("endReason-earnings")
 
       endReasonReject shouldNot be(null)
       endReasonDivorce shouldNot be(null)
-      endReasonEarnings shouldNot be(null)
 
       endReasonReject.toString.contains(EndReasonCode.REJECT) should be(true)
       endReasonDivorce.toString.contains(EndReasonCode.DIVORCE) should be(true)
-      endReasonEarnings.toString.contains(EndReasonCode.EARNINGS) should be(true)
     }
   }
 
@@ -456,18 +453,12 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReason shouldNot be(null)
 
       val endReasonReject = endReason.getElementById("endReason-reject")
-      val endReasonEarnings = endReason.getElementById("endReason-earnings")
-      val endReasonBereavement = endReason.getElementById("endReason-bereavement")
       val endReasonDivorce = endReason.getElementById("endReason-divorce")
 
       endReasonDivorce should be(null)
       endReasonReject shouldNot be(null)
-      endReasonEarnings shouldNot be(null)
-      endReasonBereavement shouldNot be(null)
 
       endReasonReject.toString.contains(EndReasonCode.REJECT) should be(true)
-      endReasonEarnings.toString.contains(EndReasonCode.EARNINGS) should be(true)
-      endReasonBereavement.toString.contains(EndReasonCode.BEREAVEMENT) should be(true)
     }
 
     "return successful on non historical active record for recipient" in new WithApplication(fakeApplication) {
@@ -484,19 +475,13 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReason shouldNot be(null)
 
       val endReasonReject = endReason.getElementById("endReason-reject")
-      val endReasonEarnings = endReason.getElementById("endReason-earnings")
-      val endReasonBereavement = endReason.getElementById("endReason-bereavement")
       val endReasonDivorce = endReason.getElementById("endReason-divorce")
 
       endReasonDivorce shouldNot be(null)
       endReasonReject shouldNot be(null)
-      endReasonEarnings shouldNot be(null)
-      endReasonBereavement shouldNot be(null)
 
       endReasonDivorce.toString.contains(EndReasonCode.DIVORCE) should be(true)
       endReasonReject.toString.contains(EndReasonCode.REJECT) should be(true)
-      endReasonEarnings.toString.contains(EndReasonCode.EARNINGS) should be(true)
-      endReasonBereavement.toString.contains(EndReasonCode.BEREAVEMENT) should be(true)
     }
   }
 }

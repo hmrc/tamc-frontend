@@ -57,52 +57,68 @@
             <input name="endReason" id="endReason-divorce_py" type="hidden" value="@EndReasonCode.DIVORCE_PY"/>
         } else {
            @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
-               @if(TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)){
-               <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
-               <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate),TextGenerators.ukDateTransformer(pyEffectiveDate)))</p>
-               <p>@Html(Messages("change.status.divorce.transferor.option1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</p>
-               <p>@Html(Messages("change.status.divorce.transferor.option2",TextGenerators.ukDateTransformer(pyEffectiveDate)))</p></br>
-            <p class="heading-medium"> @Html(Messages("change.status.reason-for-divorce",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</p>
-	           @templates.input_radio_group(
-	            changeRelationshipForm("endReason"),
-	            Seq((EndReasonCode.DIVORCE_CY, Messages("generic.yes")),
-	                (EndReasonCode.DIVORCE_PY, Messages("generic.no"))),
-	            '_legend -> Html(Messages("change.status.reason-for-divorce")),
-                '_legendClass -> "visuallyhidden",    
-	            '_labelClass -> "block-label",
-	            '_labelAfter -> true,
-	            '_fieldsetAttributes -> "data-inline-instruction=eoy-yes",
-	            '_groupClass -> "inline spacingBottom"
-	        	)
+               @if(TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)) {
+                    <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate),TextGenerators.ukDateTransformer(pyEffectiveDate)))</p>
+                    <p>@Html(Messages("change.status.divorce.transferor.option1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</p>
+                    <p>@Html(Messages("change.status.divorce.transferor.option2",TextGenerators.ukDateTransformer(pyEffectiveDate)))</p></br>
+                    <p class="heading-medium"> @Html(Messages("change.status.reason-for-divorce",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</p>
+                    @templates.input_radio_group(
+                        changeRelationshipForm("endReason"),
+                        Seq((EndReasonCode.DIVORCE_CY, Messages("generic.yes")),
+                        (EndReasonCode.DIVORCE_PY, Messages("generic.no"))),
+                        '_legend -> Html(Messages("change.status.reason-for-divorce")),
+                        '_legendClass -> "visuallyhidden",
+                        '_labelClass -> "block-label",
+                        '_labelAfter -> true,
+                        '_fieldsetAttributes -> "data-inline-instruction=eoy-yes",
+                        '_groupClass -> "inline spacingBottom"
+                    )
 
-                <div class="tamc-js-hidden panel-indent" id="eoy-no">
-                 @Html(Messages("change.status.divorce.transferor.eoy-no",TextGenerators.ukDateTransformer(pyEffectiveDate)))
-                </div>
+                    <div class="tamc-js-hidden panel-indent" id="eoy-no">
+                        @Html(Messages("change.status.divorce.transferor.eoy-no",TextGenerators.ukDateTransformer(pyEffectiveDate)))
+                    </div>
 	        	} else {
-                  <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.conditional1.h1"))</h1>
-                  <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get))))</p>
-                  <div class="notice add-spacing-small">
-                   <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")"> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
-                  </div>
-                  <ul class="list-bullet space-smaller">
-                    <li>@Html(Messages("change.status.divorce.transferor.conditional1.para3",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</li>
-                    <li>@Html(Messages("change.status.divorce.transferor.conditional1.para4"))</li></ul></br>
-	        	  <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
+                    <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.conditional1.h1"))</h1>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get))))</p>
+                    <div class="notice add-spacing-small">
+                        <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
+                    </div>
+                    <ul class="list-bullet space-smaller">
+                        <li>@Html(Messages("change.status.divorce.transferor.conditional1.para3",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</li>
+                        <li>@Html(Messages("change.status.divorce.transferor.conditional1.para4"))</li>
+                    </ul></br>
+                    <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
 	        	}
            	} else {
-               <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.recipient.condition.h1"))</h1>
-               <p style="margin-top:-15px">@Html(Messages("change.status.divorce.transferor.conditional1.para1"))</p>
-               <p>@Html(Messages("change.status.divorce.transferor.conditional2.para2",TextGenerators.ukDateTransformer(cyEffectiveUntilDate),TextGenerators.ukDateTransformer(cyEffectiveDate)))</p>
-               <p>@Html(Messages("change.status.divorce.transferor.conditional2.para3"))</p>
-               <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
-           	}
+                @if(TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)){
+                    <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get))))</p>
+                    <div class="notice add-spacing-small">
+                        <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.recipient.content1"))</p>
+                    </div>
+                    <ul class="list-bullet space-smaller">
+                        <li>@Html(Messages("change.status.divorce.recipient.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</li>
+                        <li>@Html(Messages("pages.confirm.message2",TextGenerators.ukDateTransformer(cyEffectiveDate)))</li>
+                    </ul></br>
+                    <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
+                }else {
+                    <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get))))</p>
+                    <div class="notice add-spacing-small">
+                    <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
+                    </div>
+                    <ul class="list-bullet space-smaller">
+                    <li>@Html(Messages("change.status.divorce.recipient.previous.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate)))</li>
+                    <li>@Html(Messages("change.status.divorce.recipient.previous.para2"))</li></ul></br>
+                    <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
+                }
+            }
         }
         </div>
-
         <p>
             <button class="button" type="submit" >@Html(Messages("generic.continue"))</button>
         </p>
-
     }
     <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

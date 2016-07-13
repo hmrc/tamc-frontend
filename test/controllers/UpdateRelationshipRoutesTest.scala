@@ -194,6 +194,76 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val result = controllerToTest.confirmCancel()(request)
       status(result) shouldBe OK
     }
+
+    "confirm rejection in ended relationship in active year" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20160406", Some(""), Some("20170405"), "", "")
+
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
+        roleRecord = Some(Role.RECIPIENT),
+        activeRelationshipRecord = Some(relationshipRecord),
+        notification =Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT)),
+        relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship",transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmReject()(request)
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      val heading= document.getElementsByClass("heading-xlarge").text()
+      val message= document.getElementById("reject-content").text()
+      heading should be("Cancelling Marriage Allowance")
+      message should be("Your Marriage Allowance will be cancelled from 6 April 2016, the start of the tax year you first received it.")
+    }
+
+    "confirm rejection in active year" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20150406", Some(""), Some(""), "", "")
+
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
+        roleRecord = Some(Role.RECIPIENT),
+        activeRelationshipRecord = Some(relationshipRecord),
+        notification =Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT)),
+        relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship",transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmReject()(request)
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      val heading= document.getElementsByClass("heading-xlarge").text()
+      val message= document.getElementById("reject-content").text()
+      heading should be("Cancelling Marriage Allowance")
+      message should be("Your Marriage Allowance will be cancelled from 6 April 2015, the start of the tax year you first received it.")
+    }
+
+    "confirm rejection with ended relationship in previous year" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
+      val historic1Record = RelationshipRecord(Role.RECIPIENT, "2015", "20120101", Some(""), Some("1-01-2013"), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
+        roleRecord = Some(Role.RECIPIENT),
+        historicRelationships=Some(Seq(historic1Record)),
+        notification =Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT, timestamp = Some("2015"))),
+        relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_historic_relationship",transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmReject()(request)
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      val heading= document.getElementsByClass("heading-xlarge").text()
+      val message= document.getElementById("reject-content").text()
+      heading should be("Remove a previous Marriage Allowance claim")
+      message should be("You can remove the Marriage Allowance you claimed previously. The allowance will be removed from 6 April 2011, the start of the tax year you first received it.")
+    }
+
+
     "changing divorce year using change button on confirmation page" in new WithApplication(fakeApplication) {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "56787", "20130101", Some(""), Some("20130110"), "", "")
@@ -217,6 +287,35 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val heading= document.getElementsByClass("heading-xlarge").text()
       heading should be("Date of divorce or end of civil partnership")
     }
+
+    "confirm divorce action for recipient on current year " in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
+      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "20130101", Some(""), Some(""), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(
+        loggedInUserInfo = Some(loggedInUser),
+        roleRecord = Some(Role.RECIPIENT),
+        activeRelationshipRecord = Some(relationshipRecord),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce= Some(new LocalDate(2016,6,12)),timestamp = Some("98765"))),
+        relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmUpdate()(request)
+
+      status(result) shouldBe OK
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("confirm-page").text() shouldBe "Confirm cancellation of Marriage Allowance"
+      val message1= document.getElementById("message1").text()
+      val message2= document.getElementById("message2").text()
+      message1 should be("your Marriage Allowance will remain in place until 5 April 2017, the end of the current tax year")
+      message2 should be("your Personal Allowance will go back to the normal amount from 6 April 2017, the start of the new tax year")
+    }
+
+
+
   }
 
   "Date of divorce page" should {

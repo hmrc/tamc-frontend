@@ -39,7 +39,7 @@ object TextGenerators {
   }
 
   def dateTransformerActive(date: String): LocalDate = {
-    LocalDate.parse(date, DateTimeFormat.forPattern("yyyymmdd"))
+    LocalDate.parse(date, DateTimeFormat.forPattern("yyyyMMdd"))
   }
 
   def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean = false): String =
@@ -55,6 +55,12 @@ object TextGenerators {
     isWelsh match {
       case false => ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))
       case true => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))).replaceAll("April", "Ebrill")
+    }
+
+  def taxDateIntervalMultiYear(taxYear: Int,taxEndYear: Int, isWelsh: Boolean = false): String =
+    isWelsh match {
+      case false => TaxYearResolver.startOfTaxYear(taxYear).getYear + " to " + TaxYearResolver.endOfTaxYear(taxEndYear).getYear
+      case true => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxEndYear).getYear)
     }
 
   def taxDateIntervalShort(taxYear: Int, isWelsh: Boolean = false): String =
