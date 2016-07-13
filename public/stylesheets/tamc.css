@@ -370,7 +370,7 @@ p.blue-underline-large {
     outline: none;
     outline-offset: 0;
     /* Additional styles to look like a link */
-    color: #2e8aca;
+    color: #2a4f69;
     cursor: pointer;
     text-decoration: underline;
     box-shadow: none;
@@ -479,5 +479,3 @@ p.blue-underline-large {
 .align-left {
     text-align: left;
 }
-
-
