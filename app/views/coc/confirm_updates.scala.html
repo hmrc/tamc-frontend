@@ -34,7 +34,7 @@
         }
         @if(reason == EndReasonCode.CANCEL) {
 
-            <h1 class="heading-xlarge" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
+            <h1 class="heading-xlarge" id="cancel-heading" >@Html(Messages("change.status.cancel.h1"))</h1>
             <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate)))</p>
             <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate)))</p>
         }
@@ -67,7 +67,7 @@
         <div class="form-group booster">
             <p>
             <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-               id="confirmUpdate" class="button" role="button">@Html(Messages("generic.continue"))</a>
+               id="confirmUpdate" class="button" type="button">@Html(Messages("generic.continue"))</a>
         </div>
         <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }
