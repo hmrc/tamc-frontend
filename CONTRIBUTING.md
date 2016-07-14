@@ -25,7 +25,7 @@ If you want to contribute any changes to Marriage Allowance Frontend application
 * You’ll now have a local copy of your version of that repository.
 * Change to project directory tamc-frontend and start with changes.
 
-Post chode changes check
+Post code changes check
 -----------
 
 Once you are done with the changes make sure that:
