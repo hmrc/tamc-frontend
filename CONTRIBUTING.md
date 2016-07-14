@@ -18,55 +18,35 @@ If you want to contribute any changes to Marriage Allowance Frontend application
  * You’ll now have your own copy of that repository in your github account.
  * Open a terminal/shell and clone directory using below command
 
-  > '$ git clone git@github.com:username/tamc-frontend.git'
+  ```$ git clone git@github.com:username/tamc-frontend.git```
 
-  where 'username' is your name
+  where 'username' is your github user name
 
 * You’ll now have a local copy of your version of that repository.
-* Change into that project directory (the_repo):
+* Change to project directory tamc-frontend and start with changes.
 
+Post chode changes check
+-----------
 
-Authentication
+Once you are done with the changes make sure that:
+* all test cases successfull. Use below command to run the testcases
+ 
+  ```$ sbt test```
+
+* all your changes are covered by unit test cases. If not, please write more testcases.
+* code coverage does not go below alread existing code coverage. Use below commad to run coverage report
+ 
+  ```$ sbt clean converage test```
+
+* you have taken latest code from master before you raise 
+* there are no mrege conflicts in your pull request.
+* you have provided relavant comments while comitting changes and while raising pull request. 
+ 
+What happens next
 ------------
 
-This customer logs into this service using [GOV.UK Verify](https://www.gov.uk/government/publications/introducing-govuk-verify/introducing-govuk-verify).
-
-
-Acronyms
----
-
-In the context of this application we use the following acronyms and define their
-meanings. Provided you will also find a web link to discover more about the systems
-and technology.
-
-* [API]: Application Programming Interface
-
-* [HoD]: Head of Duty
-
-* [JRE]: Java Runtime Environment
-
-* [JSON]: JavaScript Object Notation
-
-* [NINO]: National Insurance Number
-
-* [URL]: Uniform Resource Locator
-
-* [CID]: Citizen Identifier
-
-License
----
-
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
-
-[NPS]: http://www.publications.parliament.uk/pa/cm201012/cmselect/cmtreasy/731/73107.htm
-[HoD]: http://webarchive.nationalarchives.gov.uk/+/http://www.hmrc.gov.uk/manuals/sam/samglossary/samgloss249.htm
-[NINO]: http://www.hmrc.gov.uk/manuals/nimmanual/nim39110.htm
-[National Insurance]: https://www.gov.uk/national-insurance/overview
-[JRE]: http://www.oracle.com/technetwork/java/javase/overview/index.html
-[API]: https://en.wikipedia.org/wiki/Application_programming_interface
-[URL]: https://en.wikipedia.org/wiki/Uniform_Resource_Locator
-[State Pension]: https://www.gov.uk/new-state-pension/overview
-[SP]: https://www.gov.uk/new-state-pension/overview
-[JSON]: http://json.org/
-
-
+Once you have raised pull request for the changes, tamc-frontend owner team will recieve an email. The team will review these changes and will advice you further. They will:
+* check for unit test code coverage for the changes.
+* check the overall test coverage for the whole project.
+* review the changes and may ask you for further enhancements.
+* merge your changes and you will recieve a mail for the same.
