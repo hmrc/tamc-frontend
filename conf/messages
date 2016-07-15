@@ -219,6 +219,7 @@ pages.calc.field-helper.partners-income=This is their income figure before any t
 pages.calc.how-to-apply=How to apply
 pages.calc.skip-it.pre=The step is optional,
 pages.calc.skip-it=skip it
+pages.calc.apply=Apply for Marriage Allowance
 estimate.tax.saving=Calculate
 eligibility.feedback.gain=Based on the information you have given us, as a couple you would benefit by around <strong>£{0}</strong> a year.
 eligibility.feedback.loose=Based on the details you have provided you will not benefit from making the transfer.

@@ -32,7 +32,7 @@
 	               controllers.routes.LanguageController.switchToWelshCalculatorPta.toString())         
     }
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
-    <p>@Html(Messages("pages.calc.skip-it.pre")) <a href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.skip-it"))</a></p>
+    <p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.skip-it"))</a></p>
 
     <p>@Html(Messages("pages.calc.para1"))</p>
 
@@ -64,10 +64,11 @@
         @templates.calculator_result(calculationResult)
         <p><button class="button button-calculate" data-journey-click="marriage-allowance:click:calculate" id="calculate" type="submit">@Html(Messages("estimate.tax.saving"))</button>
         </p>
-        <hr class="vertical-boost-hr">
-        <p>
-            <a id="continue" href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("generic.continue"))</a>
-        </p>
+        <div class="calculator-apply-link">
+            <p>
+                <a id="continue" href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.apply"))</a>
+            </p>
+        </div>
     }
     <a href="@controllers.routes.MultiYearPtaEligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>
 }
