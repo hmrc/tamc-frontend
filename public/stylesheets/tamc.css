@@ -479,3 +479,7 @@ p.blue-underline-large {
 .align-left {
     text-align: left;
 }
+
+.calculator-apply-link {
+    padding-top: 7px;
+}
