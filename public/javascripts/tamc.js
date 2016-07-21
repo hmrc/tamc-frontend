@@ -164,6 +164,74 @@ $(function() {
       	 });
     });
 
+   $(function() {
+
+        var $radio = $("input:radio[name=endReason]");
+     	 $radio.click(function(){
+           var $divorce = $("input:radio[value=DIVORCE]:checked").val();
+           var $cancel = $("input:radio[value=CANCEL]:checked").val();
+           var $reject = $("input:radio[value=REJECT]:checked").val();
+
+           if ($divorce) {
+             ga('send', {
+               			hitType: 'event',
+               			eventCategory: 'marriage-allowance',
+               			eventAction: 'radio selection',
+              			eventLabel: 'reason_divorce'
+             });
+
+           }
+           if ($cancel) {
+
+                ga('send', {
+                              hitType: 'event',
+                              eventCategory: 'marriage-allowance',
+                              eventAction: 'radio selection',
+                              eventLabel: 'reason_cancel'
+                });
+           }
+           if ($reject) {
+
+                ga('send', {
+                              hitType: 'event',
+                              eventCategory: 'marriage-allowance',
+                              eventAction: 'radio selection',
+                              eventLabel: 'reason_reject'
+                });
+           }
+
+      	 });
+    });
+
+   $(function() {
+
+        var $radio = $("input:radio[name=endReason]");
+     	 $radio.click(function(){
+           var $current = $("input:radio[value=DIVORCE_CY]:checked").val();
+           var $previous = $("input:radio[value=DIVORCE_PY]:checked").val();
+
+           if ($current) {
+             ga('send', {
+               			hitType: 'event',
+               			eventCategory: 'marriage-allowance',
+               			eventAction: 'radio selection',
+              			eventLabel: 'divorcechoice_endofyear'
+             });
+
+           }
+           if ($previous) {
+
+                ga('send', {
+                              hitType: 'event',
+                              eventCategory: 'marriage-allowance',
+                              eventAction: 'radio selection',
+                              eventLabel: 'divorcechoice_startofyear'
+                });
+           }
+
+      	 });
+    });
+
      $(function() {
 
         var $breadCrumb = $("#global-breadcrumb nav ol li a");

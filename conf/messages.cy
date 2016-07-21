@@ -161,7 +161,7 @@ generic.transferor-action=CY_Transferred Marriage Allowance
 #Titles
 title.pattern=CY_Marriage Allowance - {0}
 title.verify=CY_Confirm Your Personal Details
-title.eligible-years=CY_Eligible years
+title.eligible-years=CY_Eligible; years
 title.extra-years=CY_Extra years
 title.transfer-in-place=CY_Transfer in place
 title.transfer=CY_Register Your Transfer
