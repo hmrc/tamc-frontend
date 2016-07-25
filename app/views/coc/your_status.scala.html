@@ -73,7 +73,7 @@
                                    <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
                                    <br>
                                    <div class="form-group">
-                                     <button class="button" type="submit" >@Html(Messages("change.status.button"))</button>
+                                     <button class="button" type="submit" data-journey-click="marriage-allowance:button:history_cancel">@Html(Messages("change.status.button"))</button>
                                   </div><br>
                 } else {
                     @if(historicActiveRecord) {
@@ -134,7 +134,7 @@
                                                             <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
                                                             <input name="endReason" id="endReason-reject" type="hidden" value="@EndReasonCode.REJECT"/>
                                                             <input name="creationTimestamp" id="creationTimestamp" type="hidden" value="@historicRelationships.get(index).creationTimestamp"/>
-                                                            <button class="remove-block" type="submit">@Html(Messages("pages.history.button.remove"))</button>
+                                                            <button class="remove-block" type="submit" data-journey-click="marriage-allowance:link:history_remove">@Html(Messages("pages.history.button.remove"))</button>
                                                         }
                                                     </td>
                                                 } else {
@@ -153,10 +153,13 @@
                 <h2 class="heading-small">@Html(Messages("change.other.sub.caption1"))</h2>
                 <p class=font-xsmall>@Html(Messages("change.other.income.content", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE),
                     NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
-                <p id="incomeMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.changeOfIncome" id="incomeLink">@Html(Messages("change.other.income.link"))</a>.</p>
+                <p id="incomeMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.changeOfIncome" id="incomeLink" data-journey-click="marriage-allowance:link:history_income">@Html(Messages("change.other.income.link"))</a>.</p>
                 <h2 class="heading-small">@Html(Messages("change.other.sub.caption2"))</h2>
                 <p class=font-xsmall>@Html(Messages("change.other.bereavement.content"))</p>
-                <p id="bereavementMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.bereavement" id="bereavementLink">@Html(Messages("change.other.bereavement.link"))</a>.</p>
+                <p id="bereavementMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.bereavement" id="bereavementLink" data-journey-click="marriage-allowance:link:history_bereavement">@Html(Messages("change.other.bereavement.link"))</a>.</p>
             </div>
         </div>
+        <script>
+                var _gaq = [];
+        </script>
 }

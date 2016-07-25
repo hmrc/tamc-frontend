@@ -71,7 +71,7 @@
              }.getOrElse("")
               <td>@Html(Messages("generic.email"))</th>
               <td id="email">@data.email</td>
-              <td><a href="confirm-email" id="edit-email">@Html(Messages("generic.change"))</a></td>
+              <td><a href="confirm-email" id="edit-email" data-journey-click="marriage-allowance:button:edit_email" >@Html(Messages("generic.change"))</a></td>
         </tr>
         <tr>
             <td>@Html(Messages("change.status.realtionship-end"))</td>
@@ -82,7 +82,7 @@
             <tr>
                 <td>@Html(Messages("change.status.divorce.h1"))</td>
                 <td id="divorce-date">@TextGenerators.ukDateTransformer(data.endRelationshipReason.dateOfDivorce)</td>
-                <td><a href="divorce-select-year" id="edit-divorce">@Html(Messages("generic.change"))</a></td>
+                <td><a href="divorce-select-year" id="edit-divorce" data-journey-click="marriage-allowance:button:edit_divorce">@Html(Messages("generic.change"))</a></td>
             </tr>
         }
     </table>
@@ -160,13 +160,13 @@
 @if(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false) && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) {
     <div class="form-group">
         <p>
-            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("change.status.confirm-removal.button"))</a>
+            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_removal">@Html(Messages("change.status.confirm-removal.button"))</a>
         </p>
     </div>
 } else {
     <div class="form-group">
         <p>
-            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button">@Html(Messages("confirm.cancellation.button"))</a>
+            <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_cancellation">@Html(Messages("confirm.cancellation.button"))</a>
         </p>
     </div>
 }
