@@ -70,31 +70,6 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
 
   "Update relationship" should {
 
-    "return an error if citizen not found" in new WithApplication(fakeApplication) {
-
-      val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
-      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
-        activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.CANCEL)), relationshipUpdated = Some(false))
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_citizen_not_found", transferorRecipientData = Some(updateRelationshipCacheData))
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirmUpdateAction()(request)
-
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-
-      val heading = document.getElementsByClass("heading-large").text()
-      val error = document.getElementById("error").text()
-
-      heading should be("We cannot find your Marriage Allowance details")
-      error should be("Call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call")
-
-    }
-
     "return an error on bad request/recipient deceased/recipient not found" in new WithApplication(fakeApplication) {
 
       val loggedInUser = LoggedInUserInfo(999700102, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
