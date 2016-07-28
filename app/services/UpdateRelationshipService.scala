@@ -101,7 +101,7 @@ trait UpdateRelationshipService {
     } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo), canApplyForPreviousYears(historicRelationships, activeRelationship))
 
   def canApplyForPreviousYears(
-      historicRelationships: Option[Seq[RelationshipRecord]], 
+      historicRelationships: Option[Seq[RelationshipRecord]],
       activeRelationship: Option[RelationshipRecord],
       startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
     val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
@@ -247,6 +247,10 @@ trait UpdateRelationshipService {
     val role = selectedRelationship.participant
     val relationCreationTimestamp = selectedRelationship.creationTimestamp
     val endDate = getEndDate(relationshipRecord, selectedRelationship).toString("yyyyMMdd")
+
+    val startDate = startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
+    val isRetrospective = endReason == EndReasonCode.REJECT && startDate.getYear < getCurrentDate.getYear
+
     val participiants = role match {
       case Role.TRANSFEROR =>
         (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier, updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
@@ -257,7 +261,7 @@ trait UpdateRelationshipService {
     }
 
     val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
-    val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participiants._1, participant2 = participiants._2, relationship = relationship)
+    val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participiants._1, participant2 = participiants._2, relationship = relationship, isRetrospective = isRetrospective)
     val sendNotificationData = UpdateRelationshipNotificationRequest(full_name = "UNKNOWN", email = sessionData.notification.get.transferor_email, role = role, welsh = LanguageUtils.isWelsh(lang))
     UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
   }
@@ -327,7 +331,7 @@ trait UpdateRelationshipService {
       updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
       validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
     } yield (updateRelationshipCache)
-  
+
   def getUpdateRelationshipCacheForReject(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     cachingService.getUpdateRelationshipCachedData
 
