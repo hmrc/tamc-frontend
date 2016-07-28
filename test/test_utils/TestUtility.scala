@@ -73,7 +73,6 @@ import services.TimeService
 import test_utils.TestData.Ninos
 import test_utils.TestData.Cids
 
-//FIXME should we take DummyHttpResponse from http-verbs test.jar?
 class DummyHttpResponse(override val body: String, override val status: Int, override val allHeaders: Map[String, Seq[String]] = Map.empty) extends HttpResponse {
   override def json: JsValue = Json.parse(body)
 }

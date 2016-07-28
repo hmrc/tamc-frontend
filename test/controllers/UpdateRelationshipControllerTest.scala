@@ -18,14 +18,14 @@ package controllers
 
 import scala.concurrent.Future
 import org.jsoup.Jsoup
-import play.api.test.Helpers.{ OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation }
+import play.api.test.Helpers.{OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
 import play.api.test.WithApplication
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import test_utils.{ UpdateRelationshipTestUtility, TestConstants }
+import test_utils.{UpdateRelationshipTestUtility, TestConstants}
 import org.scalatest.mock.MockitoSugar
 import play.api.mvc.Cookie
-import models.{ UpdateRelationshipCacheData, LoggedInUserInfo, RelationshipRecord, NotificationRecord, Role, EndReasonCode }
+import models.{UpdateRelationshipCacheData, LoggedInUserInfo, RelationshipRecord, NotificationRecord, Role, EndReasonCode}
 import models.EndRelationshipReason
 import org.joda.time.LocalDate
 import test_utils.TestData.Cids
@@ -295,6 +295,27 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe OK
     }
+
+    "select divorce year for update relationship" in new WithApplication(fakeApplication) {
+      val transferorRecipientData = Some(UpdateRelationshipCacheData(None, None,
+        Some(RelationshipRecord(Role.RECIPIENT, "1234567890", "20150101", None, None, Role.TRANSFEROR, "1234567890")),
+        None, None, None, None))
+
+      val testComponent = makeUpdateRelationshipTestComponent(dataId = "coc_active_relationship", transferorRecipientData = transferorRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(
+        "role" -> Role.RECIPIENT,
+        "endReason" -> EndReasonCode.DIVORCE_PY,
+        "historicActiveRecord" -> "false",
+        "creationTimestamp" -> "1234567890",
+        "dateOfDivorce.day" -> "20",
+        "dateOfDivorce.month" -> "1",
+        "dateOfDivorce.year" -> "2015")
+
+      val result = controllerToTest.divorceSelectYear()(request)
+      status(result) shouldBe OK
+    }
+
   }
 
   "Calling history page" should {
