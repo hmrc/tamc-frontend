@@ -123,7 +123,8 @@ pages.form.field-required.2017.partners-income=CY_Tell us if your spouse or civi
 ############################
 #     Change every year    #
 ############################
-pages.form.field.description.partners-income=CY_Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000
+pages.form.field.description.2016.partners-income=CY_Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000
+pages.form.field.description.2017.partners-income=CY_Confirm if your spouse or civil partner has an annual income of between £11,501 and £45,000
 
 #███████████████████████████████████████████████████████████████████████████████████████████████████
 #█                                                                                                 █
