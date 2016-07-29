@@ -98,15 +98,15 @@ object TestConstants {
 
   val CREATE_SUCCESSFUL_RELATIONSHIP_REQUEST = "CreateRelationshipRequestHolder(CreateRelationshipRequest(" + Cids.cid1 + ",2015," + Cids.cid2 + ",2015,List(2015)),CreateRelationshipNotificationRequest(UNKNOWN,example123@example.com,false))"
 
-  val UPDATE_SUCCESSFUL_RELATIONSHIP_REQUEST = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(,Cancelled by Transferor," + getDateInRequiredFormate + ")),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false))"
+  val UPDATE_SUCCESSFUL_RELATIONSHIP_REQUEST = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(,Cancelled by Transferor," + getDateInRequiredFormate + ")),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
 
-  val REJECT_ACTIVE_REL_REQ = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(123456,Rejected by Recipient,20110406)),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false))"
+  val REJECT_ACTIVE_REL_REQ = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(123456,Rejected by Recipient,20110406)),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
 
-  val REJECT_HISTORIC_REL_REQ = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(98765,Rejected by Recipient,20120406)),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false))"
+  val REJECT_HISTORIC_REL_REQ = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(98765,Rejected by Recipient,20120406)),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
 
-  val UPDATE_RELATIONSHIP_CITIZEN_NOT_FOUND = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700101,2015),TransferorInformation(),RelationshipInformation(,Cancelled by Transferor," + getDateInRequiredFormate + ")),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false))"
+  val UPDATE_RELATIONSHIP_CITIZEN_NOT_FOUND = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700101,2015),TransferorInformation(),RelationshipInformation(,Cancelled by Transferor," + getDateInRequiredFormate + ")),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
 
-  val UPDATE_RELATIONSHIP_BAD_REQUEST = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700102,2015),TransferorInformation(),RelationshipInformation(,Cancelled by Transferor," + getDateInRequiredFormate + ")),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false))"
+  val UPDATE_RELATIONSHIP_BAD_REQUEST = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700102,2015),TransferorInformation(),RelationshipInformation(,Cancelled by Transferor," + getDateInRequiredFormate + ")),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
 
   val CANNOT_CREATE_RELATIONSHIP_REQUEST = "CreateRelationshipRequestHolder(CreateRelationshipRequest(" + Cids.cid1 + ",2015,123456,2015,List(2015)),CreateRelationshipNotificationRequest(UNKNOWN,example123@example.com,false))"
 
