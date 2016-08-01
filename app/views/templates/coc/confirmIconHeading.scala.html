@@ -7,5 +7,4 @@
         case optionDate@Some(date) => {<strong class="bold-small">@Html(Messages(messageKey, TextGenerators.ukDateTransformer(optionDate)))</strong>}
         case _ => {<strong class="bold-small">@Html(Messages(messageKey))</strong>}
     }
-
 </div>
