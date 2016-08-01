@@ -217,7 +217,7 @@ eligibility.feedback.gain	=	Ar sail yr wybodaeth yr ydych wedi''i rhoi i ni, byd
 eligibility.feedback.loose	=	Ar sail y manylion yr ydych wedi''i rhoi, ni fyddwch yn elwa o wneud y trosglwyddiad.
 
 #Multi-year select
-pages.multi-year-select.heading=CY_Confirm the earlier years you want to apply for
+pages.multi-year-select.heading	=	Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
 
 ############################
 #Should be added every year#
@@ -361,7 +361,7 @@ change.status.divorce.transferor.directions	=	Os ydych yn canslo Lwfans Priodaso
 change.status.divorce.transferor.h1	=	Canslo Lwfans Priodasol yn sgil ysgariad neu ddod &#226; phartneriaeth sifil i ben
 change.status.divorce.transferor.conditional1.h1	=	Canslo Lwfans Priodasol yn sgil ysgariad neu ddod &#226; phartneriaeth sifil i ben
 
-change.status.divorce.recipient.condition.h1=CY_Divorce or end of civil partnership
+change.status.divorce.recipient.condition.h1	=	Ysgariad neu ddiwedd partneriaeth sifil
 
 change.status.divorce.transferor.conditional1.para1	=	Rhoesoch wybod i ni y gwnaethoch ysgaru neu ddod &#226;''ch partneriaeth sifil i ben ar {0}.
 change.status.divorce.transferor.conditional1.para2	=	Gan fod y dyddiad hwn yn ystod y flwyddyn dreth flaenorol:
@@ -384,36 +384,36 @@ change.status.historic-active.result	=	Gallai dileu Lwfans Priodasol o ddechrau'
 change.status.historic-active.directions	=	Gallwch ddileu Lwfans Priodasol o ddechrau''r flwyddyn dreth ({2}) os ydych wedi ysgaru ac mae gennych <a href="{0}">archddyfarniad absoliwt</a>, neu os yw''ch partneriaeth sifil wedi dod i ben ac mae gennych <a href="{1}">orchymyn terfynol</a>. Dyma''r dogfennau sy''n dod &#226;''ch priodas neu''ch partneriaeth sifil i ben yn gyfreithlon.
 change.status.cancel.h1	=	Canslo Lwfans Priodasol
 
-change.status.cancel.content=CY_We''ll cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
-change.status.cancel.content1=CY_Your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
-change.status.reject.h1=CY_Remove a previous Marriage Allowance claim
-change.status.reject.content=CY_our Marriage Allowance will be cancelled from ({0}), the start of the tax year you first received it.
-change.status.reject.warning=CY_This could result in you not paying enough tax. We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. If you haven''t paid enough, we''ll usually collect it by adjusting your tax code.
-change.status.reject.previous.content=CY_You can remove the Marriage Allowance you claimed previously. The allowance will be removed from {0}, the start of the tax year you first received it.
-change.status.reject.previous.warning=CY_This could result in you underpaying tax. We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. Any underpayment will usually be collected through an adjustment to your tax code.
-change.status.allowance=CY_Allowance status
-change.status.realtionship-end=CY_Reason for cancellation
-change.status.confirm-removal.button=CY_Confirm removal
-change.status.divorce-cy-heading=CY_Remove this Marriage Allowance transfer
-change.status.divorce-cy-content=CY_This will be removed at the end of the current tax year, April 5 {0}.
-change.status.cancel-your.h1=CY_Cancelling Marriage Allowance
-change.status.cancel-your.p=CY_Why do you want to cancel your Marriage Allowance?
-change.status.confirm.email=CY_Enter your email to confirm
-change.status.history.h4=CY_Your Marriage Allowance claims
-change.status.start-date=CY_Start date
-change.status.end-date=CY_End date
-change.status.history.allowance-status=CY_Allowance status
-change.status.history.status=CY_Status
-change.status.history.role=CY_Allowance role
-change.status.history.reason=CY_Reason for change
-change.status.active=CY_Active
-change.status.active.present.year=CY_to Present
-change.status.active.to=CY_to
-change.status.transferor.amount=CY_You''ll stop transferring Marriage Allowance to your spouse or civil partner at end of the tax year ({0}).
-change.status.receiving.amount=CY_You''ll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year ({0}).
-change.status.transferor.stop-sooner=CY_You can end your Marriage Allowance transfer sooner.
-change.status.recipient.stop-sooner=CY_You can stop receiving Marriage Allowance sooner.
-change.status.finish.divorce=CY_Divorce successful
+change.status.cancel.content	=	Byddwn yn canslo''ch Lwfans Priodasol, ond bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol.
+change.status.cancel.content1	=	Bydd eich Lwfans Priodasol yn dychwelyd i''r swm blaenorol o {0}, sef dechrau''r flwyddyn dreth newydd. Ni fydd yn rhaid i''ch partner ad-dalu unrhyw dreth.
+change.status.reject.h1	=	Dileu cais blaenorol am Lwfans Priodasol
+change.status.reject.content	=	Caiff eich Lwfans Priodasol ei ganslo o ({0}) ymlaen, sef dechrau''r flwyddyn dreth pan gawsoch ef am y tro cyntaf.
+change.status.reject.warning	=	Gallai hyn arwain at beidio &#226; thalu digon o dreth. Rhown wybod i chi a ydych wedi talu''r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth.
+change.status.reject.previous.content	=	Gallwch ddileu''r Lwfans Priodasol y gwnaethoch ei hawlio''n flaenorol. Caiff y lwfans ei ddileu o {0}, sef dechrau''r flwyddyn dreth pan gawsoch ef am y tro cyntaf.
+change.status.reject.previous.warning	=	Gallai hyn arwain at dandalu treth. Rhown wybod i chi a ydych wedi talu''r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Fel arfer, bydd unrhyw dandaliad yn cael ei gasglu drwy addasu''ch cod treth.
+change.status.allowance	=	Statws y lwfans
+change.status.realtionship-end	=	Rheswm dros ganslo
+change.status.confirm-removal.button	=	Cadarnhau dileu
+change.status.divorce-cy-heading	=	Dileu''r trosglwyddiad Lwfans Priodasol hwn
+change.status.divorce-cy-content	=	Bydd hyn yn cael ei ddileu ar ddiwedd y flwyddyn dreth bresennol, sef Ebrill 5 {0}.
+change.status.cancel-your.h1	=	Canslo Lwfans Priodasol
+change.status.cancel-your.p	=	Pam yr ydych am ganslo''ch Lwfans Priodasol?
+change.status.confirm.email	=	Nodwch eich cyfeiriad e-bost i gadarnhau
+change.status.history.h4	=	Eich ceisiadau am Lwfans Priodasol
+change.status.start-date	=	Dyddiad dechrau
+change.status.end-date	=	Dyddiad dod i ben
+change.status.history.allowance-status	=	Statws y lwfans
+change.status.history.status	=	Statws
+change.status.history.role	=	R&#244;l y lwfans
+change.status.history.reason	=	Rheswm dros newid
+change.status.active	=	Gweithredol
+change.status.active.present.year	=	– Presennol
+change.status.active.to	=	–
+change.status.transferor.amount	=	Byddwch yn rhoi''r gorau i drosglwyddo Lwfans Priodasol i''ch priod neu bartner sifil ddiwedd blwyddyn dreth ({0}).
+change.status.receiving.amount	=	Byddwch yn rhoi''r gorau i gael Lwfans Priodasol gan eich priod neu bartner sifil ddiwedd blwyddyn dreth ({0}).
+change.status.transferor.stop-sooner	=	Gallwch ddod &#226;''ch trosglwyddiad Lwfans Priodasol i ben yn gynharach.
+change.status.recipient.stop-sooner	=	Gallwch beidio &#226; chael Lwfans Priodasol yn gynharach.
+change.status.finish.divorce	=	Ysgariad yn llwyddiannus
 
 cchange.status.finish.will-be-current	=	Caiff eich Lwfans Priodasol ei ddileu ar ddiwedd y flwyddyn dreth bresennol.
 change.status.finish.will-be-next	=	Bydd eich Lwfans Priodasol yn cael ei ddileu o ddechrau''r flwyddyn dreth bresennol ymlaen.
@@ -492,7 +492,7 @@ technical.technical-error.h1	=	Mae problem dechnegol wedi codi
 technical.technical-error.para1	=	Rhowch gynnig arall arni. Os yw''r broblem yn parhau, ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio.
 
 generic.translation.text	=	Mae''r dudalen hon hefyd ar gael yn
-generic.translation.english	=	English
+generic.translation.english	=	Saesneg (English)
 generic.translation.welsh	=	Cymraeg
 radio.yes	=	Iawn
 radio.no	=	Na
@@ -520,6 +520,8 @@ pages.eligibleyear.li1	=	yn talu hyd at £{0} yn llai o dreth bob blwyddyn
 pages.eligibleyear.li2	=	byddwn yn addasu cod treth <span id="firstNameOnly3">{0}</span> i gynnwys y lwfans ychwanegol hwn
 pages.eligibleyear.li3	=	bydd yn adnewyddu''n awtomatig bob blwyddyn hyd nes eich bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">nad ydych bellach yn gymwys</a>
 pages.eligibleyear.doyou.want	=	A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
+pages.eligibleyear.notice	=	Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
+
 
 #multi-year
 pages.multiyear.taxyear	=	blwyddyn dreth
@@ -566,3 +568,7 @@ change.other.bereavement.link	=	Er mwyn rhoi gwybod i ni am brofedigaeth, cysyll
 change.status.active	=	Gweithredol
 
 error.invalid.date.format	=	Rhaid i chi nodi dyddiad dilys.
+
+pages.noyears.h1	=	Nid ydych wedi dewis blynyddoedd treth i wneud cais ar eu cyfer
+pages.noyears.content1	=	Ewch yn &#244;l os ydych am ddewis blwyddyn i wneud cais ar ei chyfer.
+pages.noyears.findoutmore	=	Rhagor o wybodaeth am <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">sut y mae Lwfans Priodasol yn gweithio.</a>

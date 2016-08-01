@@ -26,9 +26,9 @@
     title = Messages("title.pattern", Messages("title.other-ways")),
     mainConfig = views.helpers.MainConfig(
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
-<h1 class="heading-xlarge text mainpage" id="message">You haven't selected any tax years to apply for</h1>
-<div class="panel panel-border-narrow">Go back if you want to select a year to apply for.</div>
-<p>You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works.</a></p>
+<h1 class="heading-xlarge text mainpage" id="message">@Html(Messages("pages.noyears.h1"))</h1>
+<div class="panel panel-border-narrow">@Html(Messages("pages.noyears.content1"))</div>
+<p>@Html(Messages("pages.noyears.findoutmore"))</p>
 <br>
 <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 }

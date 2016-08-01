@@ -381,6 +381,7 @@ change.status.historic-active.result=Removing Marriage Allowance from the start 
 change.status.historic-active.directions=You can remove Marriage Allowance from the start of the tax year ({2}) if you''ve divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.cancel.h1=Cancelling Marriage Allowance
 
+# To be translated
 change.status.cancel.content=We''ll cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
 change.status.cancel.content1=Your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
 change.status.reject.h1=Remove a previous Marriage Allowance claim
@@ -517,6 +518,7 @@ pages.eligibleyear.li1=will pay up to £{0} less tax each year
 pages.eligibleyear.li2=we''ll adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
 pages.eligibleyear.li3=it''ll automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
 pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
+pages.eligibleyear.notice=You can apply for earlier years if you continue.
 
 #multi-year
 pages.multiyear.taxyear=tax year
@@ -563,3 +565,8 @@ change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 change.status.active=Active
 
 error.invalid.date.format=You must specify a valid date.
+
+#no years selected page
+pages.noyears.h1=You haven't selected any tax years to apply for
+pages.noyears.content1=Go back if you want to select a year to apply for.
+pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works.</a>

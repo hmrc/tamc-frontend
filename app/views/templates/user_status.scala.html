@@ -24,7 +24,7 @@
     <p class="service-info-p">
         @if(utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
             @if(user.authContext.user.previouslyLoggedInAt.isEmpty) {
-              @Messages("user-status.first-time-login", user.name.map(_ + ", this").getOrElse(""))
+              @Messages("user-status.first-time-login", user.name.map(_ + ", this").getOrElse("This"))
             } else {
               @Messages("user-status.previous-login-time", user.name.map(_ + ", you").getOrElse("You"), formatEasyReadingTimestamp(user.authContext.user.previouslyLoggedInAt, ""))
             }
