@@ -560,6 +560,7 @@ class ContentTest extends UnitSpec with TestUtility {
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/eligible-years")
     }
+
     "display form error message (no year choice made )" in new WithApplication(fakeApplication) {
 
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
