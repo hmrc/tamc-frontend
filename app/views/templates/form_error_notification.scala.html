@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(form: Form[_], formErrorMessage:String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.")(implicit lang: Lang, request: Request[_])
+@(form: Form[_], formErrorMessage:String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.", lowerLimit: Option[Int] = None, upperLimit: Option[Int] = None)(implicit lang: Lang, request: Request[_])
 @import play.twirl.api.Html
 
 @if(form.hasErrors) {
@@ -26,7 +26,11 @@
     @form.errors.map(_.key).distinct.map { errorKey =>
     <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
       <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")' data-focuses='@errorKey.replaceAll("""[\.\[\]]""", "-")'>
-        @Messages(prefix+errorKey.replaceAll("""[\.\[\]]""", "-"))
+        @if(lowerLimit.isDefined||upperLimit.isDefined) {
+          @Messages(prefix+errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get, upperLimit.get)
+        } else {
+          @Messages(prefix+errorKey.replaceAll("""[\.\[\]]""", "-"))
+        }
       </a>
     </li>
     }
