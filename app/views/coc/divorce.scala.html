@@ -81,7 +81,7 @@
                     </div>
 	        	} else {
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.conditional1.h1"))</h1>
-                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get)), LanguageUtils.isWelsh(lang)))</p>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(lang))))</p>
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
                     </div>
@@ -94,7 +94,7 @@
            	} else {
                 @if(TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)){
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
-                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get)), LanguageUtils.isWelsh(lang)))</p>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(lang))))</p>
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.recipient.content1"))</p>
                     </div>
