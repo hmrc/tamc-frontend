@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import services.TimeService
 import uk.gov.hmrc.time.TaxYearResolver
+import views.helpers.WelshDateConverter._
 
 object TextGenerators {
   def formPageDataJourney(prefix: String, form: Form[_]): String =
@@ -45,7 +46,7 @@ object TextGenerators {
   def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean = false): String =
     isWelsh match {
       case false => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK)))
-      case true => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))).replaceAll("April", "Ebrill")
+      case true => welshConverted(date)
     }
 
   def formPossessive(noun: String): String =
@@ -54,7 +55,7 @@ object TextGenerators {
   def taxDateInterval(taxYear: Int, isWelsh: Boolean = false): String =
     isWelsh match {
       case false => ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))
-      case true => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))).replaceAll("April", "Ebrill")
+      case true => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear)), isWelsh) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)), isWelsh))
     }
 
   def taxDateIntervalMultiYear(taxYear: Int,taxEndYear: Int, isWelsh: Boolean = false): String =
@@ -66,7 +67,7 @@ object TextGenerators {
   def taxDateIntervalShort(taxYear: Int, isWelsh: Boolean = false): String =
     isWelsh match {
       case false => TaxYearResolver.startOfTaxYear(taxYear).getYear + " to " + TaxYearResolver.endOfTaxYear(taxYear).getYear
-      case true => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxYear).getYear).replaceAll("April", "Ebrill")
+      case true => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxYear).getYear)
     }
 
   def taxDateIntervalString(taxYear: String, taxAnotherYear: Option[String] = None, isWelsh: Boolean = false): String = {

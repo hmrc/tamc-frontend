@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 @import config.ApplicationConfig
 @import services.TimeService
+@import utils.LanguageUtils
     
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.reason")),
@@ -35,8 +36,8 @@
         @if(reason == EndReasonCode.CANCEL) {
 
             <h1 class="heading-xlarge" id="cancel-heading" >@Html(Messages("change.status.cancel.h1"))</h1>
-            <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate)))</p>
-            <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate)))</p>
+            <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate, LanguageUtils.isWelsh(lang))))</p>
+            <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
             <div class="form-group booster">
                 <p>
                 <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
@@ -46,7 +47,7 @@
         @if(reason == EndReasonCode.REJECT) {
             @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
-                <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
+                <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
                     <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning" ))</strong>
@@ -59,7 +60,7 @@
 
              }else {
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
-                <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate)))</p>
+                <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
                     <strong class="bold-small">@Html(Messages("change.status.reject.warning" ))</strong>
