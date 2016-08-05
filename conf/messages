@@ -275,7 +275,7 @@ pages.finished.para6=Your revised notice of tax coding will show in your persona
 pages.finished.para7=There is no need to contact us.
 pages.finished.back-pta=Back to Personal Tax Account
 pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
-pages.finished.survey-link=<a data-journey-click="{0}c" id="survey-link" href="https://www.gov.uk/done/marriage-allowance">What did you think of this service?</a> (takes 30 seconds)
+pages.finished.survey-link=<a data-journey-click="{0}" id="survey-link" href="https://www.gov.uk/done/marriage-allowance">What did you think of this service?</a> (takes 30 seconds)
 
 #Registration page - Your spouse details
 pages.form.h1=Your spouse or civil partner''s details
@@ -373,7 +373,6 @@ change.status.historic-active.result=Removing Marriage Allowance from the start 
 change.status.historic-active.directions=You can remove Marriage Allowance from the start of the tax year ({2}) if you''ve divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.cancel.h1=Cancelling Marriage Allowance
 
-# To be translated
 change.status.cancel.content=We''ll cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
 change.status.cancel.content1=Your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
 change.status.reject.h1=Remove a previous Marriage Allowance claim
