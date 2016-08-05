@@ -102,7 +102,7 @@ object TestConstants {
 
   val REJECT_ACTIVE_REL_REQ = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(123456,Rejected by Recipient,20110406)),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
 
-  val REJECT_HISTORIC_REL_REQ = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(98765,Rejected by Recipient,20120406)),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
+  val REJECT_HISTORIC_REL_REQ = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700100,2015),TransferorInformation(),RelationshipInformation(98765,Rejected by Recipient,20120406)),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,true))"
 
   val UPDATE_RELATIONSHIP_CITIZEN_NOT_FOUND = "UpdateRelationshipRequestHolder(UpdateRelationshipRequest(RecipientInformation(999700101,2015),TransferorInformation(),RelationshipInformation(,Cancelled by Transferor," + getDateInRequiredFormate + ")),UpdateRelationshipNotificationRequest(UNKNOWN,example@example.com,Recipient,false,false))"
 
