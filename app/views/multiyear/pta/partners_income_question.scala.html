@@ -24,6 +24,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
+@import uk.gov.hmrc.time.TaxYearResolver
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligibility"))){
@@ -36,7 +37,7 @@
         @Html(Messages("eligibility.check.partners.income.h1"))</h1>
     <p class="information">@Html(Messages("eligibility.check.partners.income.information1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</br>
         @Html(Messages("eligibility.check.partners.income.information2"))</p>
-        @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = "pages.form.error.mandatory.data")
+        @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.PERSONAL_ALLOWANCE+1), upperLimit = Some(ApplicationConfig.MAX_LIMIT))
         @helpers.form(action = routes.MultiYearPtaEligibilityController.partnersIncomeCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
             <p class="bold-small">@Html(Messages("eligibility.check.partners.income.h2",  NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>

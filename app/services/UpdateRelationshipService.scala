@@ -101,7 +101,7 @@ trait UpdateRelationshipService {
     } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo), canApplyForPreviousYears(historicRelationships, activeRelationship))
 
   def canApplyForPreviousYears(
-      historicRelationships: Option[Seq[RelationshipRecord]], 
+      historicRelationships: Option[Seq[RelationshipRecord]],
       activeRelationship: Option[RelationshipRecord],
       startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
     val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
@@ -247,6 +247,13 @@ trait UpdateRelationshipService {
     val role = selectedRelationship.participant
     val relationCreationTimestamp = selectedRelationship.creationTimestamp
     val endDate = getEndDate(relationshipRecord, selectedRelationship).toString("yyyyMMdd")
+
+    val isRetrospective = endReason match {
+      case EndReasonCode.REJECT => val startDate = startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
+        startDate.getYear < getCurrentDate.getYear
+      case _ => false
+    }
+
     val participiants = role match {
       case Role.TRANSFEROR =>
         (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier, updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
@@ -258,7 +265,7 @@ trait UpdateRelationshipService {
 
     val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
     val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participiants._1, participant2 = participiants._2, relationship = relationship)
-    val sendNotificationData = UpdateRelationshipNotificationRequest(full_name = "UNKNOWN", email = sessionData.notification.get.transferor_email, role = role, welsh = LanguageUtils.isWelsh(lang))
+    val sendNotificationData = UpdateRelationshipNotificationRequest(full_name = "UNKNOWN", email = sessionData.notification.get.transferor_email, role = role, welsh = LanguageUtils.isWelsh(lang), isRetrospective = isRetrospective)
     UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
   }
 
@@ -279,7 +286,6 @@ trait UpdateRelationshipService {
         Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
           case UpdateRelationshipResponse(ResponseStatus("OK"))                                    => data
           case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CANNOT-UPDATE-RELATIONSHIP")) => throw CannotUpdateRelationship()
-          case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CITIZEN-NOT-FOUND"))          => throw CitizenNotFound()
           case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:BAD-REQUEST"))                => throw RecipientNotFound()
         }
     } recover {
@@ -327,7 +333,7 @@ trait UpdateRelationshipService {
       updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
       validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
     } yield (updateRelationshipCache)
-  
+
   def getUpdateRelationshipCacheForReject(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     cachingService.getUpdateRelationshipCachedData
 
@@ -350,9 +356,8 @@ trait UpdateRelationshipService {
       notificationAndEmail <- validateUpdateRelationshipFinishedData(cacheData)
     } yield (notificationAndEmail)
 
-  def saveEndRelationshipReason(endRealtionshipReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] = {
+  def saveEndRelationshipReason(endRealtionshipReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
     cachingService.savRelationshipEndReasonRecord(endRealtionshipReason)
-  }
 
   def isValidDivorceDate(dod: Option[LocalDate])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     for {
@@ -393,9 +398,8 @@ trait UpdateRelationshipService {
       case EndRelationshipReason(EndReasonCode.REJECT, _, _) => startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
     })
 
-  def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate = {
+  def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
      (LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd")))
-    }
 
 
   private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {

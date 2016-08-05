@@ -111,16 +111,9 @@ coc.end-reason.RETROSPECTIVE	=	Wedi gwneud cais am Lwfans Priodasol yn &#244;l-w
 coc.end-reason.SYSTEM	=	CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT	=	Lwfans Priodasol wedi dod ben
 
-############################
-#Should be added every year#
-############################
-pages.form.field-required.2016.partners-income	=	Rhowch wybod a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £11,001 a £43,000.
-pages.form.field-required.2017.partners-income	=	Rhowch wybod a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £11,501 a £45,000.
+pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £{0} a £{1}.
 
-############################
-#     Change every year    #
-############################
-pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £11,001 a £43,000
+pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £{0} a £{1}.
 
 #███████████████████████████████████████████████████████████████████████████████████████████████████
 #█                                                                                                 █

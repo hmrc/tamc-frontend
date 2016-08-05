@@ -111,16 +111,8 @@ coc.end-reason.RETROSPECTIVE=Applied for Marriage Allowance retrospectively
 coc.end-reason.SYSTEM=Ended by HMRC
 coc.end-reason.DEFAULT=Marriage Allowance Ended
 
-############################
-#Should be added every year#
-############################
-pages.form.field-required.2016.partners-income=Tell us if your spouse or civil partner has an annual income of between £11,001 and £43,000.
-pages.form.field-required.2017.partners-income=Tell us if your spouse or civil partner has an annual income of between £11,501 and £45,000.
-
-############################
-#     Change every year    #
-############################
-pages.form.field.description.partners-income=Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000
+pages.form.field.description.partners-income=Confirm if your spouse or civil partner has an annual income of between £{0} and £{1}
+pages.form.field-required.partners-income=Tell us if your spouse or civil partner has an annual income of between £{0} and £{1}.
 
 #███████████████████████████████████████████████████████████████████████████████████████████████████
 #█                                                                                                 █
