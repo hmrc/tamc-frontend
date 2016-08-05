@@ -26,7 +26,7 @@ user: details.TamcUser)
 @import config.ApplicationConfig
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.date-of-marriage")),
+title = Messages("title.application.pattern", Messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))) {
     @if(ApplicationConfig.isWelshEnabled){

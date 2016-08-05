@@ -160,33 +160,34 @@ generic.transferor-action=CY_Transferred Marriage Allowance
 
 
 #Titles
-title.pattern=CY_Marriage Allowance - {0}
+title.pattern=CY_{0} - Marriage Allowance - GOV.UK
+title.eligibility.pattern=CY_{0} - Marriage Allowance Eligibility - GOV.UK
 title.verify=CY_Confirm Your Personal Details
-title.eligible-years=CY_Eligible years
-title.extra-years=CY_Extra years
+title.eligible-years=CY_Apply for the current year
+title.extra-years=CY_Apply for earlier tax years
 title.transfer-in-place=CY_Transfer in place
 title.transfer=CY_Register Your Transfer
-title.finished=CY_Complete
-title.confirm-email=CY_Confirm your email
-title.non-eligible=CY_You are not eligible
+title.finished=CY_Application confirmed
+title.confirm-email=CY_Confirm your email address
+title.non-eligible=CY_You are not eligible in the current tax year
 title.no-tax-years=CY_No tax years available
-title.eligibility=CY_Eligibility Questions
+title.eligibility=CY_Your relationship
 title.confirm-transferor=CY_Confirm change
-title.confirm-recipient=CY_Confirm the Recipient Details
+title.confirm-recipient=CY_Check your details and confirm
 title.confirm-update=CY_Confirm Update
 title.eligibility-criteria=CY_Eligibility Criteria
-title.how-it-works=CY_How It Works
+title.how-it-works=CY_Apply for Marriage Allowance
 title.other-ways=CY_Other Ways to apply
 title.change.complete=CY_Change complete
 title.change.earnings=CY_Change in income
-title.change.reason=CY_Reason for change
+title.change.reason=CY_Remove a previous claim
 title.complete=CY_Complete
 title.error=CY_Error
-title.history=CY_Your history
+title.history=CY_Your Marriage Allowance Summary
 title.make-a-change=CY_Make a change
 title.bereavement=CY_Bereavement
 title.divorce=CY_Divorce
-title.date-of-marriage=CY_Date of Marriage
+title.date-of-marriage=CY_Date of Marriage or civil partnership
 
 
 #User status

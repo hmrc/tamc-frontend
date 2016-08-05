@@ -30,7 +30,7 @@
 @import org.joda.time.LocalDate
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.confirm-recipient"))){
+    title = Messages("title.application.pattern", Messages("title.confirm"))){
     @if(ApplicationConfig.isWelshEnabled){
 	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirm.toString(), 
 	               controllers.routes.LanguageController.switchToWelshConfirm.toString()) 
