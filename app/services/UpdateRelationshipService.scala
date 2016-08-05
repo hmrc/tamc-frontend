@@ -246,11 +246,13 @@ trait UpdateRelationshipService {
     val selectedRelationship = getRelationship(sessionData)
     val role = selectedRelationship.participant
     val relationCreationTimestamp = selectedRelationship.creationTimestamp
-    val endDate = getEndDate(relationshipRecord, selectedRelationship).toString("yyyyMMdd")
+    val effectiveDate = getEndDate(relationshipRecord, selectedRelationship)
+    val endDate = effectiveDate.toString("yyyyMMdd")
 
-    val isRetrospective = endReason match {
-      case EndReasonCode.REJECT => val startDate = startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
-        startDate.getYear < getCurrentDate.getYear
+    val isRetrospective = relationshipRecord.endReason match {
+      case EndReasonCode.REJECT =>
+        selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty &&
+          !selectedRelationship.participant1EndDate.get.equals("") && (effectiveDate.getYear != TimeService.getCurrentTaxYear)
       case _ => false
     }
 
