@@ -68,7 +68,7 @@
 
         @if(historicYearsAvailable) {
         <div class="tamc-js-hidden error-inline validation-summary" id="current-year-error">
-            You can apply for earlier years if you continue.
+            @Html(Messages("pages.eligibleyear.notice"))
         </div>
         <script>
                     var _gaq = [];

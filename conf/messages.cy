@@ -9,122 +9,111 @@
 #█                                                                                                 █
 #███████████████████████████████████████████████████████████████████████████████████████████████████
 
-pages.form.field.description.transferor-income=CY_Confirm your annual income
-pages.form.field.description.recipient-income=CY_Confirm your spouse or civil partner''s annual income
+pages.form.field.description.transferor-income	=	Cadarnhewch eich incwm blynyddol
+pages.form.field.description.recipient-income	=	Cadarnhewch incwm blynyddol eich priod neu bartner sifil
 
+pages.form.field.description.name	=	Cadarnhewch enw cyntaf eich priod neu bartner sifil
+pages.form.field.name.error.error.required	=	Rhowch wybod beth yw enw cyntaf eich priod neu bartner sifil.
+pages.form.field.name.error.error.pattern	=	Defnyddiwch lythrennau yn unig.
+pages.form.field.name.error.error.maxLength	=	Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny.
 
-pages.form.field.description.name=CY_Confirm your spouse or civil partner''s first name
-pages.form.field.name.error.error.required=CY_Tell us your spouse or civil partner''s first name.
-pages.form.field.name.error.error.pattern=CY_Use letters only.
-pages.form.field.name.error.error.maxLength=CY_Use up to or no more than {0} letters.
+pages.form.field.description.last-name	=	Cadarnhewch enw olaf eich priod neu bartner sifil
+pages.form.field.last-name.error.error.required	=	Rhowch wybod beth yw enw olaf eich priod neu bartner sifil.
+pages.form.field.last-name.error.error.pattern	=	Defnyddiwch lythrennau yn unig.
+pages.form.field.last-name.error.error.maxLength	=	Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny.
 
-pages.form.field.description.last-name=CY_Confirm your spouse or civil partner''s last name
-pages.form.field.last-name.error.error.required=CY_Tell us your spouse or civil partner''s last name.
-pages.form.field.last-name.error.error.pattern=CY_Use letters only.
-pages.form.field.last-name.error.error.maxLength=CY_Use up to or no more than {0} letters.
+pages.form.field.description.gender	=	Cadarnhewch ryw eich priod neu bartner sifil
+pages.form.field.gender.error.error.required	=	Rhowch wybod beth yw rhyw eich priod neu bartner sifil.
+pages.form.field.gender.error.error.invalid	=	Rhowch wybod beth yw rhyw eich priod neu bartner sifil.
+pages.form.field.dom.error.required	=	Rhowch wybod pa ddyddiad y gwnaethoch briodi.
+pages.form.field.dod.error.required	=	Rhowch wybod pa ddyddiad y gwnaethoch ysgaru.
+pages.form.field.dom.error.min-date	=	Mae''r dyddiad hwn yn rhy bell yn y gorffennol.
+pages.form.field.dom.error.max-date	=	Mae''r dyddiad hwn yn y dyfodol.
 
-pages.form.field.description.gender=CY_Confirm your spouse or civil partner''s gender
-pages.form.field.gender.error.error.required=CY_Tell us your spouse or civil partner''s gender.
-pages.form.field.gender.error.error.invalid=CY_Tell us your spouse or civil partner''s gender.
-pages.form.field.dom.error.required=CY_Tell us your date of marriage.
-pages.form.field.dod.error.required=CY_Tell us your date of divorce.
-pages.form.field.dom.error.min-date=CY_This date is too far in the past.
-pages.form.field.dom.error.max-date=CY_This date is in the future.
+pages.form.field.description.nino	=	Cadarnhewch rif Yswiriant Gwladol eich priod neu bartner sifil
+pages.form.field.nino.error.error.required	=	Rhowch wybod beth yw rhif Yswiriant Gwladol eich priod neu bartner sifil.
+pages.form.field.nino.error.error.invalid	=	Rhaid i chi wirio''r rhif Yswiriant Gwladol a''i nodi''n gywir.
+pages.form.field.nino.error.self	=	Ni allwch nodi''ch manylion eich hun.
 
-pages.form.field.description.nino=CY_Confirm your spouse or civil partner''s National Insurance number
-pages.form.field.nino.error.error.required=CY_Tell us your spouse or civil partner''s National Insurance number.
-pages.form.field.nino.error.error.invalid=CY_Check their National Insurance number and enter it correctly.
-pages.form.field.nino.error.self=CY_You can''t enter your own details.
+pages.form.field.description.dateOfMarriage	=	Cadarnhewch eich dyddiad priodi
+pages.form.field.description-alt.dateOfDivorce	=	Cadarnhewch eich dyddiad ysgaru
 
-pages.form.field.description.dateOfMarriage=CY_Confirm your date of marriage
-pages.form.field.description-alt.dateOfDivorce=CY_Confirm your date of divorce
+pages.form.field.description.transferor-email	=	Cadarnhewch eich cyfeiriad e-bost
+pages.form.field.transferor-email.error.error.maxLength	=	Nodwch ddim mwy na {0} o gymeriadau.
+pages.form.field.transferor-email.error.error.email	=	Rhowch gyfeiriad e-bost dilys.
+pages.form.field.transferor-email.error.error.required	=	Rhowch wybod beth yw''ch cyfeiriad e-bost.
 
-pages.form.field.description.transferor-email=CY_Confirm your email
-pages.form.field.transferor-email.error.error.maxLength=CY_Enter no more than {0} characters.
-pages.form.field.transferor-email.error.error.email=CY_Give a valid email address.
-pages.form.field.transferor-email.error.error.required=CY_Tell us your email address.
+pages.form.field.description.marriage-criteria	=	Cadarnhewch a ydych yn briod neu mewn partneriaeth sifil sydd wedi''i chofrestru''n gyfreithlon
+pages.form.field.description.lower-earner	=	Cadarnhewch os mai chi yw''r un &#226;''r cyflog isaf yn y berthynas
 
-pages.form.field.description.marriage-criteria=CY_Confirm if you are married or in a legally registered civil partnership
-pages.form.field.description.lower-earner=CY_Confirm if you are the lower earner in the relationship
+pages.form.field.description.multiyear-transferor-income-criteria	=	Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu''n is.
+pages.form.field.description.multiyear-recipient-income-criteria	=	Rhowch wybod a yw''ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
 
-pages.form.field.description.multiyear-transferor-income-criteria=CY_Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
-pages.form.field.description.multiyear-recipient-income-criteria=CY_Tell us if your spouse or civil partner is a basic rate tax payer since 6 April 2015?
+pages.form.field-required.marriage-criteria	=	Rhowch wybod a ydych yn briod neu mewn partneriaeth sifil sydd wedi''i chofrestru''n gyfreithlon.
+pages.form.field-required.multiyear-recipient-income-criteria	=	Rhowch wybod a yw''ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
+pages.form.field-required.multiyear-transferor-income-criteria	=	Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu''n is.
 
+pages.form.field-required.lower-earner	=	Rhowch wybod os mai chi yw''r un &#226;''r cyflog isaf yn y berthynas.
 
-pages.form.field-required.marriage-criteria=CY_Tell us if you are married or in a legally registered civil partnership.
-pages.form.field-required.multiyear-recipient-income-criteria=CY_Tell us if your spouse or civil partner is a basic rate tax payer since 6 April 2015?
-pages.form.field-required.multiyear-transferor-income-criteria=CY_Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
+pages.form.field-required.applyForCurrentYear	=	Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol.
+pages.form.field-required.applyForHistoricYears	=	Rhowch wybod a hoffech wneud cais ar gyfer blynyddoedd treth cynharach.
 
+pages.form.field.description.applyForCurrentYear	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol
+pages.form.field.description.applyForHistoricYears	=	Cadarnhewch a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
 
-pages.form.field-required.lower-earner=CY_Tell us if you are the lower earner in the relationship.
+pages.form.extra-year.field-required	=	Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}.
+pages.form.field.description.year-2015-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2015 i 2016
+pages.form.field.description.year-2016-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2016 i 2017
+pages.form.field.description.year-2017-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2017 i 2018
+pages.form.field.description.year-2018-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2018 i 2019
+pages.form.field.description.year-2019-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2019 i 2020
+pages.form.field.description.year-2020-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2020 i 2021
+pages.form.field.description.year-2021-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2021 i 2022
+pages.form.field.description.year-2022-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2022 i 2023
+pages.form.field.description.year-2023-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2023 i 2024
+pages.form.field.description.year-2024-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2024 i 2025
+pages.form.field.description.year-2025-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2025 i 2026
+pages.form.field.description.year-2026-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2026 i 2027
 
-pages.form.field-required.applyForCurrentYear=CY_Tell us whether you''d like to apply for this current tax year.
-pages.form.field-required.applyForHistoricYears=CY_Tell us whether you''d like to apply for earlier tax years.
+pages.form.field.transferor-income.error.field-required	=	Rhowch wybod beth yw''ch incwm blynyddol.
+pages.form.field.transferor-income.error.field-invalid	=	Defnyddiwch rifau''n unig.
 
-pages.form.field.description.applyForCurrentYear=CY_Confirm whether you''d like to apply for this current tax year
-pages.form.field.description.applyForHistoricYears=CY_Confirm whether you''d like to apply for earlier tax years
+eligibility.feedback.incorrect-role	=	Gwiriwch y rhifau yr ydych wedi''u nodi. Nodwch incwm yr unigolyn &#226;''r cyflog isaf, wedi''i ddilyn gan incwm yr unigolyn &#226;''r cyflog uchaf.
 
-pages.form.extra-year.field-required=CY_Tell us whether you''d like to apply for the previous {0} to {1} tax year.
-pages.form.field.description.year-2015-=CY_Confirm whether you''d like to apply for the previous 2015 to 2016 tax year
-pages.form.field.description.year-2016-=CY_Confirm whether you''d like to apply for the previous 2016 to 2017 tax year
-pages.form.field.description.year-2017-=CY_Confirm whether you''d like to apply for the previous 2017 to 2018 tax year
-pages.form.field.description.year-2018-=CY_Confirm whether you''d like to apply for the previous 2018 to 2019 tax year
-pages.form.field.description.year-2019-=CY_Confirm whether you''d like to apply for the previous 2019 to 2020 tax year
-pages.form.field.description.year-2020-=CY_Confirm whether you''d like to apply for the previous 2020 to 2021 tax year
-pages.form.field.description.year-2021-=CY_Confirm whether you''d like to apply for the previous 2021 to 2022 tax year
-pages.form.field.description.year-2022-=CY_Confirm whether you''d like to apply for the previous 2022 to 2023 tax year
-pages.form.field.description.year-2023-=CY_Confirm whether you''d like to apply for the previous 2023 to 2024 tax year
-pages.form.field.description.year-2024-=CY_Confirm whether you''d like to apply for the previous 2024 to 2025 tax year
-pages.form.field.description.year-2025-=CY_Confirm whether you''d like to apply for the previous 2025 to 2026 tax year
-pages.form.field.description.year-2026-=CY_Confirm whether you''d like to apply for the previous 2026 to 2027 tax year
+pages.form.field.recipient-income.error.field-required	=	Rhowch wybod beth yw incwm blynyddol eich priod neu bartner sifil.
+pages.form.field.recipient-income.error.field-invalid	=	Defnyddiwch rifau''n unig.
 
-pages.form.field.transferor-income.error.field-required=CY_Tell us your annual income.
-pages.form.field.transferor-income.error.field-invalid=CY_Use numbers only.
+change.status.reason-CANCEL	=	Rwyf am roi''r gorau i gael taliadau Lwfans Priodasol
+change.status.reason-REJECT	=	Rwyf am roi''r gorau i gael taliadau Lwfans Priodasol
+change.status.reason-DIVORCE_CY	=	Ysgariad neu ddiwedd partneriaeth sifil
+change.status.reason-DIVORCE_PY	=	Ysgariad neu ddiwedd partneriaeth sifil
 
-eligibility.feedback.incorrect-role=CY_Check the numbers you''ve entered. Please enter the lower earner''s income followed by the higher earner''s income.
+change.status.relevantDate-CANCEL	=	Caiff hyn ei ddileu ar ddiwedd y flwyddyn dreth ({0}).
+change.status.relevantDate-REJECT	=	Caiff hyn ei ddileu o ddechrau''r flwyddyn dreth y cawsoch Lwfans Priodasol ({0}) am y tro cyntaf.
+change.status.relevantDate-DIVORCE_CY	=	Caiff hyn ei ddileu o ddiwedd y flwyddyn dreth pan wnaethoch ysgaru ({0}).
+change.status.relevantDate-DIVORCE_PY	=	Caiff hyn ei ddileu o ddechrau''r flwyddyn dreth ({0}).
 
-pages.form.field.recipient-income.error.field-required=CY_Tell us your spouse or civil partner''s annual income.
-pages.form.field.recipient-income.error.field-invalid=CY_Use numbers only.
+error.end-reason.required	=	Dewiswch reswm dros newid eich Lwfans Priodasol isod.
+pages.form.field.description.endReason	=	Dewiswch reswm dros newid eich Lwfans Priodasol isod
+error.divorce-reason.required	=	Dewiswch ateb am gadw''ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth.
+pages.form.field.description-alt.endReason	=	Dewiswch ateb am gadw''ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth
 
-change.status.reason-CANCEL=CY_I want to stop Marriage Allowance payments
-change.status.reason-REJECT=CY_I want to stop Marriage Allowance payments
-change.status.reason-DIVORCE_CY=CY_Divorce or end of civil partnership
-change.status.reason-DIVORCE_PY=CY_Divorce or end of civil partnership
+coc.end-reason.DEATH	=	Profedigaeth
+coc.end-reason.DIVORCE	=	Ysgariad neu ddiwedd partneriaeth sifil
+coc.end-reason.INELIGIBLE_PARTICIPANT	=	Gwneud Cais am Lwfans P&#226;r Priod
+coc.end-reason.INVALID_PARTICIPANT	=	Nid yw''r unigolyn &#226;''r cyflog uchaf yn gymwys ar gyfer Lwfans Priodasol
+coc.end-reason.CANCELLED	=	Lwfans wedi''i ganslo
+coc.end-reason.REJECTED	=	Lwfans wedi''i ganslo
+coc.end-reason.HMRC	=	CThEM wedi dod ag ef i ben
+coc.end-reason.CLOSED	=	Nid yw''r unigolyn &#226;''r cyflog isaf yn gymwys ar gyfer Lwfans Priodasol
+coc.end-reason.MERGER	=	Uno cyfrifon cwsmeriaid
+coc.end-reason.RETROSPECTIVE	=	Wedi gwneud cais am Lwfans Priodasol yn &#244;l-weithredol
+coc.end-reason.SYSTEM	=	CThEM wedi dod ag ef i ben
+coc.end-reason.DEFAULT	=	Lwfans Priodasol wedi dod ben
 
-change.status.relevantDate-CANCEL=CY_This will be removed at the end of the tax year ({0}).
-change.status.relevantDate-REJECT=CY_This will be removed from the start of the tax year you first received Marriage Allowance ({0}).
-change.status.relevantDate-DIVORCE_CY=CY_This will be removed from the end of the tax year you got divorced ({0}).
-change.status.relevantDate-DIVORCE_PY=CY_This will be removed from start of the tax year ({0}).
+pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £{0} a £{1}.
 
-error.end-reason.required=CY_Select a reason for changing your Marriage Allowance below.
-pages.form.field.description.endReason=CY_Select a reason for changing your Marriage Allowance below
-error.divorce-reason.required=CY_Select an answer for keeping your Marriage Allowance until the end of the tax year.
-pages.form.field.description-alt.endReason=CY_Select an answer for keeping your Marriage Allowance until the end of the tax year
-
-coc.end-reason.DEATH=CY_Bereavement
-coc.end-reason.DIVORCE=CY_Divorce or end of civil partnership
-coc.end-reason.INELIGIBLE_PARTICIPANT=CY_Claiming Married Couple''s Allowance
-coc.end-reason.INVALID_PARTICIPANT=CY_Higher earner not eligible for Marriage Allowance
-coc.end-reason.CANCELLED=CY_Allowance cancelled
-coc.end-reason.REJECTED=CY_Allowance cancelled
-coc.end-reason.HMRC=CY_Ended by HMRC
-coc.end-reason.CLOSED=CY_Lower earner not eligible for Marriage Allowance
-coc.end-reason.MERGER=CY_Customer accounts merged
-coc.end-reason.RETROSPECTIVE=CY_Applied for Marriage Allowance retrospectively
-coc.end-reason.SYSTEM=CY_Ended by HMRC
-coc.end-reason.DEFAULT=CY_Marriage Allowance Ended
-
-############################
-#Should be added every year#
-############################
-pages.form.field-required.2016.partners-income=CY_Tell us if your spouse or civil partner has an annual income of between £11,001 and £43,000.
-pages.form.field-required.2017.partners-income=CY_Tell us if your spouse or civil partner has an annual income of between £11,501 and £45,000.
-
-############################
-#     Change every year    #
-############################
-pages.form.field.description.2016.partners-income=CY_Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000
-pages.form.field.description.2017.partners-income=CY_Confirm if your spouse or civil partner has an annual income of between £11,501 and £45,000
+pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £{0} a £{1}.
 
 #███████████████████████████████████████████████████████████████████████████████████████████████████
 #█                                                                                                 █
@@ -139,435 +128,440 @@ pages.form.field.description.2017.partners-income=CY_Confirm if your spouse or c
 
 
 #General messages
-generic.ma=CY_Marriage Allowance
-generic.ma.apply=CY_Apply for Marriage Allowance
-generic.back=CY_Back
-generic.next=CY_Next
-generic.previous=CY_Previous
-generic.finish=CY_Finish
-generic.continue=CY_Continue
-generic.change=CY_Change
-generic.confirm-apply=CY_Confirm and apply
-generic.confirm.button=CY_Confirm
-generic.start-now=CY_Start now
-generic.name=CY_Name
-generic.email=CY_Email
-generic.nino-full=CY_National Insurance number
-generic.yes=CY_Yes
-generic.no=CY_No
-generic.recipient-action=CY_Received Marriage Allowance
-generic.transferor-action=CY_Transferred Marriage Allowance
-
+generic.ma	=	Lwfans Priodasol
+generic.ma.apply	=	Gwneud cais am Lwfans Priodasol
+generic.back	=	Yn &#244;l
+generic.next	=	Nesaf
+generic.previous	=	Blaenorol
+generic.finish	=	Gorffen
+generic.continue	=	Parhau
+generic.change	=	Newid
+generic.confirm-apply	=	Cadarnhau a gwneud cais
+generic.confirm.button	=	Cadarnhau
+generic.start-now	=	Dechrau nawr
+generic.name	=	Enw
+generic.email	=	E-bost
+generic.nino-full	=	Rhif Yswiriant Gwladol
+generic.yes	=	Iawn
+generic.no	=	Na
+generic.recipient-action	=	Wedi cael Lwfans Priodasol
+generic.transferor-action	=	Wedi trosglwyddo Lwfans Priodasol
 
 #Titles
-title.pattern=CY_Marriage Allowance - {0}
-title.verify=CY_Confirm Your Personal Details
-title.eligible-years=CY_Eligible years
-title.extra-years=CY_Extra years
-title.transfer-in-place=CY_Transfer in place
-title.transfer=CY_Register Your Transfer
-title.finished=CY_Complete
-title.confirm-email=CY_Confirm your email
-title.non-eligible=CY_You are not eligible
-title.no-tax-years=CY_No tax years available
-title.eligibility=CY_Eligibility Questions
-title.confirm-transferor=CY_Confirm change
-title.confirm-recipient=CY_Confirm the Recipient Details
-title.confirm-update=CY_Confirm Update
-title.eligibility-criteria=CY_Eligibility Criteria
-title.how-it-works=CY_How It Works
-title.other-ways=CY_Other Ways to apply
-title.change.complete=CY_Change complete
-title.change.earnings=CY_Change in income
-title.change.reason=CY_Reason for change
-title.complete=CY_Complete
-title.error=CY_Error
-title.history=CY_Your history
-title.make-a-change=CY_Make a change
-title.bereavement=CY_Bereavement
-title.divorce=CY_Divorce
-title.date-of-marriage=CY_Date of Marriage
-
+title.pattern	=	Lwfans Priodasol – {0}
+title.verify	=	Cadarnhewch eich manylion personol
+title.eligible-years	=	Blynyddoedd cymwys
+title.extra-years	=	Blynyddoedd ychwanegol
+title.transfer-in-place	=	Trosglwyddiad yn barod
+title.transfer	=	Cofrestru''ch Trosglwyddiad
+title.finished	=	Cwblhau
+title.confirm-email	=	Cadarnhewch eich cyfeiriad e-bost
+title.non-eligible	=	Nid ydych yn gymwys
+title.no-tax-years	=	Dim blynyddoedd treth ar gael
+title.eligibility	=	Cwestiynau ynghylch cymhwysedd
+title.confirm-transferor	=	Cadarnhau newid
+title.confirm-recipient	=	Cadarnhau manylion y derbynnydd
+title.confirm-update	=	Cadarnhau diweddariad
+title.eligibility-criteria	=	Meini prawf cymhwysedd
+title.how-it-works	=	Sut y mae''n gweithio
+title.other-ways	=	Ffyrdd eraill o wneud cais
+title.change.complete	=	Newid wedi''i gwblhau
+title.change.earnings	=	Newid mewn incwm
+title.change.reason	=	Rheswm dros newid
+title.complete	=	Cwblhau
+title.error	=	Gwall
+title.history	=	Eich hanes
+title.make-a-change	=	Gwneud newid
+title.bereavement	=	Profedigaeth
+title.divorce	=	Ysgaru
+title.date-of-marriage	=	Dyddiad priodi
 
 #User status
-user-status.first-time-login=CY_{0} is the first time you have logged in
-user-status.previous-login-time=CY_{0} last signed in {1}
-user-status.sign-out=CY_Sign out
-
+user-status.first-time-login	=	{0} yw''r tro cyntaf i chi fewngofnodi
+user-status.previous-login-time	=	{0} mewngofnodi diwethaf {1}
+user-status.sign-out	=	Allgofnodi
 
 #Contact Details
-hmrc.contact-details  =CY_You can contact HMRC on:
-hmrc.contact-details-1=CY_You can let HMRC know of a change in income on:
-hmrc.contact-details-2=CY_Telephone: 0300 200 3300
-hmrc.contact-details-3=CY_Textphone: 0300 200 3319
-hmrc.contact-details-4=CY_Outside UK: +44 135 535 9022
-hmrc.contact-detials.time=CY_Opening times
-hmrc.contact-details-5=CY_8am to 8pm, Monday to Friday
-hmrc.contact-details-6=CY_8am to 4pm Saturday
-hmrc.contact-details-7=CY_Closed Sundays and bank holidays
-hmrc.contact-detials.calling.time=CY_Best time to call
-hmrc.contact-details-8=CY_Phone lines are less busy before 10am, Monday to Friday
-hmrc.contact-details-9=CY_<a href=CY_"https://www.gov.uk/call-charges"> Find out about call charges</a>
-
+hmrc.contact-details	=	Gallwch gysylltu &#226; CThEM ar:
+hmrc.contact-details-1	=	Gallwch roi gwybod i CThEM am newid mewn incwm ar:
+hmrc.contact-details-2	=	Ff&#244;n: 0300 200 3300
+hmrc.contact-details-3	=	Ff&#244;n testun: 0300 200 3319
+hmrc.contact-details-4	=	Y tu allan i''r DU: +44 135 535 9022
+hmrc.contact-detials.time	=	Oriau agor
+hmrc.contact-details-5	=	08:00 – 20:00, Dydd Llun – Dydd Gwener
+hmrc.contact-details-6	=	08:00 – 16:00, Dydd Sadwrn
+hmrc.contact-details-7	=	Ar gau ar Ddydd Sul a gwyliau''r banc
+hmrc.contact-detials.calling.time	=	Yr amser gorau i gysylltu &#226; ni
+hmrc.contact-details-8	=	Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener
+hmrc.contact-details-9	=	<a href="https://www.gov.uk/call-charges"> Gwybodaeth am gost galwadau</a>
 
 #Eligibility Calculator
-pages.calc.header=CY_Marriage Allowance calculator
-pages.calc.para1=CY_As a couple, find out how much tax you''d save if you applied for Marriage Allowance in this tax year.
-pages.form.field.income=CY_Lower earner''s yearly pre-tax income 
-pages.form.field.recipient-income=CY_Higher earner''s yearly pre-tax income
-pages.calc.field-helper.income=CY_This is your income figure before any tax is deducted.
-pages.calc.field-helper.partners-income=CY_This is their income figure before any tax is deducted.
-pages.calc.how-to-apply=CY_How to apply
-pages.calc.skip-it.pre=CY_The step is optional,
-pages.calc.skip-it=CY_skip it
-estimate.tax.saving=CY_Calculate
-eligibility.feedback.gain=CY_Based on the information you have given us, as a couple you would benefit by around <strong>£{0}</strong> a year.
-eligibility.feedback.loose=CY_Based on the details you have provided you will not benefit from making the transfer.
+pages.calc.header	=	Cyfrifiannell Lwfans Priodasol
+pages.calc.para1	=	Fel p&#226;r, darganfyddwch faint o dreth y gallwch ei harbed os ydych yn gwneud cais am Lwfans Priodasol yn y flwyddyn dreth hon.
+pages.form.field.income	=	Incwm blynyddol yr unigolyn &#226;''r cyflog isaf cyn didynnu treth
+pages.form.field.recipient-income	=	Incwm blynyddol yr unigolyn &#226;''r cyflog uchaf cyn didynnu treth
+pages.calc.field-helper.income	=	Dyma ffigur eich incwm cyn didynnu treth.
+pages.calc.field-helper.partners-income	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
+pages.calc.how-to-apply	=	Sut i wneud cais
+pages.calc.skip-it.pre	=	Mae''r cam hwn yn opsiynol
+pages.calc.skip-it	=	ewch heibio
+estimate.tax.saving	=	Cyfrifo
+eligibility.feedback.gain	=	Ar sail yr wybodaeth yr ydych wedi''i rhoi i ni, byddech yn elwa o tua <strong>£{0}</strong> y flwyddyn fel p&#226;r.
+eligibility.feedback.loose	=	Ar sail y manylion yr ydych wedi''i rhoi, ni fyddwch yn elwa o wneud y trosglwyddiad.
 
 #Multi-year select
-pages.multi-year-select.heading=CY_Confirm the earlier years you want to apply for
+pages.multi-year-select.heading	=	Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
 
 ############################
 #Should be added every year#
 ############################
-eligibility.feedback.transferor-not-eligible-2016=CY_You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £43,000.
-eligibility.feedback.transferor-not-eligible-2017=CY_You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £45,000.
-eligibility.feedback.recipient-not-eligible-2016=CY_You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,001 and £43,000.
-eligibility.feedback.recipient-not-eligible-2017=CY_You are not eligible for Marriage Allowance. Your spouse or civil partner''s annual income must be between £11,501 and £45,000.
-eligibility.check.unlike-benefit-as-couple-2016=CY_You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,000.
-eligibility.check.unlike-benefit-as-couple-2017=CY_You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,500.
-max-benefit-2014=£212
-max-benefit-2015=£212
-max-benefit-2016=£220
-max-benefit-2017=£230
-your-income-2015=CY_your income was £10,600 or less
-your-income-2016=CY_your income was £11,000 or less
-your-income-2017=CY_your income was £11,500 or less
-income-between-2015=CY_income was between £10,601 and £42,385
-income-between-2016=CY_income was between £11,001 and £43,000
-income-between-2017=CY_income was between £11,601 and £45,000
+eligibility.feedback.transferor-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy''n gwneud y trosglwyddiad, mae''n rhaid i''ch incwm fod yn llai na £43,000.
+eligibility.feedback.transferor-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy''n gwneud y trosglwyddiad, mae''n rhaid i''ch incwm fod yn llai na £45,000.
+eligibility.feedback.recipient-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich priod neu bartner sifil fod rhwng £11,001 a £43,000.
+eligibility.feedback.recipient-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich priod neu bartner sifil fod rhwng £11,501 a £45,000.
+eligibility.check.unlike-benefit-as-couple-2016	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,000.
+eligibility.check.unlike-benefit-as-couple-2017	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,500.
+max-benefit-2014	=	£212.00
+max-benefit-2015	=	£212.00
+max-benefit-2016	=	£220.00
+max-benefit-2017	=	£230.00
+your-income-2015	=	roedd eich incwm yn £10,600 neu''n llai
+your-income-2016	=	roedd eich incwm yn £11,000 neu''n llai
+your-income-2017	=	roedd eich incwm yn £11,500 neu''n llai
+income-between-2015	=	roedd yr incwm rhwng £10,601 a £42,385
+income-between-2016	=	roedd yr incwm rhwng £11,001 a £43,000
+income-between-2017	=	roedd yr incwm rhwng £11,601 a £45,000
 
 #Confirmation Message
-pages.confirm.html.h1=CY_Check your details and confirm the application
-pages.confirm.html.check-details=CY_Check the details you''ve entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,060 of your Personal Allowance to them.
+pages.confirm.html.h1	=	Dylech wirio''ch manylion a chadarnhau''r cais
+pages.confirm.html.check-details	=	Dylech wirio''r manylion yr ydych wedi''i rhoi, a chadarnhau mai''r unigolyn hwn yw''ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,060 o''ch Lwfans Personol iddo/iddi.
 
 #Eligibility Check
-eligibility.check.header=CY_Your eligibility
-eligibility.check.h1=CY_Check if you''re eligible as a couple
-eligibility.check.span.h1=CY_Check your eligibility
-eligibility.check.span.para=CY_To apply for Marriage Allowance, you must be married or in a civil partnership.
-eligibility.check.married=CY_Does this apply to you?
-eligibility.check.married.legend=CY_Are you married or in a legally registered civil partnership?
-eligibility.check.yes =CY_ Yes
-eligibility.check.married.error=CY_You aren''t eligible for Marriage Allowance because you aren''t married or in a legally registered civil partnership.
-multiyear.check.income=CY_Since 6 April 2015 was your annual income at or below the Personal Allowance level?
-eligibility.check.non-eligible=CY_Based on your answers, you aren''t eligible for Marriage Allowance.
-eligibility.check.lower.earner.information1=CY_To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £{0} or less a year.
-eligibility.check.lower.earner.information2=CY_This is your income figure before any tax is deducted.
-eligibility.check.lower.earner.h1=CY_Your income
-eligibility.check.lower.earner.question=CY_Does this apply to you?
-eligibility.check.lower.earner.error=CY_You might not benefit from Marriage Allowance in this tax year because your income is above £{0}. You can still continue to check whether you''ll benefit for previous years if your income was lower in the past.
-eligibility.check.partners.income.h1=CY_Your partner''s income
-eligibility.check.partners.income.information1=CY_To be eligible for Marriage Allowance, your partner must earn between £{0} and £{1} a year.
-eligibility.check.partners.income.information2=CY_This is their income figure before any tax is deducted.
-eligibility.check.partners.income.h2=CY_Does this apply to your partner?
-eligibility.check.partners.income.before.tax=CY_This is their income figure before any tax is deducted.
-eligibility.check.partners.income.error=CY_You''re not eligible for Marriage Allowance in this tax year because your partner''s income is too high or too low. You can still continue to check your eligibility for previous years.
+eligibility.check.header	=	Eich cymhwyster
+eligibility.check.h1	=	Eich perthynas
+eligibility.check.span.h1	=	Gwiriwch eich cymhwyster
+eligibility.check.span.para	=	Er mwyn gwneud cais am Lwfans Priodasol, rhaid i chi fod yn briod neu mewn partneriaeth sifil.
+eligibility.check.married	=	A yw hyn yn berthnasol i chi?
+eligibility.check.married.legend	=	A ydych yn briod neu mewn partneriaeth sifil sydd wedi''i chofrestru''n gyfreithlon?
+eligibility.check.yes	=	Iawn
+eligibility.check.married.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi''i chofrestru''n gyfreithlon.
+multiyear.check.income	=	Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu''n is?
+eligibility.check.non-eligible	=	Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
+eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy''n gorfod ennill y lleiaf yn y perthynas ac ennill £{0} neu lai''r flwyddyn.
+eligibility.check.lower.earner.information2	=	Dyma ffigur eich incwm cyn didynnu treth.
+eligibility.check.lower.earner.h1	=	Eich incwm
+eligibility.check.lower.earner.question	=	A yw hyn yn berthnasol i chi?
+eligibility.check.lower.earner.error	=	Mae''n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm yn uwch na £{0}. Mae''n dal yn bosibl i chi wirio a fyddwch yn elwa ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
+eligibility.check.partners.income.h1	=	Incwm eich partner
+eligibility.check.partners.income.information1	=	Er mwyn bod yn gymwys ar gyfer Lwfans Priodasol, rhaid i''ch partner fod yn ennill rhwng £{0} a £{1} y flwyddyn.
+eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
+eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i''ch partner?
+eligibility.check.partners.income.before.tax	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
+eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal yn bosibl i chi wirio''ch cymhwyster am flynyddoedd blaenorol.
 
 #Verify
-pages.verify_triage.header=CY_Identity check
-pages.verify_triage.para1=CY_Before you continue, we need to check who you are.
-pages.verify_triage.para2=CY_ You''ll now be asked some questions relating to information held on you by HMRC.
-
+pages.verify_triage.header	=	Gwirio manylion adnabod
+pages.verify_triage.para1	=	Cyn i chi fynd yn eich blaen, mae angen i ni wirio pwy ydych.
+pages.verify_triage.para2	=	Caiff cwestiynau eu gofyn i chi nawr yn seiliedig ar wybodaeth sydd gan CThEM amdanoch.
 
 #Finished Message
-pages.finished.successful=CY_Marriage Allowance application successful
-pages.finished.para1.email1=CY_An email with full details acknowledging your application will be sent to you at {0}
-pages.finished.para1.email2=CY_from noreply@tax.service.gov.uk within 24 hours.
-pages.finished.para2=CY_If it doesn''t appear in your inbox, please check your spam or junk folder.
-pages.finished.now=CY_What happens next
-pages.finished.para4=CY_HMRC will now process your Marriage Allowance application. Please check the email we''ve sent you for full details on how you''ll receive Marriage Allowance.
-pages.finished.para5=CY_If they''re employed and pay tax via PAYE, we''ll send them a revised notice of tax coding by post. We''ll also tell their employer to start using the new tax code.
-pages.finished.para6=CY_Your revised notice of tax coding will show in your personal tax account within 24 hours.
-pages.finished.para7=CY_There is no need to contact us.
-pages.finished.back-pta=CY_Back to Personal Tax Account
-pages.finished.check-link-para=CY_You can <a id=CY_"pta-link" href=CY_"{0}" data-journey-click=CY_"marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
-pages.finished.survey-link=CY_<a id=CY_"survey-link" href=CY_"{0}">What did you think of this service?</a> (takes 30 seconds)
-
+pages.finished.successful	=	Cais am Lwfans Priodasol yn llwyddiannus
+pages.finished.para1.email1	=	Bydd e-bost &#226; manylion llawn yn cael ei anfon atoch yn  {0} i gydnabod eich cais, a hynny
+pages.finished.para1.email2	=	o noreply@tax.service.gov.uk cyn pen 24 awr.
+pages.finished.para2	=	Os nad yw''n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
+pages.finished.now	=	Yr hyn sy''n digwydd nesaf
+pages.finished.para4	=	Bydd CThEM bellach yn prosesu''ch cais am Lwfans Priodasol. Gwiriwch yr e-bost yr ydym wedi''i anfon atoch am fanylion llawn ar sut y byddwch yn cael Lwfans Priodasol.
+pages.finished.para5	=	Os ydynt yn gyflogedig ac yn talu treth trwy TWE, byddwn yn anfon hysbysiad o god treth diwygiedig ato/ati drwy''r post. Byddwn hefyd yn rhoi gwybod i''r cyflogwr i ddechrau defnyddio''r cod treth newydd.
+pages.finished.para6	=	Bydd eich hysbysiad o god treth diwygiedig yn ymddangos yn eich cyfrif treth personol cyn pen 24 awr.
+pages.finished.para7	=	Nid oes angen i chi gysylltu &#226; ni.
+pages.finished.back-pta	=	Yn &#244;l i''r Cyfrif Treth Personol
+pages.finished.check-link-para	=	Gallwch <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >wirio''ch Lwfans Priodasol presennol a gwneud newidiadau</a> ar unrhyw bryd drwy''ch cyfrif treth personol.
+pages.finished.survey-link	=	<a id="survey-link" href="{0}">Beth oedd eich barn am y gwasanaeth hwn?</a> (yn cymryd 30 eiliad)
 
 #Registration page - Your spouse details
-pages.form.h1=CY_Your spouse or civil partner''s details
-pages.form.details=CY_As the lower earner you <span id=CY_"transferor-name">{0}</span> can now apply to help your partner reduce the amount of tax they pay.
-pages.form.enter-data=CY_Enter your spouse or civil partner''s details:
-pages.form.field.name=CY_What is their first name?
-pages.form.field.last-name=CY_What is their last name?
-pages.form.field.gender=CY_What is their gender?
-pages.form.field.gender.male=CY_Male
-pages.form.field.gender.female=CY_Female
-pages.form.field-helper.gender=CY_This information will help us confirm their identity
-pages.form.field.nino=CY_What is their National Insurance number?
-pages.form.field-helper.nino-example=CY_For example, QQ 12 34 56 C
-pages.form.field-helper.nino-where=CY_Where do I find this?
-pages.form.field-helper.nino-found=CY_This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits
-pages.form.field-helper.dom=CY_For example, 31 3 1980
-pages.form.field-helper.dod=CY_For example, 31 3 1980
-pages.form.field.your-confirmation=CY_Confirmation email
-pages.form.field.yourDetails=CY_We''ll email confirmation of your Marriage Allowance application within 24 hours. We won''t share your email with anyone else.
-pages.form.field.transferor-email=CY_Your email address
-pages.form.field.enter-email=CY_Enter email address
-pages.form.field.dod=CY_If you''re currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
-pages.form.field.dod.question=CY_When did you legally end your marriage or civil partnership?
+pages.form.h1	=	Manylion eich priod neu bartner sifil
+pages.form.details	=	Fel yr unigolyn &#226;''r cyflog isaf, gallwch <span id="transferor-name">{0}</span> wneud cais nawr i helpu''ch partner i ostwng swm y dreth y mae''n ei dalu/thalu.
+pages.form.enter-data	=	Nodwch fanylion eich priod neu bartner sifil:
+pages.form.field.name	=	Beth yw enw cyntaf eich priod neu bartner sifil?
+pages.form.field.last-name	=	Beth yw enw olaf eich priod neu bartner sifil?
+pages.form.field.gender	=	Beth yw rhyw eich priod neu bartner sifil?
+pages.form.field.gender.male	=	Gwryw
+pages.form.field.gender.female	=	Benyw
+pages.form.field-helper.gender	=	Bydd yr wybodaeth hon yn ein helpu i gadarnhau pwy ydyw
+pages.form.field.nino	=	Beth yw rhif Yswiriant Gwladol eich priod neu bartner sifil?
+pages.form.field-helper.nino-example	=	Er enghraifft, QQ 12 34 56 C
+pages.form.field-helper.nino-where	=	Ble y gallaf ddod o hyd i hwn?
+pages.form.field-helper.nino-found	=	Mae hwn i''w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, llythyrau ynghylch budd-daliadau neu gredydau treth
+pages.form.field-helper.dom	=	Er enghraifft, 31 3 1980
+pages.form.field-helper.dod	=	Er enghraifft, 31 3 1980
+pages.form.field.your-confirmation	=	E-bost cadarnhau
+pages.form.field.yourDetails	=	Byddwn yn e-bostio cadarnhad o''ch cais am Lwfans Priodasol cyn pen 24 awr. Ni fyddwn yn rhannu''ch cyfeiriad e-bost gydag unrhyw un arall.
+pages.form.field.transferor-email	=	Eich cyfeiriad e-bost
+pages.form.field.enter-email	=	Nodwch gyfeiriad e-bost
+pages.form.field.dod	=	Os ydych wedi ymwahanu &#226;''ch priod neu bartner sifil ar hyn o bryd, gallwch barhau i gael Lwfans Priodasol hyd nes eich bod yn dod a''ch priodas neu bartneriaeth sifil i ben yn gyfreithlon.
+pages.form.field.dod.question	=	Pryd y gwnaethoch ddod &#226;''ch priodas neu''ch partneriaeth sifil i ben yn gyfreithlon?
+
 #Date of Marriage
-pages.date-of-marriage.heading=CY_Date of Marriage or civil partnership
-pages.date-of-marriage.para1=CY_This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
-pages.date-of-marriage.para2=CY_Marriage Allowance was first introduced on 6 April 2015, so you might be able to claim for previous tax years.
-pages.date-of-marriage.h2=CY_When did you marry or form a civil partnership with your current partner?
+pages.date-of-marriage.heading	=	Dyddiad y briodas neu ffurfio''r bartneriaeth sifil
+pages.date-of-marriage.para1	=	Mae hyn er mwyn sicrhau ein bod yn caniat&#225;u i chi elwa o''r Lwfans Priodasol am y maint cywir o amser.
+pages.date-of-marriage.para2	=	Cafodd y Lwfans Priodasol ei gyflwyno gyntaf ar 6 Ebrill 2015. Felly, mae''n bosibl y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
+pages.date-of-marriage.h2	=	Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda''ch partner presennol?
 
 #How it works
-pages.how-it-works.heading=CY_How It Works
-pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">CY_Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
-pages.how-it-works.lede-pre2=CY_This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year). 
-pages.how-it-works.lede-pre4=CY_To benefit as a couple, you need to earn less than your partner and have an income of £{0} or less.
-pages.how-it-works.lede-pre5=CY_If you were eligible for Marriage Allowance in the  {0} to {1} tax year, you can backdate your claim to {2} and reduce the tax paid by up to £432.
-pages.how-it-works.lede-in=CY_Personal Allowance
-pages.how-it-works.lede-post=CY_to your spouse or civil partner.
-pages.how-it-works.tse=CY_to see if you''re eligible for Marriage Allowance
-pages.how-it-works.apply.heading=CY_Before you apply
-pages.how-it-works.email=CY_You''ll get an email confirming your application.
-pages.how-it-works.detail=CY_You need you and your partner''s National Insurance numbers.
+pages.how-it-works.heading	=	Sut y mae''n gweithio
+pages.how-it-works.lede-pre1	=	<a href="https://www.gov.uk/marriage-allowance-guide">Mae''r Lwfans Priodasol</a> yn caniat&#225;u i chi drosglwyddo £{0} o''ch Lwfans Personol i''ch priod neu bartner sifil.
+pages.how-it-works.lede-pre2	=	Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
+pages.how-it-works.lede-pre4	=	Er mwyn elwa fel p&#226;r, mae angen i chi ennill llai na''ch partner a chael incwm o £{0} neu lai.
+pages.how-it-works.lede-pre5	=	Os oeddech yn gymwys ar gyfer Lwfans Priodasol ym mlwyddyn dreth {0} i {1} , gallwch &#244;l-ddyddio''ch cais i {2} a gostwng y dreth a dalwyd hyd at £432.
+pages.how-it-works.lede-in	=	Lwfans Personol
+pages.how-it-works.lede-post	=	i''ch priod neu''ch partner sifil.
+pages.how-it-works.tse	=	i weld a ydych yn gymwys ar gyfer Lwfans Priodasol
+pages.how-it-works.apply.heading	=	Cyn i chi wneud cais
+pages.how-it-works.email	=	Cewch e-bost yn cadarnhau''ch cais.
+pages.how-it-works.detail	=	Mae angen eich rhif Yswiriant Gwladol arnoch, ac un eich partner.
 
 #Change of Circumstances
-change.status.button=CY_Cancel Marriage Allowance
-change.status.transferor.ha.button=CY_End Marriage Allowance
-change.status.recipient.ha.button=CY_Stop Marriage Allowance
-change.status.recipient.previous.year.button=CY_Apply for previous years
-change.status.transferor.p1=CY_If one of the following applies, you can remove Marriage Allowance because you:
-change.status.receiver.p1=CY_If one of the following applies, you can cancel Marriage Allowance because you:
-change.status.transferor.list=CY_<li>have divorced or ended your civil partnership</li><li>have had a change in your income</li><li>want to cancel the allowance</li><li>have suffered a bereavement</li>
-change.status.receiver.list=CY_<li>have divorced or ended your civil partnership</li><li>have had a change in your income</li><li>want to reject the allowance</li><li>have suffered a bereavement</li>
-change.status.reason-for=CY_Reason for change
-change.status.reason-for-divorce=CY_Do you want to keep your Marriage Allowance in place until {0}?
-change.status.confirm.info=CY_We''ll email confirmation that you''ve cancelled your Marriage Allowance within 24 hours.
-change.status.confirm.more.info=CY_We won''t share your email with anyone else.
-change.status.confirm-cancellation.button=CY_Confirm cancellation
-change.status.confirm.field.your-email=CY_We''ll send you confirmation of your cancellation.
-change.status.confirm.field.your-name=CY_Your name
-change.status.earnings.h1=CY_Change in income
-change.status.earnings.h2=CY_You need to tell us if your or your partner''s income changes so we can tell you if:
-change.status.earnings.tr.instruction-1=CY_claiming Marriage Allowance will still benefit you as a couple
-change.status.earnings.tr.instruction-2=CY_you need to cancel your Marriage Allowance
-change.status.earnings.rec.instruction-1=CY_you expect your income over the whole tax year to be more than £{0}, because you''ll no longer be eligible as a couple in this tax year
-change.status.earnings.rec.instruction-2=CY_your partner expects their income over the whole tax year to be more than £{0}, because you might not benefit from Marriage Allowance as a couple
-change.status.divorce.date.invalid.h1=CY_There is a problem with the dates you entered
-change.status.divorce.date.invalid.para1=CY_The date you divorced or dissolved your civil partnership can''t be before the date you started claiming marriage allowance.
-change.status.divorce.date.invalid.para2=CY_You can go back and check the information you've entered is correct.
-change.status.divorce.date.invalid.para3=CY_Contact HMRC if you think we have the wrong date for the start of your marriage or civil partnership.
-change.status.divorce.h1=CY_Date of divorce or end of civil partnership
-change.status.divorce.header=CY_The date of your divorce
-change.status.divorce-py-heading=CY_Remove this Marriage Allowance transfer
-change.status.divorce-py-content=CY_This will be removed from the beginning of the current tax year, April 6 {0}.
-change.status.divorce.transferor.directions=CY_If you cancel Marriage Allowance, you can choose either to keep it in place until {0} (the end of the current tax year) or to stop it from {1} (the start of the current tax year).
-change.status.divorce.transferor.h1=CY_Cancelling Marriage Allowance due to divorce or the end of a civil partnership
-change.status.divorce.transferor.conditional1.h1=CY_Cancelling Marriage Allowance due to divorce or the end of a civil partnership
-change.status.divorce.recipient.condition.h1=CY_Divorce or end of civil partnership
-change.status.divorce.transferor.conditional1.para1=CY_You''ve told us you divorced or ended your civil partnership on {0}.
-change.status.divorce.transferor.conditional1.para2=CY_As this date falls within the previous tax year:
-change.status.divorce.transferor.conditional1.para3=CY_your Allowance will remain in place until {0}, the end of the tax year you got divorced
-change.status.divorce.transferor.conditional1.para4=CY_your ex-partner has not paid enough tax, we''ll collect it by adjusting their tax code
-change.status.divorce.transferor.conditional2.para2=CY_You can keep Marriage Allowance until {0}, the end of the tax year you divorced. Your Personal Allowance will return to normal from {1}, the start of the next tax year.
-change.status.divorce.transferor.conditional2.para3=CY_We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. If you''ve not paid enough, we''ll collect it by adjusting your tax code.
-change.status.divorce.transferor.option1=CY_If you choose to keep it in place until {0}, your ex-partner will not have to pay back any tax.
-change.status.divorce.transferor.option2=CY_If you choose to stop it from {0}, your ex-partner may not have paid enough tax and will have to pay it back. We''ll collect any tax they owe by adjusting their tax code.
-change.status.divorce.transferor.keep=CY_Would you like to keep Marriage Allowance until the end of the tax year?
-change.status.divorce.transferor.eoy-yes=CY_Your Marriage Allowance will remain until the end of this tax year ({0}). Your Personal Allowance will be adjusted at the start of the new tax year on {1}.
-change.status.divorce.transferor.eoy-no=CY_Your Marriage Allowance will stop from {0}.<br><p>This could result in your ex-partner having to pay back any tax they owe.</p>
-change.status.divorce.recipient.para1=CY_your Marriage Allowance will be cancelled from {0}, the end of the current tax year
-change.status.divorce.recipient.previous.para1=CY_your Marriage Allowance will be cancelled from {0}
-change.status.divorce.recipient.previous.para2=CY_if you haven''t paid enough tax, we''ll usually collect it by adjusting your tax code
-change.status.divorce.recipient.content1=CY_As this date falls within the current tax year:
-change.status.divorce.recipient.options=CY_Once you''ve told us, Marriage Allowance will remain in place until the end of the tax year ({0}). HMRC won''t ask you to pay back this extra allowance.
-change.status.divorce.recipient.directions=CY_You should tell us if you''ve divorced and have a <a href=CY_"{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href=CY_"{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
-change.status.historic-active.result=CY_Removing Marriage Allowance from the start of the tax year could result in your partner underpaying tax. We''ll notify them at the end of the tax year. Any underpayment will usually be collected through an adjustment to their tax code.
-change.status.historic-active.directions=CY_You can remove Marriage Allowance from the start of the tax year ({2}) if you''ve divorced and have a <a href=CY_"{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href=CY_"{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
-change.status.cancel.h1=CY_Cancelling Marriage Allowance
-change.status.cancel.content=CY_We''ll cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
-change.status.cancel.content1=CY_Your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
-change.status.reject.h1=CY_Remove a previous Marriage Allowance claim
-change.status.reject.content=CY_our Marriage Allowance will be cancelled from ({0}), the start of the tax year you first received it.
-change.status.reject.warning=CY_This could result in you not paying enough tax. We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. If you haven''t paid enough, we''ll usually collect it by adjusting your tax code.
-change.status.reject.previous.content=CY_You can remove the Marriage Allowance you claimed previously. The allowance will be removed from {0}, the start of the tax year you first received it.
-change.status.reject.previous.warning=CY_This could result in you underpaying tax. We''ll let you know if you''ve paid the right amount of tax at the end of the tax year. Any underpayment will usually be collected through an adjustment to your tax code.
-change.status.allowance=CY_Allowance status
-change.status.realtionship-end=CY_Reason for cancellation
-change.status.confirm-removal.button=CY_Confirm removal
-change.status.divorce-cy-heading=CY_Remove this Marriage Allowance transfer
-change.status.divorce-cy-content=CY_This will be removed at the end of the current tax year, April 5 {0}.
-change.status.cancel-your.h1=CY_Cancelling Marriage Allowance
-change.status.cancel-your.p=CY_Why do you want to cancel your Marriage Allowance?
-change.status.confirm.email=CY_Enter your email to confirm
-change.status.history.h4=CY_Your Marriage Allowance claims
-change.status.start-date=CY_Start date
-change.status.end-date=CY_End date
-change.status.history.allowance-status=CY_Allowance status
-change.status.history.status=CY_Status
-change.status.history.role=CY_Allowance role
-change.status.history.reason=CY_Reason for change
-change.status.active=CY_Active
-change.status.active.present.year=CY_to Present
-change.status.active.to=CY_to
-change.status.transferor.amount=CY_You''ll stop transferring Marriage Allowance to your spouse or civil partner at end of the tax year ({0}).
-change.status.receiving.amount=CY_You''ll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year ({0}).
-change.status.transferor.stop-sooner=CY_You can end your Marriage Allowance transfer sooner.
-change.status.recipient.stop-sooner=CY_You can stop receiving Marriage Allowance sooner.
-change.status.finish.divorce=CY_Divorce successful
-change.status.finish.will-be-current=CY_Your Marriage Allowance will be removed at the end of the current tax year.
-change.status.finish.will-be-next=CY_Your Marriage Allowance will be removed from the start of the current tax year.
-change.status.apply=CY_Apply for Marriage Allowance
-change.status.have-not-applied=CY_You are not currently benefiting from Marriage Allowance.
-change.status.ask-to-check=CY_If you are married or in a civil partnership you may be able to transfer some of your tax-free Personal Allowance to your partner. Check if you''re eligible to apply for Marriage Allowance.
-change.status.bereavement.sorry=CY_We''re sorry for your loss
-change.status.bereavement.notify-hmrc=CY_You can let HMRC know of a bereavement on:
-change.status.bereavement.rec.instruction=CY_If your partner transferred some of their Personal Allowance to you before they died:
-change.status.bereavement.rec.instruction-1=CY_your Personal Allowance will remain at the higher level until the end of the tax year (5 April)
-change.status.bereavement.rec.instruction-2=CY_their estate will be treated as having a smaller Personal Allowance, because they transferred some of it to you
-change.status.bereavement.tr.instruction=CY_If your partner dies after you''ve transferred some of your Personal Allowance to them:
-change.status.bereavement.tr.instruction-1=CY_their estate will be treated as having the extra Personal Allowance you transferred to them
-change.status.bereavement.tr.instruction-2=CY_your Personal Allowance will go back to the normal amount at the end of the tax year (5 April)
-change.status.divorce.radio=CY_Divorce or end of civil partnership
-change.status.bereavement.radio=CY_Bereavement
-change.status.earnings.radio=CY_Change in your income
-change.status.cancel.radio=CY_I want to stop Marriage Allowance payments
-change.status.confirm-change=CY_Confirm you want to change this Marriage Allowance transfer.
-change.status.previous-years=CY_We''ve noticed you might be able to claim Marriage Allowance for previous tax years. If you''re eligible we''ll backdate it and send your partner a cheque in the post.
-confirm.transferor.heading=CY_Confirm cancellation of Marriage Allowance
-confirm.recipient.ended.reject.heading=CY_Confirm removal of a previous Marriage Allowance claim
-pages.ended.reject.message=CY_You''ve asked us to remove your Marriage Allowance from tax year {0}. This means:
-pages.ended.reject.message1=CY_your Marriage Allowance will be removed from {0}, the start of the tax year you first received it
-pages.ended.reject.message2=CY_if you haven''t paid enough tax, we''ll usually collect it by adjusting your tax code
-pages.confirm.message=CY_You''ve asked us to cancel your Marriage Allowance. This means:
-pages.confirm.message1=CY_your Marriage Allowance will remain in place until {0}, the end of the current tax year
-pages.confirm.message2=CY_your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year
-pages.reject.message1=CY_your Marriage Allowance will be cancelled from {0}, the start of the tax year you first received it
-pages.reject.message2=CY_we''ll let you know if you''ve paid the right amount of tax at the end of tax year
-pages.reject.message3=CY_if you haven''t paid enough tax, we''ll usually collect it by adjusting your tax code
-confirm.cancellation.button=CY_Confirm cancellation
-pages.confirm.divorce.cy.message=CY_You''ve asked us to keep Marriage Allowance in place until {0}, the end of the current tax year. This means:
-pages.confirm.divorce.cy.message1=CY_your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
-pages.confirm.divorce.cy.prev.message=CY_You''ve asked us to cancel your Marriage Allowance. This means:
-pages.confirm.divorce.cy.prev.message1=CY_your Allowance will remain in place until {0}, the end of the tax year you got divorced
-pages.confirm.divorce.cy.prev.message2=CY_if your ex-partner has not paid enough tax, we''ll collect it by adjusting their tax code
-pages.confirm.divorce.py.message=CY_You''ve asked us to cancel your Marriage Allowance from {0}, the start of the current tax year. This means:
-pages.confirm.divorce.py.message1=CY_if your ex-partner has not paid enough tax, we''ll collect it by adjusting their tax code
-pages.confirm.divorce.py.message2=CY_your Personal Allowance will go back to the normal amount from {0}, the start of the current tax year
-pages.confirm.recipient.divorce.cy.prev.message1=CY_your Marriage Allowance will be cancelled from {0}, the end of the tax year you divorced
-pages.confirm.recipient.divorce.cy.prev.message2=CY_if you haven''t paid enough tax, we''ll usually collect it by adjusting your tax code
-pages.confirm.recipient.divorce.cy.message1=CY_your Marriage Allowance will remain in place until {0}, the end of the current tax year
-pages.confirm.recipient.divorce.cy.message2=CY_your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
+change.status.button	=	Canslo Lwfans Priodasol
+change.status.transferor.ha.button	=	Dod &#226; Lwfans Priodasol i ben
+change.status.recipient.ha.button	=	Dod &#226; Lwfans Priodasol i ben
+change.status.recipient.previous.year.button	=	Gwneud cais ar gyfer blynyddoedd blaenorol
+change.status.transferor.p1	=	Gallwch ddileu Lwfans Priodasol os yw un o''r canlynol yn berthnasol:
+change.status.receiver.p1	=	Gallwch ganslo Lwfans Priodasol os yw un o''r canlynol yn berthnasol:
+change.status.transferor.list	=	<li>rydych wedi ysgaru neu ddod &#226;''ch partneriaeth sifil i ben</li><li>mae''ch incwm wedi newid</li><li>rydych am ganslo''r lwfans</li><li>rydych wedi dioddef profedigaeth</li>
+change.status.receiver.list	=	<li>rydych wedi ysgaru neu ddod &#226;''ch partneriaeth sifil i be</li><li>mae''ch incwm wedi newid</li><li>rydych am wrthod y lwfans</li><li>rydych wedi dioddef profedigaeth</li>
+change.status.reason-for	=	Rheswm dros newid
+change.status.reason-for-divorce	=	A ydych am gadw''ch Lwfans Priodaosl yn ei le tan {0}?
+change.status.confirm.info	=	Byddwn yn e-bostio cadarnhad eich bod wedi canslo''ch Lwfans Priodasol cyn pen 24 awr.
+change.status.confirm.more.info	=	Ni fyddwn yn rhannu''ch cyfeiriad e-bost gydag unrhyw un arall.
+change.status.confirm-cancellation.button	=	Cadarnhau canslo
+change.status.confirm.field.your-email	=	Byddwn yn anfon cadarnhad atoch i ddweud eich bod wedi canslo.
+change.status.confirm.field.your-name	=	Eich enw
+change.status.earnings.h1	=	Newid mewn incwm
+change.status.earnings.h2	=	Mae angen i chi roi gwybod i ni os yw''ch incwm chi neu''ch partner yn newid er mwyn i ni allu rhoi gwybod i chi:
+change.status.earnings.tr.instruction-1	=	os bydd gwneud cais am Lwfans Priodasol o fudd i chi fel p&#226;r o hyd
+change.status.earnings.tr.instruction-2	=	os oes angen i chi ganslo''ch Lwfans Priodasol
+change.status.earnings.rec.instruction-1	=	os ydych yn disgwyl i''ch incwm dros y flwyddyn dreth gyfan fod yn fwy na £{0}, oherwydd na fyddwch yn gymwys fel p&#226;r rhagor yn y flwyddyn dreth hon
+change.status.earnings.rec.instruction-2	=	os yw''ch partner yn disgwyl i''w (h)incwm dros y flwyddyn dreth gyfan fod yn fwy na £{0}, oherwydd mae''n bosibl na fyddwch yn elwa o Lwfans Priodasol fel p&#226;r
+change.status.divorce.date.invalid.h1	=	Mae problem gyda''r dyddiadau yr ydych wedi''u nodi
+change.status.divorce.date.invalid.para1	=	Ni all y dyddiad y gwnaethoch ysgaru neu ddiddymu''ch partneriaeth sifil fod cyn y dyddiad y gwnaethoch ddechrau hawlio Lwfans Priodasol.
+change.status.divorce.date.invalid.para2	=	Gallwch fynd yn &#244;l a gwirio bod yr wybodaeth yr ydych wedi''i nodi''n gywir.
+change.status.divorce.date.invalid.para3	=	Cysylltwch &#226; CThEM os ydych o''r farn bod y dyddiad anghywir gennym ar gyfer dechrau''ch priodas neu bartneriaeth sifil.
+change.status.divorce.h1	=	Dyddiad ysgaru neu ddod &#226;''r bartneriaeth sifil i ben
+change.status.divorce.header	=	Eich dyddiad ysgaru
+change.status.divorce-py-heading	=	Dileu''r trosglwyddiad Lwfans Priodasol hwn
+change.status.divorce-py-content	=	Caiff hyn ei ddileu o ddechrau''r flwyddyn dreth bresennol, Ebrill 6{0} ymlaen.
+change.status.divorce.transferor.directions	=	Os ydych yn canslo Lwfans Priodasol, gallwch ddewis naill ai i''w gadw yn ei le tan {0} (diwedd y flwyddyn dreth bresennol) neu ddod ag ef i ben o {1} (dechrau''r flwyddyn dreth bresennol) ymlaen.
+change.status.divorce.transferor.h1	=	Canslo Lwfans Priodasol yn sgil ysgariad neu ddod &#226; phartneriaeth sifil i ben
+change.status.divorce.transferor.conditional1.h1	=	Canslo Lwfans Priodasol yn sgil ysgariad neu ddod &#226; phartneriaeth sifil i ben
+
+change.status.divorce.recipient.condition.h1	=	Ysgariad neu ddiwedd partneriaeth sifil
+
+change.status.divorce.transferor.conditional1.para1	=	Rhoesoch wybod i ni y gwnaethoch ysgaru neu ddod &#226;''ch partneriaeth sifil i ben ar {0}.
+change.status.divorce.transferor.conditional1.para2	=	Gan fod y dyddiad hwn yn ystod y flwyddyn dreth flaenorol:
+change.status.divorce.transferor.conditional1.para3	=	bydd eich Lwfans yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru
+change.status.divorce.transferor.conditional1.para4	=	os nad yw''ch cyn-bartner wedi talu digon o dreth, byddwn yn ei chasglu drwy addasu''i god treth
+change.status.divorce.transferor.conditional2.para2	=	Gallwch gadw''ch Lwfans Priodasol tan {0}, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru. Bydd eich Lwfans Priodasol yn cael ei ddileu o {1}, sef dechrau''r flwyddyn dreth bresennol ymlaen.
+change.status.divorce.transferor.conditional2.para3	=	Rhown wybod i chi os ydych wedi talu''r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, byddwn yn ei chasglu drwy addasu''ch cod treth.
+change.status.divorce.transferor.option1	=	Os ydych yn penderfynu ei gadw yn ei le tan {0}, ni fydd yn rhaid i''ch cyn-bartner dalu unrhyw dreth.
+change.status.divorce.transferor.option2	=	Os ydych yn dewis dod ag ef i ben o {0}, efallai ni fydd eich cyn-bartner wedi talu digon o dreth a bydd yn rhaid iddo dalu''r dreth honno. Byddwn yn casglu unrhyw dreth sydd arno drwy addasu''i god treth.
+change.status.divorce.transferor.keep	=	A hoffech gadw''ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth?
+change.status.divorce.transferor.eoy-yes	=	Bydd eich Lwfans Priodasol yn parhau tan ddiwedd y flwyddyn dreth hon ({0}). Bydd eich Lwfans Personol yn cael ei addasu ar ddechrau''r flwyddyn dreth newydd ar {1}.
+change.status.divorce.transferor.eoy-no	=	Bydd eich Lwfans Priodasol yn dod i ben o {0} ymlaen.<br><p>Gallai hyn arwain at eich cyn-bartner yn gorfod ad-dalu unrhyw dreth sydd arno.</p>
+change.status.divorce.recipient.para1	=	bydd eich Lwfans Priodasol yn cael ei ddileu o {0}, sef diwedd y flwyddyn dreth bresennol
+change.status.divorce.recipient.previous.para1	=	bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
+change.status.divorce.recipient.previous.para2	=	os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth
+change.status.divorce.recipient.content1	=	Gan fod y dyddiad hwn yn ystod y flwyddyn dreth bresennol:
+change.status.divorce.recipient.options	=	Ar &#244;l i chi roi gwybod i ni, bydd eich Lwfans Priodasol yn aros yn ei le tan ddiwedd y flwyddyn dreth ({0}). Ni fydd CThEM yn gofyn i chi ad-dalu''r lwfans ychwanegol hwn.
+change.status.divorce.recipient.directions	=	Dylech roi gwybod i ni os ydych wedi ysgaru ac mae gennych <a href="{0}">archddyfarniad absoliwt</a>, neu os yw''ch partneriaeth sifil wedi dod i ben ac mae gennych <a href="{1}">orchymyn terfynol</a>. Dyma''r dogfennau sy''n dod &#226;''ch priodas neu''ch partneriaeth sifil i ben yn gyfreithlon.
+change.status.historic-active.result	=	Gallai dileu Lwfans Priodasol o ddechrau''r flwyddyn dreth arwain at eich partner yn tandalu treth. Rhown wybod iddo ar ddiwedd y flwyddyn dreth. Bydd unrhyw dandaliad fel arfer yn cael ei gasglu drwy addasu''i god treth.
+change.status.historic-active.directions	=	Gallwch ddileu Lwfans Priodasol o ddechrau''r flwyddyn dreth ({2}) os ydych wedi ysgaru ac mae gennych <a href="{0}">archddyfarniad absoliwt</a>, neu os yw''ch partneriaeth sifil wedi dod i ben ac mae gennych <a href="{1}">orchymyn terfynol</a>. Dyma''r dogfennau sy''n dod &#226;''ch priodas neu''ch partneriaeth sifil i ben yn gyfreithlon.
+change.status.cancel.h1	=	Canslo Lwfans Priodasol
+
+change.status.cancel.content	=	Byddwn yn canslo''ch Lwfans Priodasol, ond bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol.
+change.status.cancel.content1	=	Bydd eich Lwfans Priodasol yn dychwelyd i''r swm blaenorol o {0}, sef dechrau''r flwyddyn dreth newydd. Ni fydd yn rhaid i''ch partner ad-dalu unrhyw dreth.
+change.status.reject.h1	=	Dileu cais blaenorol am Lwfans Priodasol
+change.status.reject.content	=	Caiff eich Lwfans Priodasol ei ganslo o ({0}) ymlaen, sef dechrau''r flwyddyn dreth pan gawsoch ef am y tro cyntaf.
+change.status.reject.warning	=	Gallai hyn arwain at beidio &#226; thalu digon o dreth. Rhown wybod i chi a ydych wedi talu''r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth.
+change.status.reject.previous.content	=	Gallwch ddileu''r Lwfans Priodasol y gwnaethoch ei hawlio''n flaenorol. Caiff y lwfans ei ddileu o {0}, sef dechrau''r flwyddyn dreth pan gawsoch ef am y tro cyntaf.
+change.status.reject.previous.warning	=	Gallai hyn arwain at dandalu treth. Rhown wybod i chi a ydych wedi talu''r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Fel arfer, bydd unrhyw dandaliad yn cael ei gasglu drwy addasu''ch cod treth.
+change.status.allowance	=	Statws y lwfans
+change.status.realtionship-end	=	Rheswm dros ganslo
+change.status.confirm-removal.button	=	Cadarnhau dileu
+change.status.divorce-cy-heading	=	Dileu''r trosglwyddiad Lwfans Priodasol hwn
+change.status.divorce-cy-content	=	Bydd hyn yn cael ei ddileu ar ddiwedd y flwyddyn dreth bresennol, sef Ebrill 5 {0}.
+change.status.cancel-your.h1	=	Canslo Lwfans Priodasol
+change.status.cancel-your.p	=	Pam yr ydych am ganslo''ch Lwfans Priodasol?
+change.status.confirm.email	=	Nodwch eich cyfeiriad e-bost i gadarnhau
+change.status.history.h4	=	Eich ceisiadau am Lwfans Priodasol
+change.status.start-date	=	Dyddiad dechrau
+change.status.end-date	=	Dyddiad dod i ben
+change.status.history.allowance-status	=	Statws y lwfans
+change.status.history.status	=	Statws
+change.status.history.role	=	R&#244;l y lwfans
+change.status.history.reason	=	Rheswm dros newid
+change.status.active	=	Gweithredol
+change.status.active.present.year	=	– Presennol
+change.status.active.to	=	–
+change.status.transferor.amount	=	Byddwch yn rhoi''r gorau i drosglwyddo Lwfans Priodasol i''ch priod neu bartner sifil ddiwedd blwyddyn dreth ({0}).
+change.status.receiving.amount	=	Byddwch yn rhoi''r gorau i gael Lwfans Priodasol gan eich priod neu bartner sifil ddiwedd blwyddyn dreth ({0}).
+change.status.transferor.stop-sooner	=	Gallwch ddod &#226;''ch trosglwyddiad Lwfans Priodasol i ben yn gynharach.
+change.status.recipient.stop-sooner	=	Gallwch beidio &#226; chael Lwfans Priodasol yn gynharach.
+change.status.finish.divorce	=	Ysgariad yn llwyddiannus
+
+cchange.status.finish.will-be-current	=	Caiff eich Lwfans Priodasol ei ddileu ar ddiwedd y flwyddyn dreth bresennol.
+change.status.finish.will-be-next	=	Bydd eich Lwfans Priodasol yn cael ei ddileu o ddechrau''r flwyddyn dreth bresennol ymlaen.
+change.status.apply	=	Gwneud cais am Lwfans Priodasol
+change.status.have-not-applied	=	Nid ydych yn elwa o Lwfans Priodasol ar hyn o bryd.
+change.status.ask-to-check	=	Os ydych yn briod neu mewn partneriaeth sifil, efallai y gallwch drosglwyddo rhywfaint o''ch Lwfans Personol di-dreth i''ch partner. Gwiriwch a ydych yn gymwys i wneud cais am Lwfans Priodasol.
+change.status.bereavement.sorry	=	Mae''n ddrwg gennym am eich colled
+change.status.bereavement.notify-hmrc	=	Gallwch roi gwybod i CThEM am brofedigaeth ar:
+change.status.bereavement.rec.instruction	=	Os trosglwyddodd eich partner rywfaint o''i Lwfans Personol i chi cyn iddo farw:
+change.status.bereavement.rec.instruction-1	=	bydd eich Lwfans Personol yn parhau ar y lefel uchaf tan ddiwedd y flwyddyn dreth (5 Ebrill)
+change.status.bereavement.rec.instruction-2	=	caiff ei yst&#226;d ei drin fel bod ei Lwfans Personol yn llai, am ei fod wedi trosglwyddo ychydig ohono i chi
+change.status.bereavement.tr.instruction	=	Os yw''ch partner yn marw ar &#244;l i chi drosglwyddo rhywfaint o''ch Lwfans Personol iddo:
+change.status.bereavement.tr.instruction-1	=	caiff ei yst&#226;d ei drin fel bod ganddo''r Lwfans Personol ychwanegol y gwnaethoch drosglwyddo iddo
+change.status.bereavement.tr.instruction-2	=	bydd eich Lwfans Personol yn dychwelyd i''r swm arferol ar ddiwedd y flwyddyn dreth (5 Ebrill)
+change.status.divorce.radio	=	Ysgariad neu ddiwedd partneriaeth sifil
+change.status.bereavement.radio	=	Profedigaeth
+change.status.earnings.radio	=	Newid i''ch incwm
+change.status.cancel.radio	=	Rwyf am roi''r gorau i gael taliadau Lwfans Priodasol
+change.status.confirm-change	=	Cadarnhewch eich bod am newid y trosglwyddiad Lwfans Priodasol hwn.
+change.status.previous-years	=	Rydym wedi sylwi y gallech wneud cais am Lwfans Priodasol ar gyfer blynyddoedd treth blaenorol. Os ydych yn gymwys, byddwn yn ei &#244;l-ddyddio ac yn anfon siec at eich partner drwy''r post.
+confirm.transferor.heading	=	Cadarnhewch ganslo Lwfans Priodasol
+confirm.recipient.ended.reject.heading	=	Cadarnhewch ddileu cais blaenorol am Lwfans Priodasol
+pages.ended.reject.message	=	Rydych wedi gofyn i ni ddileu''ch Lwfans Priodasol o flwyddyn dreth {0} ymlaen. Mae hyn yn golygu:
+pages.ended.reject.message1	=	caiff eich Lwfans Priodasol ei ddileu o {0} ymlaen, sef dechrau''r flwyddyn dreth pan gawsoch ef am y tro cyntaf
+pages.ended.reject.message2	=	os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth
+pages.confirm.message	=	Rydych wedi gofyn i ni ganslo''ch Lwfans Priodasol. Mae hyn yn golygu:
+pages.confirm.message1	=	bydd eich Lwfans Priodasol yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol
+pages.confirm.message2	=	bydd eich Lwfans Priodasol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
+pages.reject.message1	=	caiff eich Lwfans Priodasol ei ganslo o {0} ymlaen, sef dechrau''r flwyddyn dreth pan gawsoch ef am y tro cyntaf
+pages.reject.message2	=	byddwn yn rhoi gwybod i chi ar ddiwedd y flwyddyn dreth a ydych wedi talu''r swm cywir o dreth
+pages.reject.message3	=	os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth
+confirm.cancellation.button	=	Cadarnhau canslo
+pages.confirm.divorce.cy.message	=	Rydych wedi gofyn i ni gadw Lwfans Priodasol yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol. Mae hyn yn golygu:
+pages.confirm.divorce.cy.message1	=	bydd eich Lwfans Priodasol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
+pages.confirm.divorce.cy.prev.message	=	Rydych wedi gofyn i ni ganslo''ch Lwfans Priodasol. Mae hyn yn golygu:
+pages.confirm.divorce.cy.prev.message1	=	bydd eich Lwfans yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru
+pages.confirm.divorce.cy.prev.message2	=	os nad yw''ch cyn-bartner wedi talu digon o dreth, byddwn yn ei chasglu drwy addasu''i god treth
+pages.confirm.divorce.py.message	=	Rydych wedi gofyn i ni ganslo''ch Lwfans Priodasol o {0} ymlaen, sef dechrau''r flwyddyn dreth bresennol. Mae hyn yn golygu:
+pages.confirm.divorce.py.message1	=	os nad yw''ch cyn-bartner wedi talu digon o dreth, byddwn yn ei chasglu drwy addasu''i god treth
+pages.confirm.divorce.py.message2	=	bydd eich Lwfans Personol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth bresennol
+pages.confirm.recipient.divorce.cy.prev.message1	=	caiff eich Lwfans Priodasol ei ganslo o {0} ymlaen, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru
+pages.confirm.recipient.divorce.cy.prev.message2	=	os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth
+pages.confirm.recipient.divorce.cy.message1	=	bydd eich Lwfans Priodasol yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol
+pages.confirm.recipient.divorce.cy.message2	=	bydd eich Lwfans Priodasol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
 
 #application errors
-pages.form.error-header=CY_There is a problem
-pages.errors.timeout-pta.header=CY_You have been logged out of your Personal Tax Account.
-pages.errors.timeout-pta.action=CY_Please login to your Personal Tax Account again to apply for Marriage Allowance.
-pages.errors.timeout-pta.back=CY_Back to Personal Tax Account
-pages.form.error.confirm.data=CY_Check your information is correct, in the right place and in the right format.
-pages.form.error.mandatory.data=CY_Check that you have given answers.
-transferor.not.found=CY_We were unable to find a HMRC record for you.
-recipient.not.found.para1=CY_We were unable to find a HMRC record of your spouse or civil partner.
-recipient.not.found.para2=CY_Check with them and confirm the details you supplied.
-transferor.no-eligible-years=CY_We were unable to process your Marriage Allowance application.
-transferor.no-previous-years-available=CY_Based on the date of marriage or civil partnership you''ve provided, you''re not eligible for Marriage Allowance.
-recipient.has.relationship.para1=CY_We were unable to process your application.
-recipient.has.relationship.para2=CY_Check with your spouse or civil partner and confirm the details you supplied.
-session.timeout.button=CY_Start again
-session.timeout.statement=CY_Your session has timed out
-session.timeout.verbose-statement=CY_You''ve been signed out of Marriage Allowance.
-create.relationship.failure=CY_Cannot create relationship
-not.authorised=CY_Sorry, you haven''t been authorised to proceed.
-technical.issue.para1=CY_We''re experiencing technical difficulties
-technical.issue.para2=CY_We''re having difficulties with the service, try again in a few minutes.
-technical.issue.back=CY_Return to GOV.UK
-technical.other-ways.h1=CY_Other Ways to apply for Marriage Allowance
-technical.other-ways.para1=CY_We were unable to confirm your identity online. Call HM Revenue and Customs (HMRC) to claim Marriage Allowance.
-technical.other-ways.para2=CY_You''ll need to know you and your spouse or civil partner''s National Insurance number when you call.
-title.cannot-find-details =CY_ Cannot find details
-title.technical-error =CY_ Technical Error
-technical.cannot-find-details.h1 =CY_ We cannot find your Marriage Allowance details
-technical.cannot-find-details.para1 =CY_ Call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call
-technical.technical-error.h1 =CY_ There has been a technical error
-technical.technical-error.para1 =CY_ Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.
+pages.form.error-header	=	Mae problem wedi codi
+pages.errors.timeout-pta.header	=	Rydych wedi allgofnodi o''ch Cyfrif Treth Personol.
+pages.errors.timeout-pta.action	=	Mewngofnodwch i''ch Cyfrif Treth Personol eto i wneud cais am Lwfans Priodasol.
+pages.errors.timeout-pta.back	=	Yn &#244;l i''r Cyfrif Treth Personol
+pages.form.error.confirm.data	=	Gwiriwch fod eich gwybodaeth yn gywir, yn y man cywir ac yn y fformat cywir.
+pages.form.error.mandatory.data	=	Gwiriwch eich bod wedi rhoi atebion.
+transferor.not.found	=	Ni allwn ddod o hyd i gofnod CThEM ar eich cyfer.
+recipient.not.found.para1	=	Ni allwn ddod o hyd i gofnod CThEM ar gyfer eich priod neu''ch partner sifil.
+recipient.not.found.para2	=	Gwiriwch gydag ef/hi a chadarnhau''r manylion yr ydych wedi eu rhoi.
+transferor.no-eligible-years	=	Nid oeddem yn gallu prosesu''ch cais am Lwfans Priodasol.
+transferor.no-previous-years-available	=	Yn seiliedig ar ddyddiad y briodas neu ffurfio''r bartneriaeth sifil yr ydych wedi''i roi, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
+recipient.has.relationship.para1	=	Nid oeddem yn gallu prosesu''ch cais.
+recipient.has.relationship.para2	=	Gwiriwch &#226;''ch priod neu''ch partner sifil a chadarnhau''r manylion yr ydych wedi''u rhoi.
+session.timeout.button	=	Dechrau eto
+session.timeout.statement	=	Mae''ch sesiwn wedi cyrraedd y terfyn amser
+session.timeout.verbose-statement	=	Mae''r system wedi''ch allgofnodi o Lwfans Priodasol.
+create.relationship.failure	=	Ni ellir creu perthynas
+not.authorised	=	Mae''n ddrwg gennym. Nid oes gennych yr awdurdod i fynd yn eich blaen.
+technical.issue.para1	=	Mae problemau technegol wedi codi
+technical.issue.para2	=	Mae problemau technegol wedi codi. Rhowch gynnig arall arni mewn ychydig o funudau.
+technical.issue.back	=	Dychwelyd i GOV.UK
+technical.other-ways.h1	=	Ffyrdd eraill o wneud cais am Lwfans Priodasol
+technical.other-ways.para1	=	Nid oeddem yn gallu cadarnhau pwy ydych ar-lein. Ffoniwch Gyllid a Thollau EM (CThEM) i wneud cais am Lwfans Priodasol.
+technical.other-ways.para2	=	Bydd angen i chi wybod beth yw''ch rhif Yswiriant Gwladol chi a''ch priod neu bartner sifil pan fyddwch yn ffonio.
+title.cannot-find-details	=	Methu dod o hyd i fanylion
+title.technical-error	=	Problem dechnegol
+technical.cannot-find-details.h1	=	Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol
+technical.cannot-find-details.para1	=	Ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio
+technical.technical-error.h1	=	Mae problem dechnegol wedi codi
+technical.technical-error.para1	=	Rhowch gynnig arall arni. Os yw''r broblem yn parhau, ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio.
 
-generic.translation.text=CY_This page is also available in
-generic.translation.english=English
-generic.translation.welsh=Welsh (Cymraeg)
-radio.yes=CY_Yes
-radio.no=CY_No
+generic.translation.text	=	Mae''r dudalen hon hefyd ar gael yn
+generic.translation.english	=	Saesneg (English)
+generic.translation.welsh	=	Cymraeg
+radio.yes	=	Iawn
+radio.no	=	Na
 
 #history page
-pages.history.help.partner=CY_You are currently helping your partner benefit from Marriage Allowance.
-pages.history.helped.by.partner=CY_Your partner is currently helping you benefit from Marriage Allowance.
-pages.history.cancellation=CY_You can cancel Marriage Allowance online
-pages.history.cancellation1=CY_If you’'ve divorced or ended your civil partnership, you can cancel Marriage Allowance online. If you''re currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
-pages.history.cancellation2=CY_You can also cancel to stop payments if you’re still married or in a civil partnership, but no longer want to benefit from Marriage Allowance.
+pages.history.help.partner	=	Ar hyn o bryd, rydych yn helpu''ch partner i elwa o Lwfans Priodasol.
+pages.history.helped.by.partner	=	Ar hyn o bryd, mae''ch partner yn eich helpu i elwa o Lwfans Priodasol.
+pages.history.cancellation	=	Gallwch ganslo Lwfans Priodasol ar-lein
+pages.history.cancellation1	=	Os ydych wedi ysgaru neu wedi dod &#226;''ch partneriaeth sifil i ben, gallwch ganslo''ch Lwfans Priodasol ar-lein. Os ydych wedi ymwahanu &#226;''ch priod neu bartner sifil ar hyn o bryd, gallwch barhau i gael Lwfans Priodasol hyd nes eich bod yn dod a''ch priodas neu bartneriaeth sifil i ben yn gyfreithlon.
+pages.history.cancellation2	=	Gallwch hefyd ganslo er mwyn dod &#226; thaliadau i ben os ydych yn dal i fod yn briod neu mewn partneriaeth sifil, ond nad ydych bellach am elwa o Lwfans Priodasol.
 
-pages.history.partner.help=CY_Your partner is currently helping you benefit from Marriage Allowance.
-pages.history.cancel=CY_You can cancel Marriage Allowance if you:
-pages.history.cancel1=CY_have divorced or ended your civil partnership
-pages.history.cancel2=CY_have had a change in your income
-pages.history.cancel3=CY_want to reject the allowance
-pages.history.cancel4=CY_have suffered a bereavement
-pages.history.button.remove=CY_Remove allowance
+pages.history.partner.help	=	Ar hyn o bryd, mae''ch partner yn eich helpu i elwa o Lwfans Priodasol.
+pages.history.cancel	=	Gallwch ganslo Lwfans Priodasol:
+pages.history.cancel1	=	os ydych wedi ysgaru neu ddod &#226;''ch partneriaeth sifil i ben
+pages.history.cancel2	=	os yw''ch incwm wedi newid
+pages.history.cancel3	=	os ydych am wrthod y lwfans
+pages.history.cancel4	=	os ydych wedi dioddef profedigaeth
+pages.history.button.remove	=	Dileu lwfans
 
 #eligible year page
-pages.eligibleyear.currentyear=CY_You can apply for the current tax year
-pages.eligibleyear.toldus=CY_You''ve told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
-pages.eligibleyear.thisyear=CY_This current tax year</span><br>{0} onwards
-pages.eligibleyear.li1=CY_will pay up to £{0} less tax each year
-pages.eligibleyear.li2=CY_we''ll adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
-pages.eligibleyear.li3=CY_it''ll automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
-pages.eligibleyear.doyou.want=CY_Do you want to apply for this current tax year onwards?
+pages.eligibleyear.currentyear	=	Gallwch wneud cais am y flwyddyn dreth bresennol
+pages.eligibleyear.toldus	=	Rhoesoch wybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil &#226; <span id="firstNameOnly">{0}</span> ar
+pages.eligibleyear.thisyear	=	Bydd y flwyddyn dreth bresennol</span><br>{0} ymlaen
+pages.eligibleyear.li1	=	yn talu hyd at £{0} yn llai o dreth bob blwyddyn
+pages.eligibleyear.li2	=	byddwn yn addasu cod treth <span id="firstNameOnly3">{0}</span> i gynnwys y lwfans ychwanegol hwn
+pages.eligibleyear.li3	=	bydd yn adnewyddu''n awtomatig bob blwyddyn hyd nes eich bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">nad ydych bellach yn gymwys</a>
+pages.eligibleyear.doyou.want	=	A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
+pages.eligibleyear.notice	=	Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
+
 
 #multi-year
-pages.multiyear.taxyear=CY_tax year
-pages.multiyear.canclaim=CY_You and <span id="firstNameOnly">{0}</span> can claim Marriage Allowance for the {1} tax year if:
-pages.multiyear.successful=CY_If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
-pages.multiyear.extrayears=CY_Do you want to apply for this extra tax year too?
+pages.multiyear.taxyear	=	blwyddyn dreth
+pages.multiyear.canclaim	=	Gallwch chi a <span id="firstNameOnly">{0}</span> wneud cais am Lwfans Priodasol ar gyfer blwyddyn dreth {1}:
+pages.multiyear.successful	=	Os yw''ch cais yn llwyddiannus, bydd Lwfans Priodasol yn cael ei &#244;l-ddyddio ar gyfer blwyddyn dreth {0} a bydd <span id="firstNameOnly3"> {1} </span> yn cael siec am hyd at {2}.
+pages.multiyear.extrayears	=	A hoffech wneud cais ar gyfer y flwyddyn dreth ychwanegol hon hefyd?
 
 #previous-years
-pages.previousyear.header=CY_You can apply for earlier tax years
-pages.previousyear.lede=CY_You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.
-pages.previousyear.para=CY_You told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on <span id="marriageDate">{1}</span>. This means you can apply for earlier tax years.
+pages.previousyear.header	=	Gallwch wneud cais ar gyfer blynyddoedd treth blaenorol
+pages.previousyear.lede	=	Gallwch wneud cais am Lwfans Priodasol o''r adeg pan gafodd ei gyflwyno am y tro cyntaf, sef 6 Ebrill 2015.
+pages.previousyear.para	=	Rhoesoch wybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil &#226; <span id="firstNameOnly">{0}</span> ar <span id="marriageDate">{1}</span>. Mae hyn yn golygu y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
 
 #confirm-page
-pages.confirm.lower.earner=CY_Your details (the lower earner)
-pages.confirm.higher.earner=CY_partner''s details (the higher earner)
-pages.confirm.current.tax=CY_Current tax year: {0} onwards
-pages.confirm.current.tax.desc=CY_HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
-pages.confirm.previous.tax=CY_Previous tax year: {0} to {1}
-pages.confirm.previous.tax.desc=CY_HMRC will check the details you've supplied before sending {0} a cheque by post for up to {1}.
-pages.confirm.warning=CY_Check the details you''ve entered and make sure this is the person you want to claim Marriage Allowance with.
-pages.confirm.button=CY_Confirm your application
-pages.confirm.marriage.details=CY_Your Marriage Allowance details
-pages.confirm.date.of.marriage=CY_Date of marriage or formation of civil partnership
+pages.confirm.lower.earner	=	Eich manylion (yr unigolyn &#226;''r cyflog isaf)
+pages.confirm.higher.earner	=	Manylion eich partner (yr unigolyn &#226;''r cyflog uchaf)
+pages.confirm.current.tax	=	Rhoesoch wybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil &#226; <span id="firstNameOnly">{0}</span> ar <span id="marriageDate">{1}</span>. Mae hyn yn golygu y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
+pages.confirm.current.tax.desc	=	Bydd CThEM yn newid codau treth chi a {0} er mwyn arbed {1} hyd at £{2}. Bydd eich Lwfans Priodasol yn parhau''n awtomatig hyd nes eich bod chi neu {3} yn ei ganslo, neu nad ydych bellach yn gymwys fel p&#226;r.
+pages.confirm.previous.tax	=	Blwyddyn dreth flaenorol: {0} i {1}
+pages.confirm.previous.tax.desc	=	Bydd CThEM yn gwirio''r manylion yr ydych wedi''u rhoi cyn anfon {0} siec drwy''r post am hyd at {1}.
+pages.confirm.warning	=	Dylech wirio''r manylion yr ydych wedi''u rhoi a sicrhau mai dyma''r person yr ydych am wneud cais am Lwfans Priodasol gydag ef/hi.
+pages.confirm.button	=	Cadarnhewch eich cais
+pages.confirm.marriage.details	=	Manylion eich Lwfans Priodasol
+pages.confirm.date.of.marriage	=	Dyddiad y briodas neu ffurfio''r bartneriaeth sifil
 
 #change-of-circs-finish-page
-pages.coc.finish.header=CY_Marriage Allowance cancelled
-pages.coc.finish.acknowledgement=CY_An email acknowledging your cancellation will be sent to you at <strong>{0}</strong> from <strong>noreply&#64;tax.service.gov.uk</strong> within 24 hours.
-pages.coc.finish.junk=CY_If it doesn''t appear in your inbox, please check your spam or junk folder.
-pages.coc.finish.whn=CY_What happens next
-pages.coc.finish.para1=CY_HMRC will now process your cancellation. Please check the email we''ve sent you for full details.
-pages.coc.finish.para2=CY_There''s no need to contact us. You can <a href="history">check the status</a> of your Marriage Allowance online.
+pages.coc.finish.header	=	Lwfans Priodasol wedi''i ganslo
+pages.coc.finish.acknowledgement	=	Anfonir e-bost atoch yn cydnabod y canslo yn <strong>{0}</strong> o <strong>noreply&#64;tax.service.gov.uk</strong> cyn pen 24 awr.
+pages.coc.finish.junk	=	Os nad yw''n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
+pages.coc.finish.whn	=	Yr hyn sy''n digwydd nesaf
+pages.coc.finish.para1	=	Bydd y canslo''n cael ei brosesu nawr gan CThEM. Am fanylion llawn, edrychwch ar yr e-bost yr ydym wedi''i anfon atoch.
+pages.coc.finish.para2	=	Nid oes angen i chi gysylltu &#226; ni. Gallwch <a href="history">wirio statws</a> eich Lwfans Priodasol ar-lein.
 
-date.fields.day=dydd
-date.fields.month=mis
-date.fields.year=blwyddyn
+date.fields.day	=	Diwrnod
+date.fields.month	=	Mis
+date.fields.year	=	Blwyddyn
 
-change.other.caption=CY_Other changes that affect Marriage Allowance
-change.other.sub.caption1=CY_Change of income
-change.other.income.content=CY_To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year.
-change.other.income.link=CY_To let us know about a change in income, contact HMRC
-change.other.sub.caption2=CY_Bereavement
-change.other.bereavement.content=CY_If your partner dies, your Marriage Allowance will change.
-change.other.bereavement.link=CY_To let us know about a bereavement, contact HMRC
-change.status.active=CY_Active
+change.other.caption	=	Newidiadau eraill sy''n effeithio ar Lwfans Priodasol
+change.other.sub.caption1	=	Newid mewn incwm
+change.other.income.content	=	Er mwyn elwa o Lwfans Priodasol fel p&#226;r, dylech ennill £{0} neu lai''r flwyddyn. Er mwyn bod yn gymwys, mae''n rhaid i''ch partner ennill rhwng £{1} a £{2} y flwyddyn.
+change.other.income.link	=	Er mwyn rhoi gwybod i ni am newid mewn incwm, cysylltwch &#226; CThEM
+change.other.sub.caption2	=	Profedigaeth
+change.other.bereavement.content	=	Os yw''ch partner yn marw, bydd eich Lwfans Priodasol yn newid.
+change.other.bereavement.link	=	Er mwyn rhoi gwybod i ni am brofedigaeth, cysylltwch &#226; CThEM
+change.status.active	=	Gweithredol
 
-error.invalid.date.format=CY_You must specify a valid date.
+error.invalid.date.format	=	Rhaid i chi nodi dyddiad dilys.
+
+pages.noyears.h1	=	Nid ydych wedi dewis blynyddoedd treth i wneud cais ar eu cyfer
+pages.noyears.content1	=	Ewch yn &#244;l os ydych am ddewis blwyddyn i wneud cais ar ei chyfer.
+pages.noyears.findoutmore	=	Rhagor o wybodaeth am <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">sut y mae Lwfans Priodasol yn gweithio.</a>

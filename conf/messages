@@ -12,7 +12,6 @@
 pages.form.field.description.transferor-income=Confirm your annual income
 pages.form.field.description.recipient-income=Confirm your spouse or civil partner''s annual income
 
-
 pages.form.field.description.name=Confirm your spouse or civil partner''s first name
 pages.form.field.name.error.error.required=Tell us your spouse or civil partner''s first name.
 pages.form.field.name.error.error.pattern=Use letters only.
@@ -50,11 +49,9 @@ pages.form.field.description.lower-earner=Confirm if you are the lower earner in
 pages.form.field.description.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
 pages.form.field.description.multiyear-recipient-income-criteria=Tell us if your spouse or civil partner is a basic rate tax payer since 6 April 2015?
 
-
 pages.form.field-required.marriage-criteria=Tell us if you are married or in a legally registered civil partnership.
 pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your spouse or civil partner is a basic rate tax payer since 6 April 2015?
 pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
-
 
 pages.form.field-required.lower-earner=Tell us if you are the lower earner in the relationship.
 
@@ -149,7 +146,6 @@ generic.no=No
 generic.recipient-action=Received Marriage Allowance
 generic.transferor-action=Transferred Marriage Allowance
 
-
 #Titles
 title.pattern=Marriage Allowance - {0}
 title.verify=Confirm Your Personal Details
@@ -179,12 +175,10 @@ title.bereavement=Bereavement
 title.divorce=Divorce
 title.date-of-marriage=Date of Marriage
 
-
 #User status
 user-status.first-time-login={0} is the first time you have logged in
 user-status.previous-login-time={0} last signed in {1}
 user-status.sign-out=Sign out
-
 
 #Contact Details
 hmrc.contact-details = You can contact HMRC on:
@@ -199,7 +193,6 @@ hmrc.contact-details-7=Closed Sundays and bank holidays
 hmrc.contact-detials.calling.time=Best time to call
 hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday
 hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about call charges</a>
-
 
 #Eligibility Calculator
 pages.calc.header=Marriage Allowance calculator
@@ -270,7 +263,6 @@ pages.verify_triage.header=Identity check
 pages.verify_triage.para1=Before you continue, we need to check who you are.
 pages.verify_triage.para2= You''ll now be asked some questions relating to information held on you by HMRC.
 
-
 #Finished Message
 pages.finished.successful=Marriage Allowance application successful
 pages.finished.para1.email1=An email with full details acknowledging your application will be sent to you at {0}
@@ -284,7 +276,6 @@ pages.finished.para7=There is no need to contact us.
 pages.finished.back-pta=Back to Personal Tax Account
 pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
 pages.finished.survey-link=<a data-journey-click="{0}" id="survey-link" href="https://www.gov.uk/done/marriage-allowance">What did you think of this service?</a> (takes 30 seconds)
-
 
 #Registration page - Your spouse details
 pages.form.h1=Your spouse or civil partner''s details
@@ -308,11 +299,13 @@ pages.form.field.transferor-email=Your email address
 pages.form.field.enter-email=Enter email address
 pages.form.field.dod=If you''re currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
 pages.form.field.dod.question=When did you legally end your marriage or civil partnership?
+
 #Date of Marriage
 pages.date-of-marriage.heading=Date of Marriage or civil partnership
 pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
 pages.date-of-marriage.para2=Marriage Allowance was first introduced on 6 April 2015, so you might be able to claim for previous tax years.
 pages.date-of-marriage.h2=When did you marry or form a civil partnership with your current partner?
+
 #How it works
 pages.how-it-works.heading=How It Works
 pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
@@ -379,6 +372,7 @@ change.status.divorce.recipient.directions=You should tell us if you''ve divorce
 change.status.historic-active.result=Removing Marriage Allowance from the start of the tax year could result in your partner underpaying tax. We''ll notify them at the end of the tax year. Any underpayment will usually be collected through an adjustment to their tax code.
 change.status.historic-active.directions=You can remove Marriage Allowance from the start of the tax year ({2}) if you''ve divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.cancel.h1=Cancelling Marriage Allowance
+
 change.status.cancel.content=We''ll cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
 change.status.cancel.content1=Your Personal Allowance will go back to the previous amount from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
 change.status.reject.h1=Remove a previous Marriage Allowance claim
@@ -409,6 +403,7 @@ change.status.receiving.amount=You''ll stop receiving Marriage Allowance from yo
 change.status.transferor.stop-sooner=You can end your Marriage Allowance transfer sooner.
 change.status.recipient.stop-sooner=You can stop receiving Marriage Allowance sooner.
 change.status.finish.divorce=Divorce successful
+
 change.status.finish.will-be-current=Your Marriage Allowance will be removed at the end of the current tax year.
 change.status.finish.will-be-next=Your Marriage Allowance will be removed from the start of the current tax year.
 change.status.apply=Apply for Marriage Allowance
@@ -514,6 +509,7 @@ pages.eligibleyear.li1=will pay up to £{0} less tax each year
 pages.eligibleyear.li2=we''ll adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
 pages.eligibleyear.li3=it''ll automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
 pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
+pages.eligibleyear.notice=You can apply for earlier years if you continue.
 
 #multi-year
 pages.multiyear.taxyear=tax year
@@ -550,7 +546,6 @@ date.fields.day=Day
 date.fields.month=Month
 date.fields.year=Year
 
-
 change.other.caption=Other changes that affect Marriage Allowance
 change.other.sub.caption1=Change of income
 change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year.
@@ -560,5 +555,9 @@ change.other.bereavement.content=If your partner dies, your Marriage Allowance w
 change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 change.status.active=Active
 
-
 error.invalid.date.format=You must specify a valid date.
+
+#no years selected page
+pages.noyears.h1=You haven''t selected any tax years to apply for
+pages.noyears.content1=Go back if you want to select a year to apply for.
+pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works.</a>
