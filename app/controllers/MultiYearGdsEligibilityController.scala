@@ -65,6 +65,13 @@ trait MultiYearGdsEligibilityController extends FrontendController with Unauthor
         })
   }
 
+  def dateOfBirthCheck() = unauthorisedAction {
+    implicit request =>
+      setPtaAwareGdsJourney(
+        request = request,
+        response = Ok(views.html.multiyear.gds.date_of_birth_check(eligibilityCheckForm = eligibilityForm)))
+  }
+
   def lowerEarnerCheck() = journeyEnforcedAction {
     implicit request =>
       Ok(views.html.multiyear.gds.lower_earner(lowerEarnerFormInput = lowerEarnerForm))

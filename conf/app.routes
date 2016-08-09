@@ -62,6 +62,7 @@ GET    /lower-earner                               controllers.MultiYearGdsEligi
 POST   /lower-earner                               controllers.MultiYearGdsEligibilityController.lowerEarnerCheckAction
 GET    /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheck
 POST   /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
+GET    /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheck
 
 #Welsh Translation
 GET    /switch-to-welsh-eligibility-check          controllers.LanguageController.switchToWelshEligibilityCheck
