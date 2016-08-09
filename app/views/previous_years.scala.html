@@ -29,6 +29,7 @@ availableYears:List[TaxYear] = List[TaxYear]())(
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
+@import utils.LanguageUtils
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.extra-years"))){
@@ -36,7 +37,7 @@ availableYears:List[TaxYear] = List[TaxYear]())(
         <p class="lede">@Html(Messages("pages.previousyear.lede"))</p>
 
 
-        <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage))))</p>
+        <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage), LanguageUtils.isWelsh(lang))))</p>
         <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" type="submit" data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
         <br>
         <br>

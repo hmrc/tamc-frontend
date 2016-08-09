@@ -32,6 +32,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
+@import utils.LanguageUtils
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.eligible-years"))){
@@ -43,9 +44,9 @@
 
    @templates.form_error_notification(form)
 
-  <p class="lede">@Html(Messages("pages.eligibleyear.toldus",recipientName)) <span id="marriageDate">@TextGenerators.ukDateTransformer(dom)</span></p>
+  <p class="lede">@Html(Messages("pages.eligibleyear.toldus",recipientName)) <span id="marriageDate">@TextGenerators.ukDateTransformer(dom, LanguageUtils.isWelsh(lang))</span></p>
 
-  <h2 class="heading-medium"><span style="color:grey">@Html(Messages("pages.eligibleyear.thisyear",TextGenerators.ukDateTransformer(cy)))</h2>   
+  <h2 class="heading-medium"><span style="color:grey">@Html(Messages("pages.eligibleyear.thisyear",TextGenerators.ukDateTransformer(cy, LanguageUtils.isWelsh(lang))))</h2>
   <ul class="list list-bullet">
     <li><span id="firstNameOnly2">@recipientName</span> @Html(Messages("pages.eligibleyear.li1",NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))</li>
     <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName)))</li>

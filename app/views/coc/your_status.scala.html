@@ -78,13 +78,13 @@
                 } else {
                     @if(historicActiveRecord) {
                         @if(historicRelationships.get(0).participant == "Transferor") {
-                            <p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount", TextGenerators.ukDateTransformer(endOfYear)))</p>
+                            <p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(lang))))</p>
                             <p>@Html(Messages("change.status.transferor.stop-sooner"))</p>
                             <p>
                               <button class="button" type="submit" >@Html(Messages("change.status.transferor.ha.button"))</button>
                             </p>
                         } else {
-                            <p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount", TextGenerators.ukDateTransformer(endOfYear)))</p>
+                            <p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(lang))))</p>
                             <p>@Html(Messages("change.status.recipient.stop-sooner"))</p>
                             <p>
                               <button class="button" type="submit" >@Html(Messages("change.status.recipient.ha.button"))</button>

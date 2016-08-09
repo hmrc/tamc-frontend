@@ -24,6 +24,7 @@
 @import java.text.NumberFormat
 @import uk.gov.hmrc.time.TaxYearResolver
 @import views.helpers.TextGenerators
+@import utils.LanguageUtils
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.how-it-works"))){
@@ -42,7 +43,7 @@
         @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
     </p>
     <div class="application-notice info-notice">
-    	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5", (TaxYearResolver.currentTaxYear-1).toString(), TaxYearResolver.currentTaxYear.toString(), TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(TaxYearResolver.currentTaxYear-1)))))</p>
+    	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5", (TaxYearResolver.currentTaxYear-1).toString(), TaxYearResolver.currentTaxYear.toString(), TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(TaxYearResolver.currentTaxYear-1)), LanguageUtils.isWelsh(lang))))</p>
     </div>
     <h4 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h4>
     <p class="lede">@Html(Messages("pages.how-it-works.detail"))</p>
