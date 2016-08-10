@@ -63,12 +63,15 @@ POST   /lower-earner                               controllers.MultiYearGdsEligi
 GET    /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheck
 POST   /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
 GET    /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheck
+POST   /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheckAction
 
 #Welsh Translation
 GET    /switch-to-welsh-eligibility-check          controllers.LanguageController.switchToWelshEligibilityCheck
 GET    /switch-to-english-eligibility-check        controllers.LanguageController.switchToEnglishEligibilityCheck
 GET    /switch-to-welsh-lower-earner               controllers.LanguageController.switchToWelshLowerEarnerCheck
 GET    /switch-to-english-lower-earner             controllers.LanguageController.switchToEnglishLowerEarnerCheck
+GET    /switch-to-welsh-date-of-birth              controllers.LanguageController.switchToWelshDateOfBirthCheck
+GET    /switch-to-english-date-of-birth            controllers.LanguageController.switchToEnglishDateOfBirthCheck
 GET    /switch-to-welsh-partners-income            controllers.LanguageController.switchToWelshPartnersIncomeCheck
 GET    /switch-to-english-partners-income          controllers.LanguageController.switchToEnglishPartnersIncomeCheck
 GET    /switch-to-welsh-history                    controllers.LanguageController.switchToWelshHistory

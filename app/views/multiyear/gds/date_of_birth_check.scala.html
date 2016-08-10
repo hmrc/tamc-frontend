@@ -14,7 +14,7 @@
 * limitations under the License.
 *@
 
-@(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)]
+@(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)]
 )(implicit lang: Lang,
 request: Request[_],
 breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb)
@@ -26,20 +26,20 @@ breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.eligibility"))){
     @if(ApplicationConfig.isWelshEnabled){
-        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(),
-            controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString())
+        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfBirthCheck.toString(),
+            controllers.routes.LanguageController.switchToWelshDateOfBirthCheck.toString())
     }
 
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
     <p class="information"> @Html(Messages("eligibility.check.date.of.birth.span.para"))</p>
-    @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
-    @helpers.form(action = routes.MultiYearGdsEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
+    @templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @helpers.form(action = routes.MultiYearGdsEligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
         <div class="form-group inline">
             <p class="bold-small" >@Html(Messages("eligibility.check.date.of.birth.span.married"))</p>
             @templates.input_radio_group(
-            eligibilityCheckForm("date-of-birth"),
+            dateofBirthCheckForm("date-of-birth"),
             Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
             '_legend -> Html(Messages("eligibility.check.date.of.birth.legend")),
             '_legendClass -> "visuallyhidden",
@@ -49,6 +49,7 @@ title = Messages("title.pattern", Messages("title.eligibility"))){
             '_groupClass -> "inline spacingBottom"
             )
         </div>
+
         <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
             @Html(Messages("eligibility.check.date.of.birth.error"))
         </div>
@@ -60,5 +61,5 @@ title = Messages("title.pattern", Messages("title.eligibility"))){
         </div>
     }
 
-    <a href="https://www.gov.uk/apply-marriage-allowance" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }
