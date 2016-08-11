@@ -102,7 +102,7 @@ trait MultiYearPtaEligibilityController extends FrontendController with Authoris
           Future {
             dateOfBirthForm.bindFromRequest.fold(
               formWithErrors =>
-                BadRequest(views.html.multiyear.gds.date_of_birth_check(formWithErrors)),
+                BadRequest(views.html.multiyear.pta.date_of_birth_check(formWithErrors)),
               dateOfBirthInput => {
                 dateOfBirthInput.dateOfBirth match {
                   case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
