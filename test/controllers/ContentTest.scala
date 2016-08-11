@@ -880,7 +880,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you or your partner?"
-      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born after 6 April 1935."
+      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you or your partner should be born on or after 6 April 1935."
     }
   }
 
@@ -930,7 +930,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you or your partner?"
-      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born after 6 April 1935."
+      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you or your partner should be born on or after 6 April 1935."
     }
   }
 

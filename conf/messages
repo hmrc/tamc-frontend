@@ -114,7 +114,7 @@ coc.end-reason.DEFAULT=Marriage Allowance Ended
 pages.form.field.description.partners-income=Confirm if your spouse or civil partner has an annual income of between £{0} and £{1}
 pages.form.field-required.partners-income=Tell us if your spouse or civil partner has an annual income of between £{0} and £{1}.
 
-pages.form.field.description.date-of-birth=Confirm if you and your spouse or civil partner were born after 6 April 1935.
+pages.form.field.description.date-of-birth=Confirm if you and your spouse or civil partner were born after 6 April 1935
 pages.form.field-required.date-of-birth=Tell us if you and your spouse or civil partner were born after 6 April 1935.
 
 #███████████████████████████████████████████████████████████████████████████████████████████████████
@@ -261,9 +261,9 @@ eligibility.check.partners.income.h2=Does this apply to your partner?
 eligibility.check.partners.income.before.tax=This is their income figure before any tax is deducted.
 eligibility.check.partners.income.error=You''re not eligible for Marriage Allowance in this tax year because your partner''s income is too high or too low. You can still continue to check your eligibility for previous years.
 eligibility.check.date.of.birth.h1=You and your partner''s date of birth
-eligibility.check.date.of.birth.span.para=To benefit from Marriage Allowance, you and your partner should be born after 6 April 1935.
+eligibility.check.date.of.birth.span.para=To benefit from Marriage Allowance, you or your partner should be born on or after 6 April 1935.
 eligibility.check.date.of.birth.span.married=Does this apply to you or your partner?
-eligibility.check.date.of.birth.error=If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot apply for Marriage Allowance if you're already receiving Married Couple's Allowance.
+eligibility.check.date.of.birth.error=If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot receive both Marriage Allowance and Married Couple's Allowance at the same time.
 
 #Verify
 pages.verify_triage.header=Identity check
