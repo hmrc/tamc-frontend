@@ -194,6 +194,14 @@ class LanguageController extends FrontendController {
     Redirect(routes.MultiYearPtaEligibilityController.eligibilityCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
   }
 
+  def switchToWelshDateOfBirthCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.dateOfBirthCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishDateOfBirthCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.dateOfBirthCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
   def switchToWelshLowerEarnerCheckPta = Action { implicit request =>
     Redirect(routes.MultiYearPtaEligibilityController.lowerEarnerCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
   }

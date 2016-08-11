@@ -30,6 +30,7 @@ import actions.MarriageAllowanceRegime
 import connectors.ApplicationAuthConnector
 import details.CitizenDetailsService
 import config.ApplicationConfig
+import forms.MultiYearDateOfBirthForm._
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import services.EligibilityCalculatorService
 
@@ -63,7 +64,9 @@ trait MultiYearPtaEligibilityController extends FrontendController with Authoris
     implicit auth =>
       implicit request =>
         implicit details =>
-          Future { Ok(views.html.multiyear.pta.eligibility_check(eligibilityCheckForm = eligibilityForm)) }
+          Future {
+            Ok(views.html.multiyear.pta.eligibility_check(eligibilityCheckForm = eligibilityForm))
+          }
   }
 
   def eligibilityCheckAction() = TamcAuthPersonalDetailsAction {
@@ -76,18 +79,45 @@ trait MultiYearPtaEligibilityController extends FrontendController with Authoris
                 BadRequest(views.html.multiyear.pta.eligibility_check(formWithErrors)),
               eligibilityInput => {
                 eligibilityInput.married match {
-                  case true => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
-                  case _    => Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
+                  case true => Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
+                  case _ => Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
+                }
+              })
+          }
+  }
+
+  def dateOfBirthCheck() = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            Ok(views.html.multiyear.pta.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm))
+          }
+  }
+
+  def dateOfBirthCheckAction() = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            dateOfBirthForm.bindFromRequest.fold(
+              formWithErrors =>
+                BadRequest(views.html.multiyear.gds.date_of_birth_check(formWithErrors)),
+              dateOfBirthInput => {
+                dateOfBirthInput.dateOfBirth match {
+                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
                 }
               })
           }
   }
 
   def lowerEarnerCheck() = TamcAuthPersonalDetailsAction {
-        implicit auth =>
-          implicit request =>
-            implicit details =>
-              Future { Ok(views.html.multiyear.pta.lower_earner(lowerEarnerForm)) }
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            Ok(views.html.multiyear.pta.lower_earner(lowerEarnerForm))
+          }
   }
 
   def lowerEarnerCheckAction() = TamcAuthPersonalDetailsAction {
@@ -110,7 +140,9 @@ trait MultiYearPtaEligibilityController extends FrontendController with Authoris
     implicit auth =>
       implicit request =>
         implicit details =>
-          Future { Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm)) }
+          Future {
+            Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm))
+          }
   }
 
   def partnersIncomeCheckAction() = TamcAuthPersonalDetailsAction {

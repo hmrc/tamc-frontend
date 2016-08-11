@@ -53,6 +53,8 @@ GET    /lower-earner-pta                           controllers.MultiYearPtaEligi
 POST   /lower-earner-pta                           controllers.MultiYearPtaEligibilityController.lowerEarnerCheckAction
 GET    /partners-income-pta                        controllers.MultiYearPtaEligibilityController.partnersIncomeCheck
 POST   /partners-income-pta                        controllers.MultiYearPtaEligibilityController.partnersIncomeCheckAction
+GET    /date-of-birth-check-pta                    controllers.MultiYearPtaEligibilityController.dateOfBirthCheck
+POST   /date-of-birth-check-pta                    controllers.MultiYearPtaEligibilityController.dateOfBirthCheckAction
 
 #Mutliyaer-GDS
 GET    /                                           controllers.MultiYearGdsEligibilityController.home
@@ -108,6 +110,8 @@ GET    /switch-to-welsh-how-it-works               controllers.LanguageControlle
 GET    /switch-to-english-how-it-works             controllers.LanguageController.switchToEnglishHowItWorks
 GET    /switch-to-welsh-eligibility-check-pta      controllers.LanguageController.switchToWelshEligibilityCheckPta
 GET    /switch-to-english-eligibility-check-pta    controllers.LanguageController.switchToEnglishEligibilityCheckPta
+GET    /switch-to-welsh-date-of-birth-pta          controllers.LanguageController.switchToWelshDateOfBirthCheckPta
+GET    /switch-to-english-date-of-birth-pta        controllers.LanguageController.switchToEnglishDateOfBirthCheckPta
 GET    /switch-to-welsh-lower-earner-pta           controllers.LanguageController.switchToWelshLowerEarnerCheckPta
 GET    /switch-to-english-lower-earner-pta         controllers.LanguageController.switchToEnglishLowerEarnerCheckPta
 GET    /switch-to-welsh-partners-income-pta        controllers.LanguageController.switchToWelshPartnersIncomeCheckPta
