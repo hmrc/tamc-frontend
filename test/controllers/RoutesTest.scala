@@ -717,13 +717,13 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
     }
 
-    "redirect to lower earner if answer is yes" in new WithApplication(fakeApplication) {
+    "redirect to date of birth if answer is yes" in new WithApplication(fakeApplication) {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("marriage-criteria" -> "true")
       val controllerToTest = testComponent.controller
       val result = controllerToTest.eligibilityCheckAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner-pta"))
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check-pta"))
     }
 
     "go to not eligible page (finish page) if no is selected" in new WithApplication(fakeApplication) {
@@ -745,6 +745,35 @@ class RoutesTest extends UnitSpec with TestUtility {
     }
   }
 
+  "PTA date of birth check page for multi year" should {
+
+    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Marriage Allowance - Eligibility Questions"
+      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
+    }
+
+    "redirect to who should lower earner page irrespective of selection" in new WithApplication(fakeApplication) {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request.withFormUrlEncodedBody("date-of-birth" -> "true")
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner-pta"))
+    }
+
+  }
+
   "PTA lower earner check page for multi year" should {
 
     "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
@@ -760,7 +789,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
+      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check-pta")
     }
 
     "redirect to who should transfer page irrespective of selection" in new WithApplication(fakeApplication) {
@@ -847,7 +876,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheckAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner"))
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check"))
     }
 
     "go to not eligible page (finish page) if no is selected" in new WithApplication(fakeApplication) {
@@ -867,7 +896,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "GDS lower earner page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "display errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.lowerEarnerCheckAction()(request)
@@ -882,7 +911,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
+      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check")
     }
 
     "redirect to who should transfer page irrespective of selection" in new WithApplication(fakeApplication) {
@@ -922,5 +951,32 @@ class RoutesTest extends UnitSpec with TestUtility {
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/history"))
     }
+  }
+
+  "GDS date of birth check page for multi year" should {
+
+    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Marriage Allowance - Eligibility Questions"
+      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
+    }
+
+    "redirect to who should lower earner page irrespective of selection" in new WithApplication(fakeApplication) {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("date-of-birth" -> "false")
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner"))
+    }
+
   }
 }
