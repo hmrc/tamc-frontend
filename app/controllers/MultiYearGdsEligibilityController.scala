@@ -23,6 +23,7 @@ import forms.EligibilityCalculatorForm.calculatorForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearIncomeCheckForm.incomeCheckForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
+import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -59,8 +60,27 @@ trait MultiYearGdsEligibilityController extends FrontendController with Unauthor
           BadRequest(views.html.multiyear.gds.eligibility_check(formWithErrors)),
         eligibilityInput => {
           eligibilityInput.married match {
-            case true => Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
+            case true => Redirect(controllers.routes.MultiYearGdsEligibilityController.dateOfBirthCheck())
             case _    => Ok(views.html.multiyear.gds.eligibility_non_eligible_finish())
+          }
+        })
+  }
+
+  def dateOfBirthCheck() = unauthorisedAction {
+    implicit request =>
+      setPtaAwareGdsJourney(
+        request = request,
+        response = Ok(views.html.multiyear.gds.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm)))
+  }
+
+  def dateOfBirthCheckAction() = journeyEnforcedAction {
+    implicit request =>
+      dateOfBirthForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.multiyear.gds.date_of_birth_check(formWithErrors)),
+        dateOfBirthInput => {
+          dateOfBirthInput.dateOfBirth match {
+            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
           }
         })
   }

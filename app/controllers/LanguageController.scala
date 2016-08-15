@@ -34,6 +34,14 @@ class LanguageController extends FrontendController {
     Redirect(routes.MultiYearGdsEligibilityController.eligibilityCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
   }
 
+  def switchToWelshDateOfBirthCheck = Action { implicit request =>
+    Redirect(routes.MultiYearGdsEligibilityController.dateOfBirthCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishDateOfBirthCheck = Action { implicit request =>
+    Redirect(routes.MultiYearGdsEligibilityController.dateOfBirthCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
   def switchToWelshLowerEarnerCheck = Action { implicit request =>
     Redirect(routes.MultiYearGdsEligibilityController.lowerEarnerCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
   }
@@ -184,6 +192,14 @@ class LanguageController extends FrontendController {
 
   def switchToEnglishEligibilityCheckPta = Action { implicit request =>
     Redirect(routes.MultiYearPtaEligibilityController.eligibilityCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
+  }
+
+  def switchToWelshDateOfBirthCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.dateOfBirthCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))
+  }
+
+  def switchToEnglishDateOfBirthCheckPta = Action { implicit request =>
+    Redirect(routes.MultiYearPtaEligibilityController.dateOfBirthCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_ENGLISH))
   }
 
   def switchToWelshLowerEarnerCheckPta = Action { implicit request =>

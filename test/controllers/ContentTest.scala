@@ -864,6 +864,26 @@ class ContentTest extends UnitSpec with TestUtility {
 
     }
   }
+
+  "PTA date of marriage check page for multiyear" should {
+
+    "successfully authenticate the user and have date of marriage page and content" in new WithApplication(fakeApplication) {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.dateOfBirthCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+
+      println(s"\n\n\n $document")
+      document.title() shouldBe "Marriage Allowance - Eligibility Questions"
+
+      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you or your partner?"
+      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
+    }
+  }
+
   "PTA lower earner check page for multiyear" should {
 
     "successfully authenticate the user and have income-check page and content" in new WithApplication(fakeApplication) {
@@ -879,7 +899,6 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
       document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year. This is your income figure before any tax is deducted."
     }
-
   }
 
   "PTA partners income check page for multiyear" should {
@@ -898,7 +917,21 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
       document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Your partner's income"
     }
+  }
 
+  "GDS date of marriage page for multiyear" should {
+
+    "successfully authenticate the user and have date of marriage page and content" in new WithApplication(fakeApplication) {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.dateOfBirthCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Marriage Allowance - Eligibility Questions"
+      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you or your partner?"
+      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
+    }
   }
 
   "GDS lower earner page for multiyear" should {

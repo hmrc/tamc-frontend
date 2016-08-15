@@ -43,6 +43,21 @@ class LanguageControllerTest extends UnitSpec with TestUtility {
     }
   }
 
+  "Hitting language selection endpoint on GDS journey date of birth page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshDateOfBirthCheck(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishDateOfBirthCheck(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
   "Hitting language selection endpoint on GDS journey lower earner page" should {
     "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
       val request = FakeRequest()
@@ -324,6 +339,22 @@ class LanguageControllerTest extends UnitSpec with TestUtility {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishEligibilityCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
+    }
+  }
+
+
+  "Hitting language selection endpoint on PTA journey date of birth page" should {
+    "redirect to Welsh translated start page if Welsh language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToWelshDateOfBirthCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check-pta")
+      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
+    }
+    "redirect to English translated start page if English language is selected" in new WithApplication(FakeApplication()) {
+      val request = FakeRequest()
+      val result = Future.successful(controllers.LanguageController.switchToEnglishDateOfBirthCheckPta(request))
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check-pta")
       header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
