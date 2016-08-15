@@ -262,7 +262,7 @@ eligibility.check.partners.income.before.tax=This is their income figure before 
 eligibility.check.partners.income.error=You''re not eligible for Marriage Allowance in this tax year because your partner''s income is too high or too low. You can still continue to check your eligibility for previous years.
 eligibility.check.date.of.birth.h1=You and your partner''s date of birth
 eligibility.check.date.of.birth.span.para=To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935.
-eligibility.check.date.of.birth.span.married=Does this apply to you or your partner?
+eligibility.check.date.of.birth.span.married=Does this apply to you and your partner?
 eligibility.check.date.of.birth.error=If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot receive both Marriage Allowance and Married Couple's Allowance at the same time.
 
 #Verify
