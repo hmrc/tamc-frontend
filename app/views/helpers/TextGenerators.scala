@@ -75,7 +75,7 @@ object TextGenerators {
     {
       case false if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " to Present"
       case false => TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " to " + TaxYearResolver.endOfTaxYear(TimeService.getTaxYearForDate(dateTransformer(taxAnotherYear.get))).getYear
-      case true if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " i Yn bresennol"
+      case true if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " Presennol"
       case true => (TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " i " + TaxYearResolver.endOfTaxYear(dateTransformer(taxAnotherYear.get).getYear).getYear)
     }
 }
