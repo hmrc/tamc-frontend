@@ -511,7 +511,7 @@ pages.eligibleyear.toldus	=	Rhoesoch wybod y gwnaethoch briodi neu ffurfio partn
 pages.eligibleyear.thisyear	=	Yn ystod y flwyddyn dreth bresennol</span><br>{0} ymlaen
 pages.eligibleyear.li1	=	yn talu hyd at £{0} yn llai o dreth bob blwyddyn
 pages.eligibleyear.li2	=	byddwn yn addasu cod treth <span id="firstNameOnly3">{0}</span> i gynnwys y lwfans ychwanegol hwn
-pages.eligibleyear.li3	=	bydd yn adnewyddu''n awtomatig bob blwyddyn oni bai'ch bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">nad ydych bellach yn gymwys</a>
+pages.eligibleyear.li3	=	bydd yn adnewyddu''n awtomatig bob blwyddyn oni bai''ch bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">nad ydych bellach yn gymwys</a>
 pages.eligibleyear.doyou.want	=	A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
 pages.eligibleyear.notice	=	Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
 
@@ -525,7 +525,7 @@ pages.multiyear.extrayears	=	A hoffech wneud cais ar gyfer y flwyddyn dreth ychw
 #previous-years
 pages.previousyear.header	=	Gallwch wneud cais ar gyfer blynyddoedd treth blaenorol
 pages.previousyear.lede	=	Gallwch wneud cais am Lwfans Priodasol o''r adeg pan gafodd ei gyflwyno am y tro cyntaf, sef 6 Ebrill 2015.
-pages.previousyear.para	=	Rhoesoch wybod i ni y gwnaethoch briodi neu ffurfio partneriaeth sifil &#226; <span id="firstNameOnly">{0}</span> ar <span id="marriageDate">{1}</span>. Mae hyn yn golygu y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
+pages.previousyear.para	=	Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil &#226; <span id="firstNameOnly">{0}</span> ar <span id="marriageDate">{1}</span>. Mae hyn yn golygu y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
 
 #confirm-page
 pages.confirm.lower.earner	=	Eich manylion (yr unigolyn &#226;''r cyflog isaf)
