@@ -266,8 +266,8 @@ eligibility.check.partners.income.before.tax=This is their income figure before 
 eligibility.check.partners.income.error=You''re not eligible for Marriage Allowance in this tax year because your partner''s income is too high or too low. You can still continue to check your eligibility for previous years.
 eligibility.check.date.of.birth.h1=You and your partner''s date of birth
 eligibility.check.date.of.birth.span.para=To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935.
-eligibility.check.date.of.birth.span.married=Does this apply to you or your partner?
-eligibility.check.date.of.birth.error=If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot receive both Marriage Allowance and Married Couple's Allowance at the same time.
+eligibility.check.date.of.birth.span.married=Does this apply to you and your partner?
+eligibility.check.date.of.birth.error=If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot receive both Marriage Allowance and Married Couple''s Allowance at the same time.
 
 #Verify
 pages.verify_triage.header=Identity check
@@ -314,8 +314,8 @@ pages.form.field.dod.question=When did you legally end your marriage or civil pa
 #Date of Marriage
 pages.date-of-marriage.heading=Date of Marriage or civil partnership
 pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
-pages.date-of-marriage.para2=Marriage Allowance was first introduced on 6 April 2015, so you might be able to claim for previous tax years.
-pages.date-of-marriage.h2=When did you marry or form a civil partnership with your current partner?
+pages.date-of-marriage.para2=You can claim from when Marriage Allowance was first introduced on 6 April 2015. This means you might be able to claim for previous tax years.
+pages.date-of-marriage.h2=When did you marry or form a civil partnership with your partner?
 
 #How it works
 pages.how-it-works.heading=How It Works

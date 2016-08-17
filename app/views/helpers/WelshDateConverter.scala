@@ -20,6 +20,8 @@ import java.util.Locale
 
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
+import uk.gov.hmrc.play.views.formatting.Dates._
+import org.joda.time.DateTime
 
 object WelshDateConverter {
 
@@ -38,11 +40,32 @@ object WelshDateConverter {
     "December" -> "Rhagfyr"
   )
 
+  val welshWeekDays = Map(
+    "Monday" -> "Dydd Llun",
+    "Tuesday" -> "Dydd Mawrth",
+    "Wednesday" -> "Dydd Mercher",
+    "Thursday" -> "Dydd Iau",
+    "Friday" -> "Dydd Gwener",
+    "Saturday" -> "Dydd Sadwrn",
+    "Sunday" -> "Dydd Sul"
+  )
+
+
+  val fetchMonthName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
+  val fetchDayName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("EEEE").withLocale(Locale.UK))
 
   def welshConverted(date: Option[LocalDate]): String =
     date.fold("") { localDate =>
-      val month = localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
+      val month = fetchMonthName(localDate)
       val enDate = localDate.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
       enDate.replaceAll(month, welshMonths.get(month).get)
+    }
+
+  def welshConvertedDateTime(date: Option[DateTime]): String =
+    date.fold("") { localDate =>
+      val month = fetchMonthName(localDate.toLocalDate)
+      val day = fetchDayName(localDate.toLocalDate)
+      val enDate = formatEasyReadingTimestamp(date, "")
+      enDate.replaceAll(month, welshMonths.get(month).get).replaceAll(day, welshWeekDays.get(day).get)
     }
 }

@@ -34,99 +34,99 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
   "Update relationship email notification " should {
 
-//    "save a valid email and redirect to confirmation page" in new WithApplication(fakeApplication) {
-//      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-//      val controllerToTest = testComponent.controller
-//      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example@example.com"))
-//      val result = controllerToTest.confirmYourEmailActionUpdate(request)
-//
-//      status(result) shouldBe SEE_OTHER
-//      redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-change")
-//      controllerToTest.saveNotificationCount shouldBe 1
-//      controllerToTest.notificationToTest shouldBe Some(NotificationRecord(EmailAddress("example@example.com")))
-//    }
-//
-//    "read from keystore and display email field" in new WithApplication(fakeApplication) {
-//      val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015")
-//      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
-//      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
-//        activeRelationshipRecord = Some(relationshipRecord), notification = None,
-//        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.CANCEL)), relationshipUpdated = Some(false))
-//
-//      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
-//      val controllerToTest = testComponent.controller
-//      val request = testComponent.request
-//      val result = controllerToTest.confirmEmail(request)
-//
-//      status(result) shouldBe OK
-//      val document = Jsoup.parse(contentAsString(result))
-//
-//      controllerToTest.cachingRetrievalCount() shouldBe 1
-//      document.getElementById("transferor-email").attr("value") shouldBe ""
-//    }
+    "save a valid email and redirect to confirmation page" in new WithApplication(fakeApplication) {
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example@example.com"))
+      val result = controllerToTest.confirmYourEmailActionUpdate(request)
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-change")
+      controllerToTest.saveNotificationCount shouldBe 1
+      controllerToTest.notificationToTest shouldBe Some(NotificationRecord(EmailAddress("example@example.com")))
+    }
+
+    "read from keystore and display email field" in new WithApplication(fakeApplication) {
+      val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015")
+      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
+        activeRelationshipRecord = Some(relationshipRecord), notification = None,
+        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.CANCEL)), relationshipUpdated = Some(false))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmEmail(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+
+      controllerToTest.cachingRetrievalCount() shouldBe 1
+      document.getElementById("transferor-email").attr("value") shouldBe ""
+    }
   }
 
   "Update relationship caching data " should {
 
-//    "have a logged in user in cached" in new WithApplication(fakeApplication) {
-//      val loggedInUser = Some(LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015"))
-//
-//      val testComponent = makeUpdateRelationshipTestComponent("coc_no_relationship", loggedInUserInfo = loggedInUser)
-//      val controllerToTest = testComponent.controller
-//      val request = testComponent.request
-//      val result = controllerToTest.history()(request)
-//
-//      status(result) shouldBe SEE_OTHER
-//      controllerToTest.loggedInUserInfoCount shouldBe 1
-//    }
-//
-//    "have divorce previous year in end relationship cache " in new WithApplication(fakeApplication) {
-//      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-//      val controllerToTest = testComponent.controller
-//      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_PY)
-//      val result = controllerToTest.divorceAction()(request)
-//
-//      status(result) shouldBe SEE_OTHER
-//      controllerToTest.relationshipEndReasonCount shouldBe 1
-//      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_PY"))
-//    }
-//
-//    "have divorce previous year in end relationship cache (with divorce date)" in new WithApplication(fakeApplication) {
-//      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-//      val controllerToTest = testComponent.controller
-//      val request = testComponent.request.withFormUrlEncodedBody(
-//        "endReason" -> EndReasonCode.DIVORCE_PY,
-//        "dateOfDivorce.day" -> "20",
-//        "dateOfDivorce.month" -> "1",
-//        "dateOfDivorce.year" -> "2015")
-//      val result = controllerToTest.divorceAction()(request)
-//
-//      status(result) shouldBe SEE_OTHER
-//      controllerToTest.relationshipEndReasonCount shouldBe 1
-//      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_PY", Some(new LocalDate(2015, 1, 20))))
-//    }
-//
-//    "have divorce current year in end relationship cache " in new WithApplication(fakeApplication) {
-//      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-//      val controllerToTest = testComponent.controller
-//      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_CY)
-//      val result = controllerToTest.divorceAction()(request)
-//
-//      status(result) shouldBe SEE_OTHER
-//      controllerToTest.relationshipEndReasonCount shouldBe 1
-//      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_CY"))
-//    }
-//
-//    "have cancel in end relationship cache " in new WithApplication(fakeApplication) {
-//      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-//      val controllerToTest = testComponent.controller
-//      val request = testComponent.request
-//      val result = controllerToTest.confirmCancel()(request)
-//
-//      status(result) shouldBe OK
-//      controllerToTest.relationshipEndReasonCount shouldBe 1
-//      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason(EndReasonCode.CANCEL))
-//    }
+    "have a logged in user in cached" in new WithApplication(fakeApplication) {
+      val loggedInUser = Some(LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015"))
+
+      val testComponent = makeUpdateRelationshipTestComponent("coc_no_relationship", loggedInUserInfo = loggedInUser)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.history()(request)
+
+      status(result) shouldBe SEE_OTHER
+      controllerToTest.loggedInUserInfoCount shouldBe 1
+    }
+
+    "have divorce previous year in end relationship cache " in new WithApplication(fakeApplication) {
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_PY)
+      val result = controllerToTest.divorceAction()(request)
+
+      status(result) shouldBe SEE_OTHER
+      controllerToTest.relationshipEndReasonCount shouldBe 1
+      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_PY"))
+    }
+
+    "have divorce previous year in end relationship cache (with divorce date)" in new WithApplication(fakeApplication) {
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(
+        "endReason" -> EndReasonCode.DIVORCE_PY,
+        "dateOfDivorce.day" -> "20",
+        "dateOfDivorce.month" -> "1",
+        "dateOfDivorce.year" -> "2015")
+      val result = controllerToTest.divorceAction()(request)
+
+      status(result) shouldBe SEE_OTHER
+      controllerToTest.relationshipEndReasonCount shouldBe 1
+      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_PY", Some(new LocalDate(2015, 1, 20))))
+    }
+
+    "have divorce current year in end relationship cache " in new WithApplication(fakeApplication) {
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_CY)
+      val result = controllerToTest.divorceAction()(request)
+
+      status(result) shouldBe SEE_OTHER
+      controllerToTest.relationshipEndReasonCount shouldBe 1
+      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_CY"))
+    }
+
+    "have cancel in end relationship cache " in new WithApplication(fakeApplication) {
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmCancel()(request)
+
+      status(result) shouldBe OK
+      controllerToTest.relationshipEndReasonCount shouldBe 1
+      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason(EndReasonCode.CANCEL))
+    }
 
     "have update relationship details in cache with Cancel end reason" in new WithApplication(fakeApplication) {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)

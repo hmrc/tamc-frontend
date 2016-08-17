@@ -21,15 +21,16 @@
 
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import utils.LanguageUtils
+@import views.helpers.WelshDateConverter._
 
 <div id="user-status" class="lastLogin service-info__help">
     <p class="service-info-p">
         @if(utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
             @(user.authContext.user.previouslyLoggedInAt.isEmpty, LanguageUtils.isWelsh(lang)) match {
                 case (true, false) => { @Messages("user-status.first-time-login", user.name.map(_ + ", this").getOrElse("This")) }
-                case (true, true) => { @Messages("user-status.first-time-login", user.name.map(_ + ", hwn").getOrElse("Mae hyn yn")) }
+                case (true, true) => { @Messages("user-status.first-time-login", user.name.map(_ + ", hwn").getOrElse("Hwn")) }
                 case (false, false) => { @Messages("user-status.previous-login-time", user.name.map(_ + ", you").getOrElse("You"), formatEasyReadingTimestamp(user.authContext.user.previouslyLoggedInAt, "")) }
-                case (_, _) => { @Messages("user-status.previous-login-time", user.name.map(_ + ", chi").getOrElse("Rydych yn"), formatEasyReadingTimestamp(user.authContext.user.previouslyLoggedInAt, "")) }
+                case (_, _) => { @Messages("user-status.previous-login-time", user.name.map(_ + ", chi").getOrElse("Rydych yn"),  welshConvertedDateTime(user.authContext.user.previouslyLoggedInAt)) }
             }
         } else  {
             <a id="sign-out" href="@logoutUrl">@Messages("user-status.sign-out")</a>
