@@ -31,7 +31,7 @@
 @import utils.LanguageUtils
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.confirm-transferor")),
+    title = Messages("title.pattern", if(data.role.get=="TRANSFEROR") Messages("title.confirm-transferor") else Messages("title.confirm-recipient")),
         mainConfig = views.helpers.MainConfig(
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))) {
         @if(ApplicationConfig.isWelshEnabled){

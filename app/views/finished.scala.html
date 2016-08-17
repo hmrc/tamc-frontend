@@ -24,7 +24,7 @@
 @import config.ApplicationConfig
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.finished"))){
+    title = Messages("title.application.pattern", Messages("title.finished"))){
     @if(ApplicationConfig.isWelshEnabled){
 	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishFinished.toString(), 
 	               controllers.routes.LanguageController.switchToWelshFinished.toString())     

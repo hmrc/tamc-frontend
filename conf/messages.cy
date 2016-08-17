@@ -148,33 +148,37 @@ generic.recipient-action	=	Wedi cael Lwfans Priodasol
 generic.transferor-action	=	Wedi trosglwyddo Lwfans Priodasol
 
 #Titles
-title.pattern	=	Lwfans Priodasol – {0}
-title.verify	=	Cadarnhewch eich manylion personol
-title.eligible-years	=	Blynyddoedd cymwys
-title.extra-years	=	Blynyddoedd ychwanegol
-title.transfer-in-place	=	Trosglwyddiad yn barod
-title.transfer	=	Cofrestru''ch Trosglwyddiad
-title.finished	=	Cwblhau
-title.confirm-email	=	Cadarnhewch eich cyfeiriad e-bost
-title.non-eligible	=	Nid ydych yn gymwys
-title.no-tax-years	=	Dim blynyddoedd treth ar gael
-title.eligibility	=	Cwestiynau ynghylch cymhwysedd
-title.confirm-transferor	=	Cadarnhau newid
-title.confirm-recipient	=	Cadarnhau manylion y derbynnydd
-title.confirm-update	=	Cadarnhau diweddariad
-title.eligibility-criteria	=	Meini prawf cymhwysedd
-title.how-it-works	=	Sut y mae''n gweithio
-title.other-ways	=	Ffyrdd eraill o wneud cais
-title.change.complete	=	Newid wedi''i gwblhau
-title.change.earnings	=	Newid mewn incwm
-title.change.reason	=	Rheswm dros newid
-title.complete	=	Cwblhau
-title.error	=	Gwall
-title.history	=	Eich hanes
-title.make-a-change	=	Gwneud newid
-title.bereavement	=	Profedigaeth
-title.divorce	=	Ysgaru
-title.date-of-marriage	=	Dyddiad priodi
+title.pattern   =   {0} – Lwfans Priodasol – GOV.UK
+title.eligibility.pattern   =   {0} – Lwfans Priodasol: Bod yn gymwys ar ei gyfer – GOV.UK
+title.application.pattern   =   {0} – Cais am Lwfans Priodasol – GOV.UK
+title.verify    =   Cadarnhau''ch manylion personol
+title.dateOfBirth   =   CY_Your date of birth
+title.eligible-years    =   Gwneud cais ar gyfer y flwyddyn dreth bresennol
+title.extra-years   =   Gwneud cais ar gyfer blynyddoedd treth cynharach
+title.transfer-in-place =   Trosglwyddiad yn barod
+title.transfer  =   Manylion eich partner
+title.finished  =   Cais wedi''i gadarnhau
+title.confirm-email =   Cadarnhau''ch cyfeiriad e-bost
+title.non-eligible  =   Nid ydych yn gymwys ar gyfer y flwyddyn dreth bresennol
+title.no-tax-years  =   Dim blynyddoedd treth ar gael
+title.eligibility   =   Eich perthynas
+title.confirm-transferor    =   Cadarnhau canslo
+title.confirm-recipient =   Cadarnhau dileu cais blaenorol
+title.confirm-update    =   Cadarnhau diweddaru
+title.confirm   =   Gwirio''ch manylion a chadarnhau''r cais
+title.eligibility-criteria  =   Meini prawf cymhwysedd
+title.how-it-works  =   Gwneud cais am Lwfans Priodasol
+title.other-ways    =   Ffyrdd eraill o wneud cais
+title.change.complete   =   Lwfans Priodasol wedi''i ganslo
+title.change.earnings   =  Newid mewn incwm
+title.change.reason =   Dileu cais blaenorol
+title.complete  = Cwblhau
+title.error =   Gwall
+title.history   =   Crynodeb o''ch Lwfans Priodasol
+title.make-a-change =   Canslo''ch Lwfans Priodasol
+title.bereavement   =  Profedigaeth
+title.divorce   =  Dyddiad ysgaru neu ddod &#226;''r bartneriaeth sifil i ben
+title.date-of-marriage  = Dyddiad y briodas neu ffurfio''r bartneriaeth sifil
 
 #User status
 user-status.first-time-login	=	{0} yw''r tro cyntaf i chi fewngofnodi
@@ -258,6 +262,10 @@ eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn did
 eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i''ch partner?
 eligibility.check.partners.income.before.tax	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
 eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal yn bosibl i chi wirio''ch cymhwyster am flynyddoedd blaenorol.
+eligibility.check.date.of.birth.h1  =   CY_You and your partner''s date of birth
+eligibility.check.date.of.birth.span.para   =   CY_To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935.
+eligibility.check.date.of.birth.span.married    =   CY_Does this apply to you or your partner?
+eligibility.check.date.of.birth.error   =   CY_If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot receive both Marriage Allowance and Married Couple's Allowance at the same time.
 
 #Verify
 pages.verify_triage.header	=	Gwirio manylion adnabod

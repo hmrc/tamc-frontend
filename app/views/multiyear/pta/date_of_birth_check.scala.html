@@ -25,7 +25,7 @@ user: details.TamcUser)l
 @import config.ApplicationConfig
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.eligibility"))){
+title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))){
     @if(ApplicationConfig.isWelshEnabled){
         @templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfBirthCheckPta.toString(),
             controllers.routes.LanguageController.switchToWelshDateOfBirthCheckPta.toString())

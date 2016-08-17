@@ -26,7 +26,7 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligibility"))){
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.partners.income.h1"))){
 	@if(ApplicationConfig.isWelshEnabled){
 	     @templates.lang_button(controllers.routes.LanguageController.switchToEnglishPartnersIncomeCheck.toString(),
 	                controllers.routes.LanguageController.switchToWelshPartnersIncomeCheck.toString())
