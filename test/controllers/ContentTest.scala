@@ -876,9 +876,7 @@ class ContentTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
-      println(s"\n\n\n $document")
       document.title() shouldBe "Marriage Allowance - Eligibility Questions"
-
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you and your partner?"
       document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
     }

@@ -43,7 +43,7 @@ object TextGenerators {
     LocalDate.parse(date, DateTimeFormat.forPattern("yyyyMMdd"))
   }
 
-  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean = false): String =
+  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean): String =
     isWelsh match {
       case false => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK)))
       case true => welshConverted(date)
@@ -52,9 +52,9 @@ object TextGenerators {
   def formPossessive(noun: String): String =
     s"${noun}'s"
 
-  def taxDateInterval(taxYear: Int, isWelsh: Boolean = false): String =
+  def taxDateInterval(taxYear: Int, isWelsh: Boolean): String =
     isWelsh match {
-      case false => ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear))) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)))
+      case false => ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear)), isWelsh) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)), isWelsh)
       case true => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear)), isWelsh) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)), isWelsh))
     }
 
