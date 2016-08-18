@@ -52,7 +52,7 @@
             <p>@Html(Messages("change.status.historic-active.directions",
                         "https://www.gov.uk/divorce/apply-for-a-decree-absolute",
                         "https://www.gov.uk/end-civil-partnership/apply-for-a-final-order",
-                        TextGenerators.ukDateTransformer(pyEffectiveDate)
+                        TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(lang))
                         ))</p>
             <p>@Html(Messages("change.status.historic-active.result"))</p>
             <input name="endReason" id="endReason-divorce_py" type="hidden" value="@EndReasonCode.DIVORCE_PY"/>
@@ -60,7 +60,7 @@
            @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
                @if(TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)) {
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
-                    <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate),TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(lang))))</p>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang)),TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(lang))))</p>
                     <p>@Html(Messages("change.status.divorce.transferor.option1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang))))</p>
                     <p>@Html(Messages("change.status.divorce.transferor.option2",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(lang))))</p></br>
                     <p class="heading-medium"> @Html(Messages("change.status.reason-for-divorce",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang))))</p>
