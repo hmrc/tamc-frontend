@@ -112,19 +112,14 @@ trait UpdateRelationshipService {
   }
 
   def getUnavailableYears(historicRelationships: Option[Seq[RelationshipRecord]], activeRelationship: Option[RelationshipRecord]): Set[Int] = {
-    val historicYears: Set[Set[Int]] = historicRelationships.
-      getOrElse(Seq[RelationshipRecord]()).toSet.
-      filter {
+    val historicYears: Set[Set[Int]] = historicRelationships.getOrElse(Seq[RelationshipRecord]()).toSet.filter {
         relationship => List(Some("DIVORCE"), Some("CANCELLED"), Some("MERGER"), Some("RETROSPECTIVE")) contains (relationship.relationshipEndReason)
-      }.
-      map {
+      }.map {
         relationship => findOccupiedYears(relationship)
       }
 
     val activeYears: Set[Int] = activeRelationship.map { relationship => findOccupiedYears(relationship) }.getOrElse(Set[Int]())
-
     val allYears: Set[Set[Int]] = historicYears.+(activeYears)
-
     allYears.flatten
   }
 
