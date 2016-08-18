@@ -151,11 +151,11 @@ generic.transferor-action=Transferred Marriage Allowance
 
 #Titles
 title.pattern={0} - Marriage Allowance - GOV.UK
-title.eligibility.pattern={0} - Marriage Allowance Eligibility - GOV.UK
-title.application.pattern={0} - Marriage Allowance Application - GOV.UK
+title.eligibility.pattern={0} - Marriage Allowance eligibility - GOV.UK
+title.application.pattern={0} - Marriage Allowance application - GOV.UK
 title.verify=Confirm Your Personal Details
 title.dateOfBirth=Your date of birth
-title.eligible-years=Apply for the current year
+title.eligible-years=Apply for the current tax year
 title.extra-years=Apply for earlier tax years
 title.transfer-in-place=Transfer in place
 title.transfer=Your partner''s details
@@ -180,7 +180,7 @@ title.history=Your Marriage Allowance Summary
 title.make-a-change=Cancelling your Marriage Allowance
 title.bereavement=Bereavement
 title.divorce=Date of divorce or end of civil partnership
-title.date-of-marriage=Date of Marriage or civil partnership
+title.date-of-marriage=Date of marriage or civil partnership
 
 #User status
 user-status.first-time-login={0} is the first time you have logged in
