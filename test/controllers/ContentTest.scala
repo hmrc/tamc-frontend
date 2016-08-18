@@ -747,7 +747,7 @@ class ContentTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
-      document.title() shouldBe "Application confirmed - Marriage Allowance Application - GOV.UK"
+      document.title() shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
       document.getElementsByClass("heading-large").text shouldBe "Marriage Allowance application successful"
       document.getElementById("paragraph-1").text shouldBe "An email with full details acknowledging your application will be sent to you at example123@example.com from noreply@tax.service.gov.uk within 24 hours."
     }
@@ -803,7 +803,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
       val elements = document.getElementById("eligibility-form").getElementsByTag("p")
       elements shouldNot be(null)
       elements.get(0).text shouldBe "Does this apply to you?"
@@ -839,7 +839,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
       val elements = document.getElementById("eligibility-form").getElementsByTag("p")
       elements shouldNot be(null)
       elements.get(0).text shouldBe "Does this apply to you?"
@@ -877,7 +877,7 @@ class ContentTest extends UnitSpec with TestUtility {
       val document = Jsoup.parse(contentAsString(result))
 
       println(s"\n\n\n $document")
-      document.title() shouldBe "Your date of birth - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you and your partner?"
       document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
@@ -894,7 +894,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
       document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year. This is your income figure before any tax is deducted."
@@ -911,7 +911,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner's income - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
       document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
@@ -928,7 +928,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your date of birth - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you and your partner?"
       document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
     }
@@ -943,7 +943,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
       document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year. This is your income figure before any tax is deducted."
     }
@@ -958,7 +958,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner's income - Marriage Allowance Eligibility - GOV.UK"
+      document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
       document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
     }
