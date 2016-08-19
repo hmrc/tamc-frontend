@@ -14,12 +14,12 @@
 * limitations under the License.
 *@
 
-@(changeRelationshipForm: Form[ChangeRelationship],
-    activeRelationship: Option[RelationshipRecord],
-    historicRelationships: Option[Seq[RelationshipRecord]],
-    loggedInUserInfo: Option[LoggedInUserInfo],
-    activeRecord: Boolean,
-    historicRecord: Boolean,
+@(changeRelationshipForm: Form[ChangeRelationship], 
+    activeRelationship: Option[RelationshipRecord], 
+    historicRelationships: Option[Seq[RelationshipRecord]], 
+    loggedInUserInfo: Option[LoggedInUserInfo], 
+    activeRecord: Boolean, 
+    historicRecord: Boolean, 
     historicActiveRecord: Boolean,
     canApplyPreviousYears: Boolean,
     endOfYear: Option[org.joda.time.LocalDate]
