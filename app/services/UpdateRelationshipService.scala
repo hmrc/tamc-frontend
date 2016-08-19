@@ -105,9 +105,8 @@ trait UpdateRelationshipService {
       activeRelationship: Option[RelationshipRecord],
       startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
     val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
-    val availableYears: Set[Int] = (startYear to timeService.getCurrentTaxYear).toSet
+    val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
     val unavailableYears: Set[Int] = getUnavailableYears(historicRelationships, activeRelationship)
-
     (availableYears -- unavailableYears).size > 0
   }
 
