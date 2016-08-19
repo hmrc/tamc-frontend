@@ -17,13 +17,10 @@
 package controllers
 
 import models._
-import play.api.test.Helpers.BAD_REQUEST
+import play.api.test.Helpers.INTERNAL_SERVER_ERROR
 import play.api.test.Helpers.OK
-import play.api.test.Helpers.SEE_OTHER
 import play.api.test.Helpers.contentAsString
 import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.Helpers.redirectLocation
-import play.api.test.Helpers.session
 import play.api.test.WithApplication
 import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
@@ -34,7 +31,6 @@ import scala.concurrent.Future
 import config.ApplicationConfig
 import play.api.mvc.Cookie
 import test_utils.TestConstants
-import test_utils.UpdateRelationshipTestUtility
 import org.joda.time.LocalDate
 import test_utils.TestData.Ninos
 import test_utils.TestData.Cids
@@ -178,7 +174,7 @@ class Signout extends UnitSpec with TestUtility {
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoTransferorNotFound), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
       val result = controllerToTest.dateOfMarriageAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
@@ -197,7 +193,7 @@ class Signout extends UnitSpec with TestUtility {
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoError), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
       val result = controllerToTest.dateOfMarriageAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
 
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
@@ -215,7 +211,7 @@ class Signout extends UnitSpec with TestUtility {
       val request = testParams.request
       val result = controllerToTest.confirmAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
@@ -233,7 +229,7 @@ class Signout extends UnitSpec with TestUtility {
       val request = testParams.request
       val result = controllerToTest.confirmAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("error").text() shouldBe "We're experiencing technical difficulties"
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
@@ -252,7 +248,7 @@ class Signout extends UnitSpec with TestUtility {
       val request = testParams.request
       val result = controllerToTest.confirmAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"

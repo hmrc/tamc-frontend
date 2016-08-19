@@ -16,21 +16,13 @@
 
 package controllers
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import org.jsoup.Jsoup
 import models._
-import play.api.test.FakeApplication
-import play.api.test.FakeRequest
-import play.api.test.Helpers.BAD_REQUEST
-import play.api.test.Helpers.GET
-import play.api.test.Helpers.OK
+import play.api.test.Helpers.INTERNAL_SERVER_ERROR
 import play.api.test.Helpers.SEE_OTHER
 import play.api.test.Helpers.contentAsString
 import play.api.test.Helpers.defaultAwaitTimeout
 import play.api.test.Helpers.redirectLocation
-import play.api.test.Helpers.route
-import play.api.test.Helpers.session
 import play.api.test.WithApplication
 import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
@@ -68,7 +60,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
       val result = controllerToTest.dateOfMarriageAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("error").text() shouldBe "We were unable to find a HMRC record of your spouse or civil partner."
     }
@@ -84,7 +76,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoError), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
       val result = controllerToTest.dateOfMarriageAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("error").text() shouldBe "We're experiencing technical difficulties"
     }
@@ -112,7 +104,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoTransferorNotFound), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
       val result = controllerToTest.dateOfMarriageAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "recipient-error",
@@ -145,7 +137,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoError), ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2015"))
       val result = controllerToTest.dateOfMarriageAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val event = controllerToTest.auditEventsToTest.head
       val detailsToCheck = Map(
         "event" -> "recipient-error",
@@ -180,7 +172,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
       val result = controllerToTest.dateOfMarriageAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("description").text() shouldBe "Based on the date of marriage or civil partnership you've provided, you're not eligible for Marriage Allowance."
@@ -204,7 +196,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request
       val result = controllerToTest.confirmAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("error").text() shouldBe "Cannot create relationship"
     }
@@ -226,7 +218,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request
       val result = controllerToTest.confirmAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
     }
 
     "send audit event if a relationship cannot be created when journey is from PTA" in new WithApplication(fakeApplication) {
@@ -246,7 +238,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val request = testParams.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val result = controllerToTest.confirmAction(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
 
       controllerToTest.auditEventsToTest.size shouldBe 2
       val event = controllerToTest.auditEventsToTest.head
