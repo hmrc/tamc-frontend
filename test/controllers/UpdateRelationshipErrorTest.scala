@@ -16,16 +16,13 @@
 
 package controllers
 
-import org.joda.time.LocalDate
+import models._
 import org.jsoup.Jsoup
-import play.api.test.Helpers.{ BAD_REQUEST, contentAsString, defaultAwaitTimeout }
+import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, contentAsString, defaultAwaitTimeout}
 import play.api.test.WithApplication
-import test_utils.TestData.{Ninos, Cids}
-import uk.gov.hmrc.domain.Nino
+import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import models.{ NotificationRecord, UpdateRelationshipCacheData, LoggedInUserInfo, RelationshipRecord, Role, EndReasonCode, EndRelationshipReason }
-import test_utils.{ UpdateRelationshipTestUtility, TestConstants }
 
 class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility {
 
@@ -37,7 +34,7 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false")
       val result = controllerToTest.history()(request)
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
 
       val document = Jsoup.parse(contentAsString(result))
 
@@ -55,7 +52,7 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false")
       val result = controllerToTest.history()(request)
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
 
       val document = Jsoup.parse(contentAsString(result))
 
@@ -83,7 +80,7 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
       val request = testComponent.request
       val result = controllerToTest.confirmUpdateAction()(request)
 
-      status(result) shouldBe BAD_REQUEST
+      status(result) shouldBe INTERNAL_SERVER_ERROR
 
       val document = Jsoup.parse(contentAsString(result))
 
