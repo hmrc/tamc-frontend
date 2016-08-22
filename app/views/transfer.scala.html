@@ -29,11 +29,9 @@
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.transfer")),
     mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))) {
-	@if(ApplicationConfig.isWelshEnabled){
-		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishTransfer.toString(), 
-		               controllers.routes.LanguageController.switchToWelshTransfer.toString())        
-    }
+        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}"))),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishTransfer.toString(),
+                                            controllers.routes.LanguageController.switchToWelshTransfer.toString()))) {
     <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
     <p class="blue-underline-large">@Html(Messages("pages.form.details", name.map{ _.fullName}.flatten.fold("")(name => s"(${name})")))</p>
     <h2 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h2>

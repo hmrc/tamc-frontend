@@ -35,11 +35,9 @@ import utils.LanguageUtils
 @import utils.LanguageUtils
 @import config.ApplicationConfig
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.extra-years"))){
-    @if(ApplicationConfig.isWelshEnabled){
-		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishPreviousYears.toString(), 
-		               controllers.routes.LanguageController.switchToWelshPreviousYears.toString())
-    }
+    title = Messages("title.pattern", Messages("title.extra-years")),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishPreviousYears.toString(),
+                                                controllers.routes.LanguageController.switchToWelshPreviousYears.toString()))){
     <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
     
     @templates.form_error_notification(form)

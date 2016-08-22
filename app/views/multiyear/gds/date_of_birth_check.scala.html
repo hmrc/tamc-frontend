@@ -23,13 +23,9 @@ breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb)
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 
-@templates.tamc_main(
-title = Messages("title.pattern", Messages("title.eligibility"))){
-    @if(ApplicationConfig.isWelshEnabled){
-        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfBirthCheck.toString(),
-            controllers.routes.LanguageController.switchToWelshDateOfBirthCheck.toString())
-    }
-
+@templates.tamc_main(title = Messages("title.pattern", Messages("title.eligibility")),
+                    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfBirthCheck.toString(),
+                                            controllers.routes.LanguageController.switchToWelshDateOfBirthCheck.toString()))){
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.date.of.birth.h1"))</h1>

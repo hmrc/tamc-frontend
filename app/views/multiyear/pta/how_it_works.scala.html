@@ -27,11 +27,9 @@
 @import utils.LanguageUtils
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.how-it-works"))){
-    @if(ApplicationConfig.isWelshEnabled){
-	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishHowItWorks.toString(), 
-	               controllers.routes.LanguageController.switchToWelshHowItWorks.toString())    
-	}
+    title = Messages("title.pattern", Messages("title.how-it-works")),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishHowItWorks.toString(),
+                            controllers.routes.LanguageController.switchToWelshHowItWorks.toString()))){
     <h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
     <p class="lede">
         @Html(Messages("pages.how-it-works.lede-pre1", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_ALLOWED_TRANSFER)))

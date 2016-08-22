@@ -24,11 +24,9 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.bereavement")),
-    mainConfig = views.helpers.MainConfig()) {
-@if(ApplicationConfig.isWelshEnabled){
-    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishBereavement.toString(),
-    controllers.routes.LanguageController.switchToWelshBereavement.toString())
-}
+    mainConfig = views.helpers.MainConfig(),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishBereavement.toString(),
+                                                controllers.routes.LanguageController.switchToWelshBereavement.toString()))) {
     
     <h1 class="heading-xlarge" id="bereavement-transferor">@Html(Messages("change.status.bereavement.sorry"))</h1>
 
