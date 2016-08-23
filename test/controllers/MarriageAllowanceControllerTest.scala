@@ -37,6 +37,7 @@ import test_utils.TestConstants
 import org.joda.time.LocalDate
 import test_utils.TestData.Ninos
 import test_utils.TestData.Cids
+import services.TimeService
 class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
 
   "Calling transfer Form page" should {
@@ -151,6 +152,31 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRecipientRecordToTestCount shouldBe 1
       controllerToTest.cachingRecipientRecordToTest shouldBe Some(UserRecord(cid = Cids.cid2, timestamp = "2015", has_allowance = Some(false)))
       controllerToTest.cachingRecipientDataToTest shouldBe Some(RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
+    }
+
+    "allow user to apply for marriage allowance if previous or current years are available" in new WithApplication(fakeApplication) {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2016")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2016")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2016, 4, 10))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2016)),
+        recipientDetailsFormData = cacheRecipientFormData))
+
+      val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
+      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
+
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData, testCacheData = Some(updateRelationshipCacheData))
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "6"), ("dateOfMarriage.month" -> "4"), ("dateOfMarriage.year" -> TimeService.getCurrentTaxYear.toString))
+      val result = controllerToTest.dateOfMarriageAction(request)
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligible-years")
     }
 
     "display no eligible years page if user user is eligible for none years on eligibleYears page" in new WithApplication(fakeApplication) {

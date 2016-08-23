@@ -75,7 +75,7 @@
 					<input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
 					<br>
 					<div class="form-group">
-						<button class="button" type="submit" data-journey-click="marriage-allowance:button:history_cancel">@Html(Messages("change.status.button"))</button>
+						<button id="cancel-marriage-allowance" class="button" type="submit" data-journey-click="marriage-allowance:button:history_cancel">@Html(Messages("change.status.button"))</button>
 					</div><br>
 				} else {
 					@if(historicActiveRecord) {
@@ -120,28 +120,31 @@
                         @if(activeRecord) {
                         <tr>
                             <td id="active">@TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh =LanguageUtils.isWelsh(lang))</td>
-                            <td colspan="2">@Html(Messages("change.status.active"))</td>
+                            <td id="active-reason" colspan="2">@Html(Messages("change.status.active"))</td>
                         </tr>
                         }
                         @if(historicRecord) {
-                            @for(index <- 0 until historicRelationships.get.size) {
+                            @for((historicRelationship, index) <- historicRelationships.get.zipWithIndex) {
                                 <tr>
-                                    <td id="line@index-start">@TextGenerators.taxDateIntervalString(historicRelationships.get(index).participant1StartDate, Some(historicRelationships.get(index).participant1EndDate.get),LanguageUtils.isWelsh(lang))</td>
+                                    <td id="line@index-start">@TextGenerators.taxDateIntervalString(historicRelationship.participant1StartDate, Some(historicRelationship.participant1EndDate.get),LanguageUtils.isWelsh(lang))</td>
                                     <td id="line@index-reason">
-                                      @Html(Messages(s"coc.end-reason.${historicRelationships.get(index).relationshipEndReason.getOrElse("")}"))
+                                        @Html(Messages(s"coc.end-reason.${historicRelationship.relationshipEndReason.getOrElse("")}"))
                                     </td>
-                                    @if(List[String]("DIVORCE","CANCELLED", "RETROSPECTIVE").contains(historicRelationships.get(index).relationshipEndReason.get) && historicRelationships.get(index).participant == "Recipient"){
-                                        <td>
-                                            @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> s"line${index}-remove")) {
-                                                <input name="role" id="role" type="hidden" value="@historicRelationships.get(index).participant"/>
+                                    @(historicRelationship.relationshipEndReason.get, historicRelationship.participant) match {
+                                        case (("DIVORCE"|"CANCELLED"|"RETROSPECTIVE"), "Recipient") => {
+                                            <td>
+                                                @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> s"line${index}-remove")) {
+                                                <input name="role" id="role" type="hidden" value="@historicRelationship.participant"/>
                                                 <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
                                                 <input name="endReason" id="endReason-reject" type="hidden" value="@EndReasonCode.REJECT"/>
-                                                <input name="creationTimestamp" id="creationTimestamp" type="hidden" value="@historicRelationships.get(index).creationTimestamp"/>
+                                                <input name="creationTimestamp" id="creationTimestamp" type="hidden" value="@historicRelationship.creationTimestamp"/>
                                                 <button class="remove-block" type="submit" data-journey-click="marriage-allowance:link:history_remove">@Html(Messages("pages.history.button.remove"))</button>
-                                            }
-                                        </td>
-                                    } else {
-                                        <td></td>
+                                                }
+                                            </td>
+                                        }
+                                        case _ => {
+                                            <td></td>
+                                        }
                                     }
                                 </tr>
                             }
