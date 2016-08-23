@@ -485,7 +485,7 @@ technical.technical-error.h1	=	Mae problem dechnegol wedi codi
 technical.technical-error.para1	=	Rhowch gynnig arall arni. Os yw''r broblem yn parhau, ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio.
 
 generic.translation.text	=	Mae''r dudalen hon hefyd ar gael yn
-generic.translation.english	=	Saesneg (English)
+generic.translation.english	=	English
 generic.translation.welsh	=	Cymraeg
 radio.yes	=	Iawn
 radio.no	=	Na
