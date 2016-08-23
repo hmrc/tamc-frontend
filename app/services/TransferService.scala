@@ -42,6 +42,7 @@ import play.api.Logger
 import uk.gov.hmrc.time.TaxYearResolver
 import play.api.i18n.Lang
 import utils.LanguageUtils
+import UpdateRelationshipService._
 
 object TransferService extends TransferService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
@@ -100,7 +101,7 @@ trait TransferService {
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, _,activeRelationshipRecord, historicRelationships, _, _, _)))
-        if UpdateRelationshipService.canApplyForPreviousYears(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
+        if canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
           Future { cache }
       case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_,_, activeRelationshipRecord, historicRelationships, _, _, _))) =>
         Future.failed(new NoTaxYearsForTransferor())
