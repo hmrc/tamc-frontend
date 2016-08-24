@@ -98,7 +98,7 @@
           <tr>
               @if(taxYear.isCurrent) {
                   <td id="year-@taxYear.year">@Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang))))</td>
-                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName), data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT), data.recipientFirstName))
+                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(lang)), data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT), data.recipientFirstName))
               } else {
                   <td id="year-@taxYear.year">@Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang)), TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang))))</td>
                   <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName, Messages("max-benefit-"+taxYear.year)))</td>

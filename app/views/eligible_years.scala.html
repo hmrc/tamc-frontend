@@ -49,7 +49,7 @@
   <h2 class="heading-medium"><span style="color:grey">@Html(Messages("pages.eligibleyear.thisyear",TextGenerators.ukDateTransformer(cy, LanguageUtils.isWelsh(lang))))</h2>
   <ul class="list list-bullet">
     <li>@Html(Messages("pages.eligibleyear.li1",recipientName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))</li>
-    <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName)))</li>
+    <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName, LanguageUtils.isWelsh(lang))))</li>
     <li>@Html(Messages("pages.eligibleyear.li3",recipientName))</li>
   </ul>
 
