@@ -221,10 +221,10 @@ eligibility.feedback.recipient-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer 
 eligibility.feedback.recipient-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich priod neu bartner sifil fod rhwng £11,501 a £45,000.
 eligibility.check.unlike-benefit-as-couple-2016	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,000.
 eligibility.check.unlike-benefit-as-couple-2017	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,500.
-max-benefit-2014	=	£212.00
-max-benefit-2015	=	£212.00
-max-benefit-2016	=	£220.00
-max-benefit-2017	=	£230.00
+max-benefit-2014	=	£212
+max-benefit-2015	=	£212
+max-benefit-2016	=	£220
+max-benefit-2017	=	£230
 your-income-2015	=	os oedd incwm yn £10,600 neu''n llai
 your-income-2016	=	os oedd incwm yn £11,000 neu''n llai
 your-income-2017	=	os oedd incwm yn £11,500 neu''n llai
@@ -517,7 +517,7 @@ pages.eligibleyear.notice	=	Gallwch wneud cais ar gyfer blynyddoedd cynharach os
 
 
 #multi-year
-pages.multiyear.taxyear	=	blwyddyn dreth
+pages.multiyear.taxyear	=	Blwyddyn dreth {0}
 pages.multiyear.canclaim	=	Gallwch chi a <span id="firstNameOnly">{0}</span> wneud cais am Lwfans Priodasol ar gyfer blwyddyn dreth {1}:
 pages.multiyear.successful	=	Os yw''ch cais yn llwyddiannus, bydd Lwfans Priodasol yn cael ei &#244;l-ddyddio ar gyfer blwyddyn dreth {0} a bydd <span id="firstNameOnly3"> {1} </span> yn cael siec am hyd at {2}.
 pages.multiyear.extrayears	=	A hoffech wneud cais ar gyfer y flwyddyn dreth ychwanegol hon hefyd?
