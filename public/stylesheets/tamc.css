@@ -266,7 +266,7 @@ p.blue-underline-large {
     margin-bottom: 30px;
 }
 .form-group .error{
-	border-left: 5px solid #b10ele;
+	border-left: 5px solid #b10e1e;
 	border-bottom: 2px solid #005EA5;
 }
 .error .form-control {
@@ -285,7 +285,7 @@ p.blue-underline-large {
 }
 
  .form-field--error .form-control{
-   border: 4px solid #b10e1e;
+   border: 4px solid #bb1100;
 }
 .report-error {
     display: inline-block;
