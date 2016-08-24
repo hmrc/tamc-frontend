@@ -519,7 +519,7 @@ pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onw
 pages.eligibleyear.notice=You can apply for earlier years if you continue.
 
 #multi-year
-pages.multiyear.taxyear=tax year
+pages.multiyear.taxyear={0} tax year
 pages.multiyear.canclaim=You and <span id="firstNameOnly">{0}</span> can claim Marriage Allowance for the {1} tax year if:
 pages.multiyear.successful=If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
 pages.multiyear.extrayears=Do you want to apply for this extra tax year too?

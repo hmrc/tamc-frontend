@@ -48,7 +48,8 @@ import utils.LanguageUtils
       <fieldset class="inline spacingBottom" id="gender">
       @for(index <- 0 until availableYears.size) {
         <div class="form-group" id="year-@availableYears(index).year-">
-          <h2 class="heading-medium"><span style="color:grey">@TextGenerators.taxDateIntervalShort(availableYears(index).year, LanguageUtils.isWelsh(lang))  @Html(Messages("pages.multiyear.taxyear"))</span><br>@TextGenerators.taxDateInterval(availableYears(index).year, LanguageUtils.isWelsh(lang))</h2>
+          <h2 class="heading-medium"><span style="color:grey">@Html(Messages("pages.multiyear.taxyear", TextGenerators.taxDateIntervalShort(availableYears(index).year, LanguageUtils.isWelsh(lang))))</span>
+              <br>@TextGenerators.taxDateInterval(availableYears(index).year, LanguageUtils.isWelsh(lang))</h2>
             <div style="margin-top:30px">
               <p>@Html(Messages("pages.multiyear.canclaim", input.name, TextGenerators.taxDateIntervalShort(availableYears(index).year, LanguageUtils.isWelsh(lang))))</p>
                 <ul class="list list-bullet">
