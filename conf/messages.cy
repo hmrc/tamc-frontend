@@ -230,7 +230,7 @@ your-income-2016	=	os oedd incwm yn £11,000 neu''n llai
 your-income-2017	=	os oedd incwm yn £11,500 neu''n llai
 income-between-2015	=	os oedd incwm {0} £10,601 a £42,385
 income-between-2016	=	os oedd incwm {0} £11,001 a £43,000
-income-between-2017	=	os oedd incwm {0} £11,601 a £45,000
+income-between-2017	=	os oedd incwm {0} £11,501 a £45,000
 
 #Confirmation Message
 pages.confirm.html.h1	=	Gwirio''ch manylion a chadarnhau''r cais

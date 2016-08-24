@@ -232,7 +232,7 @@ your-income-2016=your income was £11,000 or less
 your-income-2017=your income was £11,500 or less
 income-between-2015={0} income was between £10,601 and £42,385
 income-between-2016={0} income was between £11,001 and £43,000
-income-between-2017={0} income was between £11,601 and £45,000
+income-between-2017={0} income was between £11,501 and £45,000
 
 #Confirmation Message
 pages.confirm.html.h1=Check your details and confirm the application
