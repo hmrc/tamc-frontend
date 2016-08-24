@@ -230,9 +230,9 @@ max-benefit-2017=£230
 your-income-2015=your income was £10,600 or less
 your-income-2016=your income was £11,000 or less
 your-income-2017=your income was £11,500 or less
-income-between-2015=income was between £10,601 and £42,385
-income-between-2016=income was between £11,001 and £43,000
-income-between-2017=income was between £11,601 and £45,000
+income-between-2015={0} income was between £10,601 and £42,385
+income-between-2016={0} income was between £11,001 and £43,000
+income-between-2017={0} income was between £11,601 and £45,000
 
 #Confirmation Message
 pages.confirm.html.h1=Check your details and confirm the application
@@ -511,7 +511,7 @@ pages.history.button.remove=Remove allowance
 pages.eligibleyear.currentyear=You can apply for the current tax year
 pages.eligibleyear.toldus=You''ve told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
 pages.eligibleyear.thisyear=This current tax year</span><br>{0} onwards
-pages.eligibleyear.li1=will pay up to £{0} less tax each year
+pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
 pages.eligibleyear.li2=we''ll adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
 pages.eligibleyear.li3=it''ll automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
 pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
