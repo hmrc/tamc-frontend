@@ -100,35 +100,41 @@ trait UpdateRelationshipService {
       savedTransferorRecord <- cachingService.saveTransferorRecord(transferorRec)
     } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo), canApplyForPreviousYears(historicRelationships, activeRelationship))
 
-  def canApplyForPreviousYears(
+  private def canApplyForPreviousYears(
       historicRelationships: Option[Seq[RelationshipRecord]],
       activeRelationship: Option[RelationshipRecord],
       startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
     val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
-    val availableYears: Set[Int] = (startYear to timeService.getCurrentTaxYear).toSet
+    val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
     val unavailableYears: Set[Int] = getUnavailableYears(historicRelationships, activeRelationship)
-
     (availableYears -- unavailableYears).size > 0
   }
 
-  def getUnavailableYears(historicRelationships: Option[Seq[RelationshipRecord]], activeRelationship: Option[RelationshipRecord]): Set[Int] = {
-    val historicYears: Set[Set[Int]] = historicRelationships.
-      getOrElse(Seq[RelationshipRecord]()).toSet.
-      filter {
+  private def canApplyForCurrentYears(
+       historicRelationships: Option[Seq[RelationshipRecord]],
+       activeRelationship: Option[RelationshipRecord]): Boolean =
+    !getUnavailableYears(historicRelationships, activeRelationship).contains(timeService.getCurrentTaxYear)
+
+  def canApplyForMarriageAllowance(
+                                historicRelationships: Option[Seq[RelationshipRecord]],
+                                activeRelationship: Option[RelationshipRecord],
+                                startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean =
+   canApplyForPreviousYears(historicRelationships, activeRelationship, startingFromTaxYear) ||
+      canApplyForCurrentYears(historicRelationships, activeRelationship)
+
+  private def getUnavailableYears(historicRelationships: Option[Seq[RelationshipRecord]], activeRelationship: Option[RelationshipRecord]): Set[Int] = {
+    val historicYears: Set[Set[Int]] = historicRelationships.getOrElse(Seq[RelationshipRecord]()).toSet.filter {
         relationship => List(Some("DIVORCE"), Some("CANCELLED"), Some("MERGER"), Some("RETROSPECTIVE")) contains (relationship.relationshipEndReason)
-      }.
-      map {
+      }.map {
         relationship => findOccupiedYears(relationship)
       }
 
     val activeYears: Set[Int] = activeRelationship.map { relationship => findOccupiedYears(relationship) }.getOrElse(Set[Int]())
-
     val allYears: Set[Set[Int]] = historicYears.+(activeYears)
-
     allYears.flatten
   }
 
-  def findOccupiedYears(relationship: RelationshipRecord): Set[Int] = {
+  private def findOccupiedYears(relationship: RelationshipRecord): Set[Int] = {
     val relStartDate = timeService.getTaxYearForDate(parseRelationshipStartDate(relationship.participant1StartDate))
     val relEndDate = relationship.participant1EndDate.fold(timeService.getCurrentTaxYear)(
       year => {
