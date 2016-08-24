@@ -35,11 +35,10 @@
 @import utils.LanguageUtils
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligible-years"))){
-	@if(ApplicationConfig.isWelshEnabled){
-		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibleYears.toString(), 
-		               controllers.routes.LanguageController.switchToWelshEligibleYears.toString())        
-    }
+    title = Messages("title.pattern", Messages("title.eligible-years")),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibleYears.toString(),
+                                            controllers.routes.LanguageController.switchToWelshEligibleYears.toString()))){
+
   <h1 class="heading-xlarge">@Html(Messages("pages.eligibleyear.currentyear"))</h1>
 
    @templates.form_error_notification(form)

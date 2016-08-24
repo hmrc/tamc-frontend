@@ -26,11 +26,9 @@
 @import config.ApplicationConfig
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligibility-criteria"))){
-    @if(ApplicationConfig.isWelshEnabled){
-	    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishCalculatorPta.toString(), 
-	               controllers.routes.LanguageController.switchToWelshCalculatorPta.toString())         
-    }
+    title = Messages("title.pattern", Messages("title.eligibility-criteria")),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishCalculatorPta.toString(),
+                                                controllers.routes.LanguageController.switchToWelshCalculatorPta.toString()))){
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.skip-it"))</a></p>
 

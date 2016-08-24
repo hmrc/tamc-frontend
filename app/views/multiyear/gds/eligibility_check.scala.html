@@ -24,11 +24,9 @@
     @import config.ApplicationConfig
 
     @templates.tamc_main(
-        title = Messages("title.pattern", Messages("title.eligibility"))){
-        @if(ApplicationConfig.isWelshEnabled){
-	        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(),
-	                           controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString())
-        }
+        title = Messages("title.pattern", Messages("title.eligibility")),
+        langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(),
+                                            controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString()))){
         <h1 class="heading-xlarge">
             <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
             @Html(Messages("eligibility.check.h1"))</h1>

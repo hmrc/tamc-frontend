@@ -28,11 +28,9 @@
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.confirm-email")),
     mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))) {
-    @if(ApplicationConfig.isWelshEnabled){
-		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmEmail.toString(), 
-		               controllers.routes.LanguageController.switchToWelshConfirmEmail.toString()) 
-    }
+        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}"))),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmEmail.toString(),
+                                            controllers.routes.LanguageController.switchToWelshConfirmEmail.toString()))) {
     @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
