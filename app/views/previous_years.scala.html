@@ -15,7 +15,8 @@
 *@
 
 @(input:RegistrationFormInput,
-availableYears:List[TaxYear] = List[TaxYear]())(
+availableYears:List[TaxYear] = List[TaxYear](),
+currentYearAvailable: Boolean)(
     implicit lang: Lang,
         request: Request[_],
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -41,6 +42,10 @@ availableYears:List[TaxYear] = List[TaxYear]())(
         <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" type="submit" data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
         <br>
         <br>
-        <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+        @if(currentYearAvailable) {
+            <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+        } else {
+            <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
+        }
   }
 
