@@ -152,7 +152,7 @@ title.pattern   =   {0} – Lwfans Priodasol – GOV.UK
 title.eligibility.pattern   =   {0} – Lwfans Priodasol: Bod yn gymwys ar ei gyfer – GOV.UK
 title.application.pattern   =   {0} – Cais am Lwfans Priodasol – GOV.UK
 title.verify    =   Cadarnhau''ch manylion personol
-title.dateOfBirth   =   CY_Your date of birth
+title.dateOfBirth   =   Eich dyddiad geni
 title.eligible-years    =   Gwneud cais ar gyfer y flwyddyn dreth bresennol
 title.extra-years   =   Gwneud cais ar gyfer blynyddoedd treth cynharach
 title.transfer-in-place =   Trosglwyddiad yn barod
@@ -262,10 +262,10 @@ eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn did
 eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i''ch partner?
 eligibility.check.partners.income.before.tax	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
 eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal yn bosibl i chi wirio''ch cymhwyster am flynyddoedd blaenorol.
-eligibility.check.date.of.birth.h1  =   CY_You and your partner''s date of birth
-eligibility.check.date.of.birth.span.para   =   CY_To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935.
+eligibility.check.date.of.birth.h1  =   Eich dyddiad geni chi a''ch partner
+eligibility.check.date.of.birth.span.para   =   I elwa o''r Lwfans Priodasol, dylai''ch dyddiad geni chi a''ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
 eligibility.check.date.of.birth.span.married    =   CY_Does this apply to you or your partner?
-eligibility.check.date.of.birth.error   =   CY_If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot receive both Marriage Allowance and Married Couple's Allowance at the same time.
+eligibility.check.date.of.birth.error   =   Os yw''ch dyddiad geni chi neu''ch partner cyn 6 Ebrill 1935, efallai y gallwch elwa'n fwy fel p&#226;r os gwnewch gais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi barhau a gwneud cais am Lwfans Priodasol yn ei le. Fodd bynnag, ni allwch gael Lwfans Priodasol a Lwfans P&#226;r Priod ar yr un pryd.
 
 #Verify
 pages.verify_triage.header	=	Gwirio manylion adnabod
@@ -312,8 +312,8 @@ pages.form.field.dod.question	=	Pryd y gwnaethoch ddod &#226;''ch priodas neu ba
 #Date of Marriage
 pages.date-of-marriage.heading	=	Dyddiad y briodas neu ffurfio''r bartneriaeth sifil
 pages.date-of-marriage.para1	=	Mae hyn er mwyn sicrhau''n bod yn caniat&#225;u i chi elwa o Lwfans Priodasol am y maint cywir o amser.
-pages.date-of-marriage.para2	=	Cafodd y Lwfans Priodasol ei gyflwyno gyntaf ar 6 Ebrill 2015. Felly, mae''n bosibl y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
-pages.date-of-marriage.h2	=	Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda''ch partner presennol?
+pages.date-of-marriage.para2	=	Gallwch wneud cais o''r adeg pan gafodd y Lwfans Priodasol ei gyflwyno am y tro cyntaf, sef 6 Ebrill 2015. O''r herwydd, efallai y gallwch wneud cais am flynyddoedd treth blaenorol.
+pages.date-of-marriage.h2	=	Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda''ch partner?
 
 #How it works
 pages.how-it-works.heading	=	Sut y mae''n gweithio
@@ -538,7 +538,7 @@ pages.previousyear.para	=	Rhoesoch wybod y gwnaethoch briodi neu ffurfio partner
 #confirm-page
 pages.confirm.lower.earner	=	Eich manylion (yr unigolyn &#226;''r cyflog isaf)
 pages.confirm.higher.earner	=	Manylion eich partner (yr unigolyn &#226;''r cyflog uchaf)
-pages.confirm.current.tax	=	Rhoesoch wybod i ni y gwnaethoch briodi neu ffurfio partneriaeth sifil &#226; <span id="firstNameOnly">{0}</span> ar <span id="marriageDate">{1}</span>. Mae hyn yn golygu y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
+pages.confirm.current.tax	=	Blwyddyn dreth bresennol: {0} ymlaen
 pages.confirm.current.tax.desc	=	Bydd CThEM yn newid codau treth chi a {0} er mwyn arbed {1} hyd at £{2}. Bydd eich Lwfans Priodasol yn parhau''n awtomatig hyd nes eich bod chi neu {3} yn ei ganslo, neu nad ydych bellach yn gymwys fel p&#226;r.
 pages.confirm.previous.tax	=	Blwyddyn dreth flaenorol: {0} i {1}
 pages.confirm.previous.tax.desc	=	Bydd CThEM yn gwirio''r manylion yr ydych wedi''u rhoi cyn anfon siec at {0} drwy''r post am hyd at {1}.
