@@ -35,7 +35,7 @@
 @import utils.LanguageUtils
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligible-years")),
+    title = Messages("title.application.pattern", Messages("title.eligible-years")),
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibleYears.toString(),
                                             controllers.routes.LanguageController.switchToWelshEligibleYears.toString()))){
 
