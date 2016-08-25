@@ -35,11 +35,10 @@
 @import utils.LanguageUtils
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.eligible-years"))){
-	@if(ApplicationConfig.isWelshEnabled){
-		@templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibleYears.toString(), 
-		               controllers.routes.LanguageController.switchToWelshEligibleYears.toString())        
-    }
+    title = Messages("title.application.pattern", Messages("title.eligible-years")),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibleYears.toString(),
+                                            controllers.routes.LanguageController.switchToWelshEligibleYears.toString()))){
+
   <h1 class="heading-xlarge">@Html(Messages("pages.eligibleyear.currentyear"))</h1>
 
    @templates.form_error_notification(form)
@@ -48,8 +47,8 @@
 
   <h2 class="heading-medium"><span style="color:grey">@Html(Messages("pages.eligibleyear.thisyear",TextGenerators.ukDateTransformer(cy, LanguageUtils.isWelsh(lang))))</h2>
   <ul class="list list-bullet">
-    <li><span id="firstNameOnly2">@recipientName</span> @Html(Messages("pages.eligibleyear.li1",NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))</li>
-    <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName)))</li>
+    <li>@Html(Messages("pages.eligibleyear.li1",recipientName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))</li>
+    <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName, LanguageUtils.isWelsh(lang))))</li>
     <li>@Html(Messages("pages.eligibleyear.li3",recipientName))</li>
   </ul>
 
@@ -77,7 +76,6 @@
         }
         <br><br>
     </div>
-
 
     <p class="get-started group" id="get-started">
      <button class="button" type="submit" data-journey-click="marriage-allowance:button:currentyear_continue">@Html(Messages("generic.continue"))</button>

@@ -16,7 +16,8 @@
 
 @(title: String,
   mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
-  appConfig: config.ApplicationConfig = config.ApplicationConfig
+  appConfig: config.ApplicationConfig = config.ApplicationConfig,
+    langSwitch: Option[play.twirl.api.Html] = None
   )(mainContent: Html)( implicit lang: Lang, 
     request: Request[_],
     breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -29,6 +30,7 @@
 @import uk.gov.hmrc.play.views.html.helpers
 @import uk.gov.hmrc.play.frontend.auth.AuthContext
 @import actions.JourneyEnforcers
+@import config.ApplicationConfig
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/tamc.js")'></script>
@@ -63,6 +65,9 @@
 @commonContentHeader = {
     @if(user.isDefined && !breadcrumb.isEmpty && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
         @breadcrumbTag(breadcrumb, false)
+    }
+    @if(ApplicationConfig.isWelshEnabled){
+        @langSwitch
     }
 }
 

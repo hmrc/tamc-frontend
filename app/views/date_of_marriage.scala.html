@@ -28,11 +28,10 @@ user: details.TamcUser)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))) {
-    @if(ApplicationConfig.isWelshEnabled){
-        @templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfMarriage.toString(),
-        controllers.routes.LanguageController.switchToWelshDateOfMarriage.toString())
-    }
+maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}"))),
+langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfMarriage.toString(),
+                                        controllers.routes.LanguageController.switchToWelshDateOfMarriage.toString()))){
+
     <h1 class="heading-xlarge">@Html(Messages("pages.date-of-marriage.heading"))</h1>
     <p class="lede">@Html(Messages("pages.date-of-marriage.para1"))</p>
     <p class="information">@Html(Messages("pages.date-of-marriage.para2"))</p>

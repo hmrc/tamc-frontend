@@ -234,9 +234,9 @@ max-benefit-2017=£230
 your-income-2015=your income was £10,600 or less
 your-income-2016=your income was £11,000 or less
 your-income-2017=your income was £11,500 or less
-income-between-2015=income was between £10,601 and £42,385
-income-between-2016=income was between £11,001 and £43,000
-income-between-2017=income was between £11,601 and £45,000
+income-between-2015={0} income was between £10,601 and £42,385
+income-between-2016={0} income was between £11,001 and £43,000
+income-between-2017={0} income was between £11,501 and £45,000
 
 #Confirmation Message
 pages.confirm.html.h1=Check your details and confirm the application
@@ -491,9 +491,8 @@ technical.cannot-find-details.para1 = Call us to make a change to your Marriage 
 technical.technical-error.h1 = There has been a technical error
 technical.technical-error.para1 = Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.
 
-generic.translation.text=This page is also available in
 generic.translation.english=English
-generic.translation.welsh=Welsh (Cymraeg)
+generic.translation.welsh=Cymraeg
 radio.yes=Yes
 radio.no=No
 
@@ -516,14 +515,14 @@ pages.history.button.remove=Remove allowance
 pages.eligibleyear.currentyear=You can apply for the current tax year
 pages.eligibleyear.toldus=You''ve told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
 pages.eligibleyear.thisyear=This current tax year</span><br>{0} onwards
-pages.eligibleyear.li1=will pay up to £{0} less tax each year
+pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
 pages.eligibleyear.li2=we''ll adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
 pages.eligibleyear.li3=it''ll automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
 pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
 pages.eligibleyear.notice=You can apply for earlier years if you continue.
 
 #multi-year
-pages.multiyear.taxyear=tax year
+pages.multiyear.taxyear={0} tax year
 pages.multiyear.canclaim=You and <span id="firstNameOnly">{0}</span> can claim Marriage Allowance for the {1} tax year if:
 pages.multiyear.successful=If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
 pages.multiyear.extrayears=Do you want to apply for this extra tax year too?

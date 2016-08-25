@@ -31,13 +31,11 @@
 @import utils.LanguageUtils
 
 @templates.tamc_main(
-    title = Messages("title.pattern", if(data.role.get=="TRANSFEROR") Messages("title.confirm-transferor") else Messages("title.confirm-recipient")),
+    title = Messages("title.pattern", Messages("title.confirm-transferor")),
         mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))) {
-        @if(ApplicationConfig.isWelshEnabled){
-		    @templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmUpdate.toString(),
-		               controllers.routes.LanguageController.switchToWelshConfirmUpdate.toString())
-		}
+        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm"))),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmUpdate.toString(),
+                                                controllers.routes.LanguageController.switchToWelshConfirmUpdate.toString()))) {
     @(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false) && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) match {
         case retroRejection@true => {
                 <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("confirm.recipient.ended.reject.heading"))</h1>

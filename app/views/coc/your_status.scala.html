@@ -38,11 +38,9 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.history")),
-    mainConfig = views.helpers.MainConfig()) {
-		@if(ApplicationConfig.isWelshEnabled){
-			 @templates.lang_button(controllers.routes.LanguageController.switchToEnglishHistory.toString(),
-						controllers.routes.LanguageController.switchToWelshHistory.toString())
-		}
+    mainConfig = views.helpers.MainConfig(),
+    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishHistory.toString(),
+                                                controllers.routes.LanguageController.switchToWelshHistory.toString()))) {
 		<h1 class="heading-xlarge">@Html(Messages("generic.ma"))
 			<div class="secondary-text-colour bold-xlarge">@loggedInUserInfo.get.name.get.firstName @loggedInUserInfo.get.name.get.lastName</div>
 		</h1>
@@ -108,7 +106,6 @@
 				<div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
 				<a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a></div>
 			 }
-
             <div id="historicRecords">
                 <section>
                     <h3 class="heading-medium blue-underline-no-padding">@Html(Messages("change.status.history.h4"))</h3>

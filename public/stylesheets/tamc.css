@@ -483,3 +483,11 @@ p.blue-underline-large {
 .calculator-apply-link {
     padding-top: 7px;
 }
+
+.available-languages {
+    float: right;
+    padding: 0 0px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}

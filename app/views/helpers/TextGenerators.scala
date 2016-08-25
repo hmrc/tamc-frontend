@@ -49,8 +49,11 @@ object TextGenerators {
       case true => welshConverted(date)
     }
 
-  def formPossessive(noun: String): String =
-    s"${noun}'s"
+  def formPossessive(noun: String, isWelsh: Boolean): String =
+    isWelsh match {
+      case false => s"${noun}'s"
+      case true => noun
+    }
 
   def taxDateInterval(taxYear: Int, isWelsh: Boolean): String =
     isWelsh match {

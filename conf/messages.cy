@@ -225,16 +225,16 @@ eligibility.feedback.recipient-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer 
 eligibility.feedback.recipient-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich priod neu bartner sifil fod rhwng £11,501 a £45,000.
 eligibility.check.unlike-benefit-as-couple-2016	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,000.
 eligibility.check.unlike-benefit-as-couple-2017	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,500.
-max-benefit-2014	=	£212.00
-max-benefit-2015	=	£212.00
-max-benefit-2016	=	£220.00
-max-benefit-2017	=	£230.00
+max-benefit-2014	=	£212
+max-benefit-2015	=	£212
+max-benefit-2016	=	£220
+max-benefit-2017	=	£230
 your-income-2015	=	os oedd incwm yn £10,600 neu''n llai
 your-income-2016	=	os oedd incwm yn £11,000 neu''n llai
 your-income-2017	=	os oedd incwm yn £11,500 neu''n llai
-income-between-2015	=	roedd yr incwm rhwng £10,601 a £42,385
-income-between-2016	=	roedd yr incwm rhwng £11,001 a £43,000
-income-between-2017	=	roedd yr incwm rhwng £11,601 a £45,000
+income-between-2015	=	os oedd incwm {0} £10,601 a £42,385
+income-between-2016	=	os oedd incwm {0} £11,001 a £43,000
+income-between-2017	=	os oedd incwm {0} £11,501 a £45,000
 
 #Confirmation Message
 pages.confirm.html.h1	=	Gwirio''ch manylion a chadarnhau''r cais
@@ -493,7 +493,7 @@ technical.technical-error.h1	=	Mae problem dechnegol wedi codi
 technical.technical-error.para1	=	Rhowch gynnig arall arni. Os yw''r broblem yn parhau, ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio.
 
 generic.translation.text	=	Mae''r dudalen hon hefyd ar gael yn
-generic.translation.english	=	Saesneg (English)
+generic.translation.english	=	English
 generic.translation.welsh	=	Cymraeg
 radio.yes	=	Iawn
 radio.no	=	Na
@@ -517,7 +517,7 @@ pages.history.button.remove	=	Dileu lwfans
 pages.eligibleyear.currentyear	=	Gallwch wneud cais ar gyfer y flwyddyn dreth bresennol
 pages.eligibleyear.toldus	=	Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil &#226; <span id="firstNameOnly">{0}</span> ar
 pages.eligibleyear.thisyear	=	Yn ystod y flwyddyn dreth bresennol</span><br>{0} ymlaen
-pages.eligibleyear.li1	=	yn talu hyd at £{0} yn llai o dreth bob blwyddyn
+pages.eligibleyear.li1	=	bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn
 pages.eligibleyear.li2	=	byddwn yn addasu cod treth <span id="firstNameOnly3">{0}</span> i gynnwys y lwfans ychwanegol hwn
 pages.eligibleyear.li3	=	bydd yn adnewyddu''n awtomatig bob blwyddyn oni bai''ch bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">nad ydych bellach yn gymwys</a>
 pages.eligibleyear.doyou.want	=	A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
@@ -525,7 +525,7 @@ pages.eligibleyear.notice	=	Gallwch wneud cais ar gyfer blynyddoedd cynharach os
 
 
 #multi-year
-pages.multiyear.taxyear	=	blwyddyn dreth
+pages.multiyear.taxyear	=	Blwyddyn dreth {0}
 pages.multiyear.canclaim	=	Gallwch chi a <span id="firstNameOnly">{0}</span> wneud cais am Lwfans Priodasol ar gyfer blwyddyn dreth {1}:
 pages.multiyear.successful	=	Os yw''ch cais yn llwyddiannus, bydd Lwfans Priodasol yn cael ei &#244;l-ddyddio ar gyfer blwyddyn dreth {0} a bydd <span id="firstNameOnly3"> {1} </span> yn cael siec am hyd at {2}.
 pages.multiyear.extrayears	=	A hoffech wneud cais ar gyfer y flwyddyn dreth ychwanegol hon hefyd?
