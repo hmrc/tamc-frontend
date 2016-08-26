@@ -44,7 +44,7 @@ pages.form.field.transferor-email.error.error.email	=	Rhowch gyfeiriad e-bost di
 pages.form.field.transferor-email.error.error.required	=	Rhowch wybod beth yw''ch cyfeiriad e-bost.
 
 pages.form.field.description.marriage-criteria	=	Cadarnhewch a ydych yn briod neu mewn partneriaeth sifil sydd wedi''i chofrestru''n gyfreithlon
-pages.form.field.description.lower-earner	=	Cadarnhewch os mai chi yw''r un &#226;''r cyflog isaf yn y berthynas
+pages.form.field.description.lower-earner	=	Cadarnhewch os mai chi yw''r un â''r cyflog isaf yn y berthynas
 
 pages.form.field.description.multiyear-transferor-income-criteria	=	Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu''n is.
 pages.form.field.description.multiyear-recipient-income-criteria	=	Rhowch wybod a yw''ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
@@ -53,7 +53,7 @@ pages.form.field-required.marriage-criteria	=	Rhowch wybod a ydych yn briod neu 
 pages.form.field-required.multiyear-recipient-income-criteria	=	Rhowch wybod a yw''ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
 pages.form.field-required.multiyear-transferor-income-criteria	=	Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu''n is.
 
-pages.form.field-required.lower-earner	=	Rhowch wybod os mai chi yw''r un &#226;''r cyflog isaf yn y berthynas.
+pages.form.field-required.lower-earner	=	Rhowch wybod os mai chi yw''r un â''r cyflog isaf yn y berthynas.
 
 pages.form.field-required.applyForCurrentYear	=	Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol.
 pages.form.field-required.applyForHistoricYears	=	Rhowch wybod a hoffech wneud cais ar gyfer blynyddoedd treth cynharach.
