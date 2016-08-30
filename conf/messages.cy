@@ -446,13 +446,13 @@ pages.ended.reject.message1	=	caiff eich Lwfans Priodasol ei ddileu o {0} ymlaen
 pages.ended.reject.message2	=	os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth
 pages.confirm.message	=	Rydych wedi gofyn i ni ganslo''ch Lwfans Priodasol. Mae hyn yn golygu:
 pages.confirm.message1	=	bydd eich Lwfans Priodasol yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol
-pages.confirm.message2	=	bydd eich Lwfans Priodasol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
+pages.confirm.message2	=	bydd eich Lwfans Personol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
 pages.reject.message1	=	caiff eich Lwfans Priodasol ei ganslo o {0} ymlaen, sef dechrau''r flwyddyn dreth pan gawsoch ef am y tro cyntaf
 pages.reject.message2	=	byddwn yn rhoi gwybod i chi ar ddiwedd y flwyddyn dreth a ydych wedi talu''r swm cywir o dreth
 pages.reject.message3	=	os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth
 confirm.cancellation.button	=	Cadarnhau canslo
 pages.confirm.divorce.cy.message	=	Rydych wedi gofyn i ni gadw''ch Lwfans Priodasol yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol. Mae hyn yn golygu:
-pages.confirm.divorce.cy.message1	=	bydd eich Lwfans Priodasol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
+pages.confirm.divorce.cy.message1	=	bydd eich Lwfans Personol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
 pages.confirm.divorce.cy.prev.message	=	Rydych wedi gofyn i ni ganslo''ch Lwfans Priodasol. Mae hyn yn golygu:
 pages.confirm.divorce.cy.prev.message1	=	bydd eich lwfans yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru
 pages.confirm.divorce.cy.prev.message2	=	os nad yw''ch cyn-bartner wedi talu digon o dreth, byddwn yn ei chasglu drwy addasu''i god treth
@@ -462,7 +462,7 @@ pages.confirm.divorce.py.message2	=	bydd eich Lwfans Personol yn dychwelyd i''r 
 pages.confirm.recipient.divorce.cy.prev.message1	=	caiff eich Lwfans Priodasol ei ganslo o {0} ymlaen, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru
 pages.confirm.recipient.divorce.cy.prev.message2	=	os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu''ch cod treth
 pages.confirm.recipient.divorce.cy.message1	=	bydd eich Lwfans Priodasol yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol
-pages.confirm.recipient.divorce.cy.message2	=	bydd eich Lwfans Priodasol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
+pages.confirm.recipient.divorce.cy.message2	=	bydd eich Lwfans Personol yn dychwelyd i''r swm arferol o {0} ymlaen, sef dechrau''r flwyddyn dreth newydd
 
 #application errors
 pages.form.error-header	=	Mae problem wedi codi
