@@ -25,8 +25,8 @@ pages.form.field.last-name.error.error.maxLength	=	Defnyddiwch hyd at {0} o lyth
 pages.form.field.description.gender	=	Cadarnhewch ryw eich priod neu bartner sifil
 pages.form.field.gender.error.error.required	=	Rhowch wybod beth yw rhyw eich priod neu bartner sifil.
 pages.form.field.gender.error.error.invalid	=	Rhowch wybod beth yw rhyw eich priod neu bartner sifil.
-pages.form.field.dom.error.required	=	Rhowch wybod pa ddyddiad y gwnaethoch briodi.
-pages.form.field.dod.error.required	=	Rhowch wybod pa ddyddiad y gwnaethoch ysgaru.
+pages.form.field.dom.error.required	=	Rhowch wybod ar ba ddyddiad y gwnaethoch briodi.
+pages.form.field.dod.error.required	=	Rhowch wybod ar ba ddyddiad y gwnaethoch ysgaru.
 pages.form.field.dom.error.min-date	=	Mae''r dyddiad hwn yn rhy bell yn y gorffennol.
 pages.form.field.dom.error.max-date	=	Mae''r dyddiad hwn yn y dyfodol.
 
@@ -263,7 +263,7 @@ eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i''ch partner?
 eligibility.check.partners.income.before.tax	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
 eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal yn bosibl i chi wirio''ch cymhwyster am flynyddoedd blaenorol.
 eligibility.check.date.of.birth.h1  =   Eich dyddiad geni chi a''ch partner
-eligibility.check.date.of.birth.span.para   =   I elwa o''r Lwfans Priodasol, dylai''ch dyddiad geni chi a''ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
+eligibility.check.date.of.birth.span.para   =   I elwa o Lwfans Priodasol, dylai''ch dyddiad geni chi a''ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
 eligibility.check.date.of.birth.span.married    =   A yw hyn yn berthnasol i chi a''ch partner?
 eligibility.check.date.of.birth.error   =   Os yw''ch dyddiad geni chi neu''ch partner cyn 6 Ebrill 1935, efallai y gallwch elwa'n fwy fel p&#226;r os gwnewch gais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi barhau a gwneud cais am Lwfans Priodasol yn ei le. Fodd bynnag, ni allwch gael Lwfans Priodasol a Lwfans P&#226;r Priod ar yr un pryd.
 
@@ -312,7 +312,7 @@ pages.form.field.dod.question	=	Pryd y gwnaethoch ddod &#226;''ch priodas neu ba
 #Date of Marriage
 pages.date-of-marriage.heading	=	Dyddiad y briodas neu ffurfio''r bartneriaeth sifil
 pages.date-of-marriage.para1	=	Mae hyn er mwyn sicrhau''n bod yn caniat&#225;u i chi elwa o Lwfans Priodasol am y maint cywir o amser.
-pages.date-of-marriage.para2	=	Gallwch wneud cais o''r adeg pan gafodd y Lwfans Priodasol ei gyflwyno am y tro cyntaf, sef 6 Ebrill 2015. O''r herwydd, efallai y gallwch wneud cais am flynyddoedd treth blaenorol.
+pages.date-of-marriage.para2	=	Gallwch wneud cais o''r adeg pan gafodd y Lwfans Priodasol ei gyflwyno am y tro cyntaf, sef 6 Ebrill 2015. O''r herwydd, efallai y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
 pages.date-of-marriage.h2	=	Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda''ch partner?
 
 #How it works
