@@ -30,7 +30,7 @@
                 case (true, false) => { @Messages("user-status.first-time-login", user.name.map(_ + ", this").getOrElse("This")) }
                 case (true, true) => { @Messages("user-status.first-time-login", user.name.map(_ + ", hwn").getOrElse("Hwn")) }
                 case (false, false) => { @Messages("user-status.previous-login-time", user.name.map(_ + ", you").getOrElse("You"), formatEasyReadingTimestamp(user.authContext.user.previouslyLoggedInAt, "")) }
-                case (_, _) => { @Messages("user-status.previous-login-time", user.name.map(_ + ", chi").getOrElse("Rydych yn"),  welshConvertedDateTime(user.authContext.user.previouslyLoggedInAt)) }
+                case (_, _) => { @Messages("user-status.previous-login-time", user.name.map(_ + ", chi").getOrElse("Chi"),  welshConvertedDateTime(user.authContext.user.previouslyLoggedInAt)) }
             }
         } else  {
             <a id="sign-out" href="@logoutUrl">@Messages("user-status.sign-out")</a>

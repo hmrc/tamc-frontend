@@ -115,6 +115,10 @@ pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich priod ne
 
 pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £{0} a £{1}.
 
+pages.form.field.description.date-of-birth  = Cadarnhewch a gawsoch chi a'ch priod neu bartner sifil eich geni ar ôl 6 Ebrill 1935
+
+pages.form.field-required.date-of-birth =   Rhowch wybod i ni a gawsoch chi a'ch priod neu bartner sifil eich geni ar ôl 6 Ebrill 1935.
+
 #███████████████████████████████████████████████████████████████████████████████████████████████████
 #█                                                                                                 █
 #█    ██╗    ██╗ ██████╗ ███████╗███╗   ██╗███████╗██████╗  █████╗ ████████╗███████╗██████╗ ██╗    █
@@ -265,7 +269,7 @@ eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Pr
 eligibility.check.date.of.birth.h1  =   Eich dyddiad geni chi a''ch partner
 eligibility.check.date.of.birth.span.para   =   I elwa o Lwfans Priodasol, dylai''ch dyddiad geni chi a''ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
 eligibility.check.date.of.birth.span.married    =   A yw hyn yn berthnasol i chi a''ch partner?
-eligibility.check.date.of.birth.error   =   Os yw''ch dyddiad geni chi neu''ch partner cyn 6 Ebrill 1935, efallai y gallwch elwa'n fwy fel p&#226;r os gwnewch gais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi barhau a gwneud cais am Lwfans Priodasol yn ei le. Fodd bynnag, ni allwch gael Lwfans Priodasol a Lwfans P&#226;r Priod ar yr un pryd.
+eligibility.check.date.of.birth.error   =   Os yw''ch dyddiad geni chi neu''ch partner cyn 6 Ebrill 1935, efallai y gallwch elwa''n fwy fel p&#226;r os gwnewch gais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi barhau a gwneud cais am Lwfans Priodasol yn ei le. Fodd bynnag, ni allwch gael Lwfans Priodasol a Lwfans P&#226;r Priod ar yr un pryd.
 
 #Verify
 pages.verify_triage.header	=	Gwirio manylion adnabod
