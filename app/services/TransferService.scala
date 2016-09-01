@@ -236,8 +236,7 @@ trait TransferService {
       httpResponse =>
         Json.fromJson[GetRelationshipResponse](httpResponse.json).get match {
           case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => (recipientRecord, availableYears)
-          case GetRelationshipResponse(None, _, ResponseStatus("TAMC:ERROR:RECIPIENT-NOT-FOUND"))   => throw RecipientNotFound()
-          case GetRelationshipResponse(None, _, ResponseStatus("TAMC:ERROR:BAD-REQUEST"))   => throw RecipientNotFound()
+          case _                                                                                    => throw RecipientNotFound()
         }
     }
 
