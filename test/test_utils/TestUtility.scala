@@ -196,10 +196,10 @@ trait TestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100)
-        case Ninos.ninoWithCL100  => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100)
-        case ninoLoa2             => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500)
+        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithCL100  => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
+        case ninoLoa2             => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
@@ -207,7 +207,7 @@ trait TestUtility extends UnitSpec {
       override lazy val http = null
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0)))
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
           case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
           case None                        => throw new IllegalArgumentException
         }
@@ -320,10 +320,10 @@ trait TestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100)
-        case Ninos.ninoWithCL100  => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100)
-        case ninoLoa2             => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500)
+        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithCL100  => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
+        case ninoLoa2             => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
@@ -331,7 +331,7 @@ trait TestUtility extends UnitSpec {
       override lazy val http = null
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0)))
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
           case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
           case None                        => throw new IllegalArgumentException
         }
@@ -456,9 +456,9 @@ trait TestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100)
-        case ninoLoa2             => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500)
+        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
+        case ninoLoa2             => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
@@ -466,7 +466,7 @@ trait TestUtility extends UnitSpec {
       override lazy val http = null
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0)))
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
           case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
           case None                        => throw new IllegalArgumentException
         }

@@ -171,9 +171,9 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100)
-        case ninoLoa2             => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500)
+        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
+        case ninoLoa2             => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
@@ -181,7 +181,7 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       override lazy val http = null
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0)))
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
           case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
           case None                        => throw new IllegalArgumentException
         }
