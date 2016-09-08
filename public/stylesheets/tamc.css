@@ -173,11 +173,12 @@ table {
     border-bottom: 5px solid #005EA5;
 }
 .highlighted-event {
-	margin: 0 -0.1em 1em
+	margin: 0 -0.1em 1em;
+    display: inline-block;
 }
 .highlighted-event h1 {
     color: #fff;
-    margin: 0 0em 1em
+    margin: 0 0em 1em;
 }
 .highlighted-event h1.heading-large{
     margin-bottom: 0.55556em;
@@ -264,6 +265,7 @@ p.blue-underline-large {
     border: 5px solid #b10e1e;
     padding: 15px 30px;
     margin-bottom: 30px;
+    display: inline-block;
 }
 .form-group .error{
 	border-left: 5px solid #b10e1e;
