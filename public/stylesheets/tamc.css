@@ -265,7 +265,6 @@ p.blue-underline-large {
     border: 5px solid #b10e1e;
     padding: 15px 30px;
     margin-bottom: 30px;
-    display: inline-block;
 }
 .form-group .error{
 	border-left: 5px solid #b10e1e;
@@ -487,7 +486,8 @@ p.blue-underline-large {
 }
 
 .available-languages {
-    float: right;
+    width: 100%;
+    text-align: right;
     padding: 0 0px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

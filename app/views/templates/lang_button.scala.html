@@ -3,9 +3,7 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.urls.Link
 @import utils.LanguageUtils
-
 <div class="available-languages">
-	<p style="float:right;">
         @if(LanguageUtils.isWelsh(lang)) {
             @Link.toInternalPage(url = urlEnglish,
             value = Some(Messages("generic.translation.english")),
@@ -16,6 +14,4 @@
             value = Some(Messages("generic.translation.welsh")),
             id = Some("switch-to-welsh")).toHtml
         }
-	</p>
 </div>
-
