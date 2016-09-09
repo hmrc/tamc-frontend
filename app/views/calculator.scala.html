@@ -28,12 +28,12 @@
     title = Messages("title.pattern", Messages("title.eligibility-criteria")),
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishCalculator.toString(),
                                                 controllers.routes.LanguageController.switchToWelshCalculator.toString()))){
+    @templates.form_error_notification(calculatorForm)
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p>@Html(Messages("pages.calc.para1"))</p>
     @helpers.form(action = routes.GdsEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
         <fieldset>
             <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
-            @templates.form_error_notification(calculatorForm)
             <div class="form-group">
             @templates.input(calculatorForm("transferor-income"),
                 '_label -> Html(Messages("pages.form.field.income")),
