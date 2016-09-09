@@ -28,11 +28,13 @@
         title = Messages("title.eligibility.pattern", Messages("title.eligibility")),
         langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheckPta.toString(),
                                             controllers.routes.LanguageController.switchToWelshEligibilityCheckPta.toString()))){
+
+    @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
         <h1 class="heading-xlarge">
             <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
             @Html(Messages("eligibility.check.h1"))</h1>
         <p class="information"> @Html(Messages("eligibility.check.span.para"))</p>
-            @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+
             @helpers.form(action = routes.MultiYearPtaEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
             <div class="form-group inline">
                 <p class="bold-small">@Html(Messages("eligibility.check.married"))</p>

@@ -466,6 +466,8 @@ p.blue-underline-large {
 .icon-information {
   width: 27px;
   height: 27px;
+  display: inline-block;
+  float: left;
 }
 
 

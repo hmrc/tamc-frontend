@@ -30,12 +30,14 @@
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishLowerEarnerCheckPta.toString(),
                                             controllers.routes.LanguageController.switchToWelshLowerEarnerCheckPta.toString()))){
 
+    @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data")
+
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.lower.earner.h1"))</h1>
     <p class="information">@Html(Messages("eligibility.check.lower.earner.information1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</br>
        @Html(Messages("eligibility.check.lower.earner.information2")) </p>
-       @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data")
+
        @helpers.form(action = routes.MultiYearPtaEligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
             <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.question", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</p>
