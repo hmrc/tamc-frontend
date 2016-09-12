@@ -29,6 +29,7 @@
     title = Messages("title.pattern", Messages("title.eligibility-criteria")),
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishCalculatorPta.toString(),
                                                 controllers.routes.LanguageController.switchToWelshCalculatorPta.toString()))){
+    @templates.form_error_notification(calculatorForm)
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.skip-it"))</a></p>
 
@@ -37,7 +38,6 @@
     @helpers.form(action = routes.PtaEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
         <fieldset>
             <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
-            @templates.form_error_notification(calculatorForm)
             <div class="form-group">
             @templates.input(calculatorForm("transferor-income"),
                 '_label -> Html(Messages("pages.form.field.income")),

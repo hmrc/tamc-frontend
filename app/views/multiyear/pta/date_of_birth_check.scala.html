@@ -29,11 +29,13 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth")),
 langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfBirthCheck.toString(),
                                         controllers.routes.LanguageController.switchToWelshDateOfBirthCheck.toString()))){
 
+    @templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
     <p class="information"> @Html(Messages("eligibility.check.date.of.birth.span.para"))</p>
-    @templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+
     @helpers.form(action = routes.MultiYearPtaEligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
         <div class="form-group inline">
             <p class="bold-small" >@Html(Messages("eligibility.check.date.of.birth.span.married"))</p>

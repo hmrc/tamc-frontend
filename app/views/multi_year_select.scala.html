@@ -38,9 +38,11 @@ import utils.LanguageUtils
     title = Messages("title.application.pattern", Messages("title.extra-years")),
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishPreviousYears.toString(),
                                                 controllers.routes.LanguageController.switchToWelshPreviousYears.toString()))){
-    <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
-    
+
     @templates.form_error_notification(form)
+
+    <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
+
 
     @helpers.form(action = routes.TransferController.extraYearsAction, args = ('id -> "eligible-years-form")) {
       <fieldset class="inline spacingBottom" id="gender">

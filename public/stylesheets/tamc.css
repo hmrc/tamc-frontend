@@ -173,11 +173,12 @@ table {
     border-bottom: 5px solid #005EA5;
 }
 .highlighted-event {
-	margin: 0 -0.1em 1em
+	margin: 0 -0.1em 1em;
+    display: inline-block;
 }
 .highlighted-event h1 {
     color: #fff;
-    margin: 0 0em 1em
+    margin: 0 0em 1em;
 }
 .highlighted-event h1.heading-large{
     margin-bottom: 0.55556em;
@@ -465,6 +466,8 @@ p.blue-underline-large {
 .icon-information {
   width: 27px;
   height: 27px;
+  display: inline-block;
+  float: left;
 }
 
 
@@ -485,7 +488,8 @@ p.blue-underline-large {
 }
 
 .available-languages {
-    float: right;
+    width: 100%;
+    text-align: right;
     padding: 0 0px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
