@@ -42,7 +42,6 @@ object FrontendBuild extends Build with MicroService {
  */
 
 private object AppDependencies {
-  import play.PlayImport._
   import play.core.PlayVersion
 
   val compile = Seq(
@@ -50,7 +49,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "frontend-bootstrap" % "6.7.0",
     "uk.gov.hmrc" %% "govuk-template" % "4.0.0",
     "uk.gov.hmrc" %% "http-caching-client" % "5.6.0",
-    "uk.gov.hmrc" %% "http-verbs" % "3.3.0",
+    "uk.gov.hmrc" %% "http-verbs" % "5.0.0",
     "uk.gov.hmrc" %% "play-authorised-frontend" % "5.5.0",
     "uk.gov.hmrc" %% "play-breadcrumb" % "1.0.0",
     "uk.gov.hmrc" %% "play-config" % "2.0.1",
