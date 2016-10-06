@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package utils
+package config
 
-import play.api.mvc.Request
-import uk.gov.hmrc.play.breadcrumb.factory.BreadcrumbFactory
-import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
+import connectors.ContactFrontendConnector
+import uk.gov.hmrc.play.http.HeaderCarrier
+import scala.concurrent.Future
 
-trait TamcBreadcrumb extends BreadcrumbFactory {
+trait TamcContext {
 
-  private[this] lazy val defaultBreadcrumb = {
-    Breadcrumb(Vector(BreadcrumbItem("Account Home", "/personal-account"),
-      BreadcrumbItem("Income Tax", "/check-income-tax/income-tax"),
-      BreadcrumbItem("", "#")))
-  }
-  implicit override def buildBreadcrumb(implicit request: Request[_]): Breadcrumb = defaultBreadcrumb
+  def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String]
+
+}
+
+case object TamcContextImpl extends TamcContext {
+
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = ContactFrontendConnector.getHelpPartial
+
 }

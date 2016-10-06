@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package utils
+package controllers
 
-import play.api.mvc.Request
-import uk.gov.hmrc.play.breadcrumb.factory.BreadcrumbFactory
-import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
+import config.TamcContextImpl
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 
-trait TamcBreadcrumb extends BreadcrumbFactory {
-
-  private[this] lazy val defaultBreadcrumb = {
-    Breadcrumb(Vector(BreadcrumbItem("Account Home", "/personal-account"),
-      BreadcrumbItem("Income Tax", "/check-income-tax/income-tax"),
-      BreadcrumbItem("", "#")))
-  }
-  implicit override def buildBreadcrumb(implicit request: Request[_]): Breadcrumb = defaultBreadcrumb
+trait BaseFrontendController extends FrontendController {
+  implicit val context: config.TamcContext = TamcContextImpl
 }

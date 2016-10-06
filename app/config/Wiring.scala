@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package utils
+package config
 
-import play.api.mvc.Request
-import uk.gov.hmrc.play.breadcrumb.factory.BreadcrumbFactory
-import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
+import uk.gov.hmrc.play.config.{AppName, RunMode}
+import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
 
-trait TamcBreadcrumb extends BreadcrumbFactory {
+object WSHttp extends WSGet with WSPut with WSPost with WSDelete with AppName with RunMode {
+  override val hooks = NoneRequired
 
-  private[this] lazy val defaultBreadcrumb = {
-    Breadcrumb(Vector(BreadcrumbItem("Account Home", "/personal-account"),
-      BreadcrumbItem("Income Tax", "/check-income-tax/income-tax"),
-      BreadcrumbItem("", "#")))
-  }
-  implicit override def buildBreadcrumb(implicit request: Request[_]): Breadcrumb = defaultBreadcrumb
 }

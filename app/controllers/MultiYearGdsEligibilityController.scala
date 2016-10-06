@@ -16,27 +16,21 @@
 
 package controllers
 
-import scala.concurrent.Future
-import actions.UnauthorisedActions
+import actions.{JourneyEnforcers, UnauthorisedActions}
 import connectors.ApplicationAuditConnector
-import forms.EligibilityCalculatorForm.calculatorForm
-import forms.MultiYearEligibilityCheckForm.eligibilityForm
-import forms.MultiYearIncomeCheckForm.incomeCheckForm
-import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearDateOfBirthForm._
+import forms.MultiYearEligibilityCheckForm.eligibilityForm
+import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import utils.TamcBreadcrumb
-import config.ApplicationConfig
-import actions.JourneyEnforcers
 
 object MultiYearGdsEligibilityController extends MultiYearGdsEligibilityController {
   override val auditConnector = ApplicationAuditConnector
 }
 
-trait MultiYearGdsEligibilityController extends FrontendController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait MultiYearGdsEligibilityController extends BaseFrontendController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val eligibilityCalculatorService = EligibilityCalculatorService
   val auditConnector: AuditConnector

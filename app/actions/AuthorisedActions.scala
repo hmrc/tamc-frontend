@@ -16,44 +16,24 @@
 
 package actions
 
-import scala.Right
+import java.net.URI
+
+import config.{ApplicationConfig, TamcContextImpl}
+import connectors.ApplicationAuditConnector
+import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsSuccessResponse, TamcUser}
+import events.RiskTriageRedirectEvent
+import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.mvc.Results.BadRequest
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.config.RunMode
+import uk.gov.hmrc.play.frontend.auth.{Actions, AuthContext, TaxRegime, UpliftingIdentityConfidencePredicate, Verify}
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel}
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HeaderCarrier
+import utils.TamcBreadcrumb
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import config.ApplicationConfig
-import connectors.ApplicationAuditConnector
-import play.api.Logger
-import play.api.mvc.Action
-import play.api.mvc.AnyContent
-import play.api.mvc.Request
-import play.api.mvc.Result
-import play.api.mvc.Results.BadRequest
-import play.api.mvc.Results.Redirect
-import play.api.mvc.Session
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.frontend.auth.Actions
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProvider
-import uk.gov.hmrc.play.frontend.auth.UpliftingIdentityConfidencePredicate
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
-import uk.gov.hmrc.play.frontend.auth.TaxRegime
-import uk.gov.hmrc.play.frontend.auth.UserCredentials
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.Accounts
-import uk.gov.hmrc.play.http.SessionKeys
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import events.RiskTriageRedirectEvent
-import utils.TamcBreadcrumb
-import java.net.URI
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import details.TamcUser
-import details.PersonDetails
-import details.CitizenDetailsService
-import details.PersonDetailsNotFoundResponse
-import config.ApplicationGlobal
-import details.PersonDetailsErrorResponse
-import details.PersonDetailsSuccessResponse
-import uk.gov.hmrc.play.frontend.auth.Verify
-import details.Person
 
 object IdaAuthentificationProvider extends IdaAuthentificationProvider {
   override val login = ApplicationConfig.ivLoginUrl
@@ -61,7 +41,7 @@ object IdaAuthentificationProvider extends IdaAuthentificationProvider {
 }
 
 trait IdaAuthentificationProvider extends Verify with RunMode with TamcBreadcrumb with JourneyEnforcers {
-
+  implicit val context: config.TamcContext = TamcContextImpl
   val customAuditConnector: AuditConnector
 
   override def redirectToLogin(implicit request: Request[_]): Future[Result] =

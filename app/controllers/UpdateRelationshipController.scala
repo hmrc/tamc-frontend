@@ -16,43 +16,24 @@
 
 package controllers
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import org.joda.time.LocalDate
-import actions.AuthorisedActions
-import actions.JourneyEnforcers
-import actions.MarriageAllowanceRegime
+import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
 import config.ApplicationConfig
 import connectors.ApplicationAuthConnector
-import details.CitizenDetailsService
-import details.TamcUser
-import errors.BadFetchRequest
-import errors.CacheMissingUpdateRecord
-import errors.CacheRelationshipAlreadyUpdated
-import errors.CacheUpdateRequestNotSent
-import errors.CannotUpdateRelationship
-import errors.CitizenNotFound
-import errors.TransferorNotFound
-import forms.ChangeRelationshipForm.changeRelationshipForm
-import forms.ChangeRelationshipForm.divorceForm
-import forms.ChangeRelationshipForm.updateRelationshipDivorceForm
-import forms.ChangeRelationshipForm.updateRelationshipDivorceNoDodForm
-import forms.ChangeRelationshipForm.updateRelationshipForm
-import forms.EmailForm
+import details.{CitizenDetailsService, TamcUser}
+import errors.{BadFetchRequest, CacheMissingUpdateRecord, CacheRelationshipAlreadyUpdated, CacheUpdateRequestNotSent, CannotUpdateRelationship, CitizenNotFound, RecipientNotFound, TransferorNotFound}
+import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, updateRelationshipDivorceForm, updateRelationshipForm}
 import forms.EmailForm.emailForm
 import forms.EmptyForm
 import models._
+import org.joda.time.LocalDate
 import play.Logger
-import play.api.mvc.AnyContent
-import play.api.mvc.Request
-import play.api.mvc.Result
+import play.api.mvc.{Request, Result}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.TamcBreadcrumb
-import errors.RecipientNotFound
+
+import scala.concurrent.{ExecutionContext, Future}
 
 object UpdateRelationshipController extends UpdateRelationshipController with RunMode {
   override lazy val registrationService = TransferService
@@ -64,7 +45,7 @@ object UpdateRelationshipController extends UpdateRelationshipController with Ru
   override val timeService = TimeService
 }
 
-trait UpdateRelationshipController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait UpdateRelationshipController extends BaseFrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val registrationService: TransferService
   val updateRelationshipService: UpdateRelationshipService

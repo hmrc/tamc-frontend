@@ -16,23 +16,19 @@
 
 package controllers
 
-import scala.concurrent.Future
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import actions.AuthorisedActions
+import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
+import config.ApplicationConfig
+import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
+import details.CitizenDetailsService
+import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
-import forms.MultiYearIncomeCheckForm.incomeCheckForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
-import utils.TamcBreadcrumb
-import actions.JourneyEnforcers
-import connectors.ApplicationAuditConnector
-import actions.MarriageAllowanceRegime
-import connectors.ApplicationAuthConnector
-import details.CitizenDetailsService
-import config.ApplicationConfig
-import forms.MultiYearDateOfBirthForm._
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import services.EligibilityCalculatorService
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.TamcBreadcrumb
+
+import scala.concurrent.Future
 
 object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityController {
   override val auditConnector = ApplicationAuditConnector
@@ -42,7 +38,7 @@ object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityControll
   override val ivUpliftUrl = ApplicationConfig.ivUpliftUrl
 }
 
-trait MultiYearPtaEligibilityController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait MultiYearPtaEligibilityController extends BaseFrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val eligibilityCalculatorService = EligibilityCalculatorService
   val authConnector: ApplicationAuthConnector
