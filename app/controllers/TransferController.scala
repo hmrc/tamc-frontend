@@ -77,7 +77,7 @@ object TransferController extends TransferController with RunMode {
   override val timeService = TimeService
 }
 
-trait TransferController extends BaseFrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait TransferController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val registrationService: TransferService
   val authConnector: ApplicationAuthConnector

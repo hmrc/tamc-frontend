@@ -41,7 +41,6 @@ object IdaAuthentificationProvider extends IdaAuthentificationProvider {
 }
 
 trait IdaAuthentificationProvider extends Verify with RunMode with TamcBreadcrumb with JourneyEnforcers {
-  implicit val context: config.TamcContext = TamcContextImpl
   val customAuditConnector: AuditConnector
 
   override def redirectToLogin(implicit request: Request[_]): Future[Result] =

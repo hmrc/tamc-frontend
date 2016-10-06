@@ -20,10 +20,11 @@ import config.ApplicationConfig
 import play.api.Play.current
 import play.api.i18n.Lang
 import play.api.mvc.Action
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 object LanguageController extends LanguageController
 
-class LanguageController extends BaseFrontendController {
+class LanguageController extends FrontendController {
 
   def switchToWelshEligibilityCheck = Action { implicit request =>
     Redirect(routes.MultiYearGdsEligibilityController.eligibilityCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))

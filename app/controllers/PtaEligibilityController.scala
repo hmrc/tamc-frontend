@@ -22,6 +22,7 @@ import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
 import forms.EligibilityCalculatorForm.calculatorForm
 import services.EligibilityCalculatorService
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
 
@@ -39,7 +40,7 @@ object PtaEligibilityController extends PtaEligibilityController {
   override val ivUpliftUrl = ApplicationConfig.ivUpliftUrl
 }
 
-trait PtaEligibilityController extends BaseFrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait PtaEligibilityController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val eligibilityCalculatorService = EligibilityCalculatorService
   val authConnector: ApplicationAuthConnector

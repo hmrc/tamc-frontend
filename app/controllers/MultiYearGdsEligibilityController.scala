@@ -24,13 +24,14 @@ import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 import utils.TamcBreadcrumb
 
 object MultiYearGdsEligibilityController extends MultiYearGdsEligibilityController {
   override val auditConnector = ApplicationAuditConnector
 }
 
-trait MultiYearGdsEligibilityController extends BaseFrontendController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait MultiYearGdsEligibilityController extends FrontendController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val eligibilityCalculatorService = EligibilityCalculatorService
   val auditConnector: AuditConnector

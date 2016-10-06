@@ -18,6 +18,7 @@ package controllers
 
 import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
 import config.ApplicationConfig
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 import connectors.ApplicationAuthConnector
 import details.{CitizenDetailsService, TamcUser}
 import errors.{BadFetchRequest, CacheMissingUpdateRecord, CacheRelationshipAlreadyUpdated, CacheUpdateRequestNotSent, CannotUpdateRelationship, CitizenNotFound, RecipientNotFound, TransferorNotFound}
@@ -45,7 +46,7 @@ object UpdateRelationshipController extends UpdateRelationshipController with Ru
   override val timeService = TimeService
 }
 
-trait UpdateRelationshipController extends BaseFrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait UpdateRelationshipController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val registrationService: TransferService
   val updateRelationshipService: UpdateRelationshipService

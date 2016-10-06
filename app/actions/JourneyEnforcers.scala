@@ -16,13 +16,14 @@
 
 package actions
 
-import config.ApplicationConfig
+import config.{TamcContextImpl, ApplicationConfig}
 import play.api.mvc.Cookie
 import play.api.mvc.Request
 import play.api.mvc.Result
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 
 trait JourneyEnforcers {
+  implicit val context: config.TamcContext = TamcContextImpl
 
   def setGdsAwarePtaJourney(request: Request[_], response: Result): Result =
     request.cookies.get(ApplicationConfig.TAMC_JOURNEY) match {

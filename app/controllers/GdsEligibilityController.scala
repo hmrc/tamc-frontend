@@ -21,13 +21,14 @@ import connectors.ApplicationAuditConnector
 import forms.EligibilityCalculatorForm.calculatorForm
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 import utils.TamcBreadcrumb
 
 object GdsEligibilityController extends GdsEligibilityController {
   override val auditConnector = ApplicationAuditConnector
 }
 
-trait GdsEligibilityController extends BaseFrontendController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait GdsEligibilityController extends FrontendController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val eligibilityCalculatorService = EligibilityCalculatorService
   val auditConnector: AuditConnector
