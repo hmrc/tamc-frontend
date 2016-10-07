@@ -16,17 +16,13 @@
 
 package actions
 
-import scala.concurrent.Future
-
-import config.ApplicationConfig
 import play.api.Logger
-import play.api.mvc.Action
-import play.api.mvc.AnyContent
-import play.api.mvc.Request
-import play.api.mvc.Result
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import play.api.mvc.Results.Redirect
 import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 trait UnauthorisedActions extends JourneyEnforcers {
 
@@ -37,7 +33,9 @@ trait UnauthorisedActions extends JourneyEnforcers {
       isGdsOrPtaJourney(request) match {
         case true => unauthorisedAction(body)(request)
         case _ => Future {
+          // $COVERAGE-OFF$
           Logger.info("User has not visited eligibility page, redirecting to eligibilityCheck")
+          // $COVERAGE-ON
           Redirect(controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck())
         }
       }

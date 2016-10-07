@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package utils
+package config
 
-import uk.gov.hmrc.play.config.AppName
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.http.ws.WSDelete
-import uk.gov.hmrc.play.http.ws.WSGet
-import uk.gov.hmrc.play.http.ws.WSPost
-import uk.gov.hmrc.play.http.ws.WSPut
+import uk.gov.hmrc.play.config.{AppName, RunMode}
+import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
 
 object WSHttp extends WSGet with WSPut with WSPost with WSDelete with AppName with RunMode {
   override val hooks = NoneRequired
+
 }

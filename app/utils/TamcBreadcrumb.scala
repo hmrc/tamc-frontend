@@ -16,11 +16,9 @@
 
 package utils
 
-import scala.Vector
 import play.api.mvc.Request
 import uk.gov.hmrc.play.breadcrumb.factory.BreadcrumbFactory
-import uk.gov.hmrc.play.breadcrumb.model.Breadcrumb
-import uk.gov.hmrc.play.breadcrumb.model.BreadcrumbItem
+import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
 
 trait TamcBreadcrumb extends BreadcrumbFactory {
 
@@ -29,6 +27,5 @@ trait TamcBreadcrumb extends BreadcrumbFactory {
       BreadcrumbItem("Income Tax", "/check-income-tax/income-tax"),
       BreadcrumbItem("", "#")))
   }
-
   implicit override def buildBreadcrumb(implicit request: Request[_]): Breadcrumb = defaultBreadcrumb
 }

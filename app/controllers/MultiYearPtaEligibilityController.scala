@@ -16,23 +16,20 @@
 
 package controllers
 
-import scala.concurrent.Future
+import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
+import config.ApplicationConfig
+import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import actions.AuthorisedActions
+import details.CitizenDetailsService
+import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
-import forms.MultiYearIncomeCheckForm.incomeCheckForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
-import utils.TamcBreadcrumb
-import actions.JourneyEnforcers
-import connectors.ApplicationAuditConnector
-import actions.MarriageAllowanceRegime
-import connectors.ApplicationAuthConnector
-import details.CitizenDetailsService
-import config.ApplicationConfig
-import forms.MultiYearDateOfBirthForm._
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import services.EligibilityCalculatorService
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.TamcBreadcrumb
+
+import scala.concurrent.Future
 
 object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityController {
   override val auditConnector = ApplicationAuditConnector

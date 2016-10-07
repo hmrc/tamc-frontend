@@ -16,10 +16,10 @@
 
 package controllers
 
+import config.ApplicationConfig
 import play.api.Play.current
 import play.api.i18n.Lang
 import play.api.mvc.Action
-import config.ApplicationConfig
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 object LanguageController extends LanguageController

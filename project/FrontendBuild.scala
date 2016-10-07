@@ -44,6 +44,9 @@ object FrontendBuild extends Build with MicroService {
 private object AppDependencies {
   import play.core.PlayVersion
 
+  private val scalaTestPlusVersion = "1.2.0"
+  private val scalaTestVersion = "2.2.6"
+
   val compile = Seq(
     "uk.gov.hmrc" %% "emailaddress" % "1.1.0",
     "uk.gov.hmrc" %% "frontend-bootstrap" % "6.7.0",
@@ -73,6 +76,7 @@ private object AppDependencies {
       override lazy val test = Seq(
         "uk.gov.hmrc" %% "hmrctest" % "1.8.0" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+        "org.scalatestplus" %% "play" % scalaTestPlusVersion % scope,
         "org.jsoup" % "jsoup" % "1.8.3" % scope,
         "org.pegdown" % "pegdown" % "1.6.0" % scope,
         "org.scalacheck" %% "scalacheck" % "1.12.5" % scope,

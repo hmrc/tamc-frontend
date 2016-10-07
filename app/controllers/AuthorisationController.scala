@@ -16,12 +16,11 @@
 
 package controllers
 
+import actions.UnauthorisedActions
 import config.ApplicationConfig
 import connectors.ApplicationAuditConnector
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
-import actions.UnauthorisedActions
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
 
 object AuthorisationController extends AuthorisationController {
@@ -30,7 +29,6 @@ object AuthorisationController extends AuthorisationController {
 }
 
 trait AuthorisationController extends FrontendController with UnauthorisedActions with TamcBreadcrumb {
-
   val logoutUrl: String
   val auditConnector: AuditConnector
 

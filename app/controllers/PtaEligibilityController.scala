@@ -16,20 +16,17 @@
 
 package controllers
 
-import scala.concurrent.Future
-import actions.AuthorisedActions
-import actions.MarriageAllowanceRegime
-import connectors.ApplicationAuditConnector
-import connectors.ApplicationAuthConnector
+import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
+import config.ApplicationConfig
+import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
+import details.CitizenDetailsService
 import forms.EligibilityCalculatorForm.calculatorForm
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import config.ApplicationConfig
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
-import actions.JourneyEnforcers
-import details.CitizenDetailsService
-import uk.gov.hmrc.play.frontend.auth.AuthContext
+
+import scala.concurrent.Future
 
 /**
  * In future we may need to change the name of this class to EligibilityContoller,

@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package utils
+package config
 
-import uk.gov.hmrc.play.config.AppName
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.http.ws.WSDelete
-import uk.gov.hmrc.play.http.ws.WSGet
-import uk.gov.hmrc.play.http.ws.WSPost
-import uk.gov.hmrc.play.http.ws.WSPut
+import connectors.ContactFrontendConnector
+import uk.gov.hmrc.play.http.HeaderCarrier
+import scala.concurrent.Future
 
-object WSHttp extends WSGet with WSPut with WSPost with WSDelete with AppName with RunMode {
-  override val hooks = NoneRequired
+trait TamcContext {
+
+  def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String]
+
+}
+
+case object TamcContextImpl extends TamcContext {
+
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = ContactFrontendConnector.getHelpPartial
+
 }
