@@ -38,8 +38,10 @@ trait ContactFrontendConnector extends ServicesConfig {
       r.body
     } recover {
       case e: BadGatewayException =>
+        // $COVERAGE-OFF$
         Logger.error(s"[ContactFrontendConnector] ${e.message}", e)
         ""
+        // $COVERAGE-ON
     }
   }
 

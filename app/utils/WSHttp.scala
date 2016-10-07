@@ -16,7 +16,6 @@
 
 package utils
 
-import connectors.ApplicationAuditConnector
 import uk.gov.hmrc.play.config.AppName
 import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.http.ws.WSDelete
