@@ -31,6 +31,12 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val reportAProblemPartialUrl = s"$contactFrontend/problem_reports_ajax?service=ma"
   override lazy val reportAProblemNonJSUrl = s"$contactFrontend/problem_reports_nonjs?service=ma"
 
+  private val contactHost = configuration.getString("microservice.contact-frontend.host").getOrElse("")
+  private val contactFrontendService = baseUrl("contact-frontend")
+  private val contactFormServiceIdentifier = "TAMC"
+  override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
+
+
   override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version")
 
   override lazy val analyticsToken: Option[String] = configuration.getString("google-analytics.token")
@@ -85,7 +91,7 @@ trait ApplicationConfig {
   val betaFeedbackUnauthenticatedUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
-
+  val contactFrontendPartialBaseUrl: String
   val assetsPrefix: String
 
   val loginUrl: String
