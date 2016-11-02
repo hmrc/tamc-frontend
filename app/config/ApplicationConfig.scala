@@ -26,11 +26,11 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactHost = configuration.getString("microservice.contact-frontend.host").getOrElse("")
+  private val contactHost = configuration.getString("tamc.external-urls.contact-frontend").getOrElse("")
   private val contactFrontendService = baseUrl("contact-frontend")
   private val contactFormServiceIdentifier = "TAMC"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
-  override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
   override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version")
 
