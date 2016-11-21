@@ -96,7 +96,6 @@ context: config.TamcContext,
     @layouts.footer(
         analyticsToken = appConfig.analyticsToken,
         analyticsHost = appConfig.analyticsHost,
-        assetsPrefix = appConfig.assetsPrefix,
         ssoUrl = None,
         scriptElem = Some(scriptElement),
         gaCalls = Some(gaCalls))
@@ -132,7 +131,7 @@ context: config.TamcContext,
 @views.html.layouts.govuk_template(
     title = Some(title), 
     bodyClasses = None)(
-    head = layouts.head(assetsPrefix = appConfig.assetsPrefix, linkElem = Some(linkElement), headScripts = None), 
+    head = layouts.head(linkElem = Some(linkElement), headScripts = None),
     bodyEnd = bodyEnd, 
     insideHeader = insideHeader, 
     afterHeader = HtmlFormat.empty, 

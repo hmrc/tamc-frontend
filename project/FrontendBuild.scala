@@ -59,7 +59,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-health" % "1.1.0",
     "uk.gov.hmrc" %% "play-json-logger" % "2.1.1",
     "uk.gov.hmrc" %% "play-partials" % "4.6.0",
-    "uk.gov.hmrc" %% "play-ui" % "4.16.0",
+    "uk.gov.hmrc" %% "play-ui" % "4.17.2",
     "uk.gov.hmrc" %% "time" % "2.1.0",
     "uk.gov.hmrc" %% "domain" % "3.3.0",
     "uk.gov.hmrc" %% "url-builder" % "1.1.0",
