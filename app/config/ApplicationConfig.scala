@@ -79,6 +79,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val LANG_LANG_WELSH = "cy"
   
   override val isWelshEnabled = configuration.getBoolean("welsh-translation").getOrElse(false)
+  lazy val webchatId = loadConfig("webchat.id")
 }
 
 trait ApplicationConfig {
@@ -113,4 +114,5 @@ trait ApplicationConfig {
   val LANG_LANG_WELSH: String
   
   val isWelshEnabled: Boolean
+  val webchatId: String
 }
