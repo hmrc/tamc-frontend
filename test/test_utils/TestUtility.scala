@@ -16,64 +16,33 @@
 
 package test_utils
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
-import connectors.{ApplicationAuditConnector, ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
-import actions.IdaAuthentificationProvider
-import actions.MarriageAllowanceRegime
-import controllers.GdsEligibilityController
-import controllers.AuthorisationController
-import controllers.TransferController
-import events.BusinessEvent
+import actions.{IdaAuthentificationProvider, MarriageAllowanceRegime}
+import connectors.{ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
+import controllers._
+import details._
 import models._
-import play.api.libs.json.JsValue
-import play.api.libs.json.Json
-import play.api.libs.json.Writes
-import play.api.mvc.AnyContent
-import play.api.mvc.Request
-import play.api.mvc.Result
-import play.api.test.FakeApplication
+import org.joda.time.DateTime
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.OK
-import services.CachingService
-import services.TransferService
+import services.{CachingService, TimeService, TransferService}
+import test_utils.TestData.{Cids, Ninos}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.Accounts
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.Authority
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.PayeAccount
-import uk.gov.hmrc.play.http.BadGatewayException
-import uk.gov.hmrc.play.http.HttpGet
-import uk.gov.hmrc.play.http.HttpPost
-import uk.gov.hmrc.play.http.HttpPut
-import uk.gov.hmrc.play.http.HttpResponse
-import uk.gov.hmrc.play.http.SessionKeys
-import uk.gov.hmrc.time.DateTimeUtils.now
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.AuditEvent
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
+import uk.gov.hmrc.play.frontend.auth.connectors.domain._
+import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
-import controllers.PtaEligibilityController
-import details.CitizenDetailsService
-import details.PersonDetailsResponse
-import details.PersonDetailsSuccessResponse
-import details.Person
-import details.PersonDetails
-import config.ApplicationConfig
-import org.joda.time.DateTime
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.CredentialStrength
-import controllers.MultiYearPtaEligibilityController
-import controllers.MultiYearGdsEligibilityController
-import org.joda.time.DateTimeZone
+import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.time.TaxYearResolver
-import services.TimeService
-import test_utils.TestData.Ninos
-import test_utils.TestData.Cids
 
-class DummyHttpResponse(override val body: String, override val status: Int, override val allHeaders: Map[String, Seq[String]] = Map.empty) extends HttpResponse {
+import scala.concurrent.{ExecutionContext, Future}
+
+class DummyHttpResponse(override val body: String, override val status: Int, override val allHeaders: Map[String, Seq[String]] = Map.empty)
+      extends HttpResponse {
   override def json: JsValue = Json.parse(body)
 }
 
@@ -81,48 +50,54 @@ trait TestUtility extends UnitSpec {
 
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
 
-  val fakeApplication = FakeApplication(additionalConfiguration = Map(
-    "Test.microservice.assets.url" -> "test-url",
-    "Test.microservice.assets.version" -> "test-version"))
+  lazy val fakeApplication: Application = new GuiceApplicationBuilder()
+    .configure("application.session.httpOnly" -> true, "session.httpOnly" -> true)
+    .build()
 
-  def eventsShouldMatch(event: AuditEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty) = {
+  def eventsShouldMatch(event: AuditEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty): Unit = {
     event match {
       case DataEvent("tamc-frontend", `auditType`, _, eventTags, `details`, _) if (tags.toSet subsetOf eventTags.toSet) =>
       case _ => fail(s"${event} did not match auditType:${auditType} details:${details} tags:${tags}")
     }
   }
 
-  def makeFakeHomeController() = {
+  def makeFakeHomeController(): AuthorisationController = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
     new AuthorisationController {
       override val logoutUrl = "baz"
-      override val auditConnector = fakeCustomAuditConnector
-      def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
+      override val auditConnector: AuditConnector = fakeCustomAuditConnector
+
+      def auditEventsToTest: List[AuditEvent] = fakeCustomAuditConnector.auditEventsToTest
     }
   }
 
-  def makeEligibilityController() = {
+  def makeEligibilityController(): GdsEligibilityController = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
     new GdsEligibilityController {
       override val auditConnector = fakeCustomAuditConnector
+
       def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
     }
   }
@@ -130,8 +105,8 @@ trait TestUtility extends UnitSpec {
   case class PtaElibilityTestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: PtaEligibilityController)
 
   def makePtaEligibilityTestComponent(
-    dataId: String,
-    pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))): PtaElibilityTestComponent = {
+                                       dataId: String,
+                                       pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))): PtaElibilityTestComponent = {
     Map(
       ("user_happy_path" -> PtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makePtaEligibilityController(Some(Ninos.ninoHappyPath), pd))),
       ("user_returning" -> PtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoWithCL100), makePtaEligibilityController(Some(Ninos.ninoWithCL100), pd))),
@@ -140,41 +115,48 @@ trait TestUtility extends UnitSpec {
   }
 
   private def makePtaEligibilityController(
-    nino: Option[String],
-    pd: PersonDetailsSuccessResponse) = {
+                                            nino: Option[String],
+                                            pd: PersonDetailsSuccessResponse) = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
-    val fakeIDACustomAuditConnector = new AuditConnector {
+    val fakeIDACustomAuditConnector: AuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
-    val fakeHttpGet = new HttpGet {
+    val fakeHttpGet: HttpGet = new HttpGet {
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val nino: String = url.split("/")(2)
         val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
         response.getOrElse(throw new IllegalArgumentException("transferor not supported for :" + url))
       }
+
       def appName: String = ???
+
       val hooks = NoneRequired
 
     }
 
-    val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
+    val fakeCitizenDetailsConnector: CitizenDetailsConnector = new CitizenDetailsConnector {
       override def httpGet: HttpGet = fakeHttpGet
+
       override def citizenDetailsUrl: String = "foo"
     }
 
@@ -184,9 +166,10 @@ trait TestUtility extends UnitSpec {
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
-          case None            => super.redirectToLogin
+          case None => super.redirectToLogin
         }
       }
+
       override val customAuditConnector = fakeIDACustomAuditConnector
     }
 
@@ -196,28 +179,32 @@ trait TestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
-        case Ninos.ninoWithCL100  => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
-        case ninoLoa2             => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case Ninos.ninoWithCL100 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case ninoLoa2 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
       override val serviceUrl: String = null
       override lazy val http = null
+
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
-          case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
-          case None                        => throw new IllegalArgumentException
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
+          case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
+          case None => throw new IllegalArgumentException
         }
       }
     }
 
     val fakeCitizenDetailsService = new CitizenDetailsService {
       def citizenDetailsUrl = ???
+
       override def cachingService = ???
+
       override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
+
       override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
         return Future.successful(pd)
       }
@@ -234,28 +221,31 @@ trait TestUtility extends UnitSpec {
     }
   }
 
-  def makeMultiYearGdsEligibilityController() = {
+  def makeMultiYearGdsEligibilityController(): MultiYearGdsEligibilityController = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
     new MultiYearGdsEligibilityController {
-      override val auditConnector = fakeCustomAuditConnector
-      def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
+      override val auditConnector: AuditConnector = fakeCustomAuditConnector
+
+      def auditEventsToTest: List[AuditEvent] = fakeCustomAuditConnector.auditEventsToTest
     }
   }
 
   case class MultiYearPtaElibilityTestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: MultiYearPtaEligibilityController)
 
   def makeMultiYearPtaEligibilityTestComponent(
-    dataId: String,
-    pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))): MultiYearPtaElibilityTestComponent = {
+                                                dataId: String,
+                                                pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))): MultiYearPtaElibilityTestComponent = {
     Map(
       ("user_happy_path" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd))),
       ("user_returning" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoWithCL100), makeMultiYearPtaEligibilityController(Some(Ninos.ninoWithCL100), pd))),
@@ -264,8 +254,8 @@ trait TestUtility extends UnitSpec {
   }
 
   private def makeMultiYearPtaEligibilityController(
-    nino: Option[String],
-    pd: PersonDetailsSuccessResponse) = {
+                                                     nino: Option[String],
+                                                     pd: PersonDetailsSuccessResponse) = {
 
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
@@ -273,7 +263,9 @@ trait TestUtility extends UnitSpec {
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
@@ -283,12 +275,15 @@ trait TestUtility extends UnitSpec {
         val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
         response.getOrElse(throw new IllegalArgumentException("transferor not supported for :" + url))
       }
+
       def appName: String = ???
+
       val hooks = NoneRequired
     }
 
     val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
       override def httpGet: HttpGet = fakeHttpGet
+
       override def citizenDetailsUrl: String = "foo"
     }
 
@@ -298,7 +293,9 @@ trait TestUtility extends UnitSpec {
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
@@ -308,9 +305,10 @@ trait TestUtility extends UnitSpec {
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
-          case None            => super.redirectToLogin
+          case None => super.redirectToLogin
         }
       }
+
       override val customAuditConnector = fakeIDACustomAuditConnector
     }
 
@@ -320,28 +318,32 @@ trait TestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
-        case Ninos.ninoWithCL100  => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
-        case ninoLoa2             => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case Ninos.ninoWithCL100 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case ninoLoa2 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
       override val serviceUrl: String = null
       override lazy val http = null
+
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
-          case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
-          case None                        => throw new IllegalArgumentException
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
+          case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
+          case None => throw new IllegalArgumentException
         }
       }
     }
 
     val fakeCitizenDetailsService = new CitizenDetailsService {
       def citizenDetailsUrl = ???
+
       override def cachingService = ???
+
       override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
+
       override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
         return Future.successful(pd)
       }
@@ -360,26 +362,35 @@ trait TestUtility extends UnitSpec {
 
   trait DebugData {
     def cachingTransferorRecordToTest(): Option[UserRecord] = ???
+
     def cachingTransferorRecordToTestCount(): Int = ???
 
     def cachingRecipientRecordToTest(): Option[UserRecord] = ???
+
     def cachingRecipientRecordToTestCount(): Int = ???
+
     def cachingRecipientDataToTest(): Option[RegistrationFormInput] = ???
+
     def cachingRecipientFormDataToTest(): Option[RecipientDetailsFormInput] = ???
 
     def notificationToTest: Option[NotificationRecord] = ???
+
     def saveNotificationCount: Int = ???
 
     def cachingRecipientRecordRetrievalCount(): Int = ???
+
     def cachingRetrievalCount(): Int = ???
 
     def cachingLockCreateRelationship(): Int = ???
+
     def cachingLockCreateValue: Option[Boolean] = ???
 
     def createRelationshipCallCountToTest: Int = ???
+
     def createRelationshipUrl: Option[String] = ???
 
     def auditEventsToTest: List[AuditEvent] = ???
+
     def idaAuditEventsToTest: List[AuditEvent] = ???
 
     def citizenDetailsCallsCount: Int = ???
@@ -388,18 +399,19 @@ trait TestUtility extends UnitSpec {
   }
 
   trait MarriageAllowanceControllerWithDebug extends TransferController with DebugData
+
   case class TestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: MarriageAllowanceControllerWithDebug)
 
   def makeTestComponent(
-    dataId: String,
-    recipientData: Option[RegistrationFormInput] = None,
-    transferorRecipientData: Option[CacheData] = None,
-    recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
-    riskTriageRouteBiasPercentageParam: Int = 0,
-    cocEnabledTestInput: Boolean = false,
-    pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name")))),
-    testingTime: DateTime = TestConstants.TEST_CURRENT_DATE,
-    testCacheData: Option[UpdateRelationshipCacheData] = None): TestComponent = {
+                         dataId: String,
+                         recipientData: Option[RegistrationFormInput] = None,
+                         transferorRecipientData: Option[CacheData] = None,
+                         recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
+                         riskTriageRouteBiasPercentageParam: Int = 0,
+                         cocEnabledTestInput: Boolean = false,
+                         pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name")))),
+                         testingTime: DateTime = TestConstants.TEST_CURRENT_DATE,
+                         testCacheData: Option[UpdateRelationshipCacheData] = None): TestComponent = {
     Map(
       ("user_happy_path" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeController(Some(Ninos.ninoHappyPath), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
       ("user_LOA_1" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1), makeController(Some(Ninos.ninoWithLOA1), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
@@ -419,14 +431,14 @@ trait TestUtility extends UnitSpec {
     SessionKeys.userId -> userId)
 
   private def makeController(
-    nino: Option[String],
-    recipientData: Option[RegistrationFormInput],
-    transferorRecipientData: Option[CacheData],
-    recipientDetailsFormData: Option[RecipientDetailsFormInput],
-    cocEnabledTestInput: Boolean,
-    pd: PersonDetailsSuccessResponse,
-    testingTime: DateTime,
-    testingCacheData: Option[UpdateRelationshipCacheData]) = {
+                              nino: Option[String],
+                              recipientData: Option[RegistrationFormInput],
+                              transferorRecipientData: Option[CacheData],
+                              recipientDetailsFormData: Option[RecipientDetailsFormInput],
+                              cocEnabledTestInput: Boolean,
+                              pd: PersonDetailsSuccessResponse,
+                              testingTime: DateTime,
+                              testingCacheData: Option[UpdateRelationshipCacheData]) = {
 
     val fakeIDACustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
@@ -434,7 +446,9 @@ trait TestUtility extends UnitSpec {
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
@@ -444,9 +458,10 @@ trait TestUtility extends UnitSpec {
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
-          case None            => super.redirectToLogin
+          case None => super.redirectToLogin
         }
       }
+
       override val customAuditConnector = fakeIDACustomAuditConnector
     }
 
@@ -456,19 +471,20 @@ trait TestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
-        case ninoLoa2             => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case ninoLoa2 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
       override val serviceUrl: String = null
       override lazy val http = null
+
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
-          case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
-          case None                        => throw new IllegalArgumentException
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
+          case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
+          case None => throw new IllegalArgumentException
         }
       }
     }
@@ -479,7 +495,9 @@ trait TestUtility extends UnitSpec {
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
@@ -489,7 +507,9 @@ trait TestUtility extends UnitSpec {
         val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
         response.getOrElse(throw new IllegalArgumentException("transferor not supported for :" + url))
       }
+
       def appName: String = ???
+
       val hooks = NoneRequired
 
     }
@@ -511,16 +531,22 @@ trait TestUtility extends UnitSpec {
             throw new IllegalArgumentException("recepient not supported for :" + url)
         }
       }
+
       protected def doPostString(url: String, body: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+
       protected def doEmptyPost[A](url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+
       protected def doFormPost(url: String, body: Map[String, Seq[String]])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+
       def appName: String = ???
+
       val hooks = NoneRequired
     }
 
     val fakeHttpPut = new HttpPut {
       var createRelationshipCallCountToTest = 0
       var createRelationshipUrl: Option[String] = None
+
       def doPut[A](url: String, body: A)(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] = {
         createRelationshipCallCountToTest = createRelationshipCallCountToTest + 1
         createRelationshipUrl = Some(url)
@@ -528,26 +554,35 @@ trait TestUtility extends UnitSpec {
         val response = TestConstants.dummyHttpPutResponseJsonMap.get(body.toString)
         response.getOrElse(throw new IllegalArgumentException("action not supported for :" + url))
       }
+
       def appName: String = ???
+
       val hooks = NoneRequired
     }
 
     val fakeMiddleConnector = new MarriageAllowanceConnector {
       override def httpGet: HttpGet = fakeHttpGet
+
       override def httpPost: HttpPost = fakeHttpPost
+
       override def httpPut: HttpPut = fakeHttpPut
+
       override val marriageAllowanceUrl = "foo"
     }
 
     val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
       override def httpGet: HttpGet = fakeHttpGet
+
       override def citizenDetailsUrl: String = "foo"
     }
 
     val fakeCachingService = new CachingService {
       override def baseUri: String = ???
+
       override def defaultSource: String = ???
+
       override def domain: String = ???
+
       override def http = ???
 
       var transferorRecordToTest: Option[UserRecord] = None
@@ -648,9 +683,13 @@ trait TestUtility extends UnitSpec {
 
     val fakeCitizenDetailsService = new CitizenDetailsService {
       def citizenDetailsUrl = ???
+
       override def cachingService = fakeCachingService
+
       override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
+
       var citizenDetailsCallsCount = 0
+
       override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
         citizenDetailsCallsCount = citizenDetailsCallsCount + 1
         return Future.successful(pd)
@@ -666,22 +705,39 @@ trait TestUtility extends UnitSpec {
       override val timeService = fakeTimeService
 
       override def cachingTransferorRecordToTest = fakeCachingService.transferorRecordToTest
+
       override def cachingTransferorRecordToTestCount = fakeCachingService.transferorRecordToTestCount
+
       override def cachingRecipientRecordToTest = fakeCachingService.recipientRecordToTest
+
       override def cachingRecipientRecordToTestCount = fakeCachingService.recipientRecordToTestCount
+
       override def cachingRecipientDataToTest = fakeCachingService.recipientDataToTest
+
       override def cachingRecipientFormDataToTest = fakeCachingService.recipientDetailsFormInputDataToTest
+
       override def cachingRecipientRecordRetrievalCount = fakeCachingService.recipientRecordRetrieval
+
       override def cachingRetrievalCount = fakeCachingService.retrieveAllCount
+
       override def createRelationshipCallCountToTest = fakeHttpPut.createRelationshipCallCountToTest
+
       override def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
+
       override def idaAuditEventsToTest = fakeIDACustomAuditConnector.auditEventsToTest
+
       override def notificationToTest = fakeCachingService.notificationToTest
+
       override def saveNotificationCount = fakeCachingService.saveNotificationCount
+
       override def cachingLockCreateRelationship = fakeCachingService.lockCreateRelationshipCount
+
       override def cachingLockCreateValue = fakeCachingService.lockCreateRelationshipVal
+
       override def createRelationshipUrl = fakeHttpPut.createRelationshipUrl
+
       override def citizenDetailsCallsCount = fakeCitizenDetailsService.citizenDetailsCallsCount
+
       override def saveSelectedYears = fakeCachingService.saveYearsToTest
     }
   }

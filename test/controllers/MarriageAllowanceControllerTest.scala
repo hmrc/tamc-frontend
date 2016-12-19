@@ -16,32 +16,26 @@
 
 package controllers
 
-import scala.concurrent.Future
-import org.jsoup.Jsoup
 import models._
-import play.api.test.Helpers.BAD_REQUEST
-import play.api.test.Helpers.OK
-import play.api.test.Helpers.SEE_OTHER
-import play.api.test.Helpers.contentAsString
-import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.Helpers.redirectLocation
-import play.api.test.Helpers.session
-import play.api.test.WithApplication
-import test_utils.TestUtility
+import org.joda.time.LocalDate
+import org.jsoup.Jsoup
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
+import play.api.mvc.Cookie
+import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
+import services.TimeService
+import test_utils.TestData.{Cids, Ninos}
+import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import events.CreateRelationshipSuccessEvent
-import play.api.mvc.Cookie
-import test_utils.TestConstants
-import org.joda.time.LocalDate
-import test_utils.TestData.Ninos
-import test_utils.TestData.Cids
-import services.TimeService
-class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
+
+class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "Calling transfer Form page" should {
-    "display registration page if transferor exits and doesn't have existing relationship" in new WithApplication(fakeApplication) {
+    "display registration page if transferor exits and doesn't have existing relationship" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -56,7 +50,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
   }
 
   "Calling transfer Submit page" should {
-    "display form with error if recipient form data is not provided" in new WithApplication(fakeApplication) {
+    "display form with error if recipient form data is not provided" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -71,7 +65,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       form.getElementsByClass("error-notification").first() shouldNot be(null)
     }
 
-    "Invalid gender error" in new WithApplication(fakeApplication) {
+    "Invalid gender error" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -86,7 +80,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       form.getElementsByClass("error-notification").first() shouldNot be(null)
     }
 
-    "not store data if recipient form data is not provided" in new WithApplication(fakeApplication) {
+    "not store data if recipient form data is not provided" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -105,7 +99,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRecipientRecordToTest shouldBe None
     }
 
-    "accept NINO with spaces and mixed case and save it in cannonical form (no spaces, upper case)" in new WithApplication(fakeApplication) {
+    "accept NINO with spaces and mixed case and save it in cannonical form (no spaces, upper case)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 3, 24)))
@@ -121,7 +115,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-marriage")
     }
 
-    "store data if recipient exists and is not in relationship" in new WithApplication(fakeApplication) {
+    "store data if recipient exists and is not in relationship" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
@@ -154,7 +148,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRecipientDataToTest shouldBe Some(RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
     }
 
-    "allow user to apply for marriage allowance if previous or current years are available" in new WithApplication(fakeApplication) {
+    "allow user to apply for marriage allowance if previous or current years are available" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2016")
       val rcrec = UserRecord(cid = 123456, timestamp = "2016")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
@@ -179,7 +173,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligible-years")
     }
 
-    "display no eligible years page if user user is eligible for none years on eligibleYears page" in new WithApplication(fakeApplication) {
+    "display no eligible years page if user user is eligible for none years on eligibleYears page" in {
 
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
@@ -197,7 +191,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("error").text() shouldBe "We were unable to process your Marriage Allowance application."
     }
 
-    "show extra years page if user is eligible for one historic year on eligibleYears page" in new WithApplication(fakeApplication) {
+    "show extra years page if user is eligible for one historic year on eligibleYears page" in {
 
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
@@ -215,12 +209,12 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("heading").text() shouldBe "You can apply for earlier tax years"
     }
 
-    "display the current eligible years page" in new WithApplication(fakeApplication) {
+    "display the current eligible years page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -239,7 +233,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/date-of-marriage")
     }
 
-    "show No Tax Years selected page if user is only eligible for current year and chooses no" in new WithApplication(fakeApplication) {
+    "show No Tax Years selected page if user is only eligible for current year and chooses no" in {
 
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
@@ -258,35 +252,35 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
     }
   }
 
-  "Calling previous year page" should{
-    "not display previous years if user only eligible for current year" in new WithApplication(fakeApplication) {
-        val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
-        val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-        val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
-        val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2016, 4, 10))
-        val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2016)))
-        val trRecipientData = Some(CacheData(
-          transferor = Some(trrec),
-          recipient = Some(recrecord),
-          notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-          recipientDetailsFormData = cacheRecipientFormData))
+  "Calling previous year page" should {
+    "not display previous years if user only eligible for current year" in {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2016, 4, 10))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2016)))
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        recipientDetailsFormData = cacheRecipientFormData))
 
 
-        val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-        val controllerToTest = testComponent.controller
-        val request = testComponent.request.withFormUrlEncodedBody(data = ("applyForCurrentYear" -> "true"))
-        val result = controllerToTest.eligibleYearsAction(request)
+      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request.withFormUrlEncodedBody(data = ("applyForCurrentYear" -> "true"))
+      val result = controllerToTest.eligibleYearsAction(request)
 
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-your-email")
-  }
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-your-email")
+    }
 
-    "not display current year if user only eligible for only previous year" in new WithApplication(fakeApplication) {
+    "not display current year if user only eligible for only previous year" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2010, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2015)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2015)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -304,12 +298,12 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("heading").text() shouldBe "You can apply for earlier tax years"
     }
 
-    "display the generic previous year page" in new WithApplication(fakeApplication) {
+    "display the generic previous year page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -326,12 +320,12 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("heading").text() shouldBe "You can apply for earlier tax years"
     }
 
-    "previous year form with error" in new WithApplication(fakeApplication) {
+    "previous year form with error" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -350,12 +344,12 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
 
   "Calling earlier years select page" should {
 
-    "progressing by selecting continue on previous year page " in new WithApplication(fakeApplication) {
+    "progressing by selecting continue on previous year page " in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -375,13 +369,13 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
 
   "Calling confirm and apply page" should {
 
-    "read keystore" in new WithApplication(fakeApplication) {
+    "read keystore" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -392,7 +386,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRetrievalCount shouldBe 1
     }
 
-    "redirect if no year is selected" in new WithApplication(fakeApplication) {
+    "redirect if no year is selected" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -410,7 +404,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("message").text() shouldBe "You haven't selected any tax years to apply for"
     }
 
-    "redirect if no year is selected (empty list)" in new WithApplication(fakeApplication) {
+    "redirect if no year is selected (empty list)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -428,7 +422,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("message").text() shouldBe "You haven't selected any tax years to apply for"
     }
 
-    "retrieve correct keystore data for female recipient" in new WithApplication(fakeApplication) {
+    "retrieve correct keystore data for female recipient" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -439,7 +433,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         selectedYears = selectedYears,
-        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -466,13 +460,13 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("change-2015").attr("href") shouldBe "/marriage-allowance-application/eligible-years"
     }
 
-    "retrieve correct keystore data for recipient when only first name is avaliable" in new WithApplication(fakeApplication) {
+    "retrieve correct keystore data for recipient when only first name is avaliable" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(Some("Foo"), None)))
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -487,13 +481,13 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-name").text() shouldBe "Foo"
     }
 
-    "retrieve correct keystore data for recipient when only last name is avaliable" in new WithApplication(fakeApplication) {
+    "retrieve correct keystore data for recipient when only last name is avaliable" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(None, Some("Bar"))))
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -508,13 +502,13 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-name").text() shouldBe "Bar"
     }
 
-    "retrieve correct keystore data for recipient when first name and last name is not avaliable" in new WithApplication(fakeApplication) {
+    "retrieve correct keystore data for recipient when first name and last name is not avaliable" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(None, None)))
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -529,13 +523,13 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-name") shouldBe null
     }
 
-    "retrieve correct keystore data for male recipient" in new WithApplication(fakeApplication) {
+    "retrieve correct keystore data for male recipient" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -552,7 +546,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("recipient-nino").text() shouldBe Ninos.ninoWithLOA1Spaces
     }
 
-    "redirect to transfer page if transferor data is missing in cache" in new WithApplication(fakeApplication) {
+    "redirect to transfer page if transferor data is missing in cache" in {
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
@@ -568,7 +562,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect to transfer page if recipient data is missing in cache" in new WithApplication(fakeApplication) {
+    "redirect to transfer page if recipient data is missing in cache" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = Some(NotificationRecord(EmailAddress("example@example.com")))))
 
@@ -582,7 +576,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect to confirm email page if notification is missing in cache" in new WithApplication(fakeApplication) {
+    "redirect to confirm email page if notification is missing in cache" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -599,7 +593,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-your-email")
     }
 
-    "accept application form if user has successfully submitted application (GDS journey)" in new WithApplication(fakeApplication) {
+    "accept application form if user has successfully submitted application (GDS journey)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -624,7 +618,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.createRelationshipUrl shouldBe Some("foo/paye/" + Ninos.ninoHappyPath + "/create-multi-year-relationship/GDS")
     }
 
-    "accept application form if user has successfully submitted application (PTA journey)" in new WithApplication(fakeApplication) {
+    "accept application form if user has successfully submitted application (PTA journey)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -649,7 +643,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.createRelationshipUrl shouldBe Some("foo/paye/" + Ninos.ninoHappyPath + "/create-multi-year-relationship/PTA")
     }
 
-    "redirect to transfer page if transferor details are not in cache" in new WithApplication(fakeApplication) {
+    "redirect to transfer page if transferor details are not in cache" in {
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
@@ -665,7 +659,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRetrievalCount() shouldBe 1
     }
 
-    "redirect to transfer page if recipient details are not in cache" in new WithApplication(fakeApplication) {
+    "redirect to transfer page if recipient details are not in cache" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = Some(NotificationRecord(EmailAddress("example123@example.com")))))
 
@@ -679,7 +673,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRetrievalCount() shouldBe 1
     }
 
-    "redirect to confirm email page if transferor notification details are not in cache" in new WithApplication(fakeApplication) {
+    "redirect to confirm email page if transferor notification details are not in cache" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -696,7 +690,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRetrievalCount() shouldBe 1
     }
 
-    "send audit event if user has successfully created relationship when journey is through GDS" in new WithApplication(fakeApplication) {
+    "send audit event if user has successfully created relationship when journey is through GDS" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -706,7 +700,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
         selectedYears = Some(List(2015)),
-        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -725,7 +719,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       eventsShouldMatch(event, "TxSuccessful", detailsToCheck, tags)
     }
 
-    "send audit event if user has successfully created relationship when journey is through PTA" in new WithApplication(fakeApplication) {
+    "send audit event if user has successfully created relationship when journey is through PTA" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -735,7 +729,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
         selectedYears = Some(List(2015)),
-        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -754,12 +748,12 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       eventsShouldMatch(event, "TxSuccessful", detailsToCheck, tags)
     }
 
-    "send audit event if relationship is already created" in new WithApplication(fakeApplication) {
+    "send audit event if relationship is already created" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example123@example.com"))), relationshipCreated = (Some(true)), dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example123@example.com"))), relationshipCreated = (Some(true)), dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -782,7 +776,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
 
   "Confirm your email page" should {
 
-    "read from keystore and display empty email field" in new WithApplication(fakeApplication) {
+    "read from keystore and display empty email field" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -801,7 +795,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email").attr("value") shouldBe ""
     }
 
-    "read from keystore and display cached email value" in new WithApplication(fakeApplication) {
+    "read from keystore and display cached email value" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -820,7 +814,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email").attr("value") shouldBe "example@example.com"
     }
 
-    "redirect ro transfer page if transferor data is missing" in new WithApplication(fakeApplication) {
+    "redirect ro transfer page if transferor data is missing" in {
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
       val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get)
@@ -836,7 +830,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRetrievalCount() shouldBe 1
     }
 
-    "redirect ro transfer page if recipient data is missing" in new WithApplication(fakeApplication) {
+    "redirect ro transfer page if recipient data is missing" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = Some(NotificationRecord(transferor_email = EmailAddress("example@example.com")))))
 
@@ -850,7 +844,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility {
       controllerToTest.cachingRetrievalCount() shouldBe 1
     }
 
-    "save a valid email and redirect to confirmation page" in new WithApplication(fakeApplication) {
+    "save a valid email and redirect to confirmation page" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example@example.com"))

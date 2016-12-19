@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*     http://www.apache.org/licenses/LICENSE-2.0
+* http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,28 +13,29 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
+@(form: Form[_], formErrorMessage: String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.", lowerLimit: Option[Int] = None, upperLimit: Option[Int] = None)(implicit lang: Lang, request: Request[_])
+    @import play.twirl.api.Html
+    @import play.api.Play.current
+    @import play.api.i18n.Messages.Implicits._
 
-@(form: Form[_], formErrorMessage:String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.", lowerLimit: Option[Int] = None, upperLimit: Option[Int] = None)(implicit lang: Lang, request: Request[_])
-@import play.twirl.api.Html
+    @if(form.hasErrors) {
+        <div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary validation-summary">
+            <h1 id="form-error-heading" class="heading-medium error-summary-heading">@Messages("pages.form.error-header")</h1>
+            <ul class="error-summary-list">
 
-@if(form.hasErrors) {
-<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary validation-summary">
-  <h1 id="form-error-heading" class="heading-medium error-summary-heading">@Messages("pages.form.error-header")</h1>
-  <ul class="error-summary-list">
-
-  	<li id="form-error-message"><p>@Messages(formErrorMessage)</p></li>
-    @form.errors.map(_.key).distinct.map { errorKey =>
-    <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
-      <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")' data-focuses='@errorKey.replaceAll("""[\.\[\]]""", "-")'>
-        @if(lowerLimit.isDefined||upperLimit.isDefined) {
-          @Messages(prefix+errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get, upperLimit.get)
-        } else {
-          @Messages(prefix+errorKey.replaceAll("""[\.\[\]]""", "-"))
-        }
-      </a>
-    </li>
+                <li id="form-error-message"><p>@Messages(formErrorMessage)</p></li>
+                @form.errors.map(_.key).distinct.map { errorKey =>
+                    <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
+                        <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")' data-focuses='@errorKey.replaceAll("""[\.\[\]]""", "-")'>
+                        @if(lowerLimit.isDefined || upperLimit.isDefined) {
+                            @Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get, upperLimit.get)
+                        } else {
+                            @Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"))
+                        }
+                        </a>
+                    </li>
+                }
+            </ul>
+            <div class="clearfix"></div>
+        </div>
     }
-  </ul>
-  <div class="clearfix"></div>
-</div>
-}

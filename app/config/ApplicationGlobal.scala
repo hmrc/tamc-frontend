@@ -19,7 +19,6 @@ package config
 import java.io.File
 
 import com.typesafe.config.Config
-
 import connectors.ApplicationAuditConnector
 import net.ceedubs.ficus.Ficus.configValueReader
 import net.ceedubs.ficus.Ficus.toFicusConfig
@@ -34,6 +33,7 @@ import uk.gov.hmrc.play.audit.filters.FrontendAuditFilter
 import uk.gov.hmrc.play.config.AppName
 import uk.gov.hmrc.play.config.ControllerConfig
 import uk.gov.hmrc.play.config.RunMode
+import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.http.logging.filters.FrontendLoggingFilter
 
@@ -58,11 +58,11 @@ object ControllerConfiguration extends ControllerConfig {
   lazy val controllerConfigs = Play.current.configuration.underlying.as[Config]("controllers")
 }
 
-object MarriageAllowanceLoggingFilter extends FrontendLoggingFilter {
+object MarriageAllowanceLoggingFilter extends FrontendLoggingFilter with MicroserviceFilterSupport {
   override def controllerNeedsLogging(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsLogging
 }
 
-object MarriageAllowanceAuditFilter extends FrontendAuditFilter with RunMode with AppName {
+object MarriageAllowanceAuditFilter extends FrontendAuditFilter with RunMode with AppName with MicroserviceFilterSupport {
   override lazy val maskedFormFields: Seq[String] = Seq.empty[String]
   override lazy val applicationPort: Option[Int] = None
   override lazy val auditConnector = ApplicationAuditConnector

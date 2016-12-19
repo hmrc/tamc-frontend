@@ -18,17 +18,20 @@ package controllers
 
 import models._
 import org.jsoup.Jsoup
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, contentAsString, defaultAwaitTimeout}
-import play.api.test.WithApplication
 import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility {
+class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "List relationship" should {
 
-    "return an error if citizen not found" in new WithApplication(fakeApplication) {
+    "return an error if citizen not found" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_citizen_not_found")
       val controllerToTest = testComponent.controller
@@ -46,7 +49,7 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
 
     }
 
-    "return an error on bad request" in new WithApplication(fakeApplication) {
+    "return an error on bad request" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_bad_request")
       val controllerToTest = testComponent.controller
@@ -67,7 +70,7 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
 
   "Update relationship" should {
 
-    "return an error on bad request/recipient deceased/recipient not found" in new WithApplication(fakeApplication) {
+    "return an error on bad request/recipient deceased/recipient not found" in {
 
       val loggedInUser = LoggedInUserInfo(999700102, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")

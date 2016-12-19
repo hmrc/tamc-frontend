@@ -16,28 +16,29 @@
 
 package controllers
 
-import config.ApplicationConfig
 import models._
+import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import play.api.test.Helpers.{ BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout, SEE_OTHER }
-import play.api.test.WithApplication
-import test_utils.{ TestConstants, TestUtility }
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
+import play.api.mvc.Cookie
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
+import test_utils.TestData.{Cids, Ninos}
+import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.mvc.Cookie
-import play.api.test.FakeRequest
-import org.joda.time.{ LocalDate, DateTimeZone, DateTime }
-import test_utils.TestData.Cids
-import test_utils.TestData.Ninos
 
-class ContentTest extends UnitSpec with TestUtility {
+class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "Calling Transfer page" should {
-    "display transferor name" in new WithApplication(fakeApplication) {
+    "display transferor name" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val testComponent: TestComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transfer(request)
@@ -51,10 +52,10 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "Calling Transfer Submit page" should {
 
-    "display transferor name on error page" in new WithApplication(fakeApplication) {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
+    "display transferor name on error page" in {
+      val trrec: UserRecord = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
+      val testComponent: TestComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"))
       val result = controllerToTest.transferAction(request)
@@ -65,7 +66,7 @@ class ContentTest extends UnitSpec with TestUtility {
       transferor.text() shouldBe "(Foo Bar)"
     }
 
-    "display form error message (first name and last name missing from request)" in new WithApplication(fakeApplication) {
+    "display form error message (first name and last name missing from request)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -83,7 +84,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name,name)").size() shouldBe 1
     }
 
-    "display form error message (request body missing form data)" in new WithApplication(fakeApplication) {
+    "display form error message (request body missing form data)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -104,7 +105,7 @@ class ContentTest extends UnitSpec with TestUtility {
   }
 
   "Calling Transfer Submit page with error in name field" should {
-    "display form error message (first name missing from request)" in new WithApplication(fakeApplication) {
+    "display form error message (first name missing from request)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -125,7 +126,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(name)").size() shouldBe 1
     }
 
-    "display form error message (first name is empty)" in new WithApplication(fakeApplication) {
+    "display form error message (first name is empty)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -143,7 +144,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
     }
 
-    "display form error message (first name is blank)" in new WithApplication(fakeApplication) {
+    "display form error message (first name is blank)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -161,7 +162,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
     }
 
-    "display form error message (first name contains more than 35 characters)" in new WithApplication(fakeApplication) {
+    "display form error message (first name contains more than 35 characters)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -179,7 +180,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
     }
 
-    "display form error message (first name contains numbers)" in new WithApplication(fakeApplication) {
+    "display form error message (first name contains numbers)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -197,7 +198,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
     }
 
-    "display form error message (first name contains letters and numbers)" in new WithApplication(fakeApplication) {
+    "display form error message (first name contains letters and numbers)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -215,7 +216,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
     }
 
-    "display form error message when recipient nino equals transferor nino" in new WithApplication(fakeApplication) {
+    "display form error message when recipient nino equals transferor nino" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -233,7 +234,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
     }
 
-    "display form error message when recipient nino equals transferor nino (including mixed case and spaces)" in new WithApplication(fakeApplication) {
+    "display form error message when recipient nino equals transferor nino (including mixed case and spaces)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -253,7 +254,7 @@ class ContentTest extends UnitSpec with TestUtility {
   }
 
   "Calling Transfer Submit page with error in last-name field" should {
-    "display form error message (last name missing from request)" in new WithApplication(fakeApplication) {
+    "display form error message (last name missing from request)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -272,7 +273,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name)").size() shouldBe 1
     }
 
-    "display form error message (last name is empty)" in new WithApplication(fakeApplication) {
+    "display form error message (last name is empty)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -290,7 +291,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
     }
 
-    "display form error message (last name is blank)" in new WithApplication(fakeApplication) {
+    "display form error message (last name is blank)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -308,7 +309,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
     }
 
-    "display form error message (last name contains more than 35 characters)" in new WithApplication(fakeApplication) {
+    "display form error message (last name contains more than 35 characters)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -326,7 +327,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
     }
 
-    "display form error message (last name contains numbers)" in new WithApplication(fakeApplication) {
+    "display form error message (last name contains numbers)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -344,7 +345,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
     }
 
-    "display form error message (last name contains letters and numbers)" in new WithApplication(fakeApplication) {
+    "display form error message (last name contains letters and numbers)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -364,7 +365,7 @@ class ContentTest extends UnitSpec with TestUtility {
   }
 
   "Calling Transfer Submit page with error in gender field" should {
-    "display form error message (gender missing from request)" in new WithApplication(fakeApplication) {
+    "display form error message (gender missing from request)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -383,7 +384,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender)").size() shouldBe 1
     }
 
-    "display form error message (gender code is invalid)" in new WithApplication(fakeApplication) {
+    "display form error message (gender code is invalid)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -403,7 +404,7 @@ class ContentTest extends UnitSpec with TestUtility {
   }
 
   "Calling Transfer Submit page with error in NINO field" should {
-    "display form error message (NINO missing from request)" in new WithApplication(fakeApplication) {
+    "display form error message (NINO missing from request)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -422,7 +423,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(nino)").size() shouldBe 1
     }
 
-    "display form error message (NINO is empty)" in new WithApplication(fakeApplication) {
+    "display form error message (NINO is empty)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -440,7 +441,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
     }
 
-    "display form error message (NINO is invalid)" in new WithApplication(fakeApplication) {
+    "display form error message (NINO is invalid)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -461,7 +462,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "Calling Date Of Marriage page with error in dom field" should {
 
-    "display form error message (date of marriage is before 1900)" in new WithApplication(fakeApplication) {
+    "display form error message (date of marriage is before 1900)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -485,7 +486,7 @@ class ContentTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/transfer-allowance")
     }
 
-    "display form error message (date of marriage is after today's date)" in new WithApplication(fakeApplication) {
+    "display form error message (date of marriage is after today's date)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent(
@@ -507,7 +508,7 @@ class ContentTest extends UnitSpec with TestUtility {
       err.size() shouldBe 1
     }
 
-    "display form error message (date of marriage is left empty)" in new WithApplication(fakeApplication) {
+    "display form error message (date of marriage is left empty)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent(
@@ -534,13 +535,13 @@ class ContentTest extends UnitSpec with TestUtility {
   }
 
   "Calling Previous year page " should {
-    "display dynamic message " in new WithApplication(fakeApplication) {
+    "display dynamic message " in {
 
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -561,13 +562,13 @@ class ContentTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/eligible-years")
     }
 
-    "display form error message (no year choice made )" in new WithApplication(fakeApplication) {
+    "display form error message (no year choice made )" in {
 
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata,aivailableTaxYears = List(TaxYear(2014),TaxYear(2015),TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -592,7 +593,7 @@ class ContentTest extends UnitSpec with TestUtility {
   }
 
   "Calling Confirm email page with error in email field" should {
-    "display form error message (transferor email missing from request)" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email missing from request)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -612,7 +613,7 @@ class ContentTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/eligible-years")
     }
 
-    "display form error message (transferor email is empty)" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email is empty)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> ""))
@@ -628,7 +629,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
     }
 
-    "display form error message (transferor email contains only spaces)" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email contains only spaces)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "  "))
@@ -644,7 +645,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
     }
 
-    "display form error message (transferor email contains more than 100 characters)" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email contains more than 100 characters)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "aaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaa@cccc.ddddd"))
@@ -660,7 +661,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
     }
 
-    "display form error message (transferor email is invalid)" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email is invalid)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example"))
@@ -676,7 +677,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
     }
 
-    "display form error message (transferor email has consequent dots)" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email has consequent dots)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "ex..ample@example.com"))
@@ -692,7 +693,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
     }
 
-    "display form error message (transferor email has symbols). Please note, this email actually is valid" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "check$%^&&@yahoo.comm"))
@@ -708,7 +709,7 @@ class ContentTest extends UnitSpec with TestUtility {
       document.getElementById("transferor-email-error").text() shouldBe "Confirm your email"
     }
 
-    "display form error message (transferor email does not include TLD)" in new WithApplication(fakeApplication) {
+    "display form error message (transferor email does not include TLD)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example@example"))
@@ -727,7 +728,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "Calling non-pta finished page" should {
 
-    "successfully authenticate the user and have finished page and content" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have finished page and content" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.nino1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -755,7 +756,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "PTA Benefit calculator page " should {
 
-    "successfully load the calculator page " in new WithApplication(fakeApplication) {
+    "successfully load the calculator page " in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -772,7 +773,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "PTA How It Works page for multi year " should {
 
-    "successfully loaded " in new WithApplication(fakeApplication) {
+    "successfully loaded " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -795,7 +796,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "PTA Eligibility check page for multiyear" should {
 
-    "successfully authenticate the user and have eligibility-check page action" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have eligibility-check page action" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -809,7 +810,7 @@ class ContentTest extends UnitSpec with TestUtility {
       elements.get(0).text shouldBe "Does this apply to you?"
     }
 
-    "diplay errors as none of the radio buttons are selected " in new WithApplication(fakeApplication) {
+    "diplay errors as none of the radio buttons are selected " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -832,7 +833,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "GDS Eligibility check page for multiyear" should {
 
-    "successfully authenticate the user and have eligibility-check page action" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have eligibility-check page action" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheck()(request)
@@ -845,7 +846,7 @@ class ContentTest extends UnitSpec with TestUtility {
       elements.get(0).text shouldBe "Does this apply to you?"
     }
 
-    "diplay errors as none of the radio buttons are selected " in new WithApplication(fakeApplication) {
+    "diplay errors as none of the radio buttons are selected " in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheckAction()(request)
@@ -867,7 +868,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "PTA date of birth check page for multiyear" should {
 
-    "successfully authenticate the user and have date of birth page and content" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have date of birth page and content" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -885,7 +886,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "PTA lower earner check page for multiyear" should {
 
-    "successfully authenticate the user and have income-check page and content" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have income-check page and content" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -902,7 +903,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "PTA partners income check page for multiyear" should {
 
-    "successfully authenticate the user and have partners-income page and content" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have partners-income page and content" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -920,7 +921,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "GDS date of birth page for multiyear" should {
 
-    "successfully authenticate the user and have date of birth page and content" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have date of birth page and content" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.dateOfBirthCheck()(request)
@@ -935,7 +936,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "GDS lower earner page for multiyear" should {
 
-    "successfully authenticate the user and have lower earner page and content" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have lower earner page and content" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.lowerEarnerCheck()(request)
@@ -950,7 +951,7 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "GDS partners income page for multiyear" should {
 
-    "successfully authenticate the user and have partners income page and content" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have partners income page and content" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.partnersIncomeCheck()(request)
@@ -965,8 +966,8 @@ class ContentTest extends UnitSpec with TestUtility {
 
   "Display Confirm page " should {
 
-    "have marriage date and name displayed" in new WithApplication(fakeApplication) {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(Some("JIM"),Some("FERGUSON"))))
+    "have marriage date and name displayed" in {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(Some("JIM"), Some("FERGUSON"))))
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)

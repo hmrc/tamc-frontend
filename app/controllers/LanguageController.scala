@@ -19,12 +19,14 @@ package controllers
 import config.ApplicationConfig
 import play.api.Play.current
 import play.api.i18n.Lang
-import play.api.mvc.Action
+import play.api.mvc.{Action, LegacyI18nSupport}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import play.api.i18n.Messages.Implicits._
+
 
 object LanguageController extends LanguageController
 
-class LanguageController extends FrontendController {
+class LanguageController extends FrontendController with LegacyI18nSupport {
 
   def switchToWelshEligibilityCheck = Action { implicit request =>
     Redirect(routes.MultiYearGdsEligibilityController.eligibilityCheck()).withLang(Lang(ApplicationConfig.LANG_CODE_WELSH))

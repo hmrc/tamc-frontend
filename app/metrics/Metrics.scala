@@ -18,20 +18,21 @@ package metrics
 
 import com.codahale.metrics.Timer
 import com.codahale.metrics.Timer.Context
-import com.kenshoo.play.metrics.MetricsRegistry
 
 trait Metrics {
   def incrementSuccessCitizenDetail(): Unit
+
   def incrementFailedCitizenDetail(): Unit
+
   def citizenDetailStartTimer(): Timer.Context
 }
 
 object Metrics extends Metrics {
 
-  override def incrementSuccessCitizenDetail(): Unit = MetricsRegistry.defaultRegistry.counter("citizen-detail-success").inc()
+  override def incrementSuccessCitizenDetail(): Unit = com.codahale.metrics.SharedMetricRegistries.getOrCreate("default").counter("citizen-detail-success").inc()
 
-  override def incrementFailedCitizenDetail(): Unit = MetricsRegistry.defaultRegistry.counter("citizen-detail-failed").inc()
+  override def incrementFailedCitizenDetail(): Unit = com.codahale.metrics.SharedMetricRegistries.getOrCreate("default").counter("citizen-detail-failed").inc()
 
-  override def citizenDetailStartTimer(): Context = MetricsRegistry.defaultRegistry.timer("citizen-detail-response-timer").time()
+  override def citizenDetailStartTimer(): Context = com.codahale.metrics.SharedMetricRegistries.getOrCreate("default").timer("citizen-detail-response-timer").time()
 
 }

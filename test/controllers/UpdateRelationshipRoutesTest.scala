@@ -16,22 +16,24 @@
 
 package controllers
 
+import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import play.api.test.Helpers.{ OK, SEE_OTHER, BAD_REQUEST, contentAsString, defaultAwaitTimeout, redirectLocation }
-import play.api.test.WithApplication
-import test_utils.TestData.{Ninos, Cids}
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
+import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
+import test_utils.TestData.Cids
 import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.test.WithApplication
-import models._
 
-class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility {
+class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "call list relationship " should {
 
-    "get redirected to how it works page when no record exist " in new WithApplication(fakeApplication) {
+    "get redirected to how it works page when no record exist " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_no_relationship")
       val controllerToTest = testComponent.controller
@@ -42,7 +44,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/how-it-works"))
     }
 
-    "list the relationship on the same page " in new WithApplication(fakeApplication) {
+    "list the relationship on the same page " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -54,23 +56,23 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
 
   }
 
-  "Links on History page " should{
+  "Links on History page " should {
 
-    "change of income link should link to change of income page" in new WithApplication(fakeApplication) {
+    "change of income link should link to change of income page" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
       val result = controllerToTest.changeOfIncome()(request)
 
-       status(result) shouldBe OK
+      status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading= document.getElementsByClass("heading-large").text()
+      val heading = document.getElementsByClass("heading-large").text()
       heading should be("Change of income")
 
     }
 
-    "bereavement link should link to Sorry for your loss page" in new WithApplication(fakeApplication) {
+    "bereavement link should link to Sorry for your loss page" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
@@ -79,7 +81,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading= document.getElementsByClass("heading-xlarge").text()
+      val heading = document.getElementsByClass("heading-xlarge").text()
       heading should be("We're sorry for your loss")
 
     }
@@ -87,7 +89,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
 
   "Update relationship action " should {
 
-    "show error if no option is selected " in new WithApplication(fakeApplication) {
+    "show error if no option is selected " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -96,20 +98,20 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe BAD_REQUEST
     }
 
-    "redirect to cancel page when user selects cancel option " in new WithApplication(fakeApplication) {
+    "redirect to cancel page when user selects cancel option " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR,"endReason" -> EndReasonCode.CANCEL)
+      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.CANCEL)
       val result = controllerToTest.updateRelationshipAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/cancel"))
     }
 
-    "redirect to reject page when user selects reject option " in new WithApplication(fakeApplication) {
+    "redirect to reject page when user selects reject option " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR,"endReason" -> EndReasonCode.REJECT)
+      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.REJECT)
       val result = controllerToTest.updateRelationshipAction()(request)
       status(result) shouldBe SEE_OTHER
       controllerToTest.relationshipEndReasonCount shouldBe 1
@@ -117,10 +119,10 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/reject"))
     }
 
-    "redirect to reject page when user selects reject option and save timestamp " in new WithApplication(fakeApplication) {
+    "redirect to reject page when user selects reject option and save timestamp " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR,"endReason" -> EndReasonCode.REJECT, "creationTimestamp" -> "1234567890")
+      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.REJECT, "creationTimestamp" -> "1234567890")
       val result = controllerToTest.updateRelationshipAction()(request)
       status(result) shouldBe SEE_OTHER
       controllerToTest.relationshipEndReasonCount shouldBe 1
@@ -128,7 +130,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/reject"))
     }
 
-    "display user divorce page when user selects divorce option " in new WithApplication(fakeApplication) {
+    "display user divorce page when user selects divorce option " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -137,7 +139,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
     }
 
-    "display user earnings changed page when user selects divorce option " in new WithApplication(fakeApplication) {
+    "display user earnings changed page when user selects divorce option " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -146,7 +148,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
     }
 
-    "show bereavement for recipient" in new WithApplication(fakeApplication) {
+    "show bereavement for recipient" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -161,7 +163,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
 
   "Confirm your selection " should {
 
-    "show error if no reason is provided" in new WithApplication(fakeApplication) {
+    "show error if no reason is provided" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false", "dateOfDivorce.day" -> "1", "dateOfDivorce.month" -> "1", "dateOfDivorce.year" -> "2015")
@@ -169,7 +171,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe BAD_REQUEST
     }
 
-    "confirm divorce action for previous year " in new WithApplication(fakeApplication) {
+    "confirm divorce action for previous year " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_PY)
@@ -178,7 +180,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
     }
 
-    "confirm divorce action for current year " in new WithApplication(fakeApplication) {
+    "confirm divorce action for current year " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_CY)
@@ -187,7 +189,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
     }
 
-    "confirm cancellation " in new WithApplication(fakeApplication) {
+    "confirm cancellation " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -195,76 +197,76 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
     }
 
-    "confirm rejection in ended relationship in active year" in new WithApplication(fakeApplication) {
+    "confirm rejection in ended relationship in active year" in {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20160406", Some(""), Some("20170405"), "", "")
 
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         roleRecord = Some(Role.RECIPIENT),
         activeRelationshipRecord = Some(relationshipRecord),
-        notification =Some(NotificationRecord(EmailAddress("example@example.com"))),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT)),
         relationshipUpdated = Some(false))
 
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship",transferorRecipientData = Some(updateRelationshipCacheData))
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
       val controllerToTest = testComponent.controller
       val request = testComponent.request
       val result = controllerToTest.confirmReject()(request)
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading= document.getElementsByClass("heading-xlarge").text()
-      val message= document.getElementById("reject-content").text()
+      val heading = document.getElementsByClass("heading-xlarge").text()
+      val message = document.getElementById("reject-content").text()
       heading should be("Cancelling Marriage Allowance")
       message should be("Your Marriage Allowance will be cancelled from 6 April 2016, the start of the tax year you first received it.")
     }
 
-    "confirm rejection in active year" in new WithApplication(fakeApplication) {
+    "confirm rejection in active year" in {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20150406", Some(""), Some(""), "", "")
 
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         roleRecord = Some(Role.RECIPIENT),
         activeRelationshipRecord = Some(relationshipRecord),
-        notification =Some(NotificationRecord(EmailAddress("example@example.com"))),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT)),
         relationshipUpdated = Some(false))
 
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship",transferorRecipientData = Some(updateRelationshipCacheData))
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
       val controllerToTest = testComponent.controller
       val request = testComponent.request
       val result = controllerToTest.confirmReject()(request)
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading= document.getElementsByClass("heading-xlarge").text()
-      val message= document.getElementById("reject-content").text()
+      val heading = document.getElementsByClass("heading-xlarge").text()
+      val message = document.getElementById("reject-content").text()
       heading should be("Cancelling Marriage Allowance")
       message should be("Your Marriage Allowance will be cancelled from 6 April 2015, the start of the tax year you first received it.")
     }
 
-    "confirm rejection with ended relationship in previous year" in new WithApplication(fakeApplication) {
+    "confirm rejection with ended relationship in previous year" in {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
       val historic1Record = RelationshipRecord(Role.RECIPIENT, "2015", "20120101", Some(""), Some("1-01-2013"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         roleRecord = Some(Role.RECIPIENT),
-        historicRelationships=Some(Seq(historic1Record)),
-        notification =Some(NotificationRecord(EmailAddress("example@example.com"))),
+        historicRelationships = Some(Seq(historic1Record)),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT, timestamp = Some("2015"))),
         relationshipUpdated = Some(false))
 
-      val testComponent = makeUpdateRelationshipTestComponent("coc_historic_relationship",transferorRecipientData = Some(updateRelationshipCacheData))
+      val testComponent = makeUpdateRelationshipTestComponent("coc_historic_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
       val controllerToTest = testComponent.controller
       val request = testComponent.request
       val result = controllerToTest.confirmReject()(request)
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading= document.getElementsByClass("heading-xlarge").text()
-      val message= document.getElementById("reject-content").text()
+      val heading = document.getElementsByClass("heading-xlarge").text()
+      val message = document.getElementById("reject-content").text()
       heading should be("Remove a previous Marriage Allowance claim")
       message should be("You can remove the Marriage Allowance you claimed previously. The allowance will be removed from 6 April 2011, the start of the tax year you first received it.")
     }
 
 
-    "changing divorce year using change button on confirmation page" in new WithApplication(fakeApplication) {
+    "changing divorce year using change button on confirmation page" in {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "56787", "20130101", Some(""), Some("20130110"), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "20120101", Some(""), Some("1-01-2013"), "", "")
@@ -273,22 +275,22 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         roleRecord = Some(Role.TRANSFEROR),
         activeRelationshipRecord = Some(relationshipRecord),
-        historicRelationships=Some(Seq(historic1Record, historic2Record)),
-        notification =Some(NotificationRecord(EmailAddress("example@example.com"))),
+        historicRelationships = Some(Seq(historic1Record, historic2Record)),
+        notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.DIVORCE_CY)),
         relationshipUpdated = Some(false))
 
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship",transferorRecipientData = Some(updateRelationshipCacheData))
+      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
       val controllerToTest = testComponent.controller
       val request = testComponent.request
       val result = controllerToTest.divorceYear()(request)
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading= document.getElementsByClass("heading-xlarge").text()
+      val heading = document.getElementsByClass("heading-xlarge").text()
       heading should be("Date of divorce or end of civil partnership")
     }
 
-    "confirm divorce action for recipient on current year " in new WithApplication(fakeApplication) {
+    "confirm divorce action for recipient on current year " in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "20130101", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(
@@ -296,7 +298,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
         roleRecord = Some(Role.RECIPIENT),
         activeRelationshipRecord = Some(relationshipRecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce= Some(new LocalDate(2016,6,12)),timestamp = Some("98765"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce = Some(new LocalDate(2016, 6, 12)), timestamp = Some("98765"))),
         relationshipUpdated = Some(false))
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
@@ -308,18 +310,17 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("confirm-page").text() shouldBe "Confirm cancellation of Marriage Allowance"
-      val message1= document.getElementById("message1").text()
-      val message2= document.getElementById("message2").text()
+      val message1 = document.getElementById("message1").text()
+      val message2 = document.getElementById("message2").text()
       message1 should be("your Marriage Allowance will remain in place until 5 April 2017, the end of the current tax year")
       message2 should be("your Personal Allowance will go back to the normal amount from 6 April 2017, the start of the new tax year")
     }
 
 
-
   }
 
   "Date of divorce page" should {
-    "display error entering no date on date of divorce page" in new WithApplication(fakeApplication) {
+    "display error entering no date on date of divorce page" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(
@@ -333,7 +334,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe BAD_REQUEST
     }
 
-    "display divorce info page if correct but invalid date entered" in new WithApplication(fakeApplication) {
+    "display divorce info page if correct but invalid date entered" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(
@@ -353,7 +354,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
 
   "Update relationship make changes" should {
 
-    "return successful on active record for transferror" in new WithApplication(fakeApplication) {
+    "return successful on active record for transferror" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -362,7 +363,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
     }
 
-    "return successful on active record for recipient " in new WithApplication(fakeApplication) {
+    "return successful on active record for recipient " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -371,7 +372,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
     }
 
-    "return successful on histrocial active record for transferror" in new WithApplication(fakeApplication) {
+    "return successful on histrocial active record for transferror" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -380,7 +381,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
     }
 
-    "return successful redirection on histrocial active record for recipient" in new WithApplication(fakeApplication) {
+    "return successful redirection on histrocial active record for recipient" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller

@@ -3,6 +3,9 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.urls.Link
 @import utils.LanguageUtils
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
 <div class="available-languages">
         @if(LanguageUtils.isWelsh(lang)) {
             @Link.toInternalPage(url = urlEnglish,

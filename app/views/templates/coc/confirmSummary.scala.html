@@ -4,6 +4,8 @@
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import utils.LanguageUtils
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 <table>
     @retroRejection match {

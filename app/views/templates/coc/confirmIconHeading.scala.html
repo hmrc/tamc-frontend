@@ -2,6 +2,8 @@
 
 @import views.helpers.TextGenerators
 @import utils.LanguageUtils
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
     @relevantDate match {

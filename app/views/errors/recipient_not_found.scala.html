@@ -19,7 +19,10 @@
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         user: details.TamcUser)
+
 @import play.twirl.api.Html
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.error")),

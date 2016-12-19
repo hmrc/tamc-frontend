@@ -20,12 +20,13 @@
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         user: details.TamcUser)
 
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 @import play.twirl.api.Html
-@import views.helpers.TextGenerators
-@import uk.gov.hmrc.time.TaxYearResolver
-@import config.ApplicationConfig
 @import services.TimeService
+@import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
+@import views.helpers.TextGenerators
     
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.reason")),

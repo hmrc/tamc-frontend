@@ -35,6 +35,9 @@ import utils.LanguageUtils
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import config.ApplicationConfig
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+
 @templates.tamc_main(
     title = Messages("title.application.pattern", Messages("title.extra-years")),
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishPreviousYears.toString(),
