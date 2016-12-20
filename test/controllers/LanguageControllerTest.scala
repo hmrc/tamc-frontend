@@ -26,7 +26,6 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
 
-@Ignore
 class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   override implicit lazy val app: Application = fakeApplication
@@ -36,13 +35,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshEligibilityCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishEligibilityCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -51,13 +48,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshDateOfBirthCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishDateOfBirthCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -66,13 +61,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshLowerEarnerCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/lower-earner")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishLowerEarnerCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/lower-earner")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -81,13 +74,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshPartnersIncomeCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/partners-income")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishPartnersIncomeCheck(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/partners-income")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -96,13 +87,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshHistory(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishHistory(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -111,13 +100,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshIncomeChange(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/change-of-income")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishIncomeChange(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/change-of-income")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -126,13 +113,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshBereavement(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/bereavement")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishBereavement(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/bereavement")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -141,13 +126,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshDateOfMarriage(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-marriage")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishDateOfMarriage(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-marriage")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -156,13 +139,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshConfirmEmail(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishConfirmEmail(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -171,13 +152,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshConfirmUpdate(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-change")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishConfirmUpdate(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-change")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -186,13 +165,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshConfirmCancel(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/cancel")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishConfirmCancel(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/cancel")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -201,13 +178,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshConfirmReject(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/reject")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishConfirmReject(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/reject")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -216,13 +191,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshFinishUpdate(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished-change")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishFinishUpdate(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished-change")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -231,13 +204,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshTransfer(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/transfer-allowance")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishTransfer(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/transfer-allowance")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -246,13 +217,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshEligibleYears(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligible-years")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishEligibleYears(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligible-years")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -261,13 +230,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshPreviousYears(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/previous-years")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishPreviousYears(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/previous-years")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -276,13 +243,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshConfirmYourEmail(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-your-email")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishConfirmYourEmail(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-your-email")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -291,13 +256,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshConfirm(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishConfirm(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -306,13 +269,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshFinished(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishFinished(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -321,13 +282,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshHowItWorks(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/how-it-works")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishHowItWorks(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/how-it-works")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -336,13 +295,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshEligibilityCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishEligibilityCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -352,13 +309,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshDateOfBirthCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishDateOfBirthCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/date-of-birth-check-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -367,13 +322,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshLowerEarnerCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/lower-earner-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishLowerEarnerCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/lower-earner-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -382,13 +335,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshPartnersIncomeCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/partners-income-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishPartnersIncomeCheckPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/partners-income-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -397,13 +348,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshCalculator(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishCalculator(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 
@@ -412,13 +361,11 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToWelshCalculatorPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=cy-GB; Path=/; HTTPOnly")
     }
     "redirect to English translated start page if English language is selected" in {
       val request = FakeRequest()
       val result = Future.successful(controllers.LanguageController.switchToEnglishCalculatorPta(request))
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/benefit-calculator-pta")
-      header("Set-Cookie", result) shouldBe Some("PLAY_LANG=en-GB; Path=/; HTTPOnly")
     }
   }
 }
