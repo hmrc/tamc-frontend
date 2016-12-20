@@ -50,8 +50,7 @@ trait TestUtility extends UnitSpec {
 
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
 
-  lazy val fakeApplication: Application = new GuiceApplicationBuilder()
-    .build()
+  lazy val fakeApplication: Application = new GuiceApplicationBuilder().build()
 
   def eventsShouldMatch(event: AuditEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty): Unit = {
     event match {
