@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,40 +19,31 @@ package test_utils
 import actions.{IdaAuthentificationProvider, MarriageAllowanceRegime}
 import connectors.{ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
 import controllers.{AuthorisationController, UpdateRelationshipController}
-import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsResponse, PersonDetailsSuccessResponse}
-import models.{LoggedInUserInfo, NotificationRecord, RegistrationFormInput, RelationshipRecord, UpdateRelationshipCacheData, UserRecord}
+import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsSuccessResponse}
+import models._
+import org.joda.time.DateTime
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Writes
 import play.api.mvc.{Request, Result}
-import play.api.test.{FakeApplication, FakeRequest}
-
-import scala.concurrent.{ExecutionContext, Future}
-import services.{CachingService, TransferService, UpdateRelationshipService}
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse, SessionKeys}
+import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
-import models.TaxYear
-import models.EndRelationshipReason
-import services.TimeService
 import uk.gov.hmrc.time.TaxYearResolver
-import org.joda.time.LocalDate
-import org.joda.time.DateTimeZone
-import org.joda.time.DateTime
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
-import test_utils.TestData.Ninos
+
+import scala.concurrent.{ExecutionContext, Future}
 
 trait UpdateRelationshipTestUtility extends UnitSpec {
 
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
-
-//  val fakeApplication = FakeApplication(additionalConfiguration = Map(
-//    "Test.microservice.assets.url" -> "test-url",
-//    "Test.microservice.assets.version" -> "test-version"))
 
   lazy val fakeApplication: Application =
     new GuiceApplicationBuilder()

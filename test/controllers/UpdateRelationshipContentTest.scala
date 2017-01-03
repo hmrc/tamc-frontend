@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
   implicit override lazy val app: Application = fakeApplication
 
-  "list relationship page " should {
+  "list relationship page" should {
 
     "display signout for PTA" in {
 
@@ -74,7 +74,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "display only active relationship details " in {
+    "display only active relationship details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -204,7 +204,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       historicRecord.toString().contains("2001 to 2011") should be(true)
     }
 
-    "not display active or historic relationship details " in {
+    "not display active or historic relationship details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_no_relationship")
       val controllerToTest = testComponent.controller
@@ -226,7 +226,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       historicRecord should be(null)
     }
 
-    "display historical active relationship details " in {
+    "display historical active relationship details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -234,6 +234,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val result = controllerToTest.history()(request)
 
       status(result) shouldBe OK
+      val contentAsStringFromResult = contentAsString(result)
       val document = Jsoup.parse(contentAsString(result))
       val historicActiveMessage = document.getElementById("historicActiveMessage").text()
       historicActiveMessage should be("You'll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year (5 April 2017).")
@@ -242,7 +243,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       historicRecord shouldNot be(null)
     }
 
-    "display bereavement and change of income related details " in {
+    "display bereavement and change of income related details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
@@ -271,9 +272,9 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
     }
   }
 
-  "Update relationship make changes page " should {
+  "Update relationship make changes page" should {
 
-    "show transferor data when user is transferor " in {
+    "show transferor data when user is transferor" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -299,7 +300,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
     }
 
-    "show transferor data when user is recipient " in {
+    "show transferor data when user is recipient" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -323,7 +324,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
     }
   }
 
-  "Update relationship confirmation page " should {
+  "Update relationship confirmation page" should {
 
     "confirm cancellation " in {
 
@@ -368,7 +369,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
   }
 
-  "Confirm your selection " should {
+  "Confirm your selection" should {
 
     "confirm email after divorce action (PY) " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
