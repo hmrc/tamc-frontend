@@ -63,6 +63,8 @@
 
     <logger name="org.asynchttpclient.netty" level="WARN"/>
 
+    <logger name="com.google.inject" level="WARN"/>
+
     <root level="DEBUG">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
