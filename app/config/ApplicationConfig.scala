@@ -16,10 +16,9 @@
 
 package config
 
-import play.api.Play.configuration
-import play.api.Play.current
-import uk.gov.hmrc.play.config.ServicesConfig
 import org.joda.time.LocalDate
+import play.api.Play.{configuration, current}
+import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYearResolver
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
@@ -76,8 +75,9 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override val LANG_CODE_ENGLISH = "en-GB"
   override val LANG_CODE_WELSH = "cy-GB"
+  override val LANG_LANG_ENGLISH = "en"
   override val LANG_LANG_WELSH = "cy"
-  
+
   override val isWelshEnabled = configuration.getBoolean("welsh-translation").getOrElse(false)
   lazy val webchatId = loadConfig("webchat.id")
 }
@@ -96,8 +96,11 @@ trait ApplicationConfig {
   val analyticsHost: String
 
   def ivNotAuthorisedUrl: String
+
   private def createUrl(action: String) = s"${loginUrl}/${action}?origin=ma&confidenceLevel=100&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
+
   def ivLoginUrl = createUrl(action = "registration")
+
   def ivUpliftUrl = createUrl(action = "uplift")
 
   val marriageAllowanceUrl: String
@@ -112,7 +115,8 @@ trait ApplicationConfig {
   val LANG_CODE_ENGLISH: String
   val LANG_CODE_WELSH: String
   val LANG_LANG_WELSH: String
-  
+  val LANG_LANG_ENGLISH: String
+
   val isWelshEnabled: Boolean
   val webchatId: String
 }
