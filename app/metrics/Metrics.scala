@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,27 @@
 
 package metrics
 
-import com.codahale.metrics.Timer
+import com.codahale.metrics.{MetricRegistry, Timer}
 import com.codahale.metrics.Timer.Context
-import com.kenshoo.play.metrics.MetricsRegistry
+import uk.gov.hmrc.play.graphite.MicroserviceMetrics
+
 
 trait Metrics {
   def incrementSuccessCitizenDetail(): Unit
+
   def incrementFailedCitizenDetail(): Unit
+
   def citizenDetailStartTimer(): Timer.Context
 }
 
-object Metrics extends Metrics {
+object Metrics extends Metrics with MicroserviceMetrics {
 
-  override def incrementSuccessCitizenDetail(): Unit = MetricsRegistry.defaultRegistry.counter("citizen-detail-success").inc()
+  val registry: MetricRegistry = metrics.defaultRegistry
 
-  override def incrementFailedCitizenDetail(): Unit = MetricsRegistry.defaultRegistry.counter("citizen-detail-failed").inc()
+  override def incrementSuccessCitizenDetail(): Unit = registry.counter("citizen-detail-success").inc()
 
-  override def citizenDetailStartTimer(): Context = MetricsRegistry.defaultRegistry.timer("citizen-detail-response-timer").time()
+  override def incrementFailedCitizenDetail(): Unit = registry.counter("citizen-detail-failed").inc()
+
+  override def citizenDetailStartTimer(): Context = registry.timer("citizen-detail-response-timer").time()
 
 }

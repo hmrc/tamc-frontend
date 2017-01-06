@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,27 @@
 
 package controllers
 
-import org.jsoup.Jsoup
 import config.ApplicationConfig
 import models._
+import org.joda.time.LocalDate
+import org.jsoup.Jsoup
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
-import play.api.test.Helpers.BAD_REQUEST
-import play.api.test.Helpers.FORBIDDEN
-import play.api.test.Helpers.OK
-import play.api.test.Helpers.SEE_OTHER
-import play.api.test.Helpers.contentAsString
-import play.api.test.Helpers.cookies
-import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.Helpers.redirectLocation
-import play.api.test.Helpers.session
-import play.api.test.WithApplication
-import play.api.test.WithApplication
-import test_utils.TestConstants
-import test_utils.TestUtility
-import test_utils.UpdateRelationshipTestUtility
+import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, cookies, defaultAwaitTimeout, redirectLocation}
+import test_utils.TestData.{Cids, Ninos}
+import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import test_utils.TestConstants
-import org.joda.time.LocalDate
-import test_utils.TestData.Ninos
-import test_utils.TestData.Cids
 
-class RoutesTest extends UnitSpec with TestUtility {
+class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "Hitting home endpoint directly" should {
-    "redirect to landing page (with passcode)" in new WithApplication(fakeApplication) {
+    "redirect to landing page (with passcode)" in {
       val request = FakeRequest()
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.home()(request)
@@ -54,7 +44,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check")
     }
 
-    "redirect to landing page (without passcode)" in new WithApplication(fakeApplication) {
+    "redirect to landing page (without passcode)" in {
       val request = FakeRequest()
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.home()(request)
@@ -64,7 +54,7 @@ class RoutesTest extends UnitSpec with TestUtility {
   }
 
   "GDS Journey enforcer" should {
-    "set GDS journey if no journey is present" in new WithApplication(fakeApplication) {
+    "set GDS journey if no journey is present" in {
       val request = FakeRequest()
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheck()(request)
@@ -72,7 +62,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
 
-    "set GDS journey if invalid journey is present" in new WithApplication(fakeApplication) {
+    "set GDS journey if invalid journey is present" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "ABC"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheck()(request)
@@ -80,7 +70,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
 
-    "leave PTA journey unchanged when PTA feature is enabled" in new WithApplication(fakeApplication) {
+    "leave PTA journey unchanged when PTA feature is enabled" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheck()(request)
@@ -90,7 +80,7 @@ class RoutesTest extends UnitSpec with TestUtility {
   }
 
   "PTA Journey enforcer" should {
-    "set PTA journey if no journey is present" in new WithApplication(fakeApplication) {
+    "set PTA journey if no journey is present" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -100,7 +90,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
     }
 
-    "set PTA journey if invalid journey is present" in new WithApplication(fakeApplication) {
+    "set PTA journey if invalid journey is present" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "ABC"))
       val controllerToTest = testComponent.controller
@@ -110,7 +100,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
     }
 
-    "leave PTA journey unchanged" in new WithApplication(fakeApplication) {
+    "leave PTA journey unchanged" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -119,7 +109,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
-    "check back link on calculator page" in new WithApplication(fakeApplication){
+    "check back link on calculator page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -132,7 +122,7 @@ class RoutesTest extends UnitSpec with TestUtility {
   }
 
   "Hitting calculator page" should {
-    "have a 'previous' and 'next' links to gov.ukpage" in new WithApplication(fakeApplication) {
+    "have a 'previous' and 'next' links to gov.ukpage" in {
       val request = FakeRequest()
       val controllerToTest = makeEligibilityController()
       val result = controllerToTest.calculator()(request)
@@ -149,7 +139,7 @@ class RoutesTest extends UnitSpec with TestUtility {
   }
 
   "Transfer page" should {
-    "redirect to status page if relationship creation is locked" in new WithApplication(fakeApplication) {
+    "redirect to status page if relationship creation is locked" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None, relationshipCreated = Some(true)))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -162,7 +152,7 @@ class RoutesTest extends UnitSpec with TestUtility {
     }
 
 
-    "redirect to status page if transferor is not in cache" in new WithApplication(fakeApplication) {
+    "redirect to status page if transferor is not in cache" in {
       val trRecipientData = Some(CacheData(transferor = None, recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -173,7 +163,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect to status page if cache is empty " in new WithApplication(fakeApplication) {
+    "redirect to status page if cache is empty " in {
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = None)
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("transferor-email" -> "example@example.com"))
@@ -183,7 +173,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect to iv page if user tries to hit any authorized page directly and user has not seen eligibility or verify page" in new WithApplication(fakeApplication) {
+    "redirect to iv page if user tries to hit any authorized page directly and user has not seen eligibility or verify page" in {
       val testComponent = makeTestComponent(dataId = "not_logged_in", riskTriageRouteBiasPercentageParam = 100)
       val controllerToTest = testComponent.controller
       val request = FakeRequest()
@@ -193,7 +183,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("bar")
     }
 
-    "redirect to IV if user tries to hit any authorized page directly and user has seen eligibility page" in new WithApplication(fakeApplication) {
+    "redirect to IV if user tries to hit any authorized page directly and user has seen eligibility page" in {
       val testComponent = makeTestComponent(dataId = "not_logged_in", riskTriageRouteBiasPercentageParam = 100)
       val controllerToTest = testComponent.controller
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
@@ -212,7 +202,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       eventsShouldMatch(event, "TxSuccessful", detailsToCheck)
     }
 
-    "redirect to IDA login page if user has insufficient Level of Assurance (LOA 1)" in new WithApplication(fakeApplication) {
+    "redirect to IDA login page if user has insufficient Level of Assurance (LOA 1)" in {
       val testComponent = makeTestComponent("user_LOA_1")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -222,7 +212,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("jazz")
     }
 
-    "redirect to transfer page if user has LOA 100 access level" in new WithApplication(fakeApplication) {
+    "redirect to transfer page if user has LOA 100 access level" in {
       val testComponent = makeTestComponent("user_LOA_1_5")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -234,7 +224,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       controllerToTest.auditEventsToTest.size shouldBe 0
     }
 
-    "redirect to transfer page if user has LOA 500 access level" in new WithApplication(fakeApplication) {
+    "redirect to transfer page if user has LOA 500 access level" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -246,7 +236,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       controllerToTest.auditEventsToTest.size shouldBe 0
     }
 
-    "have correct action and method to marriage-allowance-application/transfer-allowance" in new WithApplication(fakeApplication) {
+    "have correct action and method to marriage-allowance-application/transfer-allowance" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -262,7 +252,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       form.attr("action") shouldBe "/marriage-allowance-application/transfer-allowance"
     }
 
-    "have beta feedback link" in new WithApplication(fakeApplication) {
+    "have beta feedback link" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -281,7 +271,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "Transfer Action page" should {
 
-    "redirect to status page if relationship creation is locked" in new WithApplication(fakeApplication) {
+    "redirect to status page if relationship creation is locked" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None, relationshipCreated = Some(true)))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -293,7 +283,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect to status page if transferor is not in cache" in new WithApplication(fakeApplication) {
+    "redirect to status page if transferor is not in cache" in {
       val trRecipientData = Some(CacheData(transferor = None, recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -304,7 +294,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect transferAction to status page if transferor is not in cache" in new WithApplication(fakeApplication) {
+    "redirect transferAction to status page if transferor is not in cache" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.ninoWithLOA1), ("transferor-email" -> "example@example.com"))
@@ -316,13 +306,13 @@ class RoutesTest extends UnitSpec with TestUtility {
   }
 
   "Confirmation page" should {
-    "have correct action and method to finish page" in new WithApplication(fakeApplication) {
+    "have correct action and method to finish page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -339,13 +329,13 @@ class RoutesTest extends UnitSpec with TestUtility {
     }
 
 
-    "have signout link" in new WithApplication(fakeApplication) {
+    "have signout link" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -359,13 +349,13 @@ class RoutesTest extends UnitSpec with TestUtility {
       signout.attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "have link to edit email page" in new WithApplication(fakeApplication) {
+    "have link to edit email page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -378,13 +368,13 @@ class RoutesTest extends UnitSpec with TestUtility {
       signout shouldNot be(null)
       signout.attr("href") shouldBe "/marriage-allowance-application/confirm-your-email"
     }
-    "have link to edit partner details and edit marriage details" in new WithApplication(fakeApplication) {
+    "have link to edit partner details and edit marriage details" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -404,7 +394,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "Finished page" should {
 
-    "have check your marriage allowance and survey link for non-PTA journey" in new WithApplication(fakeApplication) {
+    "have check your marriage allowance and survey link for non-PTA journey" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -428,7 +418,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       surveyLink.getElementById("survey-link").attr("href") shouldBe "https://www.gov.uk/done/marriage-allowance"
     }
 
-    "have signout link and check your marriage allowance and survey link for PTA journey" in new WithApplication(fakeApplication) {
+    "have signout link and check your marriage allowance and survey link for PTA journey" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -455,7 +445,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       surveyLink.getElementById("survey-link").attr("href") shouldBe "https://www.gov.uk/done/marriage-allowance"
     }
 
-    "redirect to transfer-allowance if relation is not locked" in new WithApplication(fakeApplication) {
+    "redirect to transfer-allowance if relation is not locked" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -471,7 +461,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "redirect to transfer-allowance if relation lock is not present" in new WithApplication(fakeApplication) {
+    "redirect to transfer-allowance if relation lock is not present" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -487,9 +477,9 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
   }
-  
+
   "Signout page" should {
-    "redirect to IDA signout" in new WithApplication(fakeApplication) {
+    "redirect to IDA signout" in {
       val controllerToTest = makeFakeHomeController()
       val result = controllerToTest.logout(FakeRequest())
       status(result) shouldBe SEE_OTHER
@@ -498,7 +488,7 @@ class RoutesTest extends UnitSpec with TestUtility {
   }
 
   "Session timeout page" should {
-    "have link to PTA page" in new WithApplication(fakeApplication) {
+    "have link to PTA page" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -511,7 +501,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       signout.attr("href") shouldBe "/personal-account"
     }
 
-    "have link to PTA page (with PTA cookie)" in new WithApplication(fakeApplication) {
+    "have link to PTA page (with PTA cookie)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -524,7 +514,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       signout.attr("href") shouldBe "/personal-account"
     }
 
-    "have link to register page (GDS)" in new WithApplication(fakeApplication) {
+    "have link to register page (GDS)" in {
 
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
@@ -541,7 +531,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "PTA How It Works page " should {
 
-    "authenticate the user " in new WithApplication(fakeApplication) {
+    "authenticate the user " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("not_logged_in")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -550,7 +540,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("bar")
     }
 
-    "successfully authenticate the user " in new WithApplication(fakeApplication) {
+    "successfully authenticate the user " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -568,7 +558,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "PTA Benefit calculator page " should {
 
-    "authenticate the user " in new WithApplication(fakeApplication) {
+    "authenticate the user " in {
       val testComponent = makePtaEligibilityTestComponent("not_logged_in")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -577,7 +567,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("bar")
     }
 
-    "successfully authenticate the user " in new WithApplication(fakeApplication) {
+    "successfully authenticate the user " in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -594,7 +584,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "PTA Eligibility check page " should {
 
-    "authenticate the user " in new WithApplication(fakeApplication) {
+    "authenticate the user " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("not_logged_in")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -603,7 +593,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("bar")
     }
 
-    "go to finish in 'nyn' scenario" in new WithApplication(fakeApplication) {
+    "go to finish in 'nyn' scenario" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("marriage-criteria" -> "false", "recipient-income-criteria" -> "true", "transferor-income-criteria" -> "false")
       val controllerToTest = testComponent.controller
@@ -624,7 +614,7 @@ class RoutesTest extends UnitSpec with TestUtility {
   }
 
   "PTA Journey enforcer for multiyear" should {
-    "set PTA journey if no journey is present" in new WithApplication(fakeApplication) {
+    "set PTA journey if no journey is present" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -634,7 +624,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
     }
 
-    "set PTA journey if invalid journey is present" in new WithApplication(fakeApplication) {
+    "set PTA journey if invalid journey is present" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "ABC"))
       val controllerToTest = testComponent.controller
@@ -644,7 +634,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
     }
 
-    "leave PTA journey unchanged" in new WithApplication(fakeApplication) {
+    "leave PTA journey unchanged" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -657,7 +647,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "PTA Eligibility check page for multi year" should {
 
-    "authenticate the user " in new WithApplication(fakeApplication) {
+    "authenticate the user " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("not_logged_in")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -666,7 +656,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("bar")
     }
 
-    "successfully authenticate the user and have eligibility-check page action" in new WithApplication(fakeApplication) {
+    "successfully authenticate the user and have eligibility-check page action" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -683,7 +673,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
     }
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "diplay errors as no radio buttons is selected " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -702,7 +692,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
     }
 
-    "diplay errors as wrong input is provided by selected radio button" in new WithApplication(fakeApplication) {
+    "diplay errors as wrong input is provided by selected radio button" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -717,7 +707,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
     }
 
-    "redirect to date of birth if answer is yes" in new WithApplication(fakeApplication) {
+    "redirect to date of birth if answer is yes" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("marriage-criteria" -> "true")
       val controllerToTest = testComponent.controller
@@ -726,7 +716,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check-pta"))
     }
 
-    "go to not eligible page (finish page) if no is selected" in new WithApplication(fakeApplication) {
+    "go to not eligible page (finish page) if no is selected" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("marriage-criteria" -> "false")
       val controllerToTest = testComponent.controller
@@ -747,7 +737,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "PTA date of birth check page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "diplay errors as no radio buttons is selected " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -763,7 +753,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
     }
 
-    "redirect to who should lower earner page irrespective of selection" in new WithApplication(fakeApplication) {
+    "redirect to who should lower earner page irrespective of selection" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("date-of-birth" -> "true")
       val controllerToTest = testComponent.controller
@@ -776,7 +766,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "PTA lower earner check page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "diplay errors as no radio buttons is selected " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -792,10 +782,10 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check-pta")
     }
 
-    "redirect to who should transfer page irrespective of selection" in new WithApplication(fakeApplication) {
+    "redirect to who should transfer page irrespective of selection" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("lower-earner" -> "true")
-       val controllerToTest = testComponent.controller
+      val controllerToTest = testComponent.controller
       val result = controllerToTest.lowerEarnerCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/partners-income-pta"))
@@ -805,7 +795,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "PTA partners income check page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "diplay errors as no radio buttons is selected " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -822,7 +812,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
     }
 
-    "redirect to transfer controller page irrespective of selection" in new WithApplication(fakeApplication) {
+    "redirect to transfer controller page irrespective of selection" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("partners-income" -> "false")
       val controllerToTest = testComponent.controller
@@ -835,7 +825,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "GDS Eligibility check page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "diplay errors as no radio buttons is selected " in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheckAction()(request)
@@ -853,7 +843,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
     }
 
-    "diplay errors as wrong input is provided by selected radio button" in new WithApplication(fakeApplication) {
+    "diplay errors as wrong input is provided by selected radio button" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheckAction()(request)
@@ -871,7 +861,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe ("https://www.gov.uk/apply-marriage-allowance")
     }
 
-    "redirect to lower earner page if answer is yes and have back button" in new WithApplication(fakeApplication) {
+    "redirect to lower earner page if answer is yes and have back button" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("marriage-criteria" -> "true")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheckAction()(request)
@@ -879,7 +869,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check"))
     }
 
-    "go to not eligible page (finish page) if no is selected" in new WithApplication(fakeApplication) {
+    "go to not eligible page (finish page) if no is selected" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("marriage-criteria" -> "false")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.eligibilityCheckAction()(request)
@@ -896,7 +886,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "GDS lower earner page for multi year" should {
 
-    "display errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "display errors as no radio buttons is selected " in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.lowerEarnerCheckAction()(request)
@@ -914,7 +904,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check")
     }
 
-    "redirect to who should transfer page irrespective of selection" in new WithApplication(fakeApplication) {
+    "redirect to who should transfer page irrespective of selection" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("lower-earner" -> "false")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.lowerEarnerCheckAction()(request)
@@ -926,7 +916,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "GDS partners income page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "diplay errors as no radio buttons is selected " in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.partnersIncomeCheckAction()(request)
@@ -944,7 +934,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner")
     }
 
-    "redirect to verify page irrespective of selection" in new WithApplication(fakeApplication) {
+    "redirect to verify page irrespective of selection" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("partners-income" -> "false")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.partnersIncomeCheckAction()(request)
@@ -955,7 +945,7 @@ class RoutesTest extends UnitSpec with TestUtility {
 
   "GDS date of birth check page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in new WithApplication(fakeApplication) {
+    "diplay errors as no radio buttons is selected " in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.dateOfBirthCheckAction()(request)
@@ -970,7 +960,7 @@ class RoutesTest extends UnitSpec with TestUtility {
       back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
     }
 
-    "redirect to who should lower earner page irrespective of selection" in new WithApplication(fakeApplication) {
+    "redirect to who should lower earner page irrespective of selection" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("date-of-birth" -> "false")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.dateOfBirthCheckAction()(request)

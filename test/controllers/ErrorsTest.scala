@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,25 @@
 
 package controllers
 
-import org.jsoup.Jsoup
 import models._
-import play.api.test.Helpers.INTERNAL_SERVER_ERROR
-import play.api.test.Helpers.SEE_OTHER
-import play.api.test.Helpers.contentAsString
-import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.Helpers.redirectLocation
-import play.api.test.WithApplication
-import test_utils.TestUtility
-import uk.gov.hmrc.play.test.UnitSpec
+import org.joda.time.LocalDate
+import org.jsoup.Jsoup
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
+import play.api.mvc.Cookie
+import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
+import test_utils.TestData.{Cids, Ninos}
+import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import test_utils.TestConstants
-import play.api.mvc.Cookie
-import org.joda.time.LocalDate
-import test_utils.TestData.Ninos
-import test_utils.TestData.Cids
+import uk.gov.hmrc.play.test.UnitSpec
 
-class ErrorsTest extends UnitSpec with TestUtility {
+class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "Error handling in transfer page when submitting form" should {
-    "show 'Recipient details not found' page" in new WithApplication(fakeApplication) {
+    "show 'Recipient details not found' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound)))
@@ -65,7 +62,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       document.getElementById("error").text() shouldBe "We were unable to find a HMRC record of your spouse or civil partner."
     }
 
-    "show 'Technical Exception' page" in new WithApplication(fakeApplication) {
+    "show 'Technical Exception' page" in {
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("20140101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -81,7 +78,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       document.getElementById("error").text() shouldBe "We're experiencing technical difficulties"
     }
 
-    "send audit event if recipient can not be found" in new WithApplication(fakeApplication) {
+    "send audit event if recipient can not be found" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound)))
@@ -114,7 +111,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
     }
 
-    "send audit event if there is a technical error" in new WithApplication(fakeApplication) {
+    "send audit event if there is a technical error" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoError)))
@@ -147,7 +144,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
     }
 
-    "show 'no tax years for transferor' page if transferor enters date of marriage as current tax year" in new WithApplication(fakeApplication) {
+    "show 'no tax years for transferor' page if transferor enters date of marriage as current tax year" in {
 
       val cachedRecipientData = Some(RecipientDetailsFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1)))
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
@@ -159,7 +156,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
         selectedYears = Some(List(2015)),
-        recipientDetailsFormData=cachedRecipientData))
+        recipientDetailsFormData = cachedRecipientData))
 
       val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20160415"), "", "")
@@ -167,7 +164,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 
-      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData),transferorRecipientData = trRecipientData)
+      val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData), transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
       val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
       val result = controllerToTest.dateOfMarriageAction(request)
@@ -180,7 +177,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
   }
 
   "Error handling in confirm page" should {
-    "show 'Cannot Create Relationship' page" in new WithApplication(fakeApplication) {
+    "show 'Cannot Create Relationship' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -201,7 +198,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       document.getElementById("error").text() shouldBe "Cannot create relationship"
     }
 
-    "send audit event if a relationship cannot be created when journey is from GDS" in new WithApplication(fakeApplication) {
+    "send audit event if a relationship cannot be created when journey is from GDS" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -211,7 +208,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
         selectedYears = Some(List(2015)),
-        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testParams = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
@@ -221,7 +218,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       status(result) shouldBe INTERNAL_SERVER_ERROR
     }
 
-    "send audit event if a relationship cannot be created when journey is from PTA" in new WithApplication(fakeApplication) {
+    "send audit event if a relationship cannot be created when journey is from PTA" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -231,7 +228,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
         selectedYears = Some(List(2015)),
-        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testParams = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
@@ -259,7 +256,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
   }
 
   "Error handling after complete journey" should {
-    "show relationship already created if trying edit email" in new WithApplication(fakeApplication) {
+    "show relationship already created if trying edit email" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -276,7 +273,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "show relationship already created if trying open confirmation page" in new WithApplication(fakeApplication) {
+    "show relationship already created if trying open confirmation page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -293,7 +290,7 @@ class ErrorsTest extends UnitSpec with TestUtility {
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
     }
 
-    "show relationship already created if trying to confirm relationship" in new WithApplication(fakeApplication) {
+    "show relationship already created if trying to confirm relationship" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))

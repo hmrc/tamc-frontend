@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,26 +20,32 @@ import org.mockito.Matchers.{eq => meq, _}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
-import play.api.test.FakeApplication
-import play.api.test.Helpers._
+import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
 class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach with ServicesConfig {
 
-  implicit override lazy val app: FakeApplication = FakeApplication()
+  implicit override lazy val app: Application = new GuiceApplicationBuilder()
+    .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
+    .build
+
   implicit val headerCarrier = HeaderCarrier()
 
   object TestConnector extends ContactFrontendConnector {
-    override val http = mock[HttpGet]
+    override val http: HttpGet = mock[HttpGet]
   }
 
-  override def beforeEach() = {
+  override def beforeEach(): Unit = {
     reset(TestConnector.http)
   }
+
+  private val OK = 200
 
   "ContactFrontendConnector" must {
 
@@ -49,7 +55,7 @@ class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with Moc
 
     "contact the front end service to download the 'get help' partial" in {
 
-      val response = HttpResponse(200, responseString = Some(dummyResponseHtml))
+      val response = HttpResponse(OK, responseString = Some(dummyResponseHtml))
 
       when(TestConnector.http.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier])) thenReturn Future.successful(response)
 

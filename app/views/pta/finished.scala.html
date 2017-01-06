@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*     http://www.apache.org/licenses/LICENSE-2.0
+* http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,27 +13,28 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress
-  )(implicit lang: Lang, 
-      request: Request[_],
-      context: config.TamcContext,
-      breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-      user: details.TamcUser)
+)(implicit lang: Lang,
+        request: Request[_],
+        context: config.TamcContext,
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser)
 
-@import play.twirl.api.Html
-@import config.ApplicationConfig
+    @import play.twirl.api.Html
+    @import config.ApplicationConfig
+    @import play.api.Play.current
+    @import play.api.i18n.Messages.Implicits._
 
-@templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.finished"))){
-<div class="highlighted-event">
-<h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">@Html(Messages("pages.finished.successful"))</h1>
-</div>
+    @templates.tamc_main(
+        title = Messages("title.application.pattern", Messages("title.finished"))) {
+        <div class="highlighted-event">
+            <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">@Html(Messages("pages.finished.successful"))</h1>
+        </div>
 
-<p>@Html(Messages("pages.finished.para1.email1", transferorEmail)) @Html(Messages("pages.finished.para1.email2"))</p>
-<p>@Html(Messages("pages.finished.para2"))</p>
-<h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
-<p>@Html(Messages("pages.finished.para4"))</p>
-<p id="paragraph-5">@Html(Messages("pages.finished.check-link-para", "https://www.gov.uk/personal-tax-account"))</p>
-<p id="paragraph-6">@Html(Messages("pages.finished.survey-link", "marriage-allowance:link:exit_survey_pta", "https://www.gov.uk/done/marriage-allowance"))</p>
-}
+        <p>@Html(Messages("pages.finished.para1.email1", transferorEmail)) @Html(Messages("pages.finished.para1.email2"))</p>
+        <p>@Html(Messages("pages.finished.para2"))</p>
+        <h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
+        <p>@Html(Messages("pages.finished.para4"))</p>
+        <p id="paragraph-5">@Html(Messages("pages.finished.check-link-para", "https://www.gov.uk/personal-tax-account"))</p>
+        <p id="paragraph-6">@Html(Messages("pages.finished.survey-link", "marriage-allowance:link:exit_survey_pta", "https://www.gov.uk/done/marriage-allowance"))</p>
+    }

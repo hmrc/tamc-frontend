@@ -17,6 +17,7 @@
 import sbt._
 
 object FrontendBuild extends Build with MicroService {
+
   import scala.util.Properties.envOrElse
 
   val appName = "tamc-frontend"
@@ -42,29 +43,51 @@ object FrontendBuild extends Build with MicroService {
  */
 
 private object AppDependencies {
+
   import play.core.PlayVersion
 
-  private val scalaTestPlusVersion = "1.2.0"
+  private val scalaTestPlusPlayVersion = "1.5.1"
+  private val emailAddressVersion = "1.1.0"
+  private val frontendBootstrapVersion = "7.10.0"
+  private val govUkTemplateVersion = "5.0.0"
+  private val httpCachingClientVersion = "6.1.0"
+  private val httpVerbsVersion = "6.2.0"
+  private val playAuthorisedFrontendVersion = "6.2.0"
+  private val playBreadcrumbVersion = "1.0.0"
+  private val playConfigVersion = "3.0.0"
+  private val playHealthVersion = "2.0.0"
+  private val logbackJsonLoggerVersion = "3.1.0"
+  private val playPartialsVersion = "5.2.0"
+  private val playUiVersion = "5.2.0"
+  private val timeVersion = "2.1.0"
+  private val domainVersion = "4.0.0"
+  private val urlBuilderVersion = "2.0.0"
+  private val playGraphiteVersion = "3.1.0"
+  private val hmrcTestVersion = "2.2.0"
+  private val jsoupVerison = "1.8.3"
+  private val pegdownVersion = "1.6.0"
+  private val scalacheckVersion = "1.12.5"
   private val scalaTestVersion = "2.2.6"
+  private val mockitoCoreVerison = "1.9.5"
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "emailaddress" % "1.1.0",
-    "uk.gov.hmrc" %% "frontend-bootstrap" % "6.7.0",
-    "uk.gov.hmrc" %% "govuk-template" % "4.0.0",
-    "uk.gov.hmrc" %% "http-caching-client" % "5.6.0",
-    "uk.gov.hmrc" %% "http-verbs" % "5.0.0",
-    "uk.gov.hmrc" %% "play-authorised-frontend" % "5.5.0",
-    "uk.gov.hmrc" %% "play-breadcrumb" % "1.0.0",
-    "uk.gov.hmrc" %% "play-config" % "2.0.1",
-    "uk.gov.hmrc" %% "play-health" % "1.1.0",
-    "uk.gov.hmrc" %% "play-json-logger" % "2.1.1",
-    "uk.gov.hmrc" %% "play-partials" % "4.6.0",
-    "uk.gov.hmrc" %% "play-ui" % "4.17.2",
-    "uk.gov.hmrc" %% "time" % "2.1.0",
-    "uk.gov.hmrc" %% "domain" % "3.3.0",
-    "uk.gov.hmrc" %% "url-builder" % "1.1.0",
-    "com.codahale.metrics" % "metrics-graphite" % "3.0.2",
-    "com.kenshoo" %% "metrics-play" % "2.3.0_0.1.8")
+    "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,
+    "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
+    "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
+    "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
+    "uk.gov.hmrc" %% "http-verbs" % httpVerbsVersion,
+    "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
+    "uk.gov.hmrc" %% "play-breadcrumb" % playBreadcrumbVersion,
+    "uk.gov.hmrc" %% "play-config" % playConfigVersion,
+    "uk.gov.hmrc" %% "play-health" % playHealthVersion,
+    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
+    "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
+    "uk.gov.hmrc" %% "play-ui" % playUiVersion,
+    "uk.gov.hmrc" %% "time" % timeVersion,
+    "uk.gov.hmrc" %% "domain" % domainVersion,
+    "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
+    "uk.gov.hmrc" %% "play-graphite" % playGraphiteVersion
+  )
 
   trait TestDependencies {
     lazy val scope: String = "test"
@@ -72,17 +95,19 @@ private object AppDependencies {
   }
 
   object Test {
-    def apply() = new TestDependencies {
+    def apply(): Seq[ModuleID] = new TestDependencies {
       override lazy val test = Seq(
-        "uk.gov.hmrc" %% "hmrctest" % "1.8.0" % scope,
+        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "org.scalatestplus" %% "play" % scalaTestPlusVersion % scope,
-        "org.jsoup" % "jsoup" % "1.8.3" % scope,
-        "org.pegdown" % "pegdown" % "1.6.0" % scope,
-        "org.scalacheck" %% "scalacheck" % "1.12.5" % scope,
-        "org.scalatest" %% "scalatest" % "2.2.6" % scope)
+        "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusPlayVersion % scope,
+        "org.jsoup" % "jsoup" % jsoupVerison % scope,
+        "org.pegdown" % "pegdown" % pegdownVersion % scope,
+        "org.scalacheck" %% "scalacheck" % scalacheckVersion % scope,
+        "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.mockito" % "mockito-core" % mockitoCoreVerison % scope
+      )
     }.test
   }
 
-  def apply() = compile ++ Test()
+  def apply(): Seq[ModuleID] = compile ++ Test()
 }

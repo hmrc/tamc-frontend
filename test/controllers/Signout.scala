@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,29 +17,25 @@
 package controllers
 
 import models._
-import play.api.test.Helpers.INTERNAL_SERVER_ERROR
-import play.api.test.Helpers.OK
-import play.api.test.Helpers.contentAsString
-import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.WithApplication
-import test_utils.TestUtility
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.domain.Nino
-import org.jsoup.Jsoup
-import uk.gov.hmrc.emailaddress.EmailAddress
-import scala.concurrent.Future
-import config.ApplicationConfig
-import play.api.mvc.Cookie
-import test_utils.TestConstants
 import org.joda.time.LocalDate
-import test_utils.TestData.Ninos
-import test_utils.TestData.Cids
+import org.jsoup.Jsoup
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
+import play.api.mvc.Cookie
+import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, OK, contentAsString, defaultAwaitTimeout}
+import test_utils.TestData.{Cids, Ninos}
+import test_utils.{TestConstants, TestUtility}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.play.test.UnitSpec
 
-class Signout extends UnitSpec with TestUtility {
+class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "PTA Sign out and status" should {
 
-    "be on 'How It Works' page for returning user" in new WithApplication(fakeApplication) {
+    "be on 'How It Works' page for returning user" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_returning")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -51,7 +47,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015"
     }
 
-    "be on 'How It Works' page" in new WithApplication(fakeApplication) {
+    "be on 'How It Works' page" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -63,7 +59,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Calculator' page" in new WithApplication(fakeApplication) {
+    "be on 'Calculator' page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -75,7 +71,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Eligibility Check' page" in new WithApplication(fakeApplication) {
+    "be on 'Eligibility Check' page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -87,7 +83,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Transfer' page" in new WithApplication(fakeApplication) {
+    "be on 'Transfer' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -101,7 +97,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Confirm Email' page" in new WithApplication(fakeApplication) {
+    "be on 'Confirm Email' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -120,7 +116,7 @@ class Signout extends UnitSpec with TestUtility {
 
     }
 
-    "be on 'Confirm' page" in new WithApplication(fakeApplication) {
+    "be on 'Confirm' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -131,7 +127,7 @@ class Signout extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         selectedYears = selectedYears,
-        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -144,7 +140,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Finished' page" in new WithApplication(fakeApplication) {
+    "be on 'Finished' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -162,7 +158,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'Recipient details not found' page" in new WithApplication(fakeApplication) {
+    "show sign-out on 'Recipient details not found' page" in {
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -180,7 +176,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'Technical Exceptions' page" in new WithApplication(fakeApplication) {
+    "show sign-out on 'Technical Exceptions' page" in {
 
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
@@ -199,7 +195,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
-    "show sign-out on 'Cannot Create Relationship' page" in new WithApplication(fakeApplication) {
+    "show sign-out on 'Cannot Create Relationship' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -217,7 +213,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show 'Technical Exception' page" in new WithApplication(fakeApplication) {
+    "show 'Technical Exception' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = 999999, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoError), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -236,7 +232,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'Technical Exception' pages" in new WithApplication(fakeApplication) {
+    "show sign-out on 'Technical Exception' pages" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = 999999, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoError), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -257,7 +253,7 @@ class Signout extends UnitSpec with TestUtility {
   }
 
   "GDS Sign out" should {
-    "be on 'How It Works' page" in new WithApplication(fakeApplication) {
+    "be on 'How It Works' page" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -268,7 +264,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Calculator' page" in new WithApplication(fakeApplication) {
+    "be on 'Calculator' page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -279,7 +275,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Eligibility Check' page" in new WithApplication(fakeApplication) {
+    "be on 'Eligibility Check' page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -290,7 +286,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Transfer' page" in new WithApplication(fakeApplication) {
+    "be on 'Transfer' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -303,7 +299,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Confirm Email' page" in new WithApplication(fakeApplication) {
+    "be on 'Confirm Email' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -320,7 +316,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Confirm' page" in new WithApplication(fakeApplication) {
+    "be on 'Confirm' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -331,7 +327,7 @@ class Signout extends UnitSpec with TestUtility {
         recipient = Some(recrecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         selectedYears = selectedYears,
-        dateOfMarriage= Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
@@ -343,7 +339,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Finished' page" in new WithApplication(fakeApplication) {
+    "be on 'Finished' page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -363,7 +359,7 @@ class Signout extends UnitSpec with TestUtility {
 
   "PTA Sign out and status for multi year" should {
 
-    "be on 'How It Works' page for returning user" in new WithApplication(fakeApplication) {
+    "be on 'How It Works' page for returning user" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_returning")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -375,7 +371,7 @@ class Signout extends UnitSpec with TestUtility {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015"
     }
 
-    "be on 'How It Works' page" in new WithApplication(fakeApplication) {
+    "be on 'How It Works' page" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller

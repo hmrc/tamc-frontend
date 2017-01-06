@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*     http://www.apache.org/licenses/LICENSE-2.0
+* http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,7 +13,6 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
 @(pageTitle: String, heading: String, message: String, appConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_])
 
 @import play.api.Play.current
@@ -22,6 +21,8 @@
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 
 @contentHeader = {
     <h1>@heading</h1>
@@ -32,14 +33,14 @@
 }
 
 @head = {
-  @uiLayouts.head(
+@uiLayouts.head(
     linkElem = None,
     headScripts = None)
-  <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="telephone=no" />
 }
 
 @betaBanner = {
-  @uiLayouts.betaBanner(
+@uiLayouts.betaBanner(
     userLoggedIn = false,
     appConfig.betaFeedbackUnauthenticatedUrl,
     appConfig.betaFeedbackUnauthenticatedUrl,
@@ -47,7 +48,7 @@
 }
 
 @serviceInfo = {
-  @uiLayouts.serviceInfo(
+@uiLayouts.serviceInfo(
     betaBanner = betaBanner,
     includeGridWrapper = false,
     serviceInfoContent = None)
@@ -55,14 +56,14 @@
 
 
 @content = {
-  @uiLayouts.main_content(
+@uiLayouts.main_content(
     article = uiLayouts.article(mainContent),
     serviceInfo = serviceInfo,
     mainContentHeader = contentHeader)
 }
 
 @bodyEnd = {
-  @uiLayouts.footer(
+@uiLayouts.footer(
     analyticsToken = appConfig.analyticsToken,
     analyticsHost = appConfig.analyticsHost,
     ssoUrl = None,

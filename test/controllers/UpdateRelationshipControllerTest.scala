@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,25 +16,25 @@
 
 package controllers
 
-import scala.concurrent.Future
+import models._
+import org.joda.time.LocalDate
 import org.jsoup.Jsoup
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
+import play.api.mvc.Cookie
 import play.api.test.Helpers.{OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
-import play.api.test.WithApplication
+import test_utils.TestData.Cids
+import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
-import test_utils.{UpdateRelationshipTestUtility, TestConstants}
-import org.scalatest.mock.MockitoSugar
-import play.api.mvc.Cookie
-import models.{UpdateRelationshipCacheData, LoggedInUserInfo, RelationshipRecord, NotificationRecord, Role, EndReasonCode}
-import models.EndRelationshipReason
-import org.joda.time.LocalDate
-import test_utils.TestData.Cids
 
-class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipTestUtility {
+class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "Update relationship email notification " should {
 
-    "save a valid email and redirect to confirmation page" in new WithApplication(fakeApplication) {
+    "save a valid email and redirect to confirmation page" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example@example.com"))
@@ -46,7 +46,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       controllerToTest.notificationToTest shouldBe Some(NotificationRecord(EmailAddress("example@example.com")))
     }
 
-    "read from keystore and display email field" in new WithApplication(fakeApplication) {
+    "read from keystore and display email field" in {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015")
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -68,7 +68,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
   "Update relationship caching data " should {
 
-    "have a logged in user in cached" in new WithApplication(fakeApplication) {
+    "have a logged in user in cached" in {
       val loggedInUser = Some(LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015"))
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_no_relationship", loggedInUserInfo = loggedInUser)
@@ -80,7 +80,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       controllerToTest.loggedInUserInfoCount shouldBe 1
     }
 
-    "have divorce previous year in end relationship cache " in new WithApplication(fakeApplication) {
+    "have divorce previous year in end relationship cache " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_PY)
@@ -91,7 +91,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_PY"))
     }
 
-    "have divorce previous year in end relationship cache (with divorce date)" in new WithApplication(fakeApplication) {
+    "have divorce previous year in end relationship cache (with divorce date)" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody(
@@ -106,7 +106,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_PY", Some(new LocalDate(2015, 1, 20))))
     }
 
-    "have divorce current year in end relationship cache " in new WithApplication(fakeApplication) {
+    "have divorce current year in end relationship cache " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_CY)
@@ -117,7 +117,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("DIVORCE_CY"))
     }
 
-    "have cancel in end relationship cache " in new WithApplication(fakeApplication) {
+    "have cancel in end relationship cache " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -128,7 +128,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason(EndReasonCode.CANCEL))
     }
 
-    "have update relationship details in cache with Cancel end reason" in new WithApplication(fakeApplication) {
+    "have update relationship details in cache with Cancel end reason" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "20150101", Some(""), Some("20160101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser), roleRecord = Some(""),
@@ -144,7 +144,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
     }
 
-    "have update relationship details in cache with rejection reason and end date from service call" in new WithApplication(fakeApplication) {
+    "have update relationship details in cache with rejection reason and end date from service call" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "", "20150101", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser), roleRecord = Some(""),
@@ -159,7 +159,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       status(result) shouldBe OK
     }
 
-    "list correct tax year and have update relationship details in cache with rejection reason and history" in new WithApplication(fakeApplication) {
+    "list correct tax year and have update relationship details in cache with rejection reason and history" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "", Some(""), Some(""), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "", Some(""), Some(""), "", "")
@@ -185,7 +185,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       document.getElementById("confirm-note").text() shouldBe "You've asked us to remove your Marriage Allowance from tax year 2010 to 2015. This means:"
     }
 
-    "have update relationship action details in cache " in new WithApplication(fakeApplication) {
+    "have update relationship action details in cache " in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -201,7 +201,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished-change")
     }
 
-    "reject active relationship" in new WithApplication(fakeApplication) {
+    "reject active relationship" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "20120101", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -217,7 +217,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished-change")
     }
 
-    "reject historic relationship" in new WithApplication(fakeApplication) {
+    "reject historic relationship" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "", Some(""), Some(""), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "", Some(""), Some(""), "", "")
@@ -239,7 +239,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/finished-change")
     }
 
-    "confirm rejection of relationship" in new WithApplication(fakeApplication) {
+    "confirm rejection of relationship" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "", Some(""), Some(""), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "", Some(""), Some(""), "", "")
@@ -260,7 +260,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       status(result) shouldBe OK
     }
 
-    "Finish update after change of circumstances journey for recipient rejection" in new WithApplication(fakeApplication) {
+    "Finish update after change of circumstances journey for recipient rejection" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(
@@ -278,7 +278,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       status(result) shouldBe OK
     }
 
-    "Finish update after change of circumstances journey for transferor rejects" in new WithApplication(fakeApplication) {
+    "Finish update after change of circumstances journey for transferor rejects" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "123456", "", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(
@@ -296,7 +296,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       status(result) shouldBe OK
     }
 
-    "select divorce year for update relationship" in new WithApplication(fakeApplication) {
+    "select divorce year for update relationship" in {
       val transferorRecipientData = Some(UpdateRelationshipCacheData(None, None,
         Some(RelationshipRecord(Role.RECIPIENT, "1234567890", "20150101", None, None, Role.TRANSFEROR, "1234567890")),
         None, None, None, None))
@@ -320,7 +320,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
   "Calling history page" should {
 
-    "show sign-out on 'History' page with PTA journey" in new WithApplication(fakeApplication) {
+    "show sign-out on 'History' page with PTA journey" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -332,7 +332,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'History' page with GDS journey" in new WithApplication(fakeApplication) {
+    "show sign-out on 'History' page with GDS journey" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
@@ -343,7 +343,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "show beta feedback on 'History' page" in new WithApplication(fakeApplication) {
+    "show beta feedback on 'History' page" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -355,7 +355,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       feedback.attr("href") shouldBe "http://localhost:9250/contact/beta-feedback-unauthenticated?service=TAMC"
     }
 
-    "show sign-out on 'History' page along with message" in new WithApplication(fakeApplication) {
+    "show sign-out on 'History' page along with message" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import sbt.Keys._
 import sbt.Tests.{SubProcess, Group}
 import sbt._
@@ -20,6 +21,8 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import scoverage.ScoverageSbtPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
+import play.sbt.routes.RoutesKeys.routesGenerator
+import play.routes.compiler.StaticRoutesGenerator
 
 trait MicroService {
 
@@ -31,9 +34,9 @@ trait MicroService {
 
   val appName: String
 
-  lazy val appDependencies : Seq[ModuleID] = ???
-  lazy val plugins : Seq[Plugins] = Seq(play.PlayScala)
-  lazy val playSettings : Seq[Setting[_]] = Seq.empty
+  lazy val appDependencies: Seq[ModuleID] = ???
+  lazy val plugins: Seq[Plugins] = Seq(play.sbt.PlayScala)
+  lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
   lazy val scoverageSettings = {
     import ScoverageSbtPlugin._
@@ -46,10 +49,10 @@ trait MicroService {
     )
   }
 
-  lazy val microservice = Project(appName, file("."))
-    .enablePlugins(plugins : _*)
-    .settings(playSettings : _*)
-    .settings(scoverageSettings : _*)
+  lazy val microservice: Project = Project(appName, file("."))
+    .enablePlugins(plugins: _*)
+    .settings(playSettings: _*)
+    .settings(scoverageSettings: _*)
     .settings(publishingSettings: _*)
     .settings(scalaSettings: _*)
     .settings(defaultSettings(): _*)
@@ -58,18 +61,19 @@ trait MicroService {
       libraryDependencies ++= appDependencies,
       parallelExecution in Test := false,
       fork in Test := false,
-      retrieveManaged := true
+      retrieveManaged := true,
+      routesGenerator := StaticRoutesGenerator
     )
     .settings(inConfig(TemplateTest)(Defaults.testSettings): _*)
     .configs(IntegrationTest)
     .settings(inConfig(TemplateItTest)(Defaults.itSettings): _*)
     .settings(
       Keys.fork in IntegrationTest := false,
-      unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest)(base => Seq(base / "it")),
+      unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest) (base => Seq(base / "it")),
       addTestReportOption(IntegrationTest, "int-test-reports"),
       testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
       parallelExecution in IntegrationTest := false)
-    .settings(resolvers += Resolver.bintrayRepo("hmrc", "releases"))
+    .settings(resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo))
     .enablePlugins(SbtDistributablesPlugin, SbtAutoBuildPlugin, SbtGitVersioning)
 }
 
@@ -78,10 +82,10 @@ private object TestPhases {
   val allPhases = "tt->test;test->test;test->compile;compile->compile"
   val allItPhases = "tit->it;it->it;it->compile;compile->compile"
 
-  lazy val TemplateTest = config("tt") extend Test
-  lazy val TemplateItTest = config("tit") extend IntegrationTest
+  lazy val TemplateTest: Configuration = config("tt") extend Test
+  lazy val TemplateItTest: Configuration = config("tit") extend IntegrationTest
 
-  def oneForkedJvmPerTest(tests: Seq[TestDefinition]) =
+  def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
     tests map {
       test => new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
     }

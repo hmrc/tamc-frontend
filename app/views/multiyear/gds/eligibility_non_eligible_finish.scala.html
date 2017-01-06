@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*     http://www.apache.org/licenses/LICENSE-2.0
+* http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,20 +13,21 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
 @()(implicit lang: Lang, request: Request[_], context: config.TamcContext, breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb)
 
-@import play.twirl.api.Html
+    @import play.twirl.api.Html
+    @import play.api.Play.current
+    @import play.api.i18n.Messages.Implicits._
 
-@templates.tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("title.non-eligible"))){
-    <h1>@Html(Messages("eligibility.check.header"))</h1>
-    <p class="panel-indent">@Html(Messages("eligibility.check.non-eligible"))</p>
+    @templates.tamc_main(
+        title = Messages("title.eligibility.pattern", Messages("title.non-eligible"))) {
+        <h1>@Html(Messages("eligibility.check.header"))</h1>
+        <p class="panel-indent">@Html(Messages("eligibility.check.non-eligible"))</p>
 
-    <p>
-        <a id="button-finished" class="button" role="button" href="https://www.gov.uk/marriage-allowance-guide" data-journey-click="marriage-allowance:button:finished_via_eligibilitycheck" >
+        <p>
+            <a id="button-finished" class="button" role="button" href="https://www.gov.uk/marriage-allowance-guide" data-journey-click="marriage-allowance:button:finished_via_eligibilitycheck" >
             @Html(Messages("generic.finish"))
-        </a>
-    </p>
-    <a href="@controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
-}
+            </a>
+        </p>
+        <a href="@controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
+    }

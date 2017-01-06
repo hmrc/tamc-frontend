@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import forms.EmptyForm
 import models._
 import org.joda.time.LocalDate
 import play.Logger
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.http.HeaderCarrier
@@ -53,7 +53,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
   val authConnector: ApplicationAuthConnector
   val timeService: TimeService
 
-  def history() = TamcAuthPersonalDetailsAction {
+  def history(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -82,7 +82,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
 
   }
 
-  def makeChange() = TamcAuthPersonalDetailsAction {
+  def makeChange(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -98,7 +98,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
           }
   }
 
-  def updateRelationshipAction() = TamcAuthPersonalDetailsAction {
+  def updateRelationshipAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit user =>
       implicit request =>
         implicit details =>
@@ -124,21 +124,21 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
 
   }
 
-  def changeOfIncome = TamcAuthPersonalDetailsAction {
+  def changeOfIncome: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future { Ok(views.html.coc.change_in_earnings()) }
   }
 
-  def bereavement = TamcAuthPersonalDetailsAction {
+  def bereavement: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future { Ok(views.html.coc.bereavement_transferor())}
   }
 
-  def confirmYourEmailActionUpdate = TamcAuthPersonalDetailsAction {
+  def confirmYourEmailActionUpdate: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -151,7 +151,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
               }) recover (handleError)
   }
 
-  def divorceYear = TamcAuthPersonalDetailsAction {
+  def divorceYear: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -165,7 +165,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
   }
 
 
-  def divorceSelectYear() = TamcAuthPersonalDetailsAction {
+  def divorceSelectYear(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit user =>
       implicit request =>
         implicit details =>
@@ -194,7 +194,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
       case _                           => None
     }
 
-  def divorceAction() = TamcAuthPersonalDetailsAction {
+  def divorceAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit user =>
       implicit request =>
         implicit details =>
@@ -218,7 +218,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
               })
   }
 
-  def confirmEmail = TamcAuthPersonalDetailsAction {
+  def confirmEmail: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -228,7 +228,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
           } recover (handleError)
   }
 
-  def confirmReject() = TamcAuthPersonalDetailsAction {
+  def confirmReject(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit user =>
       implicit request =>
         implicit details =>
@@ -241,7 +241,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
           }
   }
 
-  def confirmCancel() = TamcAuthPersonalDetailsAction {
+  def confirmCancel(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit user =>
       implicit request =>
         implicit details =>
@@ -251,7 +251,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
           }
   }
 
-  def confirmUpdate = TamcAuthPersonalDetailsAction {
+  def confirmUpdate: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -278,7 +278,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
           } recover (handleError)
   }
 
-  def confirmUpdateAction = TamcAuthPersonalDetailsAction {
+  def confirmUpdateAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -292,7 +292,7 @@ trait UpdateRelationshipController extends FrontendController with AuthorisedAct
           } recover (handleError)
   }
 
-  def finishUpdate = TamcAuthPersonalDetailsAction {
+  def finishUpdate: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>

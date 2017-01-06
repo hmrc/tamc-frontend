@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,24 @@
 
 package controllers
 
-import models.{ EndReasonCode, Role }
+import details.{Person, PersonDetails}
+import models.{CitizenName, EndReasonCode, Role, UserRecord}
+import org.joda.time.{DateTime, DateTimeZone}
 import org.jsoup.Jsoup
-import play.api.test.Helpers.{ OK, SEE_OTHER, contentAsString, defaultAwaitTimeout }
-import play.api.test.WithApplication
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
+import play.api.mvc.Cookie
+import play.api.test.Helpers.{OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
 import test_utils.UpdateRelationshipTestUtility
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.mvc.Cookie
-import play.api.test.Helpers.redirectLocation
-import models.UserRecord
-import test_utils.TestConstants
-import models.CitizenName
-import details.PersonDetails
-import details.Person
-import org.joda.time.LocalDate
-import org.joda.time.DateTimeZone
-import org.joda.time.DateTime
 
-class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTestUtility {
+class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
 
-  "list relationship page " should {
+  implicit override lazy val app: Application = fakeApplication
 
-   "display signout for PTA" in new WithApplication(fakeApplication) {
+  "list relationship page" should {
+
+    "display signout for PTA" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -51,7 +47,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "display signout for PTA when CitizenDetails are in cache" in new WithApplication(fakeApplication) {
+    "display signout for PTA when CitizenDetails are in cache" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", cachePd = Some(PersonDetails(Person(Some("cached_name")))))
       val controllerToTest = testComponent.controller
@@ -65,7 +61,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Cached_name, this is the first time you have logged in"
     }
 
-    "display signout for GDS" in new WithApplication(fakeApplication) {
+    "display signout for GDS" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -78,7 +74,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "display only active relationship details " in new WithApplication(fakeApplication) {
+    "display only active relationship details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -94,7 +90,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       historicRecord should be(null)
     }
 
-    "display only historic relationship details and link to how-it-works" in new WithApplication(fakeApplication) {
+    "display only historic relationship details and link to how-it-works" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historic_relationship")
       val controllerToTest = testComponent.controller
@@ -119,7 +115,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("line0-remove") shouldBe null
     }
 
-    "display reject button when it should be displayed" in new WithApplication(fakeApplication) {
+    "display reject button when it should be displayed" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historic_rejectable_relationship")
       val controllerToTest = testComponent.controller
@@ -148,7 +144,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("line1-remove") shouldNot be(null)
     }
 
-    "don't display apply for previous years button when previous years are available" in new WithApplication(fakeApplication) {
+    "don't display apply for previous years button when previous years are available" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historic_rejectable_relationship")
       val controllerToTest = testComponent.controller
@@ -162,7 +158,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       prevYearsButton shouldNot be(null)
     }
 
-    "display 'apply for previous years' button if historic year is available" in new WithApplication(fakeApplication) {
+    "display 'apply for previous years' button if historic year is available" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_gap_in_years")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -175,7 +171,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       prevYearsButton shouldNot be(null)
     }
 
-    "display apply for previous years button when previous years are available" in new WithApplication(fakeApplication) {
+    "display apply for previous years button when previous years are available" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -188,7 +184,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       prevYearsButton should be(null)
     }
 
-    "display active and historic relationship details " in new WithApplication(fakeApplication) {
+    "display active and historic relationship details " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
@@ -208,7 +204,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       historicRecord.toString().contains("2001 to 2011") should be(true)
     }
 
-    "not display active or historic relationship details " in new WithApplication(fakeApplication) {
+    "not display active or historic relationship details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_no_relationship")
       val controllerToTest = testComponent.controller
@@ -230,7 +226,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       historicRecord should be(null)
     }
 
-    "display historical active relationship details " in new WithApplication(fakeApplication) {
+    "display historical active relationship details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -238,6 +234,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val result = controllerToTest.history()(request)
 
       status(result) shouldBe OK
+      val contentAsStringFromResult = contentAsString(result)
       val document = Jsoup.parse(contentAsString(result))
       val historicActiveMessage = document.getElementById("historicActiveMessage").text()
       historicActiveMessage should be("You'll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year (5 April 2017).")
@@ -246,7 +243,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       historicRecord shouldNot be(null)
     }
 
-    "display bereavement and change of income related details " in new WithApplication(fakeApplication) {
+    "display bereavement and change of income related details" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
@@ -275,9 +272,9 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
     }
   }
 
-  "Update relationship make changes page " should {
+  "Update relationship make changes page" should {
 
-    "show transferor data when user is transferor " in new WithApplication(fakeApplication) {
+    "show transferor data when user is transferor" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -303,7 +300,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
     }
 
-    "show transferor data when user is recipient " in new WithApplication(fakeApplication) {
+    "show transferor data when user is recipient" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -327,9 +324,9 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
     }
   }
 
-  "Update relationship confirmation page " should {
+  "Update relationship confirmation page" should {
 
-    "confirm cancellation " in new WithApplication(fakeApplication) {
+    "confirm cancellation " in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -349,10 +346,10 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
     }
 
-    "confirm cancellation with future date" in new WithApplication(fakeApplication) {
+    "confirm cancellation with future date" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship",
-          testingTime = new DateTime(2017, 1, 1, 0, 0, DateTimeZone.forID("Europe/London")))
+        testingTime = new DateTime(2017, 1, 1, 0, 0, DateTimeZone.forID("Europe/London")))
       val controllerToTest = testComponent.controller
       val request = testComponent.request
       val result = controllerToTest.confirmCancel()(request)
@@ -372,9 +369,9 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
   }
 
-  "Confirm your selection " should {
+  "Confirm your selection" should {
 
-    "confirm email after divorce action (PY) " in new WithApplication(fakeApplication) {
+    "confirm email after divorce action (PY) " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_PY)
@@ -384,7 +381,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
     }
 
-    "confirm email after divorce action (CY)" in new WithApplication(fakeApplication) {
+    "confirm email after divorce action (CY)" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_CY)
@@ -396,7 +393,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
   "Update relationship make changes" should {
 
-    "return successful on historical active record for transferror" in new WithApplication(fakeApplication) {
+    "return successful on historical active record for transferror" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -417,7 +414,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReasonDivorce.toString.contains(EndReasonCode.DIVORCE) should be(true)
     }
 
-    "return successful on non historically active record for transferror" in new WithApplication(fakeApplication) {
+    "return successful on non historically active record for transferror" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -439,7 +436,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReasonCancel.toString.contains(EndReasonCode.CANCEL) should be(true)
     }
 
-    "return successful on historical active record for recipient" in new WithApplication(fakeApplication) {
+    "return successful on historical active record for recipient" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller
@@ -461,7 +458,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       endReasonReject.toString.contains(EndReasonCode.REJECT) should be(true)
     }
 
-    "return successful on non historical active record for recipient" in new WithApplication(fakeApplication) {
+    "return successful on non historical active record for recipient" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
       val controllerToTest = testComponent.controller

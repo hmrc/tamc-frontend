@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ object TestConstants {
 
   private val COC_HISTORICALLY_ACTIVE_RELATIONSHIP = """{"relationship_record":{"relationships":
     [{"participant":"Recipient","creationTimestamp":"20150531235901","participant1StartDate":"20011230",
-    "relationshipEndReason":"DEATH","participant1EndDate":"20161230","otherParticipantInstanceIdentifier":"123456789012345",
+    "relationshipEndReason":"DEATH","participant1EndDate":"20201230","otherParticipantInstanceIdentifier":"123456789012345",
     "otherParticipantUpdateTimestamp":"20150531235901"}, {"participant":"Recipient","creationTimestamp":"20150531235901","participant1StartDate":"20011230",
     "relationshipEndReason":"DEATH","participant1EndDate":"20101230","otherParticipantInstanceIdentifier":"123456789012345",
     "otherParticipantUpdateTimestamp":"20150531235901"}],"userRecord":{"cid":999700100,"timestamp":"2015","name":{"firstName":"Foo","lastName":"Bar"}}},

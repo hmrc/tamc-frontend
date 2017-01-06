@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,38 +19,36 @@ package test_utils
 import actions.{IdaAuthentificationProvider, MarriageAllowanceRegime}
 import connectors.{ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
 import controllers.{AuthorisationController, UpdateRelationshipController}
-import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsResponse, PersonDetailsSuccessResponse}
-import models.{LoggedInUserInfo, NotificationRecord, RegistrationFormInput, RelationshipRecord, UpdateRelationshipCacheData, UserRecord}
+import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsSuccessResponse}
+import models._
+import org.joda.time.DateTime
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Writes
 import play.api.mvc.{Request, Result}
-import play.api.test.{FakeApplication, FakeRequest}
-
-import scala.concurrent.{ExecutionContext, Future}
-import services.{CachingService, TransferService, UpdateRelationshipService}
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse, SessionKeys}
+import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils.now
-import models.TaxYear
-import models.EndRelationshipReason
-import services.TimeService
 import uk.gov.hmrc.time.TaxYearResolver
-import org.joda.time.LocalDate
-import org.joda.time.DateTimeZone
-import org.joda.time.DateTime
-import play.api.test.Helpers._
-import test_utils.TestData.Ninos
+
+import scala.concurrent.{ExecutionContext, Future}
 
 trait UpdateRelationshipTestUtility extends UnitSpec {
 
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
 
-  val fakeApplication = FakeApplication(additionalConfiguration = Map(
-    "Test.microservice.assets.url" -> "test-url",
-    "Test.microservice.assets.version" -> "test-version"))
+  lazy val fakeApplication: Application =
+    new GuiceApplicationBuilder()
+      .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
+      .build
 
   def eventsShouldMatch(event: AuditEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty) = event match {
     case DataEvent("tamc-frontend", `auditType`, _, eventTags, `details`, _) if (tags.toSet subsetOf eventTags.toSet) =>
@@ -64,59 +62,73 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
     new AuthorisationController {
       override val logoutUrl = "baz"
       override val auditConnector = fakeCustomAuditConnector
+
       def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
     }
   }
 
   trait DebugData {
     def cachingTransferorRecordToTest(): Option[UserRecord] = ???
+
     def cachingTransferorRecordToTestCount(): Int = ???
 
     def cachingRecipientRecordToTest(): Option[UserRecord] = ???
+
     def cachingRecipientRecordToTestCount(): Int = ???
+
     def cachingRecipientDataToTest(): Option[RegistrationFormInput] = ???
 
     def notificationToTest: Option[NotificationRecord] = ???
+
     def saveNotificationCount: Int = ???
 
     def cachingRecipientRecordRetrievalCount(): Int = ???
+
     def cachingRetrievalCount(): Int = ???
 
     def cachingLockCreateRelationship(): Int = ???
+
     def cachingLockCreateValue: Option[Boolean] = ???
 
     def createRelationshipCallCountToTest: Int = ???
+
     def createRelationshipUrl: Option[String] = ???
 
     def auditEventsToTest: List[AuditEvent] = ???
+
     def idaAuditEventsToTest: List[AuditEvent] = ???
 
     def loggedInUserInfoCount: Int = ???
+
     def loggedInUserInfoVal: Option[LoggedInUserInfo] = ???
 
     def relationshipEndReasonCount: Int = ???
+
     def relationshipEndReasonRecord: Option[EndRelationshipReason] = ???
 
   }
 
   trait UpdateRelationshipControllerWithDebug extends UpdateRelationshipController with DebugData
+
   case class TestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: UpdateRelationshipControllerWithDebug)
 
   def makeUpdateRelationshipTestComponent(
-    dataId: String,
-    loggedInUserInfo: Option[LoggedInUserInfo] = None,
-    transferorRecipientData: Option[UpdateRelationshipCacheData] = None,
-    cocEnabledTestInput: Boolean = true,
-    cachePd: Option[PersonDetails] = None,
-    cidPd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name")))),
-    testingTime: DateTime = TestConstants.TEST_CURRENT_DATE): TestComponent = {
+                                           dataId: String,
+                                           loggedInUserInfo: Option[LoggedInUserInfo] = None,
+                                           transferorRecipientData: Option[UpdateRelationshipCacheData] = None,
+                                           cocEnabledTestInput: Boolean = true,
+                                           cachePd: Option[PersonDetails] = None,
+                                           cidPd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name")))),
+                                           testingTime: DateTime = TestConstants.TEST_CURRENT_DATE): TestComponent = {
     Map(
       ("coc_no_relationship" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithNoRelationship), makeController(Some(Ninos.ninoWithNoRelationship), loggedInUserInfo, transferorRecipientData, cocEnabledTestInput, cachePd, cidPd, testingTime))),
       ("coc_active_relationship" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithActiveRelationship), makeController(Some(Ninos.ninoWithActiveRelationship), loggedInUserInfo, transferorRecipientData, cocEnabledTestInput, cachePd, cidPd, testingTime))),
@@ -136,20 +148,22 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
     SessionKeys.userId -> userId)
 
   private def makeController(
-    nino: Option[String],
-    loggedInUserInfo: Option[LoggedInUserInfo],
-    transferorRecipientData: Option[UpdateRelationshipCacheData],
-    cocEnabledTestInput: Boolean,
-    cachePd: Option[PersonDetails],
-    cidPd: PersonDetailsSuccessResponse,
-    testingTime: DateTime) = {
+                              nino: Option[String],
+                              loggedInUserInfo: Option[LoggedInUserInfo],
+                              transferorRecipientData: Option[UpdateRelationshipCacheData],
+                              cocEnabledTestInput: Boolean,
+                              cachePd: Option[PersonDetails],
+                              cidPd: PersonDetailsSuccessResponse,
+                              testingTime: DateTime) = {
     val fakeIDACustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
       var auditEventsToTest: List[AuditEvent] = List()
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
@@ -159,9 +173,10 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
-          case None            => super.redirectToLogin(request)
+          case None => super.redirectToLogin(request)
         }
       }
+
       override val customAuditConnector = fakeIDACustomAuditConnector
     }
 
@@ -171,19 +186,20 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
-        case Ninos.ninoWithLOA1   => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50, userDetailsLink = None, enrolments = None)
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None)
-        case ninoLoa2             => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None)
+        case Ninos.ninoWithLOA1 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L50, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
+        case ninoLoa2 => Authority("ID-" + nino, Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), None, None, CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
       }
 
     val fakeAuthConnector = new ApplicationAuthConnector {
       override val serviceUrl: String = null
       override lazy val http = null
+
       override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
         nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None)))
-          case Some(validNino)             => Future.successful(Some(createFakePayeAuthority(validNino)))
-          case None                        => throw new IllegalArgumentException
+          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
+          case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
+          case None => throw new IllegalArgumentException
         }
       }
     }
@@ -194,7 +210,9 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
 
       override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
-        Future { AuditResult.Success }
+        Future {
+          AuditResult.Success
+        }
       }
     }
 
@@ -204,16 +222,22 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
         val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
         response.getOrElse(throw new IllegalArgumentException("transferor not supported for :" + url))
       }
+
       def appName: String = ???
+
       val hooks = NoneRequired
     }
 
     val fakeHttpCititzenGet = new HttpGet {
+
       import play.api.libs.json.Json
+
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         new DummyHttpResponse(Json.toJson(cidPd.personDetails).toString, OK)
       }
+
       def appName: String = ???
+
       val hooks = NoneRequired
     }
 
@@ -224,16 +248,22 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
             throw new IllegalArgumentException("recepient not supported for :" + url)
         }
       }
+
       protected def doPostString(url: String, body: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+
       protected def doEmptyPost[A](url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+
       protected def doFormPost(url: String, body: Map[String, Seq[String]])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+
       def appName: String = ???
+
       val hooks = NoneRequired
     }
 
     val fakeHttpPut = new HttpPut {
       var createRelationshipCallCountToTest = 0
       var createRelationshipUrl: Option[String] = None
+
       def doPut[A](url: String, body: A)(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] = {
         createRelationshipCallCountToTest = createRelationshipCallCountToTest + 1
         createRelationshipUrl = Some(url)
@@ -241,21 +271,29 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
         val response = TestConstants.dummyHttpPutResponseJsonMap.get(body.toString)
         response.getOrElse(throw new IllegalArgumentException(body.toString + "action not supported for : " + url))
       }
+
       def appName: String = ???
+
       val hooks = NoneRequired
     }
 
     val fakeMiddleConnector = new MarriageAllowanceConnector {
       override def httpGet: HttpGet = fakeHttpGet
+
       override def httpPost: HttpPost = fakeHttpPost
+
       override def httpPut: HttpPut = fakeHttpPut
+
       override val marriageAllowanceUrl = "foo"
     }
 
     val fakeCachingService = new CachingService {
       override def baseUri: String = ???
+
       override def defaultSource: String = ???
+
       override def domain: String = ???
+
       override def http = ???
 
       var transferorRecordToTest: Option[UserRecord] = None
@@ -336,11 +374,15 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
         Future.successful(historic)
 
       override def getPersonDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[PersonDetails]] = {
-        Future { cachePd }
+        Future {
+          cachePd
+        }
       }
 
       override def savePersonDetails(personDetails: PersonDetails)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[PersonDetails] = {
-        Future { personDetails }
+        Future {
+          personDetails
+        }
       }
     }
 
@@ -366,12 +408,15 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
 
     val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
       override def httpGet: HttpGet = fakeHttpCititzenGet
+
       override def citizenDetailsUrl: String = "foo"
     }
 
     val fakeCitizenDetailsService = new CitizenDetailsService {
       def citizenDetailsUrl = ???
+
       override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
+
       override def cachingService = fakeCachingService
     }
 
@@ -386,24 +431,41 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       override val timeService = fakeTimeService
 
       override def cachingTransferorRecordToTest = fakeCachingService.transferorRecordToTest
+
       override def cachingTransferorRecordToTestCount = fakeCachingService.transferorRecordToTestCount
+
       override def cachingRecipientRecordToTest = fakeCachingService.recipientRecordToTest
+
       override def cachingRecipientRecordToTestCount = fakeCachingService.recipientRecordToTestCount
+
       override def cachingRecipientDataToTest = fakeCachingService.recipientDataToTest
+
       override def cachingRecipientRecordRetrievalCount = fakeCachingService.recipientRecordRetrieval
+
       override def cachingRetrievalCount = fakeCachingService.retrieveAllCount
+
       override def createRelationshipCallCountToTest = fakeHttpPut.createRelationshipCallCountToTest
+
       override def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
+
       override def idaAuditEventsToTest = fakeIDACustomAuditConnector.auditEventsToTest
+
       override def notificationToTest = fakeCachingService.notificationToTest
+
       override def saveNotificationCount = fakeCachingService.saveNotificationCount
+
       override def cachingLockCreateRelationship = fakeCachingService.lockCreateRelationshipCount
+
       override def cachingLockCreateValue = fakeCachingService.lockCreateRelationshipVal
+
       override def createRelationshipUrl = fakeHttpPut.createRelationshipUrl
 
       override def loggedInUserInfoCount = fakeCachingService.loggedInUserInfoCount
+
       override def loggedInUserInfoVal = fakeCachingService.loggedInUserInfoToTest
+
       override def relationshipEndReasonCount = fakeCachingService.endRelationshipReasonCount
+
       override def relationshipEndReasonRecord = fakeCachingService.relationshipEndReasonRecord
     }
   }

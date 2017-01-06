@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,19 @@
 
 package controllers
 
-import scala.concurrent.Future
+import models.{CacheData, UserRecord}
 import org.jsoup.Jsoup
-import models.CacheData
-import models.CitizenName
-import models.Gender
-import models.RecipientRecord
-import models.RegistrationFormInput
-import models.UserRecord
-import play.api.test.Helpers.BAD_REQUEST
-import play.api.test.Helpers.OK
-import play.api.test.Helpers.SEE_OTHER
-import play.api.test.Helpers.contentAsString
-import play.api.test.Helpers.defaultAwaitTimeout
-import play.api.test.Helpers.redirectLocation
-import play.api.test.Helpers.session
-import play.api.test.WithApplication
-import test_utils.TestUtility
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.test.UnitSpec
-import models.NotificationRecord
-import events.CreateRelationshipSuccessEvent
+import org.scalatestplus.play.OneAppPerSuite
+import play.api.Application
 import play.api.mvc.Cookie
-import test_utils.TestConstants
+import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestData.Cids
+import test_utils.{TestConstants, TestUtility}
+import uk.gov.hmrc.play.test.UnitSpec
 
-class BreadcrumbTest extends UnitSpec with TestUtility {
+class BreadcrumbTest extends UnitSpec with TestUtility with OneAppPerSuite {
+
+  implicit override lazy val app: Application = fakeApplication
 
   "When PTA journey is enabled, Breadcrumb" should {
 
@@ -56,7 +42,7 @@ class BreadcrumbTest extends UnitSpec with TestUtility {
     val incomeTaxLink = "<li><a href=\"/check-income-tax/income-tax\">Income Tax</a></li>"
     val tfaLink = "<li><a href=\"#\">Tax-free allowance</a></li>"
 
-    "be visible on tranfer page" in new WithApplication(fakeApplication) {
+    "be visible on tranfer page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)

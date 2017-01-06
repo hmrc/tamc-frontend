@@ -14,13 +14,13 @@
 * limitations under the License.
 *@
 
-@(field: Field, radioOptions: Seq[(String, String)], args: (Symbol, Any)*)(implicit lang: Lang, request: Request[_])
+@(field: Field, radioOptions: Seq[(String, String)], args: (Symbol, Any)*)(implicit messages: Messages, request: Request[_])
 
 @import play.api.i18n._
 @import views.html.helper._
 @import play.twirl.api.Html
 
-@elements = @{new FieldElements(field.id, field, null, args.toMap, lang) }
+@elements = @{new FieldElements(field.id, field, null, args.toMap, messages) }
 @fieldsetClass = {@elements.args.get('_groupClass)@if(elements.hasErrors){ form-field--error}}
 @labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
 <fieldset class="@fieldsetClass" id="@elements.field.id"
