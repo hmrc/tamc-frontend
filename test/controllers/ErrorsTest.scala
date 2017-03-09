@@ -159,7 +159,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
         recipientDetailsFormData = cachedRecipientData))
 
       val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20160415"), "", "")
+      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20170415"), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "20100401", Some(""), Some("20100403"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
