@@ -563,7 +563,6 @@ change.other.income.link=To let us know about a change in income, contact HMRC
 change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
 change.other.bereavement.link=To let us know about a bereavement, contact HMRC
-change.status.active=Active
 
 error.invalid.date.format=You must specify a valid date.
 
