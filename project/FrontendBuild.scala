@@ -17,12 +17,7 @@
 import sbt._
 
 object FrontendBuild extends Build with MicroService {
-
-  import scala.util.Properties.envOrElse
-
   val appName = "tamc-frontend"
-  val appVersion = envOrElse("TAMC_FRONTEND_VERSION", "999-SNAPSHOT")
-
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }
 
@@ -32,22 +27,22 @@ private object AppDependencies {
 
   private val scalaTestPlusPlayVersion = "1.5.1"
   private val emailAddressVersion = "1.1.0"
-  private val frontendBootstrapVersion = "7.10.0"
-  private val govUkTemplateVersion = "5.0.0"
-  private val httpCachingClientVersion = "6.1.0"
-  private val httpVerbsVersion = "6.2.0"
-  private val playAuthorisedFrontendVersion = "6.2.0"
+  private val frontendBootstrapVersion = "7.22.0"
+  private val govUkTemplateVersion = "5.1.0"
+  private val httpCachingClientVersion = "6.2.0"
+  private val httpVerbsVersion = "6.3.0"
+  private val playAuthorisedFrontendVersion = "6.3.0"
   private val playBreadcrumbVersion = "1.0.0"
-  private val playConfigVersion = "3.0.0"
-  private val playHealthVersion = "2.0.0"
+  private val playConfigVersion = "4.3.0"
+  private val playHealthVersion = "2.1.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val playPartialsVersion = "5.2.0"
   private val playUiVersion = "5.2.0"
   private val timeVersion = "2.1.0"
-  private val domainVersion = "4.0.0"
-  private val urlBuilderVersion = "2.0.0"
-  private val playGraphiteVersion = "3.1.0"
-  private val hmrcTestVersion = "2.2.0"
+  private val domainVersion = "4.1.0"
+  private val urlBuilderVersion = "2.1.0"
+  private val playGraphiteVersion = "3.2.0"
+  private val hmrcTestVersion = "2.3.0"
   private val jsoupVerison = "1.8.3"
   private val pegdownVersion = "1.6.0"
   private val scalacheckVersion = "1.12.5"
@@ -75,7 +70,7 @@ private object AppDependencies {
 
   trait TestDependencies {
     lazy val scope: String = "test"
-    lazy val test: Seq[ModuleID] = ???
+    lazy val test: Seq[ModuleID] = Seq.empty
   }
 
   object Test {
