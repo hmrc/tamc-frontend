@@ -79,7 +79,6 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("register-form")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("form-error-message").text() shouldBe "Check your information is correct, in the right place and in the right format."
       document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name,name)").size() shouldBe 1
     }
@@ -97,7 +96,6 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("register-form")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("form-error-message").text() shouldBe "Check your information is correct, in the right place and in the right format."
       document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
 
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender,last-name,name,nino)").size() shouldBe 1
@@ -121,7 +119,6 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's first name."
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("form-error-message").text() shouldBe "Check your information is correct, in the right place and in the right format."
       document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(name)").size() shouldBe 1
     }
@@ -585,10 +582,10 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
       val form = document.getElementById("eligible-years-form")
       form shouldNot be(null)
-      val labelName = form.select("fieldset[id=year_2015]").first()
+      val labelName = form.select("fieldset[id=selectedYear]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us whether you'd like to apply for the previous 2015 to 2016 tax year."
-      document.getElementById("year-2015--error").text() shouldBe "Confirm whether you'd like to apply for the previous 2015 to 2016 tax year"
+      labelName.getElementsByClass("error-notification").first().text() shouldBe "Select an answer"
+      document.getElementById("selectedYear-error").text() shouldBe "You need to select an answer"
     }
   }
 
@@ -819,7 +816,6 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -854,7 +850,6 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
