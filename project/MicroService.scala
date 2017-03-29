@@ -34,7 +34,7 @@ trait MicroService {
 
   val appName: String
 
-  lazy val appDependencies: Seq[ModuleID] = ???
+  lazy val appDependencies: Seq[ModuleID] = Seq.empty
   lazy val plugins: Seq[Plugins] = Seq(play.sbt.PlayScala)
   lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
@@ -43,7 +43,7 @@ trait MicroService {
 
     Seq(
       ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*;connectors.ApplicationAuditConnector;connectors.ApplicationAuthConnector;services.CachingService;metrics.Metrics;utils.WSHttp",
-      ScoverageKeys.coverageMinimum := 70,
+      ScoverageKeys.coverageMinimum := 85,
       ScoverageKeys.coverageFailOnMinimum := true,
       ScoverageKeys.coverageHighlighting := true
     )
@@ -58,6 +58,7 @@ trait MicroService {
     .settings(defaultSettings(): _*)
     .settings(
       targetJvm := "jvm-1.8",
+      scalaVersion := "2.11.8",
       libraryDependencies ++= appDependencies,
       parallelExecution in Test := false,
       fork in Test := false,
