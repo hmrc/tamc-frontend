@@ -218,6 +218,9 @@ eligibility.feedback.loose=Based on the details you have provided you will not b
 #Multi-year select
 pages.multi-year-select.heading=Confirm the earlier years you want to apply for
 
+#Single-year select
+pages.form.field.description.selectedYear=You need to select an answer
+
 ############################
 #Should be added every year#
 ############################
@@ -563,7 +566,6 @@ change.other.income.link=To let us know about a change in income, contact HMRC
 change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
 change.other.bereavement.link=To let us know about a bereavement, contact HMRC
-change.status.active=Active
 
 error.invalid.date.format=You must specify a valid date.
 
@@ -573,3 +575,4 @@ pages.noyears.content1=Go back if you want to select a year to apply for.
 pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works.</a>
 
 generic.sharescreen=Share Screen
+generic.select.answer=Select an answer

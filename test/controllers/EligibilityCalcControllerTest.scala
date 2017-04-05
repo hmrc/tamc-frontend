@@ -219,7 +219,6 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("form-error-message").text() shouldBe "Check your information is correct, in the right place and in the right format."
     }
 
     "display form error message (multiple errors)" in {
@@ -229,7 +228,6 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("form-error-message").text() shouldBe "Check your information is correct, in the right place and in the right format."
     }
 
     "be displayed if transferor income is not provided (None)" in {

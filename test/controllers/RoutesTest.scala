@@ -682,7 +682,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -702,7 +701,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
     }
@@ -747,7 +745,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
@@ -776,7 +773,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check-pta")
@@ -805,7 +801,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
       document.getElementById("partners-income-error").text() shouldBe "Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
@@ -833,7 +828,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -852,7 +846,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -895,7 +888,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementById("lower-earner-error").text shouldBe "Confirm if you are the lower earner in the relationship"
 
@@ -925,7 +917,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
 
       document.getElementsByClass("partners-inc-error").text shouldBe "You're not eligible for Marriage Allowance in this tax year because your partner's income is too high or too low. You can still continue to check your eligibility for previous years."
 
@@ -954,7 +945,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("form-error-message").text() shouldBe TestConstants.ERROR_MANDATORY_DATA_TEXT
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
