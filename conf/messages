@@ -230,7 +230,7 @@ eligibility.check.unlike-benefit-as-couple-2017=You are eligible for Marriage Al
 max-benefit-2014=£212
 max-benefit-2015=£212
 max-benefit-2016=£220
-max-benefit-2017=£220
+max-benefit-2017=£230
 your-income-2015=your income was £10,600 or less
 your-income-2016=your income was £11,000 or less
 your-income-2017=your income was £11,500 or less
@@ -240,7 +240,7 @@ income-between-2017={0} income was between £11,501 and £45,000
 
 #Confirmation Message
 pages.confirm.html.h1=Check your details and confirm the application
-pages.confirm.html.check-details=Check the details you''ve entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,060 of your Personal Allowance to them.
+pages.confirm.html.check-details=Check the details you''ve entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,050 of your Personal Allowance to them.
 
 #Eligibility Check
 eligibility.check.header=Your eligibility

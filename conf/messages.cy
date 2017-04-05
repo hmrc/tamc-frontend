@@ -232,7 +232,7 @@ eligibility.check.unlike-benefit-as-couple-2017	=	Rydych yn gymwys ar gyfer Lwfa
 max-benefit-2014	=	£212
 max-benefit-2015	=	£212
 max-benefit-2016	=	£220
-max-benefit-2017	=	£220
+max-benefit-2017	=	£230
 your-income-2015	=	os oedd eich incwm yn £10,600 neu''n llai
 your-income-2016	=	os oedd eich incwm yn £11,000 neu''n llai
 your-income-2017	=	os oedd eich incwm yn £11,500 neu''n llai
@@ -242,7 +242,7 @@ income-between-2017	=	os oedd incwm rhwng {0} £11,501 a £45,000
 
 #Confirmation Message
 pages.confirm.html.h1	=	Gwirio''ch manylion a chadarnhau''r cais
-pages.confirm.html.check-details	=	Dylech wirio''r manylion yr ydych wedi''i rhoi, a chadarnhau mai''r unigolyn hwn yw''ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,060 o''ch Lwfans Personol iddo/iddi.
+pages.confirm.html.check-details	=	Dylech wirio''r manylion yr ydych wedi''i rhoi, a chadarnhau mai''r unigolyn hwn yw''ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,050 o''ch Lwfans Personol iddo/iddi.
 
 #Eligibility Check
 eligibility.check.header	=	A ydych yn gymwys?
