@@ -224,25 +224,25 @@ pages.multi-year-select.heading	=	Cadarnhewch y blynyddoedd cynharach yr ydych a
 #Should be added every year#
 ############################
 eligibility.feedback.transferor-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy''n gwneud y trosglwyddiad, mae''n rhaid i''ch incwm fod yn llai na £43,000.
-eligibility.feedback.transferor-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy''n gwneud y trosglwyddiad, mae''n rhaid i''ch incwm fod yn llai na £43,000.
+eligibility.feedback.transferor-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy''n gwneud y trosglwyddiad, mae''n rhaid i''ch incwm fod yn llai na £45,000.
 eligibility.feedback.recipient-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich priod neu bartner sifil fod rhwng £11,001 a £43,000.
-eligibility.feedback.recipient-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich priod neu bartner sifil fod rhwng £11,001 a £43,000.
+eligibility.feedback.recipient-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich priod neu bartner sifil fod rhwng £11,501 a £45,000.
 eligibility.check.unlike-benefit-as-couple-2016	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,000.
-eligibility.check.unlike-benefit-as-couple-2017	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,000.
+eligibility.check.unlike-benefit-as-couple-2017	=	Rydych yn gymwys ar gyfer Lwfans Priodasol, ond mae''n annhebygol y byddwch yn elwa fel p&#226;r am fod eich incwm dros £11,500.
 max-benefit-2014	=	£212
 max-benefit-2015	=	£212
 max-benefit-2016	=	£220
-max-benefit-2017	=	£220
+max-benefit-2017	=	£230
 your-income-2015	=	os oedd eich incwm yn £10,600 neu''n llai
 your-income-2016	=	os oedd eich incwm yn £11,000 neu''n llai
-your-income-2017	=	os oedd eich incwm yn £11,000 neu''n llai
+your-income-2017	=	os oedd eich incwm yn £11,500 neu''n llai
 income-between-2015	=	os oedd incwm rhwng {0} £10,601 a £42,385
 income-between-2016	=	os oedd incwm rhwng {0} £11,001 a £43,000
-income-between-2017	=	os oedd incwm rhwng {0} £11,001 a £43,000
+income-between-2017	=	os oedd incwm rhwng {0} £11,501 a £45,000
 
 #Confirmation Message
 pages.confirm.html.h1	=	Gwirio''ch manylion a chadarnhau''r cais
-pages.confirm.html.check-details	=	Dylech wirio''r manylion yr ydych wedi''i rhoi, a chadarnhau mai''r unigolyn hwn yw''ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,060 o''ch Lwfans Personol iddo/iddi.
+pages.confirm.html.check-details	=	Dylech wirio''r manylion yr ydych wedi''i rhoi, a chadarnhau mai''r unigolyn hwn yw''ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,050 o''ch Lwfans Personol iddo/iddi.
 
 #Eligibility Check
 eligibility.check.header	=	A ydych yn gymwys?
