@@ -394,7 +394,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   "Finished page" should {
 
-    "have check your marriage allowance and survey link for non-PTA journey" in {
+    "have check your marriage allowance link for non-PTA journey" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -412,13 +412,9 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val ptaLink = document.getElementById("paragraph-5")
       ptaLink shouldNot be(null)
       ptaLink.getElementById("pta-link").attr("href") shouldBe "https://www.gov.uk/personal-tax-account"
-
-      val surveyLink = document.getElementById("paragraph-6")
-      surveyLink shouldNot be(null)
-      surveyLink.getElementById("survey-link").attr("href") shouldBe "https://www.gov.uk/done/marriage-allowance"
     }
 
-    "have signout link and check your marriage allowance and survey link for PTA journey" in {
+    "have signout link and check your marriage allowance link for PTA journey" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -439,10 +435,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val ptaLink = document.getElementById("paragraph-5")
       ptaLink shouldNot be(null)
       ptaLink.getElementById("pta-link").attr("href") shouldBe "https://www.gov.uk/personal-tax-account"
-
-      val surveyLink = document.getElementById("paragraph-6")
-      surveyLink shouldNot be(null)
-      surveyLink.getElementById("survey-link").attr("href") shouldBe "https://www.gov.uk/done/marriage-allowance"
     }
 
     "redirect to transfer-allowance if relation is not locked" in {
@@ -483,7 +475,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val controllerToTest = makeFakeHomeController()
       val result = controllerToTest.logout(FakeRequest())
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("baz")
+      redirectLocation(result) shouldBe Some("/ida/signout")
     }
   }
 
