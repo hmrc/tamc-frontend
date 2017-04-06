@@ -288,7 +288,6 @@ pages.finished.para6	=	Bydd eich hysbysiad o god treth diwygiedig yn ymddangos y
 pages.finished.para7	=	Nid oes angen i chi gysylltu &#226; ni.
 pages.finished.back-pta	=	Yn &#244;l i''r Cyfrif Treth Personol
 pages.finished.check-link-para	=	Gallwch <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >wirio''ch Lwfans Priodasol presennol a gwneud newidiadau</a> ar unrhyw bryd drwy''ch cyfrif treth personol.
-pages.finished.survey-link	=	<a id="survey-link" href="{0}">Beth oedd eich barn am y gwasanaeth hwn?</a> (yn cymryd 30 eiliad)
 
 #Registration page - Your spouse details
 pages.form.h1	=	Manylion eich priod neu bartner sifil

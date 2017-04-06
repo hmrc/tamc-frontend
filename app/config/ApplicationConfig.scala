@@ -38,6 +38,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
   override lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
+  override lazy val logoutCallbackUrl = loadConfig("tamc.external-urls.logout-callback-url")
   override lazy val callbackUrl = loadConfig("tamc.external-urls.callback-url")
   override lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
 
@@ -90,6 +91,7 @@ trait ApplicationConfig {
 
   val loginUrl: String
   val logoutUrl: String
+  val logoutCallbackUrl: String
   val callbackUrl: String
 
   val analyticsToken: Option[String]

@@ -25,11 +25,13 @@ import utils.TamcBreadcrumb
 
 object AuthorisationController extends AuthorisationController {
   override val logoutUrl = ApplicationConfig.logoutUrl
+  override val logoutCallbackUrl = ApplicationConfig.logoutCallbackUrl
   override val auditConnector = ApplicationAuditConnector
 }
 
 trait AuthorisationController extends FrontendController with UnauthorisedActions with TamcBreadcrumb {
   val logoutUrl: String
+  val logoutCallbackUrl: String
   val auditConnector: AuditConnector
 
   def notAuthorised = unauthorisedAction {
@@ -39,6 +41,6 @@ trait AuthorisationController extends FrontendController with UnauthorisedAction
 
   def logout = unauthorisedAction {
     implicit request =>
-      Redirect(logoutUrl).withNewSession
+      Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
 }

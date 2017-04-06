@@ -289,7 +289,6 @@ pages.finished.para6=Your revised notice of tax coding will show in your persona
 pages.finished.para7=There is no need to contact us.
 pages.finished.back-pta=Back to Personal Tax Account
 pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
-pages.finished.survey-link=<a data-journey-click="{0}" id="survey-link" href="https://www.gov.uk/done/marriage-allowance">What did you think of this service?</a> (takes 30 seconds)
 
 #Registration page - Your spouse details
 pages.form.h1=Your spouse or civil partner''s details
