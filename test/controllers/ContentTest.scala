@@ -892,7 +892,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year. This is your income figure before any tax is deducted."
+      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,500 or less a year. This is your income figure before any tax is deducted."
     }
   }
 
@@ -909,7 +909,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
-      document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
+      document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,501 and £45,000 a year. This is their income figure before any tax is deducted."
       document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Your partner's income"
     }
   }
@@ -940,7 +940,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,000 or less a year. This is your income figure before any tax is deducted."
+      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must be the lower earner in the relationship and earn £11,500 or less a year. This is your income figure before any tax is deducted."
     }
   }
 
@@ -955,7 +955,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
-      document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,001 and £43,000 a year. This is their income figure before any tax is deducted."
+      document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,501 and £45,000 a year. This is their income figure before any tax is deducted."
     }
   }
 
