@@ -793,7 +793,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("partners-income-error").text() shouldBe "Confirm if your spouse or civil partner has an annual income of between £11,001 and £43,000"
+      document.getElementById("partners-income-error").text() shouldBe "Confirm if your spouse or civil partner has an annual income of between £11,501 and £45,000"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
