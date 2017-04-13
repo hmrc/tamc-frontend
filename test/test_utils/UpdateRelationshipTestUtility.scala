@@ -69,7 +69,8 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
     }
 
     new AuthorisationController {
-      override val logoutUrl = "baz"
+      override val logoutUrl = "/ida/signout"
+      override val logoutCallbackUrl = "/feedback-survey/?origin=TAMC"
       override val auditConnector = fakeCustomAuditConnector
 
       def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
