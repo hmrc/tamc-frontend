@@ -43,4 +43,8 @@ trait AuthorisationController extends FrontendController with UnauthorisedAction
     implicit request =>
       Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
+  def sessionTimeout = unauthorisedAction {
+    implicit request =>
+      Ok(views.html.errors.session_timedout())
+  }
 }
