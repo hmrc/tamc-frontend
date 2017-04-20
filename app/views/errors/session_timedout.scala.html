@@ -21,7 +21,9 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("session.timeout.title"))){
+    title = Messages("title.pattern", Messages("session.timeout.title")),
+langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishSignin.toString(),
+controllers.routes.LanguageController.switchToWelshSignin.toString()))){
     <p id="error"><strong>@Html(Messages("session.timeout.statement"))</strong></p>
     <p>@Html(Messages("session.timeout.verbose-statement"))</p>
     <p class="get-started group" id="continue-to-application">

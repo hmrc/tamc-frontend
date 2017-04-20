@@ -234,4 +234,12 @@ class LanguageController extends FrontendController with LegacyI18nSupport {
   def switchToEnglishCalculatorPta = Action { implicit request =>
     Redirect(routes.PtaEligibilityController.calculator()).withLang(Lang(ApplicationConfig.LANG_LANG_ENGLISH))
   }
+
+  def switchToWelshSignin = Action { implicit request =>
+    Redirect(routes.AuthorisationController.sessionTimeout()).withLang(Lang(ApplicationConfig.LANG_LANG_WELSH))
+  }
+
+  def switchToEnglishSignin = Action { implicit request =>
+    Redirect(routes.AuthorisationController.sessionTimeout()).withLang(Lang(ApplicationConfig.LANG_LANG_ENGLISH))
+  }
 }

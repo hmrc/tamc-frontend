@@ -121,6 +121,8 @@ GET    /switch-to-welsh-benefit-calculator         controllers.LanguageControlle
 GET    /switch-to-english-benefit-calculator       controllers.LanguageController.switchToEnglishCalculator
 GET    /switch-to-welsh-benefit-calculator-pta     controllers.LanguageController.switchToWelshCalculatorPta
 GET    /switch-to-english-benefit-calculator-pta   controllers.LanguageController.switchToEnglishCalculatorPta
+GET    /switch-to-welsh-signin                     controllers.LanguageController.switchToWelshSignin
+GET    /switch-to-english-signin                   controllers.LanguageController.switchToEnglishSignin
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                               controllers.Assets.at(path="/public", file)
