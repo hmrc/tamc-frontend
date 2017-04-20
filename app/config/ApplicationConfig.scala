@@ -124,5 +124,5 @@ trait ApplicationConfig {
 
   val isWelshEnabled: Boolean
   val webchatId: String
-  lazy val refreshInterval = 10
+  lazy val refreshInterval = 900
 }
