@@ -3,7 +3,7 @@
 # Authorisation helpers
 GET    /not-authorised                             controllers.AuthorisationController.notAuthorised
 GET    /logout                                     controllers.AuthorisationController.logout
-GET    /signin                                     controllers.AuthorisationController.sessionTimeout
+GET    /signed-out                                 controllers.AuthorisationController.sessionTimeout
 
 # GDS journey
 GET    /benefit-calculator                         controllers.GdsEligibilityController.calculator
