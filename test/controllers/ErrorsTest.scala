@@ -34,7 +34,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
   implicit override lazy val app: Application = fakeApplication
 
   "Error handling in transfer page when submitting form" should {
-    "show 'Recipient details not found' page" in {
+    "show ’Recipient details not found’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound)))
@@ -62,7 +62,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("error").text() shouldBe "We were unable to find a HMRC record of your spouse or civil partner."
     }
 
-    "show 'Technical Exception' page" in {
+    "show ’Technical Exception’ page" in {
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "98765", "20130101", Some(""), Some("20140101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -75,7 +75,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("error").text() shouldBe "We're experiencing technical difficulties"
+      document.getElementById("error").text() shouldBe "We’re experiencing technical difficulties"
     }
 
     "send audit event if recipient can not be found" in {
@@ -144,7 +144,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
     }
 
-    "show 'no tax years for transferor' page if transferor enters date of marriage as current tax year" in {
+    "show ’no tax years for transferor’ page if transferor enters date of marriage as current tax year" in {
 
       val cachedRecipientData = Some(RecipientDetailsFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1)))
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
@@ -172,12 +172,12 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe INTERNAL_SERVER_ERROR
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("description").text() shouldBe "Based on the date of marriage or civil partnership you've provided, you're not eligible for Marriage Allowance."
+      document.getElementById("description").text() shouldBe "Based on the date of marriage or civil partnership you’ve provided, you’re not eligible for Marriage Allowance."
     }
   }
 
   "Error handling in confirm page" should {
-    "show 'Cannot Create Relationship' page" in {
+    "show ’Cannot Create Relationship’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))

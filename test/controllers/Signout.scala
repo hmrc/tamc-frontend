@@ -35,7 +35,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
   "PTA Sign out and status" should {
 
-    "be on 'How It Works' page for returning user" in {
+    "be on ’How It Works’ page for returning user" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_returning")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -47,7 +47,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015"
     }
 
-    "be on 'How It Works' page" in {
+    "be on ’How It Works’ page" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -59,7 +59,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Calculator' page" in {
+    "be on ’Calculator’ page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -71,7 +71,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Eligibility Check' page" in {
+    "be on ’Eligibility Check’ page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -83,7 +83,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Transfer' page" in {
+    "be on ’Transfer’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -97,7 +97,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Confirm Email' page" in {
+    "be on ’Confirm Email’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -116,7 +116,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
     }
 
-    "be on 'Confirm' page" in {
+    "be on ’Confirm’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -140,7 +140,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "be on 'Finished' page" in {
+    "be on ’Finished’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -158,7 +158,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'Recipient details not found' page" in {
+    "show sign-out on ’Recipient details not found’ page" in {
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
@@ -176,7 +176,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'Technical Exceptions' page" in {
+    "show sign-out on ’Technical Exceptions’ page" in {
 
       val loggedInUser = LoggedInUserInfo(999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
@@ -195,7 +195,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
-    "show sign-out on 'Cannot Create Relationship' page" in {
+    "show sign-out on ’Cannot Create Relationship’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoTransferorNotFound), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -213,7 +213,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show 'Technical Exception' page" in {
+    "show ’Technical Exception’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = 999999, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoError), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -227,12 +227,12 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("error").text() shouldBe "We're experiencing technical difficulties"
+      document.getElementById("error").text() shouldBe "We’re experiencing technical difficulties"
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'Technical Exception' pages" in {
+    "show sign-out on ’Technical Exception’ pages" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = 999999, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoError), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -253,7 +253,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
   }
 
   "GDS Sign out" should {
-    "be on 'How It Works' page" in {
+    "be on ’How It Works’ page" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -264,7 +264,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Calculator' page" in {
+    "be on ’Calculator’ page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -275,7 +275,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Eligibility Check' page" in {
+    "be on ’Eligibility Check’ page" in {
       val testComponent = makePtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = testComponent.controller
@@ -286,7 +286,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Transfer' page" in {
+    "be on ’Transfer’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -299,7 +299,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Confirm Email' page" in {
+    "be on ’Confirm Email’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -316,7 +316,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Confirm' page" in {
+    "be on ’Confirm’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1)))
@@ -339,7 +339,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "be on 'Finished' page" in {
+    "be on ’Finished’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -359,7 +359,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
   "PTA Sign out and status for multi year" should {
 
-    "be on 'How It Works' page for returning user" in {
+    "be on ’How It Works’ page for returning user" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_returning")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller
@@ -371,7 +371,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015"
     }
 
-    "be on 'How It Works' page" in {
+    "be on ’How It Works’ page" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
       val controllerToTest = testComponent.controller

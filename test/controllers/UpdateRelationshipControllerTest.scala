@@ -182,7 +182,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("confirm-page").text() shouldBe "Confirm removal of a previous Marriage Allowance claim"
-      document.getElementById("confirm-note").text() shouldBe "You've asked us to remove your Marriage Allowance from tax year 2010 to 2015. This means:"
+      document.getElementById("confirm-note").text() shouldBe "You’ve asked us to remove your Marriage Allowance from tax year 2010 to 2015. This means:"
     }
 
     "have update relationship action details in cache " in {
@@ -320,7 +320,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
   "Calling history page" should {
 
-    "show sign-out on 'History' page with PTA journey" in {
+    "show sign-out on ’History’ page with PTA journey" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -332,7 +332,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
 
-    "show sign-out on 'History' page with GDS journey" in {
+    "show sign-out on ’History’ page with GDS journey" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
@@ -343,7 +343,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
-    "show beta feedback on 'History' page" in {
+    "show beta feedback on ’History’ page" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -355,7 +355,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       feedback.attr("href") shouldBe "http://localhost:9250/contact/beta-feedback-unauthenticated?service=TAMC"
     }
 
-    "show sign-out on 'History' page along with message" in {
+    "show sign-out on ’History’ page along with message" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
