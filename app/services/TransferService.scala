@@ -20,6 +20,7 @@ import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors._
 import events._
 import models._
+import play.api.Logger
 import play.api.i18n.Lang
 import play.api.libs.json.Json
 import services.UpdateRelationshipService._
@@ -60,7 +61,8 @@ trait TransferService {
     } yield (name)
   }
 
-  private def validateTransferorName(cache: Option[CacheData]): Future[Option[CitizenName]] =
+  private def validateTransferorName(cache: Option[CacheData]): Future[Option[CitizenName]] = {
+    Logger.info("validateTransferorName has been called.")
     Future {
       cache match {
         case None => throw CacheMissingTransferor()
@@ -69,6 +71,7 @@ trait TransferService {
         case Some(CacheData(Some(UserRecord(_, _, _, name)), _, _, _, _, _, _)) => name
       }
     }
+  }
 
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     checkRecipientEligible(transferorNino, recipientData).map(eligible => eligible) recoverWith {
@@ -121,7 +124,8 @@ trait TransferService {
       }
     }
 
-  private def doCreateRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
+  private def doCreateRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
+    Logger.info("doCreateRelationship" + journey)
     for {
       cacheData <- cachingService.getCachedData
       validated <- validateCompleteCache(cacheData)
@@ -129,8 +133,10 @@ trait TransferService {
       _ <- lockCreateRelationship()
       _ <- auditCreateRelationship(postCreateData, journey)
     } yield (validated.notification.get)
+  }
 
   private def lockCreateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+    Logger.info("lockCreateRelationship has been called.")
     cachingService.lockCreateRelationship
   }
 
@@ -154,7 +160,8 @@ trait TransferService {
     handleAudit(CreateRelationshipSuccessEvent(cacheData, journey))
   }
 
-  def getTransferorNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] =
+  def getTransferorNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] = {
+    Logger.info("getTransferrorNotification has been called.")
     cachingService.getCachedData map {
       case Some(CacheData(_, _, _, Some(true), _, _, _)) => throw CacheRelationshipAlreadyCreated()
       case Some(
@@ -166,18 +173,24 @@ trait TransferService {
       case Some(CacheData(None, _, _, _, _, _, _)) => throw CacheMissingTransferor()
       case Some(CacheData(_, None, _, _, _, _, _)) => throw CacheMissingRecipient()
     }
+  }
 
-  def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext, user: AuthContext): Future[NotificationRecord] =
+  def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext, user: AuthContext): Future[NotificationRecord] = {
+    Logger.info("upsertTransferorNotification has been called.")
     cachingService.saveNotificationRecord(notificationRecord)
+  }
 
-  def getConfirmationData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] =
+  def getConfirmationData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] = {
+    Logger.info("getConfirmationData has been called.")
     for {
       cache <- cachingService.getCachedData
       validated <- validateCompleteCache(cache)
       confirmData <- transformCache(validated)
     } yield (confirmData)
+  }
 
   private def validateCompleteCache(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {
+    Logger.info("validateCompleteCache has been called.")
     cacheData match {
       case Some(CacheData(_, _, _, Some(true), _, _, _)) => {
         handleAudit(RelationshipAlreadyCreatedEvent(cacheData.get))
@@ -269,7 +282,8 @@ trait TransferService {
     CreateRelationshipRequestHolder(request = createRelationshipreq, notification = sendNotificationData)
   }
 
-  private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] =
+  private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {
+    Logger.info("sendCreateRelationship has been called.")
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, lang), journey) map {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
@@ -281,6 +295,7 @@ trait TransferService {
         handleAudit(CreateRelationshipFailureEvent(data, journey, error))
         throw error
     }
+  }
 
   def saveSelectedYears(recipient: RecipientRecord, selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cachingService.saveSelectedYears(selectedYears)

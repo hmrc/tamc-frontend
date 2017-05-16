@@ -238,6 +238,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
   }
 
   def confirmAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+    Logger.info("confirmAction has been called.")
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -246,6 +247,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
               Logger.error(s"unexpected error in emty form, SID [${utils.getSid(request)}]"),
             success =>
               success)
+          Logger.info("registration service.createRelationship - confirm action.")
           registrationService.createRelationship(utils.getUserNino(auth), getJourneyName(), request2lang(request)) map {
             _ => Redirect(controllers.routes.TransferController.finished())
           } recover handleError
