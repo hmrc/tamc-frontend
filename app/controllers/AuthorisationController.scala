@@ -45,6 +45,6 @@ trait AuthorisationController extends FrontendController with UnauthorisedAction
   }
   def sessionTimeout = unauthorisedAction {
     implicit request =>
-      Ok(views.html.errors.session_timedout())
+      Ok(views.html.errors.session_timeout())
   }
 }
