@@ -286,7 +286,7 @@ trait TransferService {
     cachingService.saveSelectedYears(selectedYears)
 
   def updateSelectedYears(recipient: RecipientRecord, extraYear: Int)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
-    updateSelectedYears(recipient, List(extraYear))
+    updateSelectedYears(recipient, List(extraYear).filter(_ > 0))
   }
 
   def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
