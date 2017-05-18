@@ -124,5 +124,6 @@ trait ApplicationConfig {
 
   val isWelshEnabled: Boolean
   val webchatId: String
+  /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
   lazy val refreshInterval = 900
 }
