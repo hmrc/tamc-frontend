@@ -475,9 +475,13 @@ transferor.no-eligible-years=We were unable to process your Marriage Allowance a
 transferor.no-previous-years-available=Based on the date of marriage or civil partnership you’ve provided, you’re not eligible for Marriage Allowance.
 recipient.has.relationship.para1=We were unable to process your application.
 recipient.has.relationship.para2=Check with your spouse or civil partner and confirm the details you supplied.
+session.timeout.title=Signed out
 session.timeout.button=Start again
-session.timeout.statement=Your session has timed out
-session.timeout.verbose-statement=You’ve been signed out of Marriage Allowance.
+
+session.timeout.statement=You’ve been signed out
+session.timeout.verbose-statement=You haven’t done anything for 15 minutes, so we’ve signed you out to keep your account secure.
+session.timeout.verbose-statement2=Please sign in again.
+
 create.relationship.failure=Cannot create relationship
 not.authorised=Sorry, you haven’t been authorised to proceed.
 technical.issue.para1=We’re experiencing technical difficulties

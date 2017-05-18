@@ -3,6 +3,7 @@
 # Authorisation helpers
 GET    /not-authorised                             controllers.AuthorisationController.notAuthorised
 GET    /logout                                     controllers.AuthorisationController.logout
+GET    /signed-out                                 controllers.AuthorisationController.sessionTimeout
 
 # GDS journey
 GET    /benefit-calculator                         controllers.GdsEligibilityController.calculator
@@ -120,6 +121,8 @@ GET    /switch-to-welsh-benefit-calculator         controllers.LanguageControlle
 GET    /switch-to-english-benefit-calculator       controllers.LanguageController.switchToEnglishCalculator
 GET    /switch-to-welsh-benefit-calculator-pta     controllers.LanguageController.switchToWelshCalculatorPta
 GET    /switch-to-english-benefit-calculator-pta   controllers.LanguageController.switchToEnglishCalculatorPta
+GET    /switch-to-welsh-signin                     controllers.LanguageController.switchToWelshSignin
+GET    /switch-to-english-signin                   controllers.LanguageController.switchToEnglishSignin
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                               controllers.Assets.at(path="/public", file)

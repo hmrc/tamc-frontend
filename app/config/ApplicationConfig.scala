@@ -44,6 +44,9 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
 
+  lazy val enableRefresh = configuration.getBoolean("enableRefresh").getOrElse(true)
+
+
   val TAMC_BEGINNING_YEAR = 2015
   val TAMC_MIN_DATE = new LocalDate(1900, 1, 1)
 
@@ -121,4 +124,6 @@ trait ApplicationConfig {
 
   val isWelshEnabled: Boolean
   val webchatId: String
+  /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
+  lazy val refreshInterval = 900
 }
