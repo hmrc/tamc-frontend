@@ -144,7 +144,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       document.getElementById("line1-remove") shouldNot be(null)
     }
 
-    "don't display apply for previous years button when previous years are available" in {
+    "don’t display apply for previous years button when previous years are available" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_historic_rejectable_relationship")
       val controllerToTest = testComponent.controller
@@ -158,7 +158,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       prevYearsButton shouldNot be(null)
     }
 
-    "display 'apply for previous years' button if historic year is available" in {
+    "display ’apply for previous years’ button if historic year is available" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_gap_in_years")
       val controllerToTest = testComponent.controller
       val request = testComponent.request
@@ -237,7 +237,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val contentAsStringFromResult = contentAsString(result)
       val document = Jsoup.parse(contentAsString(result))
       val historicActiveMessage = document.getElementById("historicActiveMessage").text()
-      historicActiveMessage should be("You'll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year (5 April 2017).")
+      historicActiveMessage should be("You’ll stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year (5 April 2017).")
 
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
@@ -342,7 +342,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       cancelContent shouldNot be(null)
 
       cancelHeading.toString contains ("Cancelling Marriage Allowance") should be(true)
-      cancelContent.text() shouldBe "We'll cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year."
+      cancelContent.text() shouldBe "We’ll cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year."
 
     }
 
@@ -363,7 +363,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       cancelContent shouldNot be(null)
 
       cancelHeading.toString contains ("Cancelling Marriage Allowance") should be(true)
-      cancelContent.text() shouldBe "We'll cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year."
+      cancelContent.text() shouldBe "We’ll cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year."
 
     }
 

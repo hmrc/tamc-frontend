@@ -79,7 +79,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("register-form")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
+      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner’s first name"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name,name)").size() shouldBe 1
     }
 
@@ -96,7 +96,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("register-form")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner’s National Insurance number"
 
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender,last-name,name,nino)").size() shouldBe 1
     }
@@ -117,9 +117,9 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's first name."
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s first name."
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
+      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner’s first name"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(name)").size() shouldBe 1
     }
 
@@ -137,8 +137,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's first name."
-      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s first name."
+      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner’s first name"
     }
 
     "display form error message (first name is blank)" in {
@@ -155,8 +155,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's first name."
-      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s first name."
+      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner’s first name"
     }
 
     "display form error message (first name contains more than 35 characters)" in {
@@ -174,7 +174,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Use up to or no more than 35 letters."
-      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
+      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner’s first name"
     }
 
     "display form error message (first name contains numbers)" in {
@@ -192,7 +192,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Use letters only."
-      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
+      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner’s first name"
     }
 
     "display form error message (first name contains letters and numbers)" in {
@@ -210,7 +210,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Use letters only."
-      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner's first name"
+      document.getElementById("name-error").text() shouldBe "Confirm your spouse or civil partner’s first name"
     }
 
     "display form error message when recipient nino equals transferor nino" in {
@@ -227,8 +227,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelNino = form.select("label[for=nino]").first()
       labelNino.getElementsByClass("error-message").first() shouldNot be(null)
-      labelNino.getElementsByClass("error-message").first().text() shouldBe "You can't enter your own details."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
+      labelNino.getElementsByClass("error-message").first().text() shouldBe "You can’t enter your own details."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner’s National Insurance number"
     }
 
     "display form error message when recipient nino equals transferor nino (including mixed case and spaces)" in {
@@ -245,8 +245,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelNino = form.select("label[for=nino]").first()
       labelNino.getElementsByClass("error-message").first() shouldNot be(null)
-      labelNino.getElementsByClass("error-message").first().text() shouldBe "You can't enter your own details."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
+      labelNino.getElementsByClass("error-message").first().text() shouldBe "You can’t enter your own details."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner’s National Insurance number"
     }
   }
 
@@ -265,8 +265,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's last name."
-      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s last name."
+      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner’s last name"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name)").size() shouldBe 1
     }
 
@@ -284,8 +284,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's last name."
-      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s last name."
+      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner’s last name"
     }
 
     "display form error message (last name is blank)" in {
@@ -302,8 +302,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's last name."
-      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s last name."
+      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner’s last name"
     }
 
     "display form error message (last name contains more than 35 characters)" in {
@@ -321,7 +321,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Use up to or no more than 35 letters."
-      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
+      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner’s last name"
     }
 
     "display form error message (last name contains numbers)" in {
@@ -339,7 +339,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Use letters only."
-      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
+      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner’s last name"
     }
 
     "display form error message (last name contains letters and numbers)" in {
@@ -357,7 +357,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Use letters only."
-      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner's last name"
+      document.getElementById("last-name-error").text() shouldBe "Confirm your spouse or civil partner’s last name"
     }
   }
 
@@ -376,8 +376,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("fieldset[id=gender]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us your spouse or civil partner's gender."
-      document.getElementById("gender-error").text() shouldBe "Confirm your spouse or civil partner's gender"
+      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us your spouse or civil partner’s gender."
+      document.getElementById("gender-error").text() shouldBe "Confirm your spouse or civil partner’s gender"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender)").size() shouldBe 1
     }
 
@@ -395,8 +395,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("fieldset[id=gender]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us your spouse or civil partner's gender."
-      document.getElementById("gender-error").text() shouldBe "Confirm your spouse or civil partner's gender"
+      labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us your spouse or civil partner’s gender."
+      document.getElementById("gender-error").text() shouldBe "Confirm your spouse or civil partner’s gender"
     }
   }
 
@@ -415,8 +415,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's National Insurance number."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner’s National Insurance number"
       document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(nino)").size() shouldBe 1
     }
 
@@ -434,8 +434,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's National Insurance number."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s National Insurance number."
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner’s National Insurance number"
     }
 
     "display form error message (NINO is invalid)" in {
@@ -453,7 +453,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Check their National Insurance number and enter it correctly."
-      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner's National Insurance number"
+      document.getElementById("nino-error").text() shouldBe "Confirm your spouse or civil partner’s National Insurance number"
     }
   }
 
@@ -483,7 +483,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       back.attr("href") shouldBe marriageAllowanceUrl("/transfer-allowance")
     }
 
-    "display form error message (date of marriage is after today's date)" in {
+    "display form error message (date of marriage is after today’s date)" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent(
@@ -786,7 +786,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val button = document.getElementById("get-started")
       button shouldNot be(null)
-      button.text shouldBe "Start now to see if you're eligible for Marriage Allowance"
+      button.text shouldBe "Start now to see if you’re eligible for Marriage Allowance"
     }
 
   }
@@ -906,11 +906,11 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
       document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,501 and £45,000 a year. This is their income figure before any tax is deducted."
-      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Your partner's income"
+      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Your partner’s income"
     }
   }
 
@@ -953,7 +953,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner's income - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
       document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must earn between £11,501 and £45,000 a year. This is their income figure before any tax is deducted."
     }

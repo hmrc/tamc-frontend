@@ -134,16 +134,16 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
     }
 
 
-    "show 'recipient is not eligible' if transferor income=9540  and recipient income<11001" in {
+    "show ’recipient is not eligible’ if transferor income=9540  and recipient income<11001" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "9540", "recipient-income" -> "11000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner's annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
     }
 
-    "show 'recipient is not eligible' if transferor income=9540  and recipient income>45000" in {
+    "show ’recipient is not eligible’ if transferor income=9540  and recipient income>45000" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "9540", "recipient-income" -> "46001"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner's annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
     }
 
   }
@@ -279,8 +279,8 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your spouse or civil partner's annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's annual income."
+      document.getElementById("recipient-income-error").text shouldBe "Confirm your spouse or civil partner’s annual income"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s annual income."
     }
 
     "be displayed if recipient income is not provided (Empty)" in {
@@ -289,8 +289,8 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your spouse or civil partner's annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner's annual income."
+      document.getElementById("recipient-income-error").text shouldBe "Confirm your spouse or civil partner’s annual income"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s annual income."
     }
 
     "be displayed if recipient income contains letters" in {
@@ -323,25 +323,25 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
     "be displayed if transferor income=0 (< 9540) and recipient income=0 (10600-11660)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "0", "recipient-income" -> "0"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner's annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
     }
 
     "be displayed if transferor income=9000 (< 9540) and recipient income=5000 (< 11000)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Check the numbers you've entered. Please enter the lower earner's income followed by the higher earner's income."
+      document.getElementById("calculator-result").text() shouldBe "Check the numbers you’ve entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
 
     "be displayed if transferor income=9000 (< 9540) and recipient income=47000 (> 45000)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "46000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner's annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
     }
 
     "be displayed if transferor income=10000 (9540-10600) and recipient income=46000 (> 45000)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "10000", "recipient-income" -> "46000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner's annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
     }
     "be displayed if transferor income=11001 (>11000) and recipient income=20000" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "11501", "recipient-income" -> "20000"))
@@ -351,7 +351,7 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
     "be displayed if transferor income=43001 (>42385) and recipient income=20000" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "43001", "recipient-income" -> "20000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Check the numbers you've entered. Please enter the lower earner's income followed by the higher earner's income."
+      document.getElementById("calculator-result").text() shouldBe "Check the numbers you’ve entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
   }
 }
