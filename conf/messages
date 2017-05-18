@@ -134,7 +134,7 @@ generic.email=Email
 generic.nino-full=National Insurance number
 generic.yes=Yes
 generic.no=No
-generic.sharescreen=Share Screen
+generic.sharescreen=Share screen
 generic.select.answer=Select an answer
 generic.translation.english=English
 generic.translation.welsh=Cymraeg
@@ -359,8 +359,8 @@ pages.date-of-marriage.h2=When did you marry or form a civil partnership with yo
 
 pages.how-it-works.heading=How It Works
 pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
-pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year). 
-pages.how-it-works.lede-pre4=To benefit as a couple, you need to earn less than your partner and have an income of £{0} or less. 
+pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
+pages.how-it-works.lede-pre4=To benefit as a couple, you need to earn less than your partner and have an income of £{0} or less.
 pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year since 5 April 2015 that you were eligible for Marriage Allowance.
 pages.how-it-works.lede-in=Personal Allowance
 pages.how-it-works.lede-post=to your spouse or civil partner.
@@ -657,6 +657,6 @@ pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.u
 # Breadcrumb
 #********************************************************************************
 
-tamc.breadcrumb.home = Account Home
-tamc.breadcrumb.incometax = Income Tax
+tamc.breadcrumb.home = Account home
+tamc.breadcrumb.incometax = Income tax
 tamc.menu = Menu

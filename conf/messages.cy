@@ -135,7 +135,7 @@ generic.email	=	E-bost
 generic.nino-full	=	Rhif Yswiriant Gwladol
 generic.yes	=	Iawn
 generic.no	=	Na
-generic.sharescreen=Share Screen
+generic.sharescreen=Share screen
 generic.select.answer=Select an answer
 generic.translation.text	=	Mae’r dudalen hon hefyd ar gael yn
 generic.translation.english	=	English
@@ -662,6 +662,6 @@ pages.noyears.findoutmore	=	Rhagor o wybodaeth am <a href="https://www.gov.uk/ma
 # Breadcrumb
 #********************************************************************************
 
-tamc.breadcrumb.home = Account Home
-tamc.breadcrumb.incometax = Income Tax
+tamc.breadcrumb.home = Account home
+tamc.breadcrumb.incometax = Income tax
 tamc.menu = Menu
