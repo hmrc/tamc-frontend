@@ -93,6 +93,10 @@
     }
     }
 
+    @if(ApplicationConfig.enableRefresh) {
+            <meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
+    }
+
     @content = {
     @layouts.main_content(
         article = layouts.article(content = mainContent, includeGridWrapper = false),

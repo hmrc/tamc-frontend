@@ -528,8 +528,11 @@ transferor.no-previous-years-available	=	Yn seiliedig ar ddyddiad y briodas neu 
 recipient.has.relationship.para1	=	Nid oeddem yn gallu prosesu’ch cais.
 recipient.has.relationship.para2	=	Gwiriwch &#226;’ch priod neu’ch partner sifil a chadarnhau’r manylion yr ydych wedi’u rhoi.
 session.timeout.button	=	Dechrau eto
-session.timeout.statement	=	Mae’ch sesiwn wedi cyrraedd y terfyn amser
-session.timeout.verbose-statement	=	Mae’r system wedi’ch allgofnodi o Lwfans Priodasol.
+
+session.timeout.statement	=	Rydych wedi cael eich allgofnodi
+session.timeout.verbose-statement	=	Nid ydych wedi gwneud unrhyw beth am 15 munud, felly rydym wedi'ch allgofnodi er mwyn cadw'ch cyfrif yn ddiogel.
+session.timeout.verbose-statement2= Mewngofnodwch eto.
+
 create.relationship.failure	=	Ni ellir creu perthynas
 not.authorised	=	Mae’n ddrwg gennym. Nid oes gennych yr awdurdod i fynd yn eich blaen.
 technical.issue.para1	=	Mae problemau technegol wedi codi
