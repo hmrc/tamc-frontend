@@ -133,7 +133,7 @@
 
     @links = {
     @if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        <li><a id="sign-out" href="@controllers.routes.AuthorisationController.logout().url">Sign out</a></li>
+        <li><a id="sign-out" href="@controllers.routes.AuthorisationController.logout().url">@Messages("user-status.sign-out")</a></li>
     }
     }
 
@@ -141,11 +141,11 @@
     @if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
         <div class="header-proposition">
             <div class="content">
-                <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+                <a href="#proposition-links" class="js-header-toggle menu">@Messages("tamc.menu")</a>
                 <nav id="proposition-menu">
-                    <a href="/pta/pta-home-1" id="proposition-name">Your personal tax account</a>
+                    <a href="/pta/pta-home-1" id="proposition-name">@Messages("tamc.yourtaxaccount")</a>
                     <ul id="proposition-links" class="header__menu__proposition-links">
-                        <li><a id="sign-out" href="/marriage-allowance-application/logout">Sign out</a></li>
+                        <li><a id="sign-out" href="/marriage-allowance-application/logout">@Messages("user-status.sign-out")</a></li>
                     </ul>
                 </nav>
             </div>
