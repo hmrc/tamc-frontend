@@ -104,9 +104,9 @@ coc.end-reason.RETROSPECTIVE	=	Wedi gwneud cais am Lwfans Priodasol yn &#244;l-w
 coc.end-reason.SYSTEM	=	CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT	=	Lwfans Priodasol wedi dod i ben
 
-pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £{0} a £{1}.
+pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £43,000 os ydych yn byw yn yr Alban).
 
-pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich priod neu bartner sifil incwm blynyddol sydd rhwng £{0} a £{1}
+pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £43,000 os ydych yn byw yn yr Alban).
 
 pages.form.field.description.date-of-birth  = Cadarnhewch a gawsoch chi a'ch priod neu bartner sifil eich geni ar ôl 6 Ebrill 1935
 
@@ -287,7 +287,7 @@ eligibility.check.lower.earner.h1	=	Eich incwm
 eligibility.check.lower.earner.question	=	A yw hyn yn berthnasol i chi?
 eligibility.check.lower.earner.error	=	Mae’n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm yn uwch nag £{0}. Mae’n dal yn bosibl i chi wirio a fyddwch yn elwa ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
 eligibility.check.partners.income.h1	=	Incwm eich partner
-eligibility.check.partners.income.information1	=	Er mwyn bod yn gymwys ar gyfer Lwfans Priodasol, rhaid i’ch partner fod yn ennill rhwng £{0} a £{1} y flwyddyn.
+eligibility.check.partners.income.information1	=	I fod yn gymwys ar gyfer Lwfans Priodasol, mae'n rhaid i'ch partner ennill rhwng £{0} a £{1} y flwyddyn (neu £43,000 os ydych yn byw yn yr Alban).
 eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
 eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i’ch partner?
 eligibility.check.partners.income.before.tax	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
@@ -665,3 +665,4 @@ pages.noyears.findoutmore	=	Rhagor o wybodaeth am <a href="https://www.gov.uk/ma
 tamc.breadcrumb.home = Hafan y cyfrif
 tamc.breadcrumb.incometax = Treth Incwm
 tamc.menu = Dewislen
+tamc.yourtaxaccount = Eich cyfrif treth personol

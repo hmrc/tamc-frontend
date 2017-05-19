@@ -105,8 +105,8 @@ coc.end-reason.RETROSPECTIVE=Applied for Marriage Allowance retrospectively
 coc.end-reason.SYSTEM=Ended by HMRC
 coc.end-reason.DEFAULT=Marriage Allowance Ended
 
-pages.form.field.description.partners-income=Confirm if your spouse or civil partner has an annual income of between £{0} and £{1}
-pages.form.field-required.partners-income=Tell us if your spouse or civil partner has an annual income of between £{0} and £{1}.
+pages.form.field.description.partners-income=Confirm if your partner has an annual income of between £{0} and £{1} (or £43,000 if you live in Scotland).
+pages.form.field-required.partners-income=Tell us if your partner has an annual income of between £{0} and £{1} (or £43,000 if you live in Scotland).
 
 pages.form.field.description.date-of-birth=Confirm if you and your spouse or civil partner were born after 6 April 1935
 pages.form.field-required.date-of-birth=Tell us if you and your spouse or civil partner were born after 6 April 1935.
@@ -285,7 +285,7 @@ eligibility.check.lower.earner.h1=Your income
 eligibility.check.lower.earner.question=Does this apply to you?
 eligibility.check.lower.earner.error=You might not benefit from Marriage Allowance in this tax year because your income is above £{0}. You can still continue to check whether you’ll benefit for previous years if your income was lower in the past.
 eligibility.check.partners.income.h1=Your partner’s income
-eligibility.check.partners.income.information1=To be eligible for Marriage Allowance, your partner must earn between £{0} and £{1} a year.
+eligibility.check.partners.income.information1=To be eligible for Marriage Allowance, your partner must earn between £{0} and £{1} a year (or £43,000 if you live in Scotland).
 eligibility.check.partners.income.information2=This is their income figure before any tax is deducted.
 eligibility.check.partners.income.h2=Does this apply to your partner?
 eligibility.check.partners.income.before.tax=This is their income figure before any tax is deducted.
@@ -636,7 +636,7 @@ date.fields.year=Year
 
 change.other.caption=Other changes that affect Marriage Allowance
 change.other.sub.caption1=Change of income
-change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year.
+change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £43,000 if you live in Scotland).
 change.other.income.link=To let us know about a change in income, contact HMRC
 change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
@@ -660,3 +660,4 @@ pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.u
 tamc.breadcrumb.home = Account home
 tamc.breadcrumb.incometax = Income Tax
 tamc.menu = Menu
+tamc.yourtaxaccount = Your personal tax account
