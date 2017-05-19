@@ -135,8 +135,8 @@ generic.email	=	E-bost
 generic.nino-full	=	Rhif Yswiriant Gwladol
 generic.yes	=	Iawn
 generic.no	=	Na
-generic.sharescreen=Share screen
-generic.select.answer=Select an answer
+generic.sharescreen= Rhannu Sgrin
+generic.select.answer=Dewiswch ateb
 generic.translation.text	=	Mae’r dudalen hon hefyd ar gael yn
 generic.translation.english	=	English
 generic.translation.welsh	=	Cymraeg
@@ -234,7 +234,7 @@ eligibility.feedback.loose	=	Ar sail y manylion yr ydych wedi’i rhoi, ni fyddw
 pages.multi-year-select.heading	=	Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
 
 #Single-year select
-pages.form.field.description.selectedYear=You need to select an answer
+pages.form.field.description.selectedYear=Mae angen i chi ddewis ateb
 
 #********************************************************************************
 # Should be added every year
@@ -662,6 +662,6 @@ pages.noyears.findoutmore	=	Rhagor o wybodaeth am <a href="https://www.gov.uk/ma
 # Breadcrumb
 #********************************************************************************
 
-tamc.breadcrumb.home = Account home
-tamc.breadcrumb.incometax = Income tax
-tamc.menu = Menu
+tamc.breadcrumb.home = Hafan y Cyfrif
+tamc.breadcrumb.incometax = Treth Incwm
+tamc.menu = Dewislen
