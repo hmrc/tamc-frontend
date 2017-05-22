@@ -321,7 +321,6 @@ p.blue-underline-large {
 /**Your Status**/
 .secondary-text-colour {
     color: #6f777b;
-    text-transform: capitalize;
 }
 .section--branded h4 {
     border-bottom: 5px solid #005ea5;
@@ -494,4 +493,7 @@ p.blue-underline-large {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+.nowrap{
+    white-space: nowrap
 }

@@ -227,7 +227,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("error").text() shouldBe "We’re experiencing technical difficulties"
+      document.getElementById("error").text() shouldBe "We are experiencing technical difficulties"
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }
