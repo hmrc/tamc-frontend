@@ -27,9 +27,9 @@
             <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
                 <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")' data-focuses='@errorKey.replaceAll("""[\.\[\]]""", "-")'>
                 @if(lowerLimit.isDefined || upperLimit.isDefined) {
-                    @Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get, upperLimit.get)
+                    @Html(Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get, upperLimit.get))
                 } else {
-                    @Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"))
+                    @Html(Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-")))
                 }
                 </a>
             </li>

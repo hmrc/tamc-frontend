@@ -793,7 +793,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("partners-income-error").text() shouldBe "Confirm if your spouse or civil partner has an annual income of between £11,501 and £45,000"
+      document.getElementById("partners-income-error").text() shouldBe "Confirm if your partner has an annual income of between £11,501 and £45,000 (or £43,000 if you live in Scotland)"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
@@ -910,7 +910,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
 
-      document.getElementsByClass("partners-inc-error").text shouldBe "You’re not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still continue to check your eligibility for previous years."
+      document.getElementsByClass("partners-inc-error").text shouldBe "You are not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still continue to check your eligibility for previous years."
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)

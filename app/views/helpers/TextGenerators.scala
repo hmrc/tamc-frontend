@@ -51,7 +51,7 @@ object TextGenerators {
 
   def formPossessive(noun: String, isWelsh: Boolean): String =
     isWelsh match {
-      case false => s"${noun}'s"
+      case false => s"${noun}’s"
       case true => noun
     }
 

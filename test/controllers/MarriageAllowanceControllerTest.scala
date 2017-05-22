@@ -248,7 +248,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("message").text() shouldBe "You haven’t selected any tax years to apply for"
+      document.getElementById("message").text() shouldBe "You have not selected any tax years to apply for"
     }
   }
 
@@ -401,7 +401,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("message").text() shouldBe "You haven’t selected any tax years to apply for"
+      document.getElementById("message").text() shouldBe "You have not selected any tax years to apply for"
     }
 
     "redirect if no year is selected (empty list)" in {
@@ -419,7 +419,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("message").text() shouldBe "You haven’t selected any tax years to apply for"
+      document.getElementById("message").text() shouldBe "You have not selected any tax years to apply for"
     }
 
     "retrieve correct keystore data for female recipient" in {
@@ -453,8 +453,8 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       document.getElementById("year-2014").text() shouldBe "Previous tax year: 6 April 2014 to 5 April 2015"
       document.getElementById("year-2015").text() shouldBe "Previous tax year: 6 April 2015 to 5 April 2016"
 
-      document.getElementById("outcome-2014").text() shouldBe "HMRC will check the details you’ve supplied before sending foo a cheque by post for up to £212."
-      document.getElementById("outcome-2015").text() shouldBe "HMRC will check the details you’ve supplied before sending foo a cheque by post for up to £212."
+      document.getElementById("outcome-2014").text() shouldBe "HMRC will check the details you have supplied before sending foo a cheque by post for up to £212."
+      document.getElementById("outcome-2015").text() shouldBe "HMRC will check the details you have supplied before sending foo a cheque by post for up to £212."
 
       document.getElementById("change-2014").attr("href") shouldBe "/marriage-allowance-application/eligible-years"
       document.getElementById("change-2015").attr("href") shouldBe "/marriage-allowance-application/eligible-years"

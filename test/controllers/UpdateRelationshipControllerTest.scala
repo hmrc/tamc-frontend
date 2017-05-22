@@ -182,7 +182,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("confirm-page").text() shouldBe "Confirm removal of a previous Marriage Allowance claim"
-      document.getElementById("confirm-note").text() shouldBe "You’ve asked us to remove your Marriage Allowance from tax year 2010 to 2015. This means:"
+      document.getElementById("confirm-note").text() shouldBe "You have asked us to remove your Marriage Allowance from tax year 2010 to 2015. This means:"
     }
 
     "have update relationship action details in cache " in {
