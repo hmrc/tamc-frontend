@@ -75,7 +75,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("error").text() shouldBe "We’re experiencing technical difficulties"
+      document.getElementById("error").text() shouldBe "We are experiencing technical difficulties"
     }
 
     "send audit event if recipient can not be found" in {
@@ -172,7 +172,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe INTERNAL_SERVER_ERROR
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("description").text() shouldBe "Based on the date of marriage or civil partnership you’ve provided, you’re not eligible for Marriage Allowance."
+      document.getElementById("description").text() shouldBe "Based on the date of marriage or civil partnership you have provided, you are not eligible for Marriage Allowance."
     }
   }
 

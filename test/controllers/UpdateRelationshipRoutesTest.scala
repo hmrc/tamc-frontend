@@ -82,7 +82,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       val heading = document.getElementsByClass("heading-xlarge").text()
-      heading should be("We’re sorry for your loss")
+      heading should be("We are sorry for your loss")
 
     }
   }

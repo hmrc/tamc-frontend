@@ -367,7 +367,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "5000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Check the numbers you’ve entered. Please enter the lower earner’s income followed by the higher earner’s income."
+      document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
 
     "be displayed if transferor income=9000 (< 9540) and recipient income=46000 (> 45000)" in {
@@ -393,7 +393,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "43001", "recipient-income" -> "20000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Check the numbers you’ve entered. Please enter the lower earner’s income followed by the higher earner’s income."
+      document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
   }
 }
