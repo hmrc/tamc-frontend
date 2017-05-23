@@ -41,16 +41,15 @@
       <fieldset class="inline spacingBottom" id="gender">
       @for(index <- 0 until availableYears.size) {
         <div class="form-group" id="year-@availableYears(index).year-">
-          
           <h3 class="heading-medium"><span style="color:grey">@TextGenerators.taxDateIntervalShort(availableYears(index).year) tax year</span><br>@TextGenerators.taxDateInterval(availableYears(index).year)</h3>
             <div style="margin-top:30px">
               <p>You and <span id="firstNameOnly">@input.name</span> can claim Marriage Allowance for the @TextGenerators.taxDateIntervalShort(availableYears(index).year) tax year if:</p>
                 <ul class="list list-bullet">
-                    <li>your income was £10,600 or less </li>
-                    <li><span id="firstNameOnly2">@TextGenerators.formPossessive(input.name)</span> income was between £10,601 and £42,385</li>
+                    <li>@Html(Messages("your-income-"+availableYears(index).year)) </li>
+                    <li><span id="firstNameOnly2">@TextGenerators.formPossessive(input.name)</span> @Html(Messages("income-between-"+availableYears(index).year))</li>
                 </ul>
               <p>If your application is successful, Marriage Allowance will be backdated for the @TextGenerators.taxDateIntervalShort(availableYears(index).year)  tax year and 
-              <span id="firstNameOnly3">@input.name</span> will receive a cheque for up to £212.</p>
+              <span id="firstNameOnly3">@input.name</span> will receive a cheque for up to @Html(Messages("max-benefit-"+availableYears(index).year)).</p>
             </div>
            <p class="bold-small">Do you want to apply for this extra tax year too?</p>
             @templates.input_radio_group(
