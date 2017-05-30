@@ -881,7 +881,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
 
-      document.getElementById("lower-earner-error").text shouldBe "Confirm if you are the lower earner in the relationship"
+      document.getElementById("lower-earner-error").text shouldBe "Confirm if you have the lower income in the relationship"
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)

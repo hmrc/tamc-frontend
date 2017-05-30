@@ -89,7 +89,7 @@ class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUt
 
       val error = document.getElementById("error").text()
 
-      error should be("We were unable to find a HMRC record of your spouse or civil partner.")
+      error should be("We were unable to find a HMRC record of your partner.")
 
     }
   }

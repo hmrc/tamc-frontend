@@ -5,26 +5,26 @@
 pages.form.field.description.transferor-income	=	Cadarnhewch eich incwm blynyddol
 pages.form.field.description.recipient-income	=	Cadarnhewch incwm blynyddol eich priod neu bartner sifil
 
-pages.form.field.description.name	=	Cadarnhewch enw cyntaf eich priod neu bartner sifil
-pages.form.field.name.error.error.required	=	Rhowch wybod beth yw enw cyntaf eich priod neu bartner sifil
+pages.form.field.description.name	=	Cadarnhewch enw cyntaf eich partner
+pages.form.field.name.error.error.required	=	Rhowch enw cyntaf eich partner
 pages.form.field.name.error.error.pattern	=	Defnyddiwch lythrennau yn unig
 pages.form.field.name.error.error.maxLength	=	Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
 
-pages.form.field.description.last-name	=	Cadarnhewch enw olaf eich priod neu bartner sifil
-pages.form.field.last-name.error.error.required	=	Rhowch wybod beth yw enw olaf eich priod neu bartner sifil
+pages.form.field.description.last-name	=	Cadarnhewch enw olaf eich partner
+pages.form.field.last-name.error.error.required	=	Rhowch enw olaf eich partner
 pages.form.field.last-name.error.error.pattern	=	Defnyddiwch lythrennau yn unig
 pages.form.field.last-name.error.error.maxLength	=	Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
 
-pages.form.field.description.gender	=	Cadarnhewch ryw eich priod neu bartner sifil
-pages.form.field.gender.error.error.required	=	Rhowch wybod beth yw rhyw eich priod neu bartner sifil
-pages.form.field.gender.error.error.invalid	=	Rhowch wybod beth yw rhyw eich priod neu bartner sifil
+pages.form.field.description.gender	=	Cadarnhewch ryw eich partner
+pages.form.field.gender.error.error.required	=	Rhowch enw eich partner
+pages.form.field.gender.error.error.invalid	=	Rhowch enw eich partner
 pages.form.field.dom.error.required	=	Rhowch wybod ar ba ddyddiad y gwnaethoch briodi
 pages.form.field.dod.error.required	=	Rhowch wybod ar ba ddyddiad y gwnaethoch ysgaru
 pages.form.field.dom.error.min-date	=	Mae’r dyddiad hwn yn rhy bell yn y gorffennol
 pages.form.field.dom.error.max-date	=	Mae’r dyddiad hwn yn y dyfodol
 
-pages.form.field.description.nino	=	Cadarnhewch rif Yswiriant Gwladol eich priod neu bartner sifil
-pages.form.field.nino.error.error.required	=	Rhowch wybod beth yw rhif Yswiriant Gwladol eich priod neu bartner sifil
+pages.form.field.description.nino	=	Cadarnhewch rif Yswiriant Gwladol eich partner
+pages.form.field.nino.error.error.required	=	Rhowch rif Yswiriant Gwladol eich partner
 pages.form.field.nino.error.error.invalid	=	Rhaid i chi wirio’r rhif Yswiriant Gwladol a’i nodi’n gywir
 pages.form.field.nino.error.self	=	Ni allwch nodi’ch manylion eich hun
 
@@ -46,7 +46,7 @@ pages.form.field-required.marriage-criteria	=	Rhowch wybod a ydych yn briod neu 
 pages.form.field-required.multiyear-recipient-income-criteria	=	Rhowch wybod a yw’ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
 pages.form.field-required.multiyear-transferor-income-criteria	=	Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
 
-pages.form.field-required.lower-earner	=	Rhowch wybod os mai chi yw’r un â’r cyflog isaf yn y berthynas
+pages.form.field-required.lower-earner	=	Rhowch wybod os mai chi yw’r un â’r incwm isaf yn y berthynas
 
 pages.form.field-required.applyForCurrentYear	=	Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol
 pages.form.field-required.applyForHistoricYears	=	Rhowch wybod a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
@@ -281,16 +281,16 @@ eligibility.check.yes	=	Iawn
 eligibility.check.married.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
 multiyear.check.income	=	Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible	=	Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
-eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy’n gorfod ennill y lleiaf yn y berthynas ac ennill £{0} neu lai’r flwyddyn.
-eligibility.check.lower.earner.information2	=	Dyma ffigur eich incwm cyn didynnu treth.
+eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy'n gorfod cael yr incwm lleiaf yn y perthynas(£{0} neu lai'r flwyddyn).
+eligibility.check.lower.earner.information2	=	Mae hyn cyn didynnu treth.
 eligibility.check.lower.earner.h1	=	Eich incwm
 eligibility.check.lower.earner.question	=	A yw hyn yn berthnasol i chi?
-eligibility.check.lower.earner.error	=	Mae’n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm yn uwch nag £{0}. Mae’n dal yn bosibl i chi wirio a fyddwch yn elwa ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
+eligibility.check.lower.earner.error	=	Mae'n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm dros £{0}.  Mae'n dal yn bosibl i chi wirio a fyddwch yn elwa ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
 eligibility.check.partners.income.h1	=	Incwm eich partner
-eligibility.check.partners.income.information1	=	I fod yn gymwys ar gyfer Lwfans Priodasol, mae'n rhaid i'ch partner ennill rhwng £{0} a £{1} y flwyddyn (neu £43,000 os ydych yn byw yn yr Alban).
+eligibility.check.partners.income.information1	=	Er mwyn bod yn gymwys am Lwfans Priodasol, mae'n rhaid bod gan eich partner incwm rhwng £{0} a £{1} y flwyddyn (neu £43,000 os ydych yn byw yn yr Alban).
 eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
 eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i’ch partner?
-eligibility.check.partners.income.before.tax	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
+eligibility.check.partners.income.before.tax	=	Mae hyn cyn didynnu treth.
 eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu’n rhy isel. Mae’n dal yn bosibl i chi wirio’ch cymhwyster am flynyddoedd blaenorol.
 eligibility.check.date.of.birth.h1  =   Eich dyddiad geni chi a’ch partner
 eligibility.check.date.of.birth.span.para   =   I elwa o Lwfans Priodasol, dylai’ch dyddiad geni chi a’ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
@@ -320,9 +320,9 @@ pages.finished.check-link-para	=	Gallwch <a id="pta-link" href="{0}" data-journe
 #********************************************************************************
 
 
-pages.form.h1	=	Manylion eich priod neu bartner sifil
-pages.form.details	=	Fel yr unigolyn &#226;’r cyflog isaf, gallwch chi <span id="transferor-name">{0}</span> wneud cais nawr i helpu’ch partner i ostwng swm y dreth y mae’n ei dalu.
-pages.form.enter-data	=	Nodwch fanylion eich priod neu bartner sifil:
+pages.form.h1	=	Manylion eich partner
+pages.form.details	=	Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i helpu gostwng swm y dreth y mae ef/hi’n ei dalu.
+pages.form.enter-data	=	Nodwch fanylion eich partner:
 pages.form.field.name	=	Beth yw enw cyntaf eich priod neu bartner sifil?
 pages.form.field.last-name	=	Beth yw enw olaf eich priod neu bartner sifil?
 pages.form.field.gender	=	Beth yw rhyw eich priod neu bartner sifil?
@@ -609,16 +609,16 @@ pages.previousyear.para	=	Rhoesoch wybod y gwnaethoch briodi neu ffurfio partner
 #********************************************************************************
 
 
-pages.confirm.lower.earner	=	Eich manylion (yr unigolyn &#226;’r cyflog isaf)
-pages.confirm.higher.earner	=	Manylion eich partner (yr unigolyn &#226;’r cyflog uchaf)
+pages.confirm.lower.earner	=	Eich manylion (incwm isel)
+pages.confirm.higher.earner	=	Manylion eich partner (incwm uchel)
 pages.confirm.current.tax	=	Blwyddyn dreth bresennol: <span class=nowrap>{0}</span> ymlaen
 pages.confirm.current.tax.desc	=	Bydd CThEM yn newid codau treth chi a {0} er mwyn arbed {1} hyd at £{2}. Bydd eich Lwfans Priodasol yn parhau’n awtomatig oni bai’ch bod chi neu {3} yn ei ganslo, neu nad ydych bellach yn gymwys fel p&#226;r.
 pages.confirm.previous.tax	=	Blwyddyn dreth flaenorol: <span class=nowrap>{0}</span> i <span class=nowrap>{1}</span>
 pages.confirm.previous.tax.desc	=	Bydd CThEM yn gwirio’r manylion yr ydych wedi’u rhoi cyn anfon siec at {0} drwy’r post am hyd at {1}.
-pages.confirm.warning	=	Dylech wirio’r manylion yr ydych wedi’u rhoi a sicrhau mai dyma’r person yr hoffech wneud cais am Lwfans Priodasol gydag ef/hi.
+pages.confirm.warning	=	Gwiriwch y manylion yr ydych wedi'u nodi a gwnewch yn siŵr eu bod yn gywir.
 pages.confirm.button	=	Cadarnhau’ch cais
 pages.confirm.marriage.details	=	Manylion eich Lwfans Priodasol
-pages.confirm.date.of.marriage	=	Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
+pages.confirm.date.of.marriage	=	Dyddiad y briodas neu'r dyddiad y ffurfiwyd y bartneriaeth sifil
 
 
 #********************************************************************************

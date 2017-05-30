@@ -59,7 +59,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("error").text() shouldBe "We were unable to find a HMRC record of your spouse or civil partner."
+      document.getElementById("error").text() shouldBe "We were unable to find a HMRC record of your partner."
     }
 
     "show ’Technical Exception’ page" in {
