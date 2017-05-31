@@ -43,7 +43,7 @@ pages.form.field.description.lower-earner=Confirm if you have the lower income i
 pages.form.field.description.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
 pages.form.field.description.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
 
-pages.form.field-required.marriage-criteria=Tell us if you are married or in a legally registered civil partnership.
+pages.form.field-required.marriage-criteria=Tell us if you are married or in a legally registered civil partnership
 pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
 pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
 
@@ -69,13 +69,13 @@ pages.form.field.description.year-2024-=Confirm whether you would like to apply 
 pages.form.field.description.year-2025-=Confirm whether you would like to apply for the previous 2025 to 2026 tax year
 pages.form.field.description.year-2026-=Confirm whether you would like to apply for the previous 2026 to 2027 tax year
 
-pages.form.field.transferor-income.error.field-required=Tell us your annual income.
+pages.form.field.transferor-income.error.field-required=Tell us your annual income
 pages.form.field.transferor-income.error.field-invalid=Use numbers only.
 
 eligibility.feedback.incorrect-role=Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income.
 
-pages.form.field.recipient-income.error.field-required=Tell us your partner’s annual income.
-pages.form.field.recipient-income.error.field-invalid=Use numbers only.
+pages.form.field.recipient-income.error.field-required=Tell us your partner’s annual income
+pages.form.field.recipient-income.error.field-invalid=Use numbers only
 
 change.status.reason-CANCEL=I want to stop Marriage Allowance payments
 change.status.reason-REJECT=I want to stop Marriage Allowance payments
@@ -279,7 +279,7 @@ eligibility.check.yes = Yes
 eligibility.check.married.error=You are not eligible for Marriage Allowance because you are not married or in a legally registered civil partnership.
 multiyear.check.income=Since 6 April 2015 was your annual income at or below the Personal Allowance level?
 eligibility.check.non-eligible=Based on your answers, you are not eligible for Marriage Allowance.
-eligibility.check.lower.earner.information1=To benefit from Marriage Allowance, you must have the lower income in the relationship(£{0} or less a year).
+eligibility.check.lower.earner.information1=To benefit from Marriage Allowance, you must have the lower income in the relationship (£{0} or less a year).
 eligibility.check.lower.earner.information2= This is before any tax is deducted.
 eligibility.check.lower.earner.h1=Your income
 eligibility.check.lower.earner.question=Does this apply to you?
@@ -330,7 +330,7 @@ pages.form.field-helper.gender=This information will help us confirm their ident
 pages.form.field.nino=What is their National Insurance number?
 pages.form.field-helper.nino-example=For example, QQ 12 34 56 C
 pages.form.field-helper.nino-where=Where do I find this?
-pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits
+pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits.
 pages.form.field-helper.dom=For example, 31 3 1980
 pages.form.field-helper.dod=For example, 31 3 1980
 pages.form.field.your-confirmation=Confirmation email
@@ -346,7 +346,7 @@ pages.form.field.dod.question=When did you legally end your marriage or civil pa
 #********************************************************************************
 
 
-pages.date-of-marriage.heading=Date of Marriage or civil partnership
+pages.date-of-marriage.heading=Date of marriage or civil partnership
 pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
 pages.date-of-marriage.para2=You can claim from when Marriage Allowance was first introduced on <span class=nowrap>6 April 2015.</span> This means you might be able to claim for previous tax years.
 pages.date-of-marriage.h2=When did you marry or form a civil partnership with your partner?
@@ -357,7 +357,7 @@ pages.date-of-marriage.h2=When did you marry or form a civil partnership with yo
 #********************************************************************************
 
 
-pages.how-it-works.heading=How It Works
+pages.how-it-works.heading=How it works
 pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
 pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
@@ -642,7 +642,7 @@ change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
 change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 
-error.invalid.date.format=You must specify a valid date.
+error.invalid.date.format=You must specify a valid date
 
 
 #********************************************************************************
@@ -651,7 +651,7 @@ error.invalid.date.format=You must specify a valid date.
 
 pages.noyears.h1=You have not selected any tax years to apply for
 pages.noyears.content1=Go back if you want to select a year to apply for.
-pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works.</a>
+pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works</a>.
 
 #********************************************************************************
 # Breadcrumb

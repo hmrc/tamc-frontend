@@ -42,7 +42,7 @@ pages.form.field.description.lower-earner	=	Cadarnhewch os mai chi yw’r un â�
 pages.form.field.description.multiyear-transferor-income-criteria	=	Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
 pages.form.field.description.multiyear-recipient-income-criteria	=	Rhowch wybod a yw’ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
 
-pages.form.field-required.marriage-criteria	=	Rhowch wybod a ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
+pages.form.field-required.marriage-criteria	=	Rhowch wybod a ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon
 pages.form.field-required.multiyear-recipient-income-criteria	=	Rhowch wybod a yw’ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
 pages.form.field-required.multiyear-transferor-income-criteria	=	Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
 
@@ -68,13 +68,13 @@ pages.form.field.description.year-2024-	=	Cadarnhewch a hoffech wneud cais ar gy
 pages.form.field.description.year-2025-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2025 i 2026
 pages.form.field.description.year-2026-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2026 i 2027
 
-pages.form.field.transferor-income.error.field-required	=	Rhowch wybod beth yw’ch incwm blynyddol.
+pages.form.field.transferor-income.error.field-required	=	Rhowch wybod beth yw’ch incwm blynyddol
 pages.form.field.transferor-income.error.field-invalid	=	Defnyddiwch rifau’n unig.
 
 eligibility.feedback.incorrect-role	=	Gwiriwch y rhifau yr ydych wedi’u nodi. Nodwch incwm yr unigolyn &#226;’r cyflog isaf, wedi’i ddilyn gan incwm yr unigolyn &#226;’r cyflog uchaf.
 
-pages.form.field.recipient-income.error.field-required	=	Rhowch wybod beth yw incwm blynyddol eich priod neu bartner sifil.
-pages.form.field.recipient-income.error.field-invalid	=	Defnyddiwch rifau’n unig.
+pages.form.field.recipient-income.error.field-required	=	Rhowch wybod beth yw incwm blynyddol eich priod neu bartner sifil
+pages.form.field.recipient-income.error.field-invalid	=	Defnyddiwch rifau’n unig
 
 change.status.reason-CANCEL	=	Rwyf am roi’r gorau i gael taliadau Lwfans Priodasol
 change.status.reason-REJECT	=	Rwyf am roi’r gorau i gael taliadau Lwfans Priodasol
@@ -281,7 +281,7 @@ eligibility.check.yes	=	Iawn
 eligibility.check.married.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
 multiyear.check.income	=	Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible	=	Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
-eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy'n gorfod cael yr incwm lleiaf yn y perthynas(£{0} neu lai'r flwyddyn).
+eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy'n gorfod cael yr incwm lleiaf yn y perthynas (£{0} neu lai’r flwyddyn).
 eligibility.check.lower.earner.information2	=	Mae hyn cyn didynnu treth.
 eligibility.check.lower.earner.h1	=	Eich incwm
 eligibility.check.lower.earner.question	=	A yw hyn yn berthnasol i chi?
@@ -646,7 +646,7 @@ change.other.bereavement.content	=	Os yw’ch partner yn marw, bydd eich Lwfans 
 change.other.bereavement.link	=	Er mwyn rhoi gwybod i ni am brofedigaeth, cysylltwch &#226; CThEM
 change.status.active	=	Gweithredol
 
-error.invalid.date.format	=	Rhaid i chi nodi dyddiad dilys.
+error.invalid.date.format	=	Rhaid i chi nodi dyddiad dilys
 
 
 #********************************************************************************
@@ -656,7 +656,7 @@ error.invalid.date.format	=	Rhaid i chi nodi dyddiad dilys.
 
 pages.noyears.h1	=	Nid ydych wedi dewis blynyddoedd treth i wneud cais ar eu cyfer
 pages.noyears.content1	=	Ewch yn &#244;l os ydych am ddewis blwyddyn i wneud cais ar ei chyfer.
-pages.noyears.findoutmore	=	Rhagor o wybodaeth am <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">sut y mae Lwfans Priodasol yn gweithio.</a>
+pages.noyears.findoutmore	=	Rhagor o wybodaeth am <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">sut y mae Lwfans Priodasol yn gweithio</a>.
 
 #********************************************************************************
 # Breadcrumb

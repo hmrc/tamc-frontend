@@ -792,7 +792,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
 
     }
   }
@@ -826,7 +826,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
 
     }
   }
@@ -862,7 +862,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship(£11,500 or less a year). This is before any tax is deducted."
+      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship (£11,500 or less a year). This is before any tax is deducted."
     }
   }
 
@@ -910,7 +910,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship(£11,500 or less a year). This is before any tax is deducted."
+      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship (£11,500 or less a year). This is before any tax is deducted."
     }
   }
 

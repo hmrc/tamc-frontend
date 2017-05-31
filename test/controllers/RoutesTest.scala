@@ -680,7 +680,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
@@ -826,7 +826,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
