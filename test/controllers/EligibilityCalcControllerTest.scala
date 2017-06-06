@@ -130,14 +130,14 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9540", "recipient-income" -> "11000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
     }
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income>45000" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9540", "recipient-income" -> "46001")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
     }
   }
 
@@ -238,7 +238,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
       document.getElementById("transferor-income-error").text shouldBe "Confirm your annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
     }
 
     "be displayed if transferor income is not provided (Empty)" in {
@@ -249,7 +249,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
       document.getElementById("transferor-income-error").text shouldBe "Confirm your annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
     }
 
     "be displayed if transferor income is not provided (Blank)" in {
@@ -260,7 +260,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       form.getElementsByClass("error-message").first() shouldNot be(null)
       document.getElementById("transferor-income-error").text shouldBe "Confirm your annual income"
       val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
     }
 
     "be displayed if transferor income contains letters" in {
@@ -300,8 +300,8 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your spouse or civil partner’s annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s annual income."
+      document.getElementById("recipient-income-error").text shouldBe "Confirm your partner’s annual income"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
     }
 
     "be displayed if recipient income is not provided (Empty)" in {
@@ -311,8 +311,8 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your spouse or civil partner’s annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s annual income."
+      document.getElementById("recipient-income-error").text shouldBe "Confirm your partner’s annual income"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
     }
 
     "be displayed if recipient income is not provided (Blank)" in {
@@ -322,8 +322,8 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your spouse or civil partner’s annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your spouse or civil partner’s annual income."
+      document.getElementById("recipient-income-error").text shouldBe "Confirm your partner’s annual income"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
     }
 
     "be displayed if recipient income contains letters" in {
@@ -333,7 +333,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
     }
 
     "be displayed if recipient income contains negative number" in {
@@ -343,7 +343,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
     }
 
     "be displayed if recipient income exceeds max Int" in {
@@ -353,14 +353,14 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
     }
 
     "be displayed if transferor income=0 (< 9540) and recipient income=0 (10600-11660)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "0", "recipient-income" -> "0")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
     }
 
     "be displayed if transferor income=9000 (< 9540) and recipient income=5000 (< 10600)" in {
@@ -374,14 +374,14 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "46000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
     }
 
     "be displayed if transferor income=10000 (9540-11000) and recipient exceeds limit" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "10000", "recipient-income" -> "46000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your spouse or civil partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
     }
     "be displayed if transferor income is below limit and recipient income=20000" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "11501", "recipient-income" -> "20000")

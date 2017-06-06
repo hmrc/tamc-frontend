@@ -680,7 +680,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
@@ -826,7 +826,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership."
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
@@ -881,7 +881,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
 
-      document.getElementById("lower-earner-error").text shouldBe "Confirm if you are the lower earner in the relationship"
+      document.getElementById("lower-earner-error").text shouldBe "Confirm if you have the lower income in the relationship"
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)

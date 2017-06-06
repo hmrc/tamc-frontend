@@ -237,7 +237,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
       val contentAsStringFromResult = contentAsString(result)
       val document = Jsoup.parse(contentAsString(result))
       val historicActiveMessage = document.getElementById("historicActiveMessage").text()
-      historicActiveMessage should be("You will stop receiving Marriage Allowance from your spouse or civil partner at end of the tax year (5 April 2017).")
+      historicActiveMessage should be("You will stop receiving Marriage Allowance from your partner at end of the tax year (5 April 2017).")
 
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
