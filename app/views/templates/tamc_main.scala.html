@@ -40,7 +40,9 @@
 
     @scriptElement = {
         <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/tamc.js")'></script>
-
+    @config.OptimizelyConfig.optimizelyProjectId.map { projectId =>
+    <script src="https://cdn.optimizely.com/js/@{projectId}.js"></script>
+    }
 
         <script type="text/javascript">
                 function initCobrowse() {
