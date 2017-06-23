@@ -214,7 +214,7 @@ hmrc.contact-details-9	=	<a href="https://www.gov.uk/call-charges"> Gwybodaeth a
 
 pages.calc.header	=	Cyfrifiannell Lwfans Priodasol
 pages.calc.para1	=	Fel pâr, darganfyddwch faint o dreth y gallwch ei harbed os ydych yn gwneud cais am Lwfans Priodasol yn y flwyddyn dreth hon.
-pages.form.field.income	=	Incwm blynyddol yr unigolyn &#226;’r cyflog isaf cyn didynnu treth
+pages.form.field.income	=	Eich incwm (isel), cyn didynnu treth
 pages.form.field.recipient-income	=	Incwm eich partner (uchel), cyn didynnu treth
 pages.calc.field-helper.income	=	Dyma ffigur eich incwm cyn didynnu treth.
 pages.calc.field-helper.partners-income	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
@@ -234,7 +234,7 @@ eligibility.feedback.loose	=	Ar sail y manylion yr ydych wedi’i rhoi, ni fyddw
 pages.multi-year-select.heading	=	Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
 
 #Single-year select
-pages.form.field.description.selectedYear=Mae angen i chi ddewis ateb
+pages.form.field.description.selectedYear = Mae angen i chi ddewis ateb
 
 #********************************************************************************
 # Should be added every year
