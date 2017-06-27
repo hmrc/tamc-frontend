@@ -323,13 +323,13 @@ pages.finished.check-link-para	=	Gallwch <a id="pta-link" href="{0}" data-journe
 pages.form.h1	=	Manylion eich partner
 pages.form.details	=	Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i helpu gostwng swm y dreth y mae ef/hi’n ei dalu.
 pages.form.enter-data	=	Nodwch fanylion eich partner:
-pages.form.field.name	=	Beth yw enw cyntaf eich priod neu bartner sifil?
-pages.form.field.last-name	=	Beth yw enw olaf eich priod neu bartner sifil?
-pages.form.field.gender	=	Beth yw rhyw eich priod neu bartner sifil?
+pages.form.field.name	=	Beth yw enw cyntaf eich partner?
+pages.form.field.last-name	=	Beth yw enw olaf eich partner?
+pages.form.field.gender	=	Beth yw rhyw eich partner?
 pages.form.field.gender.male	=	Gwryw
 pages.form.field.gender.female	=	Benyw
 pages.form.field-helper.gender	=	Bydd yr wybodaeth hon yn ein helpu i gadarnhau pwy ydyw.
-pages.form.field.nino	=	Beth yw rhif Yswiriant Gwladol eich priod neu bartner sifil?
+pages.form.field.nino	=	Beth yw rhif Yswiriant Gwladol eich partner?
 pages.form.field-helper.nino-example	=	Er enghraifft, QQ 12 34 56 C
 pages.form.field-helper.nino-where	=	Ble y gallaf ddod o hyd i hwn?
 pages.form.field-helper.nino-found	=	Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.
@@ -363,7 +363,7 @@ pages.how-it-works.heading	=	Sut y mae’n gweithio
 pages.how-it-works.lede-pre1	=	Mae <a href="https://www.gov.uk/marriage-allowance-guide">Lwfans Priodasol</a> yn caniat&#225;u i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
 pages.how-it-works.lede-pre2	=	Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre4	=	Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
-pages.how-it-works.lede-pre5	=	Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth ers 5 Ebrill 2015 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
+pages.how-it-works.lede-pre5	=	Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2015 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
 pages.how-it-works.lede-in	=	Lwfans Personol
 pages.how-it-works.lede-post	=	i’ch partner.
 pages.how-it-works.tse	=	i weld a ydych yn gymwys ar gyfer Lwfans Priodasol
