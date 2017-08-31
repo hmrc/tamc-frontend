@@ -26,7 +26,8 @@ import utils.LanguageUtils
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser)
+        user: details.TamcUser,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators

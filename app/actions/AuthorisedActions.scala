@@ -30,6 +30,7 @@ import uk.gov.hmrc.play.frontend.auth.{Actions, AuthContext, TaxRegime, Upliftin
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
+import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.TamcBreadcrumb
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -38,10 +39,12 @@ import scala.concurrent.Future
 object IdaAuthentificationProvider extends IdaAuthentificationProvider {
   override val login = ApplicationConfig.ivLoginUrl
   override val customAuditConnector = ApplicationAuditConnector
+  override val templateRenderer = config.LocalTemplateRenderer
 }
 
 trait IdaAuthentificationProvider extends Verify with RunMode with TamcBreadcrumb with JourneyEnforcers {
   val customAuditConnector: AuditConnector
+  implicit val templateRenderer: TemplateRenderer
 
   override def redirectToLogin(implicit request: Request[_]): Future[Result] =
  {
