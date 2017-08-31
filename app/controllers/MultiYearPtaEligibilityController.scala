@@ -19,7 +19,6 @@ package controllers
 import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
 import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import details.CitizenDetailsService
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
@@ -39,7 +38,7 @@ object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityControll
   override val ivUpliftUrl = ApplicationConfig.ivUpliftUrl
 }
 
-trait MultiYearPtaEligibilityController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val eligibilityCalculatorService = EligibilityCalculatorService
   val authConnector: ApplicationAuthConnector
