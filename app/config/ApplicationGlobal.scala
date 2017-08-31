@@ -42,6 +42,7 @@ object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
   override val auditConnector = ApplicationAuditConnector
   override val loggingFilter = MarriageAllowanceLoggingFilter
   override val frontendAuditFilter = MarriageAllowanceAuditFilter
+  implicit val templateRenderer = config.LocalTemplateRenderer
 
   override def onStart(app: Application) {
     super.onStart(app)

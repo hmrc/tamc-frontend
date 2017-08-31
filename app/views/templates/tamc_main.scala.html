@@ -22,7 +22,8 @@
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: Option[details.TamcUser] = None
+        user: Option[details.TamcUser] = None,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 )
 
     @import play.twirl.api.Html
