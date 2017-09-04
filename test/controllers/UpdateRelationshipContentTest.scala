@@ -42,7 +42,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-
+      println("\n\n\n\n----"+document)
       document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
       document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
     }

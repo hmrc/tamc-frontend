@@ -160,12 +160,7 @@ trait TestUtility extends UnitSpec {
       override def citizenDetailsUrl: String = "foo"
     }
 
-    val fakeTemplateRenderer: TemplateRenderer = new TemplateRenderer {override def templateServiceBaseUrl = ???
-
-      override def refreshAfter = ???
-
-      override def connection = ???
-    }
+    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
@@ -306,12 +301,7 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    val fakeTemplateRenderer: TemplateRenderer = new TemplateRenderer {override def templateServiceBaseUrl = ???
-
-      override def refreshAfter = ???
-
-      override def connection = ???
-    }
+    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
@@ -466,12 +456,7 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    val fakeTemplateRenderer: TemplateRenderer = new TemplateRenderer {override def templateServiceBaseUrl = ???
-
-      override def refreshAfter = ???
-
-      override def connection = ???
-    }
+    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"

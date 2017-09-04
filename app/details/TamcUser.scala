@@ -36,12 +36,6 @@ case class TamcUser(authContext: AuthContext, personDetails: Option[PersonDetail
     case Some(personDetails) => personDetails.person.shortName
     case _ => authContext.principal.name
   }
-
-  def getDisplayName = if (!authContext.isDelegating) {
-    authContext.principal.name.fold("Name Not Defined") { name => name }
-  } else {
-    authContext.attorney.fold("Name Not Defined") { name => name.name }
-  }
 }
 
 object TamcUser {

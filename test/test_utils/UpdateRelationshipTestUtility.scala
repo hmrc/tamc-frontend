@@ -170,12 +170,7 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
     }
 
 
-    val fakeTemplateRenderer: TemplateRenderer = new TemplateRenderer {override def templateServiceBaseUrl = ???
-
-      override def refreshAfter = ???
-
-      override def connection = ???
-    }
+    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
