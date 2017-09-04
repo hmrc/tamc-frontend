@@ -13,166 +13,182 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
+
 @(title: String,
-        mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
-        appConfig: config.ApplicationConfig = config.ApplicationConfig,
-        supportLinkEnabled: Boolean = true,
-        langSwitch: Option[play.twirl.api.Html] = None,
-        scriptElem: Option[Html] = None)(mainContent: Html)(implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: Option[details.TamcUser] = None,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+pageName:Option[String] = None,
+sidebarLinks: Option[Html] = None,
+sidebarClass: Option[String] = None,
+mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
+appConfig: config.ApplicationConfig = config.ApplicationConfig,
+supportLinkEnabled: Boolean = true,
+langSwitch: Option[play.twirl.api.Html] = None,
+scriptElem: Option[Html] = None)(mainContent: Html)(implicit lang: Lang,
+request: Request[_],
+context: config.TamcContext,
+breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+user: Option[details.TamcUser] = None,
+gaDimensions: Option[Map[String, String]] = None,
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 )
 
-    @import play.twirl.api.Html
-    @import play.twirl.api.HtmlFormat
-    @import uk.gov.hmrc.play.views.html.layouts
-    @import uk.gov.hmrc.play.views.html.helpers
-    @import uk.gov.hmrc.play.frontend.auth.AuthContext
-    @import actions.JourneyEnforcers
-    @import config._
-    @import play.api.Play
-    @import play.api.Play.current
-    @import config.ApplicationConfig.webchatId
-    @import play.api.Play.current
-    @import play.api.i18n.Messages.Implicits._
+@import play.twirl.api.Html
+@import play.twirl.api.HtmlFormat
+@import uk.gov.hmrc.play.views.html.layouts
+@import uk.gov.hmrc.play.views.html.helpers
+@import uk.gov.hmrc.play.frontend.auth.AuthContext
+@import actions.JourneyEnforcers
+@import config._
+@import play.api.Play
+@import play.api.Play.current
+@import config.ApplicationConfig.webchatId
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
+@import utils.Helper._
+@import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
-    @scriptElement = {
-        <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/tamc.js")'></script>
-    @config.OptimizelyConfig.optimizelyProjectId.map { projectId =>
-    <script src="https://cdn.optimizely.com/js/@{projectId}.js"></script>
-    }
+@println("\n\n\n\n\n ------------------------- "+user)
+
+@scriptElement = {
+
+        @config.OptimizelyConfig.optimizelyProjectId.map { projectId =>
+            <script src="https://cdn.optimizely.com/js/@{projectId}.js"></script>
+        }
 
         <script type="text/javascript">
-                function initCobrowse() {
-                    if (typeof(eGain) != 'undefined' && eGain.cobrowse) {
-                        eGain.cobrowse.startCobrowse();
-                    }
-                    else {
-                        console.warn('eGain is not initialized')
-                    }
-                }
-        </script>
+                        function initCobrowse() {
+                            if (typeof(eGain) != 'undefined' && eGain.cobrowse) {
+                                eGain.cobrowse.startCobrowse();
+                            }
+                            else {
+                                console.warn('eGain is not initialized')
+                            }
+                        }
+                </script>
+}
+
+
+
+
+
+@signoutContent(user: Option[details.TamcUser]) = @{
+    user.map { loggedInUser =>
+    templates.user_status(
+    user = loggedInUser,
+    logoutUrl = controllers.routes.AuthorisationController.logout().url)
     }
-
-    @views.html.includes.web_chat(webchatId)
-
-
-    @betaBanner = {
-    @layouts.betaBanner(
-        userLoggedIn = false,
-        betaFeedbackUrl = appConfig.betaFeedbackUnauthenticatedUrl,
-        betaFeedbackUnauthenticatedUrl = appConfig.betaFeedbackUnauthenticatedUrl,
-        showFeedbackLinkInBetaBanner = true)
-    }
-
-    @signoutContent(user: Option[details.TamcUser]) = @{
-        user.map { loggedInUser =>
-            templates.user_status(
-                user = loggedInUser,
-                logoutUrl = controllers.routes.AuthorisationController.logout().url)
-        }
-    }
-
-    @serviceInfo = {
-    @layouts.serviceInfo(
-        betaBanner = betaBanner,
-        includeGridWrapper = false,
-        serviceInfoContent = signoutContent(user))
-    }
-
-    @getHelpForm = {
-    @includes.report_problem(supportLinkEnabled)
-    }
-
-    @commonContentHeader = {
-    @if(user.isDefined && !breadcrumb.isEmpty && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        @breadcrumbTag(breadcrumb, false)
-    }
-    @if(ApplicationConfig.isWelshEnabled) {
-        @langSwitch
-    }
-    }
-
-    @if(ApplicationConfig.enableRefresh) {
-            <meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
-    }
-
-    @content = {
-    @layouts.main_content(
-        article = layouts.article(content = mainContent, includeGridWrapper = false),
-        mainContentHeader = commonContentHeader,
-        mainDataAttributes = mainConfig.maybeMainDataAttributes,
-        serviceInfo = serviceInfo,
-        getHelpForm = getHelpForm)
-    }
+}
 
 
-    @gaCalls(analyticsHost: String, analyticsToken: String) = {
-        ga('create', '@analyticsToken', 'tax.service.gov.uk', {'allowLinker': true});
-        ga('set', 'anonymizeIp', true);
-        ga('require', 'linker');
-        if(document.referrer === "https://www.gov.uk/marriage-allowance"){
-        ga('set', 'referrer', '');
-        }
-        ga('require', 'displayfeatures');
-        ga('send', 'pageview');
-    }
 
-    @bodyEnd = {
-    @layouts.footer(
-        analyticsToken = appConfig.analyticsToken,
-        analyticsHost = appConfig.analyticsHost,
-        ssoUrl = None,
-        scriptElem = Some(scriptElement),
-        gaCalls = Some(gaCalls))
-    }
+@getHelpForm = {
+   @includes.report_problem(supportLinkEnabled)
+}
 
-    @linkElement = {
-        <link rel='stylesheet' href='@routes.Assets.at("stylesheets/tamc.css")' />
-    }
+@commonContentHeader = {
+@if(user.isDefined && !breadcrumb.isEmpty && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
+    @breadcrumbTag(breadcrumb, false)
+}
+@if(ApplicationConfig.isWelshEnabled) {
+    @langSwitch
+}
+}
 
-    @links = {
+@if(ApplicationConfig.enableRefresh) {
+<meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
+}
+
+
+@linkElement = {
+    Map(
+        "url" -> controllers.routes.Assets.at("stylesheets/tamc.css")
+    )
+}
+
+@links = {
     @if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        <li><a id="sign-out" href="@controllers.routes.AuthorisationController.logout().url">@Messages("user-status.sign-out")</a></li>
-    }
-    }
-
-    @insideHeader = {
-    @if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        <div class="header-proposition">
-            <div class="content">
-                <a href="#proposition-links" class="js-header-toggle menu">@Messages("tamc.menu")</a>
-                <nav id="proposition-menu">
-                    <a href="/pta/pta-home-1" id="proposition-name">@Messages("tamc.yourtaxaccount")</a>
-                    <ul id="proposition-links" class="header__menu__proposition-links">
-                        <li><a id="sign-out" href="/marriage-allowance-application/logout">@Messages("user-status.sign-out")</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
+        @println("********************\n\n")
+        Map("navTitle" -> controllers.routes.AuthorisationController.logout , "text" -> Messages("user-status.sign-out"))
     } else {
-        @HtmlFormat.empty
+@println("********************-----------------\n\n")
+Map.empty
     }
-    }
+}
 
 
-    @views.html.layouts.govuk_template(
-        title = Some(title),
-        bodyClasses = None)(
-        head = layouts.head(linkElem = Some(linkElement), headScripts = None),
-        bodyEnd = bodyEnd,
-        insideHeader = insideHeader,
-        afterHeader = HtmlFormat.empty,
-        footerTop = HtmlFormat.empty,
-        footerLinks = Some(footerLinks), true)(content)
+@mustacheCheck(str: String) = @{
+    if(str.trim=="") false else str
+}
 
-    @footerLinks = {
-    @layouts.footer_links(Some(additionalFooterLinks))
+@sidebar = {
+    @if(sidebarLinks.isDefined) {
+        @layouts.sidebar(sidebarLinks.get, sidebarClass)
     }
+}
 
-    @additionalFooterLinks = {
-        <li><a href="javascript:return false;" onclick="initCobrowse()">@Messages("generic.sharescreen")</a></li>
+@userDisplayName = @{ mustacheCheck( user.fold("")(_.getDisplayName) ) }
+
+
+@previouslyLoggedInAt = @{
+    val msg = user.fold("") { tamcUser => dates.formatEasyReadingTimeStamp(tamcUser.authContext.user.previouslyLoggedInAt, "") }
+    mustacheCheck(msg)
+}
+
+@showLastLogInStatus = {
+    user.isDefined
+}
+
+@actingAttorneyBanner = @{
+    user.fold(HtmlFormat.empty) {
+        authContext =>
+            authContext.authContext.attorney.fold(HtmlFormat.empty) {
+            _ =>  layouts.attorney_banner(authContext.authContext.principal.name, authContext.authContext.attorney.get.returnLink.url, standAlone, Some(Messages("attorney.banner.link")))
+        }
     }
+}
+
+@googleAnalytics = @{
+    Map[String, Any](
+        "trackingId" -> ApplicationConfig.analyticsToken,
+        "cookieDomain" -> ApplicationConfig.analyticsHost
+    ) ++ gaDimensions.getOrElse(Map.empty)
+}
+
+@{
+templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
+"pageTitle" -> s"$title",
+"linkElems" -> linkElement,
+"hasNavLinks" -> true,
+"navTitle" -> pageName,
+"navLinks" -> links,
+"removeServiceInfo" -> false,
+"betaBanner" -> true,
+"feedbackIdentifier" -> "TAMC",
+"includeHMRCBranding" -> true,
+"showLastLogInStatus" ->  showLastLogInStatus,
+
+"showLastLogInStatus" -> user.isDefined,
+"userDisplayName" -> userDisplayName,
+"previouslyLoggedInAt" -> previouslyLoggedInAt,
+
+"actingAttorneyBanner" -> actingAttorneyBanner,
+"mainContentHeader" -> commonContentHeader,
+"sidebar" -> sidebar,
+"getHelpForm" -> getHelpForm,
+"googleAnalytics" -> googleAnalytics,
+
+"scriptElems" -> Seq(
+    Map("url" -> controllers.routes.Assets.at("javascripts/tamc.js"))
+ ),
+
+"inlineScript" -> scriptElement,
+
+"mainClass" -> mainConfig,
+"mainDataAttributes" -> mainConfig.maybeMainDataAttributes,
+
+
+"ssoUrl" -> None
+
+))
+}
+
+

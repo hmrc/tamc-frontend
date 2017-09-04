@@ -15,10 +15,9 @@
 *@
 @(pageTitle: String, heading: String, message: String, appConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@import layouts.{govuk_template => hmrcGovUkTemplate}
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+@import uk.gov.hmrc.play.views.html.layouts
 
 @contentHeader = {
     <h1>@heading</h1>
@@ -28,50 +27,19 @@
     <p>@message</p>
 }
 
-@head = {
-@uiLayouts.head(
-    linkElem = None,
-    headScripts = None)
-    <meta name="format-detection" content="telephone=no" />
+
+@{
+    templateRenderer.renderDefaultTemplate(layouts.article(mainContent), Map[String, Any](
+        "pageTitle" -> pageTitle,
+        "linkElems" -> None,
+        "scriptElems" -> None,
+        "googleAnalytics" -> Map(
+            "trackingId" -> appConfig.analyticsToken,
+            "cookieDomain" -> appConfig.analyticsHost
+        ),
+        "includeHMRCBranding" -> true,
+        "mainContentHeader" -> contentHeader,
+        "betaBanner" -> true,
+        "feedbackIdentifier" -> "TAMC"
+    ))
 }
-
-@betaBanner = {
-@uiLayouts.betaBanner(
-    userLoggedIn = false,
-    appConfig.betaFeedbackUnauthenticatedUrl,
-    appConfig.betaFeedbackUnauthenticatedUrl,
-    showFeedbackLinkInBetaBanner = true)
-}
-
-@serviceInfo = {
-@uiLayouts.serviceInfo(
-    betaBanner = betaBanner,
-    includeGridWrapper = false,
-    serviceInfoContent = None)
-}
-
-
-@content = {
-@uiLayouts.main_content(
-    article = uiLayouts.article(mainContent),
-    serviceInfo = serviceInfo,
-    mainContentHeader = contentHeader)
-}
-
-@bodyEnd = {
-@uiLayouts.footer(
-    analyticsToken = appConfig.analyticsToken,
-    analyticsHost = appConfig.analyticsHost,
-    ssoUrl = None,
-    scriptElem = None,
-    gaCalls = None)
-}
-
-@footerTop = {}
-@footerLinks = {}
-
-@insideHeader = {}
-@afterHeader = {}
-
-
-@hmrcGovUkTemplate(Some(pageTitle), None)(head, bodyEnd, insideHeader, afterHeader, footerTop, Some(uiLayouts.footer_links()), true)(content)

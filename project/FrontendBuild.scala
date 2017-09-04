@@ -28,7 +28,6 @@ private object AppDependencies {
   private val scalaTestPlusPlayVersion = "1.5.1"
   private val emailAddressVersion = "1.1.0"
   private val frontendBootstrapVersion = "7.22.0"
-  private val govUkTemplateVersion = "5.1.0"
   private val httpCachingClientVersion = "6.2.0"
   private val httpVerbsVersion = "6.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
@@ -53,7 +52,7 @@ private object AppDependencies {
   val compile = Seq(
     "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
-    "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
+    "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
     "uk.gov.hmrc" %% "http-verbs" % httpVerbsVersion,
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
