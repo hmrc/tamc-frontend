@@ -194,6 +194,10 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
+@assetsPath = @{
+    appConfig.assetsPrefix+"/"
+}
+@println("\n\n--"+assetsPath)
 @{
 templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
     "pageTitle" -> s"$title",
@@ -226,7 +230,7 @@ templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None)
 
     "mainAttributes" -> mainConfig.maybeMainDataAttributes,
     "inlineScript" -> scriptElement,
-    "assetsPath" -> "http://localhost:9032/assets/2.150.0/",
+    "assetsPath" -> assetsPath,
     "mainClass" -> mainConfig,
     "optimizelyBaseUrl" -> "//cdn.optimizely.com/",
     "optimizelyProjectId" -> "8421482974"

@@ -105,14 +105,14 @@ table {
 }
 
 div.last-login>p {
-  color: $grey-1;
   font-size: 16px;
   font-family: nta,Arial,sans-serif;
   font-weight: 300;
   line-height: 1.25;
   text-transform: none;
   margin-bottom: 5px;
-  color #6f777b;
+  color: #6f777b;
+  text-align: right;
 }
 
 .pagination li.previous a::before {
