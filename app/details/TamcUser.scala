@@ -25,27 +25,17 @@ class NoNinoException extends RuntimeException
 case class TamcUser(authContext: AuthContext, personDetails: Option[PersonDetails] = None) {
 
   private def extractNino: Option[Nino] = {
-    authContext.principal.accounts.paye.map {
-      _.nino
-    }
+    authContext.principal.accounts.paye.map { _.nino }
   }
 
   def nino = extractNino.getOrElse(throw new NoNinoException)
-
   def name: Option[String] = personDetails match {
     case Some(personDetails) => personDetails.person.shortName
-    case _ => authContext.principal.name
-  }
-
-  def getDisplayName = if (!authContext.isDelegating) {
-    authContext.principal.name.fold("Name Not Defined") { name => name }
-  } else {
-    authContext.attorney.fold("Name Not Defined") { name => name.name }
+    case _                   => authContext.principal.name
   }
 }
 
 object TamcUser {
   implicit def implicitUser2TamcUser(implicit authContext: AuthContext, personDetails: PersonDetails): TamcUser = TamcUser(authContext, Some(personDetails))
-
   implicit def implicitUser2Option(implicit user: TamcUser): Option[TamcUser] = Some(user)
 }

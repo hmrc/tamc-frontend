@@ -252,21 +252,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form.attr("action") shouldBe "/marriage-allowance-application/transfer-allowance"
     }
 
-/*    "have beta feedback link" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val result = controllerToTest.transfer()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val feedback = document.getElementById("feedback-link")
-      feedback shouldNot be(null)
-      feedback.attr("href") shouldBe "/contact/beta-feedback-unauthenticated?service=TAMC"
-    }*/
-
   }
 
   "Transfer Action page" should {

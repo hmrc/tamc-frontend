@@ -97,40 +97,6 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     @if(ApplicationConfig.isWelshEnabled) {
         @langSwitch
     }
-
-<!--     @{
-       user.map { loggedInUser =>
-       templates.user_status(
-       user = loggedInUser,
-       logoutUrl = controllers.routes.AuthorisationController.logout().url)
-       }
-   }
-
-
-@if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
- <div class="header-proposition">
-     <div class="content">
-         <a href="#proposition-links" class="js-header-toggle menu">@Messages("tamc.menu")</a>
-         <nav id="proposition-menu">
-             <a href="/pta/pta-home-1" id="proposition-name">@Messages("tamc.yourtaxaccount")</a>
-             <ul id="proposition-links" class="header__menu__proposition-links">
-                 <li><a id="sign-out" href="/marriage-allowance-application/logout">@Messages("user-status.sign-out")</a></li>
-             </ul>
-         </nav>
-     </div>
- </div>
- } else {
- @HtmlFormat.empty
- }
--->
-}
-
-@userDisplayName1 = @{
-    user.map { loggedInUser =>
-        templates.user_status(
-        user = loggedInUser,
-        logoutUrl = controllers.routes.AuthorisationController.logout().url)
-    }
 }
 
 @if(ApplicationConfig.enableRefresh) {
@@ -140,7 +106,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 
 @links = @{
     if(user.isDefined) {
-        Map("id"  -> "sign-out", "url" -> routes.AuthorisationController.logout().url , "text" -> Messages("user-status.sign-out"))
+        Map("url" -> routes.AuthorisationController.logout().url , "text" -> Messages("user-status.sign-out"))
     } else {
         Map.empty
     }
@@ -159,7 +125,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 
 @titleName = @{
     if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        "Your personal tax account"
+        appConfig.pageTitle
     } else {
         ""
     }
@@ -197,7 +163,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 @assetsPath = @{
     appConfig.assetsPrefix+"/"
 }
-@println("\n\n--"+assetsPath)
+
 @{
 templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
     "pageTitle" -> s"$title",
@@ -210,7 +176,7 @@ templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None)
     "navLinks" -> links,
 
     "betaBanner" -> true,
-    "feedbackIdentifier" -> "TAMC",
+    "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
     "includeHMRCBranding" -> true,
 
 
@@ -238,5 +204,4 @@ templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None)
 
 ))
 }
-
 
