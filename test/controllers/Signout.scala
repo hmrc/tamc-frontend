@@ -43,8 +43,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015."
     }
 
     "be on ’How It Works’ page" in {
@@ -55,8 +55,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "be on ’Calculator’ page" in {
@@ -67,8 +67,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "be on ’Eligibility Check’ page" in {
@@ -79,8 +79,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "be on ’Transfer’ page" in {
@@ -93,8 +93,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "be on ’Confirm Email’ page" in {
@@ -111,8 +111,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
 
     }
 
@@ -136,8 +136,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "be on ’Finished’ page" in {
@@ -154,8 +154,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "show sign-out on ’Recipient details not found’ page" in {
@@ -172,8 +172,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "show sign-out on ’Technical Exceptions’ page" in {
@@ -191,9 +191,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
     "show sign-out on ’Cannot Create Relationship’ page" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
@@ -209,8 +208,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "show ’Technical Exception’ page" in {
@@ -228,8 +227,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("error").text() shouldBe "We are experiencing technical difficulties"
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "show sign-out on ’Technical Exception’ pages" in {
@@ -246,8 +245,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
   }
@@ -261,7 +260,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
     "be on ’Calculator’ page" in {
@@ -272,7 +271,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
     "be on ’Eligibility Check’ page" in {
@@ -283,7 +282,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
     "be on ’Transfer’ page" in {
@@ -296,7 +295,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
     "be on ’Confirm Email’ page" in {
@@ -313,7 +312,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
     "be on ’Confirm’ page" in {
@@ -336,7 +335,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
     "be on ’Finished’ page" in {
@@ -353,7 +352,7 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
   }
 
@@ -367,8 +366,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, you last signed in 9:00am, Friday 13 November 2015."
     }
 
     "be on ’How It Works’ page" in {
@@ -379,8 +378,8 @@ class Signout extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
   }
 }

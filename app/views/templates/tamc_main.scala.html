@@ -43,11 +43,19 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 @import config.ApplicationConfig.webchatId
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
-@import utils.Helper._
+@import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
-
+@import uk.gov.hmrc.play.http.SessionKeys
 
 @scriptElement = {
+
+        <script type="text/javascript">
+            ga('require', 'linker');
+            if(document.referrer === "https://www.gov.uk/marriage-allowance"){
+                ga('set', 'referrer', '');
+            }
+            ga('require', 'displayfeatures');
+        </script>
 
         @config.OptimizelyConfig.optimizelyProjectId.map { projectId =>
             <script src="https://cdn.optimizely.com/js/@{projectId}.js"></script>
@@ -63,11 +71,8 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
                             }
                         }
                 </script>
+
 }
-
-
-
-
 
 @signoutContent(user: Option[details.TamcUser]) = @{
     user.map { loggedInUser =>
@@ -87,34 +92,45 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     @if(user.isDefined && !breadcrumb.isEmpty && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
         @breadcrumbTag(breadcrumb, false)
     }
+
+
     @if(ApplicationConfig.isWelshEnabled) {
         @langSwitch
     }
-    @{
-        user.map { loggedInUser =>
+
+<!--     @{
+       user.map { loggedInUser =>
+       templates.user_status(
+       user = loggedInUser,
+       logoutUrl = controllers.routes.AuthorisationController.logout().url)
+       }
+   }
+
+
+@if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
+ <div class="header-proposition">
+     <div class="content">
+         <a href="#proposition-links" class="js-header-toggle menu">@Messages("tamc.menu")</a>
+         <nav id="proposition-menu">
+             <a href="/pta/pta-home-1" id="proposition-name">@Messages("tamc.yourtaxaccount")</a>
+             <ul id="proposition-links" class="header__menu__proposition-links">
+                 <li><a id="sign-out" href="/marriage-allowance-application/logout">@Messages("user-status.sign-out")</a></li>
+             </ul>
+         </nav>
+     </div>
+ </div>
+ } else {
+ @HtmlFormat.empty
+ }
+-->
+}
+
+@userDisplayName1 = @{
+    user.map { loggedInUser =>
         templates.user_status(
         user = loggedInUser,
         logoutUrl = controllers.routes.AuthorisationController.logout().url)
-        }
     }
-
-<!--
-    @if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-    <div class="header-proposition">
-        <div class="content">
-            <a href="#proposition-links" class="js-header-toggle menu">@Messages("tamc.menu")</a>
-            <nav id="proposition-menu">
-                <a href="/pta/pta-home-1" id="proposition-name">@Messages("tamc.yourtaxaccount")</a>
-                <ul id="proposition-links" class="header__menu__proposition-links">
-                    <li><a id="sign-out" href="/marriage-allowance-application/logout">@Messages("user-status.sign-out")</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-    } else {
-    @HtmlFormat.empty
-    }
--->
 }
 
 @if(ApplicationConfig.enableRefresh) {
@@ -122,9 +138,9 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 }
 
 
-@links = {
-    @if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        Map("url" -> routes.AuthorisationController.logout().url , "text" -> Messages("user-status.sign-out"))
+@links = @{
+    if(user.isDefined) {
+        Map("id"  -> "sign-out", "url" -> routes.AuthorisationController.logout().url , "text" -> Messages("user-status.sign-out"))
     } else {
         Map.empty
     }
@@ -141,14 +157,23 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     }
 }
 
+@titleName = @{
+    if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
+        "Your personal tax account"
+    } else {
+        ""
+    }
+}
+
+@userDisplayName = @{ mustacheCheck( user.fold("")(_.name.getOrElse("You")) ) }
 
 @previouslyLoggedInAt = @{
-    val msg = user.fold("") { tamcUser => dates.formatEasyReadingTimeStamp(tamcUser.authContext.user.previouslyLoggedInAt, "") }
+    val msg = user.fold("") { tamcUser => formatEasyReadingTimestamp(tamcUser.authContext.user.previouslyLoggedInAt, "") }
     mustacheCheck(msg)
 }
 
-@showLastLogInStatus = {
-    user.isDefined
+@showLastLogInStatus = @{
+    (user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request))
 }
 
 @actingAttorneyBanner = @{
@@ -163,39 +188,49 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 @googleAnalytics = @{
     Map[String, Any](
         "trackingId" -> ApplicationConfig.analyticsToken,
-        "cookieDomain" -> ApplicationConfig.analyticsHost
+        "cookieDomain" -> ApplicationConfig.analyticsHost,
+        "confidenceLevel" -> user.map(_.authContext.user.confidenceLevel.toString).getOrElse(false),
+        "authProvider" -> request.session.get(SessionKeys.authProvider)
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
 @{
 templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
-"pageTitle" -> s"$title",
-"linkElems" -> Map(
-    "url" -> routes.Assets.at("stylesheets/tamc.css")
- ),
-"hasNavLinks" -> true,
-"navTitle" -> pageName,
-"removeServiceInfo" -> false,
-"navLinks" -> links,
+    "pageTitle" -> s"$title",
+    "linkElems" -> Map(
+        "url" -> routes.Assets.at("stylesheets/tamc.css")
+     ),
+    "hasNavLinks" -> true,
+    "navTitle" -> titleName,
+    "removeServiceInfo" -> false,
+    "navLinks" -> links,
 
-"betaBanner" -> true,
-"feedbackIdentifier" -> "TAMC",
-"includeHMRCBranding" -> true,
+    "betaBanner" -> true,
+    "feedbackIdentifier" -> "TAMC",
+    "includeHMRCBranding" -> true,
 
-"actingAttorneyBanner" -> actingAttorneyBanner,
-"mainContentHeader" -> commonContentHeader,
-"sidebar" -> sidebar,
-"getHelpForm" -> getHelpForm,
-"googleAnalytics" -> googleAnalytics,
 
-"scriptElems" -> Seq(
-    Map("url" -> routes.Assets.at("javascripts/tamc.js"))
- ),
+    "showLastLogInStatus" -> showLastLogInStatus,
+    "previouslyLoggedInAt" -> previouslyLoggedInAt,
+    "userDisplayName" -> userDisplayName,
 
-"inlineScript" -> scriptElement,
+    "actingAttorneyBanner" -> actingAttorneyBanner,
+    "mainContentHeader" -> commonContentHeader,
+    "sidebar" -> sidebar,
+    "getHelpForm" -> getHelpForm,
+    "googleAnalytics" -> googleAnalytics,
 
-"mainClass" -> mainConfig,
-"mainDataAttributes" -> mainConfig.maybeMainDataAttributes
+    "scriptElems" -> Seq(
+        Map("url" -> routes.Assets.at("javascripts/tamc.js"))
+     ),
+
+    "mainAttributes" -> mainConfig.maybeMainDataAttributes,
+    "inlineScript" -> scriptElement,
+    "assetsPath" -> "http://localhost:9032/assets/2.150.0/",
+    "mainClass" -> mainConfig,
+    "optimizelyBaseUrl" -> "//cdn.optimizely.com/",
+    "optimizelyProjectId" -> "8421482974"
+
 
 ))
 }

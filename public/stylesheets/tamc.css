@@ -104,6 +104,17 @@ table {
     width: 49%;
 }
 
+div.last-login>p {
+  color: $grey-1;
+  font-size: 16px;
+  font-family: nta,Arial,sans-serif;
+  font-weight: 300;
+  line-height: 1.25;
+  text-transform: none;
+  margin-bottom: 5px;
+  color #6f777b;
+}
+
 .pagination li.previous a::before {
     background: transparent url("https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-20de3c9fa524b493538ff1b101cc2c04.png") no-repeat scroll -20px -11px;
     content: " ";

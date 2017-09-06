@@ -328,8 +328,8 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementsByClass("last-login").text() shouldBe "Test_name, this is the first time you have logged in."
     }
 
     "show sign-out on ’History’ page with GDS journey" in {
@@ -340,7 +340,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("proposition-links").child(0).child(0).attr("href") shouldBe "/marriage-allowance-application/logout"
     }
 
     "show beta feedback on ’History’ page" in {
@@ -352,7 +352,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       val document = Jsoup.parse(contentAsString(result))
       val feedback = document.getElementById("feedback-link")
       feedback shouldNot be(null)
-      feedback.attr("href") shouldBe "http://localhost:9250/contact/beta-feedback-unauthenticated?service=TAMC"
+      feedback.attr("href") shouldBe "/contact/beta-feedback-unauthenticated?service=TAMC"
     }
 
     "show sign-out on ’History’ page along with message" in {

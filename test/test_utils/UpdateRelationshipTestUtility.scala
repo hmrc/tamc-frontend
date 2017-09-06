@@ -170,11 +170,9 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
     }
 
 
-    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
-
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
-      override val templateRenderer = fakeTemplateRenderer
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
@@ -434,6 +432,8 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       override val citizenDetailsService = fakeCitizenDetailsService
       override val ivUpliftUrl = "jazz"
       override val timeService = fakeTimeService
+
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
       override def cachingTransferorRecordToTest = fakeCachingService.transferorRecordToTest
 

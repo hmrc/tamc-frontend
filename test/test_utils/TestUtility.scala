@@ -77,7 +77,7 @@ trait TestUtility extends UnitSpec {
       override val logoutUrl = "/ida/signout"
       override val logoutCallbackUrl = "/feedback-survey/?origin=TAMC"
       override val auditConnector: AuditConnector = fakeCustomAuditConnector
-
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       def auditEventsToTest: List[AuditEvent] = fakeCustomAuditConnector.auditEventsToTest
     }
   }
@@ -97,7 +97,7 @@ trait TestUtility extends UnitSpec {
 
     new GdsEligibilityController {
       override val auditConnector = fakeCustomAuditConnector
-
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
     }
   }
@@ -160,11 +160,10 @@ trait TestUtility extends UnitSpec {
       override def citizenDetailsUrl: String = "foo"
     }
 
-    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
-      override val templateRenderer = fakeTemplateRenderer
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
@@ -218,7 +217,7 @@ trait TestUtility extends UnitSpec {
       override val authConnector = fakeAuthConnector
       override val citizenDetailsService = fakeCitizenDetailsService
       override val ivUpliftUrl = "jazz"
-
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
     }
   }
@@ -238,7 +237,7 @@ trait TestUtility extends UnitSpec {
 
     new MultiYearGdsEligibilityController {
       override val auditConnector: AuditConnector = fakeCustomAuditConnector
-
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       def auditEventsToTest: List[AuditEvent] = fakeCustomAuditConnector.auditEventsToTest
     }
   }
@@ -301,11 +300,10 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
-      override val templateRenderer = fakeTemplateRenderer
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
@@ -359,7 +357,7 @@ trait TestUtility extends UnitSpec {
       override val authConnector = fakeAuthConnector
       override val citizenDetailsService = fakeCitizenDetailsService
       override val ivUpliftUrl = "jazz"
-
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
     }
   }
@@ -456,11 +454,10 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    val fakeTemplateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
-      override val templateRenderer = fakeTemplateRenderer
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
@@ -709,6 +706,8 @@ trait TestUtility extends UnitSpec {
       override val citizenDetailsService = fakeCitizenDetailsService
       override val ivUpliftUrl = "jazz"
       override val timeService = fakeTimeService
+
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
       override def cachingTransferorRecordToTest = fakeCachingService.transferorRecordToTest
 
