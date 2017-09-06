@@ -320,7 +320,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
   "Calling history page" should {
 
-    "show sign-out on ’History’ page with PTA journey" in {
+    "show 'Cancel Marriage Allowance' button on ’History’ page with PTA journey" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -328,11 +328,10 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
     }
 
-    "show sign-out on ’History’ page with GDS journey" in {
+    "show 'Cancel Marriage Allowance' button on ’History’ page with GDS journey" in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
@@ -340,19 +339,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-    }
-
-    "show beta feedback on ’History’ page" in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val result = controllerToTest.history()(request)
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val feedback = document.getElementById("feedback-link")
-      feedback shouldNot be(null)
-      feedback.attr("href") shouldBe "http://localhost:9250/contact/beta-feedback-unauthenticated?service=TAMC"
+      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
     }
 
     "show sign-out on ’History’ page along with message" in {

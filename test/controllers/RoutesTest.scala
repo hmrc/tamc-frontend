@@ -252,21 +252,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form.attr("action") shouldBe "/marriage-allowance-application/transfer-allowance"
     }
 
-    "have beta feedback link" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val result = controllerToTest.transfer()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val feedback = document.getElementById("feedback-link")
-      feedback shouldNot be(null)
-      feedback.attr("href") shouldBe "http://localhost:9250/contact/beta-feedback-unauthenticated?service=TAMC"
-    }
-
   }
 
   "Transfer Action page" should {
@@ -329,7 +314,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
     }
 
 
-    "have signout link" in {
+    "have 'Confirm your application' " in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
       val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -344,9 +329,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val signout = document.getElementById("sign-out")
-      signout shouldNot be(null)
-      signout.attr("href") shouldBe "/marriage-allowance-application/logout"
+      val signout = document.getElementById("create").text() shouldBe "Confirm your application"
     }
 
     "have link to edit email page" in {
@@ -414,7 +397,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       ptaLink.getElementById("pta-link").attr("href") shouldBe "https://www.gov.uk/personal-tax-account"
     }
 
-    "have signout link and check your marriage allowance link for PTA journey" in {
+    "have check your marriage allowance link for PTA journey" in {
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
@@ -428,9 +411,6 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val signout = document.getElementById("sign-out")
-      signout shouldNot be(null)
-      signout.attr("href") shouldBe "/marriage-allowance-application/logout"
 
       val ptaLink = document.getElementById("paragraph-5")
       ptaLink shouldNot be(null)

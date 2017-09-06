@@ -33,7 +33,6 @@ import play.api.data.FormError
 import play.api.mvc._
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.TamcBreadcrumb
 
@@ -49,7 +48,7 @@ object TransferController extends TransferController with RunMode {
   override val timeService = TimeService
 }
 
-trait TransferController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait TransferController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val registrationService: TransferService
   val authConnector: ApplicationAuthConnector

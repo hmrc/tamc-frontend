@@ -36,6 +36,7 @@ import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.time.TaxYearResolver
 
@@ -168,9 +169,10 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       }
     }
 
+
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
-
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
@@ -430,6 +432,8 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
       override val citizenDetailsService = fakeCitizenDetailsService
       override val ivUpliftUrl = "jazz"
       override val timeService = fakeTimeService
+
+      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
       override def cachingTransferorRecordToTest = fakeCachingService.transferorRecordToTest
 

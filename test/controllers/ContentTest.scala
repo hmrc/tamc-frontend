@@ -50,7 +50,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Confirm your partner’s first name"
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name,name)").size() shouldBe 1
+      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name,name)").size() shouldBe 1
     }
 
     "display form error message (request body missing form data)" in {
@@ -68,7 +68,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
       document.getElementById("nino-error").text() shouldBe "Confirm your partner’s National Insurance number"
 
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender,last-name,name,nino)").size() shouldBe 1
+      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender,last-name,name,nino)").size() shouldBe 1
     }
   }
 
@@ -90,7 +90,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s first name"
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Confirm your partner’s first name"
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(name)").size() shouldBe 1
+      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(name)").size() shouldBe 1
     }
 
     "display form error message (first name is empty)" in {
@@ -237,7 +237,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s last name"
       document.getElementById("last-name-error").text() shouldBe "Confirm your partner’s last name"
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name)").size() shouldBe 1
+      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name)").size() shouldBe 1
     }
 
     "display form error message (last name is empty)" in {
@@ -348,7 +348,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
       labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us your partner’s gender"
       document.getElementById("gender-error").text() shouldBe "Confirm your partner’s gender"
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender)").size() shouldBe 1
+      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender)").size() shouldBe 1
     }
 
     "display form error message (gender code is invalid)" in {
@@ -387,7 +387,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s National Insurance number"
       document.getElementById("nino-error").text() shouldBe "Confirm your partner’s National Insurance number"
-      document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(nino)").size() shouldBe 1
+      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(nino)").size() shouldBe 1
     }
 
     "display form error message (NINO is empty)" in {
