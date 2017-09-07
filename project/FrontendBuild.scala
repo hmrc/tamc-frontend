@@ -28,7 +28,6 @@ private object AppDependencies {
   private val scalaTestPlusPlayVersion = "1.5.1"
   private val emailAddressVersion = "1.1.0"
   private val frontendBootstrapVersion = "7.22.0"
-  private val govUkTemplateVersion = "5.1.0"
   private val httpCachingClientVersion = "6.2.0"
   private val httpVerbsVersion = "6.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
@@ -48,11 +47,12 @@ private object AppDependencies {
   private val scalacheckVersion = "1.12.5"
   private val scalaTestVersion = "2.2.6"
   private val mockitoCoreVerison = "1.9.5"
+  private val localTemplateRendererVersion  = "0.10.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
-    "uk.gov.hmrc" %% "govuk-template" % govUkTemplateVersion,
+    "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
     "uk.gov.hmrc" %% "http-verbs" % httpVerbsVersion,
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
@@ -62,6 +62,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
+    "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "time" % timeVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,

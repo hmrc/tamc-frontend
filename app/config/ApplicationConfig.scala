@@ -27,7 +27,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   private val contactHost = configuration.getString("tamc.external-urls.contact-frontend").getOrElse("")
   private val contactFrontendService = baseUrl("contact-frontend")
-  private val contactFormServiceIdentifier = "TAMC"
+  val contactFormServiceIdentifier = "TAMC"
+  val pageTitle = "Your personal tax account"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
@@ -92,6 +93,8 @@ trait ApplicationConfig {
   val contactFrontendPartialBaseUrl: String
   val assetsPrefix: String
 
+  val contactFormServiceIdentifier: String
+  val pageTitle: String
   val loginUrl: String
   val logoutUrl: String
   val logoutCallbackUrl: String
