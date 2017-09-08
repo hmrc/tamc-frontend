@@ -57,6 +57,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
             ga('require', 'displayfeatures');
         </script>
 
+        <script src='//cdn.optimizely.com/js/8421482974.js' type='text/javascript'></script>
 
         <script type="text/javascript">
                         function initCobrowse() {
@@ -202,11 +203,7 @@ templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None)
     "mainAttributes" -> mainConfig.maybeMainDataAttributes,
     "inlineScript" -> scriptElement,
     "assetsPath" -> assetsPath,
-    "mainClass" -> mainConfig,
-    "optimizelyBaseUrl" -> "https://cdn.optimizely.com/js/",
-    "optimizelyProjectId" -> "8421482974"
-
-
+    "mainClass" -> mainConfig
 ))
 }
 
