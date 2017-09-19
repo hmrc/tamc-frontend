@@ -124,7 +124,7 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
     "be negative (12) if transferor income=11000 (9540-11000) and recipient income=12000 (11000-11660)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "11000", "recipient-income" -> "12000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the details you have provided you will not benefit from making the transfer."
+      document.getElementById("calculator-result").text() shouldBe "You will not benefit as a couple because your income is £11,500."
     }
 
     "be GBP 230 if transferor income=10000 (9540-11000) and recipient income=20000 (11660-42385)" in {
@@ -346,7 +346,7 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
     "be displayed if transferor income=11001 (>11000) and recipient income=20000" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "11501", "recipient-income" -> "20000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,500."
+      document.getElementById("calculator-result").text() shouldBe "You will not benefit as a couple because your income is over £11,500."
     }
     "be displayed if transferor income=43001 (>42385) and recipient income=20000" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "43001", "recipient-income" -> "20000"))

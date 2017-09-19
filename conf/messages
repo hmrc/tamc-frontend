@@ -221,7 +221,7 @@ pages.calc.skip-it.pre=The step is optional,
 pages.calc.skip-it=skip it
 estimate.tax.saving=Calculate
 eligibility.feedback.gain=Based on the information you have given us, as a couple you would benefit by around <strong>£{0}</strong> a year.
-eligibility.feedback.loose=Based on the details you have provided you will not benefit from making the transfer.
+eligibility.feedback.loose = You will not benefit as a couple because your income is £11,500.
 
 #********************************************************************************
 # Year selection
@@ -243,8 +243,8 @@ eligibility.feedback.transferor-not-eligible-2016=You are not eligible for Marri
 eligibility.feedback.transferor-not-eligible-2017=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £45,000.
 eligibility.feedback.recipient-not-eligible-2016=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,001 and £43,000.
 eligibility.feedback.recipient-not-eligible-2017=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000.
-eligibility.check.unlike-benefit-as-couple-2016=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,000.
-eligibility.check.unlike-benefit-as-couple-2017=You are eligible for Marriage Allowance, but you are unlikely to benefit as a couple because your income is over £11,500.
+eligibility.check.unlike-benefit-as-couple-2016 = You will not benefit as a couple because your income is over £11,000.
+eligibility.check.unlike-benefit-as-couple-2017 = You will not benefit as a couple because your income is over £11,500.
 max-benefit-2014=£212
 max-benefit-2015=£212
 max-benefit-2016=£220
