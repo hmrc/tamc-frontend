@@ -86,8 +86,14 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     }
 }
 
-
-
+@isWelsh = @{
+    if(applicationMessages.lang.code == "cy"){
+        true
+    }
+    else {
+        false
+    }
+}
 @getHelpForm = {
    @includes.report_problem(supportLinkEnabled)
 }
@@ -202,6 +208,7 @@ templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None)
     "inlineScript" -> scriptElement,
     "assetsPath" -> assetsPath,
     "mainClass" -> mainConfig,
+    "isWelsh" -> isWelsh,
     "optimizelyProjectId"  -> "8421482974"
 ))
 }
