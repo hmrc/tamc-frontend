@@ -223,7 +223,7 @@ pages.calc.skip-it.pre	=	Mae’r cam hwn yn opsiynol.
 pages.calc.skip-it	=	Ewch heibio
 estimate.tax.saving	=	Cyfrifo
 eligibility.feedback.gain	=	Ar sail yr wybodaeth yr ydych wedi’i rhoi i ni, byddech yn elwa o tua <strong>£{0}</strong> y flwyddyn fel p&#226;r.
-eligibility.feedback.loose = Ni fyddwch yn elwa fel cwpl gan fod eich incwm yn £11,500.
+eligibility.feedback.loose = Ni fyddwch yn elwa fel pâr gan fod eich incwm yn £11,500.
 
 #********************************************************************************
 # Year selection
@@ -244,8 +244,8 @@ eligibility.feedback.transferor-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer
 eligibility.feedback.transferor-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na £45,000.
 eligibility.feedback.recipient-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,001 a £43,000.
 eligibility.feedback.recipient-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,501 a £45,000.
-eligibility.check.unlike-benefit-as-couple-2016	= Ni fyddwch yn elwa fel cwpl gan fod eich incwm dros £11,000.
-eligibility.check.unlike-benefit-as-couple-2017	= Ni fyddwch yn elwa fel cwpl gan fod eich incwm dros £11,500.
+eligibility.check.unlike-benefit-as-couple-2016	= Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,000.
+eligibility.check.unlike-benefit-as-couple-2017	= Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,500.
 max-benefit-2014	=	£212
 max-benefit-2015	=	£212
 max-benefit-2016	=	£220
