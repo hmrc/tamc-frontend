@@ -32,16 +32,19 @@
 
 package test_utils
 
+import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import scala.concurrent.duration._
+import scala.concurrent.Future
 
 object MockTemplateRenderer extends TemplateRenderer {
-  override def connection = ???
-  override def templateServiceBaseUrl = ???
-  override def refreshAfter = ???
+  override lazy val templateServiceBaseUrl = "http://example.com/template/mustache"
+  override val refreshAfter = 10 minutes
+  override def fetchTemplate(path: String): Future[String] = ???
 
-  override def renderDefaultTemplate = (content: Html, extraArgs: Map[String, Any]) => {
+  override def renderDefaultTemplate(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages) = {
     Html("<title>" + extraArgs("pageTitle") + "</title>" + content)
   }
 }
