@@ -68,13 +68,13 @@ pages.form.field.description.year-2024-	=	Cadarnhewch a hoffech wneud cais ar gy
 pages.form.field.description.year-2025-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2025 i 2026
 pages.form.field.description.year-2026-	=	Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2026 i 2027
 
-pages.form.field.transferor-income.error.field-required	=	Rhowch wybod beth yw’ch incwm blynyddol
-pages.form.field.transferor-income.error.field-invalid	=	Defnyddiwch rifau’n unig.
+pages.form.field.transferor-income.error.field-required	= Rhowch wybod beth yw’ch incwm blynyddol
+pages.form.field.transferor-income.error.field-invalid = Defnyddiwch rifau’n unig
 
-eligibility.feedback.incorrect-role	=	Gwiriwch y rhifau yr ydych wedi’u nodi. Nodwch incwm yr unigolyn &#226;’r cyflog isaf, wedi’i ddilyn gan incwm yr unigolyn &#226;’r cyflog uchaf.
+eligibility.feedback.incorrect-role	= Gwiriwch y rhifau yr ydych wedi’u nodi. Nodwch incwm yr unigolyn &#226;’r cyflog isaf, wedi’i ddilyn gan incwm yr unigolyn &#226;’r cyflog uchaf.
 
-pages.form.field.recipient-income.error.field-required	=	Rhowch wybod beth yw incwm blynyddol eich partner
-pages.form.field.recipient-income.error.field-invalid	=	Defnyddiwch rifau’n unig
+pages.form.field.recipient-income.error.field-required = Rhowch wybod beth yw incwm blynyddol eich partner
+pages.form.field.recipient-income.error.field-invalid = Defnyddiwch rifau’n unig
 
 change.status.reason-CANCEL	=	Rwyf am roi’r gorau i gael taliadau Lwfans Priodasol
 change.status.reason-REJECT	=	Rwyf am roi’r gorau i gael taliadau Lwfans Priodasol
