@@ -29,12 +29,12 @@ import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.frontend.auth.{Actions, AuthContext, TaxRegime, UpliftingIdentityConfidencePredicate, Verify}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.TamcBreadcrumb
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 object IdaAuthentificationProvider extends IdaAuthentificationProvider {
   override val login = ApplicationConfig.ivLoginUrl

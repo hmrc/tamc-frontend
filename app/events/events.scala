@@ -24,10 +24,9 @@ import uk.gov.hmrc.play.audit.model.DataEvent
 import play.api.mvc.Request
 import config.ApplicationConfig
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http.SessionKeys
 import play.api.mvc.AnyContent
-import uk.gov.hmrc.play.http.HeaderCarrier
 import models.UpdateRelationshipCacheData
+import uk.gov.hmrc.http.HeaderCarrier
 
 object CreateRelationshipSuccessEvent {
   def apply(cacheData: CacheData, journey: String)(implicit hc: HeaderCarrier) =

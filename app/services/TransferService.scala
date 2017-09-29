@@ -26,14 +26,14 @@ import play.api.libs.json.Json
 import services.UpdateRelationshipService._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.AuditEvent
+import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.time.TaxYearResolver
 import utils.LanguageUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
 
 object TransferService extends TransferService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
@@ -49,7 +49,7 @@ trait TransferService {
   val cachingService: CachingService
   val timeService: TimeService
 
-  private def handleAudit(event: AuditEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
+  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }

@@ -24,15 +24,11 @@ import models.CreateRelationshipRequestHolder
 import models.GetRelationshipResponse
 import models.RegistrationFormInput
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.HttpGet
-import uk.gov.hmrc.play.http.HttpPost
-import uk.gov.hmrc.play.http.HttpPut
-import uk.gov.hmrc.play.http.HttpResponse
 import utils.WSHttp
 import models.RelationshipRecordStatusWrapper
 import models.UpdateRelationshipRequestHolder
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse }
 
 object MarriageAllowanceConnector extends MarriageAllowanceConnector with ServicesConfig {
   override def httpGet = WSHttp

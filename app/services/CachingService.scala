@@ -23,7 +23,6 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import models._
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.play.http.HeaderCarrier
 import config.ApplicationConfig
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
@@ -31,6 +30,7 @@ import utils.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.config.AppName
 import details.PersonDetails
+import uk.gov.hmrc.http.HeaderCarrier
 
 object CachingService extends CachingService {
   override lazy val http = WSHttp

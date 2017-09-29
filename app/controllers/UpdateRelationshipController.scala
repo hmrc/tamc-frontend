@@ -30,10 +30,10 @@ import play.Logger
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.TamcBreadcrumb
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
 
 object UpdateRelationshipController extends UpdateRelationshipController with RunMode {
   override lazy val registrationService = TransferService

@@ -1,5 +1,5 @@
 
-@import uk.gov.hmrc.play.http.HeaderCarrier
+@import uk.gov.hmrc.play.HeaderCarrierConverter
 @import connectors._
 @import scala.concurrent.Await
 @import scala.concurrent.duration._
@@ -7,5 +7,5 @@
 @(supportLinkEnabled: Boolean)(implicit request: Request[_], context: config.TamcContext)
 
 @if(supportLinkEnabled) {
-    @Html(Await.result(context.getPageHelpPartial()(HeaderCarrier.fromHeadersAndSession(request.headers)), 5 seconds))
+    @Html(Await.result(context.getPageHelpPartial()(HeaderCarrierConverter.fromHeadersAndSession(request.headers)), 5 seconds))
 }

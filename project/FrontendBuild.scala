@@ -27,8 +27,8 @@ private object AppDependencies {
 
   private val scalaTestPlusPlayVersion = "1.5.1"
   private val emailAddressVersion = "1.1.0"
-  private val frontendBootstrapVersion = "7.22.0"
-  private val httpCachingClientVersion = "6.2.0"
+  private val frontendBootstrapVersion = "8.6.0"
+  private val httpCachingClientVersion = "7.0.0"
   private val httpVerbsVersion = "6.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
   private val playBreadcrumbVersion = "1.0.0"
@@ -54,19 +54,11 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
     "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
-    "uk.gov.hmrc" %% "http-verbs" % httpVerbsVersion,
-    "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "play-breadcrumb" % playBreadcrumbVersion,
-    "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "play-health" % playHealthVersion,
-    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
-    "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
-    "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "time" % timeVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
-    "uk.gov.hmrc" %% "play-graphite" % playGraphiteVersion
+    "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion
   )
 
   trait TestDependencies {

@@ -18,11 +18,12 @@ package connectors
 
 import details.PersonDetails
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
 import utils.WSHttp
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
 
 object CitizenDetailsConnector extends CitizenDetailsConnector with ServicesConfig {
   override def httpGet: HttpGet = WSHttp
