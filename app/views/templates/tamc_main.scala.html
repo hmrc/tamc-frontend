@@ -170,46 +170,47 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
-@assetsPath = @{
-    appConfig.assetsPrefix+"/"
-}
-
 @{
-templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
-    "pageTitle" -> s"$title",
-    "linkElems" -> Map(
-        "url" -> routes.Assets.at("stylesheets/tamc.css")
-     ),
-    "hasNavLinks" -> true,
-    "navTitle" -> titleName,
-    "removeServiceInfo" -> false,
-    "navLinks" -> links,
+    templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
+        "pageTitle" -> s"$title",
+        "linkElems" -> Map(
+            "url" -> routes.Assets.at("stylesheets/tamc.css")
+         ),
+        "hasNavLinks" -> true,
+        "navTitle" -> titleName,
+        "removeServiceInfo" -> false,
+        "navLinks" -> links,
 
-    "betaBanner" -> true,
-    "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
-    "includeHMRCBranding" -> true,
+        "betaBanner" -> true,
+        "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
+        "includeHMRCBranding" -> true,
 
+        "hideAccountMenu" -> !utils.isPtaJourneyUseOnlyOnAuthorisedPage,
 
-    "showLastLogInStatus" -> showLastLogInStatus,
-    "previouslyLoggedInAt" -> previouslyLoggedInAt,
-    "userDisplayName" -> userDisplayName,
+        "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
+        "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
+        "isSa" -> user.flatMap(_.authContext.principal.accounts.sa.map(_.utr)).isDefined,
+        "signOutUrl" -> user.map(_ => routes.AuthorisationController.logout()),
 
-    "actingAttorneyBanner" -> actingAttorneyBanner,
-    "mainContentHeader" -> commonContentHeader,
-    "sidebar" -> sidebar,
-    "getHelpForm" -> getHelpForm,
-    "googleAnalytics" -> googleAnalytics,
+        "showLastLogInStatus" -> showLastLogInStatus,
+        "previouslyLoggedInAt" -> previouslyLoggedInAt,
+        "userDisplayName" -> userDisplayName,
 
-    "scriptElems" -> Seq(
-        Map("url" -> routes.Assets.at("javascripts/tamc.js"))
-     ),
+        "actingAttorneyBanner" -> actingAttorneyBanner,
+        "mainContentHeader" -> commonContentHeader,
+        "sidebar" -> sidebar,
+        "getHelpForm" -> getHelpForm,
+        "googleAnalytics" -> googleAnalytics,
 
-    "mainAttributes" -> mainConfig.maybeMainDataAttributes,
-    "inlineScript" -> scriptElement,
-    "assetsPath" -> assetsPath,
-    "mainClass" -> mainConfig,
-    "isWelsh" -> isWelsh,
-    "optimizelyProjectId"  -> "8421482974"
-))
+        "scriptElems" -> Seq(
+            Map("url" -> routes.Assets.at("javascripts/tamc.js"))
+         ),
+
+        "mainAttributes" -> mainConfig.maybeMainDataAttributes,
+        "inlineScript" -> scriptElement,
+        "mainClass" -> mainConfig,
+        "isWelsh" -> isWelsh,
+        "optimizelyProjectId"  -> "8421482974"
+    ))
 }
 
