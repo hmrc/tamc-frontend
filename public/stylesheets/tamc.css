@@ -510,3 +510,7 @@ p.blue-underline-large {
 .nowrap{
     white-space: nowrap
 }
+.align-right{
+    text-align: right;
+    padding-top: 10px;
+}

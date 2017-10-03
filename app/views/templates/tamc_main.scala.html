@@ -78,13 +78,6 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
         </script>
 }
 
-@signoutContent(user: Option[details.TamcUser]) = @{
-    user.map { loggedInUser =>
-    templates.user_status(
-    user = loggedInUser,
-    logoutUrl = controllers.routes.AuthorisationController.logout().url)
-    }
-}
 
 @isWelsh = @{
     if(applicationMessages.lang.code == "cy"){
@@ -103,6 +96,11 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
         @breadcrumbTag(breadcrumb, false)
     }
 
+    @if(user.isDefined && !utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
+        <div class="align-right">
+            <a id="sign-out" href=@routes.AuthorisationController.logout().url>@Messages("user-status.sign-out")</a>
+        </div>
+    }
 
     @if(ApplicationConfig.isWelshEnabled) {
         @langSwitch
@@ -170,6 +168,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
+
 @{
     templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
         "pageTitle" -> s"$title",
@@ -179,7 +178,6 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
         "hasNavLinks" -> true,
         "navTitle" -> titleName,
         "removeServiceInfo" -> false,
-        "navLinks" -> links,
 
         "betaBanner" -> true,
         "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
