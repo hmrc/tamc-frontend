@@ -29,7 +29,7 @@
 
 @templates.tamc_main(
     title = Messages("title.eligibility.pattern", Messages("title.eligibility")),
-   isGDS = true,
+    isFromGDS = true,
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(),
         controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString()))) {
 

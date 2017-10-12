@@ -22,7 +22,8 @@ mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
 appConfig: config.ApplicationConfig = config.ApplicationConfig,
 supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
-isGDS:Boolean = false,
+isFromGDS:Boolean = false,
+isFromPTA:Boolean = false,
 scriptElem: Option[Html] = None)(mainContent: Html)(implicit lang: Lang,
 request: Request[_],
 context: config.TamcContext,
@@ -171,7 +172,10 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
 }
 
 @isPTA = @{
-    if(isGDS){
+    if(isFromPTA){
+      false
+     }
+    if(isFromGDS){
         true
     }
     else{
@@ -184,7 +188,6 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     }
 
 }
-
 @{
     templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
         "pageTitle" -> s"$title",
