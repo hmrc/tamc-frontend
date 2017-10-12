@@ -168,6 +168,13 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
+@hideAccountMenu = @{
+    if(utils.isPtaJourneyUseOnlyOnAuthorisedPage){
+        false
+     } else {
+        true
+     }
+}
 
 @{
     templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
@@ -183,7 +190,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
         "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
         "includeHMRCBranding" -> true,
 
-        "hideAccountMenu" -> !utils.isPtaJourneyUseOnlyOnAuthorisedPage,
+        "hideAccountMenu" -> hideAccountMenu,
 
         "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
         "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
