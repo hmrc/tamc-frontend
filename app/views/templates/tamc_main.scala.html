@@ -22,6 +22,7 @@ mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
 appConfig: config.ApplicationConfig = config.ApplicationConfig,
 supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
+isGDS:Boolean = false,
 scriptElem: Option[Html] = None)(mainContent: Html)(implicit lang: Lang,
 request: Request[_],
 context: config.TamcContext,
@@ -29,6 +30,7 @@ breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
 user: Option[details.TamcUser] = None,
 gaDimensions: Option[Map[String, String]] = None,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+
 )
 
 @import play.twirl.api.Html
@@ -168,12 +170,19 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
-@hideAccountMenu = @{
-    if(utils.isPtaJourneyUseOnlyOnAuthorisedPage){
-        false
-     } else {
+@isPTA = @{
+    if(isGDS){
         true
-     }
+    }
+    else{
+        if(utils.isPtaJourneyUseOnlyOnAuthorisedPage){
+            false
+        } else {
+            true
+        }
+
+    }
+
 }
 
 @{
@@ -190,7 +199,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
         "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
         "includeHMRCBranding" -> true,
 
-        "hideAccountMenu" -> hideAccountMenu,
+        "hideAccountMenu" -> isPTA,
 
         "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
         "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
