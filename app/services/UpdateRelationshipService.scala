@@ -58,14 +58,14 @@ import models.UserRecord
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.AuditEvent
+import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.time.TaxYearResolver._
 import errors.RecipientNotFound
 import services.TimeService._
 import play.api.i18n.Lang
 import utils.LanguageUtils
+import uk.gov.hmrc.http.HeaderCarrier
 
 object UpdateRelationshipService extends UpdateRelationshipService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
@@ -82,7 +82,7 @@ trait UpdateRelationshipService {
   val timeService: TimeService
   private val parseRelationshipStartDate = parseDateWtihFormat(_ :String, format = "yyyyMMdd")
 
-  private def handleAudit(event: AuditEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
+  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }

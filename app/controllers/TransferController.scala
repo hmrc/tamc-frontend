@@ -33,11 +33,11 @@ import play.api.data.FormError
 import play.api.mvc._
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.TamcBreadcrumb
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
 
 object TransferController extends TransferController with RunMode {
   override lazy val registrationService = TransferService

@@ -17,11 +17,11 @@
 package config
 
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import uk.gov.hmrc.http.HeaderCarrier
 
 object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
   override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")

@@ -21,10 +21,10 @@ import play.api.Logger
 import services.CachingService
 import connectors.CitizenDetailsConnector
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.http.{HeaderCarrier, NotFoundException}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext.fromLoggingDetails
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, NotFoundException }
 
 sealed trait PersonDetailsResponse
 case class PersonDetailsSuccessResponse(personDetails: PersonDetails) extends PersonDetailsResponse

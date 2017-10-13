@@ -31,10 +31,11 @@ import play.api.test.Helpers.OK
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.{Cids, Ninos}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.audit.model.{AuditEvent, DataEvent}
+import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
-import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.play.http.ws.{WSGet, WSPost, WSPut}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils.now
@@ -53,7 +54,7 @@ trait TestUtility extends UnitSpec {
 
   lazy val fakeApplication: Application = new GuiceApplicationBuilder().build()
 
-  def eventsShouldMatch(event: AuditEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty): Unit = {
+  def eventsShouldMatch(event: DataEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty): Unit = {
     event match {
       case DataEvent("tamc-frontend", `auditType`, _, eventTags, `details`, _) if (tags.toSet subsetOf eventTags.toSet) =>
       case _ => fail(s"${event} did not match auditType:${auditType} details:${details} tags:${tags}")
@@ -63,9 +64,9 @@ trait TestUtility extends UnitSpec {
   def makeFakeHomeController(): AuthorisationController = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -78,16 +79,16 @@ trait TestUtility extends UnitSpec {
       override val logoutCallbackUrl = "/feedback-survey/?origin=TAMC"
       override val auditConnector: AuditConnector = fakeCustomAuditConnector
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      def auditEventsToTest: List[AuditEvent] = fakeCustomAuditConnector.auditEventsToTest
+      def auditEventsToTest: List[DataEvent] = fakeCustomAuditConnector.auditEventsToTest
     }
   }
 
   def makeEligibilityController(): GdsEligibilityController = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -119,9 +120,9 @@ trait TestUtility extends UnitSpec {
                                             pd: PersonDetailsSuccessResponse) = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -131,9 +132,9 @@ trait TestUtility extends UnitSpec {
 
     val fakeIDACustomAuditConnector: AuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -141,7 +142,7 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    val fakeHttpGet: HttpGet = new HttpGet {
+    val fakeHttpGet: HttpGet = new HttpGet with WSGet {
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val nino: String = url.split("/")(2)
         val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
@@ -190,7 +191,7 @@ trait TestUtility extends UnitSpec {
       override val serviceUrl: String = null
       override lazy val http = null
 
-      override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
+      override def currentAuthority(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Authority]] = {
         nino match {
           case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
           case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
@@ -225,9 +226,9 @@ trait TestUtility extends UnitSpec {
   def makeMultiYearGdsEligibilityController(): MultiYearGdsEligibilityController = {
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -238,7 +239,7 @@ trait TestUtility extends UnitSpec {
     new MultiYearGdsEligibilityController {
       override val auditConnector: AuditConnector = fakeCustomAuditConnector
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      def auditEventsToTest: List[AuditEvent] = fakeCustomAuditConnector.auditEventsToTest
+      def auditEventsToTest: List[DataEvent] = fakeCustomAuditConnector.auditEventsToTest
     }
   }
 
@@ -260,9 +261,9 @@ trait TestUtility extends UnitSpec {
 
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -270,7 +271,7 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    val fakeHttpGet = new HttpGet {
+    val fakeHttpGet = new HttpGet with WSGet{
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val nino: String = url.split("/")(2)
         val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
@@ -290,9 +291,9 @@ trait TestUtility extends UnitSpec {
 
     val fakeIDACustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -330,7 +331,7 @@ trait TestUtility extends UnitSpec {
       override val serviceUrl: String = null
       override lazy val http = null
 
-      override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
+      override def currentAuthority(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Authority]] = {
         nino match {
           case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
           case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
@@ -391,9 +392,9 @@ trait TestUtility extends UnitSpec {
 
     def createRelationshipUrl: Option[String] = ???
 
-    def auditEventsToTest: List[AuditEvent] = ???
+    def auditEventsToTest: List[DataEvent] = ???
 
-    def idaAuditEventsToTest: List[AuditEvent] = ???
+    def idaAuditEventsToTest: List[DataEvent] = ???
 
     def citizenDetailsCallsCount: Int = ???
 
@@ -444,9 +445,9 @@ trait TestUtility extends UnitSpec {
 
     val fakeIDACustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -483,7 +484,7 @@ trait TestUtility extends UnitSpec {
       override val serviceUrl: String = null
       override lazy val http = null
 
-      override def currentAuthority(implicit hc: HeaderCarrier): Future[Option[Authority]] = {
+      override def currentAuthority(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Authority]] = {
         nino match {
           case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", Accounts(), None, None, CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
           case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
@@ -494,9 +495,9 @@ trait TestUtility extends UnitSpec {
 
     val fakeCustomAuditConnector = new AuditConnector {
       override lazy val auditingConfig = ???
-      var auditEventsToTest: List[AuditEvent] = List()
+      var auditEventsToTest: List[DataEvent] = List()
 
-      override def sendEvent(event: AuditEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
+      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
         auditEventsToTest = auditEventsToTest :+ event
         Future {
           AuditResult.Success
@@ -504,7 +505,7 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    val fakeHttpGet = new HttpGet {
+    val fakeHttpGet = new HttpGet with WSGet{
       override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val nino: String = url.split("/")(2)
         val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
@@ -517,8 +518,8 @@ trait TestUtility extends UnitSpec {
 
     }
 
-    val fakeHttpPost = new HttpPost {
-      protected def doPost[A](url: String, body: A, headers: Seq[(String, String)])(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] = {
+    val fakeHttpPost = new HttpPost with WSPost{
+      override def doPost[A](url: String, body: A, headers: Seq[(String, String)])(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] = {
         body match {
           case RegistrationFormInput(_, _, _, Nino(Ninos.ninoWithLOA1), _) =>
             Future.successful(new DummyHttpResponse(s"""{"user_record":{"cid": ${Cids.cid2}, "timestamp": "2015", "has_allowance": false}, "status": {"status_code":"OK"}}""", 200))
@@ -535,22 +536,22 @@ trait TestUtility extends UnitSpec {
         }
       }
 
-      protected def doPostString(url: String, body: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+      override def doPostString(url: String, body: String, headers: Seq[(String, String)])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
 
-      protected def doEmptyPost[A](url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+      override def doEmptyPost[A](url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
 
-      protected def doFormPost(url: String, body: Map[String, Seq[String]])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
+      override def doFormPost(url: String, body: Map[String, Seq[String]])(implicit hc: HeaderCarrier): Future[HttpResponse] = ???
 
       def appName: String = ???
 
       val hooks = NoneRequired
     }
 
-    val fakeHttpPut = new HttpPut {
+    val fakeHttpPut = new HttpPut with WSPut{
       var createRelationshipCallCountToTest = 0
       var createRelationshipUrl: Option[String] = None
 
-      def doPut[A](url: String, body: A)(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] = {
+      override def doPut[A](url: String, body: A)(implicit rds: Writes[A], hc: HeaderCarrier): Future[HttpResponse] = {
         createRelationshipCallCountToTest = createRelationshipCallCountToTest + 1
         createRelationshipUrl = Some(url)
 

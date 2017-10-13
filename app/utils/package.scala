@@ -19,9 +19,9 @@ import play.api.mvc.AnyContent
 import play.api.mvc.Request
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http.SessionKeys
 import config.ApplicationConfig
 import java.util.Calendar
+import uk.gov.hmrc.http.SessionKeys
 
 package object utils {
 

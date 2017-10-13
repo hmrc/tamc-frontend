@@ -19,12 +19,12 @@ package test_utils
 import org.joda.time.{ DateTimeZone, DateTime }
 import scala.concurrent.Future
 import play.api.test.Helpers.OK
-import uk.gov.hmrc.play.http.BadGatewayException
 import java.util.Calendar
 import java.text.SimpleDateFormat
 import models.CitizenName
 import test_utils.TestData.Ninos
 import test_utils.TestData.Cids
+import uk.gov.hmrc.http.BadGatewayException
 
 object TestConstants {
 
