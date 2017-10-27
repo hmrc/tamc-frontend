@@ -270,7 +270,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
     }
 
     "be displayed if transferor income contains negative number" in {
@@ -280,7 +280,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
     }
 
     "be displayed if transferor income exceeds max Int" in {
@@ -290,7 +290,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only."
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
     }
 
     "be displayed if recipient income is not provided (None)" in {
