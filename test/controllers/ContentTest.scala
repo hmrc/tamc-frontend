@@ -771,10 +771,9 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
-      val elements = document.getElementById("eligibility-form").getElementsByTag("p")
+      val elements = document.getElementsByTag("h1")
       elements shouldNot be(null)
-      elements.get(0).text shouldBe "Does this apply to you?"
+      elements.get(0).text shouldBe "Check your eligibility Are you married or in a civil partnership?"
     }
 
     "diplay errors as none of the radio buttons are selected " in {
@@ -806,10 +805,9 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
-      val elements = document.getElementById("eligibility-form").getElementsByTag("p")
+      val elements = document.getElementsByTag("h1")
       elements shouldNot be(null)
-      elements.get(0).text shouldBe "Does this apply to you?"
+      elements.get(0).text shouldBe "Check your eligibility Are you married or in a civil partnership?"
     }
 
     "diplay errors as none of the radio buttons are selected " in {

@@ -272,10 +272,8 @@ pages.confirm.html.check-details	=	Dylech wirio’r manylion yr ydych wedi’i r
 
 
 eligibility.check.header	=	A ydych yn gymwys?
-eligibility.check.h1	=	Eich perthynas
+eligibility.check.h1	=	A ydych yn briod neu mewn partneriaeth sifil?
 eligibility.check.span.h1	=	Gwiriwch a ydych yn gymwys
-eligibility.check.span.para	=	Er mwyn gwneud cais am Lwfans Priodasol, rhaid i chi fod yn briod neu mewn partneriaeth sifil.
-eligibility.check.married	=	A yw hyn yn berthnasol i chi?
 eligibility.check.married.legend	=	A ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon?
 eligibility.check.yes	=	Iawn
 eligibility.check.married.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.

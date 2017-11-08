@@ -270,10 +270,8 @@ pages.confirm.html.check-details=Check the details you have entered and confirm 
 #********************************************************************************
 
 eligibility.check.header=Your eligibility
-eligibility.check.h1=Your relationship
+eligibility.check.h1=Are you married or in a civil partnership?
 eligibility.check.span.h1=Check your eligibility
-eligibility.check.span.para=To apply for Marriage Allowance, you must be married or in a civil partnership.
-eligibility.check.married=Does this apply to you?
 eligibility.check.married.legend=Are you married or in a legally registered civil partnership?
 eligibility.check.yes = Yes
 eligibility.check.married.error=You are not eligible for Marriage Allowance because you are not married or in a legally registered civil partnership.
