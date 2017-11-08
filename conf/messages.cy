@@ -290,9 +290,7 @@ eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn did
 eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i’ch partner?
 eligibility.check.partners.income.before.tax	=	Mae hyn cyn didynnu treth.
 eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu’n rhy isel. Mae’n dal yn bosibl i chi wirio’ch cymhwyster am flynyddoedd blaenorol.
-eligibility.check.date.of.birth.h1  =   Eich dyddiad geni chi a’ch partner
-eligibility.check.date.of.birth.span.para   =   I elwa o Lwfans Priodasol, dylai’ch dyddiad geni chi a’ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
-eligibility.check.date.of.birth.span.married    =   A yw hyn yn berthnasol i chi a’ch partner?
+eligibility.check.date.of.birth.h1  =   A gawsoch chi neu'ch partner eich geni ar ôl 5 Ebrill 1935?
 eligibility.check.date.of.birth.error   =   Os yw’ch dyddiad geni chi neu’ch partner cyn 6 Ebrill 1935, efallai y gallwch elwa’n fwy fel p&#226;r os gwnewch gais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae’n dal i fod yn bosibl i chi barhau a gwneud cais am Lwfans Priodasol yn ei le. Fodd bynnag, ni allwch gael Lwfans Priodasol a Lwfans P&#226;r Priod ar yr un pryd.
 
 
