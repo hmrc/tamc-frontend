@@ -856,10 +856,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
-
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship (£11,500 or less a year). This is before any tax is deducted."
+      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
   }
 
@@ -906,9 +904,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship (£11,500 or less a year). This is before any tax is deducted."
+      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
   }
 

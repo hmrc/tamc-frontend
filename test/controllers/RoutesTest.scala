@@ -743,7 +743,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
@@ -858,7 +858,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
 
       document.getElementById("lower-earner-error").text shouldBe "Confirm if you have the lower income in the relationship"
