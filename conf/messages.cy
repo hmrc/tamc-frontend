@@ -283,11 +283,9 @@ eligibility.check.lower.earner.information	=	Mae hyn cyn y didynnir unrhyw dreth
 eligibility.check.lower.earner.h1	=	A yw eich incwm yn llai na £11,501 y flwyddyn?
 eligibility.check.lower.earner.question	=	A yw hyn yn berthnasol i chi?
 eligibility.check.lower.earner.error	=	Mae’n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm dros £{0}.  Mae’n dal yn bosibl i chi wirio a fyddwch yn elwa ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
-eligibility.check.partners.income.h1	=	Incwm eich partner
-eligibility.check.partners.income.information1	=	Er mwyn bod yn gymwys am Lwfans Priodasol, mae’n rhaid bod gan eich partner incwm rhwng £{0} a £{1} y flwyddyn (neu £43,000 os ydych yn byw yn yr Alban).
-eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
-eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i’ch partner?
-eligibility.check.partners.income.before.tax	=	Mae hyn cyn didynnu treth.
+eligibility.check.partners.income.h1	=	A yw incwm eich partner rhwng £11,501 a £45,000 y flwyddyn?
+eligibility.check.partners.income.information1	=	Os ydych yn byw'n yr Alban, mae'n rhaid bod yr incwm rhwng £11,501 a £43,000 y flwyddyn.
+eligibility.check.partners.income.information2	=	Mae hyn cyn y didynnir unrhyw dreth.
 eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu’n rhy isel. Mae’n dal yn bosibl i chi wirio’ch cymhwyster am flynyddoedd blaenorol.
 eligibility.check.date.of.birth.h1  =   A gawsoch chi neu'ch partner eich geni ar ôl 5 Ebrill 1935?
 eligibility.check.date.of.birth.error   =   Os yw’ch dyddiad geni chi neu’ch partner cyn 6 Ebrill 1935, efallai y gallwch elwa’n fwy fel p&#226;r os gwnewch gais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae’n dal i fod yn bosibl i chi barhau a gwneud cais am Lwfans Priodasol yn ei le. Fodd bynnag, ni allwch gael Lwfans Priodasol a Lwfans P&#226;r Priod ar yr un pryd.

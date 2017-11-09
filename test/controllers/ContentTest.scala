@@ -871,11 +871,10 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
-
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
-      document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must have an income between £11,501 and £45,000 a year (or £43,000 if you live in Scotland). This is before any tax is deducted."
-      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Your partner’s income"
+      document.title() shouldBe "Is your partner’s income between £11,501 and £45,000 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("information").text shouldBe "If you live in Scotland their income must be between £11,501 and £43,000 a year."
+      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Is your partner’s income between £11,501 and £45,000 a year?"
     }
   }
 
@@ -918,9 +917,9 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
-      document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must have an income between £11,501 and £45,000 a year (or £43,000 if you live in Scotland). This is before any tax is deducted."
+      document.title() shouldBe "Is your partner’s income between £11,501 and £45,000 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("Information").text shouldBe "If you live in Scotland their income must be between £11,501 and £43,000 a year."
     }
   }
 
