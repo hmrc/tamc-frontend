@@ -239,8 +239,10 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val document = Jsoup.parse(contentAsString(result))
       val heading = document.getElementsByClass("heading-xlarge").text()
       val message = document.getElementById("reject-content").text()
+      val message2 = document.getElementById("reject-partner").text()
       heading should be("Cancelling Marriage Allowance")
-      message should be("Your Marriage Allowance will be cancelled from 6 April 2017, the start of the tax year you first received it.")
+      message2 should be("If your partner cancels your Marriage Allowance, it will remain in place until 5 April 2018, the end of the current tax year.")
+      message should be("You can only cancel your Marriage Allowance from the start of the claim, 6 April 2017, the start of the tax year you first received it.")
     }
 
     "confirm rejection in active year" in {
@@ -262,8 +264,11 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val document = Jsoup.parse(contentAsString(result))
       val heading = document.getElementsByClass("heading-xlarge").text()
       val message = document.getElementById("reject-content").text()
+      val message2 = document.getElementById("reject-partner").text()
       heading should be("Cancelling Marriage Allowance")
-      message should be("Your Marriage Allowance will be cancelled from 6 April 2015, the start of the tax year you first received it.")
+
+      message2 should be(s"If your partner cancels your Marriage Allowance, it will remain in place until 5 April 2018, the end of the current tax year.")
+      message should be("You can only cancel your Marriage Allowance from the start of the claim, 6 April 2015, the start of the tax year you first received it.")
     }
 
     "confirm rejection with ended relationship in previous year" in {

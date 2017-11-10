@@ -434,10 +434,11 @@ change.status.historic-active.directions	=	Gallwch ddileu Lwfans Priodasol o dde
 change.status.cancel.h1	=	Canslo Lwfans Priodasol
 
 change.status.cancel.content	=	Byddwn yn canslo’ch Lwfans Priodasol, ond bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol.
-change.status.cancel.content1	=	Bydd eich Lwfans Priodasol yn dychwelyd i’r swm blaenorol o {0}, sef dechrau’r flwyddyn dreth newydd. Ni fydd yn rhaid i’ch partner ad-dalu unrhyw dreth.
+change.status.cancel.content1	=	Ni fydd eich Lwfans Personol yn cynnwys Lwfans Priodasol o {0}, sef dechrau'r flwyddyn dreth newydd. Ni fydd yn rhaid i'ch partner ad-dalu unrhyw dreth.
 change.status.reject.h1	=	Dileu cais blaenorol am Lwfans Priodasol
-change.status.reject.content	=	Caiff eich Lwfans Priodasol ei ganslo o {0} ymlaen, sef dechrau’r flwyddyn dreth pan gawsoch ef am y tro cyntaf.
-change.status.reject.warning	=	Gallai hyn arwain at beidio &#226; thalu digon o dreth. Rhown wybod i chi a ydych wedi talu’r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth.
+change.status.reject.content	=	Gallwch ond ganslo'ch Lwfans Priodasol o ddechrau'r cais, {0}, sef dechrau'r flwyddyn dreth y gawsoch ef am y tro cyntaf.
+change.status.reject.partner = Os yw'ch partner yn canslo'ch Lwfans Priodasol, bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth gyfredol.
+change.status.reject.warning	=	Os byddwch yn parhau, gallai hyn arwain atoch yn peidio â thalu digon o dreth. Rhown wybod i chi a ydych wedi talu'r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, fel arfer byddwn yn ei chasglu drwy addasu'ch cod treth ar gyfer {0}.
 change.status.reject.previous.content	=	Gallwch ddileu’r Lwfans Priodasol y gwnaethoch ei hawlio’n flaenorol. Caiff y lwfans ei ddileu o {0}, sef dechrau’r flwyddyn dreth pan gawsoch ef am y tro cyntaf.
 change.status.reject.previous.warning	=	Gallai hyn arwain at dandalu treth. Rhown wybod i chi a ydych wedi talu’r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Fel arfer, bydd unrhyw dandaliad yn cael ei gasglu drwy addasu’ch cod treth.
 change.status.allowance	=	Statws y lwfans
