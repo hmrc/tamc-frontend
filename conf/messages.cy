@@ -539,7 +539,7 @@ technical.issue.para1	=	Mae problemau technegol wedi codi
 technical.issue.para2	=	Mae problemau technegol wedi codi. Rhowch gynnig arall arni mewn ychydig o funudau.
 technical.issue.back	=	Dychwelyd i GOV.UK
 technical.other-ways.h1	=	Ffyrdd eraill o wneud cais am Lwfans Priodasol
-technical.other-ways.para0  =   Gallwch wneud cais am Lwfans Priodasol drwy'ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan 'gwasanaethau y mae'n bosibl y bydd eu hangen arnoch'.
+technical.other-ways.para0  =   Gallwch wneud cais am Lwfans Priodasol drwy'ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan ‘gwasanaethau y mae'n bosibl y bydd eu hangen arnoch’.
 technical.other-ways.para1	=	Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
 technical.other-ways.para2	=	Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details	=	Methu dod o hyd i fanylion
