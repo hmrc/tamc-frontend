@@ -26,6 +26,9 @@ import test_utils.TestData.Cids
 import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.time.TaxYearResolver
+import utils.LanguageUtils
+import views.helpers.TextGenerators
 
 class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
 
@@ -225,29 +228,29 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20170406", Some(""), Some("20180405"), "", "")
 
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
-        roleRecord = Some(Role.RECIPIENT),
+        roleRecord = Some(Role.TRANSFEROR),
         activeRelationshipRecord = Some(relationshipRecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.REJECT)),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.CANCEL)),
         relationshipUpdated = Some(false))
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
       val controllerToTest = testComponent.controller
       val request = testComponent.request
-      val result = controllerToTest.confirmReject()(request)
+      val result = controllerToTest.confirmCancel()(request)
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      val heading = document.getElementsByClass("heading-xlarge").text()
-      val message = document.getElementById("reject-content").text()
-      val message2 = document.getElementById("reject-partner").text()
-      heading should be("Cancelling Marriage Allowance")
-      message2 should be("If your partner cancels your Marriage Allowance, it will remain in place until 5 April 2018, the end of the current tax year.")
-      message should be("You can only cancel your Marriage Allowance from the start of the claim, 6 April 2017, the start of the tax year you first received it.")
+     val heading = document.getElementsByClass("heading-xlarge").text()
+     val message = document.getElementById("cancel-content").text()
+     heading should be("Cancelling Marriage Allowance")
+      message should be("We will cancel your Marriage Allowance, but it will remain in place until 5 April 2017, the end of the current tax year.")
     }
 
     "confirm rejection in active year" in {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20150406", Some(""), Some(""), "", "")
+
+      val endOfCurrentTaxYear = TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfCurrentTaxYear), false)
 
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         roleRecord = Some(Role.RECIPIENT),
@@ -267,7 +270,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val message2 = document.getElementById("reject-partner").text()
       heading should be("Cancelling Marriage Allowance")
 
-      message2 should be(s"If your partner cancels your Marriage Allowance, it will remain in place until 5 April 2018, the end of the current tax year.")
+      message2 should be(s"If your partner cancels your Marriage Allowance, it will remain in place until $endOfCurrentTaxYear, the end of the current tax year.")
       message should be("You can only cancel your Marriage Allowance from the start of the claim, 6 April 2015, the start of the tax year you first received it.")
     }
 

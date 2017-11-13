@@ -51,7 +51,7 @@
                 <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
-                    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning" ))</strong>
+                    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(lang))))</strong>
                 </div>
                 <div class="form-group booster">
                     <p>
