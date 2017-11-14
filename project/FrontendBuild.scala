@@ -35,7 +35,7 @@ private object AppDependencies {
   private val playConfigVersion = "4.3.0"
   private val playHealthVersion = "2.1.0"
   private val logbackJsonLoggerVersion = "3.1.0"
-  private val playPartialsVersion = "5.3.0"
+  private val playPartialsVersion = "6.1.0"
   private val playUiVersion = "7.2.1"
   private val timeVersion = "2.1.0"
   private val domainVersion = "4.1.0"
@@ -58,7 +58,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "time" % timeVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion
+    "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
+    "uk.gov.hmrc" %% "play-partials" % playPartialsVersion
   )
 
   trait TestDependencies {
