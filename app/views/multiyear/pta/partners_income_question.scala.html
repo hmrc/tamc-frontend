@@ -33,20 +33,18 @@
 
 @templates.tamc_main(
     title = Messages("title.eligibility.pattern", Messages("eligibility.check.partners.income.h1")),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishPartnersIncomeCheckPta.toString(),
-                            controllers.routes.LanguageController.switchToWelshPartnersIncomeCheckPta.toString()))){
+                         langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishPartnersIncomeCheckPta.toString(),
+                         controllers.routes.LanguageController.switchToWelshPartnersIncomeCheckPta.toString()))){
 
     @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.PERSONAL_ALLOWANCE+1), upperLimit = Some(ApplicationConfig.MAX_LIMIT))
 
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.partners.income.h1"))</h1>
-    <p class="information">@Html(Messages("eligibility.check.partners.income.information1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</br>
-        @Html(Messages("eligibility.check.partners.income.information2"))</p>
-
+    <p class="information">@Html(Messages("eligibility.check.partners.income.information1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)))<br></p>
         @helpers.form(action = routes.MultiYearPtaEligibilityController.partnersIncomeCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
-            <p class="bold-small">@Html(Messages("eligibility.check.partners.income.h2",  NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
+            <p class="bold-small">@Html(Messages("eligibility.check.partners.income.information2"))</p>
             @templates.input_radio_group(
                 partnersIncomeFormInput("partners-income"),
                 Seq(("true",  Messages("radio.yes")), ("false", Messages("radio.no"))),
