@@ -840,7 +840,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
-      document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "Does this apply to you and your partner?"
       document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
@@ -891,9 +891,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you and your partner?"
-      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
+      document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
     }
   }
 
