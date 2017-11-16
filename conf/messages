@@ -159,7 +159,6 @@ title.finished=Application confirmed
 title.confirm-email=Confirm your email address
 title.non-eligible=You are not eligible in the current tax year
 title.no-tax-years=No tax years available
-title.eligibility=Your relationship
 title.confirm-transferor=Confirm cancellation
 title.confirm-recipient=Confirm removal of a previous claim
 title.confirm-update=Confirm Update
@@ -270,7 +269,7 @@ pages.confirm.html.check-details=Check the details you have entered and confirm 
 #********************************************************************************
 
 eligibility.check.header=Your eligibility
-eligibility.check.h1=Your relationship
+eligibility.check.h1=Are you married or in a civil partnership?
 eligibility.check.span.h1=Check your eligibility
 eligibility.check.span.para=To apply for Marriage Allowance, you must be married or in a civil partnership.
 eligibility.check.married=Does this apply to you?
