@@ -1,4 +1,4 @@
-@(formItem: Form[_], fieldName: String, label: Html, extraClass: Option[String], args: (Symbol, Any)*)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(formItem: Form[_], fieldName: String, label: Html, extraClass: Option[String], args: (Symbol, Any)*)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
     @import play.api.i18n._

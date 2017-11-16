@@ -30,7 +30,8 @@ context: config.TamcContext,
 breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
 user: Option[details.TamcUser] = None,
 gaDimensions: Option[Map[String, String]] = None,
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 
 )
 
@@ -91,7 +92,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer
     }
 }
 @getHelpForm = {
-   @includes.report_problem(supportLinkEnabled)
+   @includes.report_problem(supportLinkEnabled, formPartialRetriever, appConfig)
 }
 
 @commonContentHeader = {

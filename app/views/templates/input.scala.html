@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-@(field: play.api.data.Field, args: (Symbol, Any)*)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(field: play.api.data.Field, args: (Symbol, Any)*)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     @import play.api.i18n._
     @import views.html.helper._

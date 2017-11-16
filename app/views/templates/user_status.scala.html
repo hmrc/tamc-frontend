@@ -17,7 +17,7 @@
 @(user:details.TamcUser,
   logoutUrl: String
   )(implicit lang: Lang,
-    request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+    request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import utils.LanguageUtils
