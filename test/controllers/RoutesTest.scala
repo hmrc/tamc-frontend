@@ -671,7 +671,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
@@ -816,7 +816,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
