@@ -30,6 +30,7 @@
     mainConfig = views.helpers.MainConfig(
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
     <h1 class="heading-large">@Html(Messages("technical.other-ways.h1"))</h1>
+    <p id="pta-redirect">@Html(Messages("technical.other-ways.para0"))</p>
     <p id="unable-to-confirm-identity">@Html(Messages("technical.other-ways.para1"))</p>
     <p id="need-nino">@Html(Messages("technical.other-ways.para2"))</p>
     <p><strong>@Html(Messages("hmrc.contact-details"))</strong></p>
