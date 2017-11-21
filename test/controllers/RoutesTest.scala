@@ -890,7 +890,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.title() shouldBe "Is your partner’s income between £11,501 and £45,000 a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
 
-      document.getElementsByClass("partners-inc-error").text shouldBe "You are not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still continue to check your eligibility for previous years."
+      document.getElementsByClass("partners-inc-error").text shouldBe "You are not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still apply for previous years if their income was higher or lower in the past."
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
