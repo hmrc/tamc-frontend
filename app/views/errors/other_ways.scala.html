@@ -36,10 +36,16 @@
 
     <p>@Html(Messages("hmrc.contact-details-2")) <br>
         @Html(Messages("hmrc.contact-details-3")) <br>
-        @Html(Messages("hmrc.contact-details-4"))</p>
-    <p>@Html(Messages("hmrc.contact-details-5")) <br>
-    @Html(Messages("hmrc.contact-details-6"))</p>
-    <p>@Html(Messages("hmrc.contact-details-7")) <br>
-    @Html(Messages("hmrc.contact-details-8"))</p>
+        @if(lang.code == "en"){@Html(Messages("hmrc.contact-details-4"))}
+    </p>
+
+    @if(lang.code == "en"){
+        <p>@Html(Messages("hmrc.contact-details-5")) <br>
+        @Html(Messages("hmrc.contact-details-6"))</p>
+        <p>@Html(Messages("hmrc.contact-details-7")) <br>
+        @Html(Messages("hmrc.contact-details-8"))</p>
+    }
     <p id="call-charges">@Html(Messages("hmrc.contact-details-9"))</p>
+
 }
+
