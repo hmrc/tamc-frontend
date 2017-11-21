@@ -36,8 +36,11 @@
     <p><strong>@Html(Messages("hmrc.contact-details"))</strong></p>
 
     <p>@Html(Messages("hmrc.contact-details-2")) <br>
-        @Html(Messages("hmrc.contact-details-3")) <br>
-        @if(lang.code == "en"){@Html(Messages("hmrc.contact-details-4"))}
+
+        @if(lang.code == "en"){@Html(Messages("hmrc.contact-details-3")) <br>
+            @Html(Messages("hmrc.contact-details-4"))}else{
+            @Html(Messages("hmrc.contact-details-5"))
+        }
     </p>
 
     @if(lang.code == "en"){
