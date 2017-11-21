@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package controllers
+package config
 
-import config.{LocalTemplateRenderer, TamcFormPartialRetriever}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 
-trait BaseController extends FrontendController {
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
-  implicit val formPartialRetriver: uk.gov.hmrc.play.partials.FormPartialRetriever  = TamcFormPartialRetriever
+trait SessionCookieCryptoFilterWrapper {
+  def encryptCookieString(cookie: String) : String = {
+    SessionCookieCryptoFilter.encrypt(cookie)
+  }
 }
