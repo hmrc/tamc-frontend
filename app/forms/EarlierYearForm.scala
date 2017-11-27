@@ -23,16 +23,16 @@ import play.api.data.Forms.{mapping, number, optional, text}
 object EarlierYearForm {
 
   def earlierYearsForm(furtherYears: List[Int] = List()): Form[EarlierYearsInput] = Form[EarlierYearsInput](
-    mapping("selectedYear" -> number, "furtherYears" -> text, "yearAvavilableForSelection" -> optional(number))(earlierYearsFormToEntity)(entityToEarlierYearsForm)
+    mapping("selectedYear" -> number, "furtherYears" -> text, "yearAvailableForSelection" -> optional(number))(earlierYearsFormToEntity)(entityToEarlierYearsForm)
   )
 
-  private def earlierYearsFormToEntity(selectedYear: Int, furtherYears: String, yearAvavilableForSelection: Option[Int]): EarlierYearsInput = {
+  private def earlierYearsFormToEntity(selectedYear: Int, furtherYears: String, yearAvailableForSelection: Option[Int]): EarlierYearsInput = {
     val years = furtherYears.split(",").toList
-    EarlierYearsInput(selectedYear, years.flatMap(toInt), yearAvavilableForSelection)
+    EarlierYearsInput(selectedYear, years.flatMap(toInt), yearAvailableForSelection)
   }
 
   private def entityToEarlierYearsForm(entity: EarlierYearsInput) = {
-    Option((entity.selectedYear, entity.furtherYears.mkString(","), entity.yearAvavilableForSelection))
+    Option((entity.selectedYear, entity.furtherYears.mkString(","), entity.yearAvailableForSelection))
   }
 
   def toInt(in: String): Option[Int] = {
