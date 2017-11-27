@@ -16,4 +16,4 @@
 
 package models
 
-case class EarlierYearsInput(selectedYear: Int, furtherYears: List[Int])
+case class EarlierYearsInput(selectedYear: Int, furtherYears: List[Int], yearAvavilableForSelection: Option[Int])

@@ -187,7 +187,7 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
                     BadRequest(views.html.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), recipient.data, extraYears))
                   },
                 taxYears => {
-                  registrationService.updateSelectedYears(recipient, taxYears.selectedYear).map {
+                  registrationService.updateSelectedYears(recipient, taxYears.selectedYear, taxYears.yearAvavilableForSelection).map {
                     _ =>
                       if (taxYears.furtherYears.isEmpty) {
                         Redirect(controllers.routes.TransferController.confirmYourEmail())

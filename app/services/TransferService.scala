@@ -300,22 +300,28 @@ trait TransferService {
   def saveSelectedYears(recipient: RecipientRecord, selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cachingService.saveSelectedYears(selectedYears)
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
-    updateSelectedYears(recipient, List(extraYear).filter(_ > 0))
+  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int, yearAvavilableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
+    updateSelectedYears(recipient, List(extraYear).filter(_ > 0), yearAvavilableForSelection: Option[Int])
   }
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int], yearAvavilableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     for {
       cache <- cachingService.getCachedData
       updatedYears <- updateSelectedYears(cache.get.selectedYears, extraYears)
-      validatedSelectedYears <- validateSelectedYears(recipient.aivailableTaxYears, updatedYears)
+      validatedSelectedYears <- validateSelectedYears(recipient.aivailableTaxYears, updatedYears, yearAvavilableForSelection)
       savedYears <- cachingService.saveSelectedYears(validatedSelectedYears)
     } yield savedYears
 
-  def validateSelectedYears(aivailableTaxYears: List[TaxYear], selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
-    if (selectedYears.isEmpty) {
+  def validateSelectedYears(aivailableTaxYears: List[TaxYear], selectedYears: List[Int], yearAvavilableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+    if (selectedYears.isEmpty && yearAvavilableForSelection.isDefined && aivailableTaxYears.nonEmpty && yearAvavilableForSelection.get == aivailableTaxYears.last.year) {
       throw new NoTaxYearsSelected
-    } else if (selectedYears.forall {
+    } else if (selectedYears.isEmpty) {
+      Future {
+        selectedYears
+      }
+    }
+
+    else if (selectedYears.forall {
       aivailableTaxYears.map(_.year).contains(_)
     }) {
       Future {
