@@ -52,7 +52,7 @@ trait MarriageAllowanceConnector {
 
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     Logger.debug("MarriageAllowanceConnector createRelationship : "+transferorNino.nino.hashCode)
-    Logger.debug("MarriageAllowanceConnector createRelationship CID's : TR- "+ data.request.transferor_cid + " RC- "+data.request.recipient_timestamp)
+    Logger.debug("MarriageAllowanceConnector createRelationship CID's : TR- "+ data.request.transferor_cid + " RC- "+data.request.recipient_cid)
     httpPut.PUT(s"${marriageAllowanceUrl}/paye/${transferorNino}/create-multi-year-relationship/${journey}", data)
   }
 
