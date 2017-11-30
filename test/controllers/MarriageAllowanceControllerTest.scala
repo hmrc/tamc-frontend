@@ -103,7 +103,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 3, 24)))
-      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, aivailableTaxYears = List(TaxYear(2014)))
+      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, availableTaxYears = List(TaxYear(2014)))
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com")))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -178,7 +178,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 3, 24)))
-      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, aivailableTaxYears = List())
+      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, availableTaxYears = List())
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com")))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -196,7 +196,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 3, 24)))
-      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, aivailableTaxYears = List(TaxYear(2014)))
+      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, availableTaxYears = List(TaxYear(2014)))
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com")))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -214,7 +214,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -238,7 +238,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
       val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015", name = None)
       val cachedRecipientData = Some(RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2016, 4, 24)))
-      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, aivailableTaxYears = List(TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = cachedRecipientData.get, availableTaxYears = List(TaxYear(2016)))
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com")))))
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
@@ -258,7 +258,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2016, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -280,7 +280,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2010, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2015)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2015)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -303,7 +303,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -325,7 +325,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -349,7 +349,7 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),

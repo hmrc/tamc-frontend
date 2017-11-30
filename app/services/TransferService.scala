@@ -256,10 +256,10 @@ trait TransferService {
     for {
       recipient <- getEligibleYears
     } yield (
-      !recipient.aivailableTaxYears.filter {
+      !recipient.availableTaxYears.filter {
         _.year == timeService.getCurrentTaxYear
       }.isEmpty,
-      recipient.aivailableTaxYears.filter {
+      recipient.availableTaxYears.filter {
         _.year != timeService.getCurrentTaxYear
       },
       recipient)
@@ -302,29 +302,35 @@ trait TransferService {
   def saveSelectedYears(recipient: RecipientRecord, selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cachingService.saveSelectedYears(selectedYears)
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
-    updateSelectedYears(recipient, List(extraYear).filter(_ > 0))
+  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int, yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
+    updateSelectedYears(recipient, List(extraYear).filter(_ > 0), yearAvailableForSelection: Option[Int])
   }
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     for {
       cache <- cachingService.getCachedData
       updatedYears <- updateSelectedYears(cache.get.selectedYears, extraYears)
-      validatedSelectedYears <- validateSelectedYears(recipient.aivailableTaxYears, updatedYears)
+      validatedSelectedYears <- validateSelectedYears(recipient.availableTaxYears, updatedYears, yearAvailableForSelection)
       savedYears <- cachingService.saveSelectedYears(validatedSelectedYears)
     } yield savedYears
 
-  def validateSelectedYears(aivailableTaxYears: List[TaxYear], selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
-    if (selectedYears.isEmpty) {
+  def validateSelectedYears(availableTaxYears: List[TaxYear], selectedYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+    if (selectedYears.isEmpty && yearAvailableForSelection.isDefined && availableTaxYears.nonEmpty && yearAvailableForSelection.get == availableTaxYears.last.year) {
       throw new NoTaxYearsSelected
-    } else if (selectedYears.forall {
-      aivailableTaxYears.map(_.year).contains(_)
+    } else if (selectedYears.isEmpty) {
+      Future {
+        selectedYears
+      }
+    }
+
+    else if (selectedYears.forall {
+      availableTaxYears.map(_.year).contains(_)
     }) {
       Future {
         selectedYears
       }
     } else {
-      Future.failed(new IllegalArgumentException(s"${selectedYears} is not a subset of ${aivailableTaxYears}"))
+      Future.failed(new IllegalArgumentException(s"${selectedYears} is not a subset of ${availableTaxYears}"))
     }
 
   private def updateSelectedYears(cy: Option[List[Int]], extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
