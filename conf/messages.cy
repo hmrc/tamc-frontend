@@ -193,17 +193,17 @@ user-status.sign-out	=	Allgofnodi
 #********************************************************************************
 
 
-hmrc.contact-details	=	Gallwch gysylltu &#226; CThEM ar:
+hmrc.contact-details	=	Gallwch ffonio CThEM ar:
 hmrc.contact-details-1	=	Gallwch roi gwybod i CThEM am newid mewn incwm ar:
-hmrc.contact-details-2	=	Ff&#244;n: 0300 200 3300
-hmrc.contact-details-3	=	Ff&#244;n testun: 0300 200 3319
+hmrc.contact-details-2	=	Ff&#244;n: 0300 200 1900
+hmrc.contact-details-3	=   Ff&#244;n testun: 0300 200 3319
 hmrc.contact-details-4	=	Y tu allan i’r DU: +44 135 535 9022
 hmrc.contact-detials.time	=	Oriau agor
-hmrc.contact-details-5	=	08:00 – 20:00, Dydd Llun – Dydd Gwener
+hmrc.contact-details-5	=	08:30 – 17:00 Dydd Llun – Dydd Gwener
 hmrc.contact-details-6	=	08:00 – 16:00, Dydd Sadwrn
-hmrc.contact-details-7	=	Ar gau ar Ddydd Sul a gwyliau’r banc
+hmrc.contact-details-7	=	Ar gau ar Ddydd Sul a gwyliau’r banc.
 hmrc.contact-detials.calling.time	=	Yr amser gorau i gysylltu &#226; ni
-hmrc.contact-details-8	=	Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener
+hmrc.contact-details-8	=	Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener.
 hmrc.contact-details-9	=	<a href="https://www.gov.uk/call-charges"> Gwybodaeth am gost galwadau</a>
 
 
@@ -541,8 +541,9 @@ technical.issue.para1	=	Mae problemau technegol wedi codi
 technical.issue.para2	=	Mae problemau technegol wedi codi. Rhowch gynnig arall arni mewn ychydig o funudau.
 technical.issue.back	=	Dychwelyd i GOV.UK
 technical.other-ways.h1	=	Ffyrdd eraill o wneud cais am Lwfans Priodasol
-technical.other-ways.para1	=	Nid oeddem yn gallu cadarnhau pwy ydych ar-lein. Ffoniwch Gyllid a Thollau EM (CThEM) i wneud cais am Lwfans Priodasol.
-technical.other-ways.para2	=	Bydd angen i chi wybod beth yw’ch rhif Yswiriant Gwladol chi a’ch priod neu bartner sifil pan fyddwch yn ffonio.
+technical.other-ways.para0  =   Gallwch wneud cais am Lwfans Priodasol drwy''ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan ‘gwasanaethau y mae''n bosibl y bydd eu hangen arnoch’.
+technical.other-ways.para1	=	Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
+technical.other-ways.para2	=	Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details	=	Methu dod o hyd i fanylion
 title.technical-error	=	Problem dechnegol
 technical.cannot-find-details.h1	=	Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol

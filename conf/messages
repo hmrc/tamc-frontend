@@ -191,17 +191,17 @@ user-status.sign-out=Sign out
 # Contact details
 #********************************************************************************
 
-hmrc.contact-details = You can contact HMRC on:
+hmrc.contact-details = You can call HMRC on:
 hmrc.contact-details-1=You can let HMRC know of a change in income on:
 hmrc.contact-details-2=Telephone: 0300 200 3300
 hmrc.contact-details-3=Textphone: 0300 200 3319
 hmrc.contact-details-4=Outside UK: +44 135 535 9022
 hmrc.contact-detials.time=Opening times
 hmrc.contact-details-5=8am to 8pm, Monday to Friday
-hmrc.contact-details-6=8am to 4pm Saturday
-hmrc.contact-details-7=Closed Sundays and bank holidays
+hmrc.contact-details-6=8am to 4pm, Saturday
+hmrc.contact-details-7=Closed Sundays and bank holidays.
 hmrc.contact-detials.calling.time=Best time to call
-hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday
+hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday.
 hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about call charges</a>
 
 
@@ -536,9 +536,10 @@ not.authorised=Sorry, you have not been authorised to proceed.
 technical.issue.para1=We are experiencing technical difficulties
 technical.issue.para2=We are having difficulties with the service, try again in a few minutes.
 technical.issue.back=Return to GOV.UK
-technical.other-ways.h1=Other Ways to apply for Marriage Allowance
-technical.other-ways.para1=We were unable to confirm your identity online. Call HM Revenue and Customs (HMRC) to claim Marriage Allowance.
-technical.other-ways.para2=You will need to know you and your partner’s National Insurance number when you call.
+technical.other-ways.h1=Other ways to apply for Marriage Allowance
+technical.other-ways.para0=You can apply for Marriage Allowance through your <a href="https://www.gov.uk/personal-tax-account">personal tax account</a>, under ‘services you might need’. 
+technical.other-ways.para1=You can also call HM Revenue and Customs (HMRC) to make an application.
+technical.other-ways.para2=You will need to know you and your partner’s National Insurance number.
 title.cannot-find-details = Cannot find details
 title.technical-error = Technical Error
 technical.cannot-find-details.h1 = We cannot find your Marriage Allowance details

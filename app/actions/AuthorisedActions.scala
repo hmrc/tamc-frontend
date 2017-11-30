@@ -18,7 +18,7 @@ package actions
 
 import java.net.URI
 
-import config.{ApplicationConfig, TamcContextImpl}
+import config.{ApplicationConfig, TamcContextImpl, TamcFormPartialRetriever}
 import connectors.ApplicationAuditConnector
 import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsSuccessResponse, TamcUser}
 import events.RiskTriageRedirectEvent
@@ -40,11 +40,13 @@ object IdaAuthentificationProvider extends IdaAuthentificationProvider {
   override val login = ApplicationConfig.ivLoginUrl
   override val customAuditConnector = ApplicationAuditConnector
   override val templateRenderer = config.LocalTemplateRenderer
+  override val formPartialRetriever = TamcFormPartialRetriever
 }
 
 trait IdaAuthentificationProvider extends Verify with RunMode with TamcBreadcrumb with JourneyEnforcers {
   val customAuditConnector: AuditConnector
   implicit val templateRenderer: TemplateRenderer
+  implicit val formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 
   override def redirectToLogin(implicit request: Request[_]): Future[Result] =
  {
