@@ -18,7 +18,6 @@ package connectors
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-
 import config.ApplicationConfig
 import models.CreateRelationshipRequestHolder
 import models.GetRelationshipResponse
@@ -28,7 +27,8 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import utils.WSHttp
 import models.RelationshipRecordStatusWrapper
 import models.UpdateRelationshipRequestHolder
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse }
+import play.Logger
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse}
 
 object MarriageAllowanceConnector extends MarriageAllowanceConnector with ServicesConfig {
   override def httpGet = WSHttp
@@ -50,8 +50,10 @@ trait MarriageAllowanceConnector {
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     httpPost.POST(s"${marriageAllowanceUrl}/paye/${transferorNino}/get-recipient-relationship", body = recipientData)
 
-  def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+  def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+    Logger.debug("MarriageAllowanceConnector createRelationship : "+transferorNino.nino.hashCode)
     httpPut.PUT(s"${marriageAllowanceUrl}/paye/${transferorNino}/create-multi-year-relationship/${journey}", data)
+  }
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     httpPut.PUT(s"${marriageAllowanceUrl}/paye/${transferorNino}/update-relationship", data)

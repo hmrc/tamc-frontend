@@ -237,8 +237,8 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
   }
 
   def confirmAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    Logger.info("confirmAction has been called.")
     implicit auth =>
+      Logger.debug("TransferController confirmAction : "+utils.getUserNino(auth).nino.hashCode)
       implicit request =>
         implicit details =>
           EmptyForm.form.bindFromRequest().fold(

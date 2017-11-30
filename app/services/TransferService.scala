@@ -20,7 +20,7 @@ import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors._
 import events._
 import models._
-import play.api.Logger
+import play.Logger
 import play.api.i18n.Lang
 import play.api.libs.json.Json
 import services.UpdateRelationshipService._
@@ -103,12 +103,14 @@ trait TransferService {
       case _ => throw CacheMissingTransferor()
     }
 
-  def createRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
+  def createRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
+    Logger.debug("TransferService createRelationship : "+transferorNino.nino.hashCode)
     doCreateRelationship(transferorNino, journey, lang) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
         throw error
     }
+  }
 
   def getFinishedData(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     for {
@@ -125,7 +127,7 @@ trait TransferService {
     }
 
   private def doCreateRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
-    Logger.info("doCreateRelationship" + journey)
+    Logger.debug("TransferService doCreateRelationship : "+transferorNino.nino.hashCode)
     for {
       cacheData <- cachingService.getCachedData
       validated <- validateCompleteCache(cacheData)
@@ -283,7 +285,7 @@ trait TransferService {
   }
 
   private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {
-    Logger.info("sendCreateRelationship has been called.")
+    Logger.debug("TransferService sendCreateRelationship : "+transferorNino.nino.hashCode)
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, lang), journey) map {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
