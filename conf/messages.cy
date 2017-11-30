@@ -278,7 +278,8 @@ eligibility.check.span.para	=	Er mwyn gwneud cais am Lwfans Priodasol, rhaid i c
 eligibility.check.married	=	A yw hyn yn berthnasol i chi?
 eligibility.check.married.legend	=	A ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon?
 eligibility.check.yes	=	Iawn
-eligibility.check.married.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
+eligibility.check.married.error1	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
+eligibility.check.married.error2	=	Gallwch wneud cais am Lwfans Priodasol os yw'ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
 multiyear.check.income	=	Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible	=	Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
 eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy’n gorfod cael yr incwm lleiaf yn y perthynas (£{0} neu lai’r flwyddyn).
@@ -364,6 +365,7 @@ pages.how-it-works.lede-pre1	=	Mae <a href="https://www.gov.uk/marriage-allowanc
 pages.how-it-works.lede-pre2	=	Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre4	=	Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
 pages.how-it-works.lede-pre5	=	Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2015 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
+pages.how-it-works.lede-pre6	=	Gallwch wneud cais am Lwfans Priodasol os yw'ch partner wedi marw, cyn belled â bod yr amodau'n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
 pages.how-it-works.lede-in	=	Lwfans Personol
 pages.how-it-works.lede-post	=	i’ch partner.
 pages.how-it-works.tse	=	i weld a ydych yn gymwys ar gyfer Lwfans Priodasol
