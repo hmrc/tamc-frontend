@@ -276,7 +276,7 @@ eligibility.check.span.para=To apply for Marriage Allowance, you must be married
 eligibility.check.married=Does this apply to you?
 eligibility.check.married.legend=Are you married or in a legally registered civil partnership?
 eligibility.check.yes = Yes
-eligibility.check.married.error=You are not eligible for Marriage Allowance because you are not married or in a legally registered civil partnership.
+eligibility.check.married.error=You are not eligible for Marriage Allowance because you are not married or in a legally registered civil partnership.</br>You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
 multiyear.check.income=Since 6 April 2015 was your annual income at or below the Personal Allowance level?
 eligibility.check.non-eligible=Based on your answers, you are not eligible for Marriage Allowance.
 eligibility.check.lower.earner.information1=To benefit from Marriage Allowance, you must have the lower income in the relationship (£{0} or less a year).
@@ -362,6 +362,7 @@ pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guid
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
 pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
 pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year since 5 April 2015 that you were eligible for Marriage Allowance.
+pages.how-it-works.lede-pre6=You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
 pages.how-it-works.lede-in=Personal Allowance
 pages.how-it-works.lede-post=to your partner.
 pages.how-it-works.tse=to see if you are eligible for Marriage Allowance
