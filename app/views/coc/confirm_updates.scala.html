@@ -42,7 +42,7 @@
             <div class="form-group booster">
                 <p>
                 <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-                id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatescancel_continue">@Html(Messages("generic.continue"))</a>
+                id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatescancel_continue">@Html(Messages("change.status.continue"))</a>
             </div>
         }
         @if(reason == EndReasonCode.REJECT) {
@@ -56,7 +56,7 @@
                 <div class="form-group booster">
                     <p>
                         <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("generic.continue"))</a>
+                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
                 </div>
 
              }else {
@@ -70,7 +70,7 @@
                 <div class="form-group booster">
                     <p>
                         <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("generic.continue"))</a>
+                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
                 </div>
             }
 
