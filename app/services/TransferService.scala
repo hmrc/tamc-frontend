@@ -104,7 +104,6 @@ trait TransferService {
     }
 
   def createRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
-    Logger.debug("TransferService createRelationship : "+transferorNino.nino.hashCode)
     doCreateRelationship(transferorNino, journey, lang) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
@@ -127,7 +126,6 @@ trait TransferService {
     }
 
   private def doCreateRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
-    Logger.debug("TransferService doCreateRelationship : "+transferorNino.nino.hashCode)
     for {
       cacheData <- cachingService.getCachedData
       validated <- validateCompleteCache(cacheData)
@@ -285,7 +283,6 @@ trait TransferService {
   }
 
   private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {
-    Logger.debug("TransferService sendCreateRelationship : "+transferorNino.nino.hashCode)
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, lang), journey) map {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
