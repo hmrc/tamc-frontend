@@ -16,8 +16,6 @@
 
 package services
 
-import com.sun.glass.ui.Application
-
 import scala.annotation.implicitNotFound
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
