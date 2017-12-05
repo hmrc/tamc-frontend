@@ -246,7 +246,7 @@ trait UpdateRelationshipController extends BaseController with AuthorisedActions
         implicit details =>
           updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(EndReasonCode.CANCEL)) map {
             case endReason =>
-              Ok(views.html.coc.confirm_updates_cancel(endReason.endReason, effectiveUntilDate = timeService.getEffectiveUntilDate(endReason), effectiveDate = Some(timeService.getEffectiveDate(endReason))))
+              Ok(views.html.coc.confirm_updates(endReason.endReason, effectiveUntilDate = timeService.getEffectiveUntilDate(endReason), effectiveDate = Some(timeService.getEffectiveDate(endReason))))
           }
   }
 

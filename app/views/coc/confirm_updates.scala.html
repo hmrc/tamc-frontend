@@ -28,12 +28,14 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
-    
+
+
+
+
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.reason")),
     mainConfig = views.helpers.MainConfig(),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmReject.toString(),
-                                                controllers.routes.LanguageController.switchToWelshConfirmReject.toString()))) {
+    langSwitch =  Some(templates.lang_button(LanguageUtils.switchEnglishLanguage(reason),LanguageUtils.switchWelshLanguage(reason)))) {
         @if(reason == EndReasonCode.CANCEL) {
 
             <h1 class="heading-xlarge" id="cancel-heading" >@Html(Messages("change.status.cancel.h1"))</h1>
