@@ -193,17 +193,17 @@ user-status.sign-out	=	Allgofnodi
 #********************************************************************************
 
 
-hmrc.contact-details	=	Gallwch gysylltu &#226; CThEM ar:
+hmrc.contact-details	=	Gallwch ffonio CThEM ar:
 hmrc.contact-details-1	=	Gallwch roi gwybod i CThEM am newid mewn incwm ar:
-hmrc.contact-details-2	=	Ff&#244;n: 0300 200 3300
-hmrc.contact-details-3	=	Ff&#244;n testun: 0300 200 3319
+hmrc.contact-details-2	=	Ff&#244;n: 0300 200 1900
+hmrc.contact-details-3	=   Ff&#244;n testun: 0300 200 3319
 hmrc.contact-details-4	=	Y tu allan i’r DU: +44 135 535 9022
 hmrc.contact-detials.time	=	Oriau agor
-hmrc.contact-details-5	=	08:00 – 20:00, Dydd Llun – Dydd Gwener
+hmrc.contact-details-5	=	08:30 – 17:00 Dydd Llun – Dydd Gwener
 hmrc.contact-details-6	=	08:00 – 16:00, Dydd Sadwrn
-hmrc.contact-details-7	=	Ar gau ar Ddydd Sul a gwyliau’r banc
+hmrc.contact-details-7	=	Ar gau ar Ddydd Sul a gwyliau’r banc.
 hmrc.contact-detials.calling.time	=	Yr amser gorau i gysylltu &#226; ni
-hmrc.contact-details-8	=	Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener
+hmrc.contact-details-8	=	Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener.
 hmrc.contact-details-9	=	<a href="https://www.gov.uk/call-charges"> Gwybodaeth am gost galwadau</a>
 
 
@@ -433,12 +433,13 @@ change.status.historic-active.result	=	Gallai dileu Lwfans Priodasol o ddechrau�
 change.status.historic-active.directions	=	Gallwch ddileu Lwfans Priodasol o ddechrau’r flwyddyn dreth ({2}) os ydych wedi ysgaru ac mae gennych <a href="{0}">archddyfarniad absoliwt</a>, neu os yw’ch partneriaeth sifil wedi dod i ben ac mae gennych <a href="{1}">orchymyn terfynol</a>. Dyma’r dogfennau sy’n dod &#226;’ch priodas neu’ch partneriaeth sifil i ben yn gyfreithlon.
 change.status.cancel.h1	=	Canslo Lwfans Priodasol
 
+change.status.continue = Yn eich blaen
 change.status.cancel.content	=	Byddwn yn canslo’ch Lwfans Priodasol, ond bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol.
-change.status.cancel.content1	=	Ni fydd eich Lwfans Personol yn cynnwys Lwfans Priodasol o {0}, sef dechrau'r flwyddyn dreth newydd. Ni fydd yn rhaid i'ch partner ad-dalu unrhyw dreth.
+change.status.cancel.content1	=	Ni fydd eich Lwfans Personol yn cynnwys Lwfans Priodasol o {0}, sef dechrau''r flwyddyn dreth newydd. Ni fydd yn rhaid i’ch partner ad-dalu unrhyw dreth.
 change.status.reject.h1	=	Dileu cais blaenorol am Lwfans Priodasol
-change.status.reject.content	=	Gallwch ond ganslo'ch Lwfans Priodasol o ddechrau'r cais, {0}, sef dechrau'r flwyddyn dreth y gawsoch ef am y tro cyntaf.
-change.status.reject.partner = Os yw'ch partner yn canslo'ch Lwfans Priodasol, bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth gyfredol.
-change.status.reject.warning	=	Os byddwch yn parhau, gallai hyn arwain atoch yn peidio â thalu digon o dreth. Rhown wybod i chi a ydych wedi talu'r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, fel arfer byddwn yn ei chasglu drwy addasu'ch cod treth ar gyfer {0}.
+change.status.reject.content	=	Gallwch ond ganslo’ch Lwfans Priodasol o ddechrau’r cais, {0}, sef dechrau’r flwyddyn dreth y cawsoch ef am y tro cyntaf.
+change.status.reject.partner = Os yw’ch partner yn canslo’ch Lwfans Priodasol, bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth gyfredol.
+change.status.reject.warning	=	Gallai hyn arwain atoch yn peidio â thalu digon o dreth. Rhown wybod i chi a ydych wedi talu’r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth ar gyfer {0}.
 change.status.reject.previous.content	=	Gallwch ddileu’r Lwfans Priodasol y gwnaethoch ei hawlio’n flaenorol. Caiff y lwfans ei ddileu o {0}, sef dechrau’r flwyddyn dreth pan gawsoch ef am y tro cyntaf.
 change.status.reject.previous.warning	=	Os byddwch yn parhau, gallai hyn arwain atoch yn peidio â thalu digon o dreth. Rhown wybod i chi a ydych wedi talu'r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, fel arfer byddwn yn ei chasglu drwy addasu'ch cod treth ar gyfer {0}.
 change.status.allowance	=	Statws y lwfans
@@ -540,8 +541,9 @@ technical.issue.para1	=	Mae problemau technegol wedi codi
 technical.issue.para2	=	Mae problemau technegol wedi codi. Rhowch gynnig arall arni mewn ychydig o funudau.
 technical.issue.back	=	Dychwelyd i GOV.UK
 technical.other-ways.h1	=	Ffyrdd eraill o wneud cais am Lwfans Priodasol
-technical.other-ways.para1	=	Nid oeddem yn gallu cadarnhau pwy ydych ar-lein. Ffoniwch Gyllid a Thollau EM (CThEM) i wneud cais am Lwfans Priodasol.
-technical.other-ways.para2	=	Bydd angen i chi wybod beth yw’ch rhif Yswiriant Gwladol chi a’ch priod neu bartner sifil pan fyddwch yn ffonio.
+technical.other-ways.para0  =   Gallwch wneud cais am Lwfans Priodasol drwy''ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan ‘gwasanaethau y mae''n bosibl y bydd eu hangen arnoch’.
+technical.other-ways.para1	=	Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
+technical.other-ways.para2	=	Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details	=	Methu dod o hyd i fanylion
 title.technical-error	=	Problem dechnegol
 technical.cannot-find-details.h1	=	Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol

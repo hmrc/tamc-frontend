@@ -191,17 +191,17 @@ user-status.sign-out=Sign out
 # Contact details
 #********************************************************************************
 
-hmrc.contact-details = You can contact HMRC on:
+hmrc.contact-details = You can call HMRC on:
 hmrc.contact-details-1=You can let HMRC know of a change in income on:
 hmrc.contact-details-2=Telephone: 0300 200 3300
 hmrc.contact-details-3=Textphone: 0300 200 3319
 hmrc.contact-details-4=Outside UK: +44 135 535 9022
 hmrc.contact-detials.time=Opening times
 hmrc.contact-details-5=8am to 8pm, Monday to Friday
-hmrc.contact-details-6=8am to 4pm Saturday
-hmrc.contact-details-7=Closed Sundays and bank holidays
+hmrc.contact-details-6=8am to 4pm, Saturday
+hmrc.contact-details-7=Closed Sundays and bank holidays.
 hmrc.contact-detials.calling.time=Best time to call
-hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday
+hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday.
 hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about call charges</a>
 
 
@@ -428,14 +428,15 @@ change.status.historic-active.result=Removing Marriage Allowance from the start 
 change.status.historic-active.directions=You can remove Marriage Allowance from the start of the tax year ({2}) if you have divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.cancel.h1=Cancelling Marriage Allowance
 
+change.status.continue=Continue
 change.status.cancel.content=We will cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
 change.status.cancel.content1=Your Personal Allowance will not include any Marriage Allowance from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
 change.status.reject.h1=Remove a previous Marriage Allowance claim
 change.status.reject.content=You can only cancel your Marriage Allowance from the start of the claim, {0}, the start of the tax year you first received it.
 change.status.reject.partner=If your partner cancels your Marriage Allowance, it will remain in place until {0}, the end of the current tax year.
-change.status.reject.warning=This could result in you not paying enough tax. We will let you know if you have paid the right amount of tax at the end of the tax year. If you have not paid enough, we will usually collect it by adjusting your tax code for {0}.
+change.status.reject.warning=If you continue, this could result in you not paying enough tax. We will let you know if you have paid the right amount of tax at the end of the tax year. If you have not paid enough, we will usually collect it by adjusting your tax code for {0}.
 change.status.reject.previous.content=You can remove the Marriage Allowance you claimed previously. The allowance will be removed from {0}, the start of the tax year you first received it.
-change.status.reject.previous.warning=This could result in you not paying enough tax. We will let you know if you have paid the right amount of tax at the end of the tax year. If you have not paid enough, we will usually collect it by adjusting your tax code for {0}.
+change.status.reject.previous.warning=This could result in you underpaying tax. We will let you know if you have paid the right amount of tax at the end of the tax year. If you have not paid enough, we will usually collect it by adjusting your tax code.
 change.status.allowance=Allowance status
 change.status.realtionship-end=Reason for cancellation
 change.status.confirm-removal.button=Confirm removal
@@ -535,9 +536,10 @@ not.authorised=Sorry, you have not been authorised to proceed.
 technical.issue.para1=We are experiencing technical difficulties
 technical.issue.para2=We are having difficulties with the service, try again in a few minutes.
 technical.issue.back=Return to GOV.UK
-technical.other-ways.h1=Other Ways to apply for Marriage Allowance
-technical.other-ways.para1=We were unable to confirm your identity online. Call HM Revenue and Customs (HMRC) to claim Marriage Allowance.
-technical.other-ways.para2=You will need to know you and your partner’s National Insurance number when you call.
+technical.other-ways.h1=Other ways to apply for Marriage Allowance
+technical.other-ways.para0=You can apply for Marriage Allowance through your <a href="https://www.gov.uk/personal-tax-account">personal tax account</a>, under ‘services you might need’. 
+technical.other-ways.para1=You can also call HM Revenue and Customs (HMRC) to make an application.
+technical.other-ways.para2=You will need to know you and your partner’s National Insurance number.
 title.cannot-find-details = Cannot find details
 title.technical-error = Technical Error
 technical.cannot-find-details.h1 = We cannot find your Marriage Allowance details

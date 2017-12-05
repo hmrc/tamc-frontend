@@ -17,6 +17,7 @@
 package test_utils
 
 import actions.{IdaAuthentificationProvider, MarriageAllowanceRegime}
+import config.TamcFormPartialRetriever
 import connectors.{ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
 import controllers.{AuthorisationController, UpdateRelationshipController}
 import details.{CitizenDetailsService, Person, PersonDetails, PersonDetailsSuccessResponse}
@@ -174,6 +175,7 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
     val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
       override val login = "bar"
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+      override implicit val formPartialRetriever = TamcFormPartialRetriever
       override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
         nino match {
           case Some(validNino) => throw new IllegalArgumentException
