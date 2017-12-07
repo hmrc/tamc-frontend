@@ -193,17 +193,17 @@ user-status.sign-out	=	Allgofnodi
 #********************************************************************************
 
 
-hmrc.contact-details	=	Gallwch gysylltu &#226; CThEM ar:
+hmrc.contact-details	=	Gallwch ffonio CThEM ar:
 hmrc.contact-details-1	=	Gallwch roi gwybod i CThEM am newid mewn incwm ar:
-hmrc.contact-details-2	=	Ff&#244;n: 0300 200 3300
-hmrc.contact-details-3	=	Ff&#244;n testun: 0300 200 3319
+hmrc.contact-details-2	=	Ff&#244;n: 0300 200 1900
+hmrc.contact-details-3	=   Ff&#244;n testun: 0300 200 3319
 hmrc.contact-details-4	=	Y tu allan i’r DU: +44 135 535 9022
 hmrc.contact-detials.time	=	Oriau agor
-hmrc.contact-details-5	=	08:00 – 20:00, Dydd Llun – Dydd Gwener
+hmrc.contact-details-5	=	08:30 – 17:00 Dydd Llun – Dydd Gwener
 hmrc.contact-details-6	=	08:00 – 16:00, Dydd Sadwrn
-hmrc.contact-details-7	=	Ar gau ar Ddydd Sul a gwyliau’r banc
+hmrc.contact-details-7	=	Ar gau ar Ddydd Sul a gwyliau’r banc.
 hmrc.contact-detials.calling.time	=	Yr amser gorau i gysylltu &#226; ni
-hmrc.contact-details-8	=	Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener
+hmrc.contact-details-8	=	Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener.
 hmrc.contact-details-9	=	<a href="https://www.gov.uk/call-charges"> Gwybodaeth am gost galwadau</a>
 
 
@@ -278,7 +278,8 @@ eligibility.check.span.para	=	Er mwyn gwneud cais am Lwfans Priodasol, rhaid i c
 eligibility.check.married	=	A yw hyn yn berthnasol i chi?
 eligibility.check.married.legend	=	A ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon?
 eligibility.check.yes	=	Iawn
-eligibility.check.married.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
+eligibility.check.married.error1	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
+eligibility.check.married.error2	=	Gallwch wneud cais am Lwfans Priodasol os yw'ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
 multiyear.check.income	=	Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible	=	Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
 eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy’n gorfod cael yr incwm lleiaf yn y perthynas (£{0} neu lai’r flwyddyn).
@@ -364,6 +365,7 @@ pages.how-it-works.lede-pre1	=	Mae <a href="https://www.gov.uk/marriage-allowanc
 pages.how-it-works.lede-pre2	=	Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre4	=	Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
 pages.how-it-works.lede-pre5	=	Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2015 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
+pages.how-it-works.lede-pre6	=	Gallwch wneud cais am Lwfans Priodasol os yw'ch partner wedi marw, cyn belled â bod yr amodau'n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
 pages.how-it-works.lede-in	=	Lwfans Personol
 pages.how-it-works.lede-post	=	i’ch partner.
 pages.how-it-works.tse	=	i weld a ydych yn gymwys ar gyfer Lwfans Priodasol
@@ -539,8 +541,9 @@ technical.issue.para1	=	Mae problemau technegol wedi codi
 technical.issue.para2	=	Mae problemau technegol wedi codi. Rhowch gynnig arall arni mewn ychydig o funudau.
 technical.issue.back	=	Dychwelyd i GOV.UK
 technical.other-ways.h1	=	Ffyrdd eraill o wneud cais am Lwfans Priodasol
-technical.other-ways.para1	=	Nid oeddem yn gallu cadarnhau pwy ydych ar-lein. Ffoniwch Gyllid a Thollau EM (CThEM) i wneud cais am Lwfans Priodasol.
-technical.other-ways.para2	=	Bydd angen i chi wybod beth yw’ch rhif Yswiriant Gwladol chi a’ch priod neu bartner sifil pan fyddwch yn ffonio.
+technical.other-ways.para0  =   Gallwch wneud cais am Lwfans Priodasol drwy''ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan ‘gwasanaethau y mae''n bosibl y bydd eu hangen arnoch’.
+technical.other-ways.para1	=	Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
+technical.other-ways.para2	=	Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details	=	Methu dod o hyd i fanylion
 title.technical-error	=	Problem dechnegol
 technical.cannot-find-details.h1	=	Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol

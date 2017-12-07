@@ -20,7 +20,7 @@ import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors._
 import events._
 import models._
-import play.api.Logger
+import play.Logger
 import play.api.i18n.Lang
 import play.api.libs.json.Json
 import services.UpdateRelationshipService._
@@ -103,12 +103,13 @@ trait TransferService {
       case _ => throw CacheMissingTransferor()
     }
 
-  def createRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
+  def createRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
     doCreateRelationship(transferorNino, journey, lang) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
         throw error
     }
+  }
 
   def getFinishedData(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     for {
@@ -125,7 +126,6 @@ trait TransferService {
     }
 
   private def doCreateRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
-    Logger.info("doCreateRelationship" + journey)
     for {
       cacheData <- cachingService.getCachedData
       validated <- validateCompleteCache(cacheData)
@@ -254,10 +254,10 @@ trait TransferService {
     for {
       recipient <- getEligibleYears
     } yield (
-      !recipient.aivailableTaxYears.filter {
+      !recipient.availableTaxYears.filter {
         _.year == timeService.getCurrentTaxYear
       }.isEmpty,
-      recipient.aivailableTaxYears.filter {
+      recipient.availableTaxYears.filter {
         _.year != timeService.getCurrentTaxYear
       },
       recipient)
@@ -283,7 +283,6 @@ trait TransferService {
   }
 
   private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {
-    Logger.info("sendCreateRelationship has been called.")
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, lang), journey) map {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
@@ -300,29 +299,35 @@ trait TransferService {
   def saveSelectedYears(recipient: RecipientRecord, selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cachingService.saveSelectedYears(selectedYears)
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
-    updateSelectedYears(recipient, List(extraYear).filter(_ > 0))
+  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int, yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
+    updateSelectedYears(recipient, List(extraYear).filter(_ > 0), yearAvailableForSelection: Option[Int])
   }
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     for {
       cache <- cachingService.getCachedData
       updatedYears <- updateSelectedYears(cache.get.selectedYears, extraYears)
-      validatedSelectedYears <- validateSelectedYears(recipient.aivailableTaxYears, updatedYears)
+      validatedSelectedYears <- validateSelectedYears(recipient.availableTaxYears, updatedYears, yearAvailableForSelection)
       savedYears <- cachingService.saveSelectedYears(validatedSelectedYears)
     } yield savedYears
 
-  def validateSelectedYears(aivailableTaxYears: List[TaxYear], selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
-    if (selectedYears.isEmpty) {
+  def validateSelectedYears(availableTaxYears: List[TaxYear], selectedYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+    if (selectedYears.isEmpty && yearAvailableForSelection.isDefined && availableTaxYears.nonEmpty && yearAvailableForSelection.get == availableTaxYears.last.year) {
       throw new NoTaxYearsSelected
-    } else if (selectedYears.forall {
-      aivailableTaxYears.map(_.year).contains(_)
+    } else if (selectedYears.isEmpty) {
+      Future {
+        selectedYears
+      }
+    }
+
+    else if (selectedYears.forall {
+      availableTaxYears.map(_.year).contains(_)
     }) {
       Future {
         selectedYears
       }
     } else {
-      Future.failed(new IllegalArgumentException(s"${selectedYears} is not a subset of ${aivailableTaxYears}"))
+      Future.failed(new IllegalArgumentException(s"${selectedYears} is not a subset of ${availableTaxYears}"))
     }
 
   private def updateSelectedYears(cy: Option[List[Int]], extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =

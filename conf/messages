@@ -190,17 +190,17 @@ user-status.sign-out=Sign out
 # Contact details
 #********************************************************************************
 
-hmrc.contact-details = You can contact HMRC on:
+hmrc.contact-details = You can call HMRC on:
 hmrc.contact-details-1=You can let HMRC know of a change in income on:
 hmrc.contact-details-2=Telephone: 0300 200 3300
 hmrc.contact-details-3=Textphone: 0300 200 3319
 hmrc.contact-details-4=Outside UK: +44 135 535 9022
 hmrc.contact-detials.time=Opening times
 hmrc.contact-details-5=8am to 8pm, Monday to Friday
-hmrc.contact-details-6=8am to 4pm Saturday
-hmrc.contact-details-7=Closed Sundays and bank holidays
+hmrc.contact-details-6=8am to 4pm, Saturday
+hmrc.contact-details-7=Closed Sundays and bank holidays.
 hmrc.contact-detials.calling.time=Best time to call
-hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday
+hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday.
 hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about call charges</a>
 
 
@@ -275,7 +275,8 @@ eligibility.check.span.para=To apply for Marriage Allowance, you must be married
 eligibility.check.married=Does this apply to you?
 eligibility.check.married.legend=Are you married or in a legally registered civil partnership?
 eligibility.check.yes = Yes
-eligibility.check.married.error=You are not eligible for Marriage Allowance because you are not married or in a legally registered civil partnership.
+eligibility.check.married.error1=You are not eligible for Marriage Allowance because you are not married or in a legally registered civil partnership.
+eligibility.check.married.error2=You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
 multiyear.check.income=Since 6 April 2015 was your annual income at or below the Personal Allowance level?
 eligibility.check.non-eligible=Based on your answers, you are not eligible for Marriage Allowance.
 eligibility.check.lower.earner.information1=This is before any tax is deducted.
@@ -361,6 +362,7 @@ pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guid
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
 pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
 pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year since 5 April 2015 that you were eligible for Marriage Allowance.
+pages.how-it-works.lede-pre6=You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
 pages.how-it-works.lede-in=Personal Allowance
 pages.how-it-works.lede-post=to your partner.
 pages.how-it-works.tse=to see if you are eligible for Marriage Allowance
@@ -533,9 +535,10 @@ not.authorised=Sorry, you have not been authorised to proceed.
 technical.issue.para1=We are experiencing technical difficulties
 technical.issue.para2=We are having difficulties with the service, try again in a few minutes.
 technical.issue.back=Return to GOV.UK
-technical.other-ways.h1=Other Ways to apply for Marriage Allowance
-technical.other-ways.para1=We were unable to confirm your identity online. Call HM Revenue and Customs (HMRC) to claim Marriage Allowance.
-technical.other-ways.para2=You will need to know you and your partner’s National Insurance number when you call.
+technical.other-ways.h1=Other ways to apply for Marriage Allowance
+technical.other-ways.para0=You can apply for Marriage Allowance through your <a href="https://www.gov.uk/personal-tax-account">personal tax account</a>, under ‘services you might need’. 
+technical.other-ways.para1=You can also call HM Revenue and Customs (HMRC) to make an application.
+technical.other-ways.para2=You will need to know you and your partner’s National Insurance number.
 title.cannot-find-details = Cannot find details
 title.technical-error = Technical Error
 technical.cannot-find-details.h1 = We cannot find your Marriage Allowance details

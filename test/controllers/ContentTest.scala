@@ -511,7 +511,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
@@ -538,7 +538,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
       val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
       val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, aivailableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
         recipient = Some(recrecord),
