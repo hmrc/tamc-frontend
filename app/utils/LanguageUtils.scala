@@ -18,8 +18,31 @@ package utils
 
 import play.api.i18n.Lang
 import config.ApplicationConfig
+import models.EndReasonCode
 
 object LanguageUtils {
+
   def isWelsh(lang: Lang) =
     ApplicationConfig.LANG_LANG_WELSH == lang.language
+
+
+  def switchWelshLanguage(endReasonCode: String): String = {
+    if(endReasonCode == EndReasonCode.CANCEL) {
+      controllers.routes.LanguageController.switchToWelshConfirmCancel.toString()
+    } else {
+      controllers.routes.LanguageController.switchToWelshConfirmReject.toString()
+    }
+  }
+
+
+  def switchEnglishLanguage(endReasonCode: String): String = {
+    if(endReasonCode == EndReasonCode.CANCEL){
+      controllers.routes.LanguageController.switchToEnglishConfirmCancel.toString()
+
+    } else {
+      controllers.routes.LanguageController.switchToEnglishConfirmReject.toString()
+
+    }
+  }
+
 }
