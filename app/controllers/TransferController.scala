@@ -289,6 +289,7 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
           case _: NoTaxYearsSelected => handle(message, Logger.info, Ok(views.html.errors.no_year_selected()))
           case _: NoTaxYearsAvailable => handle(message, Logger.info, Ok(views.html.errors.no_eligible_years()))
           case _: NoTaxYearsForTransferor => handle(message, Logger.info, InternalServerError(views.html.errors.no_tax_year_transferor()))
+          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _ => handle(message, Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }
