@@ -21,6 +21,7 @@ import config.TamcFormPartialRetriever
 import connectors.{ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
 import controllers._
 import details._
+import errors.ErrorResponseStatus.RELATION_MIGHT_BE_CREATED
 import models._
 import org.joda.time.DateTime
 import play.api.Application
@@ -425,6 +426,8 @@ trait TestUtility extends UnitSpec {
       ("user_has_relationship" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithRelationship), makeController(Some(Ninos.ninoWithRelationship), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
       ("transferor_cid_not_found" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorNotFound), makeController(Some(Ninos.ninoTransferorNotFound), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
       ("transferor_deceased" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorDeceased), makeController(Some(Ninos.ninoTransferorDeceased), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("conflict_409" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithConflict), makeController(Some(Ninos.ninoWithConflict), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
+      ("ltm000503" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLTM000503), makeController(Some(Ninos.ninoWithLTM000503), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
       ("throw_error" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoError), makeController(Some(Ninos.ninoError), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
       ("not_logged_in" -> TestComponent(FakeRequest(), makeController(None, None, None, None, cocEnabledTestInput, pd, testingTime, testCacheData))),
       ("not_authorised" -> TestComponent(makeFakeRequest("ID-NOT_AUTHORISED"), makeController(Some("NINO_NOT_AUTHORISED"), None, None, None, cocEnabledTestInput, pd, testingTime, testCacheData))))
@@ -576,6 +579,17 @@ trait TestUtility extends UnitSpec {
       override def httpPut: HttpPut = fakeHttpPut
 
       override val marriageAllowanceUrl = "foo"
+
+      override def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
+        transferorNino.nino match {
+          case TestData.Ninos.ninoWithConflict => Future.successful(HttpResponse(200, Some(Json.toJson(CreateRelationshipResponse(
+            status = ResponseStatus(status_code = RELATION_MIGHT_BE_CREATED))))))
+          case TestData.Ninos.ninoWithLTM000503 =>  Future.successful(HttpResponse(200, Some(Json.toJson(CreateRelationshipResponse(
+            status = ResponseStatus(status_code = RELATION_MIGHT_BE_CREATED))))))
+          case _ => super.createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)
+        }
+
+      }
     }
 
     val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
