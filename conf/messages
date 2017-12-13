@@ -150,7 +150,7 @@ radio.no=No
 title.pattern={0} - Marriage Allowance - GOV.UK
 title.eligibility.pattern={0} - Marriage Allowance eligibility - GOV.UK
 title.application.pattern={0} - Marriage Allowance application - GOV.UK
-title.dateOfBirth=Your date of birth
+title.dateOfBirth=Were you and your partner born after 5 April 1935?
 title.eligible-years=Apply for the current tax year
 title.extra-years=Apply for earlier tax years
 title.transfer-in-place=Transfer in place
@@ -159,7 +159,6 @@ title.finished=Application confirmed
 title.confirm-email=Confirm your email address
 title.non-eligible=You are not eligible in the current tax year
 title.no-tax-years=No tax years available
-title.eligibility=Your relationship
 title.confirm-transferor=Confirm cancellation
 title.confirm-recipient=Confirm removal of a previous claim
 title.confirm-update=Confirm Update
@@ -270,7 +269,7 @@ pages.confirm.html.check-details=Check the details you have entered and confirm 
 #********************************************************************************
 
 eligibility.check.header=Your eligibility
-eligibility.check.h1=Your relationship
+eligibility.check.h1=Are you married or in a civil partnership?
 eligibility.check.span.h1=Check your eligibility
 eligibility.check.span.para=To apply for Marriage Allowance, you must be married or in a civil partnership.
 eligibility.check.married=Does this apply to you?
@@ -280,21 +279,21 @@ eligibility.check.married.error1=You are not eligible for Marriage Allowance bec
 eligibility.check.married.error2=You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
 multiyear.check.income=Since 6 April 2015 was your annual income at or below the Personal Allowance level?
 eligibility.check.non-eligible=Based on your answers, you are not eligible for Marriage Allowance.
-eligibility.check.lower.earner.information1=To benefit from Marriage Allowance, you must have the lower income in the relationship (£{0} or less a year).
+eligibility.check.lower.earner.information1=This is before any tax is deducted.
 eligibility.check.lower.earner.information2= This is before any tax is deducted.
-eligibility.check.lower.earner.h1=Your income
+eligibility.check.lower.earner.h1=Is your income less than £{0} a year?
 eligibility.check.lower.earner.question=Does this apply to you?
-eligibility.check.lower.earner.error=You might not benefit from Marriage Allowance in this tax year because your income is over  £{0}.  You can still continue to check whether you will benefit for previous years if your income was lower in the past.
-eligibility.check.partners.income.h1=Your partner’s income
-eligibility.check.partners.income.information1=To be eligible for Marriage Allowance, your partner must have an income between £{0} and £{1} a year (or £43,000 if you live in Scotland).
+eligibility.check.lower.earner.error=You might not benefit from Marriage Allowance in this tax year because your income is over £{0}. You can still apply for previous years if your income was lower in the past.
+eligibility.check.partners.income.h1=Is your partner’s income between £{0} and £{1} a year?
+eligibility.check.partners.income.information1=If you live in Scotland their income must be between £{0} and £{1} a year.
 eligibility.check.partners.income.information2=This is before any tax is deducted.
 eligibility.check.partners.income.h2=Does this apply to your partner?
 eligibility.check.partners.income.before.tax=This is their income figure before any tax is deducted.
-eligibility.check.partners.income.error=You are not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still continue to check your eligibility for previous years.
-eligibility.check.date.of.birth.h1=You and your partner’s date of birth
+eligibility.check.partners.income.error=You are not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still apply for previous years if their income was higher or lower in the past.
+eligibility.check.date.of.birth.h1=Were you and your partner born after 5 April 1935?
 eligibility.check.date.of.birth.span.para=To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935.
 eligibility.check.date.of.birth.span.married=Does this apply to you and your partner?
-eligibility.check.date.of.birth.error=If you or your partner were born before 6 April 1935, you might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" data-journey-click="marriage-allowance:outboundlink:married_couples-link" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still choose to continue and apply for Marriage Allowance instead. But you cannot receive both Marriage Allowance and Married Couple’s Allowance at the same time.
+eligibility.check.date.of.birth.error=You might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" data-journey-click="marriage-allowance:outboundlink:married_couples-link" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
 
 
 #********************************************************************************

@@ -16,6 +16,9 @@
 
 package controllers
 
+import java.text.NumberFormat
+
+import config.ApplicationConfig
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
@@ -771,10 +774,9 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
       val elements = document.getElementById("eligibility-form").getElementsByTag("p")
       elements shouldNot be(null)
-      elements.get(0).text shouldBe "Does this apply to you?"
     }
 
     "diplay errors as none of the radio buttons are selected " in {
@@ -806,10 +808,9 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your relationship - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
       val elements = document.getElementById("eligibility-form").getElementsByTag("p")
       elements shouldNot be(null)
-      elements.get(0).text shouldBe "Does this apply to you?"
     }
 
     "diplay errors as none of the radio buttons are selected " in {
@@ -842,10 +843,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
-      document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
 
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you and your partner?"
-      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
     }
   }
 
@@ -859,10 +858,9 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
 
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship (£11,500 or less a year). This is before any tax is deducted."
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
   }
 
@@ -876,11 +874,14 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Is your partner’s income between £11,501 and £45,000 a year? - Marriage Allowance eligibility - GOV.UK"
 
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
-      document.getElementsByClass("information").text shouldBe "To be eligible for Marriage Allowance, your partner must have an income between £11,501 and £45,000 a year (or £43,000 if you live in Scotland). This is before any tax is deducted."
-      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Your partner’s income"
+      val baseLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val upperLimitScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("information").text shouldBe (s"If you live in Scotland their income must be between £$baseLimit and £$upperLimitScot a year.")
+      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Is your partner’s income between £11,501 and £45,000 a year?"
     }
   }
 
@@ -893,9 +894,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your date of birth - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you and your partner?"
-      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935."
+      document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
     }
   }
 
@@ -908,9 +907,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your income - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to you?"
-      document.getElementsByClass("Information").text shouldBe "To benefit from Marriage Allowance, you must have the lower income in the relationship (£11,500 or less a year). This is before any tax is deducted."
+      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
   }
 
@@ -921,11 +919,13 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.partnersIncomeCheck()(request)
 
+      val baseLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val upperLimitScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Your partner’s income - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "Does this apply to your partner?"
-      document.getElementsByClass("Information").text shouldBe "To be eligible for Marriage Allowance, your partner must have an income between £11,501 and £45,000 a year (or £43,000 if you live in Scotland). This is before any tax is deducted."
+      document.title() shouldBe "Is your partner’s income between £11,501 and £45,000 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$baseLimit and £$upperLimitScot a year."
     }
   }
 

@@ -272,7 +272,7 @@ pages.confirm.html.check-details	=	Dylech wirio’r manylion yr ydych wedi’i r
 
 
 eligibility.check.header	=	A ydych yn gymwys?
-eligibility.check.h1	=	Eich perthynas
+eligibility.check.h1	=	A ydych yn briod neu mewn partneriaeth sifil?
 eligibility.check.span.h1	=	Gwiriwch a ydych yn gymwys
 eligibility.check.span.para	=	Er mwyn gwneud cais am Lwfans Priodasol, rhaid i chi fod yn briod neu mewn partneriaeth sifil.
 eligibility.check.married	=	A yw hyn yn berthnasol i chi?
@@ -283,20 +283,20 @@ eligibility.check.married.error2	=	Gallwch wneud cais am Lwfans Priodasol os yw'
 multiyear.check.income	=	Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible	=	Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
 eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy’n gorfod cael yr incwm lleiaf yn y perthynas (£{0} neu lai’r flwyddyn).
-eligibility.check.lower.earner.information2	=	Mae hyn cyn didynnu treth.
-eligibility.check.lower.earner.h1	=	Eich incwm
+eligibility.check.lower.earner.information2	=	Mae hyn cyn y didynnir unrhyw dreth.
+eligibility.check.lower.earner.h1	=	A yw’ch incwm yn llai na £{0} y flwyddyn?
 eligibility.check.lower.earner.question	=	A yw hyn yn berthnasol i chi?
-eligibility.check.lower.earner.error	=	Mae’n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm dros £{0}.  Mae’n dal yn bosibl i chi wirio a fyddwch yn elwa ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
-eligibility.check.partners.income.h1	=	Incwm eich partner
-eligibility.check.partners.income.information1	=	Er mwyn bod yn gymwys am Lwfans Priodasol, mae’n rhaid bod gan eich partner incwm rhwng £{0} a £{1} y flwyddyn (neu £43,000 os ydych yn byw yn yr Alban).
-eligibility.check.partners.income.information2	=	Dyma ffigur ei (h)incwm cyn didynnu treth.
+eligibility.check.lower.earner.error	=	Mae''n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm dros £{0}. Mae''n dal yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
+eligibility.check.partners.income.h1	=	A yw incwm eich partner rhwng £{0} a £{1} y flwyddyn?
+eligibility.check.partners.income.information1	=	Os ydych yn byw''n yr Alban, mae''n rhaid bod yr incwm rhwng £{0} a £{1} y flwyddyn.
+eligibility.check.partners.income.information2	=	Mae hyn cyn y didynnir unrhyw dreth.
 eligibility.check.partners.income.h2	=	A yw hyn yn berthnasol i’ch partner?
 eligibility.check.partners.income.before.tax	=	Mae hyn cyn didynnu treth.
-eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu’n rhy isel. Mae’n dal yn bosibl i chi wirio’ch cymhwyster am flynyddoedd blaenorol.
-eligibility.check.date.of.birth.h1  =   Eich dyddiad geni chi a’ch partner
+eligibility.check.partners.income.error	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal i fod yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd ei incwm yn is neu''n uwch yn y gorffennol.
+eligibility.check.date.of.birth.h1  =   A gawsoch chi neu''ch partner eich geni ar ôl 5 Ebrill 1935?
 eligibility.check.date.of.birth.span.para   =   I elwa o Lwfans Priodasol, dylai’ch dyddiad geni chi a’ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
 eligibility.check.date.of.birth.span.married    =   A yw hyn yn berthnasol i chi a’ch partner?
-eligibility.check.date.of.birth.error   =   Os yw’ch dyddiad geni chi neu’ch partner cyn 6 Ebrill 1935, efallai y gallwch elwa’n fwy fel p&#226;r os gwnewch gais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae’n dal i fod yn bosibl i chi barhau a gwneud cais am Lwfans Priodasol yn ei le. Fodd bynnag, ni allwch gael Lwfans Priodasol a Lwfans P&#226;r Priod ar yr un pryd.
+eligibility.check.date.of.birth.error   =   Mae''n bosibl y byddwch yn elwa mwy fel pâr drwy wneud cais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi wneud cais am Lwfans Priodasol ond ni allwch gael Lwfans Priodasol a Lwfans Pâr Priod ar yr un pryd.
 
 
 #********************************************************************************
