@@ -772,6 +772,44 @@ class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with One
       eventsShouldMatch(event, "TxFailed", detailsToCheck, tags)
     }
 
+    "redirect to transfer/history page if recieves 409-conflict TAMC:ERROR:RELATION-MIGHT-BE-CREATED from" in {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoHappyPath), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2015))))
+      val testComponent = makeTestComponent("conflict_409", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmAction(request)
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
+    }
+
+    "redirect to transfer/history page if recieves 503-LTM000503 TAMC:ERROR:RELATION-MIGHT-BE-CREATED from" in {
+      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
+      val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoHappyPath), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
+      val trRecipientData = Some(CacheData(
+        transferor = Some(trrec),
+        recipient = Some(recrecord),
+        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
+        selectedYears = Some(List(2015))))
+      val testComponent = makeTestComponent("ltm000503", transferorRecipientData = trRecipientData)
+      val controllerToTest = testComponent.controller
+      val request = testComponent.request
+      val result = controllerToTest.confirmAction(request)
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("/marriage-allowance-application/history")
+    }
+
   }
 
   "Confirm your email page" should {

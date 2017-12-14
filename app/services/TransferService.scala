@@ -18,6 +18,7 @@ package services
 
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors._
+import errors.ErrorResponseStatus._
 import events._
 import models._
 import play.Logger
@@ -25,6 +26,7 @@ import play.api.i18n.Lang
 import play.api.libs.json.Json
 import services.UpdateRelationshipService._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
@@ -33,7 +35,6 @@ import utils.LanguageUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.HeaderCarrier
 
 object TransferService extends TransferService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
@@ -287,7 +288,9 @@ trait TransferService {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
           case CreateRelationshipResponse(ResponseStatus("OK")) => data
-          case CreateRelationshipResponse(ResponseStatus("TAMC:ERROR:CANNOT-CREATE-RELATIONSHIP")) => throw CannotCreateRelationship()
+          case CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP)) => throw CannotCreateRelationship()
+          case CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED)) => throw RelationshipMightBeCreated()
+
         }
     } recover {
       case error =>
