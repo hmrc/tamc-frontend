@@ -496,17 +496,15 @@ p.blue-underline-large {
 .calculator-apply-link {
     padding-top: 7px;
 }
-
-.available-languages {
-    width: 100%;
+.lang-select{
+    border-bottom: 0px;
+    float: right;
+    padding: 0.65em 0px;
     text-align: right;
-    padding: 0 0px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+    width: 100%;
     font-size: 16px;
-    margin-top: 10px;
-}
+    }
+
 .nowrap{
     white-space: nowrap
 }
