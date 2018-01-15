@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,7 @@ import uk.gov.hmrc.play.breadcrumb.model.{Breadcrumb, BreadcrumbItem}
 trait TamcBreadcrumb extends BreadcrumbFactory {
 
   private[this] lazy val defaultBreadcrumb = {
-    Breadcrumb(Vector(BreadcrumbItem("Account Home", "/personal-account"),
-      BreadcrumbItem("Income Tax", "/check-income-tax/income-tax"),
+    Breadcrumb(Vector(BreadcrumbItem("Income Tax", "/check-income-tax/income-tax"),
       BreadcrumbItem("", "#")))
   }
   implicit override def buildBreadcrumb(implicit request: Request[_]): Breadcrumb = defaultBreadcrumb
