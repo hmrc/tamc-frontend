@@ -37,7 +37,7 @@
         maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished"))),
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishFinishUpdate.toString(),
                                             controllers.routes.LanguageController.switchToWelshFinishUpdate.toString()))) {
-        <div class="highlighted-event">
+        <div class="highlighted-event govuk-box-highlight">
             <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">
              @Html(Messages("pages.coc.finish.header"))</h1>
         </div>

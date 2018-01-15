@@ -96,9 +96,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 }
 
 @commonContentHeader = {
-   <!-- @if(user.isDefined && !breadcrumb.isEmpty && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        @breadcrumbTag(breadcrumb, false)
-    }-->
 
     @if(user.isDefined && !utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
         <div class="align-right">
