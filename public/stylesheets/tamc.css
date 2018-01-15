@@ -183,15 +183,15 @@ div.last-login>p {
     margin-top: 45px;
     border-bottom: 5px solid #005EA5;
 }
-.highlighted-event {
+.govuk-box-highlight {
 	margin: 0 -0.1em 1em;
     display: inline-block;
 }
-.highlighted-event h1 {
+.govuk-box-highlight h1 {
     color: #fff;
     margin: 0 0em 1em;
 }
-.highlighted-event h1.heading-large{
+.govuk-box-highlight h1.heading-large{
     margin-bottom: 0.55556em;
     margin-top: .8em;
 }

@@ -96,9 +96,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 }
 
 @commonContentHeader = {
-    @if(user.isDefined && !breadcrumb.isEmpty && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
+   <!-- @if(user.isDefined && !breadcrumb.isEmpty && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
         @breadcrumbTag(breadcrumb, false)
-    }
+    }-->
 
     @if(user.isDefined && !utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
         <div class="align-right">
@@ -195,6 +195,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
         "linkElems" -> Map(
             "url" -> routes.Assets.at("stylesheets/tamc.css")
          ),
+        "assetsPath" -> "http://localhost:9032/assets/3.0.2/",
         "hasNavLinks" -> true,
         "navTitle" -> titleName,
         "removeServiceInfo" -> false,
