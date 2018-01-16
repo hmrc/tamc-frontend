@@ -53,9 +53,9 @@
 			<div class="grid-row" >
 				@if(activeRecord) {
 					@if(activeRelationship.get.participant == "Transferor") {
-						<p class="lede" id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
+						<p class="lede column-full" id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
 					} else {
-						<p class="lede" id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
+						<p class="lede column-full" id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
 					}
 				}
 				<div class="column-two-thirds">
