@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package config
 
-case class EarlierYearsInput(selectedYear: Int, furtherYears: List[Int], yearAvailableForSelection: Option[Int])
+import uk.gov.hmrc.http.HttpGet
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+
+object TamcFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
+   override def httpGet: HttpGet = WSHttp
+   override val crypto = encryptCookieString _
+}

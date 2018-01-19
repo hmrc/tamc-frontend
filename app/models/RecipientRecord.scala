@@ -22,4 +22,4 @@ object RecipientRecord {
   implicit val formats = Json.format[RecipientRecord]
 }
 
-case class RecipientRecord(record: UserRecord, data: RegistrationFormInput, aivailableTaxYears: List[TaxYear] = List[TaxYear]())
+case class RecipientRecord(record: UserRecord, data: RegistrationFormInput, availableTaxYears: List[TaxYear] = List[TaxYear]())

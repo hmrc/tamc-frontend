@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package config
 
-case class EarlierYearsInput(selectedYear: Int, furtherYears: List[Int], yearAvailableForSelection: Option[Int])
+import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
+
+trait SessionCookieCryptoFilterWrapper {
+  def encryptCookieString(cookie: String) : String = {
+    SessionCookieCryptoFilter.encrypt(cookie)
+  }
+}

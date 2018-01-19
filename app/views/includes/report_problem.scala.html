@@ -1,11 +1,12 @@
 
-@import uk.gov.hmrc.play.http.HeaderCarrier
+@import uk.gov.hmrc.play.HeaderCarrierConverter
 @import connectors._
 @import scala.concurrent.Await
 @import scala.concurrent.duration._
+@import config._
 
-@(supportLinkEnabled: Boolean)(implicit request: Request[_], context: config.TamcContext)
+@(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig : config.ApplicationConfig)(implicit request: Request[_], context: config.TamcContext)
 
 @if(supportLinkEnabled) {
-    @Html(Await.result(context.getPageHelpPartial()(HeaderCarrier.fromHeadersAndSession(request.headers)), 5 seconds))
+       @formPartialRetriever.getPartialContent(s"${appConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
 }

@@ -1,4 +1,4 @@
-@(urlEnglish: String, urlWelsh: String)(implicit lang: Lang, request: Request[_])
+@(urlEnglish: String, urlWelsh: String)(implicit lang: Lang, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.urls.Link
@@ -6,7 +6,7 @@
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
 
-<div class="available-languages">
+<div class="lang-select">
         @if(LanguageUtils.isWelsh(lang)) {
             @Link.toInternalPage(url = urlEnglish,
             value = Some(Messages("generic.translation.english")),

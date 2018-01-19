@@ -18,7 +18,9 @@
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser)
+        user: details.TamcUser,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     @import play.twirl.api.Html
     @import uk.gov.hmrc.play.views.html._
@@ -36,11 +38,9 @@
         <h1 class="heading-xlarge">
             <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
             @Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
-        <p class="information"> @Html(Messages("eligibility.check.date.of.birth.span.para"))</p>
 
         @helpers.form(action = routes.MultiYearPtaEligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
             <div class="form-group inline">
-                <p class="bold-small" >@Html(Messages("eligibility.check.date.of.birth.span.married"))</p>
                 @templates.input_radio_group(
                     dateofBirthCheckForm("date-of-birth"),
                     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),

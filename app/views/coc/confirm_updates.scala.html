@@ -18,7 +18,9 @@
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser)
+        user: details.TamcUser,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._
@@ -27,12 +29,14 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
-    
+
+
+
+
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.reason")),
     mainConfig = views.helpers.MainConfig(),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmReject.toString(),
-                                                controllers.routes.LanguageController.switchToWelshConfirmReject.toString()))) {
+    langSwitch =  Some(templates.lang_button(LanguageUtils.switchEnglishLanguage(reason),LanguageUtils.switchWelshLanguage(reason)))) {
         @if(reason == EndReasonCode.CANCEL) {
 
             <h1 class="heading-xlarge" id="cancel-heading" >@Html(Messages("change.status.cancel.h1"))</h1>
@@ -41,7 +45,7 @@
             <div class="form-group booster">
                 <p>
                 <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-                id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatescancel_continue">@Html(Messages("generic.continue"))</a>
+                id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatescancel_continue">@Html(Messages("change.status.continue"))</a>
             </div>
         }
         @if(reason == EndReasonCode.REJECT) {
@@ -50,25 +54,26 @@
                 <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
-                    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning" ))</strong>
+                    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(lang))))</strong>
                 </div>
                 <div class="form-group booster">
                     <p>
                         <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("generic.continue"))</a>
+                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
                 </div>
 
              }else {
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
                 <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
+                <p id="reject-partner">@Html(Messages("change.status.reject.partner", TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfCurrentTaxYear), LanguageUtils.isWelsh(lang))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
-                    <strong class="bold-small">@Html(Messages("change.status.reject.warning" ))</strong>
+                    <strong class="bold-small">@Html(Messages("change.status.reject.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(lang))))</strong>
                 </div>
                 <div class="form-group booster">
                     <p>
                         <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("generic.continue"))</a>
+                           id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
                 </div>
             }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
   "list relationship page" should {
 
-    "display signout for PTA" in {
+    "display 'Cancel Marriage Allowance' button" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -42,12 +42,10 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Test_name, this is the first time you have logged in"
+      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
     }
 
-    "display signout for PTA when CitizenDetails are in cache" in {
+    "display 'Cancel Marriage Allowance' button for PTA when CitizenDetails are in cache" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", cachePd = Some(PersonDetails(Person(Some("cached_name")))))
       val controllerToTest = testComponent.controller
@@ -56,12 +54,10 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
-      document.getElementById("user-status").getElementsByTag("p").text() shouldBe "Cached_name, this is the first time you have logged in"
+      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
     }
 
-    "display signout for GDS" in {
+    "display 'Cancel Marriage Allowance' button for GDS" in {
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
       val controllerToTest = testComponent.controller
@@ -70,8 +66,7 @@ class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTest
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-
-      document.getElementById("sign-out").attr("href") shouldBe "/marriage-allowance-application/logout"
+      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
     }
 
     "display only active relationship details" in {

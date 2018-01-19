@@ -6,7 +6,7 @@ Frontend of the Marriage Allowance application
 This service provides the frontend endpoint for the [Marriage Allowance project](https://github.com/hmrc/tamc).
 
 Summary
------------
+------------
 
 This service allow a customer to apply for apply for Marriage Allowance as we as to modify existing Marriage Allowance application.
 

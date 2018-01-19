@@ -29,19 +29,19 @@ import play.api.Play
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
-import uk.gov.hmrc.play.audit.filters.FrontendAuditFilter
 import uk.gov.hmrc.play.config.AppName
 import uk.gov.hmrc.play.config.ControllerConfig
 import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
-import uk.gov.hmrc.play.http.logging.filters.FrontendLoggingFilter
+import uk.gov.hmrc.play.frontend.filters.{ FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport }
 
 object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
 
   override val auditConnector = ApplicationAuditConnector
   override val loggingFilter = MarriageAllowanceLoggingFilter
   override val frontendAuditFilter = MarriageAllowanceAuditFilter
+  implicit val templateRenderer = config.LocalTemplateRenderer
+  implicit val formPartialRetriever = TamcFormPartialRetriever
 
   override def onStart(app: Application) {
     super.onStart(app)

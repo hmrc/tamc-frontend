@@ -17,55 +17,28 @@
 package services
 
 import java.text.SimpleDateFormat
-import scala.concurrent.ExecutionContext
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import org.joda.time.{DateTime, LocalDate}
-import org.joda.time.format.{DateTimeFormatter, DateTimeFormat}
+
 import config.ApplicationConfig
-import connectors.ApplicationAuditConnector
-import connectors.MarriageAllowanceConnector
-import errors.BadFetchRequest
-import errors.CacheMissingUpdateRecord
-import errors.CacheUpdateRequestNotSent
-import errors.CannotUpdateRelationship
-import errors.CitizenNotFound
-import errors.TransferorNotFound
-import events.UpdateRelationshipCacheFailureEvent
-import events.UpdateRelationshipFailureEvent
-import events.UpdateRelationshipSuccessEvent
-import models.CitizenName
-import models.EndReasonCode
-import models.EndRelationshipReason
-import models.LoggedInUserInfo
-import models.NotificationRecord
-import models.RecipientInformation
-import models.RelationshipInformation
-import models.RelationshipRecord
-import models.RelationshipRecordList
-import models.RelationshipRecordStatusWrapper
-import models.RelationshipRecordWrapper
-import models.ResponseStatus
-import models.Role
-import models.TransferorInformation
-import models.UpdateRelationshipCacheData
-import models.UpdateRelationshipConfirmationModel
-import models.UpdateRelationshipNotificationRequest
-import models.UpdateRelationshipRequest
-import models.UpdateRelationshipRequestHolder
-import models.UpdateRelationshipResponse
-import models.UserRecord
-import play.api.libs.json.Json
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.audit.model.AuditEvent
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.time.TaxYearResolver._
-import errors.RecipientNotFound
-import services.TimeService._
+import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
+import errors.ErrorResponseStatus._
+import errors.{RecipientNotFound, _}
+import events.{UpdateRelationshipCacheFailureEvent, UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
+import models._
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Lang
+import play.api.libs.json.Json
+import services.TimeService._
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.play.frontend.auth.AuthContext
+import uk.gov.hmrc.time.TaxYearResolver._
 import utils.LanguageUtils
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 object UpdateRelationshipService extends UpdateRelationshipService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
@@ -82,7 +55,7 @@ trait UpdateRelationshipService {
   val timeService: TimeService
   private val parseRelationshipStartDate = parseDateWtihFormat(_ :String, format = "yyyyMMdd")
 
-  private def handleAudit(event: AuditEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
+  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }
@@ -195,9 +168,9 @@ trait UpdateRelationshipService {
   private def fetchListRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordWrapper] =
     marriageAllowanceConnector.listRelationship(transferorNino) map {
       case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK"))      => relationshipRecordWrapper
-      case RelationshipRecordStatusWrapper(_, ResponseStatus("TAMC:ERROR:TRANSFEROR-NOT-FOUND")) => throw TransferorNotFound()
-      case RelationshipRecordStatusWrapper(_, ResponseStatus("TAMC:ERROR:CITIZEN-NOT-FOUND"))    => throw CitizenNotFound()
-      case RelationshipRecordStatusWrapper(_, ResponseStatus("TAMC:ERROR:BAD-REQUEST"))          => throw BadFetchRequest()
+      case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
+      case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND))    => throw CitizenNotFound()
+      case RelationshipRecordStatusWrapper(_, ResponseStatus(BAD_REQUEST))          => throw BadFetchRequest()
     }
 
   private def getActiveRelationship(relationshipRecordWrapper: RelationshipRecordWrapper)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
@@ -293,8 +266,8 @@ trait UpdateRelationshipService {
       httpResponse =>
         Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
           case UpdateRelationshipResponse(ResponseStatus("OK"))                                    => data
-          case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:CANNOT-UPDATE-RELATIONSHIP")) => throw CannotUpdateRelationship()
-          case UpdateRelationshipResponse(ResponseStatus("TAMC:ERROR:BAD-REQUEST"))                => throw RecipientNotFound()
+          case UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)) => throw CannotUpdateRelationship()
+          case UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))                => throw RecipientNotFound()
         }
     } recover {
       case error =>

@@ -33,12 +33,11 @@ import play.api.data.FormError
 import play.api.mvc._
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HeaderCarrier
 import utils.TamcBreadcrumb
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
 
 object TransferController extends TransferController with RunMode {
   override lazy val registrationService = TransferService
@@ -49,7 +48,7 @@ object TransferController extends TransferController with RunMode {
   override val timeService = TimeService
 }
 
-trait TransferController extends FrontendController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait TransferController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
 
   val registrationService: TransferService
   val authConnector: ApplicationAuthConnector
@@ -188,7 +187,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
                     BadRequest(views.html.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), recipient.data, extraYears))
                   },
                 taxYears => {
-                  registrationService.updateSelectedYears(recipient, taxYears.selectedYear).map {
+                  registrationService.updateSelectedYears(recipient, taxYears.selectedYear, taxYears.yearAvailableForSelection).map {
                     _ =>
                       if (taxYears.furtherYears.isEmpty) {
                         Redirect(controllers.routes.TransferController.confirmYourEmail())
@@ -238,7 +237,6 @@ trait TransferController extends FrontendController with AuthorisedActions with 
   }
 
   def confirmAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    Logger.info("confirmAction has been called.")
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -291,6 +289,7 @@ trait TransferController extends FrontendController with AuthorisedActions with 
           case _: NoTaxYearsSelected => handle(message, Logger.info, Ok(views.html.errors.no_year_selected()))
           case _: NoTaxYearsAvailable => handle(message, Logger.info, Ok(views.html.errors.no_eligible_years()))
           case _: NoTaxYearsForTransferor => handle(message, Logger.info, InternalServerError(views.html.errors.no_tax_year_transferor()))
+          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _ => handle(message, Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }

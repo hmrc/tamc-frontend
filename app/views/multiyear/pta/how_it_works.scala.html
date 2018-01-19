@@ -18,7 +18,9 @@
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser)
+        user: details.TamcUser,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.twirl.api.Html
 @import config.ApplicationConfig
@@ -46,6 +48,7 @@
     <div class="application-notice info-notice">
     	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5"))</p>
     </div>
+    <p class="lede">@Html(Messages("pages.how-it-works.lede-pre6"))</p>
     <h4 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h4>
     <p class="lede">@Html(Messages("pages.how-it-works.detail"))</p>
     <p class="lede">@Html(Messages("pages.how-it-works.email"))</p>

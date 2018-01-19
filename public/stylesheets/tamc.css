@@ -33,7 +33,7 @@ table {
 .icon-important {
     background-repeat: no-repeat;
     float: left;
-    height: 60px;
+    height: 100px;
     margin-bottom: 10px;
     margin-right: 10px;
     margin-top: 6px;
@@ -102,6 +102,17 @@ table {
     text-align: right;
     text-transform: none;
     width: 49%;
+}
+
+div.last-login>p {
+  font-size: 16px;
+  font-family: nta,Arial,sans-serif;
+  font-weight: 300;
+  line-height: 1.25;
+  text-transform: none;
+  margin-bottom: 5px;
+  color: #6f777b;
+  text-align: right;
 }
 
 .pagination li.previous a::before {
@@ -485,15 +496,19 @@ p.blue-underline-large {
 .calculator-apply-link {
     padding-top: 7px;
 }
-
-.available-languages {
-    width: 100%;
+.lang-select{
+    border-bottom: 0px;
+    float: right;
+    padding: 0.65em 0px;
     text-align: right;
-    padding: 0 0px;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
+    width: 100%;
+    font-size: 16px;
+    }
+
 .nowrap{
     white-space: nowrap
+}
+.align-right{
+    text-align: right;
+    padding-top: 10px;
 }

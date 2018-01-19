@@ -19,7 +19,10 @@
         implicit lang: Lang,
         request: Request[_],
         context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb)
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
 
 @import play.api.Play.current
 @import play.api.i18n.Messages.Implicits._

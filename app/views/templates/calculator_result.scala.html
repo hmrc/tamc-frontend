@@ -13,7 +13,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-@(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit lang: Lang, request: Request[_])
+@(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit lang: Lang, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     @import play.twirl.api.Html
     @import play.api.Play.current

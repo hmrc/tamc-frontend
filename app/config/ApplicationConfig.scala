@@ -27,7 +27,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   private val contactHost = configuration.getString("tamc.external-urls.contact-frontend").getOrElse("")
   private val contactFrontendService = baseUrl("contact-frontend")
-  private val contactFormServiceIdentifier = "TAMC"
+  val contactFormServiceIdentifier = "TAMC"
+  val pageTitle = "Your personal tax account"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
@@ -68,6 +69,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get
+  val MAX_LIMIT_SCOT = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
   val MAX_ALLOWED_TRANSFER = PERSONAL_ALLOWANCE / 10
   val MAX_BENEFIT = MAX_ALLOWED_TRANSFER / 5
   val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_TRANSFER
@@ -92,6 +94,8 @@ trait ApplicationConfig {
   val contactFrontendPartialBaseUrl: String
   val assetsPrefix: String
 
+  val contactFormServiceIdentifier: String
+  val pageTitle: String
   val loginUrl: String
   val logoutUrl: String
   val logoutCallbackUrl: String

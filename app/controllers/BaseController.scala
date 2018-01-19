@@ -14,6 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package controllers
 
-case class EarlierYearsInput(selectedYear: Int, furtherYears: List[Int], yearAvailableForSelection: Option[Int])
+import config.{LocalTemplateRenderer, TamcFormPartialRetriever}
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+
+trait BaseController extends FrontendController {
+  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+  implicit val formPartialRetriver: uk.gov.hmrc.play.partials.FormPartialRetriever  = TamcFormPartialRetriever
+}

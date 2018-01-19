@@ -17,7 +17,9 @@
 )(implicit lang: Lang,
         request: Request[_],
         context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb)
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
@@ -27,7 +29,8 @@
 
 
 @templates.tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("title.eligibility")),
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1")),
+    isFromGDS = true,
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishEligibilityCheck.toString(),
         controllers.routes.LanguageController.switchToWelshEligibilityCheck.toString()))) {
 
@@ -36,11 +39,9 @@
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.h1"))</h1>
-    <p class="information"> @Html(Messages("eligibility.check.span.para"))</p>
 
     @helpers.form(action = routes.MultiYearGdsEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
         <div class="form-group inline">
-            <p class="bold-small" >@Html(Messages("eligibility.check.married"))</p>
             @templates.input_radio_group(
                 eligibilityCheckForm("marriage-criteria"),
                 Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
@@ -48,12 +49,14 @@
                 '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
+
                 '_fieldsetAttributes -> "data-inline-error=married-js-error",
                 '_groupClass -> "inline spacingBottom"
             )
         </div>
         <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
-        @Html(Messages("eligibility.check.married.error"))
+            <p>@Html(Messages("eligibility.check.married.error1"))</p>
+            <p>@Html(Messages("eligibility.check.married.error2"))</p>
         </div>
 
         <div class="form-group">

@@ -16,14 +16,11 @@
 
 package services
 
-import com.sun.glass.ui.Application
-
 import scala.annotation.implicitNotFound
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import models._
 import uk.gov.hmrc.http.cache.client.SessionCache
-import uk.gov.hmrc.play.http.HeaderCarrier
 import config.ApplicationConfig
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
@@ -31,6 +28,7 @@ import utils.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.config.AppName
 import details.PersonDetails
+import uk.gov.hmrc.http.HeaderCarrier
 
 object CachingService extends CachingService {
   override lazy val http = WSHttp
@@ -49,8 +47,8 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     cache[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD, loggedInUserInfo) map
       (_.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD).get)
 
-  def saveRecipientRecord(recipientRecord: UserRecord, recipientData: RegistrationFormInput, aivailableYears: List[TaxYear])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
-    cache[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD, RecipientRecord(record = recipientRecord, data = recipientData, aivailableTaxYears = aivailableYears)) map
+  def saveRecipientRecord(recipientRecord: UserRecord, recipientData: RegistrationFormInput, availableYears: List[TaxYear])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
+    cache[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD, RecipientRecord(record = recipientRecord, data = recipientData, availableTaxYears = availableYears)) map
       (_.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD).get.record)
 
   def saveRecipientDetails(details: RecipientDetailsFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[RecipientDetailsFormInput] =

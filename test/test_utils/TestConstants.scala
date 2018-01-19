@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,12 @@ package test_utils
 import org.joda.time.{ DateTimeZone, DateTime }
 import scala.concurrent.Future
 import play.api.test.Helpers.OK
-import uk.gov.hmrc.play.http.BadGatewayException
 import java.util.Calendar
 import java.text.SimpleDateFormat
 import models.CitizenName
 import test_utils.TestData.Ninos
 import test_utils.TestData.Cids
+import uk.gov.hmrc.http.BadGatewayException
 
 object TestConstants {
 

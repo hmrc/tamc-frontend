@@ -513,6 +513,7 @@ technical.issue.back = Return to GOV.UK
 technical.other-ways.h1 = Other Ways to apply for Marriage Allowance
 technical.other-ways.para1 = We were unable to confirm your identity online. Call HM Revenue and Customs (HMRC) to claim Marriage Allowance.
 technical.other-ways.para2 = You will need to know you and your partner’s National Insurance number when you call.
+
 title.cannot-find-details = Cannot find details
 title.technical-error = Technical Error
 technical.cannot-find-details.h1 = We cannot find your Marriage Allowance details
