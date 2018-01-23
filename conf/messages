@@ -2,7 +2,6 @@
 # Forms and  Unit tests validation messages
 #********************************************************************************
 
-
 pages.form.field.description.transferor-income=Confirm your annual income
 pages.form.field.description.recipient-income=Confirm your partner’s annual income
 
