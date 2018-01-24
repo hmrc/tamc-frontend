@@ -202,6 +202,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
         "includeHMRCBranding" -> true,
 
         "hideAccountMenu" -> isPTA,
+        "assetsPath" -> appConfig.assetsPrefix,
 
         "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
         "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
