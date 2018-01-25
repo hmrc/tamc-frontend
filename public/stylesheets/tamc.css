@@ -517,3 +517,6 @@ p.blue-underline-large {
 .bold-small{
 font-weight: 400 !important;
 }
+strong {
+font-size : bold !important
+}
