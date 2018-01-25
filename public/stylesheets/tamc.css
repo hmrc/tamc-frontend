@@ -514,3 +514,6 @@ p.blue-underline-large {
     text-align: right;
     padding-top: 10px;
 }
+.bold-small{
+font-weight: 400 !important;
+}
