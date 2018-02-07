@@ -49,15 +49,21 @@
 		<h1 class="heading-xlarge">@Html(Messages("generic.ma"))
 			<div class="secondary-text-colour bold-xlarge">@loggedInUserInfo.get.name.get.firstName @loggedInUserInfo.get.name.get.lastName</div>
 		</h1>
+
+    @if(activeRecord) {
+        @if(activeRelationship.get.participant == "Transferor") {
+            <p id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
+        } else {
+            <p id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
+        }
+    }
+
+    <div class="panel-indent panel panel-border-wide">
+        <p>@Html(Messages("pages.finished.backdated-payments"))</p>
+    </div>
+
 		@helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
 			<div class="grid-row" >
-				@if(activeRecord) {
-					@if(activeRelationship.get.participant == "Transferor") {
-						<p class="lede column-full" id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
-					} else {
-						<p class="lede column-full" id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
-					}
-				}
 				<div class="column-two-thirds">
 					<style type="text/css">
 						.content__body {
@@ -67,19 +73,22 @@
 					</style>
 
 				@if(activeRecord) {
-					<div class="notice add-spacing-small">
-						<h2 class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">@Html(Messages("pages.history.cancellation"))</h2>
-					</div>
-					<div class="panel-indent panel panel-border-narrow">
+
+					<div>
 						<p>@Html(Messages("pages.history.cancellation1"))</p>
-						<p>@Html(Messages("pages.history.cancellation2"))</p>
+                        <p>@Html(Messages("pages.history.cancellation2"))</p>
+                        <i class="icon icon-important">
+                            <span class="visually-hidden">@Html(Messages("pages.finished.hidden-warning"))</span>
+                        </i>
+                        <strong class="heading-small">
+                            You can be fined up to £5,000 if you don’t register.
+                        </strong>
 					</div>
 					<input name="role" id="role" type="hidden" value="@activeRelationship.get.participant"/>
-					<input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
-					<br>
+					<input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/><br><br>
 					<div class="form-group">
-						<button id="cancel-marriage-allowance" class="button" type="submit" data-journey-click="marriage-allowance:button:history_cancel">@Html(Messages("change.status.button"))</button>
-					</div><br>
+						<button id="cancel-marriage-allowance" class="button move-left" type="submit" data-journey-click="marriage-allowance:button:history_cancel">@Html(Messages("change.status.button"))</button>
+					</div>
 				} else {
 					@if(historicActiveRecord) {
 						@if(historicRelationships.get(0).participant == "Transferor") {
