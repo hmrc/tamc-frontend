@@ -114,7 +114,7 @@ div.last-login>p {
   color: #6f777b;
   text-align: right;
 }
-t
+
 .pagination li.previous a::before {
     background: transparent url("https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-20de3c9fa524b493538ff1b101cc2c04.png") no-repeat scroll -20px -11px;
     content: " ";
