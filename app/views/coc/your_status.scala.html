@@ -58,9 +58,7 @@
         }
     }
 
-    <div class="panel-indent panel panel-border-wide">
-        <p>@Html(Messages("pages.finished.backdated-payments"))</p>
-    </div>
+
 
 		@helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
 			<div class="grid-row" >
@@ -73,7 +71,9 @@
 					</style>
 
 				@if(activeRecord) {
-
+                    <div class="panel-indent panel panel-border-wide">
+                        <p>@Html(Messages("pages.finished.backdated-payments"))</p>
+                    </div>
 					<div>
 						<p>@Html(Messages("pages.history.cancellation1"))</p>
                         <p>@Html(Messages("pages.history.cancellation2"))</p>
