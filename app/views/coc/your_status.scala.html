@@ -50,16 +50,6 @@
 			<div class="secondary-text-colour bold-xlarge">@loggedInUserInfo.get.name.get.firstName @loggedInUserInfo.get.name.get.lastName</div>
 		</h1>
 
-    @if(activeRecord) {
-        @if(activeRelationship.get.participant == "Transferor") {
-            <p id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
-        } else {
-            <p id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
-        }
-    }
-
-
-
 		@helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
 			<div class="grid-row" >
 				<div class="column-two-thirds">
@@ -71,6 +61,11 @@
 					</style>
 
 				@if(activeRecord) {
+                    @if(activeRelationship.get.participant == "Transferor") {
+                        <p id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
+                    } else {
+                        <p id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
+                    }
                     <div class="panel-indent panel panel-border-wide">
                         <p>@Html(Messages("pages.finished.backdated-payments"))</p>
                     </div>
