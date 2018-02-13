@@ -520,3 +520,7 @@ font-weight: 400 !important;
 strong {
 font-size : bold !important
 }
+.move-left{
+    margin-left: -55px;
+    margin-bottom: 20px;
+}

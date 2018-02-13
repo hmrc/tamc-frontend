@@ -314,7 +314,7 @@ pages.finished.para6	=	Bydd eich hysbysiad o god treth diwygiedig yn ymddangos y
 pages.finished.para7	=	Nid oes angen i chi gysylltu &#226; ni.
 pages.finished.back-pta	=	Yn &#244;l i’r Cyfrif Treth Personol
 pages.finished.check-link-para	=	Gallwch <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >wirio’ch Lwfans Priodasol presennol a gwneud newidiadau</a> ar unrhyw bryd drwy’ch cyfrif treth personol.
-
+pages.finished.backdated-payments    =    Gall taliadau sydd wedi’u hôl-ddyddio gymryd hyd at 8 wythnos i’w prosesu.
 
 #********************************************************************************
 # Registration page - Your spouse details
@@ -453,12 +453,12 @@ change.status.cancel-your.h1	=	Canslo Lwfans Priodasol
 change.status.cancel-your.p	=	Pam yr ydych am ganslo’ch Lwfans Priodasol?
 change.status.confirm.email	=	Nodwch eich cyfeiriad e-bost i gadarnhau
 change.status.history.h4	=	Eich ceisiadau am Lwfans Priodasol
-change.status.start-date	=	Dyddiad dechrau
+change.status.start-date	=	Blwyddyn dreth
 change.status.end-date	=	Dyddiad dod i ben
 change.status.history.allowance-status	=	Statws y lwfans
 change.status.history.status	=	Statws
 change.status.history.role	=	R&#244;l y lwfans
-change.status.history.reason	=	Rheswm dros newid
+change.status.history.reason	=	Statws
 change.status.active	=	Gweithredol
 change.status.active.present.year	=	i Presennol
 change.status.active.to	=	–
