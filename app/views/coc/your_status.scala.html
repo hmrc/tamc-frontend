@@ -165,7 +165,7 @@
 
                 <h2 class="heading-small">@Html(Messages("change.other.sub.caption1"))</h2>
                 <p class=font-xsmall>@Html(Messages("change.other.income.content", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE),
-                    NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</p>
+                    NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)))</p>
                 <p id="incomeMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.changeOfIncome" id="incomeLink" data-journey-click="marriage-allowance:link:history_income">@Html(Messages("change.other.income.link"))</a>.</p>
                 <h2 class="heading-small">@Html(Messages("change.other.sub.caption2"))</h2>
                 <p class=font-xsmall>@Html(Messages("change.other.bereavement.content"))</p>

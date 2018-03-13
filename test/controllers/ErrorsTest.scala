@@ -28,6 +28,7 @@ import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.time.TaxYearResolver
 
 class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
@@ -166,7 +167,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData), transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
-      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
+      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> TaxYearResolver.currentTaxYear.toString))
       val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe INTERNAL_SERVER_ERROR

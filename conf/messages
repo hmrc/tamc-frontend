@@ -104,8 +104,8 @@ coc.end-reason.RETROSPECTIVE=Applied for Marriage Allowance retrospectively
 coc.end-reason.SYSTEM=Ended by HMRC
 coc.end-reason.DEFAULT=Marriage Allowance Ended
 
-pages.form.field.description.partners-income=Confirm if your partner has an annual income of between £{0} and £{1} (or £43,000 if you live in Scotland)
-pages.form.field-required.partners-income=Tell us if your partner has an annual income of between £{0} and £{1} (or £43,000 if you live in Scotland)
+pages.form.field.description.partners-income=Confirm if your partner has an annual income of between £{0} and £{1} (or £43,430 if you live in Scotland)
+pages.form.field-required.partners-income=Tell us if your partner has an annual income of between £{0} and £{1} (or £43,430 if you live in Scotland)
 
 pages.form.field.description.date-of-birth=Confirm if you and your partner were born after <span class=nowrap>6 April 1935</span>
 pages.form.field-required.date-of-birth=Tell us if you and your partner were born after 6 April 1935
@@ -646,7 +646,7 @@ date.fields.year=Year
 
 change.other.caption=Other changes that affect Marriage Allowance
 change.other.sub.caption1=Change of income
-change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £43,000 if you live in Scotland).
+change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £{3} if you live in Scotland).
 change.other.income.link=To let us know about a change in income, contact HMRC
 change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.

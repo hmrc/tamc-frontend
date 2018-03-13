@@ -851,6 +851,8 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
   "PTA lower earner check page for multiyear" should {
 
     "successfully authenticate the user and have income-check page and content" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -858,7 +860,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Is your income less than £" + lowerThreshold + " a year? - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
@@ -872,16 +874,14 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val controllerToTest = testComponent.controller
       val result = controllerToTest.partnersIncomeCheck()(request)
 
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Is your partner’s income between £11,501 and £45,000 a year? - Marriage Allowance eligibility - GOV.UK"
-
       val baseLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val upperLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
       val upperLimitScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
 
-      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
-      document.getElementsByClass("information").text shouldBe (s"If you live in Scotland their income must be between £$baseLimit and £$upperLimitScot a year.")
-      document.getElementsByClass("heading-xlarge").text shouldBe "Check your eligibility Is your partner’s income between £11,501 and £45,000 a year?"
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe s"Is your partner’s income between £$baseLimit and £$upperLimit a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$baseLimit and £$upperLimitScot a year."
     }
   }
 
@@ -901,13 +901,15 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
   "GDS lower earner page for multiyear" should {
 
     "successfully authenticate the user and have lower earner page and content" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Is your income less than £11,501 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe "Is your income less than £" + lowerThreshold + " a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
   }
@@ -920,11 +922,12 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val result = controllerToTest.partnersIncomeCheck()(request)
 
       val baseLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val upperLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
       val upperLimitScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Is your partner’s income between £11,501 and £45,000 a year? - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe s"Is your partner’s income between £$baseLimit and £$upperLimit a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$baseLimit and £$upperLimitScot a year."
     }
   }
