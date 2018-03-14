@@ -146,11 +146,11 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
     }
 
     "show ’no tax years for transferor’ page if transferor enters date of marriage as current tax year" in {
-
+      val twoYearsPrevious = TaxYearResolver.currentTaxYear-2
       val cachedRecipientData = Some(RecipientDetailsFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1)))
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(twoYearsPrevious, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
