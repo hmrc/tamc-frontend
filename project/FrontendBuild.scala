@@ -27,7 +27,7 @@ private object AppDependencies {
 
   private val scalaTestPlusPlayVersion = "1.5.1"
   private val emailAddressVersion = "1.1.0"
-  private val frontendBootstrapVersion = "8.9.0"
+  private val frontendBootstrapVersion = "8.19.0"
   private val httpCachingClientVersion = "7.0.0"
   private val httpVerbsVersion = "6.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
