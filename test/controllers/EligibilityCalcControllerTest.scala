@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.ApplicationConfig
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
@@ -74,35 +75,38 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "11900")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 230 if transferor income=0 (< 11500) and recipient income=13000 (13000-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "0", "recipient-income" -> "13000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £230 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "Transferor not eligible if transferor income is more than maximum limit" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "45001", "recipient-income" -> "48000")
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
+      val overThreshold = formatter.format(ApplicationConfig.MAX_LIMIT + 100)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> overThreshold, "recipient-income" -> "48000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £45,000."
+      document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £$higherThreshold."
     }
 
-    "be GBP 220 if transferor income=9000 (< 9540) and recipient income=12000 (> 11660)" in {
+    "be GBP 238 if transferor income=9000 (< 9540) and recipient income=12000 (> 11660)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "16000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £230 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
-    "be GBP 30 if transferor income=9580 (9540-10600) and recipient income=11650 (10600-11660)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9580", "recipient-income" -> "11650")
+    "be GBP 20 if transferor income=9580 (9540-10600) and recipient income=11950 (10600-11660)" in {
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9580", "recipient-income" -> "11950")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £30 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be negative (12) if transferor income=10000 (9540-10600) and recipient income=11000 (10600-11660)" in {
@@ -116,28 +120,38 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "10000", "recipient-income" -> "20000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £230 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be 0 if transferor income=9540  and recipient income=11501" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9540", "recipient-income" -> "11501")
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE+1)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9540", "recipient-income" -> lowerThreshold)
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You will not benefit as a couple because your income is £11,500."
+      document.getElementById("calculator-result").text() should include("You will not benefit as a couple because your income is £")
     }
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income<11501" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE+1)
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9540", "recipient-income" -> "11000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income>45000" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9540", "recipient-income" -> "46001")
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
+      val overThreshold = formatter.format(ApplicationConfig.MAX_LIMIT + 200)
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE+1)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9540", "recipient-income" -> overThreshold)
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
   }
 
@@ -147,36 +161,35 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000.05", "recipient-income" -> "11900")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 80 if transferor income=9,000.05 (< 9540) and recipient income=11000 (11900-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9,000.05", "recipient-income" -> "11900")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 80 if transferor income=£9,000.05 (< 9540) and recipient income=11000 (11900-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "£9,000.05", "recipient-income" -> "11900")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 80 if transferor income=£9 000.05 (< 9540) and recipient income=11000 (11900-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "£9 000,05", "recipient-income" -> "11900")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 80 if transferor income=£9.000.05 (< 9540) and recipient income=11000 (11900-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "£9.000,05", "recipient-income" -> "11900")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
-    }
+      document.getElementById("calculator-result").text() should include ("Based on the information you have given us, as a couple you would benefit by around")    }
   }
 
   "When recipient income is in different format, calculation" should {
@@ -185,28 +198,28 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "11900.05")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 80 if transferor income=9000 (< 9540) and recipient income=11400 (11900-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "11,900")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 80 if transferor income=9000 (< 9540) and recipient income=£11,400.05 (11900-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "£11,900.05")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
     "be GBP 80 if transferor income=9000 (< 9540) and recipient income=£11.400,05 (11900-11500)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "£11.900,05")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "Based on the information you have given us, as a couple you would benefit by around £80 a year."
+      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
   }
 
@@ -357,10 +370,13 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
     }
 
     "be displayed if transferor income=0 (< 9540) and recipient income=0 (10600-11660)" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "0", "recipient-income" -> "0")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
 
     "be displayed if transferor income=9000 (< 9540) and recipient income=5000 (< 10600)" in {
@@ -370,24 +386,33 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
 
-    "be displayed if transferor income=9000 (< 9540) and recipient income=46000 (> 45000)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "46000")
+    "be displayed if transferor income=9000 (< 9540) and recipient exeeds limit" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> (ApplicationConfig.MAX_LIMIT + 1).toString)
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
 
     "be displayed if transferor income=10000 (9540-11000) and recipient exceeds limit" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "10000", "recipient-income" -> "46000")
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "10000", "recipient-income" -> (ApplicationConfig.MAX_LIMIT + 1).toString)
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
+      document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
     "be displayed if transferor income is below limit and recipient income=20000" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "11501", "recipient-income" -> "20000")
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> (ApplicationConfig.PERSONAL_ALLOWANCE + 1).toString,
+        "recipient-income" -> "20000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You will not benefit as a couple because your income is over £11,500."
+      document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple because your income is over £$lowerThreshold."
     }
     "be displayed if transferor income exceeds limit and recipient income=20000" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "43001", "recipient-income" -> "20000")

@@ -28,6 +28,7 @@ import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.time.TaxYearResolver
 
 class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
@@ -145,11 +146,11 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
     }
 
     "show ’no tax years for transferor’ page if transferor enters date of marriage as current tax year" in {
-
+      val twoYearsPrevious = TaxYearResolver.currentTaxYear-2
       val cachedRecipientData = Some(RecipientDetailsFormInput("foo", "bar", Gender("M"), Nino(Ninos.ninoWithLOA1)))
       val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
       val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
+      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(twoYearsPrevious, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val trRecipientData = Some(CacheData(
         transferor = Some(trrec),
@@ -159,14 +160,14 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
         recipientDetailsFormData = cachedRecipientData))
 
       val loggedInUser = LoggedInUserInfo(cid = 999700101, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some("20170415"), "", "")
+      val relationshipRecord = RelationshipRecord(Role.TRANSFEROR, "98764", "20160410", Some(""), Some(TaxYearResolver.currentTaxYear + "0415"), "", "")
       val historic1Record = RelationshipRecord(Role.TRANSFEROR, "56789", "20100401", Some(""), Some("20100403"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
         activeRelationshipRecord = Some(relationshipRecord), historicRelationships = Some(Seq(historic1Record)), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), relationshipUpdated = Some(false))
 
       val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData), transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
-      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> "2016"))
+      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> TaxYearResolver.currentTaxYear.toString))
       val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe INTERNAL_SERVER_ERROR

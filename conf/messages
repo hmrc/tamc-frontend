@@ -104,8 +104,8 @@ coc.end-reason.RETROSPECTIVE=Applied for Marriage Allowance retrospectively
 coc.end-reason.SYSTEM=Ended by HMRC
 coc.end-reason.DEFAULT=Marriage Allowance Ended
 
-pages.form.field.description.partners-income=Confirm if your partner has an annual income of between £{0} and £{1} (or £43,000 if you live in Scotland)
-pages.form.field-required.partners-income=Tell us if your partner has an annual income of between £{0} and £{1} (or £43,000 if you live in Scotland)
+pages.form.field.description.partners-income=Confirm if your partner has an annual income of between £{0} and £{1} (or £{2} if you live in Scotland)
+pages.form.field-required.partners-income=Tell us if your partner has an annual income of between £{0} and £{1} (or £{2} if you live in Scotland)
 
 pages.form.field.description.date-of-birth=Confirm if you and your partner were born after <span class=nowrap>6 April 1935</span>
 pages.form.field-required.date-of-birth=Tell us if you and your partner were born after 6 April 1935
@@ -239,20 +239,26 @@ pages.form.field.description.selectedYear=You need to select an answer
 
 eligibility.feedback.transferor-not-eligible-2016=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £43,000.
 eligibility.feedback.transferor-not-eligible-2017=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £45,000.
+eligibility.feedback.transferor-not-eligible-2018=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £46,350.
 eligibility.feedback.recipient-not-eligible-2016=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,001 and £43,000.
 eligibility.feedback.recipient-not-eligible-2017=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000.
+eligibility.feedback.recipient-not-eligible-2018=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,851 and £46,350.
 eligibility.check.unlike-benefit-as-couple-2016 = You will not benefit as a couple because your income is over £11,000.
 eligibility.check.unlike-benefit-as-couple-2017 = You will not benefit as a couple because your income is over £11,500.
+eligibility.check.unlike-benefit-as-couple-2018 = You will not benefit as a couple because your income is over £11,850.
 max-benefit-2014=£212
 max-benefit-2015=£212
 max-benefit-2016=£220
 max-benefit-2017=£230
+max-benefit-2018=£238
 your-income-2015=your income was £10,600 or less
 your-income-2016=your income was £11,000 or less
 your-income-2017=your income was £11,500 or less
+your-income-2018=your income was £11,850 or less
 income-between-2015={0} income was between £10,601 and £42,385
 income-between-2016={0} income was between £11,001 and £43,000
 income-between-2017={0} income was between £11,501 and £45,000
+income-between-2018={0} income was between £11,851 and £46,350
 
 
 #********************************************************************************
@@ -640,7 +646,7 @@ date.fields.year=Year
 
 change.other.caption=Other changes that affect Marriage Allowance
 change.other.sub.caption1=Change of income
-change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £43,000 if you live in Scotland).
+change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £{3} if you live in Scotland).
 change.other.income.link=To let us know about a change in income, contact HMRC
 change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.

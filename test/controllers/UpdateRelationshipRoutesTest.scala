@@ -321,6 +321,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
     }
 
     "confirm divorce action for recipient on current year " in {
+      val currentTaxYear = TaxYearResolver.currentTaxYear
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "123456", "20130101", Some(""), Some(""), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(
@@ -328,7 +329,7 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
         roleRecord = Some(Role.RECIPIENT),
         activeRelationshipRecord = Some(relationshipRecord),
         notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce = Some(new LocalDate(2017, 6, 12)), timestamp = Some("98765"))),
+        relationshipEndReasonRecord = Some(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce = Some(new LocalDate(currentTaxYear, 6, 12)), timestamp = Some("98765"))),
         relationshipUpdated = Some(false))
 
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
@@ -342,8 +343,8 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       document.getElementById("confirm-page").text() shouldBe "Confirm cancellation of Marriage Allowance"
       val message1 = document.getElementById("message1").text()
       val message2 = document.getElementById("message2").text()
-      message1 should be("your Marriage Allowance will remain in place until 5 April 2018, the end of the current tax year")
-      message2 should be("your Personal Allowance will go back to the normal amount from 6 April 2018, the start of the new tax year")
+      message1 should be(s"your Marriage Allowance will remain in place until 5 April ${currentTaxYear+1}, the end of the current tax year")
+      message2 should be(s"your Personal Allowance will go back to the normal amount from 6 April ${currentTaxYear+1}, the start of the new tax year")
     }
 
   }
