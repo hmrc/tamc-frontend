@@ -255,10 +255,10 @@ your-income-2015=your income was £10,600 or less
 your-income-2016=your income was £11,000 or less
 your-income-2017=your income was £11,500 or less
 your-income-2018=your income was £11,850 or less
-income-between-2015={0} income was between £10,601 and £42,385
-income-between-2016={0} income was between £11,001 and £43,000
-income-between-2017={0} income was between £11,501 and £45,000
-income-between-2018={0} income was between £11,851 and £46,350
+income-between-2015= {0} income was between £10,601 and £42,385
+income-between-2016= {0} income was between £11,001 and £43,000
+income-between-2017= {0} income was between £11,501 and £45,000 (or £43,000 if you live in Scotland)
+income-between-2018= {0} income was between £11,851 and £46,350 (or £43,430 if you live in Scotland)
 
 
 #********************************************************************************
