@@ -260,8 +260,8 @@ your-income-2017	=	os oedd eich incwm yn £11,500 neu’n llai
 your-income-2017	=	os oedd eich incwm yn £11,850 neu’n llai
 income-between-2015	=	os oedd incwm rhwng {0} £10,601 a £42,385
 income-between-2016	=	os oedd incwm rhwng {0} £11,001 a £43,000
-income-between-2017	=	os oedd incwm rhwng {0} £11,501 a £45,000
-income-between-2017	=	os oedd incwm rhwng {0} £11,851 a £46,350
+income-between-2017	=	os oedd incwm rhwng {0} £11,501 a £45,000 (neu £43,000 os ydych yn byw yn yr Alban)
+income-between-2017	=	os oedd incwm rhwng {0} £11,851 a £46,350 (neu £43,430 os ydych yn byw yn yr Alban)
 
 
 #********************************************************************************
