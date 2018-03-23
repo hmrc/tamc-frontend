@@ -110,10 +110,12 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
     }
 
     "be negative (12) if transferor income=10000 (9540-10600) and recipient income=11000 (10600-11660)" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "11000", "recipient-income" -> "12000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You will not benefit as a couple because your income is £11,500."
+      document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple because your income is £$lowerThreshold."
     }
 
     "be GBP 230 if transferor income=10000 (9540-10600) and recipient income=20000 (11660-42385)" in {

@@ -71,7 +71,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT_SCOT = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
   val MAX_ALLOWED_TRANSFER = PERSONAL_ALLOWANCE / 10
-  val MAX_BENEFIT = MAX_ALLOWED_TRANSFER / 5
+  val MAX_BENEFIT = configuration.getInt("max-benefit-" + TaxYearResolver.currentTaxYear).get
   val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_TRANSFER
   val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_TRANSFER
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
