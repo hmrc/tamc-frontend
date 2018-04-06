@@ -167,7 +167,7 @@ class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val testParams = makeTestComponent("user_happy_path", testCacheData = Some(updateRelationshipCacheData), transferorRecipientData = trRecipientData)
       val controllerToTest = testParams.controller
-      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "10"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> TaxYearResolver.currentTaxYear.toString))
+      val request = testParams.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "06"), ("dateOfMarriage.month" -> "04"), ("dateOfMarriage.year" -> TaxYearResolver.currentTaxYear.toString))
       val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe INTERNAL_SERVER_ERROR

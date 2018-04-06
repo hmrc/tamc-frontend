@@ -852,7 +852,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
     "successfully authenticate the user and have income-check page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -905,7 +905,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
     "successfully authenticate the user and have lower earner page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE )
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.lowerEarnerCheck()(request)
