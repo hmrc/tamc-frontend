@@ -31,7 +31,7 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1))),
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE))),
     langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishLowerEarnerCheckPta.toString(),
                                             controllers.routes.LanguageController.switchToWelshLowerEarnerCheckPta.toString()))){
 
@@ -39,7 +39,7 @@
 
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
-        @Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)))</h1>
+        @Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</h1>
        @helpers.form(action = routes.MultiYearPtaEligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
         <div class="form-group inline">
             <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>

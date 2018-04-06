@@ -737,7 +737,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
     "diplay errors as no radio buttons is selected " in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
@@ -860,7 +860,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
     "display errors as no radio buttons is selected " in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE )
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
       val controllerToTest = makeMultiYearGdsEligibilityController()
