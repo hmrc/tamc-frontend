@@ -156,7 +156,7 @@ title.dateOfBirth   =   Eich dyddiad geni
 title.eligible-years    =   Gwneud cais ar gyfer y flwyddyn dreth bresennol
 title.extra-years   =   Gwneud cais ar gyfer blynyddoedd treth cynharach
 title.transfer-in-place =   Trosglwyddiad yn barod
-title.transfer  =   Manylion eich partner
+title.transfer  =   Nodwch fanylion eich partner
 title.finished  =   Cais wedi’i gadarnhau
 title.confirm-email =   Cadarnhau’ch cyfeiriad e-bost
 title.non-eligible  =   Nid ydych yn gymwys ar gyfer y flwyddyn dreth bresennol
@@ -327,16 +327,18 @@ pages.finished.backdated-payments    =    Gall taliadau sydd wedi’u hôl-ddydd
 #********************************************************************************
 
 
-pages.form.h1	=	Manylion eich partner
+pages.form.h1	=	Nodwch fanylion eich partner
 pages.form.details	=	Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i helpu gostwng swm y dreth y mae ef/hi’n ei dalu.
 pages.form.enter-data	=	Nodwch fanylion eich partner:
-pages.form.field.name	=	Beth yw enw cyntaf eich partner?
-pages.form.field.last-name	=	Beth yw enw olaf eich partner?
+pages.form.field.name	=	Enw cyntaf
+pages.form.field.last-name	=	Enw olaf
 pages.form.field.gender	=	Beth yw rhyw eich partner?
 pages.form.field.gender.male	=	Gwryw
 pages.form.field.gender.female	=	Benyw
 pages.form.field-helper.gender	=	Bydd yr wybodaeth hon yn ein helpu i gadarnhau pwy ydyw.
 pages.form.field.nino	=	Beth yw rhif Yswiriant Gwladol eich partner?
+pages.form.field.warning    =   Er mwyn gwneud cais, rhaid mai chi sydd â'r incwm isaf. Os mai chi sydd â'r incwm uchaf, ni fyddwch yn talu digon o dreth os byddwch yn parhau.
+pages.form.field.warning-hidden =   Gwybodaeth bwysig
 pages.form.field-helper.nino-example	=	Er enghraifft, QQ 12 34 56 C
 pages.form.field-helper.nino-where	=	Ble y gallaf ddod o hyd i hwn?
 pages.form.field-helper.nino-found	=	Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.

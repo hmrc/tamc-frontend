@@ -153,7 +153,7 @@ title.dateOfBirth=Were you and your partner born after 5 April 1935?
 title.eligible-years=Apply for the current tax year
 title.extra-years=Apply for earlier tax years
 title.transfer-in-place=Transfer in place
-title.transfer=Your partner’s details
+title.transfer=Enter your partner’s details
 title.finished=Application confirmed
 title.confirm-email=Confirm your email address
 title.non-eligible=You are not eligible in the current tax year
@@ -324,16 +324,18 @@ pages.finished.hidden-warning=Warning
 #********************************************************************************
 
 
-pages.form.h1=Your partner’s details
+pages.form.h1=Enter your partner’s details
 pages.form.details= As you have the lower income, you can apply to help reduce the amount of tax they pay.
 pages.form.enter-data=Enter your partner’s details:
-pages.form.field.name=What is their first name?
-pages.form.field.last-name=What is their last name?
+pages.form.field.name=First name
+pages.form.field.last-name=Last name
 pages.form.field.gender=What is their gender?
 pages.form.field.gender.male=Male
 pages.form.field.gender.female=Female
 pages.form.field-helper.gender=This information will help us confirm their identity
 pages.form.field.nino=What is their National Insurance number?
+pages.form.field.warning=You must have the lower income to apply. If you have the higher income, you will underpay tax if you continue.
+pages.form.field.warning-hidden=Important information
 pages.form.field-helper.nino-example=For example, QQ 12 34 56 C
 pages.form.field-helper.nino-where=Where do I find this?
 pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits.
