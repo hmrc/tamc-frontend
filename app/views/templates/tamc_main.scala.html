@@ -227,7 +227,12 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
         "inlineScript" -> scriptElement,
         "mainClass" -> mainConfig,
         "isWelsh" -> isWelsh,
-        "optimizelyProjectId"  -> "8421482974"
+        "optimizelyProjectId"  -> "8421482974",
+        "showPropositionLinks" -> true,
+        "langSelector" -> {
+          Map("enUrl" -> controllers.routes.LanguageController.enGb(request.uri).url,
+            "cyUrl" -> controllers.routes.LanguageController.cyGb(request.uri).url)
+        }
     ))
 }
 

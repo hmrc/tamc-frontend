@@ -30,11 +30,10 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @import views.helpers.TextGenerators
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.date-of-marriage")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}"))),
-langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishDateOfMarriage.toString(),
-                                        controllers.routes.LanguageController.switchToWelshDateOfMarriage.toString()))){
+  title = Messages("title.application.pattern", Messages("title.date-of-marriage")),
+  mainConfig = views.helpers.MainConfig(
+  maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
+){
 
     @templates.form_error_notification(marriageForm)
 

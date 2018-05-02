@@ -30,9 +30,8 @@
 @import uk.gov.hmrc.play.views.html._
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.eligibility-criteria")),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishCalculator.toString(),
-                                                controllers.routes.LanguageController.switchToWelshCalculator.toString()))){
+  title = Messages("title.pattern", Messages("title.eligibility-criteria"))
+){
     @templates.form_error_notification(calculatorForm)
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
     <p>@Html(Messages("pages.calc.para1"))</p>

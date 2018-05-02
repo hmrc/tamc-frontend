@@ -31,9 +31,8 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.confirm-email")),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmYourEmail.toString(),
-                                            controllers.routes.LanguageController.switchToWelshConfirmYourEmail.toString()))){
+  title = Messages("title.application.pattern", Messages("title.confirm-email"))
+){
     @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
             @templates.form_error_notification(recipientForm)
             <div class="form-group">

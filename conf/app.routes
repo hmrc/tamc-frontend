@@ -69,60 +69,8 @@ GET    /date-of-birth-check                        controllers.MultiYearGdsEligi
 POST   /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheckAction
 
 #Welsh Translation
-GET    /switch-to-welsh-eligibility-check          controllers.LanguageController.switchToWelshEligibilityCheck
-GET    /switch-to-english-eligibility-check        controllers.LanguageController.switchToEnglishEligibilityCheck
-GET    /switch-to-welsh-lower-earner               controllers.LanguageController.switchToWelshLowerEarnerCheck
-GET    /switch-to-english-lower-earner             controllers.LanguageController.switchToEnglishLowerEarnerCheck
-GET    /switch-to-welsh-date-of-birth              controllers.LanguageController.switchToWelshDateOfBirthCheck
-GET    /switch-to-english-date-of-birth            controllers.LanguageController.switchToEnglishDateOfBirthCheck
-GET    /switch-to-welsh-partners-income            controllers.LanguageController.switchToWelshPartnersIncomeCheck
-GET    /switch-to-english-partners-income          controllers.LanguageController.switchToEnglishPartnersIncomeCheck
-GET    /switch-to-welsh-history                    controllers.LanguageController.switchToWelshHistory
-GET    /switch-to-english-history                  controllers.LanguageController.switchToEnglishHistory
-GET    /switch-to-welsh-income-change              controllers.LanguageController.switchToWelshIncomeChange
-GET    /switch-to-english-income-change            controllers.LanguageController.switchToEnglishIncomeChange
-GET    /switch-to-welsh-bereavement                controllers.LanguageController.switchToWelshBereavement
-GET    /switch-to-english-bereavement              controllers.LanguageController.switchToEnglishBereavement
-GET    /switch-to-welsh-confirm-email              controllers.LanguageController.switchToWelshConfirmEmail
-GET    /switch-to-english-confirm-email            controllers.LanguageController.switchToEnglishConfirmEmail	
-GET    /switch-to-welsh-confirm-change             controllers.LanguageController.switchToWelshConfirmUpdate
-GET    /switch-to-english-confirm-change           controllers.LanguageController.switchToEnglishConfirmUpdate	
-GET    /switch-to-welsh-cancel                     controllers.LanguageController.switchToWelshConfirmCancel
-GET    /switch-to-english-cancel                   controllers.LanguageController.switchToEnglishConfirmCancel	
-GET    /switch-to-welsh-reject                     controllers.LanguageController.switchToWelshConfirmReject
-GET    /switch-to-english-reject                   controllers.LanguageController.switchToEnglishConfirmReject	
-GET    /switch-to-welsh-finished-change            controllers.LanguageController.switchToWelshFinishUpdate
-GET    /switch-to-english-finished-change          controllers.LanguageController.switchToEnglishFinishUpdate	
-GET    /switch-to-welsh-transfer-allowance         controllers.LanguageController.switchToWelshTransfer
-GET    /switch-to-english-transfer-allowance       controllers.LanguageController.switchToEnglishTransfer
-GET    /switch-to-welsh-date-of-marriage           controllers.LanguageController.switchToWelshDateOfMarriage
-GET    /switch-to-english-date-of-marriage         controllers.LanguageController.switchToEnglishDateOfMarriage
-GET    /switch-to-welsh-eligible-years             controllers.LanguageController.switchToWelshEligibleYears
-GET    /switch-to-english-eligible-years           controllers.LanguageController.switchToEnglishEligibleYears
-GET    /switch-to-welsh-previous-years             controllers.LanguageController.switchToWelshPreviousYears
-GET    /switch-to-english-previous-years           controllers.LanguageController.switchToEnglishPreviousYears
-GET    /switch-to-welsh-confirm-your-email         controllers.LanguageController.switchToWelshConfirmYourEmail
-GET    /switch-to-english-confirm-your-email       controllers.LanguageController.switchToEnglishConfirmYourEmail
-GET    /switch-to-welsh-confirm                    controllers.LanguageController.switchToWelshConfirm
-GET    /switch-to-english-confirm                  controllers.LanguageController.switchToEnglishConfirm
-GET    /switch-to-welsh-finished                   controllers.LanguageController.switchToWelshFinished
-GET    /switch-to-english-finished                 controllers.LanguageController.switchToEnglishFinished
-GET    /switch-to-welsh-how-it-works               controllers.LanguageController.switchToWelshHowItWorks
-GET    /switch-to-english-how-it-works             controllers.LanguageController.switchToEnglishHowItWorks
-GET    /switch-to-welsh-eligibility-check-pta      controllers.LanguageController.switchToWelshEligibilityCheckPta
-GET    /switch-to-english-eligibility-check-pta    controllers.LanguageController.switchToEnglishEligibilityCheckPta
-GET    /switch-to-welsh-date-of-birth-pta          controllers.LanguageController.switchToWelshDateOfBirthCheckPta
-GET    /switch-to-english-date-of-birth-pta        controllers.LanguageController.switchToEnglishDateOfBirthCheckPta
-GET    /switch-to-welsh-lower-earner-pta           controllers.LanguageController.switchToWelshLowerEarnerCheckPta
-GET    /switch-to-english-lower-earner-pta         controllers.LanguageController.switchToEnglishLowerEarnerCheckPta
-GET    /switch-to-welsh-partners-income-pta        controllers.LanguageController.switchToWelshPartnersIncomeCheckPta
-GET    /switch-to-english-partners-income-pta      controllers.LanguageController.switchToEnglishPartnersIncomeCheckPta
-GET    /switch-to-welsh-benefit-calculator         controllers.LanguageController.switchToWelshCalculator
-GET    /switch-to-english-benefit-calculator       controllers.LanguageController.switchToEnglishCalculator
-GET    /switch-to-welsh-benefit-calculator-pta     controllers.LanguageController.switchToWelshCalculatorPta
-GET    /switch-to-english-benefit-calculator-pta   controllers.LanguageController.switchToEnglishCalculatorPta
-GET    /switch-to-welsh-signin                     controllers.LanguageController.switchToWelshSignin
-GET    /switch-to-english-signin                   controllers.LanguageController.switchToEnglishSignin
+GET     /lang/enGb                                  @controllers.LanguageController.enGb(redirectUrl: String)
+GET     /lang/cyGb                                  @controllers.LanguageController.cyGb(redirectUrl: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                               controllers.Assets.at(path="/public", file)
