@@ -42,10 +42,9 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.history")),
-    mainConfig = views.helpers.MainConfig(),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishHistory.toString(),
-                                                controllers.routes.LanguageController.switchToWelshHistory.toString()))) {
+  title = Messages("title.pattern", Messages("title.history")),
+  mainConfig = views.helpers.MainConfig()
+) {
 		<h1 class="heading-xlarge">@Html(Messages("generic.ma"))
 			<div class="secondary-text-colour bold-xlarge">@loggedInUserInfo.get.name.get.firstName @loggedInUserInfo.get.name.get.lastName</div>
 		</h1>

@@ -35,9 +35,8 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.confirm")),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirm.toString(),
-                                            controllers.routes.LanguageController.switchToWelshConfirm.toString()))){
+  title = Messages("title.application.pattern", Messages("title.confirm"))
+){
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
     <table>
     <col width="30%">

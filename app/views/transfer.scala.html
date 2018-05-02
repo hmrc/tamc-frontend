@@ -32,11 +32,10 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.transfer")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}"))),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishTransfer.toString(),
-                                            controllers.routes.LanguageController.switchToWelshTransfer.toString()))) {
+  title = Messages("title.application.pattern", Messages("title.transfer")),
+  mainConfig = views.helpers.MainConfig(
+    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
+) {
 
     @templates.form_error_notification(recipientForm)
 

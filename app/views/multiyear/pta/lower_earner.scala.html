@@ -31,9 +31,8 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE))),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishLowerEarnerCheckPta.toString(),
-                                            controllers.routes.LanguageController.switchToWelshLowerEarnerCheckPta.toString()))){
+  title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
+){
 
     @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data")
 

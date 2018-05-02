@@ -29,10 +29,9 @@
     @import play.api.Play.current
     @import play.api.i18n.Messages.Implicits._
 
-    @templates.tamc_main(
-        title = Messages("title.eligibility.pattern", Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT))),
-        langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishPartnersIncomeCheck.toString(),
-            controllers.routes.LanguageController.switchToWelshPartnersIncomeCheck.toString()))) {
+@templates.tamc_main(
+  title = Messages("title.eligibility.pattern", Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))
+) {
 
     @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.PERSONAL_ALLOWANCE+1), upperLimit = Some(ApplicationConfig.MAX_LIMIT), scottishLimit = Some(ApplicationConfig.MAX_LIMIT_SCOT))
 
