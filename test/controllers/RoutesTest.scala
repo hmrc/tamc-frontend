@@ -875,7 +875,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check")
+      back.attr("href") shouldBe marriageAllowanceUrl("/do-you-live-in-scotland")
     }
 
     "redirect to who should transfer page irrespective of selection" in {
@@ -935,10 +935,35 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
     }
 
-    "redirect to who should lower earner page irrespective of selection" in {
+    "redirect to do you live in scotland page irrespective of selection" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("date-of-birth" -> "false")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.dateOfBirthCheckAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-live-in-scotland"))
+    }
+
+  }
+
+  "GDS do you live in scotland page for multi year" should {
+    "diplay errors as no radio buttons is selected " in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouLiveInScotlandAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check")
+    }
+
+    "redirect to who should lower earner page irrespective of selection" in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("do-you-live-in-scotland" -> "false")
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouLiveInScotlandAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner"))
     }
