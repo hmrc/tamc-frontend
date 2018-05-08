@@ -901,6 +901,19 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
     }
   }
 
+  "GDS do you live in scotland page for multiyear" should {
+
+    "successfully authenticate the user and have do you live in scotland page and content" in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouLiveInScotland()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
   "GDS lower earner page for multiyear" should {
 
     "successfully authenticate the user and have lower earner page and content" in {
