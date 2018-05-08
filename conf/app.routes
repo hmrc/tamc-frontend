@@ -56,6 +56,8 @@ GET    /partners-income-pta                        controllers.MultiYearPtaEligi
 POST   /partners-income-pta                        controllers.MultiYearPtaEligibilityController.partnersIncomeCheckAction
 GET    /date-of-birth-check-pta                    controllers.MultiYearPtaEligibilityController.dateOfBirthCheck
 POST   /date-of-birth-check-pta                    controllers.MultiYearPtaEligibilityController.dateOfBirthCheckAction
+GET    /do-you-live-in-scotland-pta                controllers.MultiYearPtaEligibilityController.doYouLiveInScotland
+POST   /do-you-live-in-scotland-pta                controllers.MultiYearPtaEligibilityController.doYouLiveInScotlandAction
 
 #Mutliyaer-GDS
 GET    /                                           controllers.MultiYearGdsEligibilityController.home

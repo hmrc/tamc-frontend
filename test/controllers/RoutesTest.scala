@@ -722,11 +722,39 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
     }
 
-    "redirect to who should lower earner page irrespective of selection" in {
+    "redirect to who should do you live in scotland page irrespective of selection" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("date-of-birth" -> "true")
       val controllerToTest = testComponent.controller
       val result = controllerToTest.dateOfBirthCheckAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-live-in-scotland-pta"))
+    }
+
+  }
+
+  "PTA do you live in scotland page for multi year" should {
+
+    "diplay errors as no radio buttons is selected " in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.doYouLiveInScotlandAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check-pta")
+    }
+
+    "redirect to lower earner check page irrespective of selection" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request.withFormUrlEncodedBody("do-you-live-in-scotland" -> "true")
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.doYouLiveInScotlandAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner-pta"))
     }
@@ -750,7 +778,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check-pta")
+      back.attr("href") shouldBe marriageAllowanceUrl("/do-you-live-in-scotland-pta")
     }
 
     "redirect to who should transfer page irrespective of selection" in {

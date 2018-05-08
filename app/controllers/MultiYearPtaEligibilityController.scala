@@ -21,6 +21,7 @@ import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
 import forms.MultiYearDateOfBirthForm._
+import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
@@ -101,6 +102,31 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 BadRequest(views.html.multiyear.pta.date_of_birth_check(formWithErrors)),
               dateOfBirthInput => {
                 dateOfBirthInput.dateOfBirth match {
+                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouLiveInScotland())
+                }
+              })
+          }
+  }
+
+  def doYouLiveInScotland() = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            Ok(views.html.multiyear.pta.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
+          }
+  }
+
+  def doYouLiveInScotlandAction() = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            doYouLiveInScotlandForm.bindFromRequest.fold(
+              formWithErrors =>
+                BadRequest(views.html.multiyear.pta.do_you_live_in_scotland(formWithErrors)),
+              doYouLiveInScotlandInput => {
+                doYouLiveInScotlandInput.doYouLiveInScotland match {
                   case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
                 }
               })
