@@ -137,6 +137,30 @@ $(function() {
       });
   });
 
+$(function() {
+
+    var $radio = $("input:radio[name=do-you-live-in-scotland]");
+    $radio.click(function(){
+        var $input = $("input:radio[value=true]:checked").val();
+        if ($input) {
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'marriage-allowance',
+                eventAction: 'radio selection',
+                eventLabel: 'liveinscotland_yes'
+            });
+        } else {
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'marriage-allowance',
+                eventAction: 'radio selection',
+                eventLabel: 'liveinscotland_no'
+            });
+        }
+    });
+});
+
   $(function() {
 
        var $radio = $("input:radio[name=partners-income]");
