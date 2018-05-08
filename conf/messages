@@ -305,7 +305,6 @@ title.doYouLiveInScotland = tab title
 eligibility.check.do.you.live.in.scotland.h1 = Do you live in Scotland?
 eligibility.check.do.you.live.in.scotland.span.para = ?????1
 eligibility.check.do.you.live.in.scotland.span.married = ???2
-eligibility.check.do.you.live.in.scotland.error = ????3 when click on no
 eligibility.check.do.you.live.in.scotland.legend = ????4
 pages.form.field-required.do-you-live-in-scotland = Select yes if you live in Scotland
 pages.form.field.description.do-you-live-in-scotland = Select yes if you live in Scotland
