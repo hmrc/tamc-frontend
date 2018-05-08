@@ -301,6 +301,15 @@ eligibility.check.date.of.birth.span.married=Does this apply to you and your par
 eligibility.check.date.of.birth.error=You might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" data-journey-click="marriage-allowance:outboundlink:married_couples-link" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
 
 
+title.doYouLiveInScotland = tab title
+eligibility.check.do.you.live.in.scotland.h1 = waa
+eligibility.check.do.you.live.in.scotland.span.para = ?????1
+eligibility.check.do.you.live.in.scotland.span.married = ???2
+eligibility.check.do.you.live.in.scotland.error = ????3 when click on no
+eligibility.check.do.you.live.in.scotland.legend = ????4
+pages.form.field-required.do-you-live-in-scotland = ERROR555
+pages.form.field.description.do-you-live-in-scotland = ERROR666
+
 #********************************************************************************
 # Finished Message
 #********************************************************************************

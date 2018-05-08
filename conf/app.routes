@@ -67,6 +67,9 @@ GET    /partners-income                            controllers.MultiYearGdsEligi
 POST   /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
 GET    /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheck
 POST   /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheckAction
+GET    /do-you-live-in-scotland                    controllers.MultiYearGdsEligibilityController.doYouLiveInScotland
+POST   /do-you-live-in-scotland                    controllers.MultiYearGdsEligibilityController.doYouLiveInScotlandAction
+
 
 #Welsh Translation
 GET     /lang/enGb                                  @controllers.LanguageController.enGb(redirectUrl: String)
