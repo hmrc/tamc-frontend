@@ -679,3 +679,7 @@ tamc.breadcrumb.home = Hafan y cyfrif
 tamc.breadcrumb.incometax = Treth Incwm
 tamc.menu = Dewislen
 tamc.yourtaxaccount = Eich cyfrif treth personol
+
+eligibility.check.do.you.live.in.scotland.h1 = A ydych yn byw yn yr Alban?
+pages.form.field-required.do-you-live-in-scotland = Dewiswch Iawn os ydych yn byw yn yr Alban
+pages.form.field.description.do-you-live-in-scotland = Dewiswch Iawn os ydych yn byw yn yr Alban
