@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.ApplicationConfig
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
@@ -384,10 +385,14 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       document.getElementById("calculator-result").text() shouldBe "You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000."
     }
     "be displayed if transferor income is below limit and recipient income=20000" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "11501", "recipient-income" -> "20000")
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val overLowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> (ApplicationConfig.PERSONAL_ALLOWANCE + 1).toString,
+        "recipient-income" -> "20000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe "You will not benefit as a couple because your income is over £11,500."
+      document.getElementById("calculator-result").text() shouldBe "You will not benefit as a couple because your income is over £" +
+        overLowerThreshold + "."
     }
     "be displayed if transferor income exceeds limit and recipient income=20000" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "43001", "recipient-income" -> "20000")
