@@ -96,7 +96,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       higherThreshold + "."
     }
 
-    "be GBP 237 if transferor income=9000 (< 9540) and recipient income=12000 (> 11660)" in {
+    "be GBP 238 if transferor income=9000 (< 9540) and recipient income=12000 (> 11660)" in {
       val request = FakeRequest().withFormUrlEncodedBody("transferor-income" -> "9000", "recipient-income" -> "16000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
