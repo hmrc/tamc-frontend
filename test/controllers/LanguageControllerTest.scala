@@ -38,7 +38,8 @@ class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSui
 
   "Calling LanguageController.enGb" should {
     "change the language to English and return 303" in new LocalSetup {
-      val r = c.enGb("/test")(FakeRequest("GET", ""))
+      val req = FakeRequest("GET", "test")
+      val r = c.enGb("/test")(req)
       cookies(r).get("PLAY_LANG").get.value shouldBe "en"
       status(r) shouldBe SEE_OTHER
     }

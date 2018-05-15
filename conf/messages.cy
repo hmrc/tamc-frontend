@@ -125,7 +125,7 @@ generic.back	=	Yn &#244;l
 generic.next	=	Nesaf
 generic.previous	=	Blaenorol
 generic.finish	=	Gorffen
-generic.continue	=	Parhau
+generic.continue	=	Yn eich blaen
 generic.change	=	Newid
 generic.confirm-apply	=	Cadarnhau a gwneud cais
 generic.confirm.button	=	Cadarnhau
@@ -679,3 +679,7 @@ tamc.breadcrumb.home = Hafan y cyfrif
 tamc.breadcrumb.incometax = Treth Incwm
 tamc.menu = Dewislen
 tamc.yourtaxaccount = Eich cyfrif treth personol
+
+eligibility.check.do.you.live.in.scotland.h1 = A ydych yn byw yn yr Alban?
+pages.form.field-required.do-you-live-in-scotland = Dewiswch Iawn os ydych yn byw yn yr Alban
+pages.form.field.description.do-you-live-in-scotland = Dewiswch Iawn os ydych yn byw yn yr Alban
