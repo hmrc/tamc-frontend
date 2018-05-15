@@ -31,11 +31,10 @@
 @import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.confirm-email")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}"))),
-    langSwitch = Some(templates.lang_button(controllers.routes.LanguageController.switchToEnglishConfirmEmail.toString(),
-                                            controllers.routes.LanguageController.switchToWelshConfirmEmail.toString()))) {
+  title = Messages("title.application.pattern", Messages("title.confirm-email")),
+  mainConfig = views.helpers.MainConfig(
+    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
+) {
     @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
