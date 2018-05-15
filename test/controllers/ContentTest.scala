@@ -860,7 +860,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Is your income less than £" + lowerThreshold + " a year? - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
@@ -874,14 +874,17 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val controllerToTest = testComponent.controller
       val result = controllerToTest.partnersIncomeCheck()(request)
 
-      val baseLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val upperLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
-      val upperLimitScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your partner’s income between £$baseLimit and £$upperLimit a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$baseLimit and £$upperLimitScot a year."
+      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$lowerThreshold and £$higherThresholdScot a year."
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+
     }
   }
 
@@ -909,7 +912,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Is your income less than £" + lowerThreshold + " a year? - Marriage Allowance eligibility - GOV.UK"
+      document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
     }
   }
@@ -921,14 +924,14 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.partnersIncomeCheck()(request)
 
-      val baseLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val upperLimit = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
-      val upperLimitScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your partner’s income between £$baseLimit and £$upperLimit a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$baseLimit and £$upperLimitScot a year."
+      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$lowerThreshold and £$higherThresholdScot a year."
     }
   }
 
