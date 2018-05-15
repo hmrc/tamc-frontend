@@ -97,12 +97,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 
 @commonContentHeader = {
 
-    @if(user.isDefined && !utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-        <div class="align-right">
-            <a id="sign-out" href=@routes.AuthorisationController.logout().url>@Messages("user-status.sign-out")</a>
-        </div>
-    }
-
     @if(ApplicationConfig.isWelshEnabled) {
         @langSwitch
     }
@@ -111,16 +105,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 @if(ApplicationConfig.enableRefresh) {
     <meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
 }
-
-
-@links = @{
-    if(user.isDefined) {
-        Map("url" -> routes.AuthorisationController.logout().url , "text" -> Messages("user-status.sign-out"))
-    } else {
-        Map.empty
-    }
-}
-
 
 @mustacheCheck(str: String) = @{
     if(str.trim=="") false else str
