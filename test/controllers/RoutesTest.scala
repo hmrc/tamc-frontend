@@ -730,11 +730,9 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-live-in-scotland-pta"))
     }
-
   }
 
   "PTA do you live in scotland page for multi year" should {
-
     "diplay errors as no radio buttons is selected " in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
@@ -758,11 +756,9 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner-pta"))
     }
-
   }
 
   "PTA lower earner check page for multi year" should {
-
     "diplay errors as no radio buttons is selected " in {
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
@@ -938,12 +934,12 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner")
     }
 
-    "redirect to verify page irrespective of selection" in {
+    "redirect to do you want to apply page irrespective of selection" in {
       val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("partners-income" -> "false")
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.partnersIncomeCheckAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/history"))
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-want-to-apply"))
     }
   }
 
@@ -995,6 +991,37 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner"))
     }
+  }
 
+  "GDS do you want to apply page for multi year" should {
+    "diplay errors as no radio buttons is selected " in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouWantToApplyAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/partners-income")
+    }
+
+    "redirect to gov uk ma page if no chosen" in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("do-you-want-to-apply" -> "false")
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouWantToApplyAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("https://www.gov.uk/marriage-allowance")
+    }
+
+    "redirect to confirm id page if yes chosen" in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("do-you-want-to-apply" -> "true")
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouWantToApplyAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/history"))
+    }
   }
 }

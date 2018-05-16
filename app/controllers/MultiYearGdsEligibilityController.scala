@@ -24,6 +24,7 @@ import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
+import play.api.mvc.Call
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
@@ -36,6 +37,8 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
 
   val eligibilityCalculatorService = EligibilityCalculatorService
   val auditConnector: AuditConnector
+
+  private lazy val redirectGOVUKMarriageAllowance = Redirect(Call("GET","https://www.gov.uk/marriage-allowance"))
 
   def home = unauthorisedAction {
     implicit request =>
@@ -76,7 +79,8 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
           BadRequest(views.html.multiyear.gds.do_you_want_to_apply(formWithErrors)),
         doYouWantToApplyInput => {
           doYouWantToApplyInput.doYouWantToApply match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
+            case false => redirectGOVUKMarriageAllowance
+            case _ => Redirect(controllers.routes.UpdateRelationshipController.history())
           }
         })
   }  
@@ -148,7 +152,7 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
           BadRequest(views.html.multiyear.gds.partners_income_question(formWithErrors)),
         partnersIncomeInput => {
           partnersIncomeInput.partnersIncomeQuestion match {
-            case _ => Redirect(controllers.routes.UpdateRelationshipController.history())
+            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouWantToApply())
           }
         })
   }
