@@ -21,10 +21,13 @@ import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
 import forms.MultiYearDateOfBirthForm._
+import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
+import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
+import play.api.mvc.Call
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
@@ -78,6 +81,35 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 eligibilityInput.married match {
                   case true => Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
                   case _ => Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
+                }
+              })
+          }
+  }
+
+  def doYouWantToApply() = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            Ok(views.html.multiyear.pta.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm))
+          }
+  }
+
+  def doYouWantToApplyAction() = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            doYouWantToApplyForm.bindFromRequest.fold(
+              formWithErrors =>
+                BadRequest(views.html.multiyear.pta.do_you_want_to_apply(formWithErrors)),
+              doYouWantToApplyInput => {
+                doYouWantToApplyInput.doYouWantToApply match {
+                  //case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
+
+                  case true => Redirect(controllers.routes.TransferController.transfer())
+                  case false => Redirect(Call("GET","https://www.tax.service.gov.uk/personal-account"))
+
                 }
               })
           }
@@ -176,7 +208,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors)),
               incomeCheckInput => {
-                Redirect(controllers.routes.TransferController.transfer())
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouWantToApply())
               })
           }
   }

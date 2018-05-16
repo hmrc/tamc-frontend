@@ -38,7 +38,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.do.you.want.to.apply.h1"))</h1>
         <p>@Messages("eligibility.check.do.you.want.to.apply.helpText")</p>
-        @helpers.form(action = routes.MultiYearGdsEligibilityController.doYouWantToApplyAction, args = ('id -> "doYouWantToApply-form")) {
+        @helpers.form(action = routes.MultiYearPtaEligibilityController.doYouWantToApplyAction, args = ('id -> "doYouWantToApply-form")) {
         <div class="form-group inline">
             @templates.input_radio_group(
             doYouWantToApplyForm("do-you-want-to-apply"),
@@ -57,5 +57,5 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         </div>
     }
 
-    <a href="@controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

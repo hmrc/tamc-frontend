@@ -810,15 +810,52 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
     }
 
-    "redirect to transfer controller page irrespective of selection" in {
+    "redirect to do you want to apply page irrespective of selection" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request.withFormUrlEncodedBody("partners-income" -> "false")
       val controllerToTest = testComponent.controller
       val result = controllerToTest.partnersIncomeCheckAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/transfer-allowance"))
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-want-to-apply-pta"))
     }
 
+  }
+
+
+  "PTA do you want to apply page for multi year" should {
+    "diplay errors as no radio buttons is selected " in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.doYouWantToApplyAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/partners-income-pta")
+    }
+
+    "redirect to my pta home page if no chosen" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request.withFormUrlEncodedBody("do-you-want-to-apply" -> "false")
+      val controllerToTest = testComponent.controller
+
+      val result = controllerToTest.doYouWantToApplyAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some("https://www.tax.service.gov.uk/personal-account")
+    }
+
+    "redirect to transfer page if yes chosen" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request.withFormUrlEncodedBody("do-you-want-to-apply" -> "true")
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.doYouWantToApplyAction()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/transfer-allowance"))
+    }
   }
 
   "GDS Eligibility check page for multi year" should {

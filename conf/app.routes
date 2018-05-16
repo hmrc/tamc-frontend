@@ -58,6 +58,8 @@ GET    /date-of-birth-check-pta                    controllers.MultiYearPtaEligi
 POST   /date-of-birth-check-pta                    controllers.MultiYearPtaEligibilityController.dateOfBirthCheckAction
 GET    /do-you-live-in-scotland-pta                controllers.MultiYearPtaEligibilityController.doYouLiveInScotland
 POST   /do-you-live-in-scotland-pta                controllers.MultiYearPtaEligibilityController.doYouLiveInScotlandAction
+GET    /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApply
+POST   /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApplyAction
 
 #Mutliyaer-GDS
 GET    /                                           controllers.MultiYearGdsEligibilityController.home
