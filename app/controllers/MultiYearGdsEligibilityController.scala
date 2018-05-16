@@ -20,6 +20,7 @@ import actions.{JourneyEnforcers, UnauthorisedActions}
 import connectors.ApplicationAuditConnector
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearDoYouLiveInScotlandForm._
+import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
@@ -60,6 +61,25 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
           }
         })
   }
+
+  def doYouWantToApply() = unauthorisedAction {
+    implicit request =>
+      setPtaAwareGdsJourney(
+        request = request,
+        response = Ok(views.html.multiyear.gds.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm)))
+  }
+
+  def doYouWantToApplyAction() = journeyEnforcedAction {
+    implicit request =>
+      doYouWantToApplyForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.multiyear.gds.do_you_want_to_apply(formWithErrors)),
+        doYouWantToApplyInput => {
+          doYouWantToApplyInput.doYouWantToApply match {
+            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
+          }
+        })
+  }  
 
   def dateOfBirthCheck() = unauthorisedAction {
     implicit request =>
