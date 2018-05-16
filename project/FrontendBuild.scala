@@ -47,7 +47,7 @@ private object AppDependencies {
   private val scalacheckVersion = "1.12.5"
   private val scalaTestVersion = "2.2.6"
   private val mockitoCoreVerison = "1.9.5"
-  private val localTemplateRendererVersion  = "1.0.0"
+  private val localTemplateRendererVersion  = "1.4.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,
