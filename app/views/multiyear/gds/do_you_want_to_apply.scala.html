@@ -37,7 +37,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.do.you.want.to.apply.h1"))</h1>
-        <p>@Messages("eligibility.check.do.you.want.to.apply.helpText")</p>
         @helpers.form(action = routes.MultiYearGdsEligibilityController.doYouWantToApplyAction, args = ('id -> "doYouWantToApply-form")) {
         <div class="form-group inline">
             @templates.input_radio_group(
