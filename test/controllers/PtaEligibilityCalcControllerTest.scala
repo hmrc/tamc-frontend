@@ -20,11 +20,12 @@ import config.ApplicationConfig
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
 
-class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class PtaEligibilityCalcControllerTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
 

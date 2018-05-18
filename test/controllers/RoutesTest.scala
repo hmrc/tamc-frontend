@@ -22,6 +22,7 @@ import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, cookies, defaultAwaitTimeout, redirectLocation}
@@ -31,7 +32,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class RoutesTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
 

@@ -20,13 +20,14 @@ import models.{CacheData, UserRecord}
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.mvc.Cookie
 import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestData.Cids
 import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class BreadcrumbTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class BreadcrumbTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
 

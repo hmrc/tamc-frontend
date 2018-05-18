@@ -17,33 +17,31 @@
 package controllers
 
 import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
+import com.google.inject.Inject
 import config.ApplicationConfig
-import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
+import connectors.ApplicationAuthConnector
 import details.CitizenDetailsService
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
+import play.api.i18n.{I18nSupport, MessagesApi}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
 
 import scala.concurrent.Future
 
-object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityController {
-  override val auditConnector = ApplicationAuditConnector
-  override lazy val maAuthRegime = MarriageAllowanceRegime
-  override val authConnector = ApplicationAuthConnector
-  override val citizenDetailsService = CitizenDetailsService
-  override val ivUpliftUrl = ApplicationConfig.ivUpliftUrl
-}
-
-trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
-
-  val eligibilityCalculatorService = EligibilityCalculatorService
-  val authConnector: ApplicationAuthConnector
-  val auditConnector: AuditConnector
+class MultiYearPtaEligibilityController @Inject() (
+                                                    val messagesApi: MessagesApi,
+                                                    val auditConnector: AuditConnector,
+                                                    val citizenDetailsService: CitizenDetailsService,
+                                                    val maAuthRegime: MarriageAllowanceRegime,
+                                                    val authConnector: ApplicationAuthConnector,
+                                                    val ivUpliftUrl: String
+                                                  ) extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
+  val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
   def howItWorks() = TamcAuthPersonalDetailsAction {
     implicit auth =>

@@ -17,38 +17,36 @@
 package controllers
 
 import actions.{JourneyEnforcers, UnauthorisedActions}
-import connectors.ApplicationAuditConnector
+import com.google.inject.Inject
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearDoYouLiveInScotlandForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent}
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
 
-object MultiYearGdsEligibilityController extends MultiYearGdsEligibilityController {
-  override val auditConnector = ApplicationAuditConnector
-}
+class MultiYearGdsEligibilityController @Inject() (
+                                                  val messagesApi: MessagesApi
+                                                  ) extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
 
-trait MultiYearGdsEligibilityController extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+  val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
-  val eligibilityCalculatorService = EligibilityCalculatorService
-  val auditConnector: AuditConnector
-
-  def home = unauthorisedAction {
+  def home: Action[AnyContent] = unauthorisedAction {
     implicit request =>
       Redirect(controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck())
   }
 
-  def eligibilityCheck() = unauthorisedAction {
+  def eligibilityCheck(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
         response = Ok(views.html.multiyear.gds.eligibility_check(eligibilityCheckForm = eligibilityForm)))
   }
 
-  def eligibilityCheckAction() = journeyEnforcedAction {
+  def eligibilityCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       eligibilityForm.bindFromRequest.fold(
         formWithErrors =>
@@ -61,14 +59,14 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
         })
   }
 
-  def dateOfBirthCheck() = unauthorisedAction {
+  def dateOfBirthCheck(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
         response = Ok(views.html.multiyear.gds.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm)))
   }
 
-  def dateOfBirthCheckAction() = journeyEnforcedAction {
+  def dateOfBirthCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       dateOfBirthForm.bindFromRequest.fold(
         formWithErrors =>
@@ -80,14 +78,14 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
         })
   }
 
-  def doYouLiveInScotland() = unauthorisedAction {
+  def doYouLiveInScotland(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
         response = Ok(views.html.multiyear.gds.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm)))
   }
 
-  def doYouLiveInScotlandAction() = journeyEnforcedAction {
+  def doYouLiveInScotlandAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       doYouLiveInScotlandForm.bindFromRequest.fold(
         formWithErrors =>
@@ -99,12 +97,12 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
         })
   }
 
-  def lowerEarnerCheck() = journeyEnforcedAction {
+  def lowerEarnerCheck(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       Ok(views.html.multiyear.gds.lower_earner(lowerEarnerFormInput = lowerEarnerForm))
   }
 
-  def lowerEarnerCheckAction() = journeyEnforcedAction {
+  def lowerEarnerCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       lowerEarnerForm.bindFromRequest.fold(
         formWithErrors =>
@@ -116,12 +114,12 @@ trait MultiYearGdsEligibilityController extends BaseController with Unauthorised
         })
   }
 
-  def partnersIncomeCheck() = journeyEnforcedAction {
+  def partnersIncomeCheck(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       Ok(views.html.multiyear.gds.partners_income_question(partnersIncomeForm))
   }
 
-  def partnersIncomeCheckAction() = journeyEnforcedAction {
+  def partnersIncomeCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       partnersIncomeForm.bindFromRequest.fold(
         formWithErrors =>

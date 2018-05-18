@@ -5,7 +5,7 @@
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
-*     http://www.apache.org/licenses/LICENSE-2.0
+* http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing, software
 * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,41 +13,61 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *@
-
-@(partnersIncomeFormInput: Form[(MultiYearPartnersIncomeQuestionInput)])(
-    implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-@import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig
 @import java.text.NumberFormat
-@import uk.gov.hmrc.time.TaxYearResolver
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 
-@templates.tamc_main(
-  title = Messages("title.eligibility.pattern", Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1), NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))
+@import config._
+@import config.ApplicationConfig._
+@import uk.gov.hmrc.play.breadcrumb.model.Breadcrumb
+@import uk.gov.hmrc.play.partials.FormPartialRetriever
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.renderer.TemplateRenderer
+@import views.html.templates._
+
+@(
+    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput]
+)(implicit
+    request: Request[_],
+    messages: Messages,
+    context: config.TamcContext,
+    breadcrumb: Breadcrumb,
+    user: details.TamcUser,
+    templateRenderer: TemplateRenderer,
+    formPartialRetriever: FormPartialRetriever
+)
+
+@tamc_main(
+    title = messages("title.eligibility.pattern",
+        messages("eligibility.check.partners.income.h1",
+        NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE+1),
+        NumberFormat.getIntegerInstance().format(MAX_LIMIT))
+    )
 ){
-
-    @templates.form_error_notification(partnersIncomeFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.PERSONAL_ALLOWANCE+1), upperLimit = Some(ApplicationConfig.MAX_LIMIT), scottishLimit = Some(ApplicationConfig.MAX_LIMIT_SCOT))
+    @form_error_notification(
+        partnersIncomeFormInput,
+        formErrorMessage = "pages.form.error.mandatory.data",
+        lowerLimit = Some(PERSONAL_ALLOWANCE+1),
+        upperLimit = Some(MAX_LIMIT),
+        scottishLimit = Some(MAX_LIMIT_SCOT)
+    )
 
     <h1 class="heading-xlarge">
-        <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
-        @Html(Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</h1>    <p class="information">@Html(Messages("eligibility.check.partners.income.information1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)))<br></p>
-        @helpers.form(action = routes.MultiYearPtaEligibilityController.partnersIncomeCheckAction, args = ('id -> "income-form")) {
+        <span class="heading-large secondary-text-colour">@messages("eligibility.check.span.h1")</span><br/>
+        @messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(MAX_LIMIT))
+    </h1>
+
+    <p class="information">
+        @messages("eligibility.check.partners.income.information1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE+1), NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT))
+        <br>
+    </p>
+
+    @helpers.form(action = routes.MultiYearPtaEligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <div class="form-group inline">
-            <p class="bold-small">@Html(Messages("eligibility.check.partners.income.information2"))</p>
-            @templates.input_radio_group(
+            <p class="bold-small">@messages("eligibility.check.partners.income.information2")</p>
+            @input_radio_group(
                 partnersIncomeFormInput("partners-income"),
-                Seq(("true",  Messages("radio.yes")), ("false", Messages("radio.no"))),
-                '_legend -> Html(Messages("multiyear.check.income")),
-                '_legendClass -> "visuallyhidden", 
+                Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
+                '_legend -> messages("multiyear.check.income"),
+                '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
                 '_fieldsetAttributes -> "data-inline-error=inline-partners-income-error",
@@ -56,17 +76,20 @@
         </div>
 
         <div class="tamc-js-hidden error-inline validation-summary partners-inc-error" id="inline-partners-income-error">
-        @Html(Messages("eligibility.check.partners.income.error"))
+            @messages("eligibility.check.partners.income.error")
         </div>
+
         <script>
                 var _gaq = [];
         </script>
+
         <div class="form-group">
             <button class="button button-calculate" data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue" type="submit">
-                @Html(Messages("generic.continue"))
+                @messages("generic.continue")
             </button>
         </div>
 
     }
-    <a href="@controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck" class="link-back">@Html(Messages("generic.back"))</a>
+
+    <a href="@controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck" class="link-back">@messages("generic.back")</a>
 }

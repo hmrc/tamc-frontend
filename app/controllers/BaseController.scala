@@ -23,5 +23,5 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 trait BaseController extends FrontendController {
   implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
-  implicit val formPartialRetriver: uk.gov.hmrc.play.partials.FormPartialRetriever  = TamcFormPartialRetriever
+  implicit val formPartialRetriver: FormPartialRetriever = TamcFormPartialRetriever
 }

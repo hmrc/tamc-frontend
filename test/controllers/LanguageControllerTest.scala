@@ -19,6 +19,7 @@ package controllers
 import org.scalatest.Ignore
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{cookies, defaultAwaitTimeout, header, redirectLocation}
 import test_utils.TestUtility
@@ -27,7 +28,7 @@ import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
-class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class LanguageControllerTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
 
   override implicit lazy val app: Application = fakeApplication
 

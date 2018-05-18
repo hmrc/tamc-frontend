@@ -25,6 +25,7 @@ import errors.ErrorResponseStatus.RELATION_MIGHT_BE_CREATED
 import models._
 import org.joda.time.DateTime
 import play.api.Application
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{Request, Result}
@@ -50,9 +51,11 @@ class DummyHttpResponse(override val body: String, override val status: Int, ove
   override def json: JsValue = Json.parse(body)
 }
 
-trait TestUtility extends UnitSpec {
+trait TestUtility extends UnitSpec with I18nSupport {
 
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
+
+  val messagesApi: MessagesApi
 
   lazy val fakeApplication: Application = new GuiceApplicationBuilder().build()
 
@@ -239,8 +242,8 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    new MultiYearGdsEligibilityController {
-      override val auditConnector: AuditConnector = fakeCustomAuditConnector
+    new MultiYearGdsEligibilityController(messagesApi) {
+      val auditConnector: AuditConnector = fakeCustomAuditConnector
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       def auditEventsToTest: List[DataEvent] = fakeCustomAuditConnector.auditEventsToTest
     }
@@ -252,10 +255,10 @@ trait TestUtility extends UnitSpec {
                                                 dataId: String,
                                                 pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))): MultiYearPtaElibilityTestComponent = {
     Map(
-      ("user_happy_path" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd))),
-      ("user_returning" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoWithCL100), makeMultiYearPtaEligibilityController(Some(Ninos.ninoWithCL100), pd))),
-      ("not_logged_in" -> MultiYearPtaElibilityTestComponent(FakeRequest(), makeMultiYearPtaEligibilityController(None, pd))))
-      .get(dataId).get
+      "user_happy_path" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd)),
+      "user_returning" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoWithCL100), makeMultiYearPtaEligibilityController(Some(Ninos.ninoWithCL100), pd)),
+      "not_logged_in" -> MultiYearPtaElibilityTestComponent(FakeRequest(), makeMultiYearPtaEligibilityController(None, pd))
+    )(dataId)
   }
 
   private def makeMultiYearPtaEligibilityController(
@@ -356,7 +359,13 @@ trait TestUtility extends UnitSpec {
       }
     }
 
-    new MultiYearPtaEligibilityController {
+    def auditConnector: AuditConnector = fakeCustomAuditConnector
+    def citizenDetailsService: CitizenDetailsService = fakeCitizenDetailsService
+    def maAuthRegime: MarriageAllowanceRegime = fakeMarriageAllowanceRegime
+    def authConnector: ApplicationAuthConnector = fakeAuthConnector
+    def ivUpliftUrl: String = "jazz"
+
+    new MultiYearPtaEligibilityController(messagesApi, auditConnector, citizenDetailsService, maAuthRegime, authConnector, ivUpliftUrl) {
       override val auditConnector = fakeCustomAuditConnector
       override val maAuthRegime = fakeMarriageAllowanceRegime
       override val authConnector = fakeAuthConnector
