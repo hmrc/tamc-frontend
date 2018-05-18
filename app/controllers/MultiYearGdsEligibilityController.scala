@@ -24,9 +24,12 @@ import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent}
-import services.EligibilityCalculatorService
+import play.api.mvc.{Action, AnyContent, Result}
+import services.{CachingService, EligibilityCalculatorService}
 import utils.TamcBreadcrumb
+import play.api.mvc._
+import scala.concurrent.Future
+import views.html.multiyear.gds._
 
 class MultiYearGdsEligibilityController @Inject() (
                                                   val messagesApi: MessagesApi
@@ -43,18 +46,18 @@ class MultiYearGdsEligibilityController @Inject() (
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
-        response = Ok(views.html.multiyear.gds.eligibility_check(eligibilityCheckForm = eligibilityForm)))
+        response = Ok(eligibility_check(eligibilityCheckForm = eligibilityForm)))
   }
 
   def eligibilityCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       eligibilityForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.eligibility_check(formWithErrors)),
+          BadRequest(eligibility_check(formWithErrors)),
         eligibilityInput => {
           eligibilityInput.married match {
             case true => Redirect(controllers.routes.MultiYearGdsEligibilityController.dateOfBirthCheck())
-            case _    => Ok(views.html.multiyear.gds.eligibility_non_eligible_finish())
+            case _    => Ok(eligibility_non_eligible_finish())
           }
         })
   }
@@ -63,14 +66,14 @@ class MultiYearGdsEligibilityController @Inject() (
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
-        response = Ok(views.html.multiyear.gds.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm)))
+        response = Ok(date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm)))
   }
 
   def dateOfBirthCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       dateOfBirthForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.date_of_birth_check(formWithErrors)),
+          BadRequest(date_of_birth_check(formWithErrors)),
         dateOfBirthInput => {
           dateOfBirthInput.dateOfBirth match {
             case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouLiveInScotland())
@@ -82,31 +85,32 @@ class MultiYearGdsEligibilityController @Inject() (
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
-        response = Ok(views.html.multiyear.gds.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm)))
+        response = Ok(do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm)).discardingCookies(DiscardingCookie("scottish_resident"))
+      )
   }
 
   def doYouLiveInScotlandAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       doYouLiveInScotlandForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.do_you_live_in_scotland(formWithErrors)),
+          BadRequest(do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
-          doYouLiveInScotlandInput.doYouLiveInScotland match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
+            .discardingCookies(DiscardingCookie("scottish_resident"))
+            .withCookies(Cookie("scottish_resident", doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
 
   def lowerEarnerCheck(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
-      Ok(views.html.multiyear.gds.lower_earner(lowerEarnerFormInput = lowerEarnerForm))
+      Ok(lower_earner(lowerEarnerFormInput = lowerEarnerForm))
   }
 
   def lowerEarnerCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       lowerEarnerForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.lower_earner(formWithErrors)),
+          BadRequest(lower_earner(formWithErrors)),
         lowerEarnerInput => {
           lowerEarnerInput.lowerEarner match {
             case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck())
@@ -114,16 +118,20 @@ class MultiYearGdsEligibilityController @Inject() (
         })
   }
 
+  def scottishResident(request: Request[_]): Boolean = {
+    if (request.cookies.exists((c: Cookie) => c.name == "scottish_resident")) request.cookies.get("scottish_resident").get.value.toBoolean else false
+  }
+
   def partnersIncomeCheck(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
-      Ok(views.html.multiyear.gds.partners_income_question(partnersIncomeForm))
+      Ok(partners_income_question(partnersIncomeForm, scottishResident(request)))
   }
 
   def partnersIncomeCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       partnersIncomeForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.partners_income_question(formWithErrors)),
+          BadRequest(partners_income_question(formWithErrors, scottishResident(request))),
         partnersIncomeInput => {
           partnersIncomeInput.partnersIncomeQuestion match {
             case _ => Redirect(controllers.routes.UpdateRelationshipController.history())

@@ -16,4 +16,10 @@
 
 package models
 
+import play.api.libs.json.{Format, Json}
+
 case class MultiYearDoYouLiveInScotlandFormInput(doYouLiveInScotland: Boolean)
+
+object MultiYearDoYouLiveInScotlandFormInput {
+  implicit val formats: Format[MultiYearDoYouLiveInScotlandFormInput] = Json.format[MultiYearDoYouLiveInScotlandFormInput]
+}

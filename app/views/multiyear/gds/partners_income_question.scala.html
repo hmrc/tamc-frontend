@@ -24,7 +24,8 @@
 @import views.html.templates._
 
 @(
-    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput]
+    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
+    scottishResident: Boolean
 )(implicit
     request: Request[_],
     messages: Messages,
@@ -51,6 +52,7 @@
     )
 
     <h1 class="heading-xlarge">
+        @{scottishResident}
         <span class="heading-large secondary-text-colour">@messages("eligibility.check.span.h1")</span><br/>
         @messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(MAX_LIMIT))
     </h1>
