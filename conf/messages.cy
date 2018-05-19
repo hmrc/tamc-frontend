@@ -104,9 +104,9 @@ coc.end-reason.RETROSPECTIVE	=	Wedi gwneud cais am Lwfans Priodasol yn &#244;l-w
 coc.end-reason.SYSTEM	=	CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT	=	Lwfans Priodasol wedi dod i ben
 
-pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £43,000 os ydych yn byw yn yr Alban)
+pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £{2} os ydych yn byw yn yr Alban)
 
-pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £43,000 os ydych yn byw yn yr Alban)
+pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £{2} os ydych yn byw yn yr Alban)
 
 pages.form.field.description.date-of-birth  = Cadarnhewch os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>6 Ebrill 1935</span>
 
@@ -242,20 +242,26 @@ pages.form.field.description.selectedYear = Mae angen i chi ddewis ateb
 
 eligibility.feedback.transferor-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na £43,000.
 eligibility.feedback.transferor-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na £45,000.
+eligibility.feedback.transferor-not-eligible-2018	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na £46,350.
 eligibility.feedback.recipient-not-eligible-2016	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,001 a £43,000.
 eligibility.feedback.recipient-not-eligible-2017	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,501 a £45,000.
+eligibility.feedback.recipient-not-eligible-2018	=	Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,851 a £46,350.
 eligibility.check.unlike-benefit-as-couple-2016	= Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,000.
 eligibility.check.unlike-benefit-as-couple-2017	= Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,500.
+eligibility.check.unlike-benefit-as-couple-2018	= Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,850.
 max-benefit-2014	=	£212
 max-benefit-2015	=	£212
 max-benefit-2016	=	£220
 max-benefit-2017	=	£230
+max-benefit-2018	=	£238
 your-income-2015	=	os oedd eich incwm yn £10,600 neu’n llai
 your-income-2016	=	os oedd eich incwm yn £11,000 neu’n llai
 your-income-2017	=	os oedd eich incwm yn £11,500 neu’n llai
+your-income-2017	=	os oedd eich incwm yn £11,850 neu’n llai
 income-between-2015	=	os oedd incwm rhwng {0} £10,601 a £42,385
 income-between-2016	=	os oedd incwm rhwng {0} £11,001 a £43,000
 income-between-2017	=	os oedd incwm rhwng {0} £11,501 a £45,000
+income-between-2017	=	os oedd incwm rhwng {0} £11,851 a £46,350
 
 
 #********************************************************************************
@@ -644,7 +650,7 @@ date.fields.year	=	Blwyddyn
 
 change.other.caption	=	Newidiadau eraill sy’n effeithio ar Lwfans Priodasol
 change.other.sub.caption1	=	Newid mewn incwm
-change.other.income.content	=	Er mwyn elwa o Lwfans Priodasol fel p&#226;r, dylech ennill £{0} neu lai’r flwyddyn. Er mwyn bod yn gymwys, mae’n rhaid i’ch partner ennill rhwng £{1} a £{2} y flwyddyn (neu £43,000 os ydych yn byw yn yr Alban).
+change.other.income.content	=	Er mwyn elwa o Lwfans Priodasol fel p&#226;r, dylech ennill £{0} neu lai’r flwyddyn. Er mwyn bod yn gymwys, mae’n rhaid i’ch partner ennill rhwng £{1} a £{2} y flwyddyn (neu £{3} os ydych yn byw yn yr Alban).
 change.other.income.link	=	Er mwyn rhoi gwybod i ni am newid mewn incwm, cysylltwch &#226; CThEM
 change.other.sub.caption2	=	Profedigaeth
 change.other.bereavement.content	=	Os yw’ch partner yn marw, bydd eich Lwfans Priodasol yn newid.
