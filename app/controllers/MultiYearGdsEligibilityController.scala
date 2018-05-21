@@ -24,11 +24,9 @@ import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Result}
-import services.{CachingService, EligibilityCalculatorService}
+import play.api.mvc.{Action, AnyContent, _}
+import services.EligibilityCalculatorService
 import utils.TamcBreadcrumb
-import play.api.mvc._
-import scala.concurrent.Future
 import views.html.multiyear.gds._
 
 class MultiYearGdsEligibilityController @Inject() (
@@ -85,7 +83,8 @@ class MultiYearGdsEligibilityController @Inject() (
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
-        response = Ok(do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm)).discardingCookies(DiscardingCookie("scottish_resident"))
+        response = Ok(do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
+          .withSession(request.session - "scottish_resident")
       )
   }
 
@@ -96,8 +95,7 @@ class MultiYearGdsEligibilityController @Inject() (
           BadRequest(do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
           Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
-            .discardingCookies(DiscardingCookie("scottish_resident"))
-            .withCookies(Cookie("scottish_resident", doYouLiveInScotlandInput.doYouLiveInScotland.toString))
+            .withSession(request.session + ("scottish_resident" -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
 
@@ -119,7 +117,7 @@ class MultiYearGdsEligibilityController @Inject() (
   }
 
   def scottishResident(request: Request[_]): Boolean = {
-    if (request.cookies.exists((c: Cookie) => c.name == "scottish_resident")) request.cookies.get("scottish_resident").get.value.toBoolean else false
+    if (request.session.get("scottish_resident").isDefined) request.session.get("scottish_resident").get.toBoolean else false
   }
 
   def partnersIncomeCheck(): Action[AnyContent] = journeyEnforcedAction {

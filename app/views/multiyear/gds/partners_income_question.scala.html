@@ -35,11 +35,15 @@
     formPartialRetriever: FormPartialRetriever
 )
 
+@maxLimit = @{
+    if (scottishResident) MAX_LIMIT_SCOT else MAX_LIMIT
+}
+
 @tamc_main(
     title = messages("title.eligibility.pattern",
         messages("eligibility.check.partners.income.h1",
         NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1),
-        NumberFormat.getIntegerInstance().format(MAX_LIMIT))
+        NumberFormat.getIntegerInstance().format(maxLimit))
     )
 ) {
 
@@ -52,15 +56,9 @@
     )
 
     <h1 class="heading-xlarge">
-        @{scottishResident}
         <span class="heading-large secondary-text-colour">@messages("eligibility.check.span.h1")</span><br/>
-        @messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(MAX_LIMIT))
+        @messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))
     </h1>
-
-    <p class="information">
-        @messages("eligibility.check.partners.income.information1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT))
-        <br>
-    </p>
 
     @helpers.form(action = routes.MultiYearGdsEligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <div class="form-group inline">

@@ -27,6 +27,7 @@ import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, Request}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
@@ -43,7 +44,7 @@ class MultiYearPtaEligibilityController @Inject() (
                                                   ) extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
   val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
-  def howItWorks() = TamcAuthPersonalDetailsAction {
+  def howItWorks(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -55,7 +56,7 @@ class MultiYearPtaEligibilityController @Inject() (
 
   }
 
-  def eligibilityCheck() = TamcAuthPersonalDetailsAction {
+  def eligibilityCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -64,7 +65,7 @@ class MultiYearPtaEligibilityController @Inject() (
           }
   }
 
-  def eligibilityCheckAction() = TamcAuthPersonalDetailsAction {
+  def eligibilityCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -73,15 +74,16 @@ class MultiYearPtaEligibilityController @Inject() (
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.eligibility_check(formWithErrors)),
               eligibilityInput => {
-                eligibilityInput.married match {
-                  case true => Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
-                  case _ => Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
+                if(eligibilityInput.married) {
+                  Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
+                } else {
+                  Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
                 }
               })
           }
   }
 
-  def dateOfBirthCheck() = TamcAuthPersonalDetailsAction {
+  def dateOfBirthCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -90,7 +92,7 @@ class MultiYearPtaEligibilityController @Inject() (
           }
   }
 
-  def dateOfBirthCheckAction() = TamcAuthPersonalDetailsAction {
+  def dateOfBirthCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -99,23 +101,22 @@ class MultiYearPtaEligibilityController @Inject() (
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.date_of_birth_check(formWithErrors)),
               dateOfBirthInput => {
-                dateOfBirthInput.dateOfBirth match {
-                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouLiveInScotland())
-                }
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouLiveInScotland())
               })
           }
   }
 
-  def doYouLiveInScotland() = TamcAuthPersonalDetailsAction {
+  def doYouLiveInScotland(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future {
             Ok(views.html.multiyear.pta.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
+              .withSession(request.session - "scottish_resident")
           }
   }
 
-  def doYouLiveInScotlandAction() = TamcAuthPersonalDetailsAction {
+  def doYouLiveInScotlandAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -124,14 +125,13 @@ class MultiYearPtaEligibilityController @Inject() (
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.do_you_live_in_scotland(formWithErrors)),
               doYouLiveInScotlandInput => {
-                doYouLiveInScotlandInput.doYouLiveInScotland match {
-                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
-                }
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
+                  .withSession(request.session + ("scottish_resident" -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
               })
           }
   }
 
-  def lowerEarnerCheck() = TamcAuthPersonalDetailsAction {
+  def lowerEarnerCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -140,7 +140,7 @@ class MultiYearPtaEligibilityController @Inject() (
           }
   }
 
-  def lowerEarnerCheckAction() = TamcAuthPersonalDetailsAction {
+  def lowerEarnerCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -149,34 +149,35 @@ class MultiYearPtaEligibilityController @Inject() (
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.lower_earner(formWithErrors)),
               lowerEarnerInput => {
-                lowerEarnerInput.lowerEarner match {
-                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck())
-                }
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck())
               })
           }
   }
 
-  def partnersIncomeCheck() = TamcAuthPersonalDetailsAction {
+  def scottishResident(request: Request[_]): Boolean = {
+    if (request.session.get("scottish_resident").isDefined) request.session.get("scottish_resident").get.toBoolean else false
+  }
+
+  def partnersIncomeCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future {
-            Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm))
+            Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm, scottishResident(request)))
           }
   }
 
-  def partnersIncomeCheckAction() = TamcAuthPersonalDetailsAction {
+  def partnersIncomeCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future {
             partnersIncomeForm.bindFromRequest.fold(
               formWithErrors =>
-                BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors)),
+                BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors, scottishResident(request))),
               incomeCheckInput => {
                 Redirect(controllers.routes.TransferController.transfer())
               })
           }
   }
-
 }
