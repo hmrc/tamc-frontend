@@ -253,11 +253,25 @@ trait TestUtility extends UnitSpec with I18nSupport {
 
   def makeMultiYearPtaEligibilityTestComponent(
                                                 dataId: String,
-                                                pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))): MultiYearPtaElibilityTestComponent = {
+                                                pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))
+                                              ): MultiYearPtaElibilityTestComponent = {
     Map(
-      "user_happy_path" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd)),
-      "user_returning" -> MultiYearPtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoWithCL100), makeMultiYearPtaEligibilityController(Some(Ninos.ninoWithCL100), pd)),
-      "not_logged_in" -> MultiYearPtaElibilityTestComponent(FakeRequest(), makeMultiYearPtaEligibilityController(None, pd))
+      "user_happy_path" -> MultiYearPtaElibilityTestComponent(
+        makeFakeRequest("ID-" + Ninos.ninoHappyPath).withSession("scottish_resident" -> "false"),
+        makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd)
+      ),
+      "user_happy_path_scottish" -> MultiYearPtaElibilityTestComponent(
+        makeFakeRequest("ID-" + Ninos.ninoHappyPath).withSession("scottish_resident" -> "true"),
+        makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd)
+      ),
+      "user_returning" -> MultiYearPtaElibilityTestComponent(
+        makeFakeRequest("ID-" + Ninos.ninoWithCL100),
+        makeMultiYearPtaEligibilityController(Some(Ninos.ninoWithCL100), pd)
+      ),
+      "not_logged_in" -> MultiYearPtaElibilityTestComponent(
+        FakeRequest(),
+        makeMultiYearPtaEligibilityController(None, pd)
+      )
     )(dataId)
   }
 

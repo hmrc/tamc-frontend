@@ -27,10 +27,10 @@ import test_utils.TestData.Cids
 import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class BreadcrumbTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
+class BreadcrumbTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
-
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   "When PTA journey is enabled, Breadcrumb" should {
 
     /*

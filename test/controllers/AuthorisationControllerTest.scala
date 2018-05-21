@@ -16,21 +16,12 @@
 
 package controllers
 
-import config.ApplicationConfig
-import models._
-import org.joda.time.LocalDate
-import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
 import play.api.i18n.MessagesApi
-import play.api.mvc.Cookie
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
-import services.TimeService
-import test_utils.TestData.{Cids, Ninos}
-import test_utils.{TestConstants, TestUtility}
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
+import play.api.test.Helpers.OK
+import test_utils.TestUtility
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -38,10 +29,10 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthorisationControllerTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
+class AuthorisationControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
-
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val fakeCustomAuditConnector = new AuditConnector {
     override lazy val auditingConfig = ???
     var auditEventsToTest: List[DataEvent] = List()

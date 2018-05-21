@@ -27,10 +27,10 @@ import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
 
 
-class EligibilityCalcControllerTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
+class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
-
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   "Hitting calculator page" should {
     "return OK (200) response" in {
       val request = FakeRequest()

@@ -25,9 +25,10 @@ import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
 
-class PtaEligibilityCalcControllerTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
+class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   private def calculatorRequestAction(income: Map[String, String] = null) = {
     val testComponent = makePtaEligibilityTestComponent("user_happy_path")

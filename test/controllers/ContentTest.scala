@@ -34,9 +34,9 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
-
+class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
   implicit override lazy val app: Application = fakeApplication
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Calling Transfer Submit page" should {
 
@@ -45,7 +45,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("gender" -> "M"), ("nino" -> Ninos.nino1), ("transferor-email" -> "example@example.com"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "gender" -> "M", "nino" -> Ninos.nino1, "transferor-email" -> "example@example.com")
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -82,7 +82,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -102,7 +102,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> ""), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -120,7 +120,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> " "), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> " ", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -138,7 +138,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -156,7 +156,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "12345"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "12345", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -174,7 +174,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc123"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "abc123", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -192,7 +192,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoHappyPath))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "abc", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.ninoHappyPath)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -210,7 +210,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "abc"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> Ninos.ninoHappyPathWithSpaces))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "abc", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.ninoHappyPathWithSpaces)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -230,7 +230,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -249,7 +249,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> ""), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -267,7 +267,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> " "), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> " ", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -285,7 +285,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -303,7 +303,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "12345"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "12345", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -321,7 +321,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "abc123"), ("gender" -> "M"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "abc123", "gender" -> "M", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -341,7 +341,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("nino" -> Ninos.nino1), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "nino" -> Ninos.nino1, "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -360,7 +360,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "X"), ("nino" -> Ninos.nino1))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "X", "nino" -> Ninos.nino1)
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -380,7 +380,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M")
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -399,7 +399,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> ""))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", ("nino" -> ""))
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -417,7 +417,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("name" -> "foo"), ("last-name" -> "bar"), ("gender" -> "M"), ("nino" -> "ZZ"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", "nino" -> "ZZ")
       val result = controllerToTest.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -438,7 +438,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "1899"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "1899")
       val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -464,7 +464,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
         "user_happy_path",
         transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> "1"), ("dateOfMarriage.month" -> "1"), ("dateOfMarriage.year" -> "2020"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "2020")
       val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -486,7 +486,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
         "user_happy_path",
         transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("dateOfMarriage.day" -> ""), ("dateOfMarriage.month" -> ""), ("dateOfMarriage.year" -> ""))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "", "dateOfMarriage.month" -> "", "dateOfMarriage.year" -> "")
       val result = controllerToTest.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -521,7 +521,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("applyForCurrentYear" -> "true"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
       val result = controllerToTest.eligibleYearsAction(request)
 
       status(result) shouldBe OK
@@ -548,7 +548,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("year" -> "List(0)"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "year" -> "List(0)")
       val result = controllerToTest.extraYearsAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -587,7 +587,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
     "display form error message (transferor email is empty)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> ""))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "")
       val result = controllerToTest.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -603,7 +603,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
     "display form error message (transferor email contains only spaces)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "  "))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "  ")
       val result = controllerToTest.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -619,7 +619,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
     "display form error message (transferor email contains more than 100 characters)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "aaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaa@cccc.ddddd"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "aaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaa@cccc.ddddd")
       val result = controllerToTest.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -635,7 +635,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
     "display form error message (transferor email is invalid)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "example")
       val result = controllerToTest.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -651,7 +651,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
     "display form error message (transferor email has consequent dots)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "ex..ample@example.com"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "ex..ample@example.com")
       val result = controllerToTest.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -667,7 +667,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "check$%^&&@yahoo.comm"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "check$%^&&@yahoo.comm")
       val result = controllerToTest.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -683,7 +683,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
     "display form error message (transferor email does not include TLD)" in {
       val testComponent = makeTestComponent("user_happy_path")
       val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example@example"))
+      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "example@example")
       val result = controllerToTest.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -721,7 +721,8 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
 
       document.title() shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
       document.getElementsByClass("heading-large").text shouldBe "Marriage Allowance application successful"
-      document.getElementById("paragraph-1").text shouldBe "An email with full details acknowledging your application will be sent to you at example123@example.com from noreply@tax.service.gov.uk within 24 hours."
+      document.getElementById("paragraph-1").text shouldBe "An email with full details acknowledging your application will be " +
+        "sent to you at example123@example.com from noreply@tax.service.gov.uk within 24 hours."
     }
   }
 
@@ -869,7 +870,7 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
 
   "PTA partners income check page for multiyear" should {
 
-    "successfully authenticate the user and have partners-income page and content" in {
+    "have partners-income page and content for English resident" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -877,14 +878,29 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
-      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$lowerThreshold and £$higherThresholdScot a year."
       document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
       document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+
+    }
+
+    "have partners-income page and content for Scottish resident" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path_scottish")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.partnersIncomeCheck()(request)
+
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
 
     }
   }
@@ -933,19 +949,38 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
 
   "GDS partners income page for multiyear" should {
 
-    "successfully authenticate the user and have partners income page and content" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
+    "have partners-income page and content for English resident" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
       val result = controllerToTest.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
-      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("Information").text shouldBe s"If you live in Scotland their income must be between £$lowerThreshold and £$higherThresholdScot a year."
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+
+    }
+
+    "have partners-income page and content for Scottish resident" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path_scottish")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.partnersIncomeCheck()(request)
+
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
+
     }
   }
 
@@ -957,7 +992,13 @@ class ContentTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtilit
       val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
       val recrecord = RecipientRecord(record = rcrec, data = rcdata)
       val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
+      val trRecipientData = Some(
+        CacheData(transferor = Some(trrec),
+          recipient = Some(recrecord),
+          notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
+          selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))
+        )
+      )
 
       val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
       val controllerToTest = testComponent.controller

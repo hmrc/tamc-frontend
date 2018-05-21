@@ -31,9 +31,10 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYearResolver
 
-class ErrorsTest(val messagesApi: MessagesApi) extends UnitSpec with TestUtility with OneAppPerSuite {
+class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Error handling in transfer page when submitting form" should {
     "show ’Recipient details not found’ page" in {
