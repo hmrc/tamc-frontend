@@ -35,6 +35,11 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
+  private val lowerEarnerHelpText =
+    "This is your total earnings from all employment, pensions, benefits, trusts, " +
+    "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
+    "Insurance is taken off."
+
   implicit override lazy val app: Application = fakeApplication
 
   "Calling Transfer Submit page" should {
@@ -862,7 +867,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
 
-      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
     }
   }
 
@@ -926,7 +931,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
     }
   }
 
