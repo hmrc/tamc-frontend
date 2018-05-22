@@ -893,6 +893,18 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
     }
   }
 
+  "PTA do you want to apply page for multiyear" should {
+    "successfully authenticate the user and have do-you-want-to-apply page and content" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.doYouWantToApply()(request)
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
   "GDS date of birth page for multiyear" should {
 
     "successfully authenticate the user and have date of birth page and content" in {
@@ -916,6 +928,19 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
+  "GDS do you want to apply page for multiyear" should {
+
+    "successfully authenticate the user and have do you want to apply page and content" in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouWantToApply()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
     }
   }
 

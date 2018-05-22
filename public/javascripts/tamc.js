@@ -161,6 +161,30 @@ $(function() {
     });
 });
 
+$(function() {
+
+    var $radio = $("input:radio[name=do-you-want-to-apply]");
+    $radio.click(function(){
+        var $input = $("input:radio[value=true]:checked").val();
+        if ($input) {
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'marriage-allowance',
+                eventAction: 'radio selection',
+                eventLabel: 'applyformarriageallowance_yes'
+            });
+        } else {
+
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'marriage-allowance',
+                eventAction: 'radio selection',
+                eventLabel: 'applyformarriageallowance_no'
+            });
+        }
+    });
+});
+
   $(function() {
 
        var $radio = $("input:radio[name=partners-income]");
