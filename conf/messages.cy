@@ -104,9 +104,9 @@ coc.end-reason.RETROSPECTIVE	=	Wedi gwneud cais am Lwfans Priodasol yn &#244;l-w
 coc.end-reason.SYSTEM	=	CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT	=	Lwfans Priodasol wedi dod i ben
 
-pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £{2} os ydych yn byw yn yr Alban)
+pages.form.field-required.partners-income	=	Rhowch wybod a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
 
-pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1} (neu £{2} os ydych yn byw yn yr Alban)
+pages.form.field.description.partners-income	=	Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
 
 pages.form.field.description.date-of-birth  = Cadarnhewch os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>6 Ebrill 1935</span>
 

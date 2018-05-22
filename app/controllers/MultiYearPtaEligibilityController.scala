@@ -30,7 +30,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Request}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.TamcBreadcrumb
+import utils.{TamcBreadcrumb, scottishResident}
 
 import scala.concurrent.Future
 
@@ -152,10 +152,6 @@ class MultiYearPtaEligibilityController @Inject() (
                 Redirect(controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck())
               })
           }
-  }
-
-  def scottishResident(request: Request[_]): Boolean = {
-    if (request.session.get("scottish_resident").isDefined) request.session.get("scottish_resident").get.toBoolean else false
   }
 
   def partnersIncomeCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {

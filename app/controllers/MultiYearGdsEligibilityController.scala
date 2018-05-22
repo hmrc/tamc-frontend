@@ -26,7 +26,7 @@ import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, _}
 import services.EligibilityCalculatorService
-import utils.TamcBreadcrumb
+import utils.{TamcBreadcrumb, scottishResident}
 import views.html.multiyear.gds._
 
 class MultiYearGdsEligibilityController @Inject() (
@@ -114,10 +114,6 @@ class MultiYearGdsEligibilityController @Inject() (
             case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck())
           }
         })
-  }
-
-  def scottishResident(request: Request[_]): Boolean = {
-    if (request.session.get("scottish_resident").isDefined) request.session.get("scottish_resident").get.toBoolean else false
   }
 
   def partnersIncomeCheck(): Action[AnyContent] = journeyEnforcedAction {

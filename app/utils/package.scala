@@ -15,20 +15,19 @@
  */
 
 import java.net.URLEncoder
-import play.api.mvc.AnyContent
+
+import config.ApplicationConfig
 import play.api.mvc.Request
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import config.ApplicationConfig
-import java.util.Calendar
 import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.play.frontend.auth.AuthContext
 
 package object utils {
 
   def getUserNino(authContext: AuthContext): Nino =
     authContext.principal.accounts.paye.get.nino
 
-  def encodeQueryStringValue(value: String) =
+  def encodeQueryStringValue(value: String): String =
     URLEncoder.encode(value, "UTF8")
 
   def normaliseNino(nino: String): String =
@@ -37,14 +36,17 @@ package object utils {
   private def normalise(nino: Nino): Nino =
     Nino(normaliseNino(nino.nino))
 
-  def areEqual(source: Nino, target: Nino) =
+  def areEqual(source: Nino, target: Nino): Boolean =
     normalise(source) == normalise(target)
 
-  def getSid(request: Request[_]) =
+  def getSid(request: Request[_]): String =
     request.session.get(SessionKeys.sessionId).getOrElse("")
 
   def isPtaJourneyUseOnlyOnAuthorisedPage(implicit request: Request[_]): Boolean =
     request.cookies.get(ApplicationConfig.TAMC_JOURNEY).exists { _.value == ApplicationConfig.TAMC_JOURNEY_PTA } ||
-      !request.cookies.get(ApplicationConfig.TAMC_JOURNEY).isDefined
+      request.cookies.get(ApplicationConfig.TAMC_JOURNEY).isEmpty
 
+  def scottishResident(request: Request[_]): Boolean = {
+    request.session.get("scottish_resident").map(_.toBoolean).fold(false)(identity)
+  }
 }
