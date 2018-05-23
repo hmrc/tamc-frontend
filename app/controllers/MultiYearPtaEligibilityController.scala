@@ -17,34 +17,34 @@
 package controllers
 
 import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
-import com.google.inject.Inject
 import config.ApplicationConfig
-import connectors.ApplicationAuthConnector
+import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
 import forms.MultiYearDateOfBirthForm._
-import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Request, Call}
+import play.api.mvc.{Action, AnyContent, Call}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{TamcBreadcrumb, scottishResident}
 
 import scala.concurrent.Future
 
-class MultiYearPtaEligibilityController @Inject() (
-                                                    val messagesApi: MessagesApi,
-                                                    val auditConnector: AuditConnector,
-                                                    val citizenDetailsService: CitizenDetailsService,
-                                                    val maAuthRegime: MarriageAllowanceRegime,
-                                                    val authConnector: ApplicationAuthConnector,
-                                                    val ivUpliftUrl: String
-                                                  ) extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
 
+object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityController {
+  override val auditConnector: ApplicationAuditConnector.type = ApplicationAuditConnector
+  override lazy val maAuthRegime: MarriageAllowanceRegime.type = MarriageAllowanceRegime
+  override val authConnector: ApplicationAuthConnector.type = ApplicationAuthConnector
+  override val citizenDetailsService: CitizenDetailsService.type = CitizenDetailsService
+  override val ivUpliftUrl: String = ApplicationConfig.ivUpliftUrl
+}
+
+trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+  val authConnector: ApplicationAuthConnector
+  val auditConnector: AuditConnector
   val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
   def howItWorks(): Action[AnyContent] = TamcAuthPersonalDetailsAction {

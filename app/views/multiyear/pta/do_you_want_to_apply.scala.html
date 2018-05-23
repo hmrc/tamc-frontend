@@ -14,6 +14,8 @@
 * limitations under the License.
 *@
 
+@import play.api.Play.current
+@import play.api.i18n.Messages.Implicits._
 @import uk.gov.hmrc.play.breadcrumb.model.Breadcrumb
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html._
@@ -22,33 +24,31 @@
 
 @(
     doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
-)(implicit
+    )(implicit
     lang: Lang,
     request: Request[_],
-    messages: Messages,
     context: config.TamcContext,
     breadcrumb: Breadcrumb,
     templateRenderer: TemplateRenderer,
     formPartialRetriever: FormPartialRetriever
-)
+    )
 
 @tamc_main(
-    title = messages("title.eligibility.pattern", messages("eligibility.check.do.you.want.to.apply.h1"))
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
-
     @form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <h1 class="heading-xlarge">
-        <span class="heading-large secondary-text-colour">@messages("eligibility.check.span.h1")</span><br/>
-        @messages("eligibility.check.do.you.want.to.apply.h1")
+        <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
+        @Messages("eligibility.check.do.you.want.to.apply.h1")
     </h1>
 
     @helpers.form(action = routes.MultiYearPtaEligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
         <div class="form-group inline">
             @input_radio_group(
                 doYouWantToApplyForm("do-you-want-to-apply"),
-                Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
-                '_legend -> messages("do.you.want.to.apply.legend"),
+                Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+                '_legend -> Messages("do.you.want.to.apply.legend"),
                 '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
                 '_groupClass -> "inline spacingBottom"
@@ -57,10 +57,10 @@
 
         <div class="form-group">
             <button class="button button-calculate" data-journey-click="marriage-allowance:button:doYouWantToApply_continue" id="continue" type="submit">
-                @messages("generic.continue")
+                @Messages("generic.continue")
             </button>
         </div>
     }
 
-    <a href="@controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck" class="link-back">@messages("generic.back")</a>
+    <a href="@controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

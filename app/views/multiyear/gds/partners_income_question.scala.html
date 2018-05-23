@@ -27,6 +27,7 @@
     partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
     scottishResident: Boolean
 )(implicit
+    lang: Lang,
     request: Request[_],
     messages: Messages,
     context: TamcContext,
@@ -59,9 +60,10 @@
         @messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))
     </h1>
 
+    <p>@messages("eligibility.check.partners.income.information1")</p>
+
     @helpers.form(action = routes.MultiYearGdsEligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <div class="form-group inline">
-            <p>@messages("eligibility.check.partners.income.information2")</p>
             @input_radio_group(
                 partnersIncomeFormInput("partners-income"),
                 Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
@@ -88,5 +90,5 @@
 
     }
 
-    <a href="@controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck" class="link-back">@messages("generic.back")</a>
+    <a href="@controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck" class="link-back">@Html(messages("generic.back"))</a>
 }

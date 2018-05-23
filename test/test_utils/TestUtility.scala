@@ -25,7 +25,7 @@ import errors.ErrorResponseStatus.RELATION_MIGHT_BE_CREATED
 import models._
 import org.joda.time.DateTime
 import play.api.Application
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{Request, Result}
@@ -373,13 +373,7 @@ trait TestUtility extends UnitSpec with I18nSupport {
       }
     }
 
-    def auditConnector: AuditConnector = fakeCustomAuditConnector
-    def citizenDetailsService: CitizenDetailsService = fakeCitizenDetailsService
-    def maAuthRegime: MarriageAllowanceRegime = fakeMarriageAllowanceRegime
-    def authConnector: ApplicationAuthConnector = fakeAuthConnector
-    def ivUpliftUrl: String = "jazz"
-
-    new MultiYearPtaEligibilityController(messagesApi, auditConnector, citizenDetailsService, maAuthRegime, authConnector, ivUpliftUrl) {
+    new MultiYearPtaEligibilityController {
       override val auditConnector = fakeCustomAuditConnector
       override val maAuthRegime = fakeMarriageAllowanceRegime
       override val authConnector = fakeAuthConnector
