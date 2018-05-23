@@ -22,12 +22,14 @@ import config.ApplicationConfig
 import connectors.ApplicationAuthConnector
 import details.CitizenDetailsService
 import forms.MultiYearDateOfBirthForm._
+import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
+import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, Request}
+import play.api.mvc.{Action, AnyContent, Request, Call}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{TamcBreadcrumb, scottishResident}
@@ -42,6 +44,7 @@ class MultiYearPtaEligibilityController @Inject() (
                                                     val authConnector: ApplicationAuthConnector,
                                                     val ivUpliftUrl: String
                                                   ) extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
+
   val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
   def howItWorks(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
@@ -78,6 +81,33 @@ class MultiYearPtaEligibilityController @Inject() (
                   Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
                 } else {
                   Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
+                }
+              })
+          }
+  }
+
+  def doYouWantToApply(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            Ok(views.html.multiyear.pta.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm))
+          }
+  }
+
+  def doYouWantToApplyAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
+    implicit auth =>
+      implicit request =>
+        implicit details =>
+          Future {
+            doYouWantToApplyForm.bindFromRequest.fold(
+              formWithErrors =>
+                BadRequest(views.html.multiyear.pta.do_you_want_to_apply(formWithErrors)),
+              doYouWantToApplyInput => {
+                if (doYouWantToApplyInput.doYouWantToApply) {
+                  Redirect(controllers.routes.TransferController.transfer())
+                } else {
+                  Redirect(Call("GET", "https://www.tax.service.gov.uk/personal-account"))
                 }
               })
           }
@@ -172,7 +202,7 @@ class MultiYearPtaEligibilityController @Inject() (
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors, scottishResident(request))),
               incomeCheckInput => {
-                Redirect(controllers.routes.TransferController.transfer())
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouWantToApply())
               })
           }
   }

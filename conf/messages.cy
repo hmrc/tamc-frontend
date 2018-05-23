@@ -289,7 +289,7 @@ eligibility.check.married.error2	=	Gallwch wneud cais am Lwfans Priodasol os yw�
 multiyear.check.income	=	Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible	=	Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
 eligibility.check.lower.earner.information1	=	Er mwyn elwa o Lwfans Priodasol, chi sy’n gorfod cael yr incwm lleiaf yn y perthynas (£{0} neu lai’r flwyddyn).
-eligibility.check.lower.earner.information2	=	Mae hyn cyn y didynnir unrhyw dreth.
+eligibility.check.lower.earner.information2	=	Dyma gyfanswm eich enillion o bob cyflogaeth, pensiwn, buddiant, ymddiriedolaeth, incwm rhent, gan gynnwys incwm difidend sy’n fwy na’ch Lwfans Difidend – cyn i unrhyw dreth ac Yswiriant Gwladol gael eu didynnu.
 eligibility.check.lower.earner.h1	=	A yw’ch incwm yn llai na £{0} y flwyddyn?
 eligibility.check.lower.earner.question	=	A yw hyn yn berthnasol i chi?
 eligibility.check.lower.earner.error	=	Mae''n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm dros £{0}. Mae''n dal yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
@@ -303,7 +303,7 @@ eligibility.check.date.of.birth.h1  =   A gawsoch chi neu''ch partner eich geni 
 eligibility.check.date.of.birth.span.para   =   I elwa o Lwfans Priodasol, dylai’ch dyddiad geni chi a’ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
 eligibility.check.date.of.birth.span.married    =   A yw hyn yn berthnasol i chi a’ch partner?
 eligibility.check.date.of.birth.error   =   Mae''n bosibl y byddwch yn elwa mwy fel pâr drwy wneud cais am <a href="https://www.gov.uk/married-couples-allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi wneud cais am Lwfans Priodasol ond ni allwch gael Lwfans Priodasol a Lwfans Pâr Priod ar yr un pryd.
-
+eligibility.check.do.you.want.to.apply.h1 = A ydych am wneud cais am Lwfans Priodasol?
 
 #********************************************************************************
 # Finished Message
@@ -683,3 +683,6 @@ tamc.yourtaxaccount = Eich cyfrif treth personol
 eligibility.check.do.you.live.in.scotland.h1 = A ydych yn byw yn yr Alban?
 pages.form.field-required.do-you-live-in-scotland = Dewiswch Iawn os ydych yn byw yn yr Alban
 pages.form.field.description.do-you-live-in-scotland = Dewiswch Iawn os ydych yn byw yn yr Alban
+
+pages.form.field.description.do-you-want-to-apply = Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
+pages.form.field-required.do-you-want-to-apply = Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol

@@ -40,7 +40,7 @@ POST   /divorce-select-year                        controllers.UpdateRelationshi
 GET    /confirm-email                              controllers.UpdateRelationshipController.confirmEmail
 GET    /confirm-change                             controllers.UpdateRelationshipController.confirmUpdate
 #TO be post to edit
-GET    /confirm-change-action                      controllers.UpdateRelationshipController.confirmUpdateAction 
+GET    /confirm-change-action                      controllers.UpdateRelationshipController.confirmUpdateAction
 GET    /cancel                                     controllers.UpdateRelationshipController.confirmCancel
 GET    /reject                                     controllers.UpdateRelationshipController.confirmReject
 GET    /finished-change                            controllers.UpdateRelationshipController.finishUpdate
@@ -58,6 +58,8 @@ GET    /date-of-birth-check-pta                    @controllers.MultiYearPtaElig
 POST   /date-of-birth-check-pta                    @controllers.MultiYearPtaEligibilityController.dateOfBirthCheckAction
 GET    /do-you-live-in-scotland-pta                @controllers.MultiYearPtaEligibilityController.doYouLiveInScotland
 POST   /do-you-live-in-scotland-pta                @controllers.MultiYearPtaEligibilityController.doYouLiveInScotlandAction
+GET    /do-you-want-to-apply-pta                   @controllers.MultiYearPtaEligibilityController.doYouWantToApply
+POST   /do-you-want-to-apply-pta                   @controllers.MultiYearPtaEligibilityController.doYouWantToApplyAction
 
 #Mutliyaer-GDS
 GET    /                                           @controllers.MultiYearGdsEligibilityController.home
@@ -71,7 +73,8 @@ GET    /date-of-birth-check                        @controllers.MultiYearGdsElig
 POST   /date-of-birth-check                        @controllers.MultiYearGdsEligibilityController.dateOfBirthCheckAction
 GET    /do-you-live-in-scotland                    @controllers.MultiYearGdsEligibilityController.doYouLiveInScotland
 POST   /do-you-live-in-scotland                    @controllers.MultiYearGdsEligibilityController.doYouLiveInScotlandAction
-
+GET    /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApply
+POST   /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApplyAction
 
 #Welsh Translation
 GET     /lang/enGb                                  @controllers.LanguageController.enGb(redirectUrl: String)

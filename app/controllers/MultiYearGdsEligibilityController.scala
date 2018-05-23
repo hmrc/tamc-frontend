@@ -20,6 +20,7 @@ import actions.{JourneyEnforcers, UnauthorisedActions}
 import com.google.inject.Inject
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearDoYouLiveInScotlandForm._
+import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
@@ -53,9 +54,31 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(eligibility_check(formWithErrors)),
         eligibilityInput => {
-          eligibilityInput.married match {
-            case true => Redirect(controllers.routes.MultiYearGdsEligibilityController.dateOfBirthCheck())
-            case _    => Ok(eligibility_non_eligible_finish())
+          if (eligibilityInput.married) {
+            Redirect(controllers.routes.MultiYearGdsEligibilityController.dateOfBirthCheck())
+          } else {
+            Ok(eligibility_non_eligible_finish())
+          }
+        })
+  }
+
+  def doYouWantToApply(): Action[AnyContent] = unauthorisedAction {
+    implicit request =>
+      setPtaAwareGdsJourney(
+        request = request,
+        response = Ok(views.html.multiyear.gds.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm)))
+  }
+
+  def doYouWantToApplyAction(): Action[AnyContent] = journeyEnforcedAction {
+    implicit request =>
+      doYouWantToApplyForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.multiyear.gds.do_you_want_to_apply(formWithErrors)),
+        doYouWantToApplyInput => {
+          if (doYouWantToApplyInput.doYouWantToApply) {
+            Redirect(controllers.routes.UpdateRelationshipController.history())
+          } else {
+            Redirect(Call("GET", "https://www.gov.uk/marriage-allowance"))
           }
         })
   }
@@ -73,9 +96,7 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(date_of_birth_check(formWithErrors)),
         dateOfBirthInput => {
-          dateOfBirthInput.dateOfBirth match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouLiveInScotland())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouLiveInScotland())
         })
   }
 
@@ -110,9 +131,7 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(lower_earner(formWithErrors)),
         lowerEarnerInput => {
-          lowerEarnerInput.lowerEarner match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck())
         })
   }
 
@@ -127,9 +146,7 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(partners_income_question(formWithErrors, scottishResident(request))),
         partnersIncomeInput => {
-          partnersIncomeInput.partnersIncomeQuestion match {
-            case _ => Redirect(controllers.routes.UpdateRelationshipController.history())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouWantToApply())
         })
   }
 }

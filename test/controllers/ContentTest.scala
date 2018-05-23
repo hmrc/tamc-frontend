@@ -35,6 +35,12 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
+
+  private val lowerEarnerHelpText =
+    "This is your total earnings from all employment, pensions, benefits, trusts, " +
+    "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
+    "Insurance is taken off."
+
   implicit override lazy val app: Application = fakeApplication
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
@@ -864,7 +870,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
 
-      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
     }
   }
 
@@ -905,6 +911,18 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
     }
   }
 
+  "PTA do you want to apply page for multiyear" should {
+    "successfully authenticate the user and have do-you-want-to-apply page and content" in {
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.doYouWantToApply()(request)
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
   "GDS date of birth page for multiyear" should {
 
     "successfully authenticate the user and have date of birth page and content" in {
@@ -931,6 +949,19 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
     }
   }
 
+  "GDS do you want to apply page for multiyear" should {
+
+    "successfully authenticate the user and have do you want to apply page and content" in {
+      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
+      val controllerToTest = makeMultiYearGdsEligibilityController()
+      val result = controllerToTest.doYouWantToApply()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
   "GDS lower earner page for multiyear" should {
 
     "successfully authenticate the user and have lower earner page and content" in {
@@ -943,7 +974,7 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "This is before any tax is deducted."
+      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
     }
   }
 
