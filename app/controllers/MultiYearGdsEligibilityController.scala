@@ -18,6 +18,7 @@ package controllers
 
 import actions.{JourneyEnforcers, UnauthorisedActions}
 import com.google.inject.Inject
+import config.ApplicationConfig
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearDoYouLiveInScotlandForm._
 import forms.MultiYearDoYouWantToApplyForm._
@@ -33,7 +34,7 @@ import views.html.multiyear.gds._
 
 class MultiYearGdsEligibilityController @Inject() (
                                                   val messagesApi: MessagesApi
-                                                  ) extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport with RunMode {
+                                                  ) extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
 
   val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
@@ -79,7 +80,7 @@ class MultiYearGdsEligibilityController @Inject() (
           if (doYouWantToApplyInput.doYouWantToApply) {
             Redirect(controllers.routes.UpdateRelationshipController.history())
           } else {
-            Redirect(Call("GET", s"$env/marriage-allowance"))
+            Redirect(Call("GET", ApplicationConfig.gdsFinishedUrl))
           }
         })
   }

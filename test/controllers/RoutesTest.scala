@@ -866,7 +866,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite with RunM
 
       val result = controllerToTest.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(s"$env/personal-account")
+      redirectLocation(result) shouldBe Some("http://localhost:9232/personal-account")
     }
 
     "redirect to transfer page if yes chosen" in {
@@ -1071,7 +1071,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite with RunM
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(s"$env/marriage-allowance")
+      redirectLocation(result) shouldBe Some("https://www.gov.uk/marriage-allowance")
     }
 
     "redirect to confirm id page if yes chosen" in {

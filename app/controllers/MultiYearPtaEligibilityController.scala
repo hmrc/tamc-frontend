@@ -43,7 +43,7 @@ object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityControll
   override val ivUpliftUrl: String = ApplicationConfig.ivUpliftUrl
 }
 
-trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers with RunMode {
+trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
   val authConnector: ApplicationAuthConnector
   val auditConnector: AuditConnector
   val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
@@ -108,7 +108,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 if (doYouWantToApplyInput.doYouWantToApply) {
                   Redirect(controllers.routes.TransferController.transfer())
                 } else {
-                  Redirect(Call("GET", s"$env/personal-account"))
+                  Redirect(Call("GET", ApplicationConfig.ptaFinishedUrl))
                 }
               })
           }
