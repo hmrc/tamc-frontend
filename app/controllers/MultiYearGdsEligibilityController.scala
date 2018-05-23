@@ -27,12 +27,13 @@ import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, _}
 import services.EligibilityCalculatorService
+import uk.gov.hmrc.play.config.RunMode
 import utils.{TamcBreadcrumb, scottishResident}
 import views.html.multiyear.gds._
 
 class MultiYearGdsEligibilityController @Inject() (
                                                   val messagesApi: MessagesApi
-                                                  ) extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
+                                                  ) extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport with RunMode {
 
   val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
@@ -78,7 +79,7 @@ class MultiYearGdsEligibilityController @Inject() (
           if (doYouWantToApplyInput.doYouWantToApply) {
             Redirect(controllers.routes.UpdateRelationshipController.history())
           } else {
-            Redirect(Call("GET", "https://www.gov.uk/marriage-allowance"))
+            Redirect(Call("GET", s"$env/marriage-allowance"))
           }
         })
   }

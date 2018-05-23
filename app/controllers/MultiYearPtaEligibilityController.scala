@@ -29,6 +29,7 @@ import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.mvc.{Action, AnyContent, Call}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.config.RunMode
 import utils.{TamcBreadcrumb, scottishResident}
 
 import scala.concurrent.Future
@@ -42,7 +43,7 @@ object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityControll
   override val ivUpliftUrl: String = ApplicationConfig.ivUpliftUrl
 }
 
-trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers with RunMode {
   val authConnector: ApplicationAuthConnector
   val auditConnector: AuditConnector
   val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
@@ -107,7 +108,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 if (doYouWantToApplyInput.doYouWantToApply) {
                   Redirect(controllers.routes.TransferController.transfer())
                 } else {
-                  Redirect(Call("GET", "https://www.tax.service.gov.uk/personal-account"))
+                  Redirect(Call("GET", s"$env/personal-account"))
                 }
               })
           }

@@ -30,9 +30,10 @@ import test_utils.TestData.{Cids, Ninos}
 import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.test.UnitSpec
 
-class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite with RunMode {
 
   implicit override lazy val app: Application = fakeApplication
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
@@ -865,7 +866,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val result = controllerToTest.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("https://www.tax.service.gov.uk/personal-account")
+      redirectLocation(result) shouldBe Some(s"$env/personal-account")
     }
 
     "redirect to transfer page if yes chosen" in {
@@ -1070,7 +1071,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val controllerToTest = makeMultiYearGdsEligibilityController()
       val result = controllerToTest.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("https://www.gov.uk/marriage-allowance")
+      redirectLocation(result) shouldBe Some(s"$env/marriage-allowance")
     }
 
     "redirect to confirm id page if yes chosen" in {
