@@ -18,7 +18,7 @@ package controllers
 
 import actions.{JourneyEnforcers, UnauthorisedActions}
 import com.google.inject.Inject
-import config.ApplicationConfig
+import config.ApplicationConfig._
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearDoYouLiveInScotlandForm._
 import forms.MultiYearDoYouWantToApplyForm._
@@ -28,8 +28,7 @@ import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, _}
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.play.config.RunMode
-import utils.{TamcBreadcrumb, scottishResident}
+import utils.{TamcBreadcrumb, isScottishResident}
 import views.html.multiyear.gds._
 
 class MultiYearGdsEligibilityController @Inject() (
@@ -80,7 +79,7 @@ class MultiYearGdsEligibilityController @Inject() (
           if (doYouWantToApplyInput.doYouWantToApply) {
             Redirect(controllers.routes.UpdateRelationshipController.history())
           } else {
-            Redirect(Call("GET", ApplicationConfig.gdsFinishedUrl))
+            Redirect(Call("GET", gdsFinishedUrl))
           }
         })
   }
@@ -107,7 +106,7 @@ class MultiYearGdsEligibilityController @Inject() (
       setPtaAwareGdsJourney(
         request = request,
         response = Ok(do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
-          .withSession(request.session - "scottish_resident")
+          .withSession(request.session - SCOTTISH_RESIDENT)
       )
   }
 
@@ -118,7 +117,7 @@ class MultiYearGdsEligibilityController @Inject() (
           BadRequest(do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
           Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
-            .withSession(request.session + ("scottish_resident" -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
+            .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
 
@@ -139,14 +138,14 @@ class MultiYearGdsEligibilityController @Inject() (
 
   def partnersIncomeCheck(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
-      Ok(partners_income_question(partnersIncomeForm, scottishResident(request)))
+      Ok(partners_income_question(partnersIncomeForm, isScottishResident(request)))
   }
 
   def partnersIncomeCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       partnersIncomeForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(partners_income_question(formWithErrors, scottishResident(request))),
+          BadRequest(partners_income_question(formWithErrors, isScottishResident(request))),
         partnersIncomeInput => {
           Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouWantToApply())
         })

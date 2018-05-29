@@ -17,6 +17,7 @@
 package controllers
 
 import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
+import config.ApplicationConfig._
 import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
@@ -27,10 +28,9 @@ import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import play.api.mvc.{Action, AnyContent, Call}
-import services.EligibilityCalculatorService
+import _root_.services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.config.RunMode
-import utils.{TamcBreadcrumb, scottishResident}
+import utils.{TamcBreadcrumb, isScottishResident}
 
 import scala.concurrent.Future
 
@@ -81,7 +81,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 if(eligibilityInput.married) {
                   Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
                 } else {
-                  Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
+                  Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ptaFinishedUrl))
                 }
               })
           }
@@ -108,7 +108,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 if (doYouWantToApplyInput.doYouWantToApply) {
                   Redirect(controllers.routes.TransferController.transfer())
                 } else {
-                  Redirect(Call("GET", ApplicationConfig.ptaFinishedUrl))
+                  Redirect(Call("GET", ptaFinishedUrl))
                 }
               })
           }
@@ -143,7 +143,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
         implicit details =>
           Future {
             Ok(views.html.multiyear.pta.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
-              .withSession(request.session - "scottish_resident")
+              .withSession(request.session - SCOTTISH_RESIDENT)
           }
   }
 
@@ -157,7 +157,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 BadRequest(views.html.multiyear.pta.do_you_live_in_scotland(formWithErrors)),
               doYouLiveInScotlandInput => {
                 Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
-                  .withSession(request.session + ("scottish_resident" -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
+                  .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
               })
           }
   }
@@ -190,7 +190,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
       implicit request =>
         implicit details =>
           Future {
-            Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm, scottishResident(request)))
+            Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm, isScottishResident(request)))
           }
   }
 
@@ -201,7 +201,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
           Future {
             partnersIncomeForm.bindFromRequest.fold(
               formWithErrors =>
-                BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors, scottishResident(request))),
+                BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors, isScottishResident(request))),
               incomeCheckInput => {
                 Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouWantToApply())
               })

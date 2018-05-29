@@ -66,7 +66,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_LOCKED_UPDATE = "LOCKED_UPDATE"
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
-  val CACHE_SCOTTISH_RESIDENCY = "SCOTTISH_RESIDENCY"
 
   val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get
@@ -76,6 +75,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_TRANSFER
   val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_TRANSFER
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
+  val SCOTTISH_RESIDENT = "scottish_resident"
 
   override val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
   override val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")

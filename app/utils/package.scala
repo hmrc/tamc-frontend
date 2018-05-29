@@ -16,11 +16,11 @@
 
 import java.net.URLEncoder
 
-import config.ApplicationConfig
 import play.api.mvc.Request
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.play.frontend.auth.AuthContext
+import config.ApplicationConfig._
 
 package object utils {
 
@@ -43,10 +43,8 @@ package object utils {
     request.session.get(SessionKeys.sessionId).getOrElse("")
 
   def isPtaJourneyUseOnlyOnAuthorisedPage(implicit request: Request[_]): Boolean =
-    request.cookies.get(ApplicationConfig.TAMC_JOURNEY).exists { _.value == ApplicationConfig.TAMC_JOURNEY_PTA } ||
-      request.cookies.get(ApplicationConfig.TAMC_JOURNEY).isEmpty
+    request.cookies.get(TAMC_JOURNEY).exists { _.value == TAMC_JOURNEY_PTA } || request.cookies.get(TAMC_JOURNEY).isEmpty
 
-  def scottishResident(request: Request[_]): Boolean = {
-    request.session.get("scottish_resident").map(_.toBoolean).fold(false)(identity)
-  }
+  def isScottishResident(request: Request[_]): Boolean =
+    request.session.get(SCOTTISH_RESIDENT).map(_.toBoolean).fold(false)(identity)
 }
