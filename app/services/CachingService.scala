@@ -16,19 +16,15 @@
 
 package services
 
-import scala.annotation.implicitNotFound
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
-import models._
-import uk.gov.hmrc.http.cache.client.SessionCache
 import config.ApplicationConfig
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
-import utils.WSHttp
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.config.AppName
 import details.PersonDetails
+import models._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
+import utils.WSHttp
+
+import scala.concurrent.{ExecutionContext, Future}
 
 object CachingService extends CachingService {
   override lazy val http = WSHttp
@@ -58,7 +54,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def saveDateOfMarriage(details: DateOfMarriageFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext) : Future[DateOfMarriageFormInput] =
     cache[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE, details) map
       (_.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE).get)
-
 
   def saveNotificationRecord(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     cache[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD, notificationRecord) map

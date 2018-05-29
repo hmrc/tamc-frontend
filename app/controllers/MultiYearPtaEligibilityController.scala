@@ -17,38 +17,38 @@
 package controllers
 
 import actions.{AuthorisedActions, JourneyEnforcers, MarriageAllowanceRegime}
+import config.ApplicationConfig._
 import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
 import forms.MultiYearDateOfBirthForm._
-import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
-import play.api.mvc.Call
-import services.EligibilityCalculatorService
+import play.api.mvc.{Action, AnyContent, Call}
+import _root_.services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.TamcBreadcrumb
+import utils.{TamcBreadcrumb, isScottishResident}
 
 import scala.concurrent.Future
 
+
 object MultiYearPtaEligibilityController extends MultiYearPtaEligibilityController {
-  override val auditConnector = ApplicationAuditConnector
-  override lazy val maAuthRegime = MarriageAllowanceRegime
-  override val authConnector = ApplicationAuthConnector
-  override val citizenDetailsService = CitizenDetailsService
-  override val ivUpliftUrl = ApplicationConfig.ivUpliftUrl
+  override val auditConnector: ApplicationAuditConnector.type = ApplicationAuditConnector
+  override lazy val maAuthRegime: MarriageAllowanceRegime.type = MarriageAllowanceRegime
+  override val authConnector: ApplicationAuthConnector.type = ApplicationAuthConnector
+  override val citizenDetailsService: CitizenDetailsService.type = CitizenDetailsService
+  override val ivUpliftUrl: String = ApplicationConfig.ivUpliftUrl
 }
 
 trait MultiYearPtaEligibilityController extends BaseController with AuthorisedActions with TamcBreadcrumb with JourneyEnforcers {
-
-  val eligibilityCalculatorService = EligibilityCalculatorService
   val authConnector: ApplicationAuthConnector
   val auditConnector: AuditConnector
+  val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
-  def howItWorks() = TamcAuthPersonalDetailsAction {
+  def howItWorks(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -60,7 +60,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
 
   }
 
-  def eligibilityCheck() = TamcAuthPersonalDetailsAction {
+  def eligibilityCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -69,7 +69,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
           }
   }
 
-  def eligibilityCheckAction() = TamcAuthPersonalDetailsAction {
+  def eligibilityCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -78,15 +78,16 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.eligibility_check(formWithErrors)),
               eligibilityInput => {
-                eligibilityInput.married match {
-                  case true => Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
-                  case _ => Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ApplicationConfig.ptaFinishedUrl))
+                if(eligibilityInput.married) {
+                  Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
+                } else {
+                  Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ptaFinishedUrl))
                 }
               })
           }
   }
 
-  def doYouWantToApply() = TamcAuthPersonalDetailsAction {
+  def doYouWantToApply(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -95,7 +96,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
           }
   }
 
-  def doYouWantToApplyAction() = TamcAuthPersonalDetailsAction {
+  def doYouWantToApplyAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -104,18 +105,16 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.do_you_want_to_apply(formWithErrors)),
               doYouWantToApplyInput => {
-                doYouWantToApplyInput.doYouWantToApply match {
-                  //case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
-
-                  case true => Redirect(controllers.routes.TransferController.transfer())
-                  case false => Redirect(Call("GET","https://www.tax.service.gov.uk/personal-account"))
-
+                if (doYouWantToApplyInput.doYouWantToApply) {
+                  Redirect(controllers.routes.TransferController.transfer())
+                } else {
+                  Redirect(Call("GET", ptaFinishedUrl))
                 }
               })
           }
   }
 
-  def dateOfBirthCheck() = TamcAuthPersonalDetailsAction {
+  def dateOfBirthCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -124,7 +123,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
           }
   }
 
-  def dateOfBirthCheckAction() = TamcAuthPersonalDetailsAction {
+  def dateOfBirthCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -133,23 +132,22 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.date_of_birth_check(formWithErrors)),
               dateOfBirthInput => {
-                dateOfBirthInput.dateOfBirth match {
-                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouLiveInScotland())
-                }
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouLiveInScotland())
               })
           }
   }
 
-  def doYouLiveInScotland() = TamcAuthPersonalDetailsAction {
+  def doYouLiveInScotland(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future {
             Ok(views.html.multiyear.pta.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
+              .withSession(request.session - SCOTTISH_RESIDENT)
           }
   }
 
-  def doYouLiveInScotlandAction() = TamcAuthPersonalDetailsAction {
+  def doYouLiveInScotlandAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -158,14 +156,13 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.do_you_live_in_scotland(formWithErrors)),
               doYouLiveInScotlandInput => {
-                doYouLiveInScotlandInput.doYouLiveInScotland match {
-                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
-                }
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
+                  .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
               })
           }
   }
 
-  def lowerEarnerCheck() = TamcAuthPersonalDetailsAction {
+  def lowerEarnerCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -174,7 +171,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
           }
   }
 
-  def lowerEarnerCheckAction() = TamcAuthPersonalDetailsAction {
+  def lowerEarnerCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -183,34 +180,31 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.lower_earner(formWithErrors)),
               lowerEarnerInput => {
-                lowerEarnerInput.lowerEarner match {
-                  case _ => Redirect(controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck())
-                }
+                Redirect(controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck())
               })
           }
   }
 
-  def partnersIncomeCheck() = TamcAuthPersonalDetailsAction {
+  def partnersIncomeCheck(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future {
-            Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm))
+            Ok(views.html.multiyear.pta.partners_income_question(partnersIncomeForm, isScottishResident(request)))
           }
   }
 
-  def partnersIncomeCheckAction() = TamcAuthPersonalDetailsAction {
+  def partnersIncomeCheckAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future {
             partnersIncomeForm.bindFromRequest.fold(
               formWithErrors =>
-                BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors)),
+                BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors, isScottishResident(request))),
               incomeCheckInput => {
                 Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouWantToApply())
               })
           }
   }
-
 }

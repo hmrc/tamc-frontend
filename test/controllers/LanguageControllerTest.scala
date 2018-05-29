@@ -16,21 +16,18 @@
 
 package controllers
 
-import org.scalatest.Ignore
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{cookies, defaultAwaitTimeout, header, redirectLocation}
+import play.api.test.Helpers.{cookies, defaultAwaitTimeout, _}
 import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
-import play.api.test.Helpers._
-
-import scala.concurrent.Future
 
 class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   override implicit lazy val app: Application = fakeApplication
-
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   trait LocalSetup {
     val c = app.injector.instanceOf[LanguageController]

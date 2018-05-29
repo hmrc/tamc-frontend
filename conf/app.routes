@@ -62,19 +62,19 @@ GET    /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligi
 POST   /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApplyAction
 
 #Mutliyaer-GDS
-GET    /                                           controllers.MultiYearGdsEligibilityController.home
-GET    /eligibility-check                          controllers.MultiYearGdsEligibilityController.eligibilityCheck
-POST   /eligibility-check                          controllers.MultiYearGdsEligibilityController.eligibilityCheckAction
-GET    /do-you-want-to-apply                       controllers.MultiYearGdsEligibilityController.doYouWantToApply
-POST   /do-you-want-to-apply                       controllers.MultiYearGdsEligibilityController.doYouWantToApplyAction
-GET    /lower-earner                               controllers.MultiYearGdsEligibilityController.lowerEarnerCheck
-POST   /lower-earner                               controllers.MultiYearGdsEligibilityController.lowerEarnerCheckAction
-GET    /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheck
-POST   /partners-income                            controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
-GET    /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheck
-POST   /date-of-birth-check                        controllers.MultiYearGdsEligibilityController.dateOfBirthCheckAction
-GET    /do-you-live-in-scotland                    controllers.MultiYearGdsEligibilityController.doYouLiveInScotland
-POST   /do-you-live-in-scotland                    controllers.MultiYearGdsEligibilityController.doYouLiveInScotlandAction
+GET    /                                           @controllers.MultiYearGdsEligibilityController.home
+GET    /eligibility-check                          @controllers.MultiYearGdsEligibilityController.eligibilityCheck
+POST   /eligibility-check                          @controllers.MultiYearGdsEligibilityController.eligibilityCheckAction
+GET    /lower-earner                               @controllers.MultiYearGdsEligibilityController.lowerEarnerCheck
+POST   /lower-earner                               @controllers.MultiYearGdsEligibilityController.lowerEarnerCheckAction
+GET    /partners-income                            @controllers.MultiYearGdsEligibilityController.partnersIncomeCheck
+POST   /partners-income                            @controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
+GET    /date-of-birth-check                        @controllers.MultiYearGdsEligibilityController.dateOfBirthCheck
+POST   /date-of-birth-check                        @controllers.MultiYearGdsEligibilityController.dateOfBirthCheckAction
+GET    /do-you-live-in-scotland                    @controllers.MultiYearGdsEligibilityController.doYouLiveInScotland
+POST   /do-you-live-in-scotland                    @controllers.MultiYearGdsEligibilityController.doYouLiveInScotlandAction
+GET    /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApply
+POST   /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApplyAction
 
 #Welsh Translation
 GET     /lang/enGb                                  @controllers.LanguageController.enGb(redirectUrl: String)

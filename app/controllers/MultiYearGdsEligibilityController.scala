@@ -17,143 +17,137 @@
 package controllers
 
 import actions.{JourneyEnforcers, UnauthorisedActions}
-import connectors.ApplicationAuditConnector
+import com.google.inject.Inject
+import config.ApplicationConfig._
 import forms.MultiYearDateOfBirthForm._
 import forms.MultiYearDoYouLiveInScotlandForm._
 import forms.MultiYearDoYouWantToApplyForm._
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
-import play.api.mvc.Call
+import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.mvc.{Action, AnyContent, _}
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.TamcBreadcrumb
+import utils.{TamcBreadcrumb, isScottishResident}
+import views.html.multiyear.gds._
 
-object MultiYearGdsEligibilityController extends MultiYearGdsEligibilityController {
-  override val auditConnector = ApplicationAuditConnector
-}
+class MultiYearGdsEligibilityController @Inject() (
+                                                  val messagesApi: MessagesApi
+                                                  ) extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers with I18nSupport {
 
-trait MultiYearGdsEligibilityController extends BaseController with UnauthorisedActions with TamcBreadcrumb with JourneyEnforcers {
+  val eligibilityCalculatorService: EligibilityCalculatorService.type = EligibilityCalculatorService
 
-  val eligibilityCalculatorService = EligibilityCalculatorService
-  val auditConnector: AuditConnector
-
-  private lazy val redirectGOVUKMarriageAllowance = Redirect(Call("GET","https://www.gov.uk/marriage-allowance"))
-
-  def home = unauthorisedAction {
+  def home: Action[AnyContent] = unauthorisedAction {
     implicit request =>
       Redirect(controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck())
   }
 
-  def eligibilityCheck() = unauthorisedAction {
+  def eligibilityCheck(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
-        response = Ok(views.html.multiyear.gds.eligibility_check(eligibilityCheckForm = eligibilityForm)))
+        response = Ok(eligibility_check(eligibilityCheckForm = eligibilityForm)))
   }
 
-  def eligibilityCheckAction() = journeyEnforcedAction {
+  def eligibilityCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       eligibilityForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.eligibility_check(formWithErrors)),
+          BadRequest(eligibility_check(formWithErrors)),
         eligibilityInput => {
-          eligibilityInput.married match {
-            case true => Redirect(controllers.routes.MultiYearGdsEligibilityController.dateOfBirthCheck())
-            case _    => Ok(views.html.multiyear.gds.eligibility_non_eligible_finish())
+          if (eligibilityInput.married) {
+            Redirect(controllers.routes.MultiYearGdsEligibilityController.dateOfBirthCheck())
+          } else {
+            Ok(eligibility_non_eligible_finish())
           }
         })
   }
 
-  def doYouWantToApply() = unauthorisedAction {
+  def doYouWantToApply(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
         response = Ok(views.html.multiyear.gds.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm)))
   }
 
-  def doYouWantToApplyAction() = journeyEnforcedAction {
+  def doYouWantToApplyAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       doYouWantToApplyForm.bindFromRequest.fold(
         formWithErrors =>
           BadRequest(views.html.multiyear.gds.do_you_want_to_apply(formWithErrors)),
         doYouWantToApplyInput => {
-          doYouWantToApplyInput.doYouWantToApply match {
-            case false => redirectGOVUKMarriageAllowance
-            case _ => Redirect(controllers.routes.UpdateRelationshipController.history())
+          if (doYouWantToApplyInput.doYouWantToApply) {
+            Redirect(controllers.routes.UpdateRelationshipController.history())
+          } else {
+            Redirect(Call("GET", gdsFinishedUrl))
           }
         })
-  }  
+  }
 
-  def dateOfBirthCheck() = unauthorisedAction {
+  def dateOfBirthCheck(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
-        response = Ok(views.html.multiyear.gds.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm)))
+        response = Ok(date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm)))
   }
 
-  def dateOfBirthCheckAction() = journeyEnforcedAction {
+  def dateOfBirthCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       dateOfBirthForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.date_of_birth_check(formWithErrors)),
+          BadRequest(date_of_birth_check(formWithErrors)),
         dateOfBirthInput => {
-          dateOfBirthInput.dateOfBirth match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouLiveInScotland())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouLiveInScotland())
         })
   }
 
-  def doYouLiveInScotland() = unauthorisedAction {
+  def doYouLiveInScotland(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       setPtaAwareGdsJourney(
         request = request,
-        response = Ok(views.html.multiyear.gds.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm)))
+        response = Ok(do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
+          .withSession(request.session - SCOTTISH_RESIDENT)
+      )
   }
 
-  def doYouLiveInScotlandAction() = journeyEnforcedAction {
+  def doYouLiveInScotlandAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       doYouLiveInScotlandForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.do_you_live_in_scotland(formWithErrors)),
+          BadRequest(do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
-          doYouLiveInScotlandInput.doYouLiveInScotland match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
+            .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
 
-  def lowerEarnerCheck() = journeyEnforcedAction {
+  def lowerEarnerCheck(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
-      Ok(views.html.multiyear.gds.lower_earner(lowerEarnerFormInput = lowerEarnerForm))
+      Ok(lower_earner(lowerEarnerFormInput = lowerEarnerForm))
   }
 
-  def lowerEarnerCheckAction() = journeyEnforcedAction {
+  def lowerEarnerCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       lowerEarnerForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.lower_earner(formWithErrors)),
+          BadRequest(lower_earner(formWithErrors)),
         lowerEarnerInput => {
-          lowerEarnerInput.lowerEarner match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck())
         })
   }
 
-  def partnersIncomeCheck() = journeyEnforcedAction {
+  def partnersIncomeCheck(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
-      Ok(views.html.multiyear.gds.partners_income_question(partnersIncomeForm))
+      Ok(partners_income_question(partnersIncomeForm, isScottishResident(request)))
   }
 
-  def partnersIncomeCheckAction() = journeyEnforcedAction {
+  def partnersIncomeCheckAction(): Action[AnyContent] = journeyEnforcedAction {
     implicit request =>
       partnersIncomeForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.gds.partners_income_question(formWithErrors)),
+          BadRequest(partners_income_question(formWithErrors, isScottishResident(request))),
         partnersIncomeInput => {
-          partnersIncomeInput.partnersIncomeQuestion match {
-            case _ => Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouWantToApply())
-          }
+          Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouWantToApply())
         })
   }
 }

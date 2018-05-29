@@ -22,6 +22,7 @@ import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, cookies, defaultAwaitTimeout, redirectLocation}
@@ -29,11 +30,13 @@ import test_utils.TestData.{Cids, Ninos}
 import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.test.UnitSpec
 
-class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite with RunMode {
 
   implicit override lazy val app: Application = fakeApplication
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Hitting home endpoint directly" should {
     "redirect to landing page (with passcode)" in {
@@ -790,11 +793,10 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   "PTA partners income check page for multi year" should {
 
-    "diplay errors as no radio buttons is selected " in {
+    "display errors as no radio buttons is selected for English resident" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val higherScotThreshold = formatter.format(ApplicationConfig.MAX_LIMIT_SCOT)
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val request = testComponent.request
       val controllerToTest = testComponent.controller
@@ -804,7 +806,26 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherThreshold (or £$higherScotThreshold if you live in Scotland)"
+      document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherThreshold"
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
+    }
+
+    "display errors as no radio buttons is selected for Scottish resident" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
+      val higherScotThreshold = formatter.format(ApplicationConfig.MAX_LIMIT_SCOT)
+      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path_scottish")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.partnersIncomeCheckAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherScotThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherScotThreshold"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
@@ -845,7 +866,7 @@ class RoutesTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val result = controllerToTest.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("https://www.tax.service.gov.uk/personal-account")
+      redirectLocation(result) shouldBe Some("http://localhost:9232/personal-account")
     }
 
     "redirect to transfer page if yes chosen" in {

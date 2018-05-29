@@ -21,6 +21,7 @@ import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.mvc.Cookie
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
 import test_utils.TestData.{Cids, Ninos}
@@ -33,6 +34,7 @@ import uk.gov.hmrc.time.TaxYearResolver
 class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
   implicit override lazy val app: Application = fakeApplication
+  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Error handling in transfer page when submitting form" should {
     "show ’Recipient details not found’ page" in {

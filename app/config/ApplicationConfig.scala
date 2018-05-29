@@ -75,6 +75,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_TRANSFER
   val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_TRANSFER
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
+  val SCOTTISH_RESIDENT = "scottish_resident"
 
   override val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
   override val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
