@@ -107,6 +107,8 @@ trait ApplicationConfig {
   val analyticsToken: Option[String]
   val analyticsHost: String
 
+  val frontendTemplatePath: String
+
   def ivNotAuthorisedUrl: String
 
   private def createUrl(action: String) = s"${loginUrl}/${action}?origin=ma&confidenceLevel=100&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
