@@ -171,7 +171,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 
 }
 @{
-    templateRenderer.renderDefaultTemplate(layouts.article(mainContent, false, None), Map[String, Any](
+    templateRenderer.renderDefaultTemplate(ApplicationConfig.frontendTemplatePath, layouts.article(mainContent, false, None), Map[String, Any](
         "pageTitle" -> s"$title",
         "linkElems" -> Map(
             "url" -> routes.Assets.at("stylesheets/tamc.css")

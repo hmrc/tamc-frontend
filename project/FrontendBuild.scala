@@ -28,7 +28,7 @@ private object AppDependencies {
   private val scalaTestPlusPlayVersion = "1.5.1"
   private val emailAddressVersion = "1.1.0"
   private val frontendBootstrapVersion = "8.19.0"
-  private val httpCachingClientVersion = "7.0.0"
+  private val httpCachingClientVersion = "7.1.0"
   private val httpVerbsVersion = "6.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
   private val playBreadcrumbVersion = "1.0.0"
@@ -36,7 +36,7 @@ private object AppDependencies {
   private val playHealthVersion = "2.1.0"
   private val logbackJsonLoggerVersion = "3.1.0"
   private val playPartialsVersion = "6.1.0"
-  private val playUiVersion = "7.2.1"
+  private val playUiVersion = "7.17.0"
   private val timeVersion = "2.1.0"
   private val domainVersion = "4.1.0"
   private val urlBuilderVersion = "2.1.0"
@@ -47,7 +47,7 @@ private object AppDependencies {
   private val scalacheckVersion = "1.12.5"
   private val scalaTestVersion = "2.2.6"
   private val mockitoCoreVerison = "1.9.5"
-  private val localTemplateRendererVersion  = "1.4.0"
+  private val localTemplateRendererVersion  = "2.0.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,

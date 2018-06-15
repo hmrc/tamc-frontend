@@ -29,7 +29,7 @@
 
 
 @{
-    templateRenderer.renderDefaultTemplate(layouts.article(mainContent), Map[String, Any](
+    templateRenderer.renderDefaultTemplate(config.ApplicationConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
         "pageTitle" -> pageTitle,
         "linkElems" -> None,
         "scriptElems" -> None,
