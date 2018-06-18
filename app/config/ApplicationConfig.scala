@@ -47,6 +47,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   lazy val enableRefresh = configuration.getBoolean("enableRefresh").getOrElse(true)
 
+  lazy val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+
 
   val TAMC_BEGINNING_YEAR = 2015
   val TAMC_MIN_DATE = new LocalDate(1900, 1, 1)
@@ -104,6 +106,8 @@ trait ApplicationConfig {
 
   val analyticsToken: Option[String]
   val analyticsHost: String
+
+  val frontendTemplatePath: String
 
   def ivNotAuthorisedUrl: String
 
