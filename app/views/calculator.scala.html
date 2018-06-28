@@ -33,12 +33,21 @@
   title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
     @templates.form_error_notification(calculatorForm)
+
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
-    <p>@Html(Messages("pages.calc.para1"))</p>
+
+    <p>@Messages("pages.calc.para1")</p>
+
+    <div class="panel panel-border-wide">
+        <p>@Messages("pages.calc.para2")</p>
+    </div>
+
+    <br />
+
     @helpers.form(action = routes.GdsEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
-        <fieldset>
-            <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
-            <div class="form-group">
+    <fieldset>
+        <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
+        <div class="form-group">
             @templates.input(calculatorForm("transferor-income"),
                 '_label -> Html(Messages("pages.form.field.income")),
                 '_labelClass -> "form-label",
@@ -47,8 +56,8 @@
                 '_inputPrefix -> "£",
                 '_dataAttributes -> "autocomplete=on"
             )
-            </div>
-            <div class="form-group">
+        </div>
+        <div class="form-group">
             @templates.input(calculatorForm("recipient-income"),
                 '_label -> Html(Messages("pages.form.field.recipient-income")),
                 '_labelClass -> "form-label",
@@ -57,29 +66,34 @@
                 '_inputPrefix -> "£",
                 '_dataAttributes -> "autocomplete=on"
             )
-            </div>
-        </fieldset>
-        @templates.calculator_result(calculationResult)
-        <p><button class="button button-calculate" data-journey-click="marriage-allowance:button:calculate" id="calculate" type="submit">@Html(Messages("estimate.tax.saving"))</button>
-        </p>
-    }
-    <div class="blue-underline-large"></div>
-    <footer><nav class="pagination" role="navigation" aria-label="Pagination"><ul class="group">
-        <li class="previous">
-            <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works" id="previous" rel="prev" title="Navigate to previous part">
-                <span class="pagination-label">@Html(Messages("generic.previous"))</span>
-                <span class="pagination-part-title">@Html(Messages("pages.how-it-works.heading"))</span>
-            </a>
-        </li>
-        <li class="next">
-            <a href="https://www.gov.uk/marriage-allowance/how-to-apply" id="next" rel="next" title="Navigate to next part">
-                <span class="pagination-label">@Html(Messages("generic.next"))</span>
-                <span class="pagination-part-title">@Html(Messages("pages.calc.how-to-apply"))</span>
-            </a>
-        </li>
-    </ul>
-    </nav>
+        </div>
+    </fieldset>
 
+    @templates.calculator_result(calculationResult)
+
+    <p>
+        <button class="button button-calculate" data-journey-click="marriage-allowance:button:calculate" id="calculate" type="submit">@Html(Messages("estimate.tax.saving"))</button>
+    </p>
+    }
+
+    <div class="blue-underline-large"></div>
+
+    <footer>
+        <nav class="pagination" role="navigation" aria-label="Pagination">
+            <ul class="group">
+                <li class="previous">
+                    <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works" id="previous" rel="prev" title="Navigate to previous part">
+                        <span class="pagination-label">@Html(Messages("generic.previous"))</span>
+                        <span class="pagination-part-title">@Html(Messages("pages.how-it-works.heading"))</span>
+                    </a>
+                </li>
+                <li class="next">
+                    <a href="https://www.gov.uk/marriage-allowance/how-to-apply" id="next" rel="next" title="Navigate to next part">
+                        <span class="pagination-label">@Html(Messages("generic.next"))</span>
+                        <span class="pagination-part-title">@Html(Messages("pages.calc.how-to-apply"))</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </footer>
 }
-

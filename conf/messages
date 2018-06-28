@@ -214,6 +214,7 @@ hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about
 
 pages.calc.header=Marriage Allowance calculator
 pages.calc.para1=As a couple, find out how much tax you would save if you applied for Marriage Allowance this tax year.
+pages.calc.para2=This calculator does not include any changes to the Scottish rate of Income Tax, or other allowances such as Personal Savings Allowance or Dividend Allowance.
 pages.form.field.income=Your income (low), before tax is taken off
 pages.form.field.recipient-income=Your partner’s income (high), before tax is taken off
 pages.calc.field-helper.income=This is your income figure before any tax is deducted.
