@@ -37,7 +37,7 @@ package object utils {
     Nino(normaliseNino(nino.nino))
 
   def areEqual(source: Nino, target: Nino): Boolean =
-    normalise(source) == normalise(target)
+    normalise(source).nino.take(8) == normalise(target).nino.take(8)
 
   def getSid(request: Request[_]): String =
     request.session.get(SessionKeys.sessionId).getOrElse("")
