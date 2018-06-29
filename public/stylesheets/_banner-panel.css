@@ -1,0 +1,11 @@
+/*
+ ====================================
+ Full width panel used at top of page to contain UR recruitment notice
+ ====================================
+ */
+
+.banner-panel-close {
+    display: none;
+    background-color: #005ea5;
+    color: #fff;
+}

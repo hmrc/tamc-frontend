@@ -687,3 +687,11 @@ pages.form.field.description.do-you-live-in-scotland = Dewiswch Iawn os ydych yn
 
 pages.form.field.description.do-you-want-to-apply = Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
 pages.form.field-required.do-you-want-to-apply = Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
+
+#*************************************************************
+# User Research Banner Messages
+#*************************************************************
+tamc.banner.recruitment.link=Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr newydd)
+tamc.banner.recruitment.reject=Dim diolch
+tamc.banner.recruitment.title=Help gwella gov.uk
+tamc.banner.recruitment.linkURL=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133
