@@ -214,6 +214,7 @@ hmrc.contact-details-9	=	<a href="https://www.gov.uk/call-charges"> Gwybodaeth a
 
 pages.calc.header	=	Cyfrifiannell Lwfans Priodasol
 pages.calc.para1	=	Fel pâr, darganfyddwch faint o dreth y gallwch ei harbed os ydych yn gwneud cais am Lwfans Priodasol yn y flwyddyn dreth hon.
+pages.calc.para2	=	Nid yw’r gyfrifiannell hon yn cynnwys newidiadau i gyfradd yr Alban o Dreth Incwm, na lwfansau eraill megis Lwfans Cynilion Personol neu Lwfans Difidend.
 pages.form.field.income	=	Eich incwm (isel), cyn didynnu treth
 pages.form.field.recipient-income	=	Incwm eich partner (uchel), cyn didynnu treth
 pages.calc.field-helper.income	=	Dyma ffigur eich incwm cyn didynnu treth.
