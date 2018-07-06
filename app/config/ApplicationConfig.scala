@@ -82,6 +82,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
   override val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
 
+  lazy val urBannerEnabled = configuration.getString("feature.ur-banner.enabled").getOrElse("true").toBoolean
+
   override val LANG_CODE_ENGLISH = "en-GB"
   override val LANG_CODE_WELSH = "cy-GB"
   override val LANG_LANG_ENGLISH = "en"

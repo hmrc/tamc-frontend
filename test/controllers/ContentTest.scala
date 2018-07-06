@@ -24,7 +24,7 @@ import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.Application
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
@@ -746,6 +746,38 @@ class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
 
       val heading = document.getElementsByClass("heading-xlarge").text
       heading shouldBe "Marriage Allowance calculator"
+    }
+  }
+
+  "User research banner page " should {
+
+    "display UR banner before no thanks is clicked" in {
+      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.calculator()(request)
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      val urBanner =  document.getElementById("full-width-banner")
+      val urBannerHref =  document.getElementById("fullWidthBannerLink")
+      val urDismissedText = document.getElementById("fullWidthBannerDismissText")
+      urBanner shouldNot be(null)
+      urBanner.text() startsWith Messages("tamc.banner.recruitment.title")
+      urDismissedText.text() should include(Messages("tamc.banner.recruitment.reject"))
+      urBanner.text() should include(Messages("tamc.banner.recruitment.link"))
+      urBannerHref.text() should include(Messages("tamc.banner.recruitment.linkURL"))
+    }
+
+    "not display UR banner after no thanks is clicked" in {
+      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
+      val request = testComponent.request
+      val controllerToTest = testComponent.controller
+      val result = controllerToTest.calculator()(request)
+      status(result) shouldBe OK
+      implicit val requestWithCookie = request.withCookies(new Cookie("tamc_ur_panel", "1"))
+      val document = Jsoup.parse(contentAsString(result))
+      val urBanner =  document.getElementById("banner-panel-close")
+      urBanner should be(null)
     }
   }
 
