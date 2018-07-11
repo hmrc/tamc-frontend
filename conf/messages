@@ -311,7 +311,6 @@ eligibility.check.do.you.want.to.apply.h1 = Do you want to apply for Marriage Al
 #********************************************************************************
 # Finished Message
 #********************************************************************************
-``
 pages.finished.successful=Marriage Allowance application successful
 pages.finished.para1.email1=An email with full details acknowledging your application will be sent to you at {0}
 pages.finished.para1.email2=from noreply@tax.service.gov.uk within 24 hours.
