@@ -68,6 +68,8 @@
             @input_radio_group(
                 partnersIncomeFormInput("partners-income"),
                 Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
+                '_legend -> Html(Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))),
+                '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
                 '_fieldsetAttributes -> "data-inline-error=inline-partners-income-error",

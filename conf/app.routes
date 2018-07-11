@@ -46,7 +46,7 @@ GET    /reject                                     controllers.UpdateRelationshi
 GET    /finished-change                            controllers.UpdateRelationshipController.finishUpdate
 POST   /confirm-email-update                       controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
 
-#Mutliyaer-PTA
+#Mutliyear-PTA
 GET    /how-it-works                               controllers.MultiYearPtaEligibilityController.howItWorks
 GET    /eligibility-check-pta                      controllers.MultiYearPtaEligibilityController.eligibilityCheck
 POST   /eligibility-check-pta                      controllers.MultiYearPtaEligibilityController.eligibilityCheckAction
@@ -61,7 +61,7 @@ POST   /do-you-live-in-scotland-pta                controllers.MultiYearPtaEligi
 GET    /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApply
 POST   /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApplyAction
 
-#Mutliyaer-GDS
+#Mutliyear-GDS
 GET    /                                           @controllers.MultiYearGdsEligibilityController.home
 GET    /eligibility-check                          @controllers.MultiYearGdsEligibilityController.eligibilityCheck
 POST   /eligibility-check                          @controllers.MultiYearGdsEligibilityController.eligibilityCheckAction
