@@ -301,6 +301,7 @@ eligibility.check.partners.income.h2=Does this apply to your partner?
 eligibility.check.partners.income.before.tax=This is their income figure before any tax is deducted.
 eligibility.check.partners.income.error=You are not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still apply for previous years if their income was higher or lower in the past.
 eligibility.check.date.of.birth.h1=Were you and your partner born after 5 April 1935?
+eligibility.check.date.of.birth.legend=Were you and your partner born after 5 April 1935?
 eligibility.check.date.of.birth.span.para=To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935.
 eligibility.check.date.of.birth.span.married=Does this apply to you and your partner?
 eligibility.check.date.of.birth.error=You might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" data-journey-click="marriage-allowance:outboundlink:married_couples-link" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
@@ -310,7 +311,7 @@ eligibility.check.do.you.want.to.apply.h1 = Do you want to apply for Marriage Al
 #********************************************************************************
 # Finished Message
 #********************************************************************************
-
+``
 pages.finished.successful=Marriage Allowance application successful
 pages.finished.para1.email1=An email with full details acknowledging your application will be sent to you at {0}
 pages.finished.para1.email2=from noreply@tax.service.gov.uk within 24 hours.
