@@ -51,6 +51,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 @import uk.gov.hmrc.http.SessionKeys
 
+
 @scriptElement = {
 
         <script type="text/javascript">
@@ -72,6 +73,15 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
                         }
                 </script>
 
+        <script type="text/javascript">
+                      $.timeoutDialog({
+                                         timeout: 90,
+                                         countdown: 60,
+                                         keep_alive_url: '/keep-alive',
+                                         logout_url: '/marriage-allowance-application/logout'
+                                        });
+                </script>
+
         <script type="text/javascript" id="webchat" data-webchat-id="@config.ApplicationConfig.webchatId">var EG_ACT_ID="@config.ApplicationConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
             {c=a.contentWindow.document}
             catch(g)
@@ -81,6 +91,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
                 ;c.write('<body onload="document._d();">');c.close()})(document,"//analytics.analytics-egain.com/onetag/"+EG_ACT_ID);
         </script>
 }
+
 
 
 @isWelsh = @{
@@ -179,7 +190,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
       "linkElems" -> Map(
         "url" -> routes.Assets.at("stylesheets/tamc.css")
       ),
-
       "hasNavLinks" -> true,
       "navTitle" -> titleName,
       "removeServiceInfo" -> false,
