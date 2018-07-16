@@ -38,6 +38,8 @@ import utils.TamcBreadcrumb
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
+import org.apache.commons.lang3.exception.ExceptionUtils
+
 
 object TransferController extends TransferController with RunMode {
   override lazy val registrationService = TransferService
@@ -267,7 +269,7 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
   def handleError(implicit hc: HeaderCarrier, ec: ExecutionContext, user: TamcUser, request: Request[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
-        val message: String = s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils.getSid(request)}]"
+        val message: String = s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils.getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"
 
         def handle(message: String, logger: String => Unit, result: Result): Result = {
           logger(message)
