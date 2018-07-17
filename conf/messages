@@ -304,7 +304,7 @@ eligibility.check.date.of.birth.h1=Were you and your partner born after 5 April 
 eligibility.check.date.of.birth.legend=Were you and your partner born after 5 April 1935?
 eligibility.check.date.of.birth.span.para=To benefit from Marriage Allowance, you and your partner should be born on or after 6 April 1935.
 eligibility.check.date.of.birth.span.married=Does this apply to you and your partner?
-eligibility.check.date.of.birth.error=You might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" data-journey-click="marriage-allowance:outboundlink:married_couples-link" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
+eligibility.check.date.of.birth.error=You might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
 eligibility.check.do.you.live.in.scotland.h1 = Do you live in Scotland?
 eligibility.check.do.you.want.to.apply.h1 = Do you want to apply for Marriage Allowance?
 
@@ -321,7 +321,7 @@ pages.finished.para5=If they are employed and pay tax via PAYE, we will send the
 pages.finished.para6=Your revised notice of tax coding will show in your personal tax account within 24 hours.
 pages.finished.para7=There is no need to contact us.
 pages.finished.back-pta=Back to Personal Tax Account
-pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="marriage-allowance:outboundlink:ptaclick_finish" >check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
+pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
 pages.finished.backdated-payments=Backdated payments can take up to 8 weeks to process.
 pages.finished.hidden-warning=Warning
 
