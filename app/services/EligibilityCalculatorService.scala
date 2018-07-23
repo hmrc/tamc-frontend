@@ -17,6 +17,7 @@
 package services
 
 import config.ApplicationConfig._
+import _root_.config.ApplicationConfig
 import models.EligibilityCalculatorInput
 import models.EligibilityCalculatorResult
 import uk.gov.hmrc.time.TaxYearResolver._
@@ -39,7 +40,7 @@ object EligibilityCalculatorService {
   private def getEligibilityBenefitResult(transIncome: Int, recIncome: Int): EligibilityCalculatorResult =
     calculateGain(transIncome, recIncome) match {
       case gain if gain > 0 => EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(gain))
-      case _ => EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
+      case _ => EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose", Some(ApplicationConfig.PERSONAL_ALLOWANCE))
     }
 
   private def calculateGain(transIncome: Int, recIncome: Int): Int = {
