@@ -329,3 +329,40 @@ $(function() {
 function toggle_div(divId) {
 	$("#" + divId).toggle();
 }
+
+function getPageTitle() {
+  return document.getElementsByTagName("title")[0].innerHTML.split("-")[0].trim();
+}
+
+$(function() {
+  if ( $('.error-notification').length ) {
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'error - field',
+      eventAction: getPageTitle(),
+      eventLabel: $('.error-notification').text().trim()
+    });
+  }
+});
+
+$(function() {
+  $('span.error-message').each(function() {
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'error - field',
+      eventAction: getPageTitle(),
+      eventLabel: $(this).text().trim()
+    });
+  });
+});
+
+$(function() {
+  $('.accordion').click(function() {
+    ga('send', {
+      hitType: 'event',
+      eventCategory: 'accordion - click',
+      eventAction: getPageTitle(),
+      eventLabel: $(this).text().trim()
+    });
+  });
+});
