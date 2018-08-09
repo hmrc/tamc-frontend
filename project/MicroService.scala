@@ -19,6 +19,8 @@ import sbt.Tests.{SubProcess, Group}
 import sbt._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
+import uk.gov.hmrc.SbtArtifactory
+import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import play.sbt.routes.RoutesKeys.routesGenerator
 import play.routes.compiler.StaticRoutesGenerator
@@ -34,7 +36,7 @@ trait MicroService {
   val appName: String
 
   lazy val appDependencies: Seq[ModuleID] = Seq.empty
-  lazy val plugins: Seq[Plugins] = Seq(play.sbt.PlayScala)
+  lazy val plugins: Seq[Plugins] = Seq(play.sbt.PlayScala, SbtArtifactory)
   lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
   lazy val scoverageSettings = {
@@ -52,6 +54,7 @@ trait MicroService {
     .enablePlugins(plugins: _*)
     .settings(playSettings: _*)
     .settings(scoverageSettings: _*)
+    .settings(majorVersion := 7)
     .settings(publishingSettings: _*)
     .settings(scalaSettings: _*)
     .settings(defaultSettings(): _*)
