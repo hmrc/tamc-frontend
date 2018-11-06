@@ -72,10 +72,13 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT_SCOT = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
-  val MAX_ALLOWED_TRANSFER = configuration.getInt("max-allowed-transfer-" + TaxYearResolver.currentTaxYear).getOrElse(PERSONAL_ALLOWANCE) / 10
+  val MAX_LIMIT_WALES = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
+  val MAX_LIMIT_NORTHERN_IRELAND = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
+
+  val MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER = configuration.getInt("max-allowed-personal-allowance-transfer-" + TaxYearResolver.currentTaxYear).get
   val MAX_BENEFIT = configuration.getInt("max-benefit-" + TaxYearResolver.currentTaxYear).get
-  val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_TRANSFER
-  val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_TRANSFER
+  val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER
+  val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
   val SCOTTISH_RESIDENT = "scottish_resident"
 
