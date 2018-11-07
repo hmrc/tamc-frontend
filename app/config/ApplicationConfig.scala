@@ -72,8 +72,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get
   val MAX_LIMIT_SCOT = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
-  val MAX_LIMIT_WALES = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
-  val MAX_LIMIT_NORTHERN_IRELAND = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
+  val MAX_LIMIT_WALES = configuration.getInt("max-limit-wales-" + TaxYearResolver.currentTaxYear).get
+  val MAX_LIMIT_NORTHERN_IRELAND = configuration.getInt("max-limit-northern-ireland-" + TaxYearResolver.currentTaxYear).get
 
   val MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER = configuration.getInt("max-allowed-personal-allowance-transfer-" + TaxYearResolver.currentTaxYear).get
   val MAX_BENEFIT = configuration.getInt("max-benefit-" + TaxYearResolver.currentTaxYear).get

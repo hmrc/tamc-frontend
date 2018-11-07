@@ -349,44 +349,4 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
       }
     }
   }
-
-  "BandedIncome" when {
-
-    "incomeChunker is called" must {
-
-      "return appropriate chunked income for english tax payer" in {
-        case class EnglishTestIncome(income: Int, basicRate: Int)
-
-        val testCases = List(
-          EnglishTestIncome(30000, 30000 - PERSONAL_ALLOWANCE),
-          EnglishTestIncome(25000, 25000 - PERSONAL_ALLOWANCE),
-          EnglishTestIncome(20000, 20000 - PERSONAL_ALLOWANCE)
-        )
-
-        testCases.foreach(test =>
-
-          BandedIncome.incomeChunker(
-            test.income, England) shouldBe EnglishBandedIncome(test.basicRate)
-        )
-      }
-
-      "return appropriately chunked income for scottish tax payer" in {
-
-        case class ScottishTestIncome(income: Int, starterRate: Int, basicRate: Int, intermediateRate: Int)
-
-        val testCases = List(
-          ScottishTestIncome(30000, 2000, 10150, 6000),
-          ScottishTestIncome(25000, 2000, 10150, 1000),
-          ScottishTestIncome(20000, 2000, 6150, 0)
-        )
-
-        testCases.foreach(test =>
-
-          BandedIncome.incomeChunker(
-            test.income, Scotland) shouldBe ScottishBandedIncome(test.starterRate, test.basicRate, test.intermediateRate)
-        )
-      }
-
-    }
-  }
 }

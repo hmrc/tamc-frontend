@@ -20,58 +20,70 @@ import config.ApplicationConfig._
 
 sealed trait BandedIncome
 
-case class ScottishBandedIncome(incomeAtStarterRate: Int, incomeAtBasicRate: Int = 0, incomeAtIntermediateRate: Int = 0) extends BandedIncome {
-  val starterRate = 0.19
-  val basicRate = 0.20
-  val intermediateRate = 0.21
+case class ScottishBandedIncome(incomeAtStarterRate: Int, incomeAtBasicRate: Int = 0,
+                                incomeAtIntermediateRate: Int = 0, bands: List[TaxBand]) extends BandedIncome {
+  val starterRate = bands.find(x=> x.name=="StarterRate").map(_.rate)
+  val basicRate = bands.find(x=> x.name=="BasicRate").map(_.rate)
+  val intermediateRate = bands.find(x=> x.name=="IntermediateRate").map(_.rate)
 
-  val starterIncomeBenefit: Double = incomeAtStarterRate * starterRate
-  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate
-  val intermediateIncomeBenefit: Double = incomeAtIntermediateRate * intermediateRate
+  val starterIncomeBenefit: Double = incomeAtStarterRate * starterRate.get
+  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate.get
+  val intermediateIncomeBenefit: Double = incomeAtIntermediateRate * intermediateRate.get
 }
 
-case class EnglishBandedIncome(incomeAtBasicRate: Int) extends BandedIncome {
-  val basicRate = 0.20
+case class EnglishBandedIncome(incomeAtBasicRate: Int, bands: List[TaxBand]) extends BandedIncome {
+  val basicRate = bands.find(x=> x.name=="BasicRate").map(_.rate)
 
-  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate
+  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate.get
 }
 
-case class WelshBandedIncome(incomeAtBasicRate: Int) extends BandedIncome {
-  val basicRate = 0.20
+case class WelshBandedIncome(incomeAtBasicRate: Int, bands: List[TaxBand]) extends BandedIncome {
+  val basicRate = bands.find(x=> x.name=="BasicRate").map(_.rate)
 
-  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate
+  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate.get
 }
 
-case class NorthernIrelandBandedIncome(incomeAtBasicRate: Int) extends BandedIncome {
-  val basicRate = 0.20
+case class NorthernIrelandBandedIncome(incomeAtBasicRate: Int, bands: List[TaxBand]) extends BandedIncome {
+  val basicRate = bands.find(x=> x.name=="BasicRate").map(_.rate)
 
-  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate
+  val basicIncomeBenefit: Double = incomeAtBasicRate * basicRate.get
 }
 
 object BandedIncome {
 
-  def incomeChunker(income: Int, country: Country): BandedIncome = {
+  def incomeChunker(income: Int, country: Country, countryTaxbands: List[TaxBand]): BandedIncome = {
     val incomeOverPersonalAllowance = income - PERSONAL_ALLOWANCE
     country match {
-      case Scotland =>
-        val diffBetweenStarterAndBasicRates = 2000
-        val diffBetweenBasicAndIntermediateRates = 10150
+      case Scotland => {
+
+        // TODO - don't use .get and refactor code duplication
+        val starterRateBand = countryTaxbands.find(x=> x.name=="StarterRate").get
+        val basicRateBand = countryTaxbands.find(x=> x.name=="BasicRate").get
+        val intermediateRateBand = countryTaxbands.find(x=> x.name=="IntermediateRate").get
+
+        val diffBetweenStarterAndBasicRates = basicRateBand.lowerThreshold-starterRateBand.lowerThreshold
+        val diffBetweenBasicAndIntermediateRates = intermediateRateBand.lowerThreshold-basicRateBand.lowerThreshold
         val starterRateIncome = Math.min(diffBetweenStarterAndBasicRates, incomeOverPersonalAllowance)
 
-        if(starterRateIncome < diffBetweenStarterAndBasicRates) {
-          ScottishBandedIncome(starterRateIncome)
+        if (starterRateIncome < diffBetweenStarterAndBasicRates) {
+          ScottishBandedIncome(starterRateIncome, bands = countryTaxbands)
         } else {
           val basicRateIncome = incomeOverPersonalAllowance - diffBetweenStarterAndBasicRates
-          if(basicRateIncome > diffBetweenBasicAndIntermediateRates) {
+          if (basicRateIncome > diffBetweenBasicAndIntermediateRates) {
             val intermediateRateIncome = basicRateIncome - diffBetweenBasicAndIntermediateRates
-            ScottishBandedIncome(starterRateIncome,basicRateIncome - intermediateRateIncome, intermediateRateIncome)
+            ScottishBandedIncome(starterRateIncome, basicRateIncome - intermediateRateIncome, intermediateRateIncome, countryTaxbands)
           } else {
-            ScottishBandedIncome(starterRateIncome, basicRateIncome)
+            ScottishBandedIncome(starterRateIncome, basicRateIncome, bands = countryTaxbands)
           }
         }
-      case England => EnglishBandedIncome(income - PERSONAL_ALLOWANCE)
-      case Wales => WelshBandedIncome(income - PERSONAL_ALLOWANCE)
-      case NorthernIreland => NorthernIrelandBandedIncome(income - PERSONAL_ALLOWANCE)
+      }
+      case England => EnglishBandedIncome(income - PERSONAL_ALLOWANCE,
+        bands = countryTaxbands)
+      case Wales => WelshBandedIncome(income - PERSONAL_ALLOWANCE,
+        bands = countryTaxbands)
+      case NorthernIreland => NorthernIrelandBandedIncome(income - PERSONAL_ALLOWANCE,
+        bands = countryTaxbands)
     }
   }
 }
+

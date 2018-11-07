@@ -18,7 +18,10 @@ package services
 
 import config.ApplicationConfig._
 import models.{EligibilityCalculatorResult, _}
+import play.api.libs.json.Json
 import uk.gov.hmrc.time.TaxYearResolver
+
+import scala.io.Source
 
 object EligibilityCalculatorService {
 
@@ -46,45 +49,50 @@ object EligibilityCalculatorService {
     else if(hasMaxBenefit)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT))
     else {
-      partialEligibilityScenario(transferorIncome,recipientIncome,countryOfResidence)
+      partialEligibilityScenario(transferorIncome,recipientIncome,countryOfResidence, getCountryTaxBandsFromFile(countryOfResidence))
     }
   }
 
   private def partialEligibilityScenario(transferorIncome: Int, recipientIncome: Int,
-                                         countryOfResidence: Country): EligibilityCalculatorResult = {
-    val possibleGain = calculateGain(transferorIncome, recipientIncome, countryOfResidence)
+                                         countryOfResidence: Country, countryTaxBands: List[TaxBand]): EligibilityCalculatorResult = {
+    val possibleGain = calculateGain(transferorIncome, recipientIncome, countryOfResidence, countryTaxBands)
     if(possibleGain>=1)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(possibleGain))
     else
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose", Some(PERSONAL_ALLOWANCE))
   }
 
-  private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country): Int = {
+  private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
 
     val taxPercentage = country match {
-      case Scotland => 0.19
-      case _ => 0.2
+      case Scotland => countryTaxBands.find(x=> x.name=="StarterRate").map(_.rate)
+      case _ => countryTaxBands.find(x=> x.name=="BasicRate").map(_.rate)
     }
 
     val recipientBenefit = country match {
       case Scotland =>
-        val scottish = BandedIncome.incomeChunker(recipientIncome, country).asInstanceOf[ScottishBandedIncome]
+        val scottish = BandedIncome.incomeChunker(recipientIncome, country, countryTaxBands).asInstanceOf[ScottishBandedIncome]
         math.min(
-          scottish.starterIncomeBenefit + scottish.basicIncomeBenefit + scottish.incomeAtIntermediateRate, MAX_BENEFIT)
+          scottish.starterIncomeBenefit + scottish.basicIncomeBenefit + scottish.intermediateIncomeBenefit, MAX_BENEFIT)
       case England =>
         math.min(BandedIncome.incomeChunker(
-          recipientIncome, country).asInstanceOf[EnglishBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
+          recipientIncome, country, countryTaxBands).asInstanceOf[EnglishBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
       case Wales =>
         math.min(BandedIncome.incomeChunker(
-          recipientIncome, country).asInstanceOf[WelshBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
+          recipientIncome, country, countryTaxBands).asInstanceOf[WelshBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
       case NorthernIreland =>
         math.min(BandedIncome.incomeChunker(
-          recipientIncome, country).asInstanceOf[NorthernIrelandBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
+          recipientIncome, country, countryTaxBands).asInstanceOf[NorthernIrelandBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
     }
 
     val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE
-    val transferorLoss = math.max(transferorDifference*taxPercentage,0)
+    val transferorLoss = math.max(transferorDifference*taxPercentage.get,0)
 
     (recipientBenefit.floor - transferorLoss.floor).toInt
+  }
+
+  def getCountryTaxBandsFromFile(countryOfResidence: Country): List[TaxBand] = {
+    val resource = getClass.getResourceAsStream(s"/data/${countryOfResidence}Bands.json")
+    Json.parse(Source.fromInputStream(resource).mkString).as[CountryTaxBands].taxBands
   }
 }
