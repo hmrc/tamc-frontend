@@ -22,40 +22,69 @@ import uk.gov.hmrc.time.TaxYearResolver
 
 object EligibilityCalculatorService {
 
+  private def maxLimit(country: Country): Int = country match {
+    case England => MAX_LIMIT
+    case Scotland => MAX_LIMIT_SCOT
+    case Wales => MAX_LIMIT_WALES
+    case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND
+  }
+
   def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country): EligibilityCalculatorResult = {
 
-    val maxLimit = countryOfResidence match {
-      case England => MAX_LIMIT
-      case Scotland => MAX_LIMIT_SCOT
-      case Wales => MAX_LIMIT_WALES
-      case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND
-    }
-
     val hasMaxBenefit = transferorIncome<TRANSFEROR_ALLOWANCE&&recipientIncome>RECIPIENT_ALLOWANCE
-    val recipientNotEligible = recipientIncome>maxLimit||recipientIncome<PERSONAL_ALLOWANCE
-    val bothOverLimit = transferorIncome>maxLimit&&recipientIncome>maxLimit
+    val recipientNotEligible = recipientIncome>maxLimit(countryOfResidence)||recipientIncome<PERSONAL_ALLOWANCE
+    val bothOverMaxLimit = transferorIncome>maxLimit(countryOfResidence)&&recipientIncome>maxLimit(countryOfResidence)
 
-    if(transferorIncome>recipientIncome) EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
-    else if(bothOverLimit) EligibilityCalculatorResult("eligibility.feedback.transferor-not-eligible-"+ TaxYearResolver.currentTaxYear)
-    else if(recipientNotEligible) EligibilityCalculatorResult("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear)
-    else if(transferorIncome>PERSONAL_ALLOWANCE) EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear)
-    else if(hasMaxBenefit) EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT))
+    if(transferorIncome>recipientIncome)
+      EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
+    else if(bothOverMaxLimit)
+      EligibilityCalculatorResult("eligibility.feedback.transferor-not-eligible-" + TaxYearResolver.currentTaxYear)
+    else if(recipientNotEligible)
+      EligibilityCalculatorResult("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear)
+    else if(transferorIncome>PERSONAL_ALLOWANCE)
+      EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear)
+    else if(hasMaxBenefit)
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT))
     else {
-      val possibleGain = calculateGain(transferorIncome, recipientIncome, countryOfResidence)
-      if(possibleGain>=1)
-        EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(possibleGain))
-      else
-        EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose", Some(PERSONAL_ALLOWANCE))
+      partialEligibilityScenario(transferorIncome,recipientIncome,countryOfResidence)
     }
   }
 
+  private def partialEligibilityScenario(transferorIncome: Int, recipientIncome: Int,
+                                         countryOfResidence: Country): EligibilityCalculatorResult = {
+    val possibleGain = calculateGain(transferorIncome, recipientIncome, countryOfResidence)
+    if(possibleGain>=1)
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(possibleGain))
+    else
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose", Some(PERSONAL_ALLOWANCE))
+  }
+
   private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country): Int = {
-    val recipientDifference = recipientIncome - PERSONAL_ALLOWANCE
-    val recipientBenefit = math.min(recipientDifference*0.2, MAX_BENEFIT)
+
+    val taxPercentage = country match {
+      case Scotland => 0.19
+      case _ => 0.2
+    }
+
+    val recipientBenefit = country match {
+      case Scotland =>
+        val scottish = BandedIncome.incomeChunker(recipientIncome, country).asInstanceOf[ScottishBandedIncome]
+        math.min(
+          scottish.starterIncomeBenefit + scottish.basicIncomeBenefit + scottish.incomeAtIntermediateRate, MAX_BENEFIT)
+      case England =>
+        math.min(BandedIncome.incomeChunker(
+          recipientIncome, country).asInstanceOf[EnglishBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
+      case Wales =>
+        math.min(BandedIncome.incomeChunker(
+          recipientIncome, country).asInstanceOf[WelshBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
+      case NorthernIreland =>
+        math.min(BandedIncome.incomeChunker(
+          recipientIncome, country).asInstanceOf[NorthernIrelandBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
+    }
 
     val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE
-    val transferorLoss = math.max(transferorDifference*0.2,0)
+    val transferorLoss = math.max(transferorDifference*taxPercentage,0)
 
-    (recipientBenefit.floor-transferorLoss.floor).toInt
+    (recipientBenefit.floor - transferorLoss.floor).toInt
   }
 }

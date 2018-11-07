@@ -107,6 +107,15 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(230))
         }
+
+
+        "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
+          val higherEarnerIncome = 12500
+          val lowerEarnerIncome = 9000
+
+          EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(130))
+        }
       }
     }
 
@@ -135,6 +144,15 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
             EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
         }
+
+        "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {
+          val higherEarnerIncome = PERSONAL_ALLOWANCE+5
+          val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
+
+          EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+            EligibilityCalculatorResult("eligibility.feedback.loose",Some(11850.0))
+        }
+
       }
 
       "Inform the user they are eligible for maximum Marriage Allowance benefit" when {
@@ -153,7 +171,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT-1))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(225))
         }
 
         "The higher earners income is just below recipient allowance and the lower earners income is just above transferor allowance" in {
@@ -161,15 +179,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE+1
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT-1))
-        }
-
-        "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {
-          val higherEarnerIncome = PERSONAL_ALLOWANCE+5
-          val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
-
-          EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(1))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(225))
         }
 
         "The higher earners income is above recipient allowance and the lower earners income is above transferor allowance" in {
@@ -177,7 +187,20 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE+1
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(230))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(218))
+        }
+
+        "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
+          val incomes = List(
+            (12500,9000,123),
+            (12500,11000,59),
+            (30000,11000,174)
+          )
+
+          incomes.foreach( income =>
+          EligibilityCalculatorService.calculate(income._2, income._1, Scotland) shouldBe
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(income._3))
+          )
         }
       }
     }
@@ -324,6 +347,46 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(230))
         }
       }
+    }
+  }
+
+  "BandedIncome" when {
+
+    "incomeChunker is called" must {
+
+      "return appropriate chunked income for english tax payer" in {
+        case class EnglishTestIncome(income: Int, basicRate: Int)
+
+        val testCases = List(
+          EnglishTestIncome(30000, 30000 - PERSONAL_ALLOWANCE),
+          EnglishTestIncome(25000, 25000 - PERSONAL_ALLOWANCE),
+          EnglishTestIncome(20000, 20000 - PERSONAL_ALLOWANCE)
+        )
+
+        testCases.foreach(test =>
+
+          BandedIncome.incomeChunker(
+            test.income, England) shouldBe EnglishBandedIncome(test.basicRate)
+        )
+      }
+
+      "return appropriately chunked income for scottish tax payer" in {
+
+        case class ScottishTestIncome(income: Int, starterRate: Int, basicRate: Int, intermediateRate: Int)
+
+        val testCases = List(
+          ScottishTestIncome(30000, 2000, 10150, 6000),
+          ScottishTestIncome(25000, 2000, 10150, 1000),
+          ScottishTestIncome(20000, 2000, 6150, 0)
+        )
+
+        testCases.foreach(test =>
+
+          BandedIncome.incomeChunker(
+            test.income, Scotland) shouldBe ScottishBandedIncome(test.starterRate, test.basicRate, test.intermediateRate)
+        )
+      }
+
     }
   }
 }
