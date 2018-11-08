@@ -19,7 +19,7 @@ package controllers
 import actions.{JourneyEnforcers, UnauthorisedActions}
 import connectors.ApplicationAuditConnector
 import forms.EligibilityCalculatorForm.calculatorForm
-import models.England
+import models.{Country}
 import play.api.mvc.{Action, AnyContent}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -39,7 +39,6 @@ trait GdsEligibilityController extends BaseController with UnauthorisedActions w
       Ok(views.html.calculator(calculatorForm = calculatorForm))
   }
 
-  // TODO - Pass country into calculate function from form submission
   def calculatorAction(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
@@ -48,6 +47,7 @@ trait GdsEligibilityController extends BaseController with UnauthorisedActions w
         calculatorInput =>
           Ok(views.html.calculator(
             calculatorForm = calculatorForm.fill(calculatorInput),
-            calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome, calculatorInput.recipientIncome, England)))))
+            calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
   }
  }

@@ -20,6 +20,7 @@ import config.ApplicationConfig._
 import models.{EligibilityCalculatorResult, _}
 import play.api.libs.json.Json
 import uk.gov.hmrc.time.TaxYearResolver
+import utils.BenefitCalculatorHelper
 
 import scala.io.Source
 
@@ -64,31 +65,12 @@ object EligibilityCalculatorService {
 
   private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
 
-    val taxPercentage = country match {
-      case Scotland => countryTaxBands.find(x=> x.name=="StarterRate").map(_.rate)
-      case _ => countryTaxBands.find(x=> x.name=="BasicRate").map(_.rate)
-    }
-
-    val recipientBenefit = country match {
-      case Scotland =>
-        val scottish = BandedIncome.incomeChunker(recipientIncome, country, countryTaxBands).asInstanceOf[ScottishBandedIncome]
-        math.min(
-          scottish.starterIncomeBenefit + scottish.basicIncomeBenefit + scottish.intermediateIncomeBenefit, MAX_BENEFIT)
-      case England =>
-        math.min(BandedIncome.incomeChunker(
-          recipientIncome, country, countryTaxBands).asInstanceOf[EnglishBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
-      case Wales =>
-        math.min(BandedIncome.incomeChunker(
-          recipientIncome, country, countryTaxBands).asInstanceOf[WelshBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
-      case NorthernIreland =>
-        math.min(BandedIncome.incomeChunker(
-          recipientIncome, country, countryTaxBands).asInstanceOf[NorthernIrelandBandedIncome].basicIncomeBenefit, MAX_BENEFIT)
-    }
-
+    val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncome, country, countryTaxBands)
     val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE
-    val transferorLoss = math.max(transferorDifference*taxPercentage.get,0)
+    val taxPercentage = getCountryTaxBandsFromFile(country).head.rate
+    val transferorLoss = math.max(transferorDifference*taxPercentage, 0)
 
-    (recipientBenefit.floor - transferorLoss.floor).toInt
+    (recipientBenefit - transferorLoss.floor).toInt
   }
 
   def getCountryTaxBandsFromFile(countryOfResidence: Country): List[TaxBand] = {

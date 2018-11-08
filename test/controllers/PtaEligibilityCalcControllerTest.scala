@@ -41,7 +41,7 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
       case bothKeys if (income.contains("transferor-income") &&
         income.contains("recipient-income")) =>
         val request = testComponent.request.
-          withFormUrlEncodedBody("transferor-income" -> income.get("transferor-income").get,
+          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income.get("transferor-income").get,
             "recipient-income" -> income.get("recipient-income").get)
         val controllerToTest = testComponent.controller
         controllerToTest.calculatorAction()(request)
@@ -49,14 +49,14 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
       case transferorKey if (income.contains("transferor-income") &&
         !income.contains("recipient-income")) =>
         val request = testComponent.request.
-          withFormUrlEncodedBody("transferor-income" -> income.get("transferor-income").get)
+          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income.get("transferor-income").get)
         val controllerToTest = testComponent.controller
         controllerToTest.calculatorAction()(request)
 
       case transferorKey if (!income.contains("transferor-income") &&
         income.contains("recipient-income")) =>
         val request = testComponent.request.
-          withFormUrlEncodedBody("recipient-income" -> income.get("recipient-income").get)
+          withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income.get("recipient-income").get)
         val controllerToTest = testComponent.controller
         controllerToTest.calculatorAction()(request)
     }

@@ -16,4 +16,4 @@
 
 package models
 
-case class EligibilityCalculatorInput(transferorIncome: Int, recipientIncome: Int)
+case class EligibilityCalculatorInput(country: String, transferorIncome: Int, recipientIncome: Int)

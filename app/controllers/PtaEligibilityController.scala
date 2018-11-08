@@ -21,7 +21,7 @@ import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
 import forms.EligibilityCalculatorForm.calculatorForm
-import models.England
+import models.{Country}
 import play.api.mvc.{Action, AnyContent}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -54,7 +54,6 @@ trait PtaEligibilityController extends BaseController with AuthorisedActions wit
           Future { Ok(views.html.pta.calculator(calculatorForm = calculatorForm)) }
   }
 
-  // TODO - Pass country into calculate function from form submission
   def calculatorAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
@@ -66,7 +65,8 @@ trait PtaEligibilityController extends BaseController with AuthorisedActions wit
               calculatorInput =>
                 Ok(views.html.pta.calculator(
                   calculatorForm = calculatorForm.fill(calculatorInput),
-                  calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome, calculatorInput.recipientIncome, England)))))
+                  calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
+                    calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
           }
   }
 }

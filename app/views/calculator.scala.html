@@ -28,6 +28,7 @@
 @import play.api.i18n.Messages.Implicits._
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.eligibility-criteria"))
@@ -47,6 +48,22 @@
     @helpers.form(action = routes.GdsEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
     <fieldset>
         <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
+
+        <div class="form-group">
+            @inputRadioGroup(
+            calculatorForm("country"),
+            Seq(
+            "england" -> Messages("label.england"),
+            "northernireland" -> Messages("label.ni"),
+            "scotland" -> Messages("label.scotland"),
+            "wales" -> Messages("label.wales")
+            ),
+            '_labelClass -> "block-label",
+            '_legendClass -> "heading-small",
+            '_legend -> Messages("pages.calc.where")
+            )
+        </div>
+
         <div class="form-group">
             @templates.input(calculatorForm("transferor-income"),
                 '_label -> Html(Messages("pages.form.field.income")),

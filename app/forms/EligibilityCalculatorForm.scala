@@ -16,17 +16,11 @@
 
 package forms
 
-import scala.Left
-import scala.Right
-import scala.util.Success
-import scala.util.Try
 import models.EligibilityCalculatorInput
-import play.api.data.Form
-import play.api.data.FormError
 import play.api.data.Forms.mapping
-import play.api.data.Forms.of
+import play.api.data.format.Formats._
 import play.api.data.format.Formatter
-import play.api.data.Forms
+import play.api.data.{FieldMapping, Form, FormError, Forms}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object EligibilityCalculatorForm {
@@ -69,9 +63,11 @@ object EligibilityCalculatorForm {
   }
 
   val currency = Forms.of[Int](currencyFormatter)
+  val country: FieldMapping[String] = Forms.of[String]
 
   val calculatorForm = Form[EligibilityCalculatorInput](
     mapping(
+      "country" -> country,
       "transferor-income" -> currency,
       "recipient-income" -> currency)(EligibilityCalculatorInput.apply)(EligibilityCalculatorInput.unapply))
 }

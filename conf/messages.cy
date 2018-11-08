@@ -86,6 +86,8 @@ pages.form.field-required.partners-income=Rhowch wybod a oes gan eich partner in
 pages.form.field.description.partners-income=Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
 pages.form.field.description.date-of-birth=Cadarnhewch os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>6 Ebrill 1935</span>
 pages.form.field-required.date-of-birth=Rhowch wybod os cawsoch chi a’ch partner eich geni ar ôl 6 Ebrill 1935
+pages.form.field.description.country=Select where you live
+
 #********************************************************************************
 # General
 #********************************************************************************
@@ -173,6 +175,11 @@ hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Gwybodaeth am 
 pages.calc.header=Cyfrifiannell Lwfans Priodasol
 pages.calc.para1=Fel pâr, darganfyddwch faint o dreth y gallwch ei harbed os ydych yn gwneud cais am Lwfans Priodasol yn y flwyddyn dreth hon.
 pages.calc.para2=Nid yw’r gyfrifiannell hon yn cynnwys newidiadau i gyfradd yr Alban o Dreth Incwm, na lwfansau eraill megis Lwfans Cynilion Personol neu Lwfans Difidend.
+pages.calc.where=Where do you live?
+label.england = England
+label.wales = Wales
+label.scotland = Scotland
+label.ni = Northern Ireland
 pages.form.field.income=Eich incwm (isel), cyn didynnu treth
 pages.form.field.recipient-income=Incwm eich partner (uchel), cyn didynnu treth
 pages.calc.field-helper.income=Dyma ffigur eich incwm cyn didynnu treth.
