@@ -24,27 +24,25 @@ object BenefitCalculatorHelper {
   def calculateTotalBenefitAcrossBands(income: Int, country: Country, countryTaxbands: List[TaxBand]): Int = {
     val incomeOverPersonalAllowance = income - PERSONAL_ALLOWANCE
     val relevantTaxBands = countryTaxbands.filterNot(band => income < band.lowerThreshold)
-    val bandDifferences = relevantTaxBands.map(band => band.name -> (band.upperThreshold - band.lowerThreshold)).toMap
     val rates = relevantTaxBands.map(band => band.name -> band.rate).toMap
 
-    val benefitsFromBandedIncome = dividedIncome(relevantTaxBands, incomeOverPersonalAllowance,
-      bandDifferences).map(income => income._2 * rates(income._1)).sum.toInt
+    val benefitsFromBandedIncome = dividedIncome(relevantTaxBands, incomeOverPersonalAllowance).map(
+      income => income._2 * rates(income._1)).sum.toInt
 
     Math.min(benefitsFromBandedIncome, MAX_BENEFIT)
   }
 
-  def dividedIncome(relevantTaxBands: List[TaxBand], incomeLessPersonalAllowance: Int,
-                    bandDifferences: Map[String, Int]): Map[String, Int] = {
+  def dividedIncome(relevantTaxBands: List[TaxBand], incomeLessPersonalAllowance: Int): Map[String, Int] = {
     relevantTaxBands.map {
       band =>
         if (relevantTaxBands.size == 1)
-          band.name -> Math.min(incomeLessPersonalAllowance, band.upperThreshold - band.lowerThreshold)
+          band.name -> Math.min(incomeLessPersonalAllowance, band.diffBetweenLowerAndUpperThreshold)
         else if (band.name == relevantTaxBands.last.name)
           band.name -> {
-          Math.min(bandDifferences.values.take(bandDifferences.values.size).sum - incomeLessPersonalAllowance,
-            band.upperThreshold - band.lowerThreshold)
+          Math.min(relevantTaxBands.map(_.diffBetweenLowerAndUpperThreshold).sum - incomeLessPersonalAllowance,
+            band.diffBetweenLowerAndUpperThreshold)
         } else
-          band.name -> Math.min(incomeLessPersonalAllowance, band.upperThreshold - band.lowerThreshold)
+          band.name -> Math.min(incomeLessPersonalAllowance, band.diffBetweenLowerAndUpperThreshold)
     }.toMap
   }
 

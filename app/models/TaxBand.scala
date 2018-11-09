@@ -18,7 +18,9 @@ package models
 
 import play.api.libs.json._
 
-case class TaxBand(name: String, lowerThreshold: Int, upperThreshold: Int, rate: Double)
+case class TaxBand(name: String, lowerThreshold: Int, upperThreshold: Int, rate: Double) {
+  val diffBetweenLowerAndUpperThreshold = upperThreshold - lowerThreshold
+}
 
 object TaxBand {
   implicit val format = Json.format[TaxBand]
