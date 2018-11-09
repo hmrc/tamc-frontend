@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
+import play.routes.compiler.StaticRoutesGenerator
+import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
-import sbt.Tests.{SubProcess, Group}
+import sbt.Tests.{Group, SubProcess}
 import sbt._
+import scoverage._
+import uk.gov.hmrc.DefaultBuildSettings._
+import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin, _}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import uk.gov.hmrc.versioning.SbtGitVersioning
-import play.sbt.routes.RoutesKeys.routesGenerator
-import play.routes.compiler.StaticRoutesGenerator
-import scoverage._
-import uk.gov.hmrc._
-import DefaultBuildSettings._
+import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 
 trait MicroService {
 
@@ -38,7 +39,6 @@ trait MicroService {
   lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
   lazy val scoverageSettings = {
-    import ScoverageSbtPlugin._
 
     Seq(
       ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*;connectors.ApplicationAuditConnector;connectors.ApplicationAuthConnector;services.CachingService;metrics.Metrics;utils.WSHttp",
@@ -74,7 +74,8 @@ trait MicroService {
       testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
       parallelExecution in IntegrationTest := false)
     .settings(resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo))
-    .enablePlugins(SbtDistributablesPlugin, SbtAutoBuildPlugin, SbtGitVersioning)
+    .settings(majorVersion := 7)
+    .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
 }
 
 private object TestPhases {
