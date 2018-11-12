@@ -75,7 +75,6 @@ trait MicroService {
       parallelExecution in IntegrationTest := false)
     .settings(resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo))
     .settings(majorVersion := 7)
-    .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
 }
 
 private object TestPhases {
