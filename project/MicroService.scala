@@ -49,7 +49,7 @@ trait MicroService {
   }
 
   lazy val microservice: Project = Project(appName, file("."))
-    .enablePlugins(plugins: _*)
+    .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
     .settings(playSettings: _*)
     .settings(scoverageSettings: _*)
     .settings(publishingSettings: _*)
