@@ -20,16 +20,14 @@ import details.{Person, PersonDetails}
 import models.{CitizenName, EndReasonCode, Role, UserRecord}
 import org.joda.time.{DateTime, DateTimeZone}
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.mvc.Cookie
 import play.api.test.Helpers.{OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
 import test_utils.UpdateRelationshipTestUtility
 import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
-
-  implicit override lazy val app: Application = fakeApplication
+class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTestUtility with GuiceOneAppPerSuite {
 
   "list relationship page" should {
 

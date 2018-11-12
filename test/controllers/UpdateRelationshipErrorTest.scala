@@ -18,16 +18,13 @@ package controllers
 
 import models._
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, contentAsString, defaultAwaitTimeout}
 import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
-
-  implicit override lazy val app: Application = fakeApplication
+class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility with GuiceOneAppPerSuite {
 
   "List relationship" should {
 

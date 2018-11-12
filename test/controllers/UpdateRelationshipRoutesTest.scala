@@ -19,20 +19,16 @@ package controllers
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
 import test_utils.TestData.Cids
 import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYearResolver
-import utils.LanguageUtils
 import views.helpers.TextGenerators
 
-class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility with OneAppPerSuite {
-
-  implicit override lazy val app: Application = fakeApplication
+class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility with GuiceOneAppPerSuite {
 
   "call list relationship " should {
 

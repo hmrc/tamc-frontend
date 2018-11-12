@@ -18,16 +18,15 @@ package controllers
 
 import config.ApplicationConfig
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
 
-class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
-  implicit override lazy val app: Application = fakeApplication
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   private def calculatorRequestAction(income: Map[String, String] = null) = {

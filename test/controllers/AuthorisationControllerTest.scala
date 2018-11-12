@@ -16,8 +16,7 @@
 
 package controllers
 
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.test.Helpers.OK
@@ -29,9 +28,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthorisationControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class AuthorisationControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
-  implicit override lazy val app: Application = fakeApplication
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   val fakeCustomAuditConnector = new AuditConnector {
     override lazy val auditingConfig = ???
