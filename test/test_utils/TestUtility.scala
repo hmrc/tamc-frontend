@@ -24,9 +24,7 @@ import details._
 import errors.ErrorResponseStatus.RELATION_MIGHT_BE_CREATED
 import models._
 import org.joda.time.DateTime
-import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
@@ -56,8 +54,6 @@ trait TestUtility extends UnitSpec with I18nSupport {
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
 
   val messagesApi: MessagesApi
-
-  lazy val fakeApplication: Application = new GuiceApplicationBuilder().build()
 
   def eventsShouldMatch(event: DataEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty): Unit = {
     event match {

@@ -16,20 +16,21 @@
 
 package connectors
 
-import org.mockito.Matchers.{eq => meq, _}
-import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.{OneAppPerSuite, PlaySpec}
+import org.mockito.ArgumentMatchers.{any => mockitoAny, eq => mockitoEq}
+import org.mockito.Mockito
+import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{BeforeAndAfterEach, MustMatchers}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.play.{PlaySpec}
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.play.config.ServicesConfig
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.{BadGatewayException, HeaderCarrier, HttpGet, HttpResponse}
+import uk.gov.hmrc.play.config.ServicesConfig
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ BadGatewayException, HeaderCarrier, HttpGet, HttpResponse }
 
-class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with MockitoSugar with BeforeAndAfterEach with ServicesConfig {
+class ContactFrontendConnectorSpec extends PlaySpec with GuiceOneAppPerSuite with MockitoSugar with BeforeAndAfterEach with ServicesConfig with MustMatchers {
 
   implicit override lazy val app: Application = new GuiceApplicationBuilder()
     .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
@@ -42,7 +43,7 @@ class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with Moc
   }
 
   override def beforeEach(): Unit = {
-    reset(TestConnector.http)
+    Mockito.reset(TestConnector.http)
   }
 
   private val OK = 200
@@ -57,16 +58,16 @@ class ContactFrontendConnectorSpec extends PlaySpec with OneAppPerSuite with Moc
 
       val response = HttpResponse(OK, responseString = Some(dummyResponseHtml))
 
-      when(TestConnector.http.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier], any())) thenReturn Future.successful(response)
+      Mockito.when(TestConnector.http.GET[HttpResponse](mockitoEq(serviceUrl))(mockitoAny(), mockitoAny[HeaderCarrier], mockitoAny())) thenReturn Future.successful(response)
 
       await(TestConnector.getHelpPartial)
 
-      verify(TestConnector.http).GET(meq(serviceUrl))(any(), any[HeaderCarrier], any())
+      Mockito.verify(TestConnector.http).GET(mockitoEq(serviceUrl))(mockitoAny(), mockitoAny[HeaderCarrier], mockitoAny())
     }
 
     "return an empty string if a BadGatewayException is encountered" in {
 
-      when(TestConnector.http.GET[HttpResponse](meq(serviceUrl))(any(), any[HeaderCarrier], any())) thenReturn Future.failed(new BadGatewayException("Phony exception"))
+      Mockito.when(TestConnector.http.GET[HttpResponse](mockitoEq(serviceUrl))(mockitoAny(), mockitoAny[HeaderCarrier], mockitoAny())) thenReturn Future.failed(new BadGatewayException("Phony exception"))
 
       val result = await(TestConnector.getHelpPartial)
 

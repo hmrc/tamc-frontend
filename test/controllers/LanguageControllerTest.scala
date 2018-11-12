@@ -16,17 +16,15 @@
 
 package controllers
 
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{cookies, defaultAwaitTimeout, _}
 import test_utils.TestUtility
 import uk.gov.hmrc.play.test.UnitSpec
 
-class LanguageControllerTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class LanguageControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
-  override implicit lazy val app: Application = fakeApplication
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   trait LocalSetup {

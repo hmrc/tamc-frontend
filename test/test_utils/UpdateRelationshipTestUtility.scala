@@ -48,11 +48,6 @@ trait UpdateRelationshipTestUtility extends UnitSpec {
 
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
 
-  lazy val fakeApplication: Application =
-    new GuiceApplicationBuilder()
-      .configure(Map("Test.microservice.assets.url" -> "test-url", "Test.microservice.assets.version" -> "test-version"))
-      .build
-
   def eventsShouldMatch(event: DataEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty) = event match {
     case DataEvent("tamc-frontend", `auditType`, _, eventTags, `details`, _) if (tags.toSet subsetOf eventTags.toSet) =>
     case _ => fail(s"${event} did not match auditType:${auditType} details:${details} tags:${tags}")

@@ -19,8 +19,7 @@ package controllers
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.MessagesApi
 import play.api.mvc.Cookie
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
@@ -31,9 +30,8 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYearResolver
 
-class ErrorsTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class ErrorsTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
-  implicit override lazy val app: Application = fakeApplication
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Error handling in transfer page when submitting form" should {

@@ -22,8 +22,7 @@ import config.ApplicationConfig
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.Application
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Cookie
 import play.api.test.FakeRequest
@@ -34,14 +33,13 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ContentTest extends UnitSpec with TestUtility with OneAppPerSuite {
+class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
     "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
     "Insurance is taken off."
 
-  implicit override lazy val app: Application = fakeApplication
   val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Calling Transfer Submit page" should {
