@@ -43,8 +43,6 @@
         <p>@Messages("pages.calc.para2")</p>
     </div>
 
-    <br />
-
     @helpers.form(action = routes.GdsEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
     <fieldset>
         <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
@@ -58,7 +56,6 @@
             "scotland" -> Messages("label.scotland"),
             "wales" -> Messages("label.wales")
             ),
-            '_labelClass -> "block-label",
             '_legendClass -> "heading-small",
             '_legend -> Messages("pages.calc.where")
             )
@@ -67,8 +64,7 @@
         <div class="form-group">
             @templates.input(calculatorForm("transferor-income"),
                 '_label -> Html(Messages("pages.form.field.income")),
-                '_labelClass -> "form-label",
-                '_fieldHelper -> Html(Messages("pages.calc.field-helper.income")),
+                '_labelClass -> "form-label-bold",
                 '_inputClass -> "form-control",
                 '_inputPrefix -> "£",
                 '_dataAttributes -> "autocomplete=on"
@@ -77,8 +73,7 @@
         <div class="form-group">
             @templates.input(calculatorForm("recipient-income"),
                 '_label -> Html(Messages("pages.form.field.recipient-income")),
-                '_labelClass -> "form-label",
-                '_fieldHelper -> Html(Messages("pages.calc.field-helper.partners-income")),
+                '_labelClass -> "form-label-bold",
                 '_inputClass -> "form-control",
                 '_inputPrefix -> "£",
                 '_dataAttributes -> "autocomplete=on"
