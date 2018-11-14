@@ -61,7 +61,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose", Some(PERSONAL_ALLOWANCE))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
         }
       }
 
@@ -150,7 +150,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult("eligibility.feedback.loose",Some(11850.0))
+            EligibilityCalculatorResult("eligibility.feedback.loose")
         }
 
       }

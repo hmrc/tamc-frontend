@@ -116,7 +116,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "11000", "recipient-income" -> "12000")
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple because your income is £$lowerThreshold."
+      document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple."
     }
 
     "be GBP 230 if transferor income=10000 (9540-10600) and recipient income=20000 (11660-42385)" in {
@@ -133,7 +133,7 @@ class EligibilityCalcControllerTest extends UnitSpec with TestUtility with OneAp
       val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9540", "recipient-income" -> lowerThreshold)
       val result = makeEligibilityController().calculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("You will not benefit as a couple because your income is £")
+      document.getElementById("calculator-result").text() should include("You will not benefit as a couple.")
     }
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income<11501" in {

@@ -129,7 +129,7 @@ class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with On
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
       val result = calculatorRequestAction(Map("transferor-income" -> "11000", "recipient-income" -> "12000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple because your income is £$lowerThreshold."
+      document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple."
     }
 
     "be GBP 230 if transferor income=10000 (9540-11000) and recipient income=20000 (11660-42385)" in {
