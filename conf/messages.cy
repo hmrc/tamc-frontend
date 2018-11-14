@@ -86,7 +86,7 @@ pages.form.field-required.partners-income=Rhowch wybod a oes gan eich partner in
 pages.form.field.description.partners-income=Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
 pages.form.field.description.date-of-birth=Cadarnhewch os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>6 Ebrill 1935</span>
 pages.form.field-required.date-of-birth=Rhowch wybod os cawsoch chi a’ch partner eich geni ar ôl 6 Ebrill 1935
-pages.form.field.description.country=Select where you live
+pages.form.field.description.country=Dewiswch ble’r ydych yn byw
 
 #********************************************************************************
 # General
@@ -173,9 +173,9 @@ hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Gwybodaeth am 
 # Eligibility Calculator
 #********************************************************************************
 pages.calc.header=Cyfrifiannell Lwfans Priodasol
-pages.calc.para1=Fel pâr, darganfyddwch faint o dreth y gallwch ei harbed os ydych yn gwneud cais am Lwfans Priodasol yn y flwyddyn dreth hon.
+pages.calc.para1=Fel pâr, darganfyddwch faint o dreth y gallwch ei harbed os gwnaethoch gais am Lwfans Priodasol yn y flwyddyn hon.
 pages.calc.para2=Nid yw’r gyfrifiannell hon yn cynnwys newidiadau i gyfradd yr Alban o Dreth Incwm, na lwfansau eraill megis Lwfans Cynilion Personol neu Lwfans Difidend.
-pages.calc.where=Where do you live?
+pages.calc.where=Ble’r ydych yn byw?
 label.england = Lloegr
 label.wales = Cymru
 label.scotland = Yr Alban
@@ -189,7 +189,7 @@ pages.calc.skip-it.pre=Mae’r cam hwn yn opsiynol.
 pages.calc.skip-it=Ewch heibio
 estimate.tax.saving=Cyfrifo
 eligibility.feedback.gain=Ar sail yr wybodaeth yr ydych wedi’i rhoi i ni, byddech yn elwa o tua <strong>£{0}</strong> y flwyddyn fel p&#226;r.
-eligibility.feedback.loose=Ni fyddwch yn elwa fel pâr gan fod eich incwm yn £11,500.
+eligibility.feedback.loose=Ni fyddwch yn elwa fel pâr fod.
 #********************************************************************************
 # Year selection
 #********************************************************************************

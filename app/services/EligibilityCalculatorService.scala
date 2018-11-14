@@ -60,7 +60,7 @@ object EligibilityCalculatorService {
     if(possibleGain>=1)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(possibleGain))
     else
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose", Some(PERSONAL_ALLOWANCE))
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
   }
 
   private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {

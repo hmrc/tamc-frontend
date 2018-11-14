@@ -62,8 +62,20 @@ object EligibilityCalculatorForm {
       }
   }
 
-  val currency = Forms.of[Int](currencyFormatter)
-  val country: FieldMapping[String] = Forms.of[String]
+  val countryFormatter = new Formatter[String] {
+    override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
+      data.get(key) match {
+        case Some(c) if c.trim().isEmpty => Left(Seq(FormError(key, "pages.form.field.description.country")))
+        case Some(c) if Set("england","wales","scotland","northernireland").contains(c.trim()) => Right(c)
+        case None => Left(Seq(FormError(key, "pages.form.field.description.country")))
+      }
+    }
+
+    override def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
+  }
+
+  val currency: FieldMapping[Int] = Forms.of[Int](currencyFormatter)
+  val country: FieldMapping[String] = Forms.of[String](countryFormatter)
 
   val calculatorForm = Form[EligibilityCalculatorInput](
     mapping(
