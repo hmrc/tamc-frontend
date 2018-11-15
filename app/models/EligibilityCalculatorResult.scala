@@ -16,4 +16,4 @@
 
 package models
 
-case class EligibilityCalculatorResult(messageKey: String, monetaryGain: Option[Double] = None)
+case class EligibilityCalculatorResult(messageKey: String, monetaryGain: Option[Double] = None, messageParam: Option[String] = None)

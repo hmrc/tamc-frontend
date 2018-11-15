@@ -16,6 +16,9 @@
 
 package controllers
 
+import java.text.NumberFormat
+import java.util.Locale
+
 import models._
 import org.scalatestplus.play.OneAppPerSuite
 import services.EligibilityCalculatorService
@@ -24,6 +27,12 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYearResolver
 
 class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with OneAppPerSuite {
+
+  private def maxLimitToFormattedCurrency(limit: Int): String = {
+    val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
+    formatter.setMaximumFractionDigits(0)
+    formatter.format(limit)
+  }
 
   "MarriageAllowanceCalculator" when {
     "England is selected" should {
@@ -34,8 +43,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val lowerEarnerIncome = 9000
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
-        }
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT)))}
 
         "The lower earners income is above personal allowance" in {
 
@@ -52,7 +60,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val lowerEarnerIncome = 12000
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT)))
         }
 
         "potential gain is less than £1" in {
@@ -126,7 +134,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val higherEarnerIncome = MAX_LIMIT_SCOT+1
           val lowerEarnerIncome = 9000
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_SCOT)))
         }
 
         "The lower earners income is above personal allowance" in {
@@ -142,7 +150,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val higherEarnerIncome = MAX_LIMIT_SCOT+1
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_SCOT)))
         }
 
         "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {
@@ -212,7 +220,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val higherEarnerIncome = MAX_LIMIT_WALES+1
           val lowerEarnerIncome = 9000
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_WALES)))
         }
 
         "The lower earners income is above personal allowance" in {
@@ -228,7 +236,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val higherEarnerIncome = MAX_LIMIT_WALES+1
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_WALES)))
         }
       }
 
@@ -284,7 +292,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val higherEarnerIncome = MAX_LIMIT_NORTHERN_IRELAND+1
           val lowerEarnerIncome = 9000
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_NORTHERN_IRELAND)))
         }
 
         "The lower earners income is above personal allowance" in {
@@ -300,7 +308,7 @@ class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with
           val higherEarnerIncome = MAX_LIMIT_NORTHERN_IRELAND+1
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_NORTHERN_IRELAND)))
         }
       }
 
