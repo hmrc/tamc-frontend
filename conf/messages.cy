@@ -202,10 +202,10 @@ pages.form.field.description.selectedYear=Mae angen i chi ddewis ateb
 #********************************************************************************
 eligibility.feedback.transferor-not-eligible-2016=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na £43,000.
 eligibility.feedback.transferor-not-eligible-2017=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na £45,000.
-eligibility.feedback.transferor-not-eligible-2018=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na £46,350.
+eligibility.feedback.transferor-not-eligible-2018=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
 eligibility.feedback.recipient-not-eligible-2016=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,001 a £43,000.
 eligibility.feedback.recipient-not-eligible-2017=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,501 a £45,000.
-eligibility.feedback.recipient-not-eligible-2018=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,851 a £46,350.
+eligibility.feedback.recipient-not-eligible-2018=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng £11,851 a {0}.
 eligibility.check.unlike-benefit-as-couple-2016=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,000.
 eligibility.check.unlike-benefit-as-couple-2017=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,500.
 eligibility.check.unlike-benefit-as-couple-2018=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros £11,850.

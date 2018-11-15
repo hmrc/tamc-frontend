@@ -16,6 +16,9 @@
 
 package services
 
+import java.text.NumberFormat
+import java.util.Locale
+
 import config.ApplicationConfig._
 import models.{EligibilityCalculatorResult, _}
 import play.api.libs.json.Json
@@ -33,6 +36,13 @@ object EligibilityCalculatorService {
     case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND
   }
 
+  private def maxLimitToFormattedCurrency(country: Country): String = {
+    val limit = maxLimit(country)
+    val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
+    formatter.setMaximumFractionDigits(0)
+    formatter.format(limit)
+  }
+
   def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country): EligibilityCalculatorResult = {
 
     val hasMaxBenefit = transferorIncome<TRANSFEROR_ALLOWANCE&&recipientIncome>RECIPIENT_ALLOWANCE
@@ -42,9 +52,11 @@ object EligibilityCalculatorService {
     if(transferorIncome>recipientIncome)
       EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
     else if(bothOverMaxLimit)
-      EligibilityCalculatorResult("eligibility.feedback.transferor-not-eligible-" + TaxYearResolver.currentTaxYear)
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible-" +
+        TaxYearResolver.currentTaxYear, messageParam = Some(maxLimitToFormattedCurrency(countryOfResidence)))
     else if(recipientNotEligible)
-      EligibilityCalculatorResult("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear)
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible-" +
+        TaxYearResolver.currentTaxYear, messageParam = Some(maxLimitToFormattedCurrency(countryOfResidence)))
     else if(transferorIncome>PERSONAL_ALLOWANCE)
       EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear)
     else if(hasMaxBenefit)
