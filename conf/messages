@@ -114,6 +114,7 @@ pages.form.field-required.partners-income=Tell us if your partner has an annual 
 pages.form.field.description.date-of-birth=Confirm if you and your partner were born after <span class=nowrap>6 April 1935</span>
 pages.form.field-required.date-of-birth=Tell us if you and your partner were born after 6 April 1935
 
+pages.form.field.description.country=Select where you live
 
 #********************************************************************************
 # General
@@ -213,8 +214,13 @@ hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about
 
 
 pages.calc.header=Marriage Allowance calculator
-pages.calc.para1=As a couple, find out how much tax you would save if you applied for Marriage Allowance this tax year.
-pages.calc.para2=This calculator does not include any changes to the Scottish rate of Income Tax, or other allowances such as Personal Savings Allowance or Dividend Allowance.
+pages.calc.para1=As a couple, find out how much tax you would save if you applied for Marriage Allowance this year.
+pages.calc.para2=This calculator does not include any allowances such as Personal Savings Allowance or Dividend Allowance.
+pages.calc.where=Where do you live?
+label.england = England
+label.wales = Wales
+label.scotland = Scotland
+label.ni = Northern Ireland
 pages.form.field.income=Your income (low), before tax is taken off
 pages.form.field.recipient-income=Your partner’s income (high), before tax is taken off
 pages.calc.field-helper.income=This is your income figure before any tax is deducted.
@@ -224,7 +230,7 @@ pages.calc.skip-it.pre=The step is optional,
 pages.calc.skip-it=skip it
 estimate.tax.saving=Calculate
 eligibility.feedback.gain=Based on the information you have given us, as a couple you would benefit by around <strong>£{0}</strong> a year.
-eligibility.feedback.loose = You will not benefit as a couple because your income is £{0}.
+eligibility.feedback.loose = You will not benefit as a couple.
 
 #********************************************************************************
 # Year selection

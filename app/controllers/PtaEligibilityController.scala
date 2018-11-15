@@ -21,6 +21,8 @@ import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, ApplicationAuthConnector}
 import details.CitizenDetailsService
 import forms.EligibilityCalculatorForm.calculatorForm
+import models.{Country}
+import play.api.mvc.{Action, AnyContent}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
@@ -45,14 +47,14 @@ trait PtaEligibilityController extends BaseController with AuthorisedActions wit
   val authConnector: ApplicationAuthConnector
   val auditConnector: AuditConnector
 
-  def calculator() = TamcAuthPersonalDetailsAction {
+  def calculator(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
           Future { Ok(views.html.pta.calculator(calculatorForm = calculatorForm)) }
   }
 
-  def calculatorAction() = TamcAuthPersonalDetailsAction {
+  def calculatorAction(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
       implicit request =>
         implicit details =>
@@ -63,7 +65,8 @@ trait PtaEligibilityController extends BaseController with AuthorisedActions wit
               calculatorInput =>
                 Ok(views.html.pta.calculator(
                   calculatorForm = calculatorForm.fill(calculatorInput),
-                  calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput)))))
+                  calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
+                    calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
           }
   }
 }

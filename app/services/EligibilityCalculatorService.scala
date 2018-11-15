@@ -17,53 +17,64 @@
 package services
 
 import config.ApplicationConfig._
-import _root_.config.ApplicationConfig
-import models.EligibilityCalculatorInput
-import models.EligibilityCalculatorResult
-import uk.gov.hmrc.time.TaxYearResolver._
+import models.{EligibilityCalculatorResult, _}
+import play.api.libs.json.Json
+import uk.gov.hmrc.time.TaxYearResolver
+import utils.BenefitCalculatorHelper
+
+import scala.io.Source
 
 object EligibilityCalculatorService {
 
-  def calculate(input: EligibilityCalculatorInput): EligibilityCalculatorResult =
-    (input.transferorIncome, input.recipientIncome) match {
-      case (transIncome, recIncome) if (transIncome > recIncome) =>
-        EligibilityCalculatorResult(messageKey = "eligibility.feedback.incorrect-role")
-      case (transIncome, recIncome) if (transIncome > MAX_LIMIT || transIncome < 0) =>
-        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.transferor-not-eligible-" + currentTaxYear))
-      case (transIncome, recIncome) if (recIncome > MAX_LIMIT || recIncome <= PERSONAL_ALLOWANCE) =>
-        EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear))
-      case (transIncome, recIncome) if (transIncome > PERSONAL_ALLOWANCE && transIncome < MAX_LIMIT) =>
-        EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear))
-      case benefit => getEligibilityBenefitResult(input.transferorIncome, input.recipientIncome)
-    }
+  private def maxLimit(country: Country): Int = country match {
+    case England => MAX_LIMIT
+    case Scotland => MAX_LIMIT_SCOT
+    case Wales => MAX_LIMIT_WALES
+    case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND
+  }
 
-  private def getEligibilityBenefitResult(transIncome: Int, recIncome: Int): EligibilityCalculatorResult =
-    calculateGain(transIncome, recIncome) match {
-      case gain if gain > 0 => EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(gain))
-      case _ => EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose", Some(ApplicationConfig.PERSONAL_ALLOWANCE))
-    }
+  def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country): EligibilityCalculatorResult = {
 
-  private def calculateGain(transIncome: Int, recIncome: Int): Int = {
-    (transIncome, recIncome) match {
-      case (tIncome, rIncome) if (tIncome <= TRANSFEROR_ALLOWANCE) &&
-        recIncome.fromTo(PERSONAL_ALLOWANCE, RECIPIENT_ALLOWANCE) => (recIncome - PERSONAL_ALLOWANCE) / 5
-      case (tIncome, rIncome) if (tIncome <= TRANSFEROR_ALLOWANCE) &&
-        recIncome.fromTo(RECIPIENT_ALLOWANCE, MAX_LIMIT) => MAX_BENEFIT
-      case (tIncome, rIncome) if (tIncome.fromTo(TRANSFEROR_ALLOWANCE, PERSONAL_ALLOWANCE) &&
-        recIncome.fromTo(PERSONAL_ALLOWANCE, RECIPIENT_ALLOWANCE)) => ((recIncome - PERSONAL_ALLOWANCE) / 5) + ((TRANSFEROR_ALLOWANCE - transIncome) / 5)
-      case (tIncome, rIncome) if (tIncome.fromTo(TRANSFEROR_ALLOWANCE, PERSONAL_ALLOWANCE) &&
-        recIncome.fromTo(RECIPIENT_ALLOWANCE, MAX_LIMIT)) => MAX_BENEFIT + ((TRANSFEROR_ALLOWANCE - transIncome) / 5)
-      case _ => 0
+    val hasMaxBenefit = transferorIncome<TRANSFEROR_ALLOWANCE&&recipientIncome>RECIPIENT_ALLOWANCE
+    val recipientNotEligible = recipientIncome>maxLimit(countryOfResidence)||recipientIncome<PERSONAL_ALLOWANCE
+    val bothOverMaxLimit = transferorIncome>maxLimit(countryOfResidence)&&recipientIncome>maxLimit(countryOfResidence)
+
+    if(transferorIncome>recipientIncome)
+      EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
+    else if(bothOverMaxLimit)
+      EligibilityCalculatorResult("eligibility.feedback.transferor-not-eligible-" + TaxYearResolver.currentTaxYear)
+    else if(recipientNotEligible)
+      EligibilityCalculatorResult("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear)
+    else if(transferorIncome>PERSONAL_ALLOWANCE)
+      EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear)
+    else if(hasMaxBenefit)
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT))
+    else {
+      partialEligibilityScenario(transferorIncome,recipientIncome,countryOfResidence, getCountryTaxBandsFromFile(countryOfResidence))
     }
   }
 
-  implicit class Between(value: Int) {
-
-    // The method excludes the lower limit from range
-    def fromTo(lower: Int, upper: Int): Boolean = {
-      val excludeLowerLimit = 1
-      (lower + excludeLowerLimit) to upper contains value
-    }
+  private def partialEligibilityScenario(transferorIncome: Int, recipientIncome: Int,
+                                         countryOfResidence: Country, countryTaxBands: List[TaxBand]): EligibilityCalculatorResult = {
+    val possibleGain = calculateGain(transferorIncome, recipientIncome, countryOfResidence, countryTaxBands)
+    if(possibleGain>=1)
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(possibleGain))
+    else
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
   }
 
+  private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
+
+    val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncome, country, countryTaxBands)
+    val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE
+    val taxPercentage = getCountryTaxBandsFromFile(country).head.rate
+    val transferorLoss = math.max(transferorDifference*taxPercentage, 0)
+
+    (recipientBenefit - transferorLoss.floor).toInt
+  }
+
+  def getCountryTaxBandsFromFile(countryOfResidence: Country): List[TaxBand] = {
+    val resource = getClass.getResourceAsStream(s"/data/${countryOfResidence}Bands.json")
+    Json.parse(Source.fromInputStream(resource).mkString).as[CountryTaxBands].taxBands
+  }
 }

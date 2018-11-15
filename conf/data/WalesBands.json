@@ -1,0 +1,10 @@
+{
+  "taxBands": [
+    {
+      "name": "BasicRate",
+      "lowerThreshold": 11851,
+      "upperThreshold": 46350,
+      "rate": 0.20
+    }
+  ]
+}

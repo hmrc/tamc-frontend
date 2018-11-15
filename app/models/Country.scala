@@ -16,4 +16,19 @@
 
 package models
 
-case class EligibilityCalculatorResult(messageKey: String, monetaryGain: Option[Double] = None)
+sealed trait Country
+
+object Country {
+
+  def fromString(s: String): Country = s match {
+    case "england" => England
+    case "wales" => Wales
+    case "scotland" => Scotland
+    case "northernireland" => NorthernIreland
+  }
+}
+
+case object England extends Country
+case object Scotland extends Country
+case object Wales extends Country
+case object NorthernIreland extends Country

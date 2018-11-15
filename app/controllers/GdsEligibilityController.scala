@@ -19,6 +19,8 @@ package controllers
 import actions.{JourneyEnforcers, UnauthorisedActions}
 import connectors.ApplicationAuditConnector
 import forms.EligibilityCalculatorForm.calculatorForm
+import models.{Country}
+import play.api.mvc.{Action, AnyContent}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
@@ -32,12 +34,12 @@ trait GdsEligibilityController extends BaseController with UnauthorisedActions w
   val eligibilityCalculatorService = EligibilityCalculatorService
   val auditConnector: AuditConnector
 
-  def calculator() = unauthorisedAction {
+  def calculator(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       Ok(views.html.calculator(calculatorForm = calculatorForm))
   }
 
-  def calculatorAction() = unauthorisedAction {
+  def calculatorAction(): Action[AnyContent] = unauthorisedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
@@ -45,6 +47,7 @@ trait GdsEligibilityController extends BaseController with UnauthorisedActions w
         calculatorInput =>
           Ok(views.html.calculator(
             calculatorForm = calculatorForm.fill(calculatorInput),
-            calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput)))))
+            calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
   }
  }
