@@ -28,7 +28,6 @@ object BenefitCalculatorHelper {
 
     val benefitsFromBandedIncome = dividedIncome(relevantTaxBands, incomeOverPersonalAllowance).map(
       income => income._2 * rates(income._1)).sum.toInt
-
     Math.min(benefitsFromBandedIncome, MAX_BENEFIT)
   }
 
@@ -39,7 +38,8 @@ object BenefitCalculatorHelper {
           band.name -> Math.min(incomeLessPersonalAllowance, band.diffBetweenLowerAndUpperThreshold)
         else if (band.name == relevantTaxBands.last.name)
           band.name -> {
-          Math.min(relevantTaxBands.map(_.diffBetweenLowerAndUpperThreshold).sum - incomeLessPersonalAllowance,
+          Math.min(
+            incomeLessPersonalAllowance - relevantTaxBands(relevantTaxBands.indexOf(band) - 1).diffBetweenLowerAndUpperThreshold,
             band.diffBetweenLowerAndUpperThreshold)
         } else
           band.name -> Math.min(incomeLessPersonalAllowance, band.diffBetweenLowerAndUpperThreshold)
