@@ -21,14 +21,16 @@ import models.{Country, TaxBand}
 
 object BenefitCalculatorHelper {
 
-  def calculateTotalBenefitAcrossBands(income: Int, country: Country, countryTaxbands: List[TaxBand]): Int = {
+  def calculateTotalBenefitAcrossBands(income: Int, countryTaxbands: List[TaxBand]): Int = {
     val incomeOverPersonalAllowance = income - PERSONAL_ALLOWANCE
     val relevantTaxBands = countryTaxbands.filterNot(band => income < band.lowerThreshold)
     val rates = relevantTaxBands.map(band => band.name -> band.rate).toMap
+    val basicRate = countryTaxbands.find(band => band.name == "BasicRate").head.rate
+    val maxBenefit = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER * basicRate
 
     val benefitsFromBandedIncome = dividedIncome(relevantTaxBands, incomeOverPersonalAllowance).map(
       income => income._2 * rates(income._1)).sum.toInt
-    Math.min(benefitsFromBandedIncome, MAX_BENEFIT)
+    Math.min(benefitsFromBandedIncome, maxBenefit.toInt)
   }
 
   def dividedIncome(relevantTaxBands: List[TaxBand], incomeLessPersonalAllowance: Int): Map[String, Int] = {

@@ -59,8 +59,11 @@ object EligibilityCalculatorService {
         TaxYearResolver.currentTaxYear, messageParam = Some(maxLimitToFormattedCurrency(countryOfResidence)))
     else if(transferorIncome>PERSONAL_ALLOWANCE)
       EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear)
-    else if(hasMaxBenefit)
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT))
+    else if(hasMaxBenefit) {
+      val basicRate = getCountryTaxBandsFromFile(countryOfResidence).find(band => band.name == "BasicRate").head.rate
+      val maxBenefit = (MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER * basicRate).ceil.toInt
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(maxBenefit))
+    }
     else {
       partialEligibilityScenario(transferorIncome,recipientIncome,countryOfResidence, getCountryTaxBandsFromFile(countryOfResidence))
     }
@@ -77,10 +80,10 @@ object EligibilityCalculatorService {
 
   private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
 
-    val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncome, country, countryTaxBands)
+    val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncome, countryTaxBands)
     val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE
     val taxPercentage = getCountryTaxBandsFromFile(country).head.rate
-    val transferorLoss = math.max(transferorDifference*taxPercentage, 0)
+    val transferorLoss = math.max(transferorDifference * taxPercentage, 0)
 
     (recipientBenefit - transferorLoss.floor).toInt
   }
