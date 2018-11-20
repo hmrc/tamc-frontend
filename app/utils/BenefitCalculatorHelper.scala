@@ -34,15 +34,17 @@ object BenefitCalculatorHelper {
   def dividedIncome(relevantTaxBands: List[TaxBand], incomeLessPersonalAllowance: Int): Map[String, Int] = {
     relevantTaxBands.map {
       band =>
-        if (relevantTaxBands.size == 1)
+        if (relevantTaxBands.size == 1 || band.name == relevantTaxBands.head.name)
           band.name -> Math.min(incomeLessPersonalAllowance, band.diffBetweenLowerAndUpperThreshold)
-        else if (band.name == relevantTaxBands.last.name)
+        else
           band.name -> {
-          Math.min(
-            incomeLessPersonalAllowance - relevantTaxBands(relevantTaxBands.indexOf(band) - 1).diffBetweenLowerAndUpperThreshold,
-            band.diffBetweenLowerAndUpperThreshold)
-        } else
-          band.name -> Math.min(incomeLessPersonalAllowance, band.diffBetweenLowerAndUpperThreshold)
+            val valueOfPreviousBands = relevantTaxBands.takeWhile(
+              relevantBand => relevantTaxBands.indexOf(relevantBand) < relevantTaxBands.indexOf(band)).map(
+              _.diffBetweenLowerAndUpperThreshold).sum
+            Math.min(
+              incomeLessPersonalAllowance - valueOfPreviousBands,
+              band.diffBetweenLowerAndUpperThreshold)
+        }
     }.toMap
   }
 
