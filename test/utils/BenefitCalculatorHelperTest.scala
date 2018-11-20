@@ -30,46 +30,58 @@ class BenefitCalculatorHelperTest extends UnitSpec with TaxYearResolver with One
     "calculateTotalBenefitAcrossBands" must {
 
       "return the correct total benefit for an English tax payer" in {
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000, England,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe MAX_BENEFIT
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500, England,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 130
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000, England,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 230
       }
 
       "return the correct total benefit for a Scottish tax payer" in {
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000, Scotland,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe MAX_BENEFIT
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500, Scotland,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 123
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000, Scotland,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 218
       }
 
+      "return the correct total benefit for a Scottish tax payer when hypothetical bands are used" in {
+        val hypotheticalBandsOne = List(
+          TaxBand("StarterRate", 11851, 12050, 0.19), TaxBand("BasicRate", 12051, 24000, 0.20), TaxBand("IntermediateRate", 24001, 43430, 0.21))
+
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500, hypotheticalBandsOne) shouldBe 128
+
+        val hypotheticalBandsTwo = List(
+          TaxBand("StarterRate", 11851, 13850, 0.10), TaxBand("BasicRate", 13851, 24000, 0.21), TaxBand("IntermediateRate", 24001, 43430, 0.22))
+
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500, hypotheticalBandsTwo) shouldBe 65
+      }
+
       "return the correct total benefit for a Welsh tax payer" in {
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000, Wales,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe MAX_BENEFIT
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500, Wales,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 130
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000, Wales,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 230
       }
 
       "return the correct total benefit for a Northern Irish tax payer" in {
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000, NorthernIreland,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe MAX_BENEFIT
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500, NorthernIreland,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(12500,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 130
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000, NorthernIreland,
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13000,
           EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 230
       }
 
