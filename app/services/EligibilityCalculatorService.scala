@@ -79,11 +79,11 @@ object EligibilityCalculatorService {
   }
 
   private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
+    val recipientIncomeMinusPA = recipientIncome - PERSONAL_ALLOWANCE
+    val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncomeMinusPA, countryTaxBands)
 
-    val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncome, countryTaxBands)
     val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE
-    val taxPercentage = getCountryTaxBandsFromFile(country).head.rate
-    val transferorLoss = math.max(transferorDifference * taxPercentage, 0)
+    val transferorLoss = if(transferorDifference > 0) BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(transferorDifference, countryTaxBands) else 0
 
     (recipientBenefit - transferorLoss.floor).toInt
   }
