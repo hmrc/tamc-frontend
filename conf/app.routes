@@ -50,14 +50,14 @@ POST   /confirm-email-update                       controllers.UpdateRelationshi
 GET    /how-it-works                               controllers.MultiYearPtaEligibilityController.howItWorks
 GET    /eligibility-check-pta                      @controllers.EligibilityController.eligibilityCheck
 POST   /eligibility-check-pta                      @controllers.EligibilityController.eligibilityCheckAction
-GET    /lower-earner-pta                           controllers.MultiYearPtaEligibilityController.lowerEarnerCheck
-POST   /lower-earner-pta                           controllers.MultiYearPtaEligibilityController.lowerEarnerCheckAction
+GET    /lower-earner-pta                           @controllers.EligibilityController.lowerEarnerCheck
+POST   /lower-earner-pta                           @controllers.EligibilityController.lowerEarnerCheckAction
 GET    /partners-income-pta                        controllers.MultiYearPtaEligibilityController.partnersIncomeCheck
 POST   /partners-income-pta                        controllers.MultiYearPtaEligibilityController.partnersIncomeCheckAction
 GET    /date-of-birth-check-pta                    @controllers.EligibilityController.dateOfBirthCheck
 POST   /date-of-birth-check-pta                    @controllers.EligibilityController.dateOfBirthCheckAction
-GET    /do-you-live-in-scotland-pta                controllers.MultiYearPtaEligibilityController.doYouLiveInScotland
-POST   /do-you-live-in-scotland-pta                controllers.MultiYearPtaEligibilityController.doYouLiveInScotlandAction
+GET    /do-you-live-in-scotland-pta                @controllers.EligibilityController.doYouLiveInScotland
+POST   /do-you-live-in-scotland-pta                @controllers.EligibilityController.doYouLiveInScotlandAction
 GET    /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApply
 POST   /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApplyAction
 
@@ -65,14 +65,14 @@ POST   /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligi
 GET    /                                           @controllers.MultiYearGdsEligibilityController.home
 GET    /eligibility-check                          @controllers.EligibilityController.eligibilityCheck
 POST   /eligibility-check                          @controllers.EligibilityController.eligibilityCheckAction
-GET    /lower-earner                               @controllers.MultiYearGdsEligibilityController.lowerEarnerCheck
-POST   /lower-earner                               @controllers.MultiYearGdsEligibilityController.lowerEarnerCheckAction
+GET    /lower-earner                               @controllers.EligibilityController.lowerEarnerCheck
+POST   /lower-earner                               @controllers.EligibilityController.lowerEarnerCheckAction
 GET    /partners-income                            @controllers.MultiYearGdsEligibilityController.partnersIncomeCheck
 POST   /partners-income                            @controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
 GET    /date-of-birth-check                        @controllers.EligibilityController.dateOfBirthCheck
 POST   /date-of-birth-check                        @controllers.EligibilityController.dateOfBirthCheckAction
-GET    /do-you-live-in-scotland                    @controllers.MultiYearGdsEligibilityController.doYouLiveInScotland
-POST   /do-you-live-in-scotland                    @controllers.MultiYearGdsEligibilityController.doYouLiveInScotlandAction
+GET    /do-you-live-in-scotland                    @controllers.EligibilityController.doYouLiveInScotland
+POST   /do-you-live-in-scotland                    @controllers.EligibilityController.doYouLiveInScotlandAction
 GET    /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApply
 POST   /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApplyAction
 

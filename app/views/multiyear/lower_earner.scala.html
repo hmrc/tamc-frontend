@@ -15,11 +15,10 @@
  *@
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
-    implicit lang: Lang,
-        request: Request[_],
+    implicit messages: Messages,
+        request: UserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -28,10 +27,10 @@
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 @import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
-  title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
+  title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE))),
+  isLoggedIn = request.isLoggedIn
 ){
 
     @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data")
@@ -39,14 +38,16 @@
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</h1>
+
        @helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
+
         <div class="form-group inline">
             <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>
             @templates.input_radio_group(
                 lowerEarnerFormInput("lower-earner"),
                 Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
                 '_legend -> Html(Messages("eligibility.check.lower.earner.h1")),
-                '_legendClass -> "visuallyhidden", 
+                '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
                 '_fieldsetAttributes -> "data-inline-error=inline-lower-earner-error",

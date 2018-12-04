@@ -18,14 +18,19 @@ package controllers
 
 import config.ApplicationConfig.ptaFinishedUrl
 import config.{TamcContext, TamcContextImpl}
-import forms.MultiYearDateOfBirthForm
+import forms.{MultiYearDateOfBirthForm, MultiYearDoYouLiveInScotlandForm}
+import config.ApplicationConfig.SCOTTISH_RESIDENT
 import forms.MultiYearDateOfBirthForm.dateOfBirthForm
+import forms.MultiYearLowerEarnerForm.lowerEarnerForm
+import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 import utils.TamcBreadcrumb
 import views.html.multiyear.eligibility_check
+
+import scala.runtime.Nothing$
 
 class EligibilityController @Inject() (
                                         override val messagesApi: MessagesApi,
@@ -56,7 +61,7 @@ class EligibilityController @Inject() (
 
   def dateOfBirthCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-        Ok(views.html.multiyear.date_of_birth_check(dateofBirthCheckForm = MultiYearDateOfBirthForm.dateOfBirthForm))
+        Ok(views.html.multiyear.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm))
   }
 
   def dateOfBirthCheckAction(): Action[AnyContent] = unauthenticatedAction {
@@ -65,9 +70,37 @@ class EligibilityController @Inject() (
         formWithErrors =>
           BadRequest(views.html.multiyear.date_of_birth_check(formWithErrors)),
         _ => {
-          Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouLiveInScotland())
+          Redirect(controllers.routes.EligibilityController.doYouLiveInScotland())
         })
   }
 
+  //TODO: SHOULD THESE BE WITH SESSION ?!?!?!
+
+  def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
+        .withSession(request.session - SCOTTISH_RESIDENT)
+  }
+
+  def doYouLiveInScotlandAction(): Action[AnyContent] = unauthenticatedAction {
+  implicit request =>
+    doYouLiveInScotlandForm.bindFromRequest.fold(
+      formWithErrors =>
+        BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors)),
+      doYouLiveInScotlandInput => {
+        Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
+          .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
+      })
+  }
+
+  def lowerEarnerCheck(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      Ok(views.html.multiyear.lower_earner(lowerEarnerForm))
+  }
+
+  def lowerEarnerCheckAction(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      ???
+  }
 
 }

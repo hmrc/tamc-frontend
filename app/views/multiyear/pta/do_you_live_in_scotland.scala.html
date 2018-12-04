@@ -37,7 +37,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.do.you.live.in.scotland.h1"))</h1>
-    @helpers.form(action = routes.MultiYearPtaEligibilityController.doYouLiveInScotlandAction, args = ('id -> "doYouLiveInScotland-form")) {
+    @helpers.form(action = routes.EligibilityController.doYouLiveInScotlandAction, args = ('id -> "doYouLiveInScotland-form")) {
         <div class="form-group inline">
             @templates.input_radio_group(
             doYouLiveInScotlandForm("do-you-live-in-scotland"),

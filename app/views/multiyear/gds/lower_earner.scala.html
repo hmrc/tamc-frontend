@@ -38,7 +38,7 @@
         <h1 class="heading-xlarge">
             <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
             @Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</h1>
-        @helpers.form(action = routes.MultiYearGdsEligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
+        @helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
             <div class="form-group inline">
                 <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>
                 @templates.input_radio_group(
@@ -66,5 +66,5 @@
             </div>
         }
 
-        <a href="@controllers.routes.MultiYearGdsEligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
     }

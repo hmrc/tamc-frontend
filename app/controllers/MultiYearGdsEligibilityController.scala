@@ -97,7 +97,7 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(date_of_birth_check(formWithErrors)),
         dateOfBirthInput => {
-          Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouLiveInScotland())
+          Redirect(controllers.routes.EligibilityController.doYouLiveInScotland())
         })
   }
 
@@ -116,7 +116,7 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
-          Redirect(controllers.routes.MultiYearGdsEligibilityController.lowerEarnerCheck())
+          Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
             .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }

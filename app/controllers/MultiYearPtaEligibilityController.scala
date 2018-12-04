@@ -132,7 +132,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.date_of_birth_check(formWithErrors)),
               dateOfBirthInput => {
-                Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouLiveInScotland())
+                Redirect(controllers.routes.EligibilityController.doYouLiveInScotland())
               })
           }
   }
@@ -156,7 +156,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.do_you_live_in_scotland(formWithErrors)),
               doYouLiveInScotlandInput => {
-                Redirect(controllers.routes.MultiYearPtaEligibilityController.lowerEarnerCheck())
+                Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
                   .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
               })
           }
