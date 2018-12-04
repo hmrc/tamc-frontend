@@ -79,7 +79,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 BadRequest(views.html.multiyear.pta.eligibility_check(formWithErrors)),
               eligibilityInput => {
                 if(eligibilityInput.married) {
-                  Redirect(controllers.routes.MultiYearPtaEligibilityController.dateOfBirthCheck())
+                  Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
                 } else {
                   Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ptaFinishedUrl))
                 }

@@ -37,7 +37,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
-    @helpers.form(action = routes.MultiYearGdsEligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
+    @helpers.form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
         <div class="form-group inline">
             @templates.input_radio_group(
             dateofBirthCheckForm("date-of-birth"),
@@ -62,5 +62,5 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         </div>
     }
 
-    <a href="@controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.EligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

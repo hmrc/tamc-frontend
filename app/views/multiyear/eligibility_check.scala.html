@@ -15,11 +15,10 @@
  *@
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)]
-)(implicit lang: Lang,
-        request: Request[_],
+)(implicit messages: Messages,
+        request: UserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -27,11 +26,10 @@
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
   title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1")),
-  isFromPTA = true
+  isLoggedIn = request.isLoggedIn
 ) {
 
     @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")

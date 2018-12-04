@@ -39,7 +39,7 @@ class MultiYearGdsEligibilityController @Inject() (
 
   def home: Action[AnyContent] = unauthorisedAction {
     implicit request =>
-      Redirect(controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck())
+      Redirect(controllers.routes.EligibilityController.eligibilityCheck())
   }
 
   def eligibilityCheck(): Action[AnyContent] = unauthorisedAction {
@@ -56,7 +56,7 @@ class MultiYearGdsEligibilityController @Inject() (
           BadRequest(eligibility_check(formWithErrors)),
         eligibilityInput => {
           if (eligibilityInput.married) {
-            Redirect(controllers.routes.MultiYearGdsEligibilityController.dateOfBirthCheck())
+            Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
           } else {
             Ok(eligibility_non_eligible_finish())
           }

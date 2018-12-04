@@ -36,7 +36,8 @@ trait UnauthorisedActions extends JourneyEnforcers {
           // $COVERAGE-OFF$
           Logger.info("User has not visited eligibility page, redirecting to eligibilityCheck")
           // $COVERAGE-ON
-          Redirect(controllers.routes.MultiYearGdsEligibilityController.eligibilityCheck())
+//          Redirect(controllers.routes.EligibilityController.eligibilityCheck())
+          ???
         }
       }
   }

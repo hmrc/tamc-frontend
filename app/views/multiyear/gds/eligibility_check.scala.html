@@ -40,7 +40,7 @@
         <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
         @Html(Messages("eligibility.check.h1"))</h1>
 
-    @helpers.form(action = routes.MultiYearGdsEligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
+    @helpers.form(action = routes.EligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
         <div class="form-group inline">
             @templates.input_radio_group(
                 eligibilityCheckForm("marriage-criteria"),

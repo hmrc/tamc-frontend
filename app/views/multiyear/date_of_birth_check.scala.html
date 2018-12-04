@@ -15,22 +15,21 @@
  *@
 
 @(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)]
-)(implicit lang: Lang,
-        request: Request[_],
+)(implicit messages: Messages,
+        request: UserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.twirl.api.Html
-    @import uk.gov.hmrc.play.views.html._
-    @import config.ApplicationConfig
-    @import play.api.Play.current
-    @import play.api.i18n.Messages.Implicits._
+@import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
+@import play.api.Play.current
 
 @templates.tamc_main(
-  title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
+  title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth")),
+  isLoggedIn = request.isLoggedIn
 ) {
 
         @templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")

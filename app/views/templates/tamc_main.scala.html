@@ -24,6 +24,7 @@ supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
 isFromGDS:Boolean = false,
 isFromPTA:Boolean = false,
+isLoggedIn: Boolean = false,
 scriptElem: Option[Html] = None)(mainContent: Html)(implicit lang: Lang,
 request: Request[_],
 context: config.TamcContext,
@@ -166,23 +167,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
-@isPTA = @{
-    if(isFromPTA){
-      false
-     }
-    if(isFromGDS){
-        true
-    }
-    else{
-        if(utils.isPtaJourneyUseOnlyOnAuthorisedPage){
-            false
-        } else {
-            true
-        }
-
-    }
-
-}
 @{
 
   val arguments = Map[String, Any](
@@ -198,7 +182,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
       "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
       "includeHMRCBranding" -> true,
 
-      "hideAccountMenu" -> isPTA,
+      "hideAccountMenu" -> !isLoggedIn,
       "assetsPath" -> appConfig.assetsPrefix,
 
       "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
