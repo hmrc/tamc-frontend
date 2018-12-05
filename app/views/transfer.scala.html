@@ -14,27 +14,27 @@
  * limitations under the License.
  *@
 
-@(recipientForm: Form[models.RecipientDetailsFormInput], name: Option[models.CitizenName] = None)(
-    implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import models.Gender
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
+@(recipientForm: Form[models.RecipientDetailsFormInput], name: Option[models.CitizenName] = None)(
+implicit messages: Messages,
+request: AuthenticatedUserRequest[_],
+context: config.TamcContext,
+breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
 
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.transfer")),
   mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
+    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}"))),
+    isLoggedIn = true
 ) {
 
     @templates.form_error_notification(recipientForm)
@@ -43,7 +43,7 @@
     <p class="blue-underline-large">@Html(Messages("pages.form.details"))</p>
     <h2 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h2>
 
-    @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
+    @helpers.form(action = routes.NewTransferController.transferAction, args = ('id -> "register-form")) {
     <fieldset>
             <div class="form-group">
             @templates.input(recipientForm("name"),

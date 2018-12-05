@@ -19,6 +19,7 @@ package config
 import connectors.{ApplicationAuditConnector, TamcAuthConnector}
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
+import services.{TimeService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
@@ -28,6 +29,10 @@ class TamcModule extends Module {
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
       bind[HttpClient].to[DefaultHttpClient],
-      bind[AuditConnector].toInstance(ApplicationAuditConnector)
+      bind[AuditConnector].toInstance(ApplicationAuditConnector),
+      bind[TamcContext].toInstance(TamcContextImpl),
+      bind[TimeService].toInstance(TimeService),
+      bind[TransferService].toInstance(TransferService),
+      bind[UpdateRelationshipService].toInstance(UpdateRelationshipService)
     )
 }

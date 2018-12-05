@@ -16,52 +16,59 @@
 
 package controllers
 
-import config.ApplicationConfig.ptaFinishedUrl
-import config.{TamcContext, TamcContextImpl}
-import forms.{MultiYearDateOfBirthForm, MultiYearDoYouLiveInScotlandForm}
-import config.ApplicationConfig.SCOTTISH_RESIDENT
+import config.TamcContext
+import config.ApplicationConfig.{SCOTTISH_RESIDENT, gdsFinishedUrl, ptaFinishedUrl}
 import forms.MultiYearDateOfBirthForm.dateOfBirthForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
+import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
+import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Call}
 import utils.TamcBreadcrumb
 import views.html.multiyear.eligibility_check
+import utils.isScottishResident
 
-import scala.runtime.Nothing$
+class EligibilityController @Inject()(
+                                       override val messagesApi: MessagesApi,
+                                       unauthenticatedAction: UnauthenticatedActionTransformer
+                                     )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
 
-class EligibilityController @Inject() (
-                                        override val messagesApi: MessagesApi,
-                                        unauthenticatedAction: UnauthenticatedActionTransformer
-                                      ) extends BaseController with I18nSupport with TamcBreadcrumb {
-
-  private implicit val tamcContext: TamcContext = TamcContextImpl
+  def home: Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      Redirect(controllers.routes.EligibilityController.eligibilityCheck())
+  }
 
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(eligibility_check(eligibilityCheckForm = eligibilityForm))
   }
 
-  def eligibilityCheckAction(): Action[AnyContent] = unauthenticatedAction {
-    implicit request =>
-      eligibilityForm.bindFromRequest.fold(
-        formWithErrors =>
-          BadRequest(views.html.multiyear.eligibility_check(formWithErrors)),
-        eligibilityInput => {
-          if (eligibilityInput.married) {
-            Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
-          } else {
-            ???
-//            Ok(views.html.multiyear.pta.eligibility_non_eligible_finish(ptaFinishedUrl))
-          }
-        })
+  def eligibilityCheckAction(): Action[AnyContent] = {
+
+      def finishUrl(isLoggedIn: Boolean): String =
+        if (isLoggedIn) ptaFinishedUrl else "https://www.gov.uk/marriage-allowance-guide"
+
+    unauthenticatedAction {
+      implicit request =>
+        eligibilityForm.bindFromRequest.fold(
+          formWithErrors =>
+            BadRequest(views.html.multiyear.eligibility_check(formWithErrors)),
+          eligibilityInput => {
+            if (eligibilityInput.married) {
+              Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
+            } else {
+              Ok(views.html.multiyear.eligibility_non_eligible_finish(finishUrl(request.isLoggedIn)))
+            }
+          })
+    }
   }
 
   def dateOfBirthCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-        Ok(views.html.multiyear.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm))
+      Ok(views.html.multiyear.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm))
   }
 
   def dateOfBirthCheckAction(): Action[AnyContent] = unauthenticatedAction {
@@ -74,8 +81,6 @@ class EligibilityController @Inject() (
         })
   }
 
-  //TODO: SHOULD THESE BE WITH SESSION ?!?!?!
-
   def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
@@ -83,14 +88,14 @@ class EligibilityController @Inject() (
   }
 
   def doYouLiveInScotlandAction(): Action[AnyContent] = unauthenticatedAction {
-  implicit request =>
-    doYouLiveInScotlandForm.bindFromRequest.fold(
-      formWithErrors =>
-        BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors)),
-      doYouLiveInScotlandInput => {
-        Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
-          .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
-      })
+    implicit request =>
+      doYouLiveInScotlandForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors)),
+        doYouLiveInScotlandInput => {
+          Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
+            .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
+        })
   }
 
   def lowerEarnerCheck(): Action[AnyContent] = unauthenticatedAction {
@@ -100,7 +105,56 @@ class EligibilityController @Inject() (
 
   def lowerEarnerCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      ???
+      lowerEarnerForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.multiyear.lower_earner(formWithErrors)),
+        _ => {
+          Redirect(controllers.routes.EligibilityController.partnersIncomeCheck())
+        })
   }
+
+  def partnersIncomeCheck(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      Ok(views.html.multiyear.partners_income_question(partnersIncomeForm, isScottishResident(request)))
+  }
+
+  def partnersIncomeCheckAction(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      partnersIncomeForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.multiyear.partners_income_question(formWithErrors, isScottishResident(request))),
+        _ => {
+          Redirect(controllers.routes.EligibilityController.doYouWantToApply())
+        })
+  }
+
+  def doYouWantToApply(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      Ok(views.html.multiyear.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm))
+  }
+
+  def doYouWantToApplyAction(): Action[AnyContent] = {
+
+    def finishUrl(isLoggedIn: Boolean): String =
+      if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
+
+    unauthenticatedAction {
+      implicit request =>
+        doYouWantToApplyForm.bindFromRequest.fold(
+          formWithErrors =>
+            BadRequest(views.html.multiyear.do_you_want_to_apply(formWithErrors)),
+          doYouWantToApplyInput => {
+            if (doYouWantToApplyInput.doYouWantToApply) {
+                request.isLoggedIn match {
+                  case true => {Redirect(controllers.routes.NewTransferController.transfer())}
+                  case _ => {Redirect(controllers.routes.NewTransferController.history())}
+                }
+            } else {
+              Redirect(Call("GET", finishUrl(request.isLoggedIn)))
+            }
+          })
+    }
+  }
+
 
 }

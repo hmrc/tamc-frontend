@@ -22,7 +22,7 @@ import errors.ErrorResponseStatus._
 import events._
 import models._
 import play.Logger
-import play.api.i18n.Lang
+import play.api.i18n.Messages
 import play.api.libs.json.Json
 import services.UpdateRelationshipService._
 import uk.gov.hmrc.domain.Nino
@@ -32,6 +32,8 @@ import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.time.TaxYearResolver
 import utils.LanguageUtils
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -104,8 +106,8 @@ trait TransferService {
       case _ => throw CacheMissingTransferor()
     }
 
-  def createRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
-    doCreateRelationship(transferorNino, journey, lang) recover {
+  def createRelationship(transferorNino: Nino, journey: String)(implicit hc: HeaderCarrier, messages:Messages, ec: ExecutionContext): Future[NotificationRecord] = {
+    doCreateRelationship(transferorNino, journey)(hc, messages, ec) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
         throw error
@@ -126,11 +128,11 @@ trait TransferService {
       }
     }
 
-  private def doCreateRelationship(transferorNino: Nino, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
+  private def doCreateRelationship(transferorNino: Nino, journey: String)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
     for {
       cacheData <- cachingService.getCachedData
       validated <- validateCompleteCache(cacheData)
-      postCreateData <- sendCreateRelationship(transferorNino, validated, journey, lang)
+      postCreateData <- sendCreateRelationship(transferorNino, validated, journey)(hc, messages, ec)
       _ <- lockCreateRelationship()
       _ <- auditCreateRelationship(postCreateData, journey)
     } yield (validated.notification.get)
@@ -268,7 +270,7 @@ trait TransferService {
       cache <- cachingService.getCachedData
     } yield cache.get.recipient.get
 
-  private def transform(sessionData: CacheData, lang: Lang): CreateRelationshipRequestHolder = {
+  private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
     val transferor = sessionData.transferor.get
     val recipient = sessionData.recipient.get.record
     val formData = sessionData.recipient.get.data
@@ -279,12 +281,12 @@ trait TransferService {
       recipient_cid = recipient.cid,
       recipient_timestamp = recipient.timestamp,
       taxYears = sessionData.selectedYears.get.sortWith(_ < _))
-    val sendNotificationData = CreateRelationshipNotificationRequest(full_name = "UNKNOWN", email = email, welsh = LanguageUtils.isWelsh(lang))
+    val sendNotificationData = CreateRelationshipNotificationRequest(full_name = "UNKNOWN", email = email, welsh = LanguageUtils.isWelsh(messages))
     CreateRelationshipRequestHolder(request = createRelationshipreq, notification = sendNotificationData)
   }
 
-  private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {
-    marriageAllowanceConnector.createRelationship(transferorNino, transform(data, lang), journey) map {
+  private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[CacheData] = {
+    marriageAllowanceConnector.createRelationship(transferorNino, transform(data, messages), journey) map {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
           case CreateRelationshipResponse(ResponseStatus("OK")) => data

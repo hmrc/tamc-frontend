@@ -31,6 +31,8 @@ import play.api.mvc.{Action, AnyContent, Call}
 import _root_.services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.{TamcBreadcrumb, isScottishResident}
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.Future
 
@@ -106,7 +108,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
                 BadRequest(views.html.multiyear.pta.do_you_want_to_apply(formWithErrors)),
               doYouWantToApplyInput => {
                 if (doYouWantToApplyInput.doYouWantToApply) {
-                  Redirect(controllers.routes.TransferController.transfer())
+                  Redirect(controllers.routes.NewTransferController.transfer())
                 } else {
                   Redirect(Call("GET", ptaFinishedUrl))
                 }
@@ -180,7 +182,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.lower_earner(formWithErrors)),
               lowerEarnerInput => {
-                Redirect(controllers.routes.MultiYearPtaEligibilityController.partnersIncomeCheck())
+                Redirect(controllers.routes.EligibilityController.partnersIncomeCheck())
               })
           }
   }
@@ -203,7 +205,7 @@ trait MultiYearPtaEligibilityController extends BaseController with AuthorisedAc
               formWithErrors =>
                 BadRequest(views.html.multiyear.pta.partners_income_question(formWithErrors, isScottishResident(request))),
               incomeCheckInput => {
-                Redirect(controllers.routes.MultiYearPtaEligibilityController.doYouWantToApply())
+                Redirect(controllers.routes.EligibilityController.doYouWantToApply())
               })
           }
   }

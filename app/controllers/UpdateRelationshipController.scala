@@ -35,6 +35,8 @@ import utils.TamcBreadcrumb
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import org.apache.commons.lang3.exception.ExceptionUtils
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 object UpdateRelationshipController extends UpdateRelationshipController with RunMode {
   override lazy val registrationService = TransferService
@@ -53,34 +55,34 @@ trait UpdateRelationshipController extends BaseController with AuthorisedActions
   val authConnector: ApplicationAuthConnector
   val timeService: TimeService
 
-  def history(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          updateRelationshipService.listRelationship(utils.getUserNino(auth)) map {
-            case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
-              if (!activeRecord && !historicRecord) {
-                if (isGdsJourney(request)) {
-                  Redirect(controllers.routes.TransferController.transfer())
-                } else {
-                  Redirect(controllers.routes.MultiYearPtaEligibilityController.howItWorks())
-                }
-              } else {
-                Ok(views.html.coc.your_status(
-                  changeRelationshipForm = changeRelationshipForm,
-                  activeRelationship = activeRelationship,
-                  historicRelationships = historicRelationships,
-                  loggedInUserInfo = loggedInUserInfo,
-                  activeRecord = activeRecord,
-                  historicRecord = historicRecord,
-                  historicActiveRecord = historicActiveRecord,
-                  canApplyPreviousYears = canApplyPreviousYears,
-                  endOfYear = Some(timeService.taxYearResolver.endOfCurrentTaxYear)))
-              }
-            }
-          } recover (handleError)
-
-  }
+//  def history(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          updateRelationshipService.listRelationship(utils.getUserNino(auth)) map {
+//            case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
+//              if (!activeRecord && !historicRecord) {
+//                if (isGdsJourney(request)) {
+//                  Redirect(controllers.routes.NewTransferController.transfer())
+//                } else {
+//                  Redirect(controllers.routes.MultiYearPtaEligibilityController.howItWorks())
+//                }
+//              } else {
+//                Ok(views.html.coc.your_status(
+//                  changeRelationshipForm = changeRelationshipForm,
+//                  activeRelationship = activeRelationship,
+//                  historicRelationships = historicRelationships,
+//                  loggedInUserInfo = loggedInUserInfo,
+//                  activeRecord = activeRecord,
+//                  historicRecord = historicRecord,
+//                  historicActiveRecord = historicActiveRecord,
+//                  canApplyPreviousYears = canApplyPreviousYears,
+//                  endOfYear = Some(timeService.taxYearResolver.endOfCurrentTaxYear)))
+//              }
+//            }
+//          } recover (handleError)
+//
+//  }
 
   def makeChange(): Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
@@ -90,7 +92,7 @@ trait UpdateRelationshipController extends BaseController with AuthorisedActions
             changeRelationshipForm.bindFromRequest.fold(
               formWithErrors => {
                 Logger.warn("unexpected error in makeChange()")
-                Redirect(controllers.routes.UpdateRelationshipController.history())
+                Redirect(controllers.routes.NewTransferController.history())
               },
               formData => {
                 Ok(views.html.coc.reason_for_change(changeRelationshipForm.fill(formData)))
@@ -273,7 +275,7 @@ trait UpdateRelationshipController extends BaseController with AuthorisedActions
                   }
                   Some(updateRelationshipService.getEndDate(reason, selectedRelationship))
               }
-              Ok(views.html.coc.confirm(data, relevantDate ,isEnded=isEnded,relationEndDate=relationEndDate))
+              Ok( views.html.coc.confirm(data, relevantDate ,isEnded=isEnded,relationEndDate=relationEndDate))
             }
           } recover (handleError)
   }

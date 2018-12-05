@@ -32,6 +32,9 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.TamcBreadcrumb
 
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier

@@ -22,8 +22,9 @@
 
 @(
     doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
-    )(implicit messages: Messages,
-    request: Request[_],
+    )(implicit
+    messages: Messages,
+    request: UserRequest[_],
     context: config.TamcContext,
     breadcrumb: Breadcrumb,
     templateRenderer: TemplateRenderer,
@@ -31,7 +32,8 @@
     )
 
 @tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1")),
+    isLoggedIn = request.isLoggedIn
 ){
     @form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 

@@ -15,7 +15,7 @@
  *@
 
 @(finishedUrl: String
-)(implicit lang: Lang,
+)(implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -24,13 +24,19 @@
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.twirl.api.Html
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 
-@templates.tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("title.non-eligible"))){
-    <h1>@Html(Messages("eligibility.check.header"))</h1>
-    <p class="panel-indent">@Html(Messages("eligibility.check.non-eligible"))</p>
-    <p><a id="button-finished" class="button" role="button" href="@finishedUrl">@Html(Messages("generic.finish"))</a></p>
+
+
+    @templates.tamc_main(
+        title = Messages("title.eligibility.pattern", Messages("title.non-eligible"))){
+        <h1>@Html(Messages("eligibility.check.header"))</h1>
+        <p class="panel-indent">@Html(Messages("eligibility.check.non-eligible"))</p>
+
+        <p>
+            <a id="button-finished" class="button" role="button" href="@finishedUrl">
+                @Html(Messages("generic.finish"))
+            </a>
+        </p>
+
     <a href="@controllers.routes.EligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

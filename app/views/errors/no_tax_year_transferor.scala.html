@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@()(implicit lang: Lang, request: Request[_], context: config.TamcContext, breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit messages: Messages, request: Request[_], context: config.TamcContext, breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.twirl.api.Html
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.no-tax-years")),
@@ -32,7 +32,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:non-e
         @Html(Messages("generic.finish"))
     </a>
 </p>
-<a href="@controllers.routes.UpdateRelationshipController.history" data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back" class="link-back">
+<a href="@controllers.routes.NewTransferController.history" data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back" class="link-back">
     @Html(Messages("generic.back"))
 </a>
 }

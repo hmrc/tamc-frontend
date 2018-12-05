@@ -16,7 +16,7 @@
 
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress, reason: models.EndRelationshipReason,
     effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None
-)(implicit lang: Lang,
+)(implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -27,8 +27,8 @@
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.change.complete")),

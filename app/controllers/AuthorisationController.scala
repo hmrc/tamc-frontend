@@ -21,6 +21,8 @@ import config.ApplicationConfig
 import connectors.ApplicationAuditConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 object AuthorisationController extends AuthorisationController {
   override val logoutUrl = ApplicationConfig.logoutUrl

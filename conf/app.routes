@@ -14,10 +14,10 @@ GET    /benefit-calculator-pta                     controllers.PtaEligibilityCon
 POST   /benefit-calculator-pta                     controllers.PtaEligibilityController.calculatorAction
 
 # Transfer Allowance
-GET    /transfer-allowance                         controllers.TransferController.transfer
-POST   /transfer-allowance                         controllers.TransferController.transferAction
-GET    /date-of-marriage                           controllers.TransferController.dateOfMarriage
-POST   /date-of-marriage                           controllers.TransferController.dateOfMarriageAction
+GET    /transfer-allowance                         @controllers.NewTransferController.transfer
+POST   /transfer-allowance                         @controllers.NewTransferController.transferAction
+GET    /date-of-marriage                           @controllers.NewTransferController.dateOfMarriage
+POST   /date-of-marriage                           @controllers.NewTransferController.dateOfMarriageAction
 GET    /eligible-years                             controllers.TransferController.eligibleYears
 POST   /eligible-years                             controllers.TransferController.eligibleYearsAction
 GET    /previous-years                             controllers.TransferController.previousYears
@@ -29,7 +29,7 @@ POST   /confirm                                    controllers.TransferControlle
 GET    /finished                                   controllers.TransferController.finished
 
 #Change of Circumstances
-GET    /history                                    controllers.UpdateRelationshipController.history
+GET    /history                                    @controllers.NewTransferController.history
 POST   /make-changes                               controllers.UpdateRelationshipController.makeChange
 GET    /change-of-income                           controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                controllers.UpdateRelationshipController.bereavement
@@ -52,29 +52,29 @@ GET    /eligibility-check-pta                      @controllers.EligibilityContr
 POST   /eligibility-check-pta                      @controllers.EligibilityController.eligibilityCheckAction
 GET    /lower-earner-pta                           @controllers.EligibilityController.lowerEarnerCheck
 POST   /lower-earner-pta                           @controllers.EligibilityController.lowerEarnerCheckAction
-GET    /partners-income-pta                        controllers.MultiYearPtaEligibilityController.partnersIncomeCheck
-POST   /partners-income-pta                        controllers.MultiYearPtaEligibilityController.partnersIncomeCheckAction
+GET    /partners-income-pta                        @controllers.EligibilityController.partnersIncomeCheck
+POST   /partners-income-pta                        @controllers.EligibilityController.partnersIncomeCheckAction
 GET    /date-of-birth-check-pta                    @controllers.EligibilityController.dateOfBirthCheck
 POST   /date-of-birth-check-pta                    @controllers.EligibilityController.dateOfBirthCheckAction
 GET    /do-you-live-in-scotland-pta                @controllers.EligibilityController.doYouLiveInScotland
 POST   /do-you-live-in-scotland-pta                @controllers.EligibilityController.doYouLiveInScotlandAction
-GET    /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApply
-POST   /do-you-want-to-apply-pta                   controllers.MultiYearPtaEligibilityController.doYouWantToApplyAction
+GET    /do-you-want-to-apply-pta                   @controllers.EligibilityController.doYouWantToApply
+POST   /do-you-want-to-apply-pta                   @controllers.EligibilityController.doYouWantToApplyAction
 
 #Mutliyear-GDS
-GET    /                                           @controllers.MultiYearGdsEligibilityController.home
+GET    /                                           @controllers.EligibilityController.home
 GET    /eligibility-check                          @controllers.EligibilityController.eligibilityCheck
 POST   /eligibility-check                          @controllers.EligibilityController.eligibilityCheckAction
 GET    /lower-earner                               @controllers.EligibilityController.lowerEarnerCheck
 POST   /lower-earner                               @controllers.EligibilityController.lowerEarnerCheckAction
-GET    /partners-income                            @controllers.MultiYearGdsEligibilityController.partnersIncomeCheck
-POST   /partners-income                            @controllers.MultiYearGdsEligibilityController.partnersIncomeCheckAction
+GET    /partners-income                            @controllers.EligibilityController.partnersIncomeCheck
+POST   /partners-income                            @controllers.EligibilityController.partnersIncomeCheckAction
 GET    /date-of-birth-check                        @controllers.EligibilityController.dateOfBirthCheck
 POST   /date-of-birth-check                        @controllers.EligibilityController.dateOfBirthCheckAction
 GET    /do-you-live-in-scotland                    @controllers.EligibilityController.doYouLiveInScotland
 POST   /do-you-live-in-scotland                    @controllers.EligibilityController.doYouLiveInScotlandAction
-GET    /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApply
-POST   /do-you-want-to-apply                       @controllers.MultiYearGdsEligibilityController.doYouWantToApplyAction
+GET    /do-you-want-to-apply                       @controllers.EligibilityController.doYouWantToApply
+POST   /do-you-want-to-apply                       @controllers.EligibilityController.doYouWantToApplyAction
 
 GET    /after-eligibility                          controllers.TestAuthController.afterEligibility
 GET    /before-eligibility                         controllers.TestAuthController.eligibility

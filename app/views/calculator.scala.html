@@ -16,7 +16,7 @@
 
 @(calculatorForm: Form[models.EligibilityCalculatorInput],
         calculationResult: Option[models.EligibilityCalculatorResult] = None)(
-        implicit lang: Lang,
+        implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -24,8 +24,8 @@
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._

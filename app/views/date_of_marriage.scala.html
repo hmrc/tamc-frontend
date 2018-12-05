@@ -15,16 +15,14 @@
  *@
 
 @(marriageForm: Form[models.DateOfMarriageFormInput], name: Option[models.CitizenName] = None)(
-implicit lang: Lang,
-request: Request[_],
+implicit messages: Messages,
+request: AuthenticatedUserRequest[_],
 context: config.TamcContext,
 breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-user: details.TamcUser,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.TextGenerators
@@ -32,7 +30,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.date-of-marriage")),
   mainConfig = views.helpers.MainConfig(
-  maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
+  maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}"))),
+ isLoggedIn = true
 ){
 
     @templates.form_error_notification(marriageForm)
@@ -41,7 +40,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     <p class="lede">@Html(Messages("pages.date-of-marriage.para1"))</p>
     <p class="information">@Html(Messages("pages.date-of-marriage.para2"))</p>
 
-    @helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
+    @helpers.form(action = routes.NewTransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
     <fieldset>
         <div class="form-group client-validated">
             @templates.dateFields(
@@ -60,5 +59,5 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     </p>
     }
     <br>
-    <a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.NewTransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>
 }

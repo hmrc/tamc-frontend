@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(changeRelationshipForm: Form[ChangeRelationship])(implicit lang: Lang,
+@(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -24,8 +24,8 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.divorce")),
@@ -57,5 +57,5 @@
             <button class="button" type="submit" >@Html(Messages("generic.back"))</button>
         </p>
     }
-        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

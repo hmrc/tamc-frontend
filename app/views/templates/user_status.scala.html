@@ -16,19 +16,19 @@
 
 @(user:details.TamcUser,
   logoutUrl: String
-  )(implicit lang: Lang,
+  )(implicit messages: Messages,
     request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import utils.LanguageUtils
 @import views.helpers.WelshDateConverter._
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 <div id="user-status" class="lastLogin service-info__help">
     <p class="service-info-p">
         @if(utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
-            @(user.authContext.user.previouslyLoggedInAt.isEmpty, LanguageUtils.isWelsh(lang)) match {
+            @(user.authContext.user.previouslyLoggedInAt.isEmpty, LanguageUtils.isWelsh(messages)) match {
                 case (true, false) => { @Messages("user-status.first-time-login", user.name.map(_ + ", this").getOrElse("This")) }
                 case (true, true) => { @Messages("user-status.first-time-login", user.name.map(_ + ", hwn").getOrElse("Hwn")) }
                 case (false, false) => { @Messages("user-status.previous-login-time", user.name.map(_ + ", you").getOrElse("You"), formatEasyReadingTimestamp(user.authContext.user.previouslyLoggedInAt, "")) }

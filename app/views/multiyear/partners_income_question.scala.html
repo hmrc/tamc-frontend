@@ -16,7 +16,6 @@
 
 @import java.text.NumberFormat
 
-@import config._
 @import config.ApplicationConfig._
 @import uk.gov.hmrc.play.breadcrumb.model.Breadcrumb
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -24,14 +23,14 @@
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 
+
 @(
     partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
     scottishResident: Boolean
 )(implicit
-    lang: Lang,
-    request: Request[_],
     messages: Messages,
-    context: TamcContext,
+    request: UserRequest[_],
+    context: config.TamcContext,
     breadcrumb: Breadcrumb,
     templateRenderer: TemplateRenderer,
     formPartialRetriever: FormPartialRetriever
@@ -42,13 +41,14 @@
 }
 
 @tamc_main(
-    title = messages("title.eligibility.pattern",
-        messages("eligibility.check.partners.income.h1",
-        NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1),
-        NumberFormat.getIntegerInstance().format(maxLimit))
-    )
-) {
-
+    title = Messages("title.eligibility.pattern",
+        Messages("eligibility.check.partners.income.h1",
+            NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE+1),
+            NumberFormat.getIntegerInstance().format(maxLimit)
+        )
+    ),
+    isLoggedIn = request.isLoggedIn
+){
     @form_error_notification(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
@@ -57,18 +57,18 @@
     )
 
     <h1 class="heading-xlarge">
-        <span class="heading-large secondary-text-colour">@messages("eligibility.check.span.h1")</span><br/>
-        @messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))
+        <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
+        @Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))
     </h1>
 
-    <p>@messages("eligibility.check.partners.income.information1")</p>
+    <p>@Messages("eligibility.check.partners.income.information1")</p>
 
     @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <div class="form-group inline">
             @input_radio_group(
                 partnersIncomeFormInput("partners-income"),
-                Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
-                '_legend -> Html(Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))),
+                Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+                '_legend -> Messages("multiyear.check.income"),
                 '_legendClass -> "visuallyhidden",
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
@@ -78,7 +78,7 @@
         </div>
 
         <div class="tamc-js-hidden error-inline validation-summary partners-inc-error" id="inline-partners-income-error">
-            @messages("eligibility.check.partners.income.error")
+            @Messages("eligibility.check.partners.income.error")
         </div>
 
         <script>
@@ -86,12 +86,12 @@
         </script>
 
         <div class="form-group">
-            <button class="button button-calculate" data-journey-click="marriage-allowance:button:partner_continue" id="continue" type="submit">
-                @messages("generic.continue")
+            <button class="button button-calculate" data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue" type="submit">
+                @Messages("generic.continue")
             </button>
         </div>
 
     }
 
-    <a href="@controllers.routes.EligibilityController.lowerEarnerCheck" class="link-back">@Html(messages("generic.back"))</a>
+    <a href="@controllers.routes.EligibilityController.lowerEarnerCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

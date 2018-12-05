@@ -77,7 +77,7 @@ class MultiYearGdsEligibilityController @Inject() (
           BadRequest(views.html.multiyear.gds.do_you_want_to_apply(formWithErrors)),
         doYouWantToApplyInput => {
           if (doYouWantToApplyInput.doYouWantToApply) {
-            Redirect(controllers.routes.UpdateRelationshipController.history())
+            Redirect(controllers.routes.NewTransferController.history())
           } else {
             Redirect(Call("GET", gdsFinishedUrl))
           }
@@ -132,7 +132,7 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(lower_earner(formWithErrors)),
         lowerEarnerInput => {
-          Redirect(controllers.routes.MultiYearGdsEligibilityController.partnersIncomeCheck())
+          Redirect(controllers.routes.EligibilityController.partnersIncomeCheck())
         })
   }
 
@@ -147,7 +147,7 @@ class MultiYearGdsEligibilityController @Inject() (
         formWithErrors =>
           BadRequest(partners_income_question(formWithErrors, isScottishResident(request))),
         partnersIncomeInput => {
-          Redirect(controllers.routes.MultiYearGdsEligibilityController.doYouWantToApply())
+          Redirect(controllers.routes.EligibilityController.doYouWantToApply())
         })
   }
 }

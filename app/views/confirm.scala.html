@@ -15,7 +15,7 @@
  *@
 
 @(data: models.ConfirmationModel, emptyForm: Form[Option[String]])(
-    implicit lang: Lang,
+    implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -31,8 +31,6 @@
 @import java.text.NumberFormat
 @import utils.LanguageUtils
 @import org.joda.time.LocalDate
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.confirm"))
@@ -71,7 +69,7 @@
             <td>@Html(Messages("generic.name"))</td>
             <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
             <td>
-                <a href="@controllers.routes.TransferController.transfer()" data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
+                <a href="@controllers.routes.NewTransferController.transfer()" data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
                     @Html(Messages("generic.change"))
                 </a>
             </td>
@@ -89,9 +87,9 @@
           <caption class="align-left">@Html(Messages("pages.confirm.marriage.details"))</caption>
       <tr>
           <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
-          <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage), LanguageUtils.isWelsh(lang))</td>
+          <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage), LanguageUtils.isWelsh(messages))</td>
           <td>
-              <a href="@controllers.routes.TransferController.dateOfMarriage()" data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
+              <a href="@controllers.routes.NewTransferController.dateOfMarriage()" data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
                   @Html(Messages("generic.change"))
               </a>
           </td>
@@ -99,10 +97,10 @@
       @for(taxYear <- data.availableYears) {
           <tr>
               @if(taxYear.isCurrent) {
-                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang))))</td>
-                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(lang)), data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT), data.recipientFirstName))
+                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(messages))))</td>
+                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(messages)), data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT), data.recipientFirstName))
               } else {
-                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang)), TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(lang))))</td>
+                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(messages)), TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear.year)), LanguageUtils.isWelsh(messages))))</td>
                   <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName, Messages("max-benefit-"+taxYear.year)))</td>
               }
             <td>

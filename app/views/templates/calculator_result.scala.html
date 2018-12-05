@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit lang: Lang, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     @import play.twirl.api.Html
-    @import play.api.Play.current
-    @import play.api.i18n.Messages.Implicits._
+
+
 
     @{
         calculationResult match {

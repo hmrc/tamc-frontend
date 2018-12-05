@@ -23,11 +23,10 @@
     historicActiveRecord: Boolean,
     canApplyPreviousYears: Boolean,
     endOfYear: Option[org.joda.time.LocalDate]
-    )(implicit lang: Lang,
-        request: Request[_],
+    )(implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -38,12 +37,12 @@
 @import config.ApplicationConfig
 @import utils.LanguageUtils
 @import java.text.NumberFormat
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.history")),
-  mainConfig = views.helpers.MainConfig()
+  mainConfig = views.helpers.MainConfig(),
+  isLoggedIn = true
 ) {
 		<h1 class="heading-xlarge">@Html(Messages("generic.ma"))
 			<div class="secondary-text-colour bold-xlarge">@loggedInUserInfo.get.name.get.firstName @loggedInUserInfo.get.name.get.lastName</div>
@@ -86,13 +85,13 @@
 				} else {
 					@if(historicActiveRecord) {
 						@if(historicRelationships.get(0).participant == "Transferor") {
-							<p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(lang))))</p>
+							<p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
 							<p>@Html(Messages("change.status.transferor.stop-sooner"))</p>
 							<p>
 							  <button class="button" type="submit" >@Html(Messages("change.status.transferor.ha.button"))</button>
 							</p>
 						} else {
-							<p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(lang))))</p>
+							<p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
 							<p>@Html(Messages("change.status.recipient.stop-sooner"))</p>
 							<p>
 							  <button class="button" type="submit" >@Html(Messages("change.status.recipient.ha.button"))</button>
@@ -112,7 +111,7 @@
 
 			@if(canApplyPreviousYears) {
 				<div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
-				<a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a></div>
+				<a id="previousYearsApply" href="@routes.NewTransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a></div>
 			 }
             <div id="historicRecords">
                 <section>
@@ -124,14 +123,14 @@
                         </tr>
                         @if(activeRecord) {
                         <tr>
-                            <td id="active">@TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh =LanguageUtils.isWelsh(lang))</td>
+                            <td id="active">@TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh =LanguageUtils.isWelsh(messages))</td>
                             <td id="active-reason" colspan="2">@Html(Messages("change.status.active"))</td>
                         </tr>
                         }
                         @if(historicRecord) {
                             @for((historicRelationship, index) <- historicRelationships.get.zipWithIndex) {
                                 <tr>
-                                    <td id="line@index-start">@TextGenerators.taxDateIntervalString(historicRelationship.participant1StartDate, Some(historicRelationship.participant1EndDate.get),LanguageUtils.isWelsh(lang))</td>
+                                    <td id="line@index-start">@TextGenerators.taxDateIntervalString(historicRelationship.participant1StartDate, Some(historicRelationship.participant1EndDate.get),LanguageUtils.isWelsh(messages))</td>
                                     <td id="line@index-reason">
                                         @Html(Messages(s"coc.end-reason.${historicRelationship.relationshipEndReason.getOrElse("")}"))
                                     </td>

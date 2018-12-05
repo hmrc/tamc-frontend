@@ -34,6 +34,8 @@ import uk.gov.hmrc.play.config.ControllerConfig
 import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.frontend.filters.{ FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport }
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 object ApplicationGlobal extends DefaultFrontendGlobal with RunMode {
 

@@ -16,12 +16,12 @@
 
 package utils
 
-import play.api.i18n.Lang
+import play.api.i18n.{Lang, Messages}
 import config.ApplicationConfig
 import models.EndReasonCode
 
 object LanguageUtils {
 
-  def isWelsh(lang: Lang) =
-    ApplicationConfig.LANG_LANG_WELSH == lang.language
+  def isWelsh(messages: Messages) =
+    ApplicationConfig.LANG_LANG_WELSH == messages.lang.language
 }

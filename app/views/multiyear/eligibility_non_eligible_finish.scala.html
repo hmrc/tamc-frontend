@@ -14,8 +14,9 @@
  * limitations under the License.
  *@
 
-@()(implicit messages: Messages,
-        request: Request[_],
+@(finishedUrl: String
+)(implicit messages: Messages,
+        request: UserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
@@ -24,19 +25,18 @@
 @import play.twirl.api.Html
 
 
+    @templates.tamc_main(
+        title = Messages("title.eligibility.pattern", Messages("title.non-eligible")),
+        isLoggedIn = request.isLoggedIn
+){
+        <h1>@Html(Messages("eligibility.check.header"))</h1>
+        <p class="panel-indent">@Html(Messages("eligibility.check.non-eligible"))</p>
 
-@templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.cannot-find-details"))) {
-    <h1 class="heading-large">@Html(Messages("technical.cannot-find-details.h1"))</h1>
-    <p id="error">@Html(Messages("technical.cannot-find-details.para1"))</p>
-    <p><strong>@Html(Messages("hmrc.contact-details"))</strong></p>
+        <p>
+            <a id="button-finished" class="button" role="button" href="@finishedUrl">
+                @Html(Messages("generic.finish"))
+            </a>
+        </p>
 
-    <p>@Html(Messages("hmrc.contact-details-2")) <br>
-        @Html(Messages("hmrc.contact-details-3")) <br>
-        @Html(Messages("hmrc.contact-details-4"))</p>
-    <p>@Html(Messages("hmrc.contact-details-5")) <br>
-    @Html(Messages("hmrc.contact-details-6"))</p>
-    <p>@Html(Messages("hmrc.contact-details-7")) <br>
-    @Html(Messages("hmrc.contact-details-8"))</p>
-    <p id="error">@Html(Messages("hmrc.contact-details-9"))</p>
+    <a href="@controllers.routes.EligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

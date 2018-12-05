@@ -24,6 +24,8 @@ import play.api.mvc.{Action, AnyContent}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import utils.TamcBreadcrumb
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 object GdsEligibilityController extends GdsEligibilityController {
   override val auditConnector = ApplicationAuditConnector

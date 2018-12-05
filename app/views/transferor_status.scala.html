@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@()(implicit lang: Lang,
+@()(implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -23,8 +23,8 @@
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import play.twirl.api.Html
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.transfer-in-place")),

@@ -15,7 +15,7 @@
  *@
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None
-)(implicit lang: Lang,
+)(implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -27,8 +27,8 @@
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.confirm-email")),
@@ -53,5 +53,5 @@
             <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">@Html(Messages("generic.continue"))</button>
         </p>
     }
-        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

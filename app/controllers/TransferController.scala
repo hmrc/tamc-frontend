@@ -39,6 +39,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import org.apache.commons.lang3.exception.ExceptionUtils
+import play.api.i18n.MessagesApi
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 
 
 object TransferController extends TransferController with RunMode {
@@ -56,68 +59,69 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
   val authConnector: ApplicationAuthConnector
   val timeService: TimeService
 
-  def transfer: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getEligibleTransferorName map {
-            name => {
-              Ok(views.html.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)), name))
-            }
-          } recover handleError
-  }
 
-  def transferAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)).bindFromRequest.fold(
-            formWithErrors =>
-              registrationService.getEligibleTransferorName map {
-                name => {
-                  BadRequest(views.html.transfer(formWithErrors, name))
-                }
-              },
-            recipientData => {
-              CachingService.saveRecipientDetails(recipientData)
-              registrationService.getEligibleTransferorName map {
-                name => Redirect(controllers.routes.TransferController.dateOfMarriage())
-              }
-            }) recover handleError
-  }
+//  def transfer: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getEligibleTransferorName map {
+//            name => {
+//              Ok(views.html.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)), name))
+//            }
+//          } recover handleError
+//  }
 
-  def dateOfMarriage: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getEligibleTransferorName map {
-            name => Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), name))
-          } recover handleError
-  }
-
-  def dateOfMarriageAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
-            formWithErrors =>
-              registrationService.getEligibleTransferorName map {
-                name => {
-                  BadRequest(views.html.date_of_marriage(formWithErrors, name))
-                }
-              },
-            marriageData => {
-              CachingService.saveDateOfMarriage(marriageData)
-              registrationService.getRecipientDetailsFormData flatMap {
-                case RecipientDetailsFormInput(name, lastName, gender, nino) => {
-                  val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
-                  registrationService.isRecipientEligible(utils.getUserNino(auth), dataToSend) flatMap {
-                    _ => Future.successful(Redirect(controllers.routes.TransferController.eligibleYears()))
-                  }
-                }
-              }
-            }) recover handleError
-  }
+//  def transferAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = utils.getUserNino(auth)).bindFromRequest.fold(
+//            formWithErrors =>
+//              registrationService.getEligibleTransferorName map {
+//                name => {
+//                  BadRequest(views.html.transfer(formWithErrors, name))
+//                }
+//              },
+//            recipientData => {
+//              CachingService.saveRecipientDetails(recipientData)
+//              registrationService.getEligibleTransferorName map {
+//                name => Redirect(controllers.routes.NewTransferController.dateOfMarriage())
+//              }
+//            }) recover handleError
+//  }
+//
+//  def dateOfMarriage: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getEligibleTransferorName map {
+//            name => Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), name))
+//          } recover handleError
+//  }
+//
+//  def dateOfMarriageAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
+//            formWithErrors =>
+//              registrationService.getEligibleTransferorName map {
+//                name => {
+//                  BadRequest(views.html.date_of_marriage(formWithErrors, name))
+//                }
+//              },
+//            marriageData => {
+//              CachingService.saveDateOfMarriage(marriageData)
+//              registrationService.getRecipientDetailsFormData flatMap {
+//                case RecipientDetailsFormInput(name, lastName, gender, nino) => {
+//                  val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
+//                  registrationService.isRecipientEligible(utils.getUserNino(auth), dataToSend) flatMap {
+//                    _ => Future.successful(Redirect(controllers.routes.TransferController.eligibleYears()))
+//                  }
+//                }
+//              }
+//            }) recover handleError
+//  }
 
   def eligibleYears: Action[AnyContent] = TamcAuthPersonalDetailsAction {
     implicit auth =>
@@ -248,7 +252,7 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
             success =>
               success)
           Logger.info("registration service.createRelationship - confirm action.")
-          registrationService.createRelationship(utils.getUserNino(auth), getJourneyName(), request2lang(request)) map {
+          registrationService.createRelationship(utils.getUserNino(auth), getJourneyName()) map {
             _ => Redirect(controllers.routes.TransferController.finished())
           } recover handleError
   }
@@ -280,18 +284,18 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
           case _: TransferorNotFound => handle(message, Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
           case _: RecipientNotFound => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
           case _: TransferorDeceased => handle(message, Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
-          case _: CacheMissingTransferor => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: CacheMissingTransferor => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
           case _: CacheTransferorInRelationship => handle(message, Logger.warn, Ok(views.html.transferor_status()))
-          case _: CacheMissingRecipient => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: CacheMissingRecipient => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
           case _: CacheRecipientInRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_relationship_exists()))
           case _: CacheMissingEmail => handle(message, Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
           case _: CannotCreateRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.relationship_cannot_create()))
-          case _: CacheRelationshipAlreadyCreated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-          case _: CacheCreateRequestNotSent => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: CacheRelationshipAlreadyCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
+          case _: CacheCreateRequestNotSent => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
           case _: NoTaxYearsSelected => handle(message, Logger.info, Ok(views.html.errors.no_year_selected()))
           case _: NoTaxYearsAvailable => handle(message, Logger.info, Ok(views.html.errors.no_eligible_years()))
           case _: NoTaxYearsForTransferor => handle(message, Logger.info, InternalServerError(views.html.errors.no_tax_year_transferor()))
-          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
           case _ => handle(message, Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }

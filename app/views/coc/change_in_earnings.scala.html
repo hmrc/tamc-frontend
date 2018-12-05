@@ -15,7 +15,7 @@
  *@
 
  
-@()(implicit lang: Lang,
+@()(implicit messages: Messages,
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -26,8 +26,8 @@
 @import play.twirl.api.Html
 @import config.ApplicationConfig
 @import java.text.NumberFormat
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.change.earnings")),
@@ -50,5 +50,5 @@
     <h3>@Html(Messages("hmrc.contact-detials.calling.time"))</h3>
     @Html(Messages("hmrc.contact-details-8"))</p>
     <p>@Html(Messages("hmrc.contact-details-9"))</p>
-    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

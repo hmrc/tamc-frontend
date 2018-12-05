@@ -22,14 +22,13 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @(
     partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
     scottishResident: Boolean
-)(implicit
-    lang: Lang,
+)(implicit messages: Messages,
     request: Request[_],
     context: config.TamcContext,
     breadcrumb: Breadcrumb,
@@ -63,7 +62,7 @@
 
     <p>@Messages("eligibility.check.partners.income.information1")</p>
 
-    @helpers.form(action = routes.MultiYearPtaEligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
+    @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <div class="form-group inline">
             @input_radio_group(
                 partnersIncomeFormInput("partners-income"),
