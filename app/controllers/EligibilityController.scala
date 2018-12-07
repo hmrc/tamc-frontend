@@ -150,10 +150,7 @@ class EligibilityController @Inject()(
             BadRequest(views.html.multiyear.do_you_want_to_apply(formWithErrors)),
           doYouWantToApplyInput => {
             if (doYouWantToApplyInput.doYouWantToApply) {
-                request.isLoggedIn match {
-                  case true => {Redirect(controllers.routes.NewTransferController.transfer())}
-                  case _ => {Redirect(controllers.routes.NewTransferController.history())}
-                }
+                Redirect(controllers.routes.NewTransferController.transfer())
             } else {
               Redirect(Call("GET", finishUrl(request.isLoggedIn)))
             }
