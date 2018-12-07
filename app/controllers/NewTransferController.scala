@@ -17,7 +17,7 @@
 package controllers
 
 import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
-import config.{ApplicationConfig, TamcContext}
+import config.TamcContext
 import errors.{NoTaxYearsAvailable, NoTaxYearsSelected}
 import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.RecipientDetailsForm.recipientDetailsForm
@@ -31,7 +31,7 @@ import models._
 import play.Logger
 import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, ActionBuilder, AnyContent, Request}
+import play.api.mvc.{Action, ActionBuilder, AnyContent}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import utils.TamcBreadcrumb
 
@@ -205,6 +205,9 @@ class NewTransferController @Inject()(
       }
   }
 
+  //Success(Some(CacheData(None,Some(RecipientRecord(UserRecord(999059794,2015,None,None),RegistrationFormInput(Claire,Forester,Gender(F),NY059794B,2011-02-22),List(TaxYear(2018,Some(true)), TaxYear(2017,None), TaxYear(2016,None), TaxYear(2015,None)))),Some(NotificationRecord(sample@sample.com)),None,Some(List(2018, 2017, 2015)),Some(RecipientDetailsFormInput(Claire,Forester,Gender(F),NY059794B)),Some(DateOfMarriageFormInput(2011-02-22)))))
+
+
   def confirmYourEmailAction: Action[AnyContent] = transferControllerAction.async {
     implicit request =>
       emailForm.bindFromRequest.fold(
@@ -218,7 +221,7 @@ class NewTransferController @Inject()(
 
   def confirm: Action[AnyContent] = transferControllerAction.async {
     implicit request =>
-      registrationService.getConfirmationData map {
+      registrationService.getConfirmationData(request.name) map {
         data =>
           Ok(views.html.confirm(data = data, emptyForm = EmptyForm.form))
       }

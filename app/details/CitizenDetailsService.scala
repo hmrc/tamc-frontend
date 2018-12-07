@@ -43,8 +43,8 @@ trait CitizenDetailsService {
 
   def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] =
     cachingService.getPersonDetails.flatMap {
-      case Some(details) => Logger.error(s"************** got from cache $details");Future { PersonDetailsSuccessResponse(details) }
-      case None          => Logger.error("********************** failed to get from cache");getDetailsAndSave(nino)
+      case Some(details) => Future { PersonDetailsSuccessResponse(details) }
+      case None          => getDetailsAndSave(nino)
     }
 
   private def getDetailsAndSave(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] =

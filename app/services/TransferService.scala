@@ -36,7 +36,7 @@ import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 object TransferService extends TransferService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
@@ -173,7 +173,7 @@ trait TransferService {
       Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
       notificationRecord, _, _, _, _)) => notificationRecord
       case None => throw CacheMissingTransferor()
-      case Some(CacheData(None, _, _, _, _, _, _)) => None //throw CacheMissingTransferor() //TODO this is the exception being thrown.. the controller can handle None
+      case Some(CacheData(None, _, _, _, _, _, _)) => throw CacheMissingTransferor()
       case Some(CacheData(_, None, _, _, _, _, _)) => throw CacheMissingRecipient()
     }
   }
@@ -201,7 +201,7 @@ trait TransferService {
       }
       case Some(
       CacheData(
-      Some(UserRecord(_, _, _, _)),
+      None,
       Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
       Some(notification: NotificationRecord),
       _,
@@ -271,7 +271,7 @@ trait TransferService {
     } yield cache.get.recipient.get
 
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
-    val transferor = sessionData.transferor.get
+    val transferor: UserRecord = sessionData.transferor.get
     val recipient = sessionData.recipient.get.record
     val formData = sessionData.recipient.get.data
     val email = sessionData.notification.get.transferor_email
