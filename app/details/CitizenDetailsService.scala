@@ -51,7 +51,9 @@ trait CitizenDetailsService {
     getDetailsFromCid(nino).flatMap {
       case PersonDetailsSuccessResponse(pd) =>
         cachingService.savePersonDetails(pd).map {
-          pd => PersonDetailsSuccessResponse(pd)
+          pd =>
+            println(s"???????\n\n\n??????? \n\n  $pd    \n\n\n\n")
+            PersonDetailsSuccessResponse(pd)
         }
       case otherResponse => Future { otherResponse }
     }

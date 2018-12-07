@@ -221,7 +221,7 @@ class NewTransferController @Inject()(
 
   def confirm: Action[AnyContent] = transferControllerAction.async {
     implicit request =>
-      registrationService.getConfirmationData(request.name) map {
+      registrationService.getConfirmationData map {
         data =>
           Ok(views.html.confirm(data = data, emptyForm = EmptyForm.form))
       }
