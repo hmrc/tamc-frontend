@@ -16,10 +16,9 @@
 
 @(data: models.ConfirmationModel, emptyForm: Form[Option[String]])(
     implicit messages: Messages,
-        request: Request[_],
+        request: AuthenticatedUserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -33,7 +32,8 @@
 @import org.joda.time.LocalDate
 
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.confirm"))
+  title = Messages("title.application.pattern", Messages("title.confirm")),
+  isLoggedIn = true
 ){
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
     <table>
@@ -52,7 +52,7 @@
             <td>@Html(Messages("generic.email"))</td>
               <td id="transferor-email">@data.transferorEmail</td>
             <td>
-                <a href="@controllers.routes.TransferController.confirmYourEmail()" data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
+                <a href="@controllers.routes.NewTransferController.confirmYourEmail()" data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                     @Html(Messages("generic.change"))
                 </a>
             </td>
@@ -104,7 +104,7 @@
                   <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName, Messages("max-benefit-"+taxYear.year)))</td>
               }
             <td>
-                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">
+                <a id="change-@taxYear.year" href="@routes.NewTransferController.eligibleYears">
                     @Html(Messages("generic.change"))
                 </a>
             </td>
@@ -116,11 +116,11 @@
             @Html(Messages("pages.confirm.warning"))
         </p>
     </div>
-    @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
+    @helpers.form(action = routes.NewTransferController.confirmAction(), args = ('id -> "create-form")) {
         <p>
             <button data-journey-click="marriage-allowance:button:application_confirm" id="create" type="submit"> @Html(Messages("pages.confirm.button"))</button>
         </p>
     }
     <br>
-    <a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.NewTransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
 }

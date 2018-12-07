@@ -20,10 +20,9 @@
     dom: Option[org.joda.time.LocalDate],
     cy: Option[org.joda.time.LocalDate])(
     implicit messages: Messages,
-        request: Request[_],
+        request: AuthenticatedUserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -38,7 +37,8 @@
 @import utils.LanguageUtils
 
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.eligible-years"))
+  title = Messages("title.application.pattern", Messages("title.eligible-years")),
+  isLoggedIn = request.isLoggedIn
 ){
 
     @templates.form_error_notification(form)

@@ -16,109 +16,240 @@
 
 package controllers
 
-import config.TamcContext
+import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
+import config.{ApplicationConfig, TamcContext}
+import errors.{NoTaxYearsAvailable, NoTaxYearsSelected}
 import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.RecipientDetailsForm.recipientDetailsForm
 import forms.ChangeRelationshipForm.changeRelationshipForm
+import forms.CurrentYearForm.currentYearForm
+import forms.EarlierYearForm.earlierYearsForm
+import forms.EmailForm.emailForm
+import forms.EmptyForm
 import javax.inject.Inject
-import models.RelationshipRecordList
+import models._
+import play.Logger
+import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, ActionBuilder, AnyContent, Request}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import utils.TamcBreadcrumb
 
-class NewTransferController @Inject() (
-                                        override val messagesApi: MessagesApi,
-                                        authenticatedActionRefiner: AuthenticatedActionRefiner,
-                                        registrationService: TransferService,
-                                        timeService: TimeService,
-                                        updateRelationshipService: UpdateRelationshipService
-                                      )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
+import scala.concurrent.Future
 
+class NewTransferController @Inject()(
+                                       override val messagesApi: MessagesApi,
+                                       authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                       personalDetailsCacheAction: PersonalDetailsCacheAction,
+                                       registrationService: TransferService,
+                                       timeService: TimeService,
+                                       updateRelationshipService: UpdateRelationshipService
+                                     )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
+
+  private val transferControllerAction: ActionBuilder[AuthenticatedUserRequest] = authenticatedActionRefiner andThen personalDetailsCacheAction
+
+  // TODO history needs to be moved to a new Controller along with the rest of UpdateRelationshipController
   def history(): Action[AnyContent] = authenticatedActionRefiner.async {
-      implicit request =>
-          updateRelationshipService.listRelationship(request.nino) map {
-            case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
-              if (!activeRecord && !historicRecord) {
-                if (!request.isLoggedIn) {
-                  Redirect(controllers.routes.NewTransferController.transfer())
-                } else {
-                  Redirect(controllers.routes.MultiYearPtaEligibilityController.howItWorks())
-                }
-              } else {
-                Ok(views.html.coc.your_status(
-                  changeRelationshipForm = changeRelationshipForm,
-                  activeRelationship = activeRelationship,
-                  historicRelationships = historicRelationships,
-                  loggedInUserInfo = loggedInUserInfo,
-                  activeRecord = activeRecord,
-                  historicRecord = historicRecord,
-                  historicActiveRecord = historicActiveRecord,
-                  canApplyPreviousYears = canApplyPreviousYears,
-                  endOfYear = Some(timeService.taxYearResolver.endOfCurrentTaxYear)))
-              }
-            }
-          }
-  }
-
-
-  def transfer: Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>
-      registrationService.getEligibleTransferorName map {
-        name => {
-          Ok(views.html.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino), name))
+      updateRelationshipService.listRelationship(request.nino) map {
+        case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
+          if (!activeRecord && !historicRecord) {
+            if (!request.isLoggedIn) {
+              Redirect(controllers.routes.NewTransferController.transfer())
+            } else {
+              Redirect(controllers.routes.EligibilityController.howItWorks())
+            }
+          } else {
+            Ok(views.html.coc.your_status(
+              changeRelationshipForm = changeRelationshipForm,
+              activeRelationship = activeRelationship,
+              historicRelationships = historicRelationships,
+              loggedInUserInfo = loggedInUserInfo,
+              activeRecord = activeRecord,
+              historicRecord = historicRecord,
+              historicActiveRecord = historicActiveRecord,
+              canApplyPreviousYears = canApplyPreviousYears,
+              endOfYear = Some(timeService.taxYearResolver.endOfCurrentTaxYear)))
+          }
         }
       }
   }
+  ///////
 
-  def transferAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def transfer: Action[AnyContent] = transferControllerAction {
+    implicit request =>
+      Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino), Some(request.name)))
+  }
+
+  def transferAction: Action[AnyContent] = (authenticatedActionRefiner andThen personalDetailsCacheAction) {
     implicit request =>
       recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
         formWithErrors =>
-          registrationService.getEligibleTransferorName map {
-            name => {
-              BadRequest(views.html.transfer(formWithErrors, name))
-            }
-          },
+          BadRequest(views.html.multiyear.transfer.transfer(formWithErrors, Some(request.name))),
         recipientData => {
           CachingService.saveRecipientDetails(recipientData)
-          registrationService.getEligibleTransferorName map {
-            name => Redirect(controllers.routes.NewTransferController.dateOfMarriage())
-          }
+          Redirect(controllers.routes.NewTransferController.dateOfMarriage())
         })
   }
 
 
-  def dateOfMarriage: Action[AnyContent] = authenticatedActionRefiner.async {
-      implicit request =>
-          registrationService.getEligibleTransferorName map {
-            name => Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), name))
-          }
+  def dateOfMarriage: Action[AnyContent] = transferControllerAction {
+    implicit request =>
+      Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), Some(request.name)))
   }
 
-  def dateOfMarriageAction: Action[AnyContent] = { ??? }
-//    TamcAuthPersonalDetailsAction {
-//    implicit auth =>
-//      implicit request =>
-//        implicit details =>
-//          dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
-//            formWithErrors =>
-//              registrationService.getEligibleTransferorName map {
-//                name => {
-//                  BadRequest(views.html.date_of_marriage(formWithErrors, name))
-//                }
-//              },
-//            marriageData => {
-//              CachingService.saveDateOfMarriage(marriageData)
-//              registrationService.getRecipientDetailsFormData flatMap {
-//                case RecipientDetailsFormInput(name, lastName, gender, nino) => {
-//                  val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
-//                  registrationService.isRecipientEligible(utils.getUserNino(auth), dataToSend) flatMap {
-//                    _ => Future.successful(Redirect(controllers.routes.TransferController.eligibleYears()))
-//                  }
-//                }
-//              }
-//            })
-//  }
+  def dateOfMarriageAction: Action[AnyContent] = (authenticatedActionRefiner andThen personalDetailsCacheAction).async {
+    implicit request =>
+      dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
+        formWithErrors => Future.successful(BadRequest(views.html.date_of_marriage(formWithErrors, Some(request.name))))
+        ,
+        marriageData => {
+          CachingService.saveDateOfMarriage(marriageData)
+
+
+          registrationService.getRecipientDetailsFormData flatMap {
+            case RecipientDetailsFormInput(name, lastName, gender, nino) => {
+              val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
+              registrationService.isRecipientEligible(request.nino, dataToSend) map {
+                _ => Redirect(controllers.routes.NewTransferController.eligibleYears())
+              }
+            }
+          }
+        })
+  }
+
+  def eligibleYears: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+      registrationService.deleteSelectionAndGetCurrentAndExtraYearEligibility map {
+        case (false, Nil, _) => throw new NoTaxYearsAvailable
+        case (false, extraYears, recipient) if extraYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, false))
+        case (_, extraYears, recipient) =>
+          Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(extraYears.nonEmpty), extraYears.nonEmpty, recipient.data.name,
+            Some(recipient.data.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
+      }
+  }
+
+  def eligibleYearsAction: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+      registrationService.getCurrentAndExtraYearEligibility flatMap {
+        case (currentYearAvailable, extraYears, recipient) =>
+          currentYearForm(extraYears.nonEmpty).bindFromRequest.fold(
+            hasErrors =>
+              Future {
+                BadRequest(views.html.multiyear.transfer.eligible_years(
+                  hasErrors,
+                  extraYears.nonEmpty,
+                  recipient.data.name,
+                  Some(recipient.data.dateOfMarriage),
+                  Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
+              },
+            success => {
+              registrationService.saveSelectedYears(recipient, if (success.applyForCurrentYear.contains(true)) {
+                List[Int](timeService.getCurrentTaxYear)
+              } else {
+                List[Int]()
+              }) map { _ =>
+                if (extraYears.isEmpty && currentYearAvailable && (!success.applyForCurrentYear.contains(true))) {
+                  throw new NoTaxYearsSelected
+                } else if (extraYears.nonEmpty) {
+                  Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, currentYearAvailable))
+                } else {
+                  Redirect(controllers.routes.NewTransferController.confirmYourEmail())
+                }
+              }
+            })
+      }
+  }
+
+  def previousYears: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+      registrationService.getCurrentAndExtraYearEligibility.map {
+        case (currentYearAvailable, extraYears, recipient) =>
+          Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), recipient.data, extraYears))
+      }
+  }
+
+  def extraYearsAction: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+
+      def toTaxYears(years: List[Int]): List[TaxYear] = {
+        years.map(year => TaxYear(year, None))
+      }
+
+      registrationService.getCurrentAndExtraYearEligibility flatMap {
+        case (_, extraYears, recipient) =>
+          earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
+            hasErrors =>
+              Future {
+                BadRequest(views.html.multiyear.transfer.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), recipient.data, extraYears))
+              },
+            taxYears => {
+              registrationService.updateSelectedYears(recipient, taxYears.selectedYear, taxYears.yearAvailableForSelection).map {
+                _ =>
+                  if (taxYears.furtherYears.isEmpty) {
+                    Redirect(controllers.routes.NewTransferController.confirmYourEmail())
+                  } else {
+                    Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), recipient.data, toTaxYears(taxYears.furtherYears)))
+                  }
+              }
+            })
+      }
+  }
+
+  //TODO registrationService is being a pain
+  def confirmYourEmail: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+      registrationService.getTransferorNotification map {
+        case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail)))
+        case None => Ok(views.html.multiyear.transfer.email(emailForm))
+      }
+  }
+
+  def confirmYourEmailAction: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+      emailForm.bindFromRequest.fold(
+        formWithErrors =>
+          Future.successful(BadRequest(views.html.multiyear.transfer.email(formWithErrors))),
+        transferorEmail =>
+          registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
+            _ => Redirect(controllers.routes.NewTransferController.confirm())
+          })
+  }
+
+  def confirm: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+      registrationService.getConfirmationData map {
+        data =>
+          Ok(views.html.confirm(data = data, emptyForm = EmptyForm.form))
+      }
+  }
+
+  def confirmAction: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+
+      def getJourneyName(): String =
+        if (request.isLoggedIn) TAMC_JOURNEY_PTA else TAMC_JOURNEY_GDS
+
+      EmptyForm.form.bindFromRequest().fold(
+        formWithErrors =>
+          Logger.error(s"unexpected error in emty form, SID [${utils.getSid(request)}]"),
+        success =>
+          success)
+      Logger.info("registration service.createRelationship - confirm action.")
+      registrationService.createRelationship(request.nino, getJourneyName()) map {
+        _ => Redirect(controllers.routes.NewTransferController.finished())
+      }
+  }
+
+  def finished: Action[AnyContent] = transferControllerAction.async {
+    implicit request =>
+      registrationService.getFinishedData(request.nino) map {
+        case NotificationRecord(email) =>
+          if (request.isLoggedIn)
+            Ok(views.html.finished(transferorEmail = email))
+          else
+            Ok(views.html.finished(transferorEmail = email))
+      }
+  }
 
 }

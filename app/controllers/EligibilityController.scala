@@ -36,6 +36,11 @@ class EligibilityController @Inject()(
                                        unauthenticatedAction: UnauthenticatedActionTransformer
                                      )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
 
+  def howItWorks: Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      Ok(views.html.multiyear.how_it_works())
+  }
+
   def home: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Redirect(controllers.routes.EligibilityController.eligibilityCheck())

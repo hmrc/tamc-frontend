@@ -61,7 +61,7 @@ trait TransferService {
     for {
       initialCacheState <- cachingService.getCachedData
       name <- validateTransferorName(initialCacheState)
-    } yield (name)
+    } yield name
   }
 
   private def validateTransferorName(cache: Option[CacheData]): Future[Option[CitizenName]] = {
@@ -173,12 +173,12 @@ trait TransferService {
       Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
       notificationRecord, _, _, _, _)) => notificationRecord
       case None => throw CacheMissingTransferor()
-      case Some(CacheData(None, _, _, _, _, _, _)) => throw CacheMissingTransferor()
+      case Some(CacheData(None, _, _, _, _, _, _)) => None //throw CacheMissingTransferor() //TODO this is the exception being thrown.. the controller can handle None
       case Some(CacheData(_, None, _, _, _, _, _)) => throw CacheMissingRecipient()
     }
   }
 
-  def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext, user: AuthContext): Future[NotificationRecord] = {
+  def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
     Logger.info("upsertTransferorNotification has been called.")
     cachingService.saveNotificationRecord(notificationRecord)
   }
@@ -189,7 +189,7 @@ trait TransferService {
       cache <- cachingService.getCachedData
       validated <- validateCompleteCache(cache)
       confirmData <- transformCache(validated)
-    } yield (confirmData)
+    } yield confirmData
   }
 
   private def validateCompleteCache(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {

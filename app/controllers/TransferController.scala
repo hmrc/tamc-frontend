@@ -59,7 +59,7 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
   val authConnector: ApplicationAuthConnector
   val timeService: TimeService
 
-
+//
 //  def transfer: Action[AnyContent] = TamcAuthPersonalDetailsAction {
 //    implicit auth =>
 //      implicit request =>
@@ -116,159 +116,159 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
 //                case RecipientDetailsFormInput(name, lastName, gender, nino) => {
 //                  val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
 //                  registrationService.isRecipientEligible(utils.getUserNino(auth), dataToSend) flatMap {
-//                    _ => Future.successful(Redirect(controllers.routes.TransferController.eligibleYears()))
+//                    _ => Future.successful(Redirect(controllers.routes.NewTransferController.eligibleYears()))
 //                  }
 //                }
 //              }
 //            }) recover handleError
 //  }
 
-  def eligibleYears: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.deleteSelectionAndGetCurrentAndExtraYearEligibility map {
-            case (false, extraYears, recipient) if extraYears.isEmpty => throw new NoTaxYearsAvailable
-            case (false, extraYears, recipient) if extraYears.nonEmpty => Ok(views.html.previous_years(recipient.data, extraYears, false))
-            case (_, extraYears, recipient) =>
-              Ok(views.html.eligible_years(currentYearForm(extraYears.nonEmpty), extraYears.nonEmpty, recipient.data.name,
-                Some(recipient.data.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
-          } recover handleError
-  }
+//  def eligibleYears: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.deleteSelectionAndGetCurrentAndExtraYearEligibility map {
+//            case (false, extraYears, recipient) if extraYears.isEmpty => throw new NoTaxYearsAvailable
+//            case (false, extraYears, recipient) if extraYears.nonEmpty => Ok(views.html.previous_years(recipient.data, extraYears, false))
+//            case (_, extraYears, recipient) =>
+//              Ok(views.html.eligible_years(currentYearForm(extraYears.nonEmpty), extraYears.nonEmpty, recipient.data.name,
+//                Some(recipient.data.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
+//          } recover handleError
+//  }
 
-  def eligibleYearsAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getCurrentAndExtraYearEligibility flatMap {
-            case (currentYearAvailable, extraYears, recipient) =>
-              currentYearForm(extraYears.nonEmpty).bindFromRequest.fold(
-                hasErrors =>
-                  Future {
-                    BadRequest(views.html.eligible_years(
-                      hasErrors,
-                      extraYears.nonEmpty,
-                      recipient.data.name,
-                      Some(recipient.data.dateOfMarriage),
-                      Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
-                  },
-                success => {
-                  registrationService.saveSelectedYears(recipient, if (success.applyForCurrentYear == Some(true)) {
-                    List[Int](timeService.getCurrentTaxYear)
-                  } else {
-                    List[Int]()
-                  }) map {
-                    _ =>
-                      if (extraYears.isEmpty && currentYearAvailable && (success.applyForCurrentYear != Some(true))) {
-                        throw new NoTaxYearsSelected
-                      } else if (extraYears.nonEmpty) {
-                        Ok(views.html.previous_years(recipient.data, extraYears, currentYearAvailable))
-                      } else {
-                        Redirect(controllers.routes.TransferController.confirmYourEmail())
-                      }
-                  }
-                })
-          } recover handleError
-  }
+//  def eligibleYearsAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getCurrentAndExtraYearEligibility flatMap {
+//            case (currentYearAvailable, extraYears, recipient) =>
+//              currentYearForm(extraYears.nonEmpty).bindFromRequest.fold(
+//                hasErrors =>
+//                  Future {
+//                    BadRequest(views.html.eligible_years(
+//                      hasErrors,
+//                      extraYears.nonEmpty,
+//                      recipient.data.name,
+//                      Some(recipient.data.dateOfMarriage),
+//                      Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
+//                  },
+//                success => {
+//                  registrationService.saveSelectedYears(recipient, if (success.applyForCurrentYear == Some(true)) {
+//                    List[Int](timeService.getCurrentTaxYear)
+//                  } else {
+//                    List[Int]()
+//                  }) map {
+//                    _ =>
+//                      if (extraYears.isEmpty && currentYearAvailable && (success.applyForCurrentYear != Some(true))) {
+//                        throw new NoTaxYearsSelected
+//                      } else if (extraYears.nonEmpty) {
+//                        Ok(views.html.previous_years(recipient.data, extraYears, currentYearAvailable))
+//                      } else {
+//                        Redirect(controllers.routes.NewTransferController.confirmYourEmail())
+//                      }
+//                  }
+//                })
+//          } recover handleError
+//  }
 
-  def previousYears: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getCurrentAndExtraYearEligibility flatMap {
-            case (currentYearAvailable, extraYears, recipient) =>
-              Future.successful(Ok(views.html.single_year_select(earlierYearsForm(), recipient.data, extraYears)))
-          } recover handleError
-  }
+//  def previousYears: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getCurrentAndExtraYearEligibility flatMap {
+//            case (currentYearAvailable, extraYears, recipient) =>
+//              Future.successful(Ok(views.html.single_year_select(earlierYearsForm(), recipient.data, extraYears)))
+//          } recover handleError
+//  }
 
-  def extraYearsAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getCurrentAndExtraYearEligibility flatMap {
-            case (_, extraYears, recipient) =>
-              earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
-                hasErrors =>
-                  Future {
-                    BadRequest(views.html.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), recipient.data, extraYears))
-                  },
-                taxYears => {
-                  registrationService.updateSelectedYears(recipient, taxYears.selectedYear, taxYears.yearAvailableForSelection).map {
-                    _ =>
-                      if (taxYears.furtherYears.isEmpty) {
-                        Redirect(controllers.routes.TransferController.confirmYourEmail())
-                      } else {
-                        Ok(views.html.single_year_select(earlierYearsForm(), recipient.data, toTaxYears(taxYears.furtherYears)))
-                      }
-                  }
-                })
-          } recover handleError
-  }
+//  def extraYearsAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getCurrentAndExtraYearEligibility flatMap {
+//            case (_, extraYears, recipient) =>
+//              earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
+//                hasErrors =>
+//                  Future {
+//                    BadRequest(views.html.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), recipient.data, extraYears))
+//                  },
+//                taxYears => {
+//                  registrationService.updateSelectedYears(recipient, taxYears.selectedYear, taxYears.yearAvailableForSelection).map {
+//                    _ =>
+//                      if (taxYears.furtherYears.isEmpty) {
+//                        Redirect(controllers.routes.NewTransferController.confirmYourEmail())
+//                      } else {
+//                        Ok(views.html.single_year_select(earlierYearsForm(), recipient.data, toTaxYears(taxYears.furtherYears)))
+//                      }
+//                  }
+//                })
+//          } recover handleError
+//  }
 
-  def toTaxYears(years: List[Int]): List[TaxYear] = {
-    years.map(year => TaxYear(year, None))
-  }
+//  def toTaxYears(years: List[Int]): List[TaxYear] = {
+//    years.map(year => TaxYear(year, None))
+//  }
+//
+//  def confirmYourEmail: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getTransferorNotification map {
+//            case Some(NotificationRecord(transferorEmail)) => Ok(views.html.email(emailForm.fill(transferorEmail)))
+//            case None => Ok(views.html.email(emailForm))
+//          } recover handleError
+//  }
+//
+//  def confirmYourEmailAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          emailForm.bindFromRequest.fold(
+//            formWithErrors =>
+//              Future.successful(BadRequest(views.html.email(formWithErrors))),
+//            transferorEmail =>
+//              registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
+//                _ => Redirect(controllers.routes.NewTransferController.confirm())
+//              }) recover handleError
+//  }
 
-  def confirmYourEmail: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getTransferorNotification map {
-            case Some(NotificationRecord(transferorEmail)) => Ok(views.html.email(emailForm.fill(transferorEmail)))
-            case None => Ok(views.html.email(emailForm))
-          } recover handleError
-  }
+//  def confirm: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getConfirmationData map {
+//            case data =>
+//              Ok(views.html.confirm(data = data, emptyForm = EmptyForm.form))
+//          } recover handleError
+//  }
 
-  def confirmYourEmailAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          emailForm.bindFromRequest.fold(
-            formWithErrors =>
-              Future.successful(BadRequest(views.html.email(formWithErrors))),
-            transferorEmail =>
-              registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
-                _ => Redirect(controllers.routes.TransferController.confirm())
-              }) recover handleError
-  }
+//  def confirmAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          EmptyForm.form.bindFromRequest().fold(
+//            formWithErrors =>
+//              Logger.error(s"unexpected error in emty form, SID [${utils.getSid(request)}]"),
+//            success =>
+//              success)
+//          Logger.info("registration service.createRelationship - confirm action.")
+//          registrationService.createRelationship(utils.getUserNino(auth), getJourneyName()) map {
+//            _ => Redirect(controllers.routes.NewTransferController.finished())
+//          } recover handleError
+//  }
 
-  def confirm: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getConfirmationData map {
-            case data =>
-              Ok(views.html.confirm(data = data, emptyForm = EmptyForm.form))
-          } recover handleError
-  }
-
-  def confirmAction: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          EmptyForm.form.bindFromRequest().fold(
-            formWithErrors =>
-              Logger.error(s"unexpected error in emty form, SID [${utils.getSid(request)}]"),
-            success =>
-              success)
-          Logger.info("registration service.createRelationship - confirm action.")
-          registrationService.createRelationship(utils.getUserNino(auth), getJourneyName()) map {
-            _ => Redirect(controllers.routes.TransferController.finished())
-          } recover handleError
-  }
-
-  def finished: Action[AnyContent] = TamcAuthPersonalDetailsAction {
-    implicit auth =>
-      implicit request =>
-        implicit details =>
-          registrationService.getFinishedData(utils.getUserNino(auth)) map {
-            case NotificationRecord(email) =>
-              if (isPtaJourney)
-                Ok(views.html.pta.finished(transferorEmail = email))
-              else
-                Ok(views.html.finished(transferorEmail = email))
-          } recover handleError
-  }
+//  def finished: Action[AnyContent] = TamcAuthPersonalDetailsAction {
+//    implicit auth =>
+//      implicit request =>
+//        implicit details =>
+//          registrationService.getFinishedData(utils.getUserNino(auth)) map {
+//            case NotificationRecord(email) =>
+//              if (isPtaJourney)
+//                Ok(views.html.pta.finished(transferorEmail = email))
+//              else
+//                Ok(views.html.finished(transferorEmail = email))
+//          } recover handleError
+//  }
 
   def handleError(implicit hc: HeaderCarrier, ec: ExecutionContext, user: TamcUser, request: Request[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
@@ -288,7 +288,7 @@ trait TransferController extends BaseController with AuthorisedActions with Tamc
           case _: CacheTransferorInRelationship => handle(message, Logger.warn, Ok(views.html.transferor_status()))
           case _: CacheMissingRecipient => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
           case _: CacheRecipientInRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_relationship_exists()))
-          case _: CacheMissingEmail => handle(message, Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
+          case _: CacheMissingEmail => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.confirmYourEmail()))
           case _: CannotCreateRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.relationship_cannot_create()))
           case _: CacheRelationshipAlreadyCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
           case _: CacheCreateRequestNotSent => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))

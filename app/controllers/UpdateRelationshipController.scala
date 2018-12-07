@@ -65,7 +65,7 @@ trait UpdateRelationshipController extends BaseController with AuthorisedActions
 //                if (isGdsJourney(request)) {
 //                  Redirect(controllers.routes.NewTransferController.transfer())
 //                } else {
-//                  Redirect(controllers.routes.MultiYearPtaEligibilityController.howItWorks())
+//                  Redirect(controllers.routes.EligibilityController.howItWorks())
 //                }
 //              } else {
 //                Ok(views.html.coc.your_status(

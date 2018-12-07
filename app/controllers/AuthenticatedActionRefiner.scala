@@ -17,18 +17,19 @@
 package controllers
 
 import com.google.inject.Inject
-import controllers.TestAuthController.{Ok, Redirect, authorised}
+import controllers.TestAuthController.Ok
+import models.CitizenName
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.{Name, ~}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.auth.core.retrieve.~
-import uk.gov.hmrc.domain.Nino
 
 import scala.concurrent.{ExecutionContext, Future}
 
-final case class AuthenticatedUserRequest[A](request: Request[A], isLoggedIn: Boolean, nino: Nino) extends WrappedRequest[A](request)
+final case class AuthenticatedUserRequest[A](request: Request[A], isLoggedIn: Boolean, nino: Nino, name: CitizenName) extends WrappedRequest[A](request)
 
 class AuthenticatedActionRefiner @Inject()(
                                             val authConnector: AuthConnector
@@ -39,9 +40,9 @@ class AuthenticatedActionRefiner @Inject()(
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L100).retrieve(Retrievals.credentials and Retrievals.nino) {
-      case credentials ~ Some(nino)  =>
-        Future.successful(Right(AuthenticatedUserRequest(request, credentials.isDefined, Nino(nino))))
+    authorised(ConfidenceLevel.L100).retrieve(Retrievals.credentials and Retrievals.nino and Retrievals.name) {
+      case credentials ~ Some(nino) ~ Some(name) =>
+        Future.successful(Right(AuthenticatedUserRequest(request, credentials.isDefined, Nino(nino), CitizenName(name.name, name.lastName))))
       case _ =>
         Future.failed(new Exception("no required nino found"))
     }.recover {
