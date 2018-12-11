@@ -59,10 +59,10 @@ trait UpdateRelationshipService {
     Future {
       customAuditConnector.sendEvent(event)
     }
-
+//TODO no.
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordList, Boolean)] =
     for {
-      relationshipRecordWrapper <- fetchListRelationship(transferorNino)
+      relationshipRecordWrapper <- marriageAllowanceConnector.listRelationship(transferorNino)
       activeRelationship <- getActiveRelationship(relationshipRecordWrapper)
       historicRelationships <- getHistoricRelationships(relationshipRecordWrapper)
       transformedHistoricRelationships <- transformHistoricRelationships(historicRelationships)
@@ -157,20 +157,12 @@ trait UpdateRelationshipService {
   }
 
   def transformRecord(rec: Option[LoggedInUserInfo], activeRel: Option[RelationshipRecord]): Future[UserRecord] =
-    Future {
+    Future.successful {
       rec.fold(throw TransferorNotFound())(rec => UserRecord(
         cid = rec.cid,
         timestamp = rec.timestamp,
         has_allowance = None,
         name = rec.name))
-    }
-
-  private def fetchListRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordWrapper] =
-    marriageAllowanceConnector.listRelationship(transferorNino) map {
-      case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK"))      => relationshipRecordWrapper
-      case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
-      case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND))    => throw CitizenNotFound()
-      case RelationshipRecordStatusWrapper(_, ResponseStatus(BAD_REQUEST))          => throw BadFetchRequest()
     }
 
   private def getActiveRelationship(relationshipRecordWrapper: RelationshipRecordWrapper)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {

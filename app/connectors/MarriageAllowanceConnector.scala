@@ -16,19 +16,16 @@
 
 package connectors
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
 import config.ApplicationConfig
-import models.CreateRelationshipRequestHolder
-import models.GetRelationshipResponse
-import models.RegistrationFormInput
+import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
+import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
+import models._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.config.ServicesConfig
 import utils.WSHttp
-import models.RelationshipRecordStatusWrapper
-import models.UpdateRelationshipRequestHolder
-import play.Logger
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpPost, HttpPut, HttpResponse}
+
+import scala.concurrent.{ExecutionContext, Future}
 
 object MarriageAllowanceConnector extends MarriageAllowanceConnector with ServicesConfig {
   override def httpGet = WSHttp
@@ -44,12 +41,17 @@ trait MarriageAllowanceConnector {
   def httpPut: HttpPut
   def marriageAllowanceUrl: String
 
-  def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordStatusWrapper] =
-    httpGet.GET[RelationshipRecordStatusWrapper](s"${marriageAllowanceUrl}/paye/${transferorNino}/list-relationship")
+  def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordWrapper] =
+    httpGet.GET[RelationshipRecordStatusWrapper](s"${marriageAllowanceUrl}/paye/${transferorNino}/list-relationship") map {
+      case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK"))      => relationshipRecordWrapper
+      case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
+      case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND))    => throw CitizenNotFound()
+      case RelationshipRecordStatusWrapper(_, ResponseStatus(BAD_REQUEST))          => throw BadFetchRequest()
+    }
 
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     httpPost.POST(s"${marriageAllowanceUrl}/paye/${transferorNino}/get-recipient-relationship", body = recipientData)
-
+//TODO why do we need the journey here????
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     httpPut.PUT(s"${marriageAllowanceUrl}/paye/${transferorNino}/create-multi-year-relationship/${journey}", data)
   }

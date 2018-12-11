@@ -131,7 +131,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 }
 
 @titleName = @{
-    if(user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request)) {
+    if(isLoggedIn) {
         appConfig.pageTitle
     } else {
         ""
@@ -188,7 +188,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
       "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
       "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
       "isSa" -> user.flatMap(_.authContext.principal.accounts.sa.map(_.utr)).isDefined,
-      "signOutUrl" -> user.map(_ => routes.AuthorisationController.logout()),
+      "signOutUrl" -> (if(isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
 
       "showLastLogInStatus" -> showLastLogInStatus,
       "previouslyLoggedInAt" -> previouslyLoggedInAt,

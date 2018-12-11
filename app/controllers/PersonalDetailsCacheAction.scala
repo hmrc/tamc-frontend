@@ -59,9 +59,10 @@ class PersonalDetailsCacheAction @Inject()(
   }
 }
 
+/*
 """
 |Some(
 |  CacheData(
 |  Some(UserRecord(_, _, _, _)),
 |  Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
-|  notificationRecord, _, _, _, _))""".stripMarine
+|  notificationRecord, _, _, _, _))""".stripMarine*/

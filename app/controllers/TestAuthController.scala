@@ -39,7 +39,7 @@ object TestAuthController extends Controller with AuthorisedFunctions {
   //http://localhost:9900/marriage-allowance-application/abc
   // /marriage-allowance-application/do-you-want-to-apply
   // http://localhost:9948/mdtp/registration?origin=ma&confidenceLevel=100&completionURL=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fabc&failureURL=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fnot-authorised
-
+//TODO check its not used (completionUrl on uplift) and delete
   def afterEligibility(): Action[AnyContent] = Action.async {
     implicit request =>
 

@@ -17,10 +17,13 @@
 package services
 
 import config.ApplicationConfig
+import connectors.MarriageAllowanceConnector
 import details.PersonDetails
+import errors.TransferorNotFound
 import models._
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 import utils.WSHttp
 
@@ -31,9 +34,12 @@ object CachingService extends CachingService {
   override lazy val defaultSource = appName
   override lazy val baseUri = baseUrl("cachable.session-cache")
   override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
+  override def marriageAllowanceConnector: MarriageAllowanceConnector = MarriageAllowanceConnector
 }
 
 trait CachingService extends SessionCache with AppName with ServicesConfig {
+
+  def marriageAllowanceConnector: MarriageAllowanceConnector
 
   def saveTransferorRecord(transferorRecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cache[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD, transferorRecord) map
@@ -118,6 +124,19 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
             dateOfMarriage= cacheMap.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE))))
 
+  def getCachedData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[CacheData]] =
+    getCacheData(nino) map (
+      _ map (
+        cacheMap =>
+          CacheData(
+            transferor = cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD),
+            recipient = cacheMap.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD),
+            notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
+            relationshipCreated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE),
+            selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
+            recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
+            dateOfMarriage= cacheMap.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE))))
+
 
   def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     fetch() map (
@@ -131,5 +150,31 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
             relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD),
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
+//TODO
+  private def getCacheData(nino: Nino)(implicit hc: HeaderCarrier, executionContext: ExecutionContext): Future[Option[CacheMap]] = {
+    fetch().flatMap {
+      _.map {
+        cacheMap ⇒
+          cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD)
+            .map(_ ⇒ Future.successful(Some(cacheMap)))
+            .getOrElse {
+              marriageAllowanceConnector.listRelationship(nino) flatMap {
+                data ⇒ data.userRecord.map {
+                  loggedInUser ⇒
+                    val userRecord: UserRecord = UserRecord(
+                      cid = loggedInUser.cid,
+                      timestamp = loggedInUser.timestamp,
+                      has_allowance = None,
+                      name = loggedInUser.name)
 
+                    cache[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD, userRecord)
+                      .map(Some.apply)
+                }.getOrElse {
+                  throw TransferorNotFound()
+                }
+              }
+            }
+      }.getOrElse(Future.successful(None))
+    }
+  }
 }

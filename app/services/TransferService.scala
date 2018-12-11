@@ -16,6 +16,7 @@
 
 package services
 
+import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors._
 import errors.ErrorResponseStatus._
@@ -163,30 +164,15 @@ trait TransferService {
     handleAudit(CreateRelationshipSuccessEvent(cacheData, journey))
   }
 
-  def getTransferorNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] = {
-    Logger.info("getTransferrorNotification has been called.")
-    cachingService.getCachedData map {
-      case Some(CacheData(_, _, _, Some(true), _, _, _)) => throw CacheRelationshipAlreadyCreated()
-      case Some(
-      CacheData(
-      Some(UserRecord(_, _, _, _)),
-      Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
-      notificationRecord, _, _, _, _)) => notificationRecord
-      case None => throw CacheMissingTransferor()
-      case Some(CacheData(None, _, _, _, _, _, _)) => throw CacheMissingTransferor()
-      case Some(CacheData(_, None, _, _, _, _, _)) => throw CacheMissingRecipient()
-    }
-  }
-
   def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
     Logger.info("upsertTransferorNotification has been called.")
     cachingService.saveNotificationRecord(notificationRecord)
   }
 
-  def getConfirmationData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] = {
+  def getConfirmationData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] = {
     Logger.info("getConfirmationData has been called.")
     for {
-      cache <- cachingService.getCachedData
+      cache <- cachingService.getCachedData(nino)
       validated <- validateCompleteCache(cache)
       confirmData <- transformCache(validated)
     } yield confirmData
@@ -201,7 +187,7 @@ trait TransferService {
       }
       case Some(
       CacheData(
-      None,
+      Some(_),
       Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
       Some(notification: NotificationRecord),
       _,
@@ -214,11 +200,11 @@ trait TransferService {
       case Some(CacheData(_, _, _, _, Some(selectedTaxYears), _, _)) if (selectedTaxYears.size == 0) => throw NoTaxYearsSelected()
     }
   }
-
+//TODO remove gets
   private def transformCache(cacheData: CacheData)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] =
     Future {
       ConfirmationModel(
-        transferorFullName = cacheData.transferor.get.name,
+        transferorFullName = cacheData.transferor.fold(None: Option[CitizenName])(_.name),
         transferorEmail = cacheData.notification.get.transferor_email,
         recipientFirstName = cacheData.recipient.get.data.name,
         recipientLastName = cacheData.recipient.get.data.lastName,

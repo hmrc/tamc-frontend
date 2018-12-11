@@ -21,7 +21,7 @@
 @import config.ApplicationConfig
 
 
-@(recipientForm: Form[models.RecipientDetailsFormInput], name: Option[models.CitizenName] = None)(
+@(recipientForm: Form[models.RecipientDetailsFormInput])(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 context: config.TamcContext,

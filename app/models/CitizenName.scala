@@ -22,7 +22,7 @@ import play.api.libs.json.Json
 object CitizenName {
   implicit val formats: Format[CitizenName] = Json.format[CitizenName]
 }
-
+//TODO is needed?
 case class CitizenName(firstName: Option[String], lastName: Option[String]) {
   def fullName: Option[String] = (firstName, lastName) match {
     case (Some(firstName), Some(lastName)) =>
