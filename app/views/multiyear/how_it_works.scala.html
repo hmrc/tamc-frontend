@@ -32,7 +32,7 @@
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.how-it-works")),
-  isLoggedIn = request.isLoggedIn
+  authState = request.authState
 ){
     <h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
     <p class="lede">

@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
-import details.CitizenDetailsService
+import models.auth._
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-final case class AuthenticatedUserRequest[A](request: Request[A], isLoggedIn: Boolean, nino: Nino) extends WrappedRequest[A](request)
+final case class AuthenticatedUserRequest[A](request: Request[A], authState: AuthState, nino: Nino) extends WrappedRequest[A](request)
 
 class AuthenticatedActionRefiner @Inject()(
                                             val authConnector: AuthConnector
@@ -42,14 +42,15 @@ class AuthenticatedActionRefiner @Inject()(
 
     authorised(ConfidenceLevel.L100).retrieve(Retrievals.credentials and Retrievals.nino) {
       case credentials ~ Some(nino) =>
-        Future.successful(Right(AuthenticatedUserRequest(request, credentials.isDefined, Nino(nino))))
+        val authState = if (credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
+        Future.successful(Right(AuthenticatedUserRequest(request, authState, Nino(nino))))
       case _ ⇒
         ???
     }.recover {
       case _: InsufficientConfidenceLevel =>
         Left(Ok("redirect perm uplift for gg user "))
       case _: NoActiveSession =>
-        Left(Redirect("http://localhost:9948/mdtp/registration?origin=ma&confidenceLevel=100&completionURL=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Ftransfer-allowance&failureURL=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fabc"))
+        Left(Redirect("http://localhost:9948/mdtp/registration?origin=ma&confidenceLevel=100&completionURL=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory&failureURL=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fabc"))
     }
   }
 

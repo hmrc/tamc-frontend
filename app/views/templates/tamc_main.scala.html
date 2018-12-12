@@ -14,6 +14,20 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import play.twirl.api.HtmlFormat
+@import uk.gov.hmrc.play.views.html.layouts
+@import uk.gov.hmrc.play.views.html.helpers
+@import uk.gov.hmrc.play.frontend.auth.AuthContext
+@import models.auth._
+@import actions.JourneyEnforcers
+@import config._
+@import play.api.Play
+@import config.ApplicationConfig.webchatId
+@import uk.gov.hmrc.play.views.formatting.Dates._
+@import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
+@import uk.gov.hmrc.http.SessionKeys
+
 @(title: String,
 pageName:Option[String] = None,
 sidebarLinks: Option[Html] = None,
@@ -24,8 +38,8 @@ supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
 isFromGDS:Boolean = false,
 isFromPTA:Boolean = false,
-isLoggedIn: Boolean = false,
-scriptElem: Option[Html] = None)(mainContent: Html)(implicit messages: Messages,
+scriptElem: Option[Html] = None,
+authState: AuthState = Unauthenticated)(mainContent: Html)(implicit messages: Messages,
 request: Request[_],
 context: config.TamcContext,
 breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
@@ -33,25 +47,9 @@ user: Option[details.TamcUser] = None,
 gaDimensions: Option[Map[String, String]] = None,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
-
 )
 
-@import play.twirl.api.Html
-@import play.twirl.api.HtmlFormat
-@import uk.gov.hmrc.play.views.html.layouts
-@import uk.gov.hmrc.play.views.html.helpers
-@import uk.gov.hmrc.play.frontend.auth.AuthContext
-@import actions.JourneyEnforcers
-@import config._
-@import play.api.Play
-
-@import config.ApplicationConfig.webchatId
-
-
-@import uk.gov.hmrc.play.views.formatting.Dates._
-@import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
-@import uk.gov.hmrc.http.SessionKeys
-
+<!--TODO remove isFrom*-->
 
 @scriptElement = {
 
@@ -131,7 +129,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 }
 
 @titleName = @{
-    if(isLoggedIn) {
+    if(authState.permanent) {
         appConfig.pageTitle
     } else {
         ""
@@ -182,13 +180,13 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
       "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
       "includeHMRCBranding" -> true,
 
-      "hideAccountMenu" -> !isLoggedIn,
+      "hideAccountMenu" -> !authState.permanent,
       "assetsPath" -> appConfig.assetsPrefix,
 
       "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
       "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
       "isSa" -> user.flatMap(_.authContext.principal.accounts.sa.map(_.utr)).isDefined,
-      "signOutUrl" -> (if(isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
+      "signOutUrl" -> (if(authState.isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
 
       "showLastLogInStatus" -> showLastLogInStatus,
       "previouslyLoggedInAt" -> previouslyLoggedInAt,

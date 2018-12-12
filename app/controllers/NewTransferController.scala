@@ -19,7 +19,6 @@ package controllers
 import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
 import config.{ApplicationConfig, TamcContext}
 import errors._
-import forms.ChangeRelationshipForm.changeRelationshipForm
 import forms.CurrentYearForm.currentYearForm
 import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
@@ -33,7 +32,7 @@ import play.Logger
 import play.api.data.FormError
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc._
-import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.TamcBreadcrumb
 
@@ -44,51 +43,23 @@ class NewTransferController @Inject()(
                                        authenticatedActionRefiner: AuthenticatedActionRefiner,
                                        registrationService: TransferService,
                                        cachingService: CachingService,
-                                       timeService: TimeService,
-                                       updateRelationshipService: UpdateRelationshipService
+                                       timeService: TimeService
                                      )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
-
-  // TODO history needs to be moved to a new Controller along with the rest of UpdateRelationshipController
-  def history(): Action[AnyContent] = authenticatedActionRefiner.async {
-    implicit request =>
-      updateRelationshipService.listRelationship(request.nino) map {
-        case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
-          if (!activeRecord && !historicRecord) {
-            if (!request.isLoggedIn) {
-              Redirect(controllers.routes.NewTransferController.transfer())
-            } else {
-              Redirect(controllers.routes.EligibilityController.howItWorks())
-            }
-          } else {
-            Ok(views.html.coc.your_status(
-              changeRelationshipForm = changeRelationshipForm,
-              activeRelationship = activeRelationship,
-              historicRelationships = historicRelationships,
-              loggedInUserInfo = loggedInUserInfo,
-              activeRecord = activeRecord,
-              historicRecord = historicRecord,
-              historicActiveRecord = historicActiveRecord,
-              canApplyPreviousYears = canApplyPreviousYears,
-              endOfYear = Some(timeService.taxYearResolver.endOfCurrentTaxYear)))
-          }
-        }
-      }
-  }
-  ///////
 
   def transfer: Action[AnyContent] = authenticatedActionRefiner {
     implicit request =>
       Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)))
   }
 
-  def transferAction: Action[AnyContent] = authenticatedActionRefiner {
+  def transferAction: Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>
       recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.transfer.transfer(formWithErrors)),
+          Future.successful(BadRequest(views.html.multiyear.transfer.transfer(formWithErrors))),
         recipientData => {
-          CachingService.saveRecipientDetails(recipientData)  //TODO if this fails to cache it breaks the journey, right? Shouldnt this be recovered
-          Redirect(controllers.routes.NewTransferController.dateOfMarriage())
+          CachingService.saveRecipientDetails(recipientData).map { _ ⇒
+            Redirect(controllers.routes.NewTransferController.dateOfMarriage())
+          }  //TODO should this be recovered here or handled by global
         })
   }
 
@@ -230,7 +201,7 @@ class NewTransferController @Inject()(
     implicit request =>
 
       val getJourneyName: String =
-        if (request.isLoggedIn) TAMC_JOURNEY_PTA else TAMC_JOURNEY_GDS
+        if (request.authState.permanent) TAMC_JOURNEY_PTA else TAMC_JOURNEY_GDS
 
       EmptyForm.form.bindFromRequest().fold(
         formWithErrors =>
@@ -265,18 +236,18 @@ class NewTransferController @Inject()(
           case _: TransferorNotFound => handle(message, Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
           case _: RecipientNotFound => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
           case _: TransferorDeceased => handle(message, Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
-          case _: CacheMissingTransferor => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
+          case _: CacheMissingTransferor => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
           case _: CacheTransferorInRelationship => handle(message, Logger.warn, Ok(views.html.transferor_status()))
-          case _: CacheMissingRecipient => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
+          case _: CacheMissingRecipient => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
           case _: CacheRecipientInRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_relationship_exists()))
           case _: CacheMissingEmail => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.confirmYourEmail()))
           case _: CannotCreateRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.relationship_cannot_create()))
-          case _: CacheRelationshipAlreadyCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
-          case _: CacheCreateRequestNotSent => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
+          case _: CacheRelationshipAlreadyCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
+          case _: CacheCreateRequestNotSent => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
           case _: NoTaxYearsSelected => handle(message, Logger.info, Ok(views.html.errors.no_year_selected()))
           case _: NoTaxYearsAvailable => handle(message, Logger.info, Ok(views.html.errors.no_eligible_years()))
           case _: NoTaxYearsForTransferor => handle(message, Logger.info, InternalServerError(views.html.errors.no_tax_year_transferor()))
-          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.history()))
+          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
           case _ => handle(message, Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }

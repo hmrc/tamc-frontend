@@ -17,14 +17,15 @@
 package controllers
 
 import com.google.inject.Inject
+import models.auth._
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, NoActiveSession}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-final case class UserRequest[A](request: Request[A], isLoggedIn: Boolean) extends WrappedRequest[A](request)
+final case class UserRequest[A](request: Request[A], authState: AuthState) extends WrappedRequest[A](request)
 
 class UnauthenticatedActionTransformer @Inject()(
                                                val authConnector: AuthConnector
@@ -35,13 +36,13 @@ class UnauthenticatedActionTransformer @Inject()(
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    val isLoggedIn: Future[Boolean] = authorised() {
-      Future.successful(true)
+    authorised(ConfidenceLevel.L200) {
+      Future.successful(UserRequest(request, authState = PermanentlyAuthenticated))
     }.recover {
-      case _: NoActiveSession =>
-        false
+      case _: NoActiveSession ⇒
+        UserRequest(request, Unauthenticated)
+      case _: InsufficientConfidenceLevel ⇒
+        UserRequest(request, TemporarilyAuthenticated)
     }
-
-    isLoggedIn.map(UserRequest(request, _))
   }
 }

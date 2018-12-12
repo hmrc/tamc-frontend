@@ -14,22 +14,21 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import controllers.AuthenticatedUserRequest
+
 @(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
-        request: Request[_],
+        request: AuthenticatedUserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-
-
-
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.divorce")),
-    mainConfig = views.helpers.MainConfig()) {
+    mainConfig = views.helpers.MainConfig(),
+    authState = request.authState) {
 
     @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data", prefix = "pages.form.field.description-alt.")
 
@@ -41,7 +40,7 @@
     margin-bottom:30px;
     }
     </style>
-    @helpers.form(action = routes.UpdateRelationshipController.divorceSelectYear, args = ('id -> "change-relationship-form")) {
+    @helpers.form(action = routes.NewUpdateRelationshipController.divorceSelectYear, args = ('id -> "change-relationship-form")) {
         <div>
         <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
         <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
@@ -65,5 +64,5 @@
         </p>
 
     }
-        <a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

@@ -14,21 +14,23 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import controllers.AuthenticatedUserRequest
+
 @()(implicit messages: Messages,
-        request: Request[_],
+        request: AuthenticatedUserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.twirl.api.Html
 
 
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.bereavement")),
-    mainConfig = views.helpers.MainConfig()) {
+    mainConfig = views.helpers.MainConfig(),
+    authState = request.authState) {
     
     <h1 class="heading-xlarge" id="bereavement-recipient">@Html(Messages("change.status.bereavement.sorry"))</h1>
 

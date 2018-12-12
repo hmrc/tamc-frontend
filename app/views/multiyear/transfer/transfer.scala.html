@@ -34,7 +34,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
   title = Messages("title.application.pattern", Messages("title.transfer")),
   mainConfig = views.helpers.MainConfig(
     maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}"))),
-    isLoggedIn = true
+    authState = request.authState
 ) {
 
     @templates.form_error_notification(recipientForm)

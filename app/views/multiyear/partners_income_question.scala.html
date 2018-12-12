@@ -47,7 +47,7 @@
             NumberFormat.getIntegerInstance().format(maxLimit)
         )
     ),
-    isLoggedIn = request.isLoggedIn
+    authState = request.authState
 ){
     @form_error_notification(
         partnersIncomeFormInput,

@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package config
+package models.auth
 
-import connectors.ContactFrontendConnector
-import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
+import play.api.mvc.{Request, WrappedRequest}
 
-trait TamcContext {
+sealed abstract class AuthState(val isLoggedIn: Boolean, val permanent: Boolean)
 
-  def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String]
+case object PermanentlyAuthenticated extends AuthState(true, true)
+case object TemporarilyAuthenticated extends AuthState(true, false)
+case object Unauthenticated extends AuthState(false, false)
 
-}
-
-case object TamcContextImpl extends TamcContext {
-
-  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = ContactFrontendConnector.getHelpPartial
-
-}
+final case class UserRequest[A](request: Request[A], authState: AuthState) extends WrappedRequest[A](request)

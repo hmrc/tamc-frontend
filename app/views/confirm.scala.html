@@ -33,7 +33,7 @@
 
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.confirm")),
-  isLoggedIn = true
+  authState = request.authState
 ){
     <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
     <table>

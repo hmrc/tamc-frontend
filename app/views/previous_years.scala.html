@@ -14,17 +14,6 @@
  * limitations under the License.
  *@
 
-@(input:RegistrationFormInput,
-availableYears:List[TaxYear] = List[TaxYear](),
-currentYearAvailable: Boolean)(
-    implicit messages: Messages,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import uk.gov.hmrc.play.views.html._
@@ -34,11 +23,21 @@ currentYearAvailable: Boolean)(
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 @import utils.LanguageUtils
+@import controllers.AuthenticatedUserRequest
 
-
+@(input:RegistrationFormInput,
+availableYears:List[TaxYear] = List[TaxYear](),
+currentYearAvailable: Boolean)(
+    implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
+        context: config.TamcContext,
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        user: details.TamcUser,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.extra-years")), isLoggedIn = true){
+    title = Messages("title.application.pattern", Messages("title.extra-years")), authState = request.authState){
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
         <p class="lede">@Html(Messages("pages.previousyear.lede"))</p>
 

@@ -14,26 +14,25 @@
  * limitations under the License.
  *@
 
-@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress, reason: models.EndRelationshipReason,
-    effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None
-)(implicit messages: Messages,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
+@import controllers.AuthenticatedUserRequest
 
-
+@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress, reason: models.EndRelationshipReason,
+    effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None
+)(implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
+        context: config.TamcContext,
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.change.complete")),
   mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))
+    maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished"))),
+  authState = request.authState
 ) {
         <div class="highlighted-event govuk-box-highlight">
             <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">

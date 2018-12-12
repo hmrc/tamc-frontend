@@ -18,7 +18,6 @@
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -31,7 +30,7 @@
     title = Messages("title.pattern", Messages("title.divorce")),
     mainConfig = views.helpers.MainConfig()) {
    
-    @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
+    @helpers.form(action = routes.NewUpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
         
         <h1 class="heading-xlarge text mainpage">@Html(Messages("change.status.divorce.date.invalid.h1"))</h1>
         <p style="margin-top:-15px">@Html(Messages("change.status.divorce.date.invalid.para1"))</p>
@@ -57,5 +56,5 @@
             <button class="button" type="submit" >@Html(Messages("generic.back"))</button>
         </p>
     }
-        <a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

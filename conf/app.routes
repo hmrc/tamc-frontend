@@ -29,22 +29,22 @@ POST   /confirm                                    @controllers.NewTransferContr
 GET    /finished                                   @controllers.NewTransferController.finished
 
 #Change of Circumstances
-GET    /history                                    @controllers.NewTransferController.history
-POST   /make-changes                               controllers.UpdateRelationshipController.makeChange
-GET    /change-of-income                           controllers.UpdateRelationshipController.changeOfIncome
-GET    /bereavement                                controllers.UpdateRelationshipController.bereavement
-POST   /reason-for-change                          controllers.UpdateRelationshipController.updateRelationshipAction
-POST   /divorce                                    controllers.UpdateRelationshipController.divorceAction
-GET    /divorce-select-year                        controllers.UpdateRelationshipController.divorceYear
-POST   /divorce-select-year                        controllers.UpdateRelationshipController.divorceSelectYear
-GET    /confirm-email                              controllers.UpdateRelationshipController.confirmEmail
-GET    /confirm-change                             controllers.UpdateRelationshipController.confirmUpdate
+GET    /history                                    @controllers.NewUpdateRelationshipController.history
+POST   /make-changes                               @controllers.NewUpdateRelationshipController.makeChange
+GET    /change-of-income                           @controllers.NewUpdateRelationshipController.changeOfIncome
+GET    /bereavement                                @controllers.NewUpdateRelationshipController.bereavement
+POST   /reason-for-change                          @controllers.NewUpdateRelationshipController.updateRelationshipAction
+POST   /divorce                                    @controllers.NewUpdateRelationshipController.divorceAction
+GET    /divorce-select-year                        @controllers.NewUpdateRelationshipController.divorceYear
+POST   /divorce-select-year                        @controllers.NewUpdateRelationshipController.divorceSelectYear
+GET    /confirm-email                              @controllers.NewUpdateRelationshipController.confirmEmail
+GET    /confirm-change                             @controllers.NewUpdateRelationshipController.confirmUpdate
 #TO be post to edit
-GET    /confirm-change-action                      controllers.UpdateRelationshipController.confirmUpdateAction
-GET    /cancel                                     controllers.UpdateRelationshipController.confirmCancel
-GET    /reject                                     controllers.UpdateRelationshipController.confirmReject
-GET    /finished-change                            controllers.UpdateRelationshipController.finishUpdate
-POST   /confirm-email-update                       controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
+GET    /confirm-change-action                      @controllers.NewUpdateRelationshipController.confirmUpdateAction
+GET    /cancel                                     @controllers.NewUpdateRelationshipController.confirmCancel
+GET    /reject                                     @controllers.NewUpdateRelationshipController.confirmReject
+GET    /finished-change                            @controllers.NewUpdateRelationshipController.finishUpdate
+POST   /confirm-email-update                       @controllers.NewUpdateRelationshipController.confirmYourEmailActionUpdate
 
 #Mutliyear-PTA
 GET    /how-it-works                               @controllers.EligibilityController.howItWorks

@@ -77,7 +77,7 @@ class MultiYearGdsEligibilityController @Inject() (
           BadRequest(views.html.multiyear.gds.do_you_want_to_apply(formWithErrors)),
         doYouWantToApplyInput => {
           if (doYouWantToApplyInput.doYouWantToApply) {
-            Redirect(controllers.routes.NewTransferController.history())
+            Redirect(controllers.routes.NewUpdateRelationshipController.history())
           } else {
             Redirect(Call("GET", gdsFinishedUrl))
           }

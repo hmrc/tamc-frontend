@@ -14,25 +14,24 @@
  * limitations under the License.
  *@
 
- 
-@(reason: String, effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None)(implicit messages: Messages,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import services.TimeService
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
-
+@import controllers.AuthenticatedUserRequest
+ 
+@(reason: String, effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None)(implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
+        context: config.TamcContext,
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.change.reason")),
-  mainConfig = views.helpers.MainConfig()
+  mainConfig = views.helpers.MainConfig(),
+  authState = request.authState
 ) {
         @if(reason == EndReasonCode.CANCEL) {
 
@@ -41,7 +40,7 @@
             <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
             <div class="form-group booster">
                 <p>
-                <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+                <a href="@{controllers.routes.NewUpdateRelationshipController.confirmEmail}"
                 id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatescancel_continue">@Html(Messages("change.status.continue"))</a>
             </div>
         }
@@ -55,7 +54,7 @@
                 </div>
                 <div class="form-group booster">
                     <p>
-                        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+                        <a href="@{controllers.routes.NewUpdateRelationshipController.confirmEmail}"
                            id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
                 </div>
 
@@ -69,7 +68,7 @@
                 </div>
                 <div class="form-group booster">
                     <p>
-                        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+                        <a href="@{controllers.routes.NewUpdateRelationshipController.confirmEmail}"
                            id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
                 </div>
             }
@@ -80,7 +79,7 @@
             <p id="divorce-py-content">@Html(Messages("change.status.divorce-py-content", (TaxYearResolver.currentTaxYear-1)))</p>
             <div class="form-group booster">
                 <p>
-                    <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+                    <a href="@{controllers.routes.NewUpdateRelationshipController.confirmEmail}"
                        id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatedivorceprevious_continue">@Html(Messages("generic.continue"))</a>
             </div>
         }
@@ -89,9 +88,9 @@
             <p id="divorce-cy-content">@Html(Messages("change.status.divorce-cy-content", TaxYearResolver.currentTaxYear))</p>
             <div class="form-group booster">
                 <p>
-                    <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+                    <a href="@{controllers.routes.NewUpdateRelationshipController.confirmEmail}"
                        id="confirmUpdate" class="button" type="button" data-journey-click="marriage-allowance:button:confirmupdatedivorcecurrent_continue">@Html(Messages("generic.continue"))</a>
             </div>
         }
-        <a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

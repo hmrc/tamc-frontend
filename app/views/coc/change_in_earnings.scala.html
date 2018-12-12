@@ -14,24 +14,22 @@
  * limitations under the License.
  *@
 
- 
-@()(implicit messages: Messages,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import config.ApplicationConfig
 @import java.text.NumberFormat
-
-
+@import controllers.AuthenticatedUserRequest
+ 
+@()(implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
+        context: config.TamcContext,
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.change.earnings")),
-  mainConfig = views.helpers.MainConfig()
+  mainConfig = views.helpers.MainConfig(),
+  authState = request.authState
 ) {
     <h1 class="heading-large">@Html(Messages("change.status.earnings.h1"))</h1>
     <p class="lede">@Html(Messages("change.status.earnings.h2"))</p>
@@ -50,5 +48,5 @@
     <h3>@Html(Messages("hmrc.contact-detials.calling.time"))</h3>
     @Html(Messages("hmrc.contact-details-8"))</p>
     <p>@Html(Messages("hmrc.contact-details-9"))</p>
-    <a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

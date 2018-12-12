@@ -14,16 +14,6 @@
  * limitations under the License.
  *@
 
-@(data: models.UpdateRelationshipConfirmationModel,
-    relevantDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None,relationEndDate: Option[org.joda.time.LocalDate]=None
-   )(implicit messages: Messages,
-      request: Request[_],
-      context: config.TamcContext,
-      breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-      user: details.TamcUser,
-      templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-      formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
@@ -32,12 +22,22 @@
 @import models.EndReasonCode._
 @import models.Role._
 @import utils.LanguageUtils
+@import controllers.AuthenticatedUserRequest
 
+@(data: models.UpdateRelationshipConfirmationModel,
+    relevantDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None,relationEndDate: Option[org.joda.time.LocalDate]=None
+   )(implicit messages: Messages,
+      request: AuthenticatedUserRequest[_],
+      context: config.TamcContext,
+      breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+      templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+      formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.confirm-transferor")),
   mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
+    maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm"))),
+  authState = request.authState
 ) {
     @(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false) && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) match {
         case retroRejection@true => {
@@ -54,7 +54,7 @@
 
                 <div class="form-group">
                     <p>
-                        <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_removal">@Html(Messages("change.status.confirm-removal.button"))</a>
+                        <a href="@{controllers.routes.NewUpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_removal">@Html(Messages("change.status.confirm-removal.button"))</a>
                     </p>
                 </div>
             }
@@ -122,10 +122,10 @@
             <br>
             <div class="form-group">
                 <p>
-                    <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_cancellation">@Html(Messages("confirm.cancellation.button"))</a>
+                    <a href="@{controllers.routes.NewUpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_cancellation">@Html(Messages("confirm.cancellation.button"))</a>
                 </p>
             </div>
             }
     }
-<a href="@controllers.routes.NewTransferController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

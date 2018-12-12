@@ -38,7 +38,7 @@
 
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.eligible-years")),
-  isLoggedIn = request.isLoggedIn
+  authState = request.authState
 ){
 
     @templates.form_error_notification(form)

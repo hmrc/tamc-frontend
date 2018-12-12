@@ -30,7 +30,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.confirm-email")),
-isLoggedIn = true
+authState = request.authState
 ){
 @helpers.form(action = routes.NewTransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)
