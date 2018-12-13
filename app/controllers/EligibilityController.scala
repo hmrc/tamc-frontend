@@ -49,6 +49,7 @@ class EligibilityController @Inject()(
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(eligibility_check(eligibilityCheckForm = eligibilityForm))
+      //TODO this view back link changes depending on gds/pta (Govuk gds, calculator pta)
   }
 
   def eligibilityCheckAction(): Action[AnyContent] = {

@@ -20,7 +20,7 @@ import config.{LocalTemplateRenderer, TamcFormPartialRetriever}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-
+//TODO move I18N to here once all extensions are DI
 trait BaseController extends FrontendController {
   implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
   implicit val formPartialRetriver: FormPartialRetriever = TamcFormPartialRetriever

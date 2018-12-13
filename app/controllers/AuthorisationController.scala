@@ -16,35 +16,29 @@
 
 package controllers
 
-import actions.UnauthorisedActions
-import config.ApplicationConfig
-import connectors.ApplicationAuditConnector
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import com.google.inject.Inject
+import config.{ApplicationConfig, TamcContext}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import utils.TamcBreadcrumb
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 
-object AuthorisationController extends AuthorisationController {
-  override val logoutUrl = ApplicationConfig.logoutUrl
-  override val logoutCallbackUrl = ApplicationConfig.logoutCallbackUrl
-  override val auditConnector = ApplicationAuditConnector
-}
+class AuthorisationController @Inject()(
+                                         override val messagesApi: MessagesApi,
+                                         unauthenticatedAction: UnauthenticatedActionTransformer
+                                       )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
 
-trait AuthorisationController extends BaseController with UnauthorisedActions with TamcBreadcrumb {
-  val logoutUrl: String
-  val logoutCallbackUrl: String
-  val auditConnector: AuditConnector
+  val logoutUrl: String = ApplicationConfig.logoutUrl
+  val logoutCallbackUrl: String = ApplicationConfig.logoutCallbackUrl
 
-  def notAuthorised = unauthorisedAction {
+  def notAuthorised = unauthenticatedAction {
     implicit request =>
       Ok(views.html.errors.other_ways())
   }
 
-  def logout = unauthorisedAction {
+  def logout = unauthenticatedAction {
     implicit request =>
       Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
-  def sessionTimeout = unauthorisedAction {
+  def sessionTimeout = unauthenticatedAction {
     implicit request =>
       Ok(views.html.errors.session_timeout())
   }

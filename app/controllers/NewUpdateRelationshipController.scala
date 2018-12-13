@@ -42,13 +42,13 @@ class NewUpdateRelationshipController @Inject()(
                                                  timeService: TimeService
                                                )(implicit tamcContext: TamcContext) extends BaseController with TamcBreadcrumb with I18nSupport {
 
-
+//TODO split the status page to its own link and history be for just redirecting
   def history(): Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>
       updateRelationshipService.listRelationship(request.nino) map {
         case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
           if (!activeRecord && !historicRecord) {
-            if (!request.authState.permanent) {
+            if (!request.authState.permanent) { //TODO ensure this is correct!! If it is, since hiw is unauth, the journey is hiw continue login hiw....???
               Redirect(controllers.routes.NewTransferController.transfer())
             } else {
               Redirect(controllers.routes.EligibilityController.howItWorks())
@@ -66,7 +66,7 @@ class NewUpdateRelationshipController @Inject()(
               endOfYear = Some(timeService.taxYearResolver.endOfCurrentTaxYear)))
           }
         }
-      }
+      } recover handleError
   }
 
   def makeChange(): Action[AnyContent] = authenticatedActionRefiner {

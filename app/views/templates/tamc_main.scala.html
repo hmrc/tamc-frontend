@@ -36,8 +36,6 @@ mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
 appConfig: config.ApplicationConfig = config.ApplicationConfig,
 supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
-isFromGDS:Boolean = false,
-isFromPTA:Boolean = false,
 scriptElem: Option[Html] = None,
 authState: AuthState = Unauthenticated)(mainContent: Html)(implicit messages: Messages,
 request: Request[_],
@@ -48,8 +46,6 @@ gaDimensions: Option[Map[String, String]] = None,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
-
-<!--TODO remove isFrom*-->
 
 @scriptElement = {
 
