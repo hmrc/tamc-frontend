@@ -32,7 +32,7 @@
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.confirm-email"))
 ){
-    @helpers.form(action = routes.NewTransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
+    @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
                 <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
@@ -50,5 +50,5 @@
         </p>
     }
     <br>
-    <a href="@controllers.routes.NewTransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 }

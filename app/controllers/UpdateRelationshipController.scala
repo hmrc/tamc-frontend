@@ -23,7 +23,6 @@ import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, update
 import forms.EmailForm.emailForm
 import forms.EmptyForm
 import models._
-import org.apache.commons.lang3.exception.ExceptionUtils
 import org.joda.time.LocalDate
 import play.Logger
 import play.api.i18n.MessagesApi
@@ -33,13 +32,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NewUpdateRelationshipController @Inject()(
-                                                 override val messagesApi: MessagesApi,
-                                                 authenticatedActionRefiner: AuthenticatedActionRefiner,
-                                                 updateRelationshipService: UpdateRelationshipService,
-                                                 registrationService: TransferService,
-                                                 timeService: TimeService
-                                               )(implicit tamcContext: TamcContext) extends BaseController {
+class UpdateRelationshipController @Inject()(
+                                             override val messagesApi: MessagesApi,
+                                             authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                             updateRelationshipService: UpdateRelationshipService,
+                                             registrationService: TransferService,
+                                             timeService: TimeService
+                                            )(implicit tamcContext: TamcContext) extends BaseController {
 
 //TODO split the status page to its own link and history be for just redirecting
   def history(): Action[AnyContent] = authenticatedActionRefiner.async {
@@ -48,7 +47,7 @@ class NewUpdateRelationshipController @Inject()(
         case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
           if (!activeRecord && !historicRecord) {
             if (!request.authState.permanent) {
-              Redirect(controllers.routes.NewTransferController.transfer())
+              Redirect(controllers.routes.TransferController.transfer())
             } else {
               Redirect(controllers.routes.EligibilityController.howItWorks())
             }
@@ -73,7 +72,7 @@ class NewUpdateRelationshipController @Inject()(
       changeRelationshipForm.bindFromRequest.fold(
         formWithErrors => {
           Logger.warn("unexpected error in makeChange()")
-          Redirect(controllers.routes.NewUpdateRelationshipController.history())
+          Redirect(controllers.routes.UpdateRelationshipController.history())
         },
         formData => {
           Ok(views.html.coc.reason_for_change(changeRelationshipForm.fill(formData)))
@@ -93,11 +92,11 @@ class NewUpdateRelationshipController @Inject()(
           CachingService.saveRoleRecord(formData.role.get).flatMap { _ ⇒
             (formData.endReason, formData.role) match {
               case (Some(EndReasonCode.CANCEL), _) => Future.successful {
-                Redirect(controllers.routes.NewUpdateRelationshipController.confirmCancel())
+                Redirect(controllers.routes.UpdateRelationshipController.confirmCancel())
               }
               case (Some(EndReasonCode.REJECT), _) =>
                 updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(endReason = EndReasonCode.REJECT, timestamp = formData.creationTimestamp)) map {
-                  _ => Redirect(controllers.routes.NewUpdateRelationshipController.confirmReject())
+                  _ => Redirect(controllers.routes.UpdateRelationshipController.confirmReject())
                 }
               case (Some(EndReasonCode.DIVORCE), _) => Future.successful {
                 Ok(views.html.coc.divorce_select_year(changeRelationshipForm.fill(formData)))
@@ -136,7 +135,7 @@ class NewUpdateRelationshipController @Inject()(
           Future.successful(BadRequest(views.html.coc.email(formWithErrors))),
         transferorEmail =>
           registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
-            _ => Redirect(controllers.routes.NewUpdateRelationshipController.confirmUpdate())
+            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
           }
       ) recover handleError
   }
@@ -197,7 +196,7 @@ class NewUpdateRelationshipController @Inject()(
           },
         formData =>
           updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(formData.endReason.get, formData.dateOfDivorce)) map {
-            _ => Redirect(controllers.routes.NewUpdateRelationshipController.confirmEmail())
+            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmEmail())
           }
       )
   }
@@ -270,7 +269,7 @@ class NewUpdateRelationshipController @Inject()(
         success =>
           success)
       updateRelationshipService.updateRelationship(request.nino, request2lang(request)) map {
-        _ => Redirect(controllers.routes.NewUpdateRelationshipController.finishUpdate())
+        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
       } recover handleError
   }
 
@@ -296,7 +295,7 @@ class NewUpdateRelationshipController @Inject()(
         }
 
         throwable match {
-          case _: CacheRelationshipAlreadyUpdated => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.finishUpdate()))
+          case _: CacheRelationshipAlreadyUpdated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
           case _: CacheMissingUpdateRecord        => handle(message, Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CacheUpdateRequestNotSent       => handle(message, Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CannotUpdateRelationship        => handle(message, Logger.warn, InternalServerError(views.html.errors.try_later()))

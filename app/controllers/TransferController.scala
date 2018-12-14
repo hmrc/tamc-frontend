@@ -37,13 +37,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NewTransferController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       authenticatedActionRefiner: AuthenticatedActionRefiner,
-                                       registrationService: TransferService,
-                                       cachingService: CachingService,
-                                       timeService: TimeService
-                                     )(implicit tamcContext: TamcContext) extends BaseController {
+class TransferController @Inject()(
+                                   override val messagesApi: MessagesApi,
+                                   authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                   registrationService: TransferService,
+                                   cachingService: CachingService,
+                                   timeService: TimeService
+                                  )(implicit tamcContext: TamcContext) extends BaseController {
 
   def transfer: Action[AnyContent] = authenticatedActionRefiner {
     implicit request =>
@@ -57,7 +57,7 @@ class NewTransferController @Inject()(
           Future.successful(BadRequest(views.html.multiyear.transfer.transfer(formWithErrors))),
         recipientData => {
           CachingService.saveRecipientDetails(recipientData).map { _ ⇒
-            Redirect(controllers.routes.NewTransferController.dateOfMarriage())
+            Redirect(controllers.routes.TransferController.dateOfMarriage())
           }  //TODO should this be recovered here or handled by global
         })
   }
@@ -81,7 +81,7 @@ class NewTransferController @Inject()(
             case RecipientDetailsFormInput(name, lastName, gender, nino) => {
               val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
               registrationService.isRecipientEligible(request.nino, dataToSend) map {
-                _ => Redirect(controllers.routes.NewTransferController.eligibleYears())
+                _ => Redirect(controllers.routes.TransferController.eligibleYears())
               }
             }
           }
@@ -124,7 +124,7 @@ class NewTransferController @Inject()(
                 } else if (extraYears.nonEmpty) {
                   Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, currentYearAvailable))
                 } else {
-                  Redirect(controllers.routes.NewTransferController.confirmYourEmail())
+                  Redirect(controllers.routes.TransferController.confirmYourEmail())
                 }
               }
             })
@@ -157,7 +157,7 @@ class NewTransferController @Inject()(
               registrationService.updateSelectedYears(recipient, taxYears.selectedYear, taxYears.yearAvailableForSelection).map {
                 _ =>
                   if (taxYears.furtherYears.isEmpty) {
-                    Redirect(controllers.routes.NewTransferController.confirmYourEmail())
+                    Redirect(controllers.routes.TransferController.confirmYourEmail())
                   } else {
                     Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), recipient.data, toTaxYears(taxYears.furtherYears)))
                   }
@@ -184,7 +184,7 @@ class NewTransferController @Inject()(
           Future.successful(BadRequest(views.html.multiyear.transfer.email(formWithErrors))),
         transferorEmail =>
           registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
-            _ => Redirect(controllers.routes.NewTransferController.confirm())
+            _ => Redirect(controllers.routes.TransferController.confirm())
           }) recover handleError
   }
 
@@ -209,7 +209,7 @@ class NewTransferController @Inject()(
           success)
       Logger.info("registration service.createRelationship - confirm action.")
       registrationService.createRelationship(request.nino, getJourneyName) map {
-        _ => Redirect(controllers.routes.NewTransferController.finished())
+        _ => Redirect(controllers.routes.TransferController.finished())
       } recover handleError
   }
 
@@ -235,18 +235,18 @@ class NewTransferController @Inject()(
           case _: TransferorNotFound => handle(message, Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
           case _: RecipientNotFound => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
           case _: TransferorDeceased => handle(message, Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
-          case _: CacheMissingTransferor => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
+          case _: CacheMissingTransferor => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: CacheTransferorInRelationship => handle(message, Logger.warn, Ok(views.html.transferor_status()))
-          case _: CacheMissingRecipient => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
+          case _: CacheMissingRecipient => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: CacheRecipientInRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_relationship_exists()))
-          case _: CacheMissingEmail => handle(message, Logger.warn, Redirect(controllers.routes.NewTransferController.confirmYourEmail()))
+          case _: CacheMissingEmail => handle(message, Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
           case _: CannotCreateRelationship => handle(message, Logger.warn, InternalServerError(views.html.errors.relationship_cannot_create()))
-          case _: CacheRelationshipAlreadyCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
-          case _: CacheCreateRequestNotSent => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
+          case _: CacheRelationshipAlreadyCreated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: CacheCreateRequestNotSent => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: NoTaxYearsSelected => handle(message, Logger.info, Ok(views.html.errors.no_year_selected()))
           case _: NoTaxYearsAvailable => handle(message, Logger.info, Ok(views.html.errors.no_eligible_years()))
           case _: NoTaxYearsForTransferor => handle(message, Logger.info, InternalServerError(views.html.errors.no_tax_year_transferor()))
-          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.NewUpdateRelationshipController.history()))
+          case _: RelationshipMightBeCreated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _ => handle(message, Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }

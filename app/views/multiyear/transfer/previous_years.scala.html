@@ -44,13 +44,13 @@ currentYearAvailable: Boolean)(
 
 
         <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage), LanguageUtils.isWelsh(messages))))</p>
-        <a href="@{controllers.routes.NewTransferController.previousYears}" id="continue" class="button" type="submit" data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
+        <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" type="submit" data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
         <br>
         <br>
         @if(currentYearAvailable) {
-            <a href="@controllers.routes.NewTransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+            <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
         } else {
-            <a href="@controllers.routes.NewTransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
+            <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
         }
   }
 

@@ -40,7 +40,7 @@
     margin-bottom:30px;
     }
     </style>
-    @helpers.form(action = routes.NewUpdateRelationshipController.divorceSelectYear, args = ('id -> "change-relationship-form")) {
+    @helpers.form(action = routes.UpdateRelationshipController.divorceSelectYear, args = ('id -> "change-relationship-form")) {
         <div>
         <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
         <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
@@ -64,5 +64,5 @@
         </p>
 
     }
-        <a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

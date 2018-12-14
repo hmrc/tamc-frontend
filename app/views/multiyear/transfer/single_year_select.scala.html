@@ -43,7 +43,7 @@
 
     <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
 
-    @helpers.form(action = routes.NewTransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
+    @helpers.form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
         <fieldset class="inline spacingBottom" id="earlierYears">
             <div class="form-group" id="year-@availableYears.head.year">
                 <h2 class="heading-medium"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages))))</span>
@@ -76,6 +76,6 @@
         </p>
     }
     <br>
-    <a href="@controllers.routes.NewTransferController.eligibleYearsAction" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.TransferController.eligibleYearsAction" class="link-back">@Html(Messages("generic.back"))</a>
 }
 

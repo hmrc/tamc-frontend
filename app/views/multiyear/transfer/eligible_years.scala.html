@@ -54,7 +54,7 @@
     <li>@Html(Messages("pages.eligibleyear.li3",recipientName))</li>
   </ul>
 
-  @helpers.form(action = routes.NewTransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
+  @helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
     <div @if(historicYearsAvailable) {class="form-group"} id="apply-For-CurrentYear">
       <h3 class="heading-small">@Html(Messages("pages.eligibleyear.doyou.want"))</h3>
       @templates.input_radio_group(
@@ -84,5 +84,5 @@
     </p>
   }
     <br>
-    <a href="@controllers.routes.NewTransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
 }

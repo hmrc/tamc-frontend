@@ -54,7 +54,7 @@
 
                 <div class="form-group">
                     <p>
-                        <a href="@{controllers.routes.NewUpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_removal">@Html(Messages("change.status.confirm-removal.button"))</a>
+                        <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_removal">@Html(Messages("change.status.confirm-removal.button"))</a>
                     </p>
                 </div>
             }
@@ -122,10 +122,10 @@
             <br>
             <div class="form-group">
                 <p>
-                    <a href="@{controllers.routes.NewUpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_cancellation">@Html(Messages("confirm.cancellation.button"))</a>
+                    <a href="@{controllers.routes.UpdateRelationshipController.confirmUpdateAction}" id="confirmRemoval" class="button" role="button" data-journey-click="marriage-allowance:link:confirm_cancellation">@Html(Messages("confirm.cancellation.button"))</a>
                 </p>
             </div>
             }
     }
-<a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

@@ -44,7 +44,7 @@
     margin-bottom:30px;
     }
     </style>
-    @helpers.form(action = routes.NewUpdateRelationshipController.divorceAction, args = 'id -> "change-relationship-form") {
+    @helpers.form(action = routes.UpdateRelationshipController.divorceAction, args = 'id -> "change-relationship-form") {
         <div>
         @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data", prefix = "pages.form.field.description-alt.")
         <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
@@ -116,5 +116,5 @@
             <button class="button" type="submit" data-journey-click="marriage-allowance:button:divorceselectyear_continue">@Html(Messages("generic.continue"))</button>
         </p>
     }
-    <a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

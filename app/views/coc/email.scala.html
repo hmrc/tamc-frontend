@@ -34,7 +34,7 @@
     maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}"))),
   authState = request.authState
 ) {
-    @helpers.form(action = routes.NewUpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
+    @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
             @templates.form_error_notification(recipientForm)
             <div class="form-group">
                 <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
@@ -52,5 +52,5 @@
             <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">@Html(Messages("generic.continue"))</button>
         </p>
     }
-        <a href="@controllers.routes.NewUpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

@@ -14,37 +14,37 @@ GET    /benefit-calculator-pta                     @controllers.EligibilityContr
 POST   /benefit-calculator-pta                     @controllers.EligibilityController.ptaCalculatorAction
 
 # Transfer Allowance
-GET    /transfer-allowance                         @controllers.NewTransferController.transfer
-POST   /transfer-allowance                         @controllers.NewTransferController.transferAction
-GET    /date-of-marriage                           @controllers.NewTransferController.dateOfMarriage
-POST   /date-of-marriage                           @controllers.NewTransferController.dateOfMarriageAction
-GET    /eligible-years                             @controllers.NewTransferController.eligibleYears
-POST   /eligible-years                             @controllers.NewTransferController.eligibleYearsAction
-GET    /previous-years                             @controllers.NewTransferController.previousYears
-POST   /extra-years                                @controllers.NewTransferController.extraYearsAction
-GET    /confirm-your-email                         @controllers.NewTransferController.confirmYourEmail
-POST   /confirm-your-email                         @controllers.NewTransferController.confirmYourEmailAction
-GET    /confirm                                    @controllers.NewTransferController.confirm
-POST   /confirm                                    @controllers.NewTransferController.confirmAction
-GET    /finished                                   @controllers.NewTransferController.finished
+GET    /transfer-allowance                         @controllers.TransferController.transfer
+POST   /transfer-allowance                         @controllers.TransferController.transferAction
+GET    /date-of-marriage                           @controllers.TransferController.dateOfMarriage
+POST   /date-of-marriage                           @controllers.TransferController.dateOfMarriageAction
+GET    /eligible-years                             @controllers.TransferController.eligibleYears
+POST   /eligible-years                             @controllers.TransferController.eligibleYearsAction
+GET    /previous-years                             @controllers.TransferController.previousYears
+POST   /extra-years                                @controllers.TransferController.extraYearsAction
+GET    /confirm-your-email                         @controllers.TransferController.confirmYourEmail
+POST   /confirm-your-email                         @controllers.TransferController.confirmYourEmailAction
+GET    /confirm                                    @controllers.TransferController.confirm
+POST   /confirm                                    @controllers.TransferController.confirmAction
+GET    /finished                                   @controllers.TransferController.finished
 
 #Change of Circumstances
-GET    /history                                    @controllers.NewUpdateRelationshipController.history
-POST   /make-changes                               @controllers.NewUpdateRelationshipController.makeChange
-GET    /change-of-income                           @controllers.NewUpdateRelationshipController.changeOfIncome
-GET    /bereavement                                @controllers.NewUpdateRelationshipController.bereavement
-POST   /reason-for-change                          @controllers.NewUpdateRelationshipController.updateRelationshipAction
-POST   /divorce                                    @controllers.NewUpdateRelationshipController.divorceAction
-GET    /divorce-select-year                        @controllers.NewUpdateRelationshipController.divorceYear
-POST   /divorce-select-year                        @controllers.NewUpdateRelationshipController.divorceSelectYear
-GET    /confirm-email                              @controllers.NewUpdateRelationshipController.confirmEmail
-GET    /confirm-change                             @controllers.NewUpdateRelationshipController.confirmUpdate
+GET    /history                                    @controllers.UpdateRelationshipController.history
+POST   /make-changes                               @controllers.UpdateRelationshipController.makeChange
+GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
+GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
+POST   /reason-for-change                          @controllers.UpdateRelationshipController.updateRelationshipAction
+POST   /divorce                                    @controllers.UpdateRelationshipController.divorceAction
+GET    /divorce-select-year                        @controllers.UpdateRelationshipController.divorceYear
+POST   /divorce-select-year                        @controllers.UpdateRelationshipController.divorceSelectYear
+GET    /confirm-email                              @controllers.UpdateRelationshipController.confirmEmail
+GET    /confirm-change                             @controllers.UpdateRelationshipController.confirmUpdate
 #TO be post to edit
-GET    /confirm-change-action                      @controllers.NewUpdateRelationshipController.confirmUpdateAction
-GET    /cancel                                     @controllers.NewUpdateRelationshipController.confirmCancel
-GET    /reject                                     @controllers.NewUpdateRelationshipController.confirmReject
-GET    /finished-change                            @controllers.NewUpdateRelationshipController.finishUpdate
-POST   /confirm-email-update                       @controllers.NewUpdateRelationshipController.confirmYourEmailActionUpdate
+GET    /confirm-change-action                      @controllers.UpdateRelationshipController.confirmUpdateAction
+GET    /cancel                                     @controllers.UpdateRelationshipController.confirmCancel
+GET    /reject                                     @controllers.UpdateRelationshipController.confirmReject
+GET    /finished-change                            @controllers.UpdateRelationshipController.finishUpdate
+POST   /confirm-email-update                       @controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
 
 GET    /how-it-works                               @controllers.EligibilityController.howItWorks
 GET    /eligibility-check-pta                      controllers.Default.redirect(to = controllers.routes.EligibilityController.eligibilityCheck().url)

@@ -43,7 +43,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     <p class="blue-underline-large">@Html(Messages("pages.form.details"))</p>
     <h2 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h2>
 
-    @helpers.form(action = routes.NewTransferController.transferAction, args = ('id -> "register-form")) {
+    @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
     <fieldset>
             <div class="form-group">
             @templates.input(recipientForm("name"),
