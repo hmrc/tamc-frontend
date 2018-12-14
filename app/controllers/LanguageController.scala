@@ -17,12 +17,12 @@
 package controllers
 
 import javax.inject.Inject
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.{Action, AnyContent}
 
 import scala.concurrent.Future
 
-class LanguageController @Inject()(val messagesApi: MessagesApi) extends BaseController with I18nSupport {
+class LanguageController @Inject()(val messagesApi: MessagesApi) extends BaseController {
 
   def enGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl=redirectUrl, language="en")
   def cyGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl=redirectUrl, language="cy")

@@ -30,11 +30,10 @@ import models._
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc._
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.TamcBreadcrumb
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,7 +43,7 @@ class NewTransferController @Inject()(
                                        registrationService: TransferService,
                                        cachingService: CachingService,
                                        timeService: TimeService
-                                     )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
+                                     )(implicit tamcContext: TamcContext) extends BaseController {
 
   def transfer: Action[AnyContent] = authenticatedActionRefiner {
     implicit request =>

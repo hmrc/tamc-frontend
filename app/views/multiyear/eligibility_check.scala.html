@@ -62,5 +62,9 @@
             </button>
         </div>
     }
-    <a href="@controllers.routes.PtaEligibilityController.calculator" class="link-back">@Html(Messages("generic.back"))</a>
+    @if(request.authState.permanent){
+      <a href="@controllers.routes.EligibilityController.ptaCalculator" class="link-back">@Html(Messages("generic.back"))</a>
+    } else {
+      <a href="https://www.gov.uk/apply-marriage-allowance" class="link-back">@Html(Messages("generic.back"))</a>
+    }
 }

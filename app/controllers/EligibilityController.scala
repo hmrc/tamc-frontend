@@ -16,25 +16,29 @@
 
 package controllers
 
-import config.TamcContext
 import config.ApplicationConfig.{SCOTTISH_RESIDENT, gdsFinishedUrl, ptaFinishedUrl}
+import config.TamcContext
+import forms.EligibilityCalculatorForm.calculatorForm
 import forms.MultiYearDateOfBirthForm.dateOfBirthForm
-import forms.MultiYearLowerEarnerForm.lowerEarnerForm
-import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
+import forms.MultiYearLowerEarnerForm.lowerEarnerForm
+import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import javax.inject.Inject
-import play.api.i18n.{I18nSupport, MessagesApi}
+import models.Country
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Call}
-import utils.TamcBreadcrumb
-import views.html.multiyear.eligibility_check
+import services.EligibilityCalculatorService
 import utils.isScottishResident
+import views.html.multiyear.eligibility_check
 
 class EligibilityController @Inject()(
                                        override val messagesApi: MessagesApi,
-                                       unauthenticatedAction: UnauthenticatedActionTransformer
-                                     )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
+                                       unauthenticatedAction: UnauthenticatedActionTransformer,
+                                       authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                       eligibilityCalculatorService: EligibilityCalculatorService
+                                     )(implicit tamcContext: TamcContext) extends BaseController {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
@@ -49,7 +53,6 @@ class EligibilityController @Inject()(
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(eligibility_check(eligibilityCheckForm = eligibilityForm))
-      //TODO this view back link changes depending on gds/pta (Govuk gds, calculator pta)
   }
 
   def eligibilityCheckAction(): Action[AnyContent] = {
@@ -157,6 +160,40 @@ class EligibilityController @Inject()(
             }
           })
     }
+  }
+
+  def gdsCalculator(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      Ok(views.html.calculator(calculatorForm = calculatorForm))
+  }
+
+  def gdsCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
+    implicit request =>
+      calculatorForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.calculator(calculatorForm = formWithErrors)),
+        calculatorInput =>
+          Ok(views.html.calculator(
+            calculatorForm = calculatorForm.fill(calculatorInput),
+            calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
+  }
+//TODO should these be authenticated - no if it doesnt break
+  def ptaCalculator(): Action[AnyContent] = authenticatedActionRefiner {
+      implicit request =>
+        Ok(views.html.pta.calculator(calculatorForm = calculatorForm))
+  }
+
+  def ptaCalculatorAction(): Action[AnyContent] = authenticatedActionRefiner {
+    implicit request =>
+      calculatorForm.bindFromRequest.fold(
+        formWithErrors =>
+          BadRequest(views.html.pta.calculator(calculatorForm = formWithErrors)),
+        calculatorInput =>
+          Ok(views.html.pta.calculator(
+            calculatorForm = calculatorForm.fill(calculatorInput),
+            calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
   }
 
 

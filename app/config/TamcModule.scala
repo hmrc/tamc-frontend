@@ -20,7 +20,7 @@ import connectors.{ApplicationAuditConnector, TamcAuthConnector}
 import details.CitizenDetailsService
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
-import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import services._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
@@ -36,6 +36,7 @@ class TamcModule extends Module {
       bind[TransferService].toInstance(TransferService),
       bind[UpdateRelationshipService].toInstance(UpdateRelationshipService),
       bind[CitizenDetailsService].toInstance(CitizenDetailsService),
-      bind[CachingService].toInstance(CachingService)
+      bind[CachingService].toInstance(CachingService),
+      bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService)
     )
 }

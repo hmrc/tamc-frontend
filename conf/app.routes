@@ -6,12 +6,12 @@ GET    /logout                                     @controllers.AuthorisationCon
 GET    /signed-out                                 @controllers.AuthorisationController.sessionTimeout
 
 # GDS journey
-GET    /benefit-calculator                         controllers.GdsEligibilityController.calculator
-POST   /benefit-calculator                         controllers.GdsEligibilityController.calculatorAction
+GET    /benefit-calculator                         @controllers.EligibilityController.gdsCalculator
+POST   /benefit-calculator                         @controllers.EligibilityController.gdsCalculatorAction
 
 # PTA journey
-GET    /benefit-calculator-pta                     controllers.PtaEligibilityController.calculator
-POST   /benefit-calculator-pta                     controllers.PtaEligibilityController.calculatorAction
+GET    /benefit-calculator-pta                     @controllers.EligibilityController.ptaCalculator
+POST   /benefit-calculator-pta                     @controllers.EligibilityController.ptaCalculatorAction
 
 # Transfer Allowance
 GET    /transfer-allowance                         @controllers.NewTransferController.transfer
@@ -46,23 +46,14 @@ GET    /reject                                     @controllers.NewUpdateRelatio
 GET    /finished-change                            @controllers.NewUpdateRelationshipController.finishUpdate
 POST   /confirm-email-update                       @controllers.NewUpdateRelationshipController.confirmYourEmailActionUpdate
 
-#Mutliyear-PTA
-#TODO can we remove all of the duplicate -pta urls - it causes test failures - see if its used in analytics
 GET    /how-it-works                               @controllers.EligibilityController.howItWorks
-GET    /eligibility-check-pta                      @controllers.EligibilityController.eligibilityCheck
-POST   /eligibility-check-pta                      @controllers.EligibilityController.eligibilityCheckAction
-GET    /lower-earner-pta                           @controllers.EligibilityController.lowerEarnerCheck
-POST   /lower-earner-pta                           @controllers.EligibilityController.lowerEarnerCheckAction
-GET    /partners-income-pta                        @controllers.EligibilityController.partnersIncomeCheck
-POST   /partners-income-pta                        @controllers.EligibilityController.partnersIncomeCheckAction
-GET    /date-of-birth-check-pta                    @controllers.EligibilityController.dateOfBirthCheck
-POST   /date-of-birth-check-pta                    @controllers.EligibilityController.dateOfBirthCheckAction
-GET    /do-you-live-in-scotland-pta                @controllers.EligibilityController.doYouLiveInScotland
-POST   /do-you-live-in-scotland-pta                @controllers.EligibilityController.doYouLiveInScotlandAction
-GET    /do-you-want-to-apply-pta                   @controllers.EligibilityController.doYouWantToApply
-POST   /do-you-want-to-apply-pta                   @controllers.EligibilityController.doYouWantToApplyAction
+GET    /eligibility-check-pta                      controllers.Default.redirect(to = controllers.routes.EligibilityController.eligibilityCheck().url)
+GET    /lower-earner-pta                           controllers.Default.redirect(to = controllers.routes.EligibilityController.lowerEarnerCheck().url)
+GET    /partners-income-pta                        controllers.Default.redirect(to = controllers.routes.EligibilityController.partnersIncomeCheck().url)
+GET    /date-of-birth-check-pta                    controllers.Default.redirect(to = controllers.routes.EligibilityController.dateOfBirthCheck().url)
+GET    /do-you-live-in-scotland-pta                controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouLiveInScotland().url)
+GET    /do-you-want-to-apply-pta                   controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouWantToApply().url)
 
-#Mutliyear-GDS
 GET    /                                           @controllers.EligibilityController.home
 GET    /eligibility-check                          @controllers.EligibilityController.eligibilityCheck
 POST   /eligibility-check                          @controllers.EligibilityController.eligibilityCheckAction
@@ -78,8 +69,8 @@ GET    /do-you-want-to-apply                       @controllers.EligibilityContr
 POST   /do-you-want-to-apply                       @controllers.EligibilityController.doYouWantToApplyAction
 
 #Welsh Translation
-GET     /lang/enGb                                  @controllers.LanguageController.enGb(redirectUrl: String)
-GET     /lang/cyGb                                  @controllers.LanguageController.cyGb(redirectUrl: String)
+GET     /lang/enGb                                 @controllers.LanguageController.enGb(redirectUrl: String)
+GET     /lang/cyGb                                 @controllers.LanguageController.cyGb(redirectUrl: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                               controllers.Assets.at(path="/public", file)

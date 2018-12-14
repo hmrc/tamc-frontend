@@ -27,7 +27,9 @@ import utils.BenefitCalculatorHelper
 
 import scala.io.Source
 
-object EligibilityCalculatorService {
+object EligibilityCalculatorService extends EligibilityCalculatorService
+
+trait EligibilityCalculatorService {
 
   private def maxLimit(country: Country): Int = country match {
     case England => MAX_LIMIT

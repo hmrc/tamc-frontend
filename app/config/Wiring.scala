@@ -20,6 +20,7 @@ import uk.gov.hmrc.http.{HttpDelete, HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.config.{AppName, RunMode}
 import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
 
+//FIXME no auditing here use config.HttpClient and delete this
 object WSHttp extends WSGet with HttpGet
   with WSPut with HttpPut
   with WSPost with HttpPost

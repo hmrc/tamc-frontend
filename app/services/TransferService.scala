@@ -200,7 +200,7 @@ trait TransferService {
       case Some(CacheData(_, _, _, _, Some(selectedTaxYears), _, _)) if (selectedTaxYears.size == 0) => throw NoTaxYearsSelected()
     }
   }
-//TODO remove gets
+
   private def transformCache(cacheData: CacheData)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] =
     Future {
       ConfirmationModel(

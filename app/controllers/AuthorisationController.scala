@@ -18,13 +18,12 @@ package controllers
 
 import com.google.inject.Inject
 import config.{ApplicationConfig, TamcContext}
-import play.api.i18n.{I18nSupport, MessagesApi}
-import utils.TamcBreadcrumb
+import play.api.i18n.MessagesApi
 
 class AuthorisationController @Inject()(
                                          override val messagesApi: MessagesApi,
                                          unauthenticatedAction: UnauthenticatedActionTransformer
-                                       )(implicit tamcContext: TamcContext) extends BaseController with I18nSupport with TamcBreadcrumb {
+                                       )(implicit tamcContext: TamcContext) extends BaseController {
 
   val logoutUrl: String = ApplicationConfig.logoutUrl
   val logoutCallbackUrl: String = ApplicationConfig.logoutCallbackUrl

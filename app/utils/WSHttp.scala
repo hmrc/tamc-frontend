@@ -24,6 +24,7 @@ import uk.gov.hmrc.play.http.ws.WSGet
 import uk.gov.hmrc.play.http.ws.WSPost
 import uk.gov.hmrc.play.http.ws.WSPut
 
+//FIXME no auditing here use config.HttpClient and delete this
 object WSHttp extends WSGet with HttpGet
   with WSPut with HttpPut
   with WSPost with HttpPost

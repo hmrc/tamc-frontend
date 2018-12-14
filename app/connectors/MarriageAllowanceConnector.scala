@@ -51,7 +51,7 @@ trait MarriageAllowanceConnector {
 
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     httpPost.POST(s"${marriageAllowanceUrl}/paye/${transferorNino}/get-recipient-relationship", body = recipientData)
-//TODO why do we need the journey here????
+
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
     httpPut.PUT(s"${marriageAllowanceUrl}/paye/${transferorNino}/create-multi-year-relationship/${journey}", data)
   }

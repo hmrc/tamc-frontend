@@ -372,7 +372,7 @@ trait UpdateRelationshipService {
     })
 
   def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
-     (LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd")))
+     LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd"))
 
 
   private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {

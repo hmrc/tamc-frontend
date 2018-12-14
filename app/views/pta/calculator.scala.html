@@ -20,7 +20,6 @@
         request: Request[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -40,7 +39,7 @@
 
     <p>@Html(Messages("pages.calc.para1"))</p>
 
-    @helpers.form(action = routes.PtaEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
+    @helpers.form(action = routes.EligibilityController.ptaCalculatorAction(), args = ('id -> "calculator")) {
         <fieldset>
             <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
             <div class="form-group">
