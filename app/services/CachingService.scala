@@ -150,7 +150,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
             relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD),
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
-//TODO
+
   private def getCacheData(nino: Nino)(implicit hc: HeaderCarrier, executionContext: ExecutionContext): Future[Option[CacheMap]] = {
     fetch().flatMap {
       _.map {

@@ -40,7 +40,6 @@ class UpdateRelationshipController @Inject()(
                                              timeService: TimeService
                                             )(implicit tamcContext: TamcContext) extends BaseController {
 
-//TODO split the status page to its own link and history be for just redirecting
   def history(): Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>
       updateRelationshipService.listRelationship(request.nino) map {

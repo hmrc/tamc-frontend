@@ -58,7 +58,7 @@ class TransferController @Inject()(
         recipientData => {
           CachingService.saveRecipientDetails(recipientData).map { _ ⇒
             Redirect(controllers.routes.TransferController.dateOfMarriage())
-          }  //TODO should this be recovered here or handled by global
+          }
         })
   }
 

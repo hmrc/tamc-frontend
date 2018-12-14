@@ -178,13 +178,13 @@ class EligibilityController @Inject()(
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
               calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
   }
-//TODO should these be authenticated - no if it doesnt break
-  def ptaCalculator(): Action[AnyContent] = authenticatedActionRefiner {
+
+  def ptaCalculator(): Action[AnyContent] = unauthenticatedAction {
       implicit request =>
         Ok(views.html.pta.calculator(calculatorForm = calculatorForm))
   }
 
-  def ptaCalculatorAction(): Action[AnyContent] = authenticatedActionRefiner {
+  def ptaCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>

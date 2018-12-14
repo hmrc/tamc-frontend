@@ -59,7 +59,7 @@ trait UpdateRelationshipService {
     Future {
       customAuditConnector.sendEvent(event)
     }
-//TODO no.
+
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordList, Boolean)] =
     for {
       relationshipRecordWrapper <- marriageAllowanceConnector.listRelationship(transferorNino)
