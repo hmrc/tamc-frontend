@@ -18,6 +18,7 @@ package config
 
 import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import utils.WSHttp
 
 object TamcFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
    override def httpGet: HttpGet = WSHttp

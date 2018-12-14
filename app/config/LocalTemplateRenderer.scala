@@ -22,12 +22,13 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.WSHttp
 
 object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
-  override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
+  override lazy val templateServiceBaseUrl: String = baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes
 
-  private implicit val hc = HeaderCarrier()
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
   import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
   override def fetchTemplate(path: String): Future[String] =  {
