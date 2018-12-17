@@ -22,7 +22,7 @@
 @import models.EndReasonCode._
 @import models.Role._
 @import utils.LanguageUtils
-@import controllers.AuthenticatedUserRequest
+@import models.auth.AuthenticatedUserRequest
 
 @(data: models.UpdateRelationshipConfirmationModel,
     relevantDate: Option[org.joda.time.LocalDate] = None, isEnded: Boolean = false, relationEndDate: Option[org.joda.time.LocalDate]=None

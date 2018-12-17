@@ -14,21 +14,20 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
+@import models.auth.RequestWithAuthState
+@import uk.gov.hmrc.play.views.html.helpers._
+
 @(calculatorForm: Form[models.EligibilityCalculatorInput],
         calculationResult: Option[models.EligibilityCalculatorResult] = None
 )(implicit messages: Messages,
-        request: Request[_],
+        request: RequestWithAuthState[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-@import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig
-
-
-@import uk.gov.hmrc.play.views.html.helpers._
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.eligibility-criteria"))

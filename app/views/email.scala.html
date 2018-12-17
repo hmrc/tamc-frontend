@@ -14,20 +14,19 @@
  * limitations under the License.
  *@
 
-@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None)(
-    implicit messages: Messages,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
+@import models.auth.RequestWithAuthState
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
 
-
+@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None)(
+    implicit messages: Messages,
+        request: RequestWithAuthState[_],
+        context: config.TamcContext,
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.confirm-email"))

@@ -16,7 +16,7 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import controllers.AuthenticatedUserRequest
+@import models.auth.AuthenticatedUserRequest
 
 @(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
         request: AuthenticatedUserRequest[_],

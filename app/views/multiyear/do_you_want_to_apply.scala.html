@@ -19,12 +19,13 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
+@import models.auth.RequestWithAuthState
 
 @(
     doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
     )(implicit
     messages: Messages,
-    request: UserRequest[_],
+    request: RequestWithAuthState[_],
     context: config.TamcContext,
     breadcrumb: Breadcrumb,
     templateRenderer: TemplateRenderer,

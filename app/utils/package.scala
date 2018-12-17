@@ -24,9 +24,6 @@ import config.ApplicationConfig._
 
 package object utils {
 
-  def getUserNino(authContext: AuthContext): Nino =
-    authContext.principal.accounts.paye.get.nino
-
   def encodeQueryStringValue(value: String): String =
     URLEncoder.encode(value, "UTF8")
 
@@ -41,9 +38,6 @@ package object utils {
 
   def getSid(request: Request[_]): String =
     request.session.get(SessionKeys.sessionId).getOrElse("")
-
-  def isPtaJourneyUseOnlyOnAuthorisedPage(implicit request: Request[_]): Boolean =
-    request.cookies.get(TAMC_JOURNEY).exists { _.value == TAMC_JOURNEY_PTA } || request.cookies.get(TAMC_JOURNEY).isEmpty
 
   def isScottishResident(request: Request[_]): Boolean =
     request.session.get(SCOTTISH_RESIDENT).map(_.toBoolean).fold(false)(identity)

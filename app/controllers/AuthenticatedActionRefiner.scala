@@ -19,7 +19,6 @@ package controllers
 import com.google.inject.Inject
 import config.ApplicationConfig
 import models.auth._
-import play.api.Logger
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
@@ -30,8 +29,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
-
-final case class AuthenticatedUserRequest[A](request: Request[A], authState: AuthState, nino: Nino) extends WrappedRequest[A](request)
 
 class AuthenticatedActionRefiner @Inject()(
                                             val authConnector: AuthConnector

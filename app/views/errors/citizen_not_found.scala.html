@@ -14,14 +14,16 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import models.auth.UserRequest
+
 @()(implicit messages: Messages,
-        request: Request[_],
+        request: UserRequest[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.twirl.api.Html
 
 
 

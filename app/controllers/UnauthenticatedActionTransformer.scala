@@ -25,24 +25,22 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-final case class UserRequest[A](request: Request[A], authState: AuthState) extends WrappedRequest[A](request)
-
 class UnauthenticatedActionTransformer @Inject()(
                                                val authConnector: AuthConnector
-                                             )(implicit ec: ExecutionContext) extends ActionTransformer[Request, UserRequest] with ActionBuilder[UserRequest] with AuthorisedFunctions {
+                                             )(implicit ec: ExecutionContext) extends ActionTransformer[Request, RequestWithAuthState] with ActionBuilder[RequestWithAuthState] with AuthorisedFunctions {
 
-  override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
+  override protected def transform[A](request: Request[A]): Future[RequestWithAuthState[A]] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L200) {
-      Future.successful(UserRequest(request, authState = PermanentlyAuthenticated))
+      Future.successful(RequestWithAuthState(request, authState = PermanentlyAuthenticated))
     }.recover {
       case _: NoActiveSession ⇒
-        UserRequest(request, Unauthenticated)
+        RequestWithAuthState(request, Unauthenticated)
       case _: InsufficientConfidenceLevel ⇒
-        UserRequest(request, TemporarilyAuthenticated)
+        RequestWithAuthState(request, TemporarilyAuthenticated)
     }
   }
 }

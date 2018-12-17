@@ -14,19 +14,19 @@
  * limitations under the License.
  *@
 
-@(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
-    implicit messages: Messages,
-        request: UserRequest[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
+@import models.auth.RequestWithAuthState
 
+@(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
+    implicit messages: Messages,
+        request: RequestWithAuthState[_],
+        context: config.TamcContext,
+        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE))),

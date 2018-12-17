@@ -37,7 +37,7 @@ supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
 scriptElem: Option[Html] = None,
 authState: AuthState = Unauthenticated)(mainContent: Html)(implicit messages: Messages,
-request: Request[_],
+request: UserRequest[_],
 context: config.TamcContext,
 breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
 user: Option[details.TamcUser] = None,
@@ -45,6 +45,8 @@ gaDimensions: Option[Map[String, String]] = None,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
+
+<!--TODO remove user???? embed stuff into auth request? remove auth state param-->
 
 @scriptElement = {
 
@@ -110,7 +112,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 @if(ApplicationConfig.enableRefresh) {
     <meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
 }
-
+<!--TODO another cookie?-->
 @isUserResearchBannerHidden = @{request.cookies.exists((x: Cookie) => x.name == "tamc_ur_panel")}
 
 @mustacheCheck(str: String) = @{
@@ -139,7 +141,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 }
 
 @showLastLogInStatus = @{
-    (user.isDefined && utils.isPtaJourneyUseOnlyOnAuthorisedPage(request))
+    (user.isDefined && authState.permanent)
 }
 
 @actingAttorneyBanner = @{

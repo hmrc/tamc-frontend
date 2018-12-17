@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
-@import controllers.AuthenticatedUserRequest
+@import models.auth.AuthenticatedUserRequest
  
 @(reason: String, effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None)(implicit messages: Messages,
         request: AuthenticatedUserRequest[_],

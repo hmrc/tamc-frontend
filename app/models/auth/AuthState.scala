@@ -16,12 +16,8 @@
 
 package models.auth
 
-import play.api.mvc.{Request, WrappedRequest}
-
 sealed abstract class AuthState(val isLoggedIn: Boolean, val permanent: Boolean)
 
 case object PermanentlyAuthenticated extends AuthState(true, true)
 case object TemporarilyAuthenticated extends AuthState(true, false)
 case object Unauthenticated extends AuthState(false, false)
-
-final case class UserRequest[A](request: Request[A], authState: AuthState) extends WrappedRequest[A](request)

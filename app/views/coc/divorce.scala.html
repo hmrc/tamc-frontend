@@ -19,7 +19,7 @@
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
-@import controllers.AuthenticatedUserRequest
+@import models.auth.AuthenticatedUserRequest
 
 @(changeRelationshipForm: Form[ChangeRelationship],
     cyEffectiveUntilDate: Option[org.joda.time.LocalDate] = None,

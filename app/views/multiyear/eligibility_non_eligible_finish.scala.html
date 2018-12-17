@@ -14,16 +14,16 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import models.auth.RequestWithAuthState
+
 @(finishedUrl: String
 )(implicit messages: Messages,
-        request: UserRequest[_],
+        request: RequestWithAuthState[_],
         context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-@import play.twirl.api.Html
-
 
     @templates.tamc_main(
         title = Messages("title.eligibility.pattern", Messages("title.non-eligible")),

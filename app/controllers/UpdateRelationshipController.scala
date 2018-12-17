@@ -23,6 +23,7 @@ import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, update
 import forms.EmailForm.emailForm
 import forms.EmptyForm
 import models._
+import models.auth.UserRequest
 import org.joda.time.LocalDate
 import play.Logger
 import play.api.i18n.MessagesApi
@@ -282,7 +283,7 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def handleError(implicit hc: HeaderCarrier, ec: ExecutionContext, request: Request[_]): PartialFunction[Throwable, Result] =
+  def handleError(implicit hc: HeaderCarrier, ec: ExecutionContext, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
 

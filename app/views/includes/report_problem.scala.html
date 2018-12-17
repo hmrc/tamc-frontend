@@ -20,7 +20,7 @@
 @import scala.concurrent.duration._
 @import config._
 
-@(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig : config.ApplicationConfig)(implicit request: Request[_], context: config.TamcContext)
+@(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig : config.ApplicationConfig)(implicit request: Request[_])
 
 @if(supportLinkEnabled) {
        @formPartialRetriever.getPartialContent(s"${appConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")

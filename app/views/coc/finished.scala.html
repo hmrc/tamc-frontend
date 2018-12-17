@@ -17,7 +17,7 @@
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
-@import controllers.AuthenticatedUserRequest
+@import models.auth.AuthenticatedUserRequest
 
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress, reason: models.EndRelationshipReason,
     effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None

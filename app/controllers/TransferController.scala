@@ -27,6 +27,7 @@ import forms.EmptyForm
 import forms.RecipientDetailsForm.recipientDetailsForm
 import javax.inject.Inject
 import models._
+import models.auth.UserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
 import play.api.data.FormError
@@ -221,7 +222,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def handleError(implicit hc: HeaderCarrier, ec: ExecutionContext, request: Request[_]): PartialFunction[Throwable, Result] =
+  def handleError(implicit hc: HeaderCarrier, ec: ExecutionContext, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
         val message: String = s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils.getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"
