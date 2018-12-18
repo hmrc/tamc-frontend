@@ -17,7 +17,6 @@
 package config
 
 import connectors.{ApplicationAuditConnector, TamcAuthConnector}
-import details.CitizenDetailsService
 import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
 import services._
@@ -34,7 +33,6 @@ class TamcModule extends Module {
       bind[TimeService].toInstance(TimeService),
       bind[TransferService].toInstance(TransferService),
       bind[UpdateRelationshipService].toInstance(UpdateRelationshipService),
-      bind[CitizenDetailsService].toInstance(CitizenDetailsService),
       bind[CachingService].toInstance(CachingService),
       bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService)
     )

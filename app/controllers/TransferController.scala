@@ -175,9 +175,6 @@ class TransferController @Inject()(
       }
   }
 
-  //Success(Some(CacheData(None,Some(RecipientRecord(UserRecord(999059794,2015,None,None),RegistrationFormInput(Claire,Forester,Gender(F),NY059794B,2011-02-22),List(TaxYear(2018,Some(true)), TaxYear(2017,None), TaxYear(2016,None), TaxYear(2015,None)))),Some(NotificationRecord(sample@sample.com)),None,Some(List(2018, 2017, 2015)),Some(RecipientDetailsFormInput(Claire,Forester,Gender(F),NY059794B)),Some(DateOfMarriageFormInput(2011-02-22)))))
-
-
   def confirmYourEmailAction: Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>
       emailForm.bindFromRequest.fold(

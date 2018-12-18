@@ -179,8 +179,8 @@ class EligibilityController @Inject()(
   }
 
   def ptaCalculator(): Action[AnyContent] = unauthenticatedAction {
-      implicit request =>
-        Ok(views.html.pta.calculator(calculatorForm = calculatorForm))
+    implicit request =>
+      Ok(views.html.pta.calculator(calculatorForm = calculatorForm))
   }
 
   def ptaCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
