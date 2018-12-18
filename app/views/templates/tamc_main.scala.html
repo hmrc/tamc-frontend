@@ -36,14 +36,12 @@ supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
 scriptElem: Option[Html] = None)(mainContent: Html)(implicit messages: Messages,
 request: UserRequest[_],
-context: config.TamcContext,
 breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
 gaDimensions: Option[Map[String, String]] = None,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
 
-<!--TODO remove user???? embed stuff into auth request? remove auth state param-->
 
 @scriptElement = {
 

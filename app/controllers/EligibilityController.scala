@@ -17,7 +17,6 @@
 package controllers
 
 import config.ApplicationConfig.{SCOTTISH_RESIDENT, gdsFinishedUrl, ptaFinishedUrl}
-import config.TamcContext
 import forms.EligibilityCalculatorForm.calculatorForm
 import forms.MultiYearDateOfBirthForm.dateOfBirthForm
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
@@ -38,7 +37,7 @@ class EligibilityController @Inject()(
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
                                        authenticatedActionRefiner: AuthenticatedActionRefiner,
                                        eligibilityCalculatorService: EligibilityCalculatorService
-                                     )(implicit tamcContext: TamcContext) extends BaseController {
+                                     ) extends BaseController {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>

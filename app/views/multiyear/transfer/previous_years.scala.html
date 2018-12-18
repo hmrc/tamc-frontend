@@ -30,14 +30,12 @@ availableYears:List[TaxYear] = List[TaxYear](),
 currentYearAvailable: Boolean)(
     implicit messages: Messages,
         request: AuthenticatedUserRequest[_],
-        context: config.TamcContext,
         breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.extra-years"))
-){
+    title = Messages("title.application.pattern", Messages("title.extra-years"))){
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
         <p class="lede">@Html(Messages("pages.previousyear.lede"))</p>
 

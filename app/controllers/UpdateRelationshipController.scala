@@ -39,7 +39,7 @@ class UpdateRelationshipController @Inject()(
                                              updateRelationshipService: UpdateRelationshipService,
                                              registrationService: TransferService,
                                              timeService: TimeService
-                                            )(implicit tamcContext: TamcContext) extends BaseController {
+                                            ) extends BaseController {
 
   def history(): Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>

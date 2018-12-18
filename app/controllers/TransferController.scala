@@ -17,7 +17,7 @@
 package controllers
 
 import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
-import config.{ApplicationConfig, TamcContext}
+import config.ApplicationConfig
 import errors._
 import forms.CurrentYearForm.currentYearForm
 import forms.DateOfMarriageForm.dateOfMarriageForm
@@ -44,7 +44,7 @@ class TransferController @Inject()(
                                    registrationService: TransferService,
                                    cachingService: CachingService,
                                    timeService: TimeService
-                                  )(implicit tamcContext: TamcContext) extends BaseController {
+                                  ) extends BaseController {
 
   def transfer: Action[AnyContent] = authenticatedActionRefiner {
     implicit request =>
