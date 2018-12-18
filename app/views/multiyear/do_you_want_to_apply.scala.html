@@ -14,7 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.breadcrumb.model.Breadcrumb
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.renderer.TemplateRenderer
@@ -26,7 +25,6 @@
     )(implicit
     messages: Messages,
     request: RequestWithAuthState[_],
-    breadcrumb: Breadcrumb,
     templateRenderer: TemplateRenderer,
     formPartialRetriever: FormPartialRetriever
     )

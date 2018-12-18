@@ -16,7 +16,7 @@
 
 @import models.auth.UserRequest
 
-@()(implicit messages: Messages, request: UserRequest[_], breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit messages: Messages, request: UserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("session.timeout.title"))

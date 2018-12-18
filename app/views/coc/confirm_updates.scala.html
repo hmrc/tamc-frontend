@@ -23,7 +23,6 @@
  
 @(reason: String, effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None)(implicit messages: Messages,
         request: AuthenticatedUserRequest[_],
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
