@@ -14,6 +14,12 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import views.helpers.TextGenerators
+@import config.ApplicationConfig
+@import models.auth.AuthenticatedUserRequest
+
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -22,15 +28,8 @@ breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-@import views.helpers.TextGenerators
-@import config.ApplicationConfig
-
-
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.confirm-email")),
-authState = request.authState
+title = Messages("title.application.pattern", Messages("title.confirm-email"))
 ){
 @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)

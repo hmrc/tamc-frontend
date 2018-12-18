@@ -27,8 +27,7 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.divorce")),
-    mainConfig = views.helpers.MainConfig(),
-    authState = request.authState) {
+    mainConfig = views.helpers.MainConfig()) {
 
     @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data", prefix = "pages.form.field.description-alt.")
 

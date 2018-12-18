@@ -17,18 +17,31 @@
 package models.auth
 
 import play.api.mvc.{Request, WrappedRequest}
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 
-sealed abstract class UserRequest[A](val request: Request[A]) extends WrappedRequest[A](request)
+sealed abstract class UserRequest[A](
+                                      val request: Request[A],
+                                      val authState: AuthState,
+                                      val confidenceLevel: Option[ConfidenceLevel],
+                                      val isSA: Boolean,
+                                      val authProvider: Option[String]
+                                    ) extends WrappedRequest[A](request)
 
 final case class RequestWithAuthState[A](
                                           override val request: Request[A],
-                                          authState: AuthState
-                                        ) extends UserRequest[A](request)
+                                          override val authState: AuthState,
+                                          override val confidenceLevel: Option[ConfidenceLevel],
+                                          override val isSA: Boolean,
+                                          override val authProvider: Option[String]
+                                        ) extends UserRequest[A](request, authState, confidenceLevel, isSA, authProvider)
 
 final case class AuthenticatedUserRequest[A](
                                               override val request: Request[A],
-                                              authState: AuthState,
+                                              override val authState: AuthState,
+                                              override val confidenceLevel: Option[ConfidenceLevel],
+                                              override val isSA: Boolean,
+                                              override val authProvider: Option[String],
                                               nino: Nino
-                                            ) extends UserRequest[A](request)
+                                            ) extends UserRequest[A](request, authState, confidenceLevel, isSA, authProvider)
 

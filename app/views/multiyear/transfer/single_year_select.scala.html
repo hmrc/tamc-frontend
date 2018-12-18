@@ -14,6 +14,15 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+@import models.Gender
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.time.TaxYearResolver
+@import utils.LanguageUtils
+@import config.ApplicationConfig
+@import models.auth.AuthenticatedUserRequest
+
 @(form: Form[models.EarlierYearsInput],
         input: RegistrationFormInput,
         availableYears: List[TaxYear] = List[TaxYear]())(
@@ -24,19 +33,8 @@
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.twirl.api.Html
-@import views.helpers.TextGenerators
-@import models.Gender
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.time.TaxYearResolver
-@import utils.LanguageUtils
-@import config.ApplicationConfig
-
-
-
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.extra-years")),
-  authState = request.authState
+  title = Messages("title.application.pattern", Messages("title.extra-years"))
 ) {
 
     @templates.form_error_notification(form)

@@ -29,8 +29,7 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.bereavement")),
-    mainConfig = views.helpers.MainConfig(),
-    authState = request.authState) {
+    mainConfig = views.helpers.MainConfig()) {
     
     <h1 class="heading-xlarge" id="bereavement-recipient">@Html(Messages("change.status.bereavement.sorry"))</h1>
 

@@ -30,8 +30,7 @@
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.change.reason")),
-  mainConfig = views.helpers.MainConfig(),
-  authState = request.authState
+  mainConfig = views.helpers.MainConfig()
 ) {
         @if(reason == EndReasonCode.CANCEL) {
 

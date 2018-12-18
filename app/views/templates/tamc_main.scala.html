@@ -25,7 +25,6 @@
 @import config.ApplicationConfig.webchatId
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
-@import uk.gov.hmrc.http.SessionKeys
 
 @(title: String,
 pageName:Option[String] = None,
@@ -35,12 +34,10 @@ mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
 appConfig: config.ApplicationConfig = config.ApplicationConfig,
 supportLinkEnabled: Boolean = true,
 langSwitch: Option[play.twirl.api.Html] = None,
-scriptElem: Option[Html] = None,
-authState: AuthState = Unauthenticated)(mainContent: Html)(implicit messages: Messages,
+scriptElem: Option[Html] = None)(mainContent: Html)(implicit messages: Messages,
 request: UserRequest[_],
 context: config.TamcContext,
 breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-user: Option[details.TamcUser] = None,
 gaDimensions: Option[Map[String, String]] = None,
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -112,8 +109,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 @if(ApplicationConfig.enableRefresh) {
     <meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
 }
-<!--TODO another cookie?-->
-@isUserResearchBannerHidden = @{request.cookies.exists((x: Cookie) => x.name == "tamc_ur_panel")}
+
+@isUserResearchBannerHidden = @{true}
 
 @mustacheCheck(str: String) = @{
     if(str.trim=="") false else str
@@ -126,39 +123,30 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 }
 
 @titleName = @{
-    if(authState.permanent) {
+    if(request.authState.permanent) {
         appConfig.pageTitle
     } else {
         ""
     }
 }
 
-@userDisplayName = @{ mustacheCheck( user.fold("")(_.name.getOrElse("You")) ) }
-
-@previouslyLoggedInAt = @{
-    val msg = user.fold("") { tamcUser => formatEasyReadingTimestamp(tamcUser.authContext.user.previouslyLoggedInAt, "") }
-    mustacheCheck(msg)
-}
-
-@showLastLogInStatus = @{
-    (user.isDefined && authState.permanent)
-}
-
+@* user.fold(HtmlFormat.empty) {
+*  authContext =>
+*      authContext.authContext.attorney.fold(HtmlFormat.empty) {
+*        _ =>  layouts.attorney_banner(authContext.authContext.principal.name, authContext.authContext.attorney.get.returnLink.url, standAlone, Some(Messages("attorney.banner.link")))
+*   }
+*}
+*@
 @actingAttorneyBanner = @{
-    user.fold(HtmlFormat.empty) {
-        authContext =>
-            authContext.authContext.attorney.fold(HtmlFormat.empty) {
-            _ =>  layouts.attorney_banner(authContext.authContext.principal.name, authContext.authContext.attorney.get.returnLink.url, standAlone, Some(Messages("attorney.banner.link")))
-        }
-    }
+    HtmlFormat.empty
 }
 
 @googleAnalytics = @{
     Map[String, Any](
         "trackingId" -> ApplicationConfig.analyticsToken,
         "cookieDomain" -> ApplicationConfig.analyticsHost,
-        "confidenceLevel" -> user.map(_.authContext.user.confidenceLevel.toString).getOrElse(false),
-        "authProvider" -> request.session.get(SessionKeys.authProvider)
+        "confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
+        "authProvider" -> request.authProvider
     ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
@@ -177,17 +165,13 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
       "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
       "includeHMRCBranding" -> true,
 
-      "hideAccountMenu" -> !authState.permanent,
+      "hideAccountMenu" -> !request.authState.permanent,
       "assetsPath" -> appConfig.assetsPrefix,
 
-      "isGovernmentGateway" -> request.session.get(SessionKeys.authProvider).contains("GGW"),
-      "isVerify" -> request.session.get(SessionKeys.authProvider).contains("IDA"),
-      "isSa" -> user.flatMap(_.authContext.principal.accounts.sa.map(_.utr)).isDefined,
-      "signOutUrl" -> (if(authState.isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
-
-      "showLastLogInStatus" -> showLastLogInStatus,
-      "previouslyLoggedInAt" -> previouslyLoggedInAt,
-      "userDisplayName" -> userDisplayName,
+      "isGovernmentGateway" -> request.authProvider.contains("GovernmentGateway"),
+      "isVerify" -> request.authProvider.contains("Verify"),
+      "isSa" -> request.isSA,
+      "signOutUrl" -> (if(request.authState.isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
 
       "actingAttorneyBanner" -> actingAttorneyBanner,
       "mainContentHeader" -> commonContentHeader,
@@ -196,8 +180,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
       "googleAnalytics" -> googleAnalytics,
 
       "scriptElems" -> Seq(
-        Map("url" -> routes.Assets.at("javascripts/tamc.js")),
-        Map("url" -> routes.Assets.at("javascripts/banner_close.js"))
+        Map("url" -> routes.Assets.at("javascripts/tamc.js"))
       ),
 
       "mainAttributes" -> mainConfig.maybeMainDataAttributes,

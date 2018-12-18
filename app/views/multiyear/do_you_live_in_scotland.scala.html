@@ -28,8 +28,7 @@
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1")),
-  authState = request.authState
+  title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1"))
 ){
 
     @templates.form_error_notification(doYouLiveInScotlandForm, formErrorMessage = "pages.form.error.mandatory.data")

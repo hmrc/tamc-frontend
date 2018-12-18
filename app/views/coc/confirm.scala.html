@@ -36,8 +36,7 @@
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.confirm-transferor")),
   mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm"))),
-  authState = request.authState
+    maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
 ) {
     @(data.endRelationshipReason.endReason == "REJECT" && isEnded && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) match {
         case retroRejection@true => {

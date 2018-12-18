@@ -14,6 +14,17 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.time.TaxYearResolver
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.play.views.html._
+@import config.ApplicationConfig
+@import java.text.NumberFormat
+@import utils.LanguageUtils
+@import models.auth.AuthenticatedUserRequest
+
 @(input:RegistrationFormInput,
 availableYears:List[TaxYear] = List[TaxYear](),
 currentYearAvailable: Boolean)(
@@ -24,20 +35,8 @@ currentYearAvailable: Boolean)(
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.twirl.api.Html
-@import views.helpers.TextGenerators
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.time.TaxYearResolver
-@import views.helpers.TextGenerators
-@import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig
-@import java.text.NumberFormat
-@import utils.LanguageUtils
-
-
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.extra-years")),
-    authState = request.authState
+    title = Messages("title.application.pattern", Messages("title.extra-years"))
 ){
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
         <p class="lede">@Html(Messages("pages.previousyear.lede"))</p>

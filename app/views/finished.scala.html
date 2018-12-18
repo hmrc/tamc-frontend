@@ -14,6 +14,10 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
+@import config.ApplicationConfig
+@import models.auth.AuthenticatedUserRequest
+
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(
     implicit messages: Messages,
         request: AuthenticatedUserRequest[_],
@@ -22,14 +26,8 @@
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@import play.twirl.api.Html
-@import config.ApplicationConfig
-
-
-
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.finished")),
-  authState = request.authState
+  title = Messages("title.application.pattern", Messages("title.finished"))
 ){
 
     <div class="highlighted-event govuk-box-highlight">

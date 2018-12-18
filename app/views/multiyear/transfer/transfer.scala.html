@@ -19,7 +19,7 @@
 @import views.helpers.TextGenerators
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
-
+@import models.auth.AuthenticatedUserRequest
 
 @(recipientForm: Form[models.RecipientDetailsFormInput])(
 implicit messages: Messages,
@@ -33,8 +33,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.transfer")),
   mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}"))),
-    authState = request.authState
+    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
 ) {
 
     @templates.form_error_notification(recipientForm)

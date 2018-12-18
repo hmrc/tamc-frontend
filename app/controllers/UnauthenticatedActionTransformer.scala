@@ -20,8 +20,10 @@ import com.google.inject.Inject
 import models.auth._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.auth.core.retrieve.~
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,13 +36,13 @@ class UnauthenticatedActionTransformer @Inject()(
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L200) {
-      Future.successful(RequestWithAuthState(request, authState = PermanentlyAuthenticated))
-    }.recover {
-      case _: NoActiveSession ⇒
-        RequestWithAuthState(request, Unauthenticated)
-      case _: InsufficientConfidenceLevel ⇒
-        RequestWithAuthState(request, TemporarilyAuthenticated)
+    authorised(ConfidenceLevel.L100).retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
+      case cl ~ saUtr ~ credentials ⇒
+        val authState = if(credentials.isDefined) TemporarilyAuthenticated else PermanentlyAuthenticated
+        Future.successful(RequestWithAuthState(request, authState = authState, Some(cl), saUtr.isDefined, credentials.map(_.providerType)))
+    } recover {
+      case _: NoActiveSession | _: InsufficientConfidenceLevel ⇒
+        RequestWithAuthState(request, Unauthenticated, None, isSA = false, None)
     }
   }
 }

@@ -39,13 +39,17 @@ class AuthenticatedActionRefiner @Inject()(
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L100).retrieve(Retrievals.credentials and Retrievals.nino) {
-      case credentials ~ Some(nino) =>
+    authorised(ConfidenceLevel.L100).retrieve(Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr) {
+      case credentials ~ Some(nino) ~ confidenceLevel ~ saUtr =>
         val authState = if (credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
-        Future.successful(Right(AuthenticatedUserRequest(request, authState, Nino(nino))))
+        Future.successful(
+          Right(
+            AuthenticatedUserRequest(request, authState, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
+          )
+        )
       case _ ⇒
         throw new Exception("Nino not found")
-    }.recover {
+    } recover {
       case _: InsufficientConfidenceLevel =>
         Left(Redirect(ApplicationConfig.ivUpliftUrl))
       case _: NoActiveSession =>

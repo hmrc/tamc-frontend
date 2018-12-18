@@ -28,8 +28,7 @@
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.change.earnings")),
-    mainConfig = views.helpers.MainConfig(),
-    authState = request.authState) {
+    mainConfig = views.helpers.MainConfig()) {
     <h1 class="heading-large">@Html(Messages("change.status.earnings.h1"))</h1>
     <h2 class="heading-medium">@Html(Messages("change.status.earnings.h2"))</h2>
         <ul class="list list-bullet">

@@ -29,8 +29,7 @@
 
 
 @templates.tamc_main(
-  title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth")),
-  authState = request.authState
+  title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 ) {
 
         @templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")

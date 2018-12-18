@@ -33,8 +33,7 @@
     )
 
 @tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1")),
-    authState = request.authState
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
     @form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 
