@@ -26,7 +26,7 @@ import config.ApplicationConfig._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYearResolver
 
-class MarriageAllowanceCalculatorTest extends UnitSpec with TaxYearResolver with OneAppPerSuite {
+class MarriageAllowanceCalculatorTest extends ControllerBaseSpec {
 
   private def maxLimitToFormattedCurrency(limit: Int): String = {
     val formatter = NumberFormat.getCurrencyInstance(Locale.UK)

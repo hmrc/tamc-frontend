@@ -33,23 +33,18 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.test.UnitSpec
 
-class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with RunMode {
+class RoutesTest extends ControllerBaseSpec {
 
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Hitting home endpoint directly" should {
     "redirect to landing page (with passcode)" in {
-      val request = FakeRequest()
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.home()(request)
+      val result = eligibilityController.home()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check")
     }
 
     "redirect to landing page (without passcode)" in {
-      val request = FakeRequest()
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.home()(request)
+      val result = eligibilityController.home()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check")
     }
@@ -57,25 +52,19 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "GDS Journey enforcer" should {
     "set GDS journey if no journey is present" in {
-      val request = FakeRequest()
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheck()(request)
+      val result = eligibilityController.eligibilityCheck()(request)
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
 
     "set GDS journey if invalid journey is present" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "ABC"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheck()(request)
+      val result = eligibilityController.eligibilityCheck()(request)
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
 
     "leave PTA journey unchanged when PTA feature is enabled" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheck()(request)
+      val result = eligibilityController.eligibilityCheck()(request)
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
     }
@@ -83,39 +72,27 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "PTA Journey enforcer" should {
     "set PTA journey if no journey is present" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
+      val result = eligibilityController.howItWorks()(request)
 
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
     }
 
     "set PTA journey if invalid journey is present" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "ABC"))
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
+      val result = eligibilityController.howItWorks()(request)
 
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
     }
 
     "leave PTA journey unchanged" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
+      val result = eligibilityController.howItWorks()(request)
 
       status(result) shouldBe OK
       cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
     }
     "check back link on calculator page" in {
-      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.calculator()(request)
+      val result = eligibilityController.ptaCalculator()(request)
       val document = Jsoup.parse(contentAsString(result))
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
@@ -125,9 +102,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "Hitting calculator page" should {
     "have a ’previous’ and ’next’ links to gov.ukpage" in {
-      val request = FakeRequest()
-      val controllerToTest = makeEligibilityController()
-      val result = controllerToTest.calculator()(request)
+      val result = eligibilityController.gdsCalculator()(request)
       status(result) shouldBe OK
 
       val document = Jsoup.parse(contentAsString(result))
@@ -183,25 +158,6 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("bar")
-    }
-
-    "redirect to IV if user tries to hit any authorized page directly and user has seen eligibility page" in {
-      val testComponent = makeTestComponent(dataId = "not_logged_in", riskTriageRouteBiasPercentageParam = 100)
-      val controllerToTest = testComponent.controller
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val result = controllerToTest.transfer()(request)
-
-      status(result) shouldBe SEE_OTHER
-
-      redirectLocation(result) shouldBe Some("bar")
-
-      controllerToTest.idaAuditEventsToTest.size shouldBe 1
-      val event = controllerToTest.idaAuditEventsToTest.head
-
-      val detailsToCheck = Map(
-        "event" -> "authorisation-attempt",
-        "data" -> "TRIAGE")
-      eventsShouldMatch(event, "TxSuccessful", detailsToCheck)
     }
 
     "redirect to IDA login page if user has insufficient Level of Assurance (LOA 1)" in {
@@ -454,204 +410,17 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "Signout page" should {
     "redirect to IDA signout" in {
-      val controllerToTest = makeFakeHomeController()
+      val controllerToTest = app.injector.instanceOf[AuthorisationController]
       val result = controllerToTest.logout(FakeRequest())
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/ida/signout")
     }
   }
 
-  "Session timeout page" should {
-    "have link to PTA page" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.maAuthRegime.authenticationType.handleSessionTimeout(request)
-
-      status(result) shouldBe BAD_REQUEST
-      val document = Jsoup.parse(contentAsString(result))
-      val signout = document.getElementById("timed-out")
-      signout shouldNot be(null)
-      signout.attr("href") shouldBe "/personal-account"
-    }
-
-    "have link to PTA page (with PTA cookie)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val result = controllerToTest.maAuthRegime.authenticationType.handleSessionTimeout(request)
-
-      status(result) shouldBe BAD_REQUEST
-      val document = Jsoup.parse(contentAsString(result))
-      val signout = document.getElementById("timed-out")
-      signout shouldNot be(null)
-      signout.attr("href") shouldBe "/personal-account"
-    }
-
-    "have link to register page (GDS)" in {
-
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      implicit val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val result = controllerToTest.maAuthRegime.authenticationType.handleSessionTimeout
-
-      status(result) shouldBe BAD_REQUEST
-      val document = Jsoup.parse(contentAsString(result))
-      val signout = document.getElementById("timed-out")
-      signout shouldNot be(null)
-      signout.attr("href") shouldBe "/marriage-allowance-application"
-    }
-  }
-
-  "PTA How It Works page " should {
-
-    "authenticate the user " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("not_logged_in")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("bar")
-    }
-
-    "successfully authenticate the user " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      val button = document.getElementById("start-now")
-      button shouldNot be(null)
-      button.attr("href") shouldBe marriageAllowanceUrl("/benefit-calculator-pta")
-    }
-
-  }
-
-  "PTA Benefit calculator page " should {
-
-    "authenticate the user " in {
-      val testComponent = makePtaEligibilityTestComponent("not_logged_in")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.calculator()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("bar")
-    }
-
-    "successfully authenticate the user " in {
-      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.calculator()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val continue = document.getElementById("continue")
-      continue shouldNot be(null)
-      continue.attr("href") shouldBe "/marriage-allowance-application/eligibility-check-pta"
-
-    }
-  }
-
-  "PTA Eligibility check page " should {
-
-    "authenticate the user " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("not_logged_in")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheck()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("bar")
-    }
-
-    "go to finish in ’nyn’ scenario" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("marriage-criteria" -> "false", "recipient-income-criteria" -> "true", "transferor-income-criteria" -> "false")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheckAction()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "You are not eligible in the current tax year - Marriage Allowance eligibility - GOV.UK"
-
-      val finish = document.getElementById("button-finished")
-      finish shouldNot be(null)
-      finish.attr("href") shouldBe ApplicationConfig.ptaFinishedUrl
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
-    }
-
-  }
-
-  "PTA Journey enforcer for multiyear" should {
-    "set PTA journey if no journey is present" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
-
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
-    }
-
-    "set PTA journey if invalid journey is present" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "ABC"))
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
-
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
-    }
-
-    "leave PTA journey unchanged" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
-
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
-    }
-  }
-
   "PTA Eligibility check page for multi year" should {
 
-    "authenticate the user " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("not_logged_in")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheck()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("bar")
-    }
-
-    "successfully authenticate the user and have eligibility-check page action" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheck()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val eligibilityForm = document.getElementById("eligibility-form")
-      eligibilityForm shouldNot be(null)
-      eligibilityForm.attr("action") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/benefit-calculator-pta")
-
-    }
-
     "diplay errors as no radio buttons is selected " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -666,10 +435,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -680,19 +446,13 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "redirect to date of birth if answer is yes" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("marriage-criteria" -> "true")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check-pta"))
     }
 
     "go to not eligible page (finish page) if no is selected" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("marriage-criteria" -> "false")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -710,10 +470,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
   "PTA date of birth check page for multi year" should {
 
     "diplay errors as no radio buttons is selected " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      val result = eligibilityController.dateOfBirthCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -725,10 +482,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "redirect to who should do you live in scotland page irrespective of selection" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("date-of-birth" -> "true")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      val result = eligibilityController.dateOfBirthCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-live-in-scotland-pta"))
     }
@@ -736,25 +490,18 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "PTA do you live in scotland page for multi year" should {
     "diplay errors as no radio buttons is selected " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.doYouLiveInScotlandAction()(request)
+      val result = eligibilityController.doYouLiveInScotlandAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check-pta")
     }
 
     "redirect to lower earner check page irrespective of selection" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("do-you-live-in-scotland" -> "true")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.doYouLiveInScotlandAction()(request)
+      val result = eligibilityController.doYouLiveInScotlandAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner-pta"))
     }
@@ -765,25 +512,18 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.lowerEarnerCheckAction()(request)
+      val result = eligibilityController.lowerEarnerCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/do-you-live-in-scotland-pta")
     }
 
     "redirect to who should transfer page irrespective of selection" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("lower-earner" -> "true")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.lowerEarnerCheckAction()(request)
+      val result = eligibilityController.lowerEarnerCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/partners-income-pta"))
     }
@@ -796,10 +536,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.partnersIncomeCheckAction()(request)
+      val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -815,10 +552,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherScotThreshold = formatter.format(ApplicationConfig.MAX_LIMIT_SCOT)
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path_scottish")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.partnersIncomeCheckAction()(request)
+      val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -832,9 +566,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
     "redirect to do you want to apply page irrespective of selection" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("partners-income" -> "false")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.partnersIncomeCheckAction()(request)
+      val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-want-to-apply-pta"))
     }
@@ -844,10 +576,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "PTA do you want to apply page for multi year" should {
     "diplay errors as no radio buttons is selected " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.doYouWantToApplyAction()(request)
+      val result = eligibilityController.doYouWantToApplyAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -859,20 +588,13 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "redirect to my pta home page if no chosen" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("do-you-want-to-apply" -> "false")
-      val controllerToTest = testComponent.controller
-
-      val result = controllerToTest.doYouWantToApplyAction()(request)
+      val result = eligibilityController.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("http://localhost:9232/personal-account")
     }
 
     "redirect to transfer page if yes chosen" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request.withFormUrlEncodedBody("do-you-want-to-apply" -> "true")
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.doYouWantToApplyAction()(request)
+      val result = eligibilityController.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/transfer-allowance"))
     }
@@ -881,9 +603,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
   "GDS Eligibility check page for multi year" should {
 
     "diplay errors as no radio buttons is selected " in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -898,9 +618,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -915,17 +633,13 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "redirect to lower earner page if answer is yes and have back button" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("marriage-criteria" -> "true")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check"))
     }
 
     "go to not eligible page (finish page) if no is selected" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("marriage-criteria" -> "false")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -943,9 +657,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE )
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.lowerEarnerCheckAction()(request)
+      val result = eligibilityController.lowerEarnerCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -960,9 +672,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "redirect to who should transfer page irrespective of selection" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("lower-earner" -> "false")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.lowerEarnerCheckAction()(request)
+      val result = eligibilityController.lowerEarnerCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/partners-income"))
     }
@@ -972,9 +682,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
   "GDS partners income page for multi year" should {
 
     "diplay errors as no radio buttons is selected " in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.partnersIncomeCheckAction()(request)
+      val result = eligibilityController.partnersIncomeCheckAction()(request)
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
@@ -992,9 +700,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "redirect to do you want to apply page irrespective of selection" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("partners-income" -> "false")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.partnersIncomeCheckAction()(request)
+      val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-want-to-apply"))
     }
@@ -1003,9 +709,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
   "GDS date of birth check page for multi year" should {
 
     "diplay errors as no radio buttons is selected " in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      val result = eligibilityController.dateOfBirthCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -1017,9 +721,7 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
     }
 
     "redirect to do you live in scotland page irrespective of selection" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("date-of-birth" -> "false")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.dateOfBirthCheckAction()(request)
+      val result = eligibilityController.dateOfBirthCheckAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-live-in-scotland"))
     }
@@ -1028,23 +730,18 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "GDS do you live in scotland page for multi year" should {
     "diplay errors as no radio buttons is selected " in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.doYouLiveInScotlandAction()(request)
+      val result = eligibilityController.doYouLiveInScotlandAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check")
     }
 
     "redirect to who should lower earner page irrespective of selection" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("do-you-live-in-scotland" -> "false")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.doYouLiveInScotlandAction()(request)
+      val result = eligibilityController.doYouLiveInScotlandAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner"))
     }
@@ -1052,33 +749,28 @@ class RoutesTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite with
 
   "GDS do you want to apply page for multi year" should {
     "diplay errors as no radio buttons is selected " in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.doYouWantToApplyAction()(request)
+      val result = eligibilityController.doYouWantToApplyAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/partners-income")
     }
 
     "redirect to gov uk ma page if no chosen" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("do-you-want-to-apply" -> "false")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.doYouWantToApplyAction()(request)
+      val result = eligibilityController.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("https://www.gov.uk/marriage-allowance")
     }
 
     "redirect to confirm id page if yes chosen" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS")).withFormUrlEncodedBody("do-you-want-to-apply" -> "true")
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.doYouWantToApplyAction()(request)
+      val result = eligibilityController.doYouWantToApplyAction()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/history"))
     }
   }
+
+  def eligibilityController: EligibilityController = app.injector.instanceOf[EligibilityController]
 }

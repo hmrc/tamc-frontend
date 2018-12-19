@@ -16,35 +16,24 @@
 
 package controllers
 
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.MessagesApi
-import play.api.test.FakeRequest
 import play.api.test.Helpers.{cookies, defaultAwaitTimeout, _}
-import test_utils.TestUtility
-import uk.gov.hmrc.play.test.UnitSpec
 
-class LanguageControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
+class LanguageControllerTest extends ControllerBaseSpec {
 
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
-  trait LocalSetup {
-    val c = app.injector.instanceOf[LanguageController]
-  }
-
+  val controller = app.injector.instanceOf[LanguageController]
   "Calling LanguageController.enGb" should {
-    "change the language to English and return 303" in new LocalSetup {
-      val req = FakeRequest("GET", "test")
-      val r = c.enGb("/test")(req)
-      cookies(r).get("PLAY_LANG").get.value shouldBe "en"
-      status(r) shouldBe SEE_OTHER
+    "change the language to English and return 303" in {
+      val result = controller.enGb("/test")(request)
+      cookies(result).get("PLAY_LANG").get.value shouldBe "en"
+      status(result) shouldBe SEE_OTHER
     }
   }
 
   "Calling LanguageController.cyGb" should {
-    "change the language to Welsh and return 303" in new LocalSetup {
-      val r = c.cyGb("/test")(FakeRequest("GET", ""))
-      cookies(r).get("PLAY_LANG").get.value shouldBe "cy"
-      status(r) shouldBe SEE_OTHER
+    "change the language to Welsh and return 303" in {
+      val result = controller.cyGb("/test")(request)
+      cookies(result).get("PLAY_LANG").get.value shouldBe "cy"
+      status(result) shouldBe SEE_OTHER
     }
   }
 }

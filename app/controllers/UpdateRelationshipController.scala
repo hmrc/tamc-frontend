@@ -17,7 +17,6 @@
 package controllers
 
 import com.google.inject.Inject
-import config._
 import errors._
 import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, updateRelationshipDivorceForm, updateRelationshipForm}
 import forms.EmailForm.emailForm
@@ -27,7 +26,7 @@ import models.auth.UserRequest
 import org.joda.time.LocalDate
 import play.Logger
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.mvc.{Action, AnyContent, Result}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -38,6 +37,7 @@ class UpdateRelationshipController @Inject()(
                                              authenticatedActionRefiner: AuthenticatedActionRefiner,
                                              updateRelationshipService: UpdateRelationshipService,
                                              registrationService: TransferService,
+                                             cachingService: CachingService,
                                              timeService: TimeService
                                             ) extends BaseController {
 
@@ -89,7 +89,7 @@ class UpdateRelationshipController @Inject()(
           BadRequest(views.html.coc.reason_for_change(form))
         },
         formData => {
-          CachingService.saveRoleRecord(formData.role.get).flatMap { _ ⇒
+          cachingService.saveRoleRecord(formData.role.get).flatMap { _ ⇒
             (formData.endReason, formData.role) match {
               case (Some(EndReasonCode.CANCEL), _) => Future.successful {
                 Redirect(controllers.routes.UpdateRelationshipController.confirmCancel())

@@ -24,7 +24,7 @@ import test_utils.{TestConstants, UpdateRelationshipTestUtility}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateRelationshipErrorTest extends UnitSpec with UpdateRelationshipTestUtility with GuiceOneAppPerSuite {
+class UpdateRelationshipErrorTest extends UpdateRelationshipTestUtility {
 
   "List relationship" should {
 

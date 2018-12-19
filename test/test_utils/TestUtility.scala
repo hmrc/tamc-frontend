@@ -16,17 +16,13 @@
 
 package test_utils
 
-import actions.{IdaAuthentificationProvider, MarriageAllowanceRegime}
-import config.TamcFormPartialRetriever
-import connectors.{ApplicationAuthConnector, CitizenDetailsConnector, MarriageAllowanceConnector}
+import connectors.{ApplicationAuthConnector, MarriageAllowanceConnector}
 import controllers._
-import details._
 import errors.ErrorResponseStatus.RELATION_MIGHT_BE_CREATED
 import models._
 import org.joda.time.DateTime
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsValue, Json, Writes}
-import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.OK
 import services.{CachingService, TimeService, TransferService}
@@ -38,7 +34,6 @@ import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.connectors.domain._
 import uk.gov.hmrc.play.http.ws.{WSGet, WSPost, WSPut}
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.DateTimeUtils.now
 import uk.gov.hmrc.time.TaxYearResolver
 
@@ -53,8 +48,6 @@ trait TestUtility extends UnitSpec with I18nSupport {
 
   def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
 
-  val messagesApi: MessagesApi
-
   def eventsShouldMatch(event: DataEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty): Unit = {
     event match {
       case DataEvent("tamc-frontend", `auditType`, _, eventTags, `details`, _) if (tags.toSet subsetOf eventTags.toSet) =>
@@ -62,61 +55,20 @@ trait TestUtility extends UnitSpec with I18nSupport {
     }
   }
 
-  def makeFakeHomeController(): AuthorisationController = {
-    val fakeCustomAuditConnector = new AuditConnector {
-      override lazy val auditingConfig = ???
-      var auditEventsToTest: List[DataEvent] = List()
-
-      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
-        auditEventsToTest = auditEventsToTest :+ event
-        Future {
-          AuditResult.Success
-        }
-      }
-    }
-
-    new AuthorisationController {
-      override val logoutUrl = "/ida/signout"
-      override val logoutCallbackUrl = "/feedback-survey/?origin=TAMC"
-      override val auditConnector: AuditConnector = fakeCustomAuditConnector
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      def auditEventsToTest: List[DataEvent] = fakeCustomAuditConnector.auditEventsToTest
-    }
-  }
-
-  def makeEligibilityController(): GdsEligibilityController = {
-    val fakeCustomAuditConnector = new AuditConnector {
-      override lazy val auditingConfig = ???
-      var auditEventsToTest: List[DataEvent] = List()
-
-      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
-        auditEventsToTest = auditEventsToTest :+ event
-        Future {
-          AuditResult.Success
-        }
-      }
-    }
-
-    new GdsEligibilityController {
-      override val auditConnector = fakeCustomAuditConnector
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
-    }
-  }
-
-  case class PtaElibilityTestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: PtaEligibilityController)
+  case class PtaElibilityTestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: EligibilityController)
 
   def makePtaEligibilityTestComponent(
-                                       dataId: String,
-                                       pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))): PtaElibilityTestComponent = {
-    Map(
+                                       dataId: String
+                                     ): PtaElibilityTestComponent = {
+    /*Map(
       ("user_happy_path" -> PtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makePtaEligibilityController(Some(Ninos.ninoHappyPath), pd))),
       ("user_returning" -> PtaElibilityTestComponent(makeFakeRequest("ID-" + Ninos.ninoWithCL100), makePtaEligibilityController(Some(Ninos.ninoWithCL100), pd))),
       ("not_logged_in" -> PtaElibilityTestComponent(FakeRequest(), makePtaEligibilityController(None, pd))))
-      .get(dataId).get
+      .get(dataId).get*/
+    PtaElibilityTestComponent(FakeRequest(), ???)
   }
 
-  private def makePtaEligibilityController(
+ /* private def makePtaEligibilityController(
                                             nino: Option[String],
                                             pd: PersonDetailsSuccessResponse) = {
     val fakeCustomAuditConnector = new AuditConnector {
@@ -162,25 +114,6 @@ trait TestUtility extends UnitSpec with I18nSupport {
       override def citizenDetailsUrl: String = "foo"
     }
 
-
-    val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
-      override val login = "bar"
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      override implicit val formPartialRetriever = TamcFormPartialRetriever
-      override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
-        nino match {
-          case Some(validNino) => throw new IllegalArgumentException
-          case None => super.redirectToLogin
-        }
-      }
-
-      override val customAuditConnector = fakeIDACustomAuditConnector
-    }
-
-    val fakeMarriageAllowanceRegime = new MarriageAllowanceRegime {
-      override val authenticationType = fakeIdaAuthenticationProvider
-    }
-
     def createFakePayeAuthority(nino: String) =
       nino match {
         case Ninos.ninoWithLOA1 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
@@ -223,161 +156,38 @@ trait TestUtility extends UnitSpec with I18nSupport {
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
       def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
     }
-  }
+  }*/
 
-  def makeMultiYearGdsEligibilityController(): MultiYearGdsEligibilityController = {
-    val fakeCustomAuditConnector = new AuditConnector {
-      override lazy val auditingConfig = ???
-      var auditEventsToTest: List[DataEvent] = List()
-
-      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
-        auditEventsToTest = auditEventsToTest :+ event
-        Future {
-          AuditResult.Success
-        }
-      }
-    }
-
-    new MultiYearGdsEligibilityController(messagesApi) {
-      val auditConnector: AuditConnector = fakeCustomAuditConnector
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      def auditEventsToTest: List[DataEvent] = fakeCustomAuditConnector.auditEventsToTest
-    }
-  }
-
-  case class MultiYearPtaElibilityTestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: MultiYearPtaEligibilityController)
+  case class MultiYearPtaElibilityTestComponent(request: play.api.test.FakeRequest[play.api.mvc.AnyContentAsEmpty.type], controller: EligibilityController)
 
   def makeMultiYearPtaEligibilityTestComponent(
-                                                dataId: String,
-                                                pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name"))))
+                                                dataId: String
                                               ): MultiYearPtaElibilityTestComponent = {
     Map(
       "user_happy_path" -> MultiYearPtaElibilityTestComponent(
         makeFakeRequest("ID-" + Ninos.ninoHappyPath).withSession("scottish_resident" -> "false"),
-        makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd)
+        makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath))
       ),
       "user_happy_path_scottish" -> MultiYearPtaElibilityTestComponent(
         makeFakeRequest("ID-" + Ninos.ninoHappyPath).withSession("scottish_resident" -> "true"),
-        makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath), pd)
+        makeMultiYearPtaEligibilityController(Some(Ninos.ninoHappyPath))
       ),
       "user_returning" -> MultiYearPtaElibilityTestComponent(
         makeFakeRequest("ID-" + Ninos.ninoWithCL100),
-        makeMultiYearPtaEligibilityController(Some(Ninos.ninoWithCL100), pd)
+        makeMultiYearPtaEligibilityController(Some(Ninos.ninoWithCL100))
       ),
       "not_logged_in" -> MultiYearPtaElibilityTestComponent(
         FakeRequest(),
-        makeMultiYearPtaEligibilityController(None, pd)
+        makeMultiYearPtaEligibilityController(None)
       )
     )(dataId)
   }
 
   private def makeMultiYearPtaEligibilityController(
-                                                     nino: Option[String],
-                                                     pd: PersonDetailsSuccessResponse) = {
+                                                     nino: Option[String]
+                                                   ) = {
 
-    val fakeCustomAuditConnector = new AuditConnector {
-      override lazy val auditingConfig = ???
-      var auditEventsToTest: List[DataEvent] = List()
-
-      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
-        auditEventsToTest = auditEventsToTest :+ event
-        Future {
-          AuditResult.Success
-        }
-      }
-    }
-
-    val fakeHttpGet = new HttpGet with WSGet{
-      override def doGet(url: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        val nino: String = url.split("/")(2)
-        val response = TestConstants.dummyHttpGetResponseJsonMap.get(nino)
-        response.getOrElse(throw new IllegalArgumentException("transferor not supported for :" + url))
-      }
-
-      def appName: String = ???
-
-      val hooks = NoneRequired
-    }
-
-    val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
-      override def httpGet: HttpGet = fakeHttpGet
-
-      override def citizenDetailsUrl: String = "foo"
-    }
-
-    val fakeIDACustomAuditConnector = new AuditConnector {
-      override lazy val auditingConfig = ???
-      var auditEventsToTest: List[DataEvent] = List()
-
-      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
-        auditEventsToTest = auditEventsToTest :+ event
-        Future {
-          AuditResult.Success
-        }
-      }
-    }
-
-
-    val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
-      override val login = "bar"
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      override implicit val formPartialRetriever = TamcFormPartialRetriever
-      override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
-        nino match {
-          case Some(validNino) => throw new IllegalArgumentException
-          case None => super.redirectToLogin
-        }
-      }
-
-      override val customAuditConnector = fakeIDACustomAuditConnector
-    }
-
-    val fakeMarriageAllowanceRegime = new MarriageAllowanceRegime {
-      override val authenticationType = fakeIdaAuthenticationProvider
-    }
-
-    def createFakePayeAuthority(nino: String) =
-      nino match {
-        case Ninos.ninoWithLOA1 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, confidenceLevel = ConfidenceLevel.L50, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
-        case Ninos.ninoWithLOA1_5 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
-        case Ninos.ninoWithCL100 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = Some(new DateTime(2015, 11, 13, 9, 0)), credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L100, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
-        case ninoLoa2 => Authority("ID-" + nino, accounts = Accounts(paye = Some(PayeAccount(s"/ZZZ/${nino}", Nino(nino)))), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L500, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")
-      }
-
-    val fakeAuthConnector = new ApplicationAuthConnector {
-      override val serviceUrl: String = null
-      override lazy val http = null
-
-      override def currentAuthority(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Authority]] = {
-        nino match {
-          case Some("NINO_NOT_AUTHORISED") => Future.successful(Some(Authority("ID-NOT_AUTHORISED", accounts = Accounts(), loggedInAt = None, previouslyLoggedInAt = None, credentialStrength = CredentialStrength.Strong, ConfidenceLevel.L0, userDetailsLink = None, enrolments = None, ids = None, legacyOid = "")))
-          case Some(validNino) => Future.successful(Some(createFakePayeAuthority(validNino)))
-          case None => throw new IllegalArgumentException
-        }
-      }
-    }
-
-    val fakeCitizenDetailsService = new CitizenDetailsService {
-      def citizenDetailsUrl = ???
-
-      override def cachingService = ???
-
-      override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
-
-      override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
-        return Future.successful(pd)
-      }
-    }
-
-    new MultiYearPtaEligibilityController {
-      override val auditConnector = fakeCustomAuditConnector
-      override val maAuthRegime = fakeMarriageAllowanceRegime
-      override val authConnector = fakeAuthConnector
-      override val citizenDetailsService = fakeCitizenDetailsService
-      override val ivUpliftUrl = "jazz"
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
-    }
+    ???
   }
 
   trait DebugData {
@@ -411,10 +221,6 @@ trait TestUtility extends UnitSpec with I18nSupport {
 
     def auditEventsToTest: List[DataEvent] = ???
 
-    def idaAuditEventsToTest: List[DataEvent] = ???
-
-    def citizenDetailsCallsCount: Int = ???
-
     def saveSelectedYears: Option[List[Int]] = ???
   }
 
@@ -429,21 +235,20 @@ trait TestUtility extends UnitSpec with I18nSupport {
                          recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
                          riskTriageRouteBiasPercentageParam: Int = 0,
                          cocEnabledTestInput: Boolean = false,
-                         pd: PersonDetailsSuccessResponse = PersonDetailsSuccessResponse(PersonDetails(Person(Some("test_name")))),
                          testingTime: DateTime = TestConstants.TEST_CURRENT_DATE,
                          testCacheData: Option[UpdateRelationshipCacheData] = None): TestComponent = {
     Map(
-      ("user_happy_path" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeController(Some(Ninos.ninoHappyPath), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("user_LOA_1" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1), makeController(Some(Ninos.ninoWithLOA1), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("user_LOA_1_5" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1_5), makeController(Some(Ninos.ninoWithLOA1_5), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("user_has_relationship" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithRelationship), makeController(Some(Ninos.ninoWithRelationship), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("transferor_cid_not_found" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorNotFound), makeController(Some(Ninos.ninoTransferorNotFound), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("transferor_deceased" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorDeceased), makeController(Some(Ninos.ninoTransferorDeceased), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("conflict_409" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithConflict), makeController(Some(Ninos.ninoWithConflict), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("ltm000503" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLTM000503), makeController(Some(Ninos.ninoWithLTM000503), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("throw_error" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoError), makeController(Some(Ninos.ninoError), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("not_logged_in" -> TestComponent(FakeRequest(), makeController(None, None, None, None, cocEnabledTestInput, pd, testingTime, testCacheData))),
-      ("not_authorised" -> TestComponent(makeFakeRequest("ID-NOT_AUTHORISED"), makeController(Some("NINO_NOT_AUTHORISED"), None, None, None, cocEnabledTestInput, pd, testingTime, testCacheData))))
+      ("user_happy_path" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoHappyPath), makeController(Some(Ninos.ninoHappyPath), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("user_LOA_1" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1), makeController(Some(Ninos.ninoWithLOA1), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("user_LOA_1_5" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLOA1_5), makeController(Some(Ninos.ninoWithLOA1_5), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("user_has_relationship" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithRelationship), makeController(Some(Ninos.ninoWithRelationship), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("transferor_cid_not_found" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorNotFound), makeController(Some(Ninos.ninoTransferorNotFound), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("transferor_deceased" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoTransferorDeceased), makeController(Some(Ninos.ninoTransferorDeceased), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("conflict_409" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithConflict), makeController(Some(Ninos.ninoWithConflict), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("ltm000503" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoWithLTM000503), makeController(Some(Ninos.ninoWithLTM000503), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("throw_error" -> TestComponent(makeFakeRequest("ID-" + Ninos.ninoError), makeController(Some(Ninos.ninoError), recipientData, transferorRecipientData, recipientDetailsFormData, cocEnabledTestInput, testingTime, testCacheData))),
+      ("not_logged_in" -> TestComponent(FakeRequest(), makeController(None, None, None, None, cocEnabledTestInput, testingTime, testCacheData))),
+      ("not_authorised" -> TestComponent(makeFakeRequest("ID-NOT_AUTHORISED"), makeController(Some("NINO_NOT_AUTHORISED"), None, None, None, cocEnabledTestInput, testingTime, testCacheData))))
       .get(dataId).get
   }
 
@@ -458,40 +263,8 @@ trait TestUtility extends UnitSpec with I18nSupport {
                               transferorRecipientData: Option[CacheData],
                               recipientDetailsFormData: Option[RecipientDetailsFormInput],
                               cocEnabledTestInput: Boolean,
-                              pd: PersonDetailsSuccessResponse,
                               testingTime: DateTime,
-                              testingCacheData: Option[UpdateRelationshipCacheData]) = {
-
-    val fakeIDACustomAuditConnector = new AuditConnector {
-      override lazy val auditingConfig = ???
-      var auditEventsToTest: List[DataEvent] = List()
-
-      override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
-        auditEventsToTest = auditEventsToTest :+ event
-        Future {
-          AuditResult.Success
-        }
-      }
-    }
-
-
-    val fakeIdaAuthenticationProvider = new IdaAuthentificationProvider {
-      override val login = "bar"
-      override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-      override implicit val formPartialRetriever = TamcFormPartialRetriever
-      override def redirectToLogin(implicit request: Request[_]): Future[Result] = {
-        nino match {
-          case Some(validNino) => throw new IllegalArgumentException
-          case None => super.redirectToLogin
-        }
-      }
-
-      override val customAuditConnector = fakeIDACustomAuditConnector
-    }
-
-    val fakeMarriageAllowanceRegime = new MarriageAllowanceRegime {
-      override val authenticationType = fakeIdaAuthenticationProvider
-    }
+                              testingCacheData: Option[UpdateRelationshipCacheData]): MarriageAllowanceControllerWithDebug = {
 
     def createFakePayeAuthority(nino: String) =
       nino match {
@@ -605,13 +378,8 @@ trait TestUtility extends UnitSpec with I18nSupport {
       }
     }
 
-    val fakeCitizenDetailsConnector = new CitizenDetailsConnector {
-      override def httpGet: HttpGet = fakeHttpGet
-
-      override def citizenDetailsUrl: String = "foo"
-    }
-
     val fakeCachingService = new CachingService {
+      val marriageAllowanceConnector = ???
       override def baseUri: String = ???
 
       override def defaultSource: String = ???
@@ -716,28 +484,8 @@ trait TestUtility extends UnitSpec with I18nSupport {
       override val timeService = fakeTimeService
     }
 
-    val fakeCitizenDetailsService = new CitizenDetailsService {
-      def citizenDetailsUrl = ???
 
-      override def cachingService = fakeCachingService
-
-      override def citizenDetailsConnector: CitizenDetailsConnector = fakeCitizenDetailsConnector
-
-      var citizenDetailsCallsCount = 0
-
-      override def getPersonDetails(nino: Nino)(implicit hc: HeaderCarrier): Future[PersonDetailsResponse] = {
-        citizenDetailsCallsCount = citizenDetailsCallsCount + 1
-        return Future.successful(pd)
-      }
-    }
-
-    new MarriageAllowanceControllerWithDebug {
-      override val maAuthRegime = fakeMarriageAllowanceRegime
-      override val registrationService = fakeRegistrationService
-      override val authConnector = fakeAuthConnector
-      override val citizenDetailsService = fakeCitizenDetailsService
-      override val ivUpliftUrl = "jazz"
-      override val timeService = fakeTimeService
+    /*new MarriageAllowanceControllerWithDebug {
 
       override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
@@ -761,8 +509,6 @@ trait TestUtility extends UnitSpec with I18nSupport {
 
       override def auditEventsToTest = fakeCustomAuditConnector.auditEventsToTest
 
-      override def idaAuditEventsToTest = fakeIDACustomAuditConnector.auditEventsToTest
-
       override def notificationToTest = fakeCachingService.notificationToTest
 
       override def saveNotificationCount = fakeCachingService.saveNotificationCount
@@ -773,9 +519,8 @@ trait TestUtility extends UnitSpec with I18nSupport {
 
       override def createRelationshipUrl = fakeHttpPut.createRelationshipUrl
 
-      override def citizenDetailsCallsCount = fakeCitizenDetailsService.citizenDetailsCallsCount
-
       override def saveSelectedYears = fakeCachingService.saveYearsToTest
-    }
+    }*/
+    ???
   }
 }

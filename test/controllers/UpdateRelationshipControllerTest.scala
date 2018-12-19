@@ -19,63 +19,298 @@ package controllers
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.mvc.Cookie
-import play.api.test.Helpers.{OK, SEE_OTHER, contentAsString, defaultAwaitTimeout, redirectLocation}
-import test_utils.TestData.Cids
-import test_utils.{TestConstants, UpdateRelationshipTestUtility}
+import org.jsoup.nodes.Document
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito._
+import play.api.mvc.{AnyContent, Cookie, Request, Result}
+import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import test_utils._
+import test_utils.data.RelationshipRecordData
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.time.TaxYearResolver
 
-class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipTestUtility with GuiceOneAppPerSuite {
+import scala.concurrent.Future
+
+class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
+
+  //NOTE: These vals will ruin the mock counts
+  val mockRegistrationService: TransferService = mock[TransferService]
+  val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
+  val mockCachingService: CachingService = mock[CachingService]
+
+  def controller(auth: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): UpdateRelationshipController =
+    new UpdateRelationshipController(
+      messagesApi,
+      auth,
+      mockUpdateRelationshipService,
+      mockRegistrationService,
+      mockCachingService,
+      instanceOf[TimeService]
+  ) {
+    override val templateRenderer: TemplateRenderer = MockTemplateRenderer
+    override val formPartialRetriver: FormPartialRetriever = MockFormPartialRetriever
+  }
+
+  "History" should {
+    "redirect to transfer" when {
+      "has no active record, no historic and temporary authentication" in{
+        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+          .thenReturn(
+            Future.successful(
+              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
+            )
+          )
+        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+      }
+    }
+
+    "redirect to how-it-works" when {
+      "has no active record, no historic and permanent authentication" in {
+        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+          .thenReturn(
+            Future.successful(
+              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false),true)
+            )
+          )
+        val result: Future[Result] = controller().history()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
+      }
+    }
+
+    "load change of circumstances page" when {
+      "has some active record" in {
+        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+          .thenReturn(
+            Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
+          )
+
+
+        val result: Future[Result] = controller().history()(request)
+        status(result) shouldBe OK
+      }
+
+      "has some historic record" in {
+        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+          .thenReturn(
+            Future.successful((RelationshipRecordData.historicRelationshipRecordList,true))
+          )
+        val result: Future[Result] = controller().history()(request)
+        status(result) shouldBe OK
+      }
+    }
+  }
+
+  "makeChange" should {
+    "return successful response" when {
+      "a valid form is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody(
+          "role" → "some role",
+          "endReason" → "some end reason",
+          "historicActiveRecord" → "true"
+        )
+        val result = controller().makeChange()(request)
+        status(result) shouldBe OK
+      }
+    }
+
+    "redirect the user" when {
+      "an invalid form with errors is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody("historicActiveRecord" → "string")
+        val result = controller().makeChange()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.UpdateRelationshipController.history().url)
+      }
+    }
+  }
+
+  class UpdateRelationshipActionTest(endReason: String) {
+    val request: Request[AnyContent] = FakeRequest().withFormUrlEncodedBody(
+      "role" → "some role",
+      "endReason" → endReason,
+      "historicActiveRecord" → "true",
+      "creationTimestamp" → "timestamp",
+      "dateOfDivorce" → new LocalDate(TaxYearResolver.currentTaxYear, 6, 12).toString()
+    )
+    when(mockCachingService.saveRoleRecord(any())(any(), any())).thenReturn("OK")
+    when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
+      .thenReturn(Future.successful(EndRelationshipReason("")))
+    val result: Future[Result] = controller().updateRelationshipAction()(request)
+    lazy val document: Document = Jsoup.parse(contentAsString(result))
+  }
+
+  "updateRelationshipAction" should {
+    "return a success" when {
+      "the end reason code is DIVORCE" in new UpdateRelationshipActionTest("DIVORCE") {
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("title.divorce")
+      }
+
+      "the end reason code is EARNINGS" in new UpdateRelationshipActionTest("EARNINGS") {
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.earnings.h1")
+      }
+
+      "the end reason code is BEREAVEMENT" in new UpdateRelationshipActionTest("BEREAVEMENT") {
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.bereavement.sorry")
+      }
+    }
+
+    "redirect the user" when {
+      "the end reason code is CANCEL" in new UpdateRelationshipActionTest("CANCEL") {
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmCancel().url)
+      }
+
+      "the end reason code is REJECT" in new UpdateRelationshipActionTest("REJECT") {
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmReject().url)
+      }
+    }
+
+    "return a bad request" when {
+      "an invalid form is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody("role" → "ROLE", "historicActiveRecord" -> "string")
+        val result: Future[Result] = controller().updateRelationshipAction()(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      "an unrecognised end reason is submitted" in new UpdateRelationshipActionTest("DIVORCE_PY") {
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+  }
+
+  "changeOfIncome" should {
+    "return success" in {
+      status(controller().changeOfIncome()(request)) shouldBe OK
+    }
+  }
+
+  "bereavement" should {
+    "return success" in {
+      status(controller().bereavement()(request)) shouldBe OK
+    }
+  }
+
+  "confirmYourEmailActionUpdate" should {
+    "return a bad request" when {
+      "an invalid form is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" → "not a real email")
+        val result = controller().confirmYourEmailActionUpdate()(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+
+    "redirect" when {
+      "a successful form is submitted" in {
+        val email = "example@example.com"
+        val record = NotificationRecord(EmailAddress(email))
+        when(mockRegistrationService.upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any()))
+          .thenReturn(record)
+        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" → email)
+        val result = controller().confirmYourEmailActionUpdate()(request)
+        status(result) shouldBe SEE_OTHER
+      }
+    }
+  }
+
+  "divorceYear" should {
+    "return a success" when {
+      "there is cache data returned" in {
+        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any())).thenReturn(
+          Some(UpdateRelationshipCacheData(None, Some(""), relationshipEndReasonRecord = Some(EndRelationshipReason("")), notification = None))
+        )
+        val result = controller().divorceYear()(request)
+
+        status(result) shouldBe OK
+      }
+    }
+
+    "return InternalServerError" when {
+      "there is no cache data" in {
+        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any())).thenReturn(None)
+        status(controller().divorceYear()(request)) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+  }
+
+  "divorceSelectYear" should {
+    "return bad request" when {
+      "an invalid form is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody("role"→ "")
+        val result = controller().divorceSelectYear()(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+//TODO fix... always returning bad request. possibly due to divorce date on form - not sure
+    "return a success" when {
+      def request = FakeRequest().withFormUrlEncodedBody(
+        "role"→ "some role",
+        "endReason" → "DIVORCE",
+        "historicActiveRecord" → "true",
+        "creationTimeStamp" → "timestamp",
+        "dateOfDivorce" -> LocalDate.now.minusDays(1).toString()
+      )
+
+      "divorce date is valid" in {
+        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(true)
+        val result = controller().divorceSelectYear()(request)
+        lazy val document: Document = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("title.make-a-change")
+      }
+
+      "divorce date is invalid" in {
+        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(false)
+        val result = controller().divorceSelectYear()(request)
+        lazy val document: Document = Jsoup.parse(contentAsString(result))
+
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("title.divorce")
+      }
+    }
+  }
 
   "Update relationship email notification " should {
 
     "save a valid email and redirect to confirmation page" in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = ("transferor-email" -> "example@example.com"))
-      val result = controllerToTest.confirmYourEmailActionUpdate(request)
+      val email = "example@example.com"
+      val record = NotificationRecord(EmailAddress(email))
+      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> email)
+      when(mockRegistrationService.upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any()))
+        .thenReturn(Future.successful(record))
+      val result = controller().confirmYourEmailActionUpdate(request)
 
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-change")
-      controllerToTest.saveNotificationCount shouldBe 1
-      controllerToTest.notificationToTest shouldBe Some(NotificationRecord(EmailAddress("example@example.com")))
+      verify(mockRegistrationService, times(1)).upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any())
     }
 
     "read from keystore and display email field" in {
-      val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015")
-      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "", Some(""), Some(""), "", "")
-      val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser),
-        activeRelationshipRecord = Some(relationshipRecord), notification = None,
-        relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.CANCEL)), relationshipUpdated = Some(false))
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship", transferorRecipientData = Some(updateRelationshipCacheData))
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirmEmail(request)
+      val email = "example@example.com"
+      val record = NotificationRecord(EmailAddress(email))
+      when(mockUpdateRelationshipService.getUpdateNotification(any(), any())).thenReturn(Some(record))
+      val result = controller().confirmEmail(request)
 
       status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
 
-      controllerToTest.cachingRetrievalCount() shouldBe 1
-      document.getElementById("transferor-email").attr("value") shouldBe ""
+      val document = Jsoup.parse(contentAsString(result))
+      verify(mockUpdateRelationshipService, times(1))
+      document.getElementById("transferor-email").attr("value") shouldBe email
     }
   }
 
   "Update relationship caching data " should {
-
-    "have a logged in user in cached" in {
-      val loggedInUser = Some(LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015"))
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_no_relationship", loggedInUserInfo = loggedInUser)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.history()(request)
-
-      status(result) shouldBe SEE_OTHER
-      controllerToTest.loggedInUserInfoCount shouldBe 1
-    }
 
     "have divorce previous year in end relationship cache " in {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
@@ -127,7 +362,7 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
 
     "have update relationship details in cache with Cancel end reason" in {
       val loggedInUser = LoggedInUserInfo(999700100, "2015", None, TestConstants.GENERIC_CITIZEN_NAME)
-      val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "", "20150101", Some(""), Some("20160101"), "", "")
+      val relationshipRecord =  RelationshipRecord(Role.RECIPIENT, "", "20150101", Some(""), Some("20160101"), "", "")
       val updateRelationshipCacheData = UpdateRelationshipCacheData(loggedInUserInfo = Some(loggedInUser), roleRecord = Some(""),
         activeRelationshipRecord = Some(relationshipRecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
         relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.CANCEL)), relationshipUpdated = Some(false))
@@ -316,8 +551,8 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
   }
 
   "Calling history page" should {
-
-    "show 'Cancel Marriage Allowance' button on ’History’ page with PTA journey" in {
+    //CONTENT
+    "show 'Cancel Marriage Allowance' button on ’History’ page with PTA journey" ignore {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
@@ -327,8 +562,9 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
     }
+    //CONTENT
 
-    "show 'Cancel Marriage Allowance' button on ’History’ page with GDS journey" in {
+    "show 'Cancel Marriage Allowance' button on ’History’ page with GDS journey" ignore {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
@@ -338,8 +574,9 @@ class UpdateRelationshipControllerTest extends UnitSpec with UpdateRelationshipT
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
     }
+    //CONTENT
 
-    "show sign-out on ’History’ page along with message" in {
+    "show sign-out on ’History’ page along with message" ignore {
       val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
       val controllerToTest = testComponent.controller
       val request = testComponent.request

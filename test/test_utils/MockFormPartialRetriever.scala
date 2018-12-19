@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-package controllers
+package test_utils
 
-import play.api.test.Helpers.OK
+import play.api.mvc.RequestHeader
+import play.twirl.api.Html
+import uk.gov.hmrc.http.CoreGet
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-class AuthorisationControllerTest extends ControllerBaseSpec {
+object MockFormPartialRetriever extends FormPartialRetriever  {
+  override val crypto: String ⇒ String = s ⇒ s
+  override def httpGet: CoreGet = ???
 
-  val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
-
-  "Calling notAuthorised" should {
-    "return OK" in {
-      val result = await(controller.notAuthorised()(request))
-      status(result) shouldBe OK
-    }
+  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html = {
+    Html("")
   }
-
-  "Calling sessionTimeout" should {
-    "return OK" in {
-      val result = await(controller.sessionTimeout()(request))
-      status(result) shouldBe OK
-    }
-  }
-
-  //TODO controller.logout
-
 }

@@ -33,14 +33,12 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
+class ContentTest extends ControllerBaseSpec {
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
     "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
     "Insurance is taken off."
-
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   "Calling Transfer Submit page" should {
 
@@ -733,10 +731,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "PTA Benefit calculator page " should {
 
     "successfully load the calculator page " in {
-      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.calculator()(request)
+      val result = eligibilityController.ptaCalculator()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -747,45 +742,9 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
     }
   }
 
-  "User research banner page " should {
-
-    "display UR banner before no thanks is clicked" in {
-      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.calculator()(request)
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val urBanner =  document.getElementById("full-width-banner")
-      val urBannerHref =  document.getElementById("fullWidthBannerLink")
-      val urDismissedText = document.getElementById("fullWidthBannerDismissText")
-      urBanner shouldNot be(null)
-      urBanner.text() startsWith Messages("tamc.banner.recruitment.title")
-      urDismissedText.text() should include(Messages("tamc.banner.recruitment.reject"))
-      urBanner.text() should include(Messages("tamc.banner.recruitment.link"))
-      urBannerHref.text() should include(Messages("tamc.banner.recruitment.linkURL"))
-    }
-
-    "not display UR banner after no thanks is clicked" in {
-      val testComponent = makePtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.calculator()(request)
-      status(result) shouldBe OK
-      implicit val requestWithCookie = request.withCookies(new Cookie("tamc_ur_panel", "1"))
-      val document = Jsoup.parse(contentAsString(result))
-      val urBanner =  document.getElementById("banner-panel-close")
-      urBanner should be(null)
-    }
-  }
-
   "PTA How It Works page for multi year " should {
-
     "successfully loaded " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.howItWorks()(request)
+      val result = eligibilityController.howItWorks()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -796,7 +755,6 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
       heading shouldBe "Apply for Marriage Allowance"
 
       val button = document.getElementById("get-started")
-      button shouldNot be(null)
       button.text shouldBe "Start now to see if you are eligible for Marriage Allowance"
     }
 
@@ -805,10 +763,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "PTA Eligibility check page for multiyear" should {
 
     "successfully authenticate the user and have eligibility-check page action" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheck()(request)
+      val result = eligibilityController.eligibilityCheck()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -818,10 +773,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
     }
 
     "diplay errors as none of the radio buttons are selected " in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -831,7 +783,6 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
       marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
 
     }
@@ -840,9 +791,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "GDS Eligibility check page for multiyear" should {
 
     "successfully authenticate the user and have eligibility-check page action" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheck()(request)
+      val result = eligibilityController.eligibilityCheck()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -852,9 +801,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
     }
 
     "diplay errors as none of the radio buttons are selected " in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.eligibilityCheckAction()(request)
+      val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
@@ -864,7 +811,6 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
       marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
 
     }
@@ -873,16 +819,12 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "PTA date of birth check page for multiyear" should {
 
     "successfully authenticate the user and have date of birth page and content" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.dateOfBirthCheck()(request)
+      val result = eligibilityController.dateOfBirthCheck()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
       document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
-
     }
   }
 
@@ -891,10 +833,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
     "successfully authenticate the user and have income-check page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.lowerEarnerCheck()(request)
+      val result = eligibilityController.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -907,10 +846,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "PTA partners income check page for multiyear" should {
 
     "have partners-income page and content for English resident" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.partnersIncomeCheck()(request)
+      val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
@@ -924,10 +860,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
     }
 
     "have partners-income page and content for Scottish resident" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path_scottish")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.partnersIncomeCheck()(request)
+      val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
@@ -943,10 +876,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
   "PTA do you want to apply page for multiyear" should {
     "successfully authenticate the user and have do-you-want-to-apply page and content" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.doYouWantToApply()(request)
+      val result = eligibilityController.doYouWantToApply()(request)
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
@@ -956,9 +886,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "GDS date of birth page for multiyear" should {
 
     "successfully authenticate the user and have date of birth page and content" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.dateOfBirthCheck()(request)
+      val result = eligibilityController.dateOfBirthCheck()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -969,9 +897,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "GDS do you live in scotland page for multiyear" should {
 
     "successfully authenticate the user and have do you live in scotland page and content" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.doYouLiveInScotland()(request)
+      val result = eligibilityController.doYouLiveInScotland()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -982,9 +908,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
   "GDS do you want to apply page for multiyear" should {
 
     "successfully authenticate the user and have do you want to apply page and content" in {
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.doYouWantToApply()(request)
+      val result = eligibilityController.doYouWantToApply()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -997,9 +921,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
     "successfully authenticate the user and have lower earner page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE )
-      val request = FakeRequest().withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val controllerToTest = makeMultiYearGdsEligibilityController()
-      val result = controllerToTest.lowerEarnerCheck()(request)
+      val result = eligibilityController.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -1012,9 +934,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
     "have partners-income page and content for English resident" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.partnersIncomeCheck()(request)
+      val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
@@ -1029,9 +949,7 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
 
     "have partners-income page and content for Scottish resident" in {
       val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path_scottish")
-      val request = testComponent.request
-      val controllerToTest = testComponent.controller
-      val result = controllerToTest.partnersIncomeCheck()(request)
+      val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
@@ -1076,4 +994,6 @@ class ContentTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
       marriageDate.ownText() shouldBe "1 January 2015"
     }
   }
+
+  def eligibilityController = app.injector.instanceOf[EligibilityController]
 }

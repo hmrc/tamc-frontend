@@ -28,7 +28,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYearResolver
 import views.helpers.TextGenerators
 
-class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestUtility with GuiceOneAppPerSuite {
+class UpdateRelationshipRoutesTest extends UpdateRelationshipTestUtility {
 
   "call list relationship " should {
 
@@ -53,111 +53,6 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       status(result) shouldBe OK
     }
 
-  }
-
-  "Links on History page " should {
-
-    "change of income link should link to change of income page" in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.changeOfIncome()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val heading = document.getElementsByClass("heading-large").text()
-      heading should be("Change of income")
-
-    }
-
-    "bereavement link should link to Sorry for your loss page" in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.bereavement()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val heading = document.getElementsByClass("heading-xlarge").text()
-      heading should be("We are sorry for your loss")
-
-    }
-  }
-
-  "Update relationship action " should {
-
-    "show error if no option is selected " in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false")
-      val result = controllerToTest.updateRelationshipAction()(request)
-      status(result) shouldBe BAD_REQUEST
-    }
-
-    "redirect to cancel page when user selects cancel option " in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.CANCEL)
-      val result = controllerToTest.updateRelationshipAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/cancel"))
-    }
-
-    "redirect to reject page when user selects reject option " in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.REJECT)
-      val result = controllerToTest.updateRelationshipAction()(request)
-      status(result) shouldBe SEE_OTHER
-      controllerToTest.relationshipEndReasonCount shouldBe 1
-      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason("REJECT"))
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/reject"))
-    }
-
-    "redirect to reject page when user selects reject option and save timestamp " in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.REJECT, "creationTimestamp" -> "1234567890")
-      val result = controllerToTest.updateRelationshipAction()(request)
-      status(result) shouldBe SEE_OTHER
-      controllerToTest.relationshipEndReasonCount shouldBe 1
-      controllerToTest.relationshipEndReasonRecord shouldBe Some(EndRelationshipReason(endReason = "REJECT", timestamp = Some("1234567890")))
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/reject"))
-    }
-
-    "display user divorce page when user selects divorce option " in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.DIVORCE, "historicActiveRecord" -> "false")
-      val result = controllerToTest.updateRelationshipAction()(request)
-      status(result) shouldBe OK
-    }
-
-    "display user earnings changed page when user selects divorce option " in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "endReason" -> EndReasonCode.EARNINGS)
-      val result = controllerToTest.updateRelationshipAction()(request)
-      status(result) shouldBe OK
-    }
-
-    "show bereavement for recipient" in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.BEREAVEMENT, "role" -> Role.RECIPIENT)
-      val result = controllerToTest.updateRelationshipAction()(request)
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      val sorry = document.getElementById("bereavement-recipient") shouldNot be(null)
-    }
   }
 
   "Confirm your selection " should {
@@ -377,44 +272,4 @@ class UpdateRelationshipRoutesTest extends UnitSpec with UpdateRelationshipTestU
       val hiddenDay = document.getElementsByAttributeValue("name", "dateOfDivorce.day") shouldNot be(null)
     }
   }
-
-  "Update relationship make changes" should {
-
-    "return successful on active record for transferror" in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false")
-      val result = controllerToTest.makeChange()(request)
-      status(result) shouldBe OK
-    }
-
-    "return successful on active record for recipient " in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.RECIPIENT, "historicActiveRecord" -> "false")
-      val result = controllerToTest.makeChange()(request)
-      status(result) shouldBe OK
-    }
-
-    "return successful on histrocial active record for transferror" in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "true")
-      val result = controllerToTest.makeChange()(request)
-      status(result) shouldBe OK
-    }
-
-    "return successful redirection on histrocial active record for recipient" in {
-
-      val testComponent = makeUpdateRelationshipTestComponent("coc_historically_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.RECIPIENT, "historicActiveRecord" -> "true")
-      val result = controllerToTest.makeChange()(request)
-      status(result) shouldBe OK
-    }
-  }
-
 }

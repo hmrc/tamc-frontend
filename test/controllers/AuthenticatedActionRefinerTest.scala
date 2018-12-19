@@ -16,26 +16,13 @@
 
 package controllers
 
-import play.api.test.Helpers.OK
+import play.api.mvc.Controller
 
-class AuthorisationControllerTest extends ControllerBaseSpec {
+class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
 
-  val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
-
-  "Calling notAuthorised" should {
-    "return OK" in {
-      val result = await(controller.notAuthorised()(request))
-      status(result) shouldBe OK
-    }
+  class FakeController(authenticate: AuthenticatedActionRefiner) extends Controller {
+    def onPageLoad() = authenticate { _ ⇒ Ok }
   }
 
-  "Calling sessionTimeout" should {
-    "return OK" in {
-      val result = await(controller.sessionTimeout()(request))
-      status(result) shouldBe OK
-    }
-  }
-
-  //TODO controller.logout
 
 }

@@ -30,9 +30,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
-class MarriageAllowanceControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
-
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+class MarriageAllowanceControllerTest extends ControllerBaseSpec {
 
   "Calling transfer Form page" should {
     "display registration page if transferor exits and doesn’t have existing relationship" in {

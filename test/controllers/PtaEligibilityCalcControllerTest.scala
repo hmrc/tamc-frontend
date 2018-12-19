@@ -18,49 +18,36 @@ package controllers
 
 import config.ApplicationConfig
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.i18n.MessagesApi
+import play.api.test.FakeRequest
 import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
-import test_utils.TestUtility
-import uk.gov.hmrc.play.test.UnitSpec
 
-class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
-
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
 
   private def calculatorRequestAction(income: Map[String, String] = null) = {
-    val testComponent = makePtaEligibilityTestComponent("user_happy_path")
-    val request = income match {
-      case nullMap if (null == income) =>
-        val request = testComponent.request
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculator()(request)
+    val controller = app.injector.instanceOf[EligibilityController]
+    income match {
+      case nullMap if null == income =>
+        controller.ptaCalculator()(request)
 
       case bothKeys if (income.contains("transferor-income") &&
         income.contains("recipient-income")) =>
-        val request = testComponent.request.
-          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income.get("transferor-income").get,
-            "recipient-income" -> income.get("recipient-income").get)
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculatorAction()(request)
+        val fakeRequest = FakeRequest()
+          .withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"),
+            "recipient-income" -> income("recipient-income"))
+        controller.ptaCalculatorAction()(fakeRequest)
 
       case transferorKey if (income.contains("transferor-income") &&
         !income.contains("recipient-income")) =>
-        val request = testComponent.request.
-          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income.get("transferor-income").get)
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculatorAction()(request)
+        val request = FakeRequest().
+          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"))
+        controller.ptaCalculatorAction()(request)
 
       case transferorKey if (!income.contains("transferor-income") &&
         income.contains("recipient-income")) =>
-        val request = testComponent.request.
-          withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income.get("recipient-income").get)
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculatorAction()(request)
+        val request = FakeRequest().
+          withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income("recipient-income"))
+        controller.ptaCalculatorAction()(request)
     }
-
-    request
   }
 
   "Hitting calculator page" should {

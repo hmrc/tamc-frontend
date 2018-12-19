@@ -27,7 +27,7 @@ import play.api.test.Helpers.{OK, SEE_OTHER, contentAsString, defaultAwaitTimeou
 import test_utils.UpdateRelationshipTestUtility
 import uk.gov.hmrc.play.test.UnitSpec
 
-class UpdateRelationshipContentTest extends UnitSpec with UpdateRelationshipTestUtility with GuiceOneAppPerSuite {
+class UpdateRelationshipContentTest extends UpdateRelationshipTestUtility {
 
   "list relationship page" should {
 
