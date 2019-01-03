@@ -19,9 +19,7 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
-@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress, reason: models.EndRelationshipReason,
-    effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None
-)(implicit messages: Messages,
+@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(implicit messages: Messages,
         request: AuthenticatedUserRequest[_],
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)

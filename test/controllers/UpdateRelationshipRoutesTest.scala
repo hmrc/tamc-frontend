@@ -57,40 +57,6 @@ class UpdateRelationshipRoutesTest extends UpdateRelationshipTestUtility {
 
   "Confirm your selection " should {
 
-    "show error if no reason is provided" in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false", "dateOfDivorce.day" -> "1", "dateOfDivorce.month" -> "1", "dateOfDivorce.year" -> "2015")
-      val result = controllerToTest.divorceAction()(request)
-      status(result) shouldBe BAD_REQUEST
-    }
-
-    "confirm divorce action for previous year " in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_PY)
-      val result = controllerToTest.divorceAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
-    }
-
-    "confirm divorce action for current year " in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_CY)
-      val result = controllerToTest.divorceAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
-    }
-
-    "confirm cancellation " in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirmCancel()(request)
-      status(result) shouldBe OK
-    }
-
     "confirm rejection in ended relationship in previous year" in {
       val loggedInUser = LoggedInUserInfo(cid = Cids.cid1, timestamp = "2015", Some(false), TestConstants.GENERIC_CITIZEN_NAME)
       val relationshipRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20160406", Some(""), Some("20170405"), "", "")
@@ -238,38 +204,5 @@ class UpdateRelationshipRoutesTest extends UpdateRelationshipTestUtility {
       message2 should be(s"your Personal Allowance will go back to the normal amount from 6 April ${currentTaxYear+1}, the start of the new tax year")
     }
 
-  }
-
-  "Date of divorce page" should {
-    "display error entering no date on date of divorce page" in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(
-        "role" -> "Transferor",
-        "endReason" -> EndReasonCode.DIVORCE_PY,
-        "dateOfDivorce.day" -> "",
-        "dateOfDivorce.month" -> "",
-        "dateOfDivorce.year" -> "")
-      val result = controllerToTest.divorceSelectYear()(request)
-
-      status(result) shouldBe BAD_REQUEST
-    }
-
-    "display divorce info page if correct but invalid date entered" in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(
-        "role" -> Role.TRANSFEROR,
-        "endReason" -> EndReasonCode.DIVORCE_CY,
-        "historicActiveRecord" -> "true",
-        "dateOfDivorce.day" -> "1",
-        "dateOfDivorce.month" -> "1",
-        "dateOfDivorce.year" -> "2016")
-      val result = controllerToTest.divorceSelectYear()(request)
-      status(result) shouldBe OK
-
-      val document = Jsoup.parse(contentAsString(result))
-      val hiddenDay = document.getElementsByAttributeValue("name", "dateOfDivorce.day") shouldNot be(null)
-    }
   }
 }

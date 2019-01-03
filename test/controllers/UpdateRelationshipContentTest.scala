@@ -362,28 +362,6 @@ class UpdateRelationshipContentTest extends UpdateRelationshipTestUtility {
 
   }
 
-  "Confirm your selection" should {
-
-    "confirm email after divorce action (PY) " in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_PY)
-      val result = controllerToTest.divorceAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
-
-    }
-
-    "confirm email after divorce action (CY)" in {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody("endReason" -> EndReasonCode.DIVORCE_CY)
-      val result = controllerToTest.divorceAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/confirm-email")
-    }
-  }
-
   "Update relationship make changes" should {
 
     "return successful on historical active record for transferror" in {

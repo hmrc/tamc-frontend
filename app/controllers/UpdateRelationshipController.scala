@@ -228,32 +228,36 @@ class UpdateRelationshipController @Inject()(
       }
   }
 
+  private[controllers] def getConfirmationInfoFromReason(reason: EndRelationshipReason, cacheData: UpdateRelationshipCacheData): (Boolean, Option[LocalDate], Option[LocalDate]) = {
+    reason.endReason match {
+      case EndReasonCode.DIVORCE_PY =>
+        (false, None, Some(timeService.getEffectiveDate(reason)))
+
+      case EndReasonCode.DIVORCE_CY =>
+        (false, None, timeService.getEffectiveUntilDate(reason))
+
+      case EndReasonCode.CANCEL =>
+        (false, None, timeService.getEffectiveUntilDate(reason))
+
+      case EndReasonCode.REJECT =>
+        val selectedRelationship = updateRelationshipService.getRelationship(cacheData)
+        val isEnded = selectedRelationship.participant1EndDate.exists(_ != "")
+
+        val relationshipEndDate = if (isEnded) {
+          Some(updateRelationshipService.getRelationEndDate(selectedRelationship))
+        } else None
+
+        (isEnded, relationshipEndDate, Some(updateRelationshipService.getEndDate(reason, selectedRelationship)))
+    }
+  }
+
   def confirmUpdate: Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>
       updateRelationshipService.getConfirmationUpdateData map {
         case (data, Some(updateCache)) =>
 
           val reason = data.endRelationshipReason
-
-          val (isEnded, relationEndDate, relevantDate) = reason match {
-            case EndRelationshipReason(EndReasonCode.DIVORCE_PY, _, _) =>
-              (false, None, Some(timeService.getEffectiveDate(reason)))
-            case EndRelationshipReason(EndReasonCode.DIVORCE_CY, _, _) =>
-              (false, None, timeService.getEffectiveUntilDate(reason))
-            case EndRelationshipReason(EndReasonCode.CANCEL, _, _)     =>
-              (false, None, timeService.getEffectiveUntilDate(reason))
-            case EndRelationshipReason(EndReasonCode.REJECT, _, _)     =>
-
-              val selectedRelationship = updateRelationshipService.getRelationship(updateCache)
-
-              val isEnded = !selectedRelationship.participant1EndDate.contains("")
-
-              val relationshipEndDate = if (isEnded) {
-                Some(updateRelationshipService.getRelationEndDate(selectedRelationship))
-              } else None
-
-              (isEnded, relationshipEndDate, Some(updateRelationshipService.getEndDate(reason, selectedRelationship)))
-          }
+          val (isEnded, relationEndDate, relevantDate) = getConfirmationInfoFromReason(reason, updateCache)
           Ok(views.html.coc.confirm(data, relevantDate, isEnded = isEnded, relationEndDate = relationEndDate))
 
         case (_, None) ⇒
@@ -265,7 +269,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       EmptyForm.form.bindFromRequest().fold(
         formWithErrors =>
-          Logger.warn(s"unexpected error in emty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
+          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
         success =>
           success)
       updateRelationshipService.updateRelationship(request.nino, request2lang(request)) map {
@@ -276,34 +280,32 @@ class UpdateRelationshipController @Inject()(
   def finishUpdate: Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>
       updateRelationshipService.getupdateRelationshipFinishedData(request.nino) map {
-        case (NotificationRecord(email), rsn @ EndRelationshipReason(EndReasonCode.REJECT, _, _)) =>
-          Ok(views.html.coc.finished(transferorEmail = email, reason = rsn))
-        case (NotificationRecord(email), rsn) =>
-          Ok(views.html.coc.finished(transferorEmail = email, reason = rsn, effectiveUntilDate = timeService.getEffectiveUntilDate(rsn), effectiveDate = Some(timeService.getEffectiveDate(rsn))))
+        case (NotificationRecord(email), _) =>
+          Ok(views.html.coc.finished(transferorEmail = email))
       } recover handleError
   }
 
-  def handleError(implicit hc: HeaderCarrier, ec: ExecutionContext, request: UserRequest[_]): PartialFunction[Throwable, Result] =
+  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
 
         val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
 
-        def handle(message: String, logger: (String, Throwable) => Unit, result: Result): Result = {
+        def handle(logger: (String, Throwable) => Unit, result: Result): Result = {
           logger(message, throwable)
           result
         }
 
         throwable match {
-          case _: CacheRelationshipAlreadyUpdated => handle(message, Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-          case _: CacheMissingUpdateRecord        => handle(message, Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CacheUpdateRequestNotSent       => handle(message, Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CannotUpdateRelationship        => handle(message, Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CitizenNotFound                 => handle(message, Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
-          case _: BadFetchRequest                 => handle(message, Logger.warn, InternalServerError(views.html.errors.bad_request()))
-          case _: TransferorNotFound              => handle(message, Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound               => handle(message, Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
-          case _                                  => handle(message, Logger.error, InternalServerError(views.html.errors.try_later()))
+          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+          case _: CacheMissingUpdateRecord        => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CacheUpdateRequestNotSent       => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CannotUpdateRelationship        => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CitizenNotFound                 => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
+          case _: BadFetchRequest                 => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
+          case _: TransferorNotFound              => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound               => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
+          case _                                  => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }
 
