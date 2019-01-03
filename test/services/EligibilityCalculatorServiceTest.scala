@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package services
 
 import java.text.NumberFormat
 import java.util.Locale
 
-import models._
-import org.scalatestplus.play.OneAppPerSuite
-import services.EligibilityCalculatorService
 import config.ApplicationConfig._
-import uk.gov.hmrc.play.test.UnitSpec
+import controllers.ControllerBaseSpec
+import models._
 import uk.gov.hmrc.time.TaxYearResolver
 
-class MarriageAllowanceCalculatorTest extends ControllerBaseSpec {
+class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
 
   private def maxLimitToFormattedCurrency(limit: Int): String = {
     val formatter = NumberFormat.getCurrencyInstance(Locale.UK)

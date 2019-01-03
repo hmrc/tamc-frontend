@@ -30,44 +30,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
-  "Hitting calculator page" should {
-    "return OK (200) response" in {
-      val request = FakeRequest()
-      val result = controller.gdsCalculator()(request)
-      status(result) shouldBe OK
-    }
-
-    "have form" in {
-      val request = FakeRequest()
-      val result = controller.gdsCalculator()(request)
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator") shouldNot be(null)
-    }
-
-    "have form calculate button" in {
-      val request = FakeRequest()
-      val result = controller.gdsCalculator()(request)
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form.getElementsByClass("button").attr("type") shouldEqual "submit"
-    }
-
-    "have required fields" in {
-      val request = FakeRequest()
-      val result = controller.gdsCalculator()(request)
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form.select("input[name=transferor-income]").first() shouldNot be(null)
-      form.select("input[name=recipient-income]").first() shouldNot be(null)
-    }
-
-    "not have calculation result" in {
-      val request = FakeRequest()
-      val result = controller.gdsCalculator()(request)
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result") shouldBe null
-    }
-  }
+  //TODO content
 
   "Check eligibility benefit" should {
 
@@ -424,5 +387,5 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
   }
   
-  val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
+  lazy val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
 }

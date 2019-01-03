@@ -35,71 +35,6 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class RoutesTest extends ControllerBaseSpec {
 
-
-  "Hitting home endpoint directly" should {
-    "redirect to landing page (with passcode)" in {
-      val result = eligibilityController.home()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check")
-    }
-
-    "redirect to landing page (without passcode)" in {
-      val result = eligibilityController.home()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("/marriage-allowance-application/eligibility-check")
-    }
-  }
-
-  "GDS Journey enforcer" should {
-    "set GDS journey if no journey is present" in {
-      val result = eligibilityController.eligibilityCheck()(request)
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
-    }
-
-    "set GDS journey if invalid journey is present" in {
-      val result = eligibilityController.eligibilityCheck()(request)
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
-    }
-
-    "leave PTA journey unchanged when PTA feature is enabled" in {
-      val result = eligibilityController.eligibilityCheck()(request)
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
-    }
-  }
-
-  "PTA Journey enforcer" should {
-    "set PTA journey if no journey is present" in {
-      val result = eligibilityController.howItWorks()(request)
-
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
-    }
-
-    "set PTA journey if invalid journey is present" in {
-      val result = eligibilityController.howItWorks()(request)
-
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "PTA", None, "/", None, false, true))
-    }
-
-    "leave PTA journey unchanged" in {
-      val result = eligibilityController.howItWorks()(request)
-
-      status(result) shouldBe OK
-      cookies(result).get("TAMC_JOURNEY") shouldBe Some(Cookie("TAMC_JOURNEY", "GDS", None, "/", None, false, true))
-    }
-    "check back link on calculator page" in {
-      val result = eligibilityController.ptaCalculator()(request)
-      val document = Jsoup.parse(contentAsString(result))
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/how-it-works")
-    }
-  }
-
   "Hitting calculator page" should {
     "have a ’previous’ and ’next’ links to gov.ukpage" in {
       val result = eligibilityController.gdsCalculator()(request)
@@ -444,27 +379,6 @@ class RoutesTest extends ControllerBaseSpec {
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
     }
-
-    "redirect to date of birth if answer is yes" in {
-      val result = eligibilityController.eligibilityCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check-pta"))
-    }
-
-    "go to not eligible page (finish page) if no is selected" in {
-      val result = eligibilityController.eligibilityCheckAction()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "You are not eligible in the current tax year - Marriage Allowance eligibility - GOV.UK"
-
-      val finish = document.getElementById("button-finished")
-      finish shouldNot be(null)
-      finish.attr("href") shouldBe ApplicationConfig.ptaFinishedUrl
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
-    }
   }
 
   "PTA date of birth check page for multi year" should {
@@ -480,54 +394,6 @@ class RoutesTest extends ControllerBaseSpec {
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
     }
-
-    "redirect to who should do you live in scotland page irrespective of selection" in {
-      val result = eligibilityController.dateOfBirthCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-live-in-scotland-pta"))
-    }
-  }
-
-  "PTA do you live in scotland page for multi year" should {
-    "diplay errors as no radio buttons is selected " in {
-      val result = eligibilityController.doYouLiveInScotlandAction()(request)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      val back = document.getElementsByClass("link-back")
-      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check-pta")
-    }
-
-    "redirect to lower earner check page irrespective of selection" in {
-      val result = eligibilityController.doYouLiveInScotlandAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner-pta"))
-    }
-  }
-
-  "PTA lower earner check page for multi year" should {
-    "diplay errors as no radio buttons is selected " in {
-      val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val result = eligibilityController.lowerEarnerCheckAction()(request)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      val back = document.getElementsByClass("link-back")
-      back.attr("href") shouldBe marriageAllowanceUrl("/do-you-live-in-scotland-pta")
-    }
-
-    "redirect to who should transfer page irrespective of selection" in {
-      val result = eligibilityController.lowerEarnerCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/partners-income-pta"))
-    }
-
   }
 
   "PTA partners income check page for multi year" should {
@@ -563,41 +429,6 @@ class RoutesTest extends ControllerBaseSpec {
       back shouldNot be(null)
       back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
     }
-
-    "redirect to do you want to apply page irrespective of selection" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
-      val result = eligibilityController.partnersIncomeCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-want-to-apply-pta"))
-    }
-
-  }
-
-
-  "PTA do you want to apply page for multi year" should {
-    "diplay errors as no radio buttons is selected " in {
-      val result = eligibilityController.doYouWantToApplyAction()(request)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/partners-income-pta")
-    }
-
-    "redirect to my pta home page if no chosen" in {
-      val result = eligibilityController.doYouWantToApplyAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("http://localhost:9232/personal-account")
-    }
-
-    "redirect to transfer page if yes chosen" in {
-      val result = eligibilityController.doYouWantToApplyAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/transfer-allowance"))
-    }
   }
 
   "GDS Eligibility check page for multi year" should {
@@ -630,145 +461,6 @@ class RoutesTest extends ControllerBaseSpec {
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe ("https://www.gov.uk/apply-marriage-allowance")
-    }
-
-    "redirect to lower earner page if answer is yes and have back button" in {
-      val result = eligibilityController.eligibilityCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/date-of-birth-check"))
-    }
-
-    "go to not eligible page (finish page) if no is selected" in {
-      val result = eligibilityController.eligibilityCheckAction()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "You are not eligible in the current tax year - Marriage Allowance eligibility - GOV.UK"
-
-      val finish = document.getElementById("button-finished")
-      finish shouldNot be(null)
-      finish.attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide"
-    }
-  }
-
-  "GDS lower earner page for multi year" should {
-
-    "display errors as no radio buttons is selected " in {
-      val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE )
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val result = eligibilityController.lowerEarnerCheckAction()(request)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-
-      document.getElementById("lower-earner-error").text shouldBe "Confirm if you have the lower income in the relationship"
-
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/do-you-live-in-scotland")
-    }
-
-    "redirect to who should transfer page irrespective of selection" in {
-      val result = eligibilityController.lowerEarnerCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/partners-income"))
-    }
-
-  }
-
-  "GDS partners income page for multi year" should {
-
-    "diplay errors as no radio buttons is selected " in {
-      val result = eligibilityController.partnersIncomeCheckAction()(request)
-      val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-
-      document.getElementsByClass("partners-inc-error").text shouldBe "You are not eligible for Marriage Allowance in this tax year because your partner’s income is too high or too low. You can still apply for previous years if their income was higher or lower in the past."
-
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner")
-    }
-
-    "redirect to do you want to apply page irrespective of selection" in {
-      val result = eligibilityController.partnersIncomeCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-want-to-apply"))
-    }
-  }
-
-  "GDS date of birth check page for multi year" should {
-
-    "diplay errors as no radio buttons is selected " in {
-      val result = eligibilityController.dateOfBirthCheckAction()(request)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check")
-    }
-
-    "redirect to do you live in scotland page irrespective of selection" in {
-      val result = eligibilityController.dateOfBirthCheckAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/do-you-live-in-scotland"))
-    }
-
-  }
-
-  "GDS do you live in scotland page for multi year" should {
-    "diplay errors as no radio buttons is selected " in {
-      val result = eligibilityController.doYouLiveInScotlandAction()(request)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      val back = document.getElementsByClass("link-back")
-      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-birth-check")
-    }
-
-    "redirect to who should lower earner page irrespective of selection" in {
-      val result = eligibilityController.doYouLiveInScotlandAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/lower-earner"))
-    }
-  }
-
-  "GDS do you want to apply page for multi year" should {
-    "diplay errors as no radio buttons is selected " in {
-      val result = eligibilityController.doYouWantToApplyAction()(request)
-      status(result) shouldBe BAD_REQUEST
-
-      val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
-      val back = document.getElementsByClass("link-back")
-      back.attr("href") shouldBe marriageAllowanceUrl("/partners-income")
-    }
-
-    "redirect to gov uk ma page if no chosen" in {
-      val result = eligibilityController.doYouWantToApplyAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some("https://www.gov.uk/marriage-allowance")
-    }
-
-    "redirect to confirm id page if yes chosen" in {
-      val result = eligibilityController.doYouWantToApplyAction()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(marriageAllowanceUrl("/history"))
     }
   }
 

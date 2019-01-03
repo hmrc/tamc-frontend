@@ -20,7 +20,7 @@ import play.api.test.Helpers.OK
 
 class AuthorisationControllerTest extends ControllerBaseSpec {
 
-  val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
+  lazy val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
 
   "Calling notAuthorised" should {
     "return OK" in {

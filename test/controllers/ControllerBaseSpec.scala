@@ -29,11 +29,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 
 trait ControllerBaseSpec extends TestUtility with GuiceOneAppPerSuite with MockitoSugar {
 
-  val defaultBuilder: GuiceApplicationBuilder = new GuiceApplicationBuilder()
+  override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
-    .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
-
-  override implicit lazy val app: Application = defaultBuilder.build()
+    .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
+  ).configure(
+    "metrics.jvm" → false,
+    "metrics.enabled" → false
+  ).build()
 
   def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]
 

@@ -50,40 +50,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
     }
   }
 
-  "Hitting calculator page" should {
-    "return OK (200) response" in {
-      val result = calculatorRequestAction()
-      status(result) shouldBe OK
-    }
-
-    "have form" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator") shouldNot be(null)
-    }
-
-    "have form calculate button" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form.getElementsByClass("button").attr("type") shouldEqual "submit"
-    }
-
-    "have required fields" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form.select("input[name=transferor-income]").first() shouldNot be(null)
-      form.select("input[name=recipient-income]").first() shouldNot be(null)
-    }
-
-    "not have calculation result" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result") shouldBe null
-    }
-  }
-
+  //TODO content
   "Check eligibility benefit" should {
 
     "be GBP 80 if transferor income=9000 (< 11500) and recipient income=11900 (11900-11500)" in {

@@ -153,7 +153,7 @@ class EligibilityController @Inject()(
             BadRequest(views.html.multiyear.do_you_want_to_apply(formWithErrors)),
           doYouWantToApplyInput => {
             if (doYouWantToApplyInput.doYouWantToApply) {
-                Redirect(controllers.routes.TransferController.transfer())
+              Redirect(controllers.routes.TransferController.transfer())
             } else {
               Redirect(Call("GET", finishUrl(request.authState.permanent)))
             }

@@ -61,8 +61,13 @@ class MockTemporaryAuthenticatedAction @Inject()(override val authConnector: Aut
 }
 
 class MockUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
-
   override protected def transform[A](request: Request[A]): Future[RequestWithAuthState[A]] = {
     Future.successful(RequestWithAuthState(request, Unauthenticated, None, isSA = false, None))
+  }
+}
+
+class MockPermUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
+  override protected def transform[A](request: Request[A]): Future[RequestWithAuthState[A]] = {
+    Future.successful(RequestWithAuthState(request, PermanentlyAuthenticated, None, isSA = false, None))
   }
 }
