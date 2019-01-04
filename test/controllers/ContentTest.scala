@@ -22,16 +22,19 @@ import config.ApplicationConfig
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Cookie
+import org.mockito.ArgumentMatchers
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
+import services.{CachingService, TimeService, TransferService}
+import test_utils.TestConstants
 import test_utils.TestData.{Cids, Ninos}
-import test_utils.{TestConstants, TestUtility}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
+import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers._
+import uk.gov.hmrc.time.TaxYearResolver
 
 class ContentTest extends ControllerBaseSpec {
 
@@ -43,12 +46,12 @@ class ContentTest extends ControllerBaseSpec {
   "Calling Transfer Submit page" should {
 
     "display form error message (first name and last name missing from request)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "gender" -> "M", "nino" -> Ninos.nino1, "transferor-email" -> "example@example.com")
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "gender" -> "M",
+        "nino" -> Ninos.nino1,
+        "transferor-email" -> "example@example.com"
+      )
+      val result = transferController.transferAction()(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -56,16 +59,10 @@ class ContentTest extends ControllerBaseSpec {
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Confirm your partner’s first name"
-      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name,name)").size() shouldBe 1
     }
 
     "display form error message (request body missing form data)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.transferAction(request)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -73,19 +70,17 @@ class ContentTest extends ControllerBaseSpec {
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
       document.getElementById("nino-error").text() shouldBe "Confirm your partner’s National Insurance number"
-
-      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender,last-name,name,nino)").size() shouldBe 1
     }
   }
 
   "Calling Transfer Submit page with error in name field" should {
     "display form error message (first name missing from request)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -96,16 +91,16 @@ class ContentTest extends ControllerBaseSpec {
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s first name"
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Confirm your partner’s first name"
-      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(name)").size() shouldBe 1
     }
 
     "display form error message (first name is empty)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -118,12 +113,13 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (first name is blank)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> " ", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> " ",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -136,12 +132,13 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (first name contains more than 35 characters)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "a" * 36,
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -154,12 +151,13 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (first name contains numbers)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "12345", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "12345",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -172,12 +170,13 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (first name contains letters and numbers)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "abc123", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "abc123",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -189,51 +188,9 @@ class ContentTest extends ControllerBaseSpec {
       document.getElementById("name-error").text() shouldBe "Confirm your partner’s first name"
     }
 
-    "display form error message when recipient nino equals transferor nino" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "abc", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.ninoHappyPath)
-      val result = controllerToTest.transferAction(request)
-
-      status(result) shouldBe BAD_REQUEST
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val labelNino = form.select("label[for=nino]").first()
-      labelNino.getElementsByClass("error-message").first() shouldNot be(null)
-      labelNino.getElementsByClass("error-message").first().text() shouldBe "You cannot enter your own details"
-      document.getElementById("nino-error").text() shouldBe "Confirm your partner’s National Insurance number"
-    }
-
-    "display form error message when recipient nino equals transferor nino (including mixed case and spaces)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "abc", "last-name" -> "bar", "gender" -> "M", "nino" -> Ninos.ninoHappyPathWithSpaces)
-      val result = controllerToTest.transferAction(request)
-
-      status(result) shouldBe BAD_REQUEST
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val labelNino = form.select("label[for=nino]").first()
-      labelNino.getElementsByClass("error-message").first() shouldNot be(null)
-      labelNino.getElementsByClass("error-message").first().text() shouldBe "You cannot enter your own details"
-      document.getElementById("nino-error").text() shouldBe "Confirm your partner’s National Insurance number"
-    }
-  }
-
-  "Calling Transfer Submit page with error in last-name field" should {
     "display form error message (last name missing from request)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "gender" -> "M", "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -247,12 +204,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name is empty)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "", "gender" -> "M", "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -265,12 +218,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name is blank)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> " ", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> " ", "gender" -> "M", "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -283,12 +232,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name contains more than 35 characters)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "a" * 36, "gender" -> "M", "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -301,12 +246,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name contains numbers)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "12345", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "12345", "gender" -> "M", "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -319,12 +260,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name contains letters and numbers)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "abc123", "gender" -> "M", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "abc123", "gender" -> "M", "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -335,16 +272,31 @@ class ContentTest extends ControllerBaseSpec {
       labelName.getElementsByClass("error-message").first().text() shouldBe "Use letters only"
       document.getElementById("last-name-error").text() shouldBe "Confirm your partner’s last name"
     }
+
+    "display form error message when recipient nino equals transferor nino" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "abc",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val labelNino = form.select("label[for=nino]").first()
+      labelNino.getElementsByClass("error-message").first() shouldNot be(null)
+      labelNino.getElementsByClass("error-message").first().text() shouldBe "You cannot enter your own details"
+      document.getElementById("nino-error").text() shouldBe "Confirm your partner’s National Insurance number"
+    }
   }
 
   "Calling Transfer Submit page with error in gender field" should {
     "display form error message (gender missing from request)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "nino" -> Ninos.nino1, "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "nino" -> Ninos.nino1, "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -358,12 +310,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (gender code is invalid)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "X", "nino" -> Ninos.nino1)
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "X", "nino" -> Ninos.nino1)
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -378,12 +326,8 @@ class ContentTest extends ControllerBaseSpec {
 
   "Calling Transfer Submit page with error in NINO field" should {
     "display form error message (NINO missing from request)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M")
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M")
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -397,12 +341,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (NINO is empty)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", ("nino" -> ""))
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", ("nino" -> ""))
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -415,12 +355,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (NINO is invalid)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", "nino" -> "ZZ")
-      val result = controllerToTest.transferAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", "nino" -> "ZZ")
+      val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -436,12 +372,8 @@ class ContentTest extends ControllerBaseSpec {
   "Calling Date Of Marriage page with error in dom field" should {
 
     "display form error message (date of marriage is before 1900)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "1899")
-      val result = controllerToTest.dateOfMarriageAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "1899")
+      val result = transferController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -460,14 +392,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (date of marriage is after today’s date)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent(
-        "user_happy_path",
-        transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "2020")
-      val result = controllerToTest.dateOfMarriageAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "2020")
+      val result = transferController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -482,14 +408,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (date of marriage is left empty)" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = TestConstants.GENERIC_CITIZEN_NAME)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = None, notification = None))
-      val testComponent = makeTestComponent(
-        "user_happy_path",
-        transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "", "dateOfMarriage.month" -> "", "dateOfMarriage.year" -> "")
-      val result = controllerToTest.dateOfMarriageAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "", "dateOfMarriage.month" -> "", "dateOfMarriage.year" -> "")
+      val result = transferController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -508,23 +428,15 @@ class ContentTest extends ControllerBaseSpec {
   }
 
   "Calling Previous year page " should {
+    val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+    val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
+    val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
     "display dynamic message " in {
-
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
-      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
-      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
-      val trRecipientData = Some(CacheData(
-        transferor = Some(trrec),
-        recipient = Some(recrecord),
-        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-        recipientDetailsFormData = cacheRecipientFormData))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
-      val result = controllerToTest.eligibleYearsAction(request)
+      when(mockTransferService.getCurrentAndExtraYearEligibility(any(), any())).thenReturn((true, recrecord.availableTaxYears, recrecord))
+      when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(recrecord), ArgumentMatchers.eq(List(TaxYearResolver.currentTaxYear)))(any(), any()))
+        .thenReturn(Nil)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
+      val result = transferController.eligibleYearsAction(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -536,22 +448,9 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (no year choice made )" in {
-
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
-      val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-      val cacheRecipientFormData = Some(RecipientDetailsFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1)))
-      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
-      val trRecipientData = Some(CacheData(
-        transferor = Some(trrec),
-        recipient = Some(recrecord),
-        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-        recipientDetailsFormData = cacheRecipientFormData))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "year" -> "List(0)")
-      val result = controllerToTest.extraYearsAction(request)
+      when(mockTransferService.getCurrentAndExtraYearEligibility(any(), any())).thenReturn((true, recrecord.availableTaxYears, recrecord))
+      val request = FakeRequest().withFormUrlEncodedBody(data = "year" -> "List(0)")
+      val result = transferController.extraYearsAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -567,10 +466,7 @@ class ContentTest extends ControllerBaseSpec {
 
   "Calling Confirm email page with error in email field" should {
     "display form error message (transferor email missing from request)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -587,10 +483,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (transferor email is empty)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "")
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "")
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -603,10 +497,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (transferor email contains only spaces)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "  ")
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "  ")
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -619,10 +511,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (transferor email contains more than 100 characters)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "aaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaabbbbbbbbbbaaaaaaaaaa@cccc.ddddd")
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> s"${"a" * 90}@bbbb.ccccc")
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -635,10 +525,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (transferor email is invalid)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "example")
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "example")
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -651,10 +539,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (transferor email has consequent dots)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "ex..ample@example.com")
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "ex..ample@example.com")
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -667,10 +553,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "check$%^&&@yahoo.comm")
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "check$%^&&@example.com")
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -683,10 +567,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (transferor email does not include TLD)" in {
-      val testComponent = makeTestComponent("user_happy_path")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withFormUrlEncodedBody(data = "transferor-email" -> "example@example")
-      val result = controllerToTest.confirmYourEmailAction(request)
+      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "example@example")
+      val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -702,21 +584,9 @@ class ContentTest extends ControllerBaseSpec {
   "Calling non-pta finished page" should {
 
     "successfully authenticate the user and have finished page and content" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
-      val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
-      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.nino1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val trRecipientData = Some(CacheData(
-        transferor = Some(trrec),
-        recipient = Some(recrecord),
-        notification = Some(NotificationRecord(EmailAddress("example123@example.com"))),
-        relationshipCreated = Some(true),
-        selectedYears = Some(List(2015))))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.finished(request)
+      when(mockTransferService.getFinishedData(any())(any(), any()))
+        .thenReturn(NotificationRecord(EmailAddress("example@example.com")))
+      val result = transferController.finished(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -724,7 +594,7 @@ class ContentTest extends ControllerBaseSpec {
       document.title() shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
       document.getElementsByClass("heading-large").text shouldBe "Marriage Allowance application successful"
       document.getElementById("paragraph-1").text shouldBe "An email with full details acknowledging your application will be " +
-        "sent to you at example123@example.com from noreply@tax.service.gov.uk within 24 hours."
+        "sent to you at example@example.com from noreply@tax.service.gov.uk within 24 hours."
     }
   }
 
@@ -860,6 +730,7 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "have partners-income page and content for Scottish resident" in {
+      val request = FakeRequest().withSession("scottish_resident" → "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
@@ -931,9 +802,7 @@ class ContentTest extends ControllerBaseSpec {
   }
 
   "GDS partners income page for multiyear" should {
-
     "have partners-income page and content for English resident" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
@@ -948,7 +817,7 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "have partners-income page and content for Scottish resident" in {
-      val testComponent = makeMultiYearPtaEligibilityTestComponent("user_happy_path_scottish")
+      val request = FakeRequest().withSession("scottish_resident" → "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
@@ -964,25 +833,20 @@ class ContentTest extends ControllerBaseSpec {
   }
 
   "Display Confirm page " should {
-
     "have marriage date and name displayed" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = Some(CitizenName(Some("JIM"), Some("FERGUSON"))))
-      val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
-      val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(
-        CacheData(transferor = Some(trrec),
-          recipient = Some(recrecord),
-          notification = Some(NotificationRecord(EmailAddress("example@example.com"))),
-          selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))
-        )
+      val confirmData = ConfirmationModel(
+        Some(CitizenName(Some("JIM"), Some("FERGUSON"))),
+        EmailAddress("example@example.com"),
+        "foo",
+        "bar",
+        Nino(Ninos.ninoWithLOA1),
+        List(TaxYear(2014, Some(false)), TaxYear(2015, Some(false))),
+        DateOfMarriageFormInput(new LocalDate(2015, 1, 1))
       )
+      when(mockTransferService.getConfirmationData(any())(any(), any()))
+        .thenReturn(confirmData)
 
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirm(request)
+      val result = transferController.confirm(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -995,5 +859,19 @@ class ContentTest extends ControllerBaseSpec {
     }
   }
 
-  def eligibilityController = app.injector.instanceOf[EligibilityController]
+  val mockTransferService: TransferService = mock[TransferService]
+  val mockCachingService: CachingService = mock[CachingService]
+  val mockTimeService: TimeService = mock[TimeService]
+  def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+  def transferController: TransferController = new TransferController(
+    messagesApi,
+    instanceOf[AuthenticatedActionRefiner],
+    mockTransferService,
+    mockCachingService,
+    mockTimeService
+  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+
+  when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
+  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(TaxYearResolver.currentTaxYear))).thenReturn(TaxYearResolver.startOfCurrentTaxYear)
+  when(mockTimeService.getCurrentTaxYear).thenReturn(TaxYearResolver.currentTaxYear)
 }

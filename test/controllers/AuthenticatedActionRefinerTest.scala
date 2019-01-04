@@ -26,7 +26,6 @@ import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers._
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import uk.gov.hmrc.auth.core.retrieve.{~ ⇒ ret}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -85,15 +84,12 @@ class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
 
   object NoActiveSessionException extends NoActiveSession("")
   val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    ret(ret(ret(None, None), ConfidenceLevel.L100), None)
+    new ~(new ~(new ~(None, None), ConfidenceLevel.L100), None)
   }
   val withNinoNoCredRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    ret(ret(ret(None, Some(Ninos.nino1)), ConfidenceLevel.L100), None)
+    new ~(new ~(new ~(None, Some(Ninos.nino1)), ConfidenceLevel.L100), None)
   }
   val withNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    ret(ret(ret(Some(Credentials("", "")), Some(Ninos.nino1)), ConfidenceLevel.L100), None)
+    new ~(new ~(new ~(Some(Credentials("", "")), Some(Ninos.nino1)), ConfidenceLevel.L100), None)
   }
-
-
-
 }

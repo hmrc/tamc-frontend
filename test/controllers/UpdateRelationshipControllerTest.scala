@@ -534,42 +534,4 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
       }
     }
   }
-//TODO below
-  "Calling history page" should {
-    //CONTENT
-    "show 'Cancel Marriage Allowance' button on ’History’ page with PTA journey" ignore {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val result = controllerToTest.history()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
-    }
-    //CONTENT
-
-    "show 'Cancel Marriage Allowance' button on ’History’ page with GDS journey" ignore {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "GDS"))
-      val result = controllerToTest.history()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
-    }
-    //CONTENT
-
-    "show sign-out on ’History’ page along with message" ignore {
-      val testComponent = makeUpdateRelationshipTestComponent("coc_active_historic_relationship")
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.history()(request)
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val article = document.getElementsByTag("article")
-      article.text().contains("Marriage Allowance Foo Bar") shouldBe true
-    }
-  }
 }

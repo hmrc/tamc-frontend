@@ -23,7 +23,6 @@ import org.mockito.Mockito.when
 import play.api.mvc.{Controller, Result}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import uk.gov.hmrc.auth.core.retrieve.{~ ⇒ ret}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -71,6 +70,6 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseSpec {
   }
 
   object NoActiveSessionException extends NoActiveSession("")
-  val withCredRetrieval: AuthRetrievals = ret(ret(ConfidenceLevel.L100, None), Some(Credentials("", "")))
-  val withoutCredRetrieval: AuthRetrievals = ret(ret(ConfidenceLevel.L100, None), None)
+  val withCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L100, None), Some(Credentials("", "")))
+  val withoutCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L100, None), None)
 }
