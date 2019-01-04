@@ -24,14 +24,18 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
-import test_utils.{MockAuthenticatedAction, MockUnauthenticatedAction, TestUtility}
+import test_utils._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 trait ControllerBaseSpec extends TestUtility with GuiceOneAppPerSuite with MockitoSugar {
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
-    .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
+    .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
+    .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))
+    .overrides(bind[FormPartialRetriever].toInstance(MockFormPartialRetriever)
   ).configure(
     "metrics.jvm" → false,
     "metrics.enabled" → false

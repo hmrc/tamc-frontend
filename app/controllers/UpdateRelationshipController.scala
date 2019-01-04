@@ -29,6 +29,8 @@ import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Result}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +41,8 @@ class UpdateRelationshipController @Inject()(
                                              registrationService: TransferService,
                                              cachingService: CachingService,
                                              timeService: TimeService
-                                            ) extends BaseController {
+                                            )(implicit templateRenderer: TemplateRenderer,
+                                              formPartialRetriever: FormPartialRetriever) extends BaseController {
 
   def history(): Action[AnyContent] = authenticatedActionRefiner.async {
     implicit request =>

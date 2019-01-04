@@ -35,6 +35,8 @@ import play.api.i18n.MessagesApi
 import play.api.mvc._
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,7 +46,8 @@ class TransferController @Inject()(
                                    registrationService: TransferService,
                                    cachingService: CachingService,
                                    timeService: TimeService
-                                  ) extends BaseController {
+                                  )(implicit templateRenderer: TemplateRenderer,
+                                    formPartialRetriever: FormPartialRetriever) extends BaseController {
 
   def transfer: Action[AnyContent] = authenticatedActionRefiner {
     implicit request =>

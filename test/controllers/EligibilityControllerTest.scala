@@ -20,13 +20,14 @@ import config.ApplicationConfig
 import models.{EligibilityCalculatorResult, England}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito._
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.EligibilityCalculatorService
-import test_utils.MockPermUnauthenticatedAction
-import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
+import test_utils.{MockFormPartialRetriever, MockPermUnauthenticatedAction, MockTemplateRenderer}
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class EligibilityControllerTest extends ControllerBaseSpec {
 
@@ -38,7 +39,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
       unAuthAction,
       instanceOf[AuthenticatedActionRefiner],
       mockEligibilityCalculatorService
-    )
+    )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
   "howItWorks" should {
     "return success" in {

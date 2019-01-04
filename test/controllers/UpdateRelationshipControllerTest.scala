@@ -57,10 +57,7 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
       mockRegistrationService,
       mockCachingService,
       mockTimeService
-  ) {
-    override val templateRenderer: TemplateRenderer = MockTemplateRenderer
-    override val formPartialRetriver: FormPartialRetriever = MockFormPartialRetriever
-  }
+  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
   "History" should {
     "redirect to transfer" when {

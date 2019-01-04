@@ -16,13 +16,7 @@
 
 package controllers
 
-import config.{LocalTemplateRenderer, TamcFormPartialRetriever}
 import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 
-trait BaseController extends FrontendController with I18nSupport  {
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
-  implicit val formPartialRetriver: FormPartialRetriever = TamcFormPartialRetriever
-}
+trait BaseController extends FrontendController with I18nSupport

@@ -29,6 +29,8 @@ import models.Country
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Call}
 import services.EligibilityCalculatorService
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.isScottishResident
 import views.html.multiyear.eligibility_check
 
@@ -37,7 +39,8 @@ class EligibilityController @Inject()(
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
                                        authenticatedActionRefiner: AuthenticatedActionRefiner,
                                        eligibilityCalculatorService: EligibilityCalculatorService
-                                     ) extends BaseController {
+                                     )(implicit templateRenderer: TemplateRenderer,
+                                       formPartialRetriever: FormPartialRetriever) extends BaseController {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>

@@ -22,6 +22,8 @@ import play.api.inject.{Binding, Module}
 import services._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class TamcModule extends Module {
 
@@ -34,6 +36,8 @@ class TamcModule extends Module {
       bind[TransferService].toInstance(TransferService),
       bind[UpdateRelationshipService].toInstance(UpdateRelationshipService),
       bind[CachingService].toInstance(CachingService),
-      bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService)
+      bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService),
+      bind[TemplateRenderer].toInstance(LocalTemplateRenderer),
+      bind[FormPartialRetriever].toInstance(TamcFormPartialRetriever)
     )
 }

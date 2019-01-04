@@ -19,11 +19,14 @@ package controllers
 import com.google.inject.Inject
 import config.ApplicationConfig
 import play.api.i18n.MessagesApi
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class AuthorisationController @Inject()(
                                          override val messagesApi: MessagesApi,
                                          unauthenticatedAction: UnauthenticatedActionTransformer
-                                       ) extends BaseController {
+                                       )(implicit templateRenderer: TemplateRenderer,
+                                         formPartialRetriever: FormPartialRetriever) extends BaseController {
 
   val logoutUrl: String = ApplicationConfig.logoutUrl
   val logoutCallbackUrl: String = ApplicationConfig.logoutCallbackUrl
