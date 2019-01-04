@@ -16,7 +16,8 @@
 
 package controllers
 
-import play.api.test.Helpers.OK
+import config.ApplicationConfig
+import play.api.test.Helpers._
 
 class AuthorisationControllerTest extends ControllerBaseSpec {
 
@@ -36,6 +37,13 @@ class AuthorisationControllerTest extends ControllerBaseSpec {
     }
   }
 
-  //TODO controller.logout
+  "Calling logout" should {
+    "redirect" in {
+      val result = await(controller.logout()(request))
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(ApplicationConfig.logoutUrl)
+      result.session(request).data("postLogoutPage") shouldBe ApplicationConfig.logoutCallbackUrl
+    }
+  }
 
 }

@@ -38,7 +38,7 @@ class UnauthenticatedActionTransformer @Inject()(
 
     authorised(ConfidenceLevel.L100).retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
       case cl ~ saUtr ~ credentials ⇒
-        val authState = if(credentials.isDefined) TemporarilyAuthenticated else PermanentlyAuthenticated
+        val authState = if(credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
         Future.successful(RequestWithAuthState(request, authState = authState, Some(cl), saUtr.isDefined, credentials.map(_.providerType)))
     } recover {
       case _: NoActiveSession | _: InsufficientConfidenceLevel ⇒
