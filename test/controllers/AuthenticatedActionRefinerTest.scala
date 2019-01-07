@@ -39,7 +39,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
   class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
-    def onPageLoad() = authAction { implicit request ⇒ Ok.withHeaders("authState" → request.authState.toString) }
+    def onPageLoad() = authAction { implicit request => Ok.withHeaders("authState" -> request.authState.toString) }
     when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L100), ArgumentMatchers.eq(retrievals))(any(), any()))
       .thenReturn(authReturn)
   }

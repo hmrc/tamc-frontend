@@ -174,7 +174,7 @@ class RoutesTest extends ControllerBaseSpec {
     }
 
     "display errors as no radio buttons is selected for Scottish resident" in {
-      val request = FakeRequest().withSession("scottish_resident" → "true")
+      val request = FakeRequest().withSession("scottish_resident" -> "true")
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherScotThreshold = formatter.format(ApplicationConfig.MAX_LIMIT_SCOT)

@@ -37,8 +37,8 @@ trait ControllerBaseSpec extends TestUtility with GuiceOneAppPerSuite with Mocki
     .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))
     .overrides(bind[FormPartialRetriever].toInstance(MockFormPartialRetriever)
   ).configure(
-    "metrics.jvm" → false,
-    "metrics.enabled" → false
+    "metrics.jvm" -> false,
+    "metrics.enabled" -> false
   ).build()
 
   def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]

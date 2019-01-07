@@ -730,7 +730,7 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "have partners-income page and content for Scottish resident" in {
-      val request = FakeRequest().withSession("scottish_resident" → "true")
+      val request = FakeRequest().withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
@@ -817,7 +817,7 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "have partners-income page and content for Scottish resident" in {
-      val request = FakeRequest().withSession("scottish_resident" → "true")
+      val request = FakeRequest().withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)

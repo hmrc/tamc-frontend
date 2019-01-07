@@ -119,9 +119,9 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
     "return successful response" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "role" → "some role",
-          "endReason" → "some end reason",
-          "historicActiveRecord" → "true"
+          "role" -> "some role",
+          "endReason" -> "some end reason",
+          "historicActiveRecord" -> "true"
         )
         val result = controller().makeChange()(request)
         status(result) shouldBe OK
@@ -130,7 +130,7 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
 
     "redirect the user" when {
       "an invalid form with errors is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("historicActiveRecord" → "string")
+        val request = FakeRequest().withFormUrlEncodedBody("historicActiveRecord" -> "string")
         val result = controller().makeChange()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.UpdateRelationshipController.history().url)
@@ -140,11 +140,11 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
 
   class UpdateRelationshipActionTest(endReason: String) {
     val request: Request[AnyContent] = FakeRequest().withFormUrlEncodedBody(
-      "role" → "some role",
-      "endReason" → endReason,
-      "historicActiveRecord" → "true",
-      "creationTimestamp" → "timestamp",
-      "dateOfDivorce" → new LocalDate(TaxYearResolver.currentTaxYear, 6, 12).toString()
+      "role" -> "some role",
+      "endReason" -> endReason,
+      "historicActiveRecord" -> "true",
+      "creationTimestamp" -> "timestamp",
+      "dateOfDivorce" -> new LocalDate(TaxYearResolver.currentTaxYear, 6, 12).toString()
     )
     when(mockCachingService.saveRoleRecord(any())(any(), any())).thenReturn("OK")
     when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
@@ -185,7 +185,7 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
 
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("role" → "ROLE", "historicActiveRecord" -> "string")
+        val request = FakeRequest().withFormUrlEncodedBody("role" -> "ROLE", "historicActiveRecord" -> "string")
         val result: Future[Result] = controller().updateRelationshipAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -211,7 +211,7 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
   "confirmYourEmailActionUpdate" should {
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" → "not a real email")
+        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "not a real email")
         val result = controller().confirmYourEmailActionUpdate()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -223,7 +223,7 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
         val record = NotificationRecord(EmailAddress(email))
         when(mockRegistrationService.upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any()))
           .thenReturn(record)
-        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" → email)
+        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> email)
         val result = controller().confirmYourEmailActionUpdate()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate().url)
@@ -256,7 +256,7 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
   "divorceSelectYear" should {
     "return bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("role"→ "")
+        val request = FakeRequest().withFormUrlEncodedBody("role"-> "")
         val result = controller().divorceSelectYear()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -264,13 +264,13 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
 
     "return a success" when {
       def request = FakeRequest().withFormUrlEncodedBody(
-        "role"→ "some role",
-        "endReason" → "DIVORCE",
-        "historicActiveRecord" → "true",
-        "creationTimeStamp" → "timestamp",
+        "role"-> "some role",
+        "endReason" -> "DIVORCE",
+        "historicActiveRecord" -> "true",
+        "creationTimeStamp" -> "timestamp",
         "dateOfDivorce.day" -> "1",
-        "dateOfDivorce.month" → "1",
-        "dateOfDivorce.year" → "2000"
+        "dateOfDivorce.month" -> "1",
+        "dateOfDivorce.year" -> "2000"
       )
 
       "divorce date is valid" in {
@@ -299,13 +299,13 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
     "return a bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "role" → "some role",
-          "endReason" → "invalid end reason",
-          "historicActiveRecord" → "true",
-          "creationTimeStamp" → "timestamp",
+          "role" -> "some role",
+          "endReason" -> "invalid end reason",
+          "historicActiveRecord" -> "true",
+          "creationTimeStamp" -> "timestamp",
           "dateOfDivorce.day" -> "1",
-          "dateOfDivorce.month" → "1",
-          "dateOfDivorce.year" → "2000"
+          "dateOfDivorce.month" -> "1",
+          "dateOfDivorce.year" -> "2000"
         )
         val result = controller().divorceAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -315,13 +315,13 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
     "redirect the user" when {
       "EndRelationshipReason is pulled from the cache" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "role" → "some role",
-          "endReason" → "DIVORCE_CY",
-          "historicActiveRecord" → "true",
-          "creationTimeStamp" → "timestamp",
+          "role" -> "some role",
+          "endReason" -> "DIVORCE_CY",
+          "historicActiveRecord" -> "true",
+          "creationTimeStamp" -> "timestamp",
           "dateOfDivorce.day" -> "1",
-          "dateOfDivorce.month" → "1",
-          "dateOfDivorce.year" → "2000"
+          "dateOfDivorce.month" -> "1",
+          "dateOfDivorce.year" -> "2000"
         )
         when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
           .thenReturn(EndRelationshipReason("DIVORCE_CY"))
@@ -516,7 +516,7 @@ class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
         (new Exception, "technical.issue.para1")
       )
 
-      for((error, message) ← errors) {
+      for((error, message) <- errors) {
         s"a $error has been thrown" in {
           val result = controller().handleError(HeaderCarrier(), auhtRequest)(error)
           status(result) shouldBe INTERNAL_SERVER_ERROR

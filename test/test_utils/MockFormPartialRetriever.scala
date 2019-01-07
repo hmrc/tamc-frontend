@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.CoreGet
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 object MockFormPartialRetriever extends FormPartialRetriever  {
-  override val crypto: String ⇒ String = s ⇒ s
+  override val crypto: String => String = s => s
   override def httpGet: CoreGet = ???
 
   override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html = {

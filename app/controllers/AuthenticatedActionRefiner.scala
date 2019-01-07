@@ -47,7 +47,7 @@ class AuthenticatedActionRefiner @Inject()(
             AuthenticatedUserRequest(request, authState, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
           )
         )
-      case _ ⇒
+      case _ =>
         throw new Exception("Nino not found")
     } recover {
       case _: InsufficientConfidenceLevel =>

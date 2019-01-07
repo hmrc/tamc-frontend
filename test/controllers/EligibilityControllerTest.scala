@@ -67,7 +67,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "marriage-criteria" → "not a boolean"
+          "marriage-criteria" -> "not a boolean"
         )
         val result = controller().eligibilityCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -77,7 +77,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a success" when {
       "user is not married with permanent auth state" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "marriage-criteria" → "false"
+          "marriage-criteria" -> "false"
         )
         val result = controller(instanceOf[MockPermUnauthenticatedAction]).eligibilityCheckAction()(request)
         status(result) shouldBe OK
@@ -87,7 +87,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
 
       "user is not married with temporary auth state" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "marriage-criteria" → "false"
+          "marriage-criteria" -> "false"
         )
         val result = controller().eligibilityCheckAction()(request)
         status(result) shouldBe OK
@@ -99,7 +99,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "redirect the user" when {
       "user is married" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "marriage-criteria" → "true"
+          "marriage-criteria" -> "true"
         )
         val result = controller().eligibilityCheckAction()(request)
         status(result) shouldBe SEE_OTHER
@@ -119,7 +119,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "date-of-birth" → "not bool")
+          "date-of-birth" -> "not bool")
         val result = controller().dateOfBirthCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -128,7 +128,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "redirect to do you live in scotland" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "date-of-birth" → "true"
+          "date-of-birth" -> "true"
         )
         val result = controller().dateOfBirthCheckAction()(request)
         status(result) shouldBe SEE_OTHER
@@ -148,7 +148,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "do-you-live-in-scotland" → "not bool")
+          "do-you-live-in-scotland" -> "not bool")
         val result = controller().doYouLiveInScotlandAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -157,7 +157,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "redirect to lower earner" when {
       "a valid form is submitted who lives in scotland" in {
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(
-          "do-you-live-in-scotland" → "true")
+          "do-you-live-in-scotland" -> "true")
         val result = controller().doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck().url)
@@ -166,7 +166,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
 
       "a valid form is submitted who does not live in scotland" in {
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(
-          "do-you-live-in-scotland" → "false")
+          "do-you-live-in-scotland" -> "false")
         val result = controller().doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck().url)
@@ -186,7 +186,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a bad request" when {
       "a invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "lower-earner" → "not a bool"
+          "lower-earner" -> "not a bool"
         )
         val result = controller().lowerEarnerCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -195,7 +195,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
       "redirect to partners income" when {
         "a valid form is submitted" in {
           val request = FakeRequest().withFormUrlEncodedBody(
-            "lower-earner" → "true"
+            "lower-earner" -> "true"
           )
           val result = controller().lowerEarnerCheckAction()(request)
           status(result) shouldBe SEE_OTHER
@@ -216,7 +216,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "partners-income" → "not bool")
+          "partners-income" -> "not bool")
         val result = controller().partnersIncomeCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -225,7 +225,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "redirect to want to apply" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "partners-income" → "true")
+          "partners-income" -> "true")
         val result = controller().partnersIncomeCheckAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouWantToApply().url)
@@ -244,7 +244,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "do-you-want-to-apply" → "not a bool")
+          "do-you-want-to-apply" -> "not a bool")
         val result = controller().doYouWantToApplyAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -253,7 +253,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a redirect to transfer" when {
       "the user wants to apply" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "do-you-want-to-apply" → "true")
+          "do-you-want-to-apply" -> "true")
         val result = controller().doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
@@ -263,7 +263,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a redirect" when {
       "the user doesnt want to apply and is permanently logged in" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "do-you-want-to-apply" → "false")
+          "do-you-want-to-apply" -> "false")
         val result = controller(instanceOf[MockPermUnauthenticatedAction]).doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(ApplicationConfig.ptaFinishedUrl)
@@ -271,7 +271,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
 
       "the user doesnt want to apply and is not permanently logged in" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "do-you-want-to-apply" → "false")
+          "do-you-want-to-apply" -> "false")
         val result = controller().doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(ApplicationConfig.gdsFinishedUrl)
@@ -300,9 +300,9 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a success" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "country" → "england",
-          "transferor-income" → "£20.56",
-          "recipient-income" → "£100"
+          "country" -> "england",
+          "transferor-income" -> "£20.56",
+          "recipient-income" -> "£100"
         )
         when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
           ArgumentMatchers.eq(England))
@@ -334,9 +334,9 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "return a success" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "country" → "england",
-          "transferor-income" → "£20.56",
-          "recipient-income" → "£100"
+          "country" -> "england",
+          "transferor-income" -> "£20.56",
+          "recipient-income" -> "£100"
         )
         when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
           ArgumentMatchers.eq(England))

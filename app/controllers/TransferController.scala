@@ -60,7 +60,7 @@ class TransferController @Inject()(
         formWithErrors =>
           Future.successful(BadRequest(views.html.multiyear.transfer.transfer(formWithErrors))),
         recipientData => {
-          cachingService.saveRecipientDetails(recipientData).map { _ ⇒
+          cachingService.saveRecipientDetails(recipientData).map { _ =>
             Redirect(controllers.routes.TransferController.dateOfMarriage())
           }
         })

@@ -92,7 +92,7 @@ class UpdateRelationshipController @Inject()(
           BadRequest(views.html.coc.reason_for_change(form))
         },
         formData => {
-          cachingService.saveRoleRecord(formData.role.get).flatMap { _ ⇒
+          cachingService.saveRoleRecord(formData.role.get).flatMap { _ =>
             (formData.endReason, formData.role) match {
               case (Some(EndReasonCode.CANCEL), _) => Future.successful {
                 Redirect(controllers.routes.UpdateRelationshipController.confirmCancel())
@@ -110,7 +110,7 @@ class UpdateRelationshipController @Inject()(
               case (Some(EndReasonCode.BEREAVEMENT), _) => Future.successful {
                 Ok(views.html.coc.bereavement_recipient())
               }
-              case (None, _) ⇒
+              case (None, _) =>
                 throw new Exception("Missing EndReasonCode")
               case _ => Future.successful {
                 BadRequest(views.html.coc.reason_for_change(updateRelationshipForm.fill(formData)))
@@ -263,7 +263,7 @@ class UpdateRelationshipController @Inject()(
           val (isEnded, relationEndDate, relevantDate) = getConfirmationInfoFromReason(reason, updateCache)
           Ok(views.html.coc.confirm(data, relevantDate, isEnded = isEnded, relationEndDate = relationEndDate))
 
-        case (_, None) ⇒
+        case (_, None) =>
           throw new Exception("No UpdateRelationshipCacheData found")
       } recover handleError
   }

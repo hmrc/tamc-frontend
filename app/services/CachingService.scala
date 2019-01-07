@@ -154,13 +154,13 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   private def getCacheData(nino: Nino)(implicit hc: HeaderCarrier, executionContext: ExecutionContext): Future[Option[CacheMap]] = {
     fetch().flatMap {
       _.map {
-        cacheMap ⇒
+        cacheMap =>
           cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD)
-            .map(_ ⇒ Future.successful(Some(cacheMap)))
+            .map(_ => Future.successful(Some(cacheMap)))
             .getOrElse {
               marriageAllowanceConnector.listRelationship(nino) flatMap {
-                data ⇒ data.userRecord.map {
-                  loggedInUser ⇒
+                data => data.userRecord.map {
+                  loggedInUser =>
                     val userRecord: UserRecord = UserRecord(
                       cid = loggedInUser.cid,
                       timestamp = loggedInUser.timestamp,
