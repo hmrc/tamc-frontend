@@ -46,8 +46,6 @@ class DummyHttpResponse(override val body: String, override val status: Int, ove
 
 trait TestUtility extends UnitSpec with I18nSupport {
 
-  def marriageAllowanceUrl(pageUrl: String): String = "/marriage-allowance-application" + pageUrl
-
   def eventsShouldMatch(event: DataEvent, auditType: String, details: Map[String, String], tags: Map[String, String] = Map.empty): Unit = {
     event match {
       case DataEvent("tamc-frontend", `auditType`, _, eventTags, `details`, _) if (tags.toSet subsetOf eventTags.toSet) =>

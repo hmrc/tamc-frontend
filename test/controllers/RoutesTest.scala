@@ -20,18 +20,17 @@ import config.ApplicationConfig
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.i18n.MessagesApi
-import play.api.mvc.Cookie
+import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito._
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{BAD_REQUEST, OK, SEE_OTHER, contentAsString, cookies, defaultAwaitTimeout, redirectLocation}
-import test_utils.TestData.{Cids, Ninos}
-import test_utils.{TestConstants, TestUtility}
+import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
+import services.{CachingService, TimeService, TransferService}
+import test_utils.TestConstants
+import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class RoutesTest extends ControllerBaseSpec {
 
@@ -52,17 +51,9 @@ class RoutesTest extends ControllerBaseSpec {
 
   "Confirmation page" should {
     "have correct action and method to finish page" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
-      val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
-      val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirm(request)
+      when(mockTransferService.getConfirmationData(any())(any(), any()))
+        .thenReturn(ConfirmationModel(None, EmailAddress("example@example.com"), "", "", Nino(Ninos.nino1), Nil, DateOfMarriageFormInput(LocalDate.now())))
+      val result = transferController.confirm(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -70,22 +61,12 @@ class RoutesTest extends ControllerBaseSpec {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/confirm-your-email")
+      back.attr("href") shouldBe controllers.routes.TransferController.confirmYourEmail().url
     }
 
 
     "have 'Confirm your application' " in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
-      val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
-      val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirm(request)
+      val result = transferController.confirm(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -93,17 +74,7 @@ class RoutesTest extends ControllerBaseSpec {
     }
 
     "have link to edit email page" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
-      val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
-      val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirm(request)
+      val result = transferController.confirm(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -112,17 +83,7 @@ class RoutesTest extends ControllerBaseSpec {
       signout.attr("href") shouldBe "/marriage-allowance-application/confirm-your-email"
     }
     "have link to edit partner details and edit marriage details" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015", name = None)
-      val rcrec = UserRecord(cid = Cids.cid5, timestamp = "2015", name = None)
-      val rcdata = RegistrationFormInput("foo", "bar", Gender("F"), Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val selectedYears = Some(List(2014, 2015))
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example@example.com"))), selectedYears = selectedYears, dateOfMarriage = Some(DateOfMarriageFormInput(new LocalDate(2015, 1, 1)))))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.confirm(request)
+      val result = transferController.confirm(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -136,38 +97,11 @@ class RoutesTest extends ControllerBaseSpec {
   }
 
   "Finished page" should {
+    "have check your marriage allowance link" in {
+      when(mockTransferService.getFinishedData(any())(any(), any()))
+        .thenReturn(NotificationRecord(EmailAddress("example@example.com")))
 
-    "have check your marriage allowance link for non-PTA journey" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
-      val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
-      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example123@example.com"))), relationshipCreated = Some(true)))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request
-      val result = controllerToTest.finished(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      val ptaLink = document.getElementById("paragraph-5")
-      ptaLink shouldNot be(null)
-      ptaLink.getElementById("pta-link").attr("href") shouldBe "https://www.gov.uk/personal-tax-account"
-    }
-
-    "have check your marriage allowance link for PTA journey" in {
-      val trrec = UserRecord(cid = Cids.cid1, timestamp = "2015")
-      val rcrec = UserRecord(cid = Cids.cid2, timestamp = "2015")
-      val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2015, 1, 1))
-      val recrecord = RecipientRecord(record = rcrec, data = rcdata)
-      val trRecipientData = Some(CacheData(transferor = Some(trrec), recipient = Some(recrecord), notification = Some(NotificationRecord(EmailAddress("example123@example.com"))), relationshipCreated = Some(true)))
-
-      val testComponent = makeTestComponent("user_happy_path", transferorRecipientData = trRecipientData)
-      val controllerToTest = testComponent.controller
-      val request = testComponent.request.withCookies(Cookie("TAMC_JOURNEY", "PTA"))
-      val result = controllerToTest.finished(request)
+      val result = transferController.finished(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -179,7 +113,6 @@ class RoutesTest extends ControllerBaseSpec {
   }
 
   "PTA Eligibility check page for multi year" should {
-
     "diplay errors as no radio buttons is selected " in {
       val result = eligibilityController.eligibilityCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
@@ -218,7 +151,7 @@ class RoutesTest extends ControllerBaseSpec {
       document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligibility-check-pta")
+      back.attr("href") shouldBe controllers.routes.EligibilityController.eligibilityCheck().url
     }
   }
 
@@ -237,10 +170,11 @@ class RoutesTest extends ControllerBaseSpec {
       document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherThreshold"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
+      back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck().url
     }
 
     "display errors as no radio buttons is selected for Scottish resident" in {
+      val request = FakeRequest().withSession("scottish_resident" → "true")
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherScotThreshold = formatter.format(ApplicationConfig.MAX_LIMIT_SCOT)
@@ -253,7 +187,7 @@ class RoutesTest extends ControllerBaseSpec {
       document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherScotThreshold"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/lower-earner-pta")
+      back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck().url
     }
   }
 
@@ -290,5 +224,15 @@ class RoutesTest extends ControllerBaseSpec {
     }
   }
 
-  def eligibilityController: EligibilityController = app.injector.instanceOf[EligibilityController]
+  val mockTransferService: TransferService = mock[TransferService]
+  val mockCachingService: CachingService = mock[CachingService]
+  val mockTimeService: TimeService = mock[TimeService]
+  def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+  def transferController: TransferController = new TransferController(
+    messagesApi,
+    instanceOf[AuthenticatedActionRefiner],
+    mockTransferService,
+    mockCachingService,
+    mockTimeService
+  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 }

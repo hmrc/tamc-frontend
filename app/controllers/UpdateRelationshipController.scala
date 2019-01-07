@@ -32,7 +32,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class UpdateRelationshipController @Inject()(
                                              override val messagesApi: MessagesApi,

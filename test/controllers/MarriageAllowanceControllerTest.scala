@@ -228,7 +228,7 @@ class MarriageAllowanceControllerTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/date-of-marriage")
+      back.attr("href") shouldBe controllers.routes.TransferController.dateOfMarriage().url
     }
 
     "show No Tax Years selected page if user is only eligible for current year and chooses no" in {

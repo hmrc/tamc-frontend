@@ -23,17 +23,17 @@ import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestConstants
-import test_utils.TestData.{Cids, Ninos}
+import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import org.mockito.Mockito._
-import org.mockito.ArgumentMatchers._
 import uk.gov.hmrc.time.TaxYearResolver
 
 class ContentTest extends ControllerBaseSpec {
@@ -388,7 +388,7 @@ class ContentTest extends ControllerBaseSpec {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/transfer-allowance")
+      back.attr("href") shouldBe controllers.routes.TransferController.transfer().url
     }
 
     "display form error message (date of marriage is after today’s date)" in {
@@ -444,7 +444,7 @@ class ContentTest extends ControllerBaseSpec {
       document.getElementById("marriageDate").text() shouldBe "10 April 2011"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligible-years")
+      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears().url
     }
 
     "display form error message (no year choice made )" in {
@@ -479,7 +479,7 @@ class ContentTest extends ControllerBaseSpec {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe marriageAllowanceUrl("/eligible-years")
+      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears().url
     }
 
     "display form error message (transferor email is empty)" in {
