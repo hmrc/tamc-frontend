@@ -18,19 +18,13 @@ package test_utils.data
 
 import models._
 import org.joda.time.LocalDate
-import test_utils.TestData.Ninos
+import test_utils.TestData.{Cids, Ninos}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
 
-object ConfirmationModelData {
-  val citizenName = Some(CitizenName(Some("Test"), Some("User")))
-  val emailAddress = EmailAddress("test@test.com")
+object RecipientRecordData {
+  val citizenName: CitizenName = CitizenName(Some("Test"), Some("User"))
+  val userRecord: UserRecord = UserRecord(Cids.cid1, "2015", Some(true), Some(citizenName))
+  val registrationFormInput: RegistrationFormInput = RegistrationFormInput("Test", "User", Gender("M"), Nino(Ninos.nino1), LocalDate.now())
 
-  val dateOfMarriageFormInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
-
-  val confirmationModelData = ConfirmationModel(citizenName, emailAddress, "Test", "User", Nino(Ninos.nino1),
-    List(TaxYear(2015, None)), dateOfMarriageFormInput)
-
-  val updateRelationshipConfirmationModel =
-    UpdateRelationshipConfirmationModel(citizenName, emailAddress, EndRelationshipReason("DIVORCE_PY"))
+  val recipientRecord: RecipientRecord = RecipientRecord(userRecord, registrationFormInput, List(TaxYear(2015, Some(false))))
 }
