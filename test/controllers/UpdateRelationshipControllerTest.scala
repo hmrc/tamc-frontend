@@ -25,7 +25,7 @@ import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api.mvc.{AnyContent, Cookie, Request, Result}
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
@@ -41,9 +41,8 @@ import uk.gov.hmrc.time.TaxYearResolver
 
 import scala.concurrent.Future
 
-class UpdateRelationshipControllerTest extends UpdateRelationshipTestUtility {
+class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
-  //NOTE: These vals will ruin the mock counts
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]

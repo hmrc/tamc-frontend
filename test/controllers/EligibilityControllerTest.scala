@@ -25,7 +25,7 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.EligibilityCalculatorService
-import test_utils.{MockFormPartialRetriever, MockPermUnauthenticatedAction, MockTemplateRenderer}
+import test_utils.MockPermUnauthenticatedAction
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 

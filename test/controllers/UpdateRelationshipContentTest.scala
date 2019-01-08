@@ -16,18 +16,14 @@
 
 package controllers
 
-import details.{Person, PersonDetails}
 import models._
-import org.joda.time.{DateTime, DateTimeZone}
 import org.jsoup.Jsoup
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.mockito.ArgumentMatchers
-import play.api.mvc.Cookie
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{OK, SEE_OTHER, contentAsString, defaultAwaitTimeout}
+import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
 import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
-import test_utils.UpdateRelationshipTestUtility
 import test_utils.data.RelationshipRecordData
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -35,7 +31,7 @@ import uk.gov.hmrc.time.TaxYearResolver
 
 import scala.concurrent.Future
 
-class UpdateRelationshipContentTest extends UpdateRelationshipTestUtility {
+class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
   "list relationship page" should {
 

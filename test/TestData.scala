@@ -17,8 +17,6 @@
 package test_utils
 
 import models.Cid
-import models.Timestamp
-import java.net.URLDecoder
 import uk.gov.hmrc.domain.Generator
 
 object TestData {
@@ -75,9 +73,5 @@ object TestData {
 
     val cid1: Cid = cids(0)
     val cid2: Cid = cids(1)
-    val cid3: Cid = cids(2)
-    val cid4: Cid = cids(3)
-    val cid5: Cid = cids(4)
-    val cid6: Cid = cids(5)
   }
 }

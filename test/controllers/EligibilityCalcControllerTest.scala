@@ -18,19 +18,11 @@ package controllers
 
 import config.ApplicationConfig
 import org.jsoup.Jsoup
-import org.scalatestplus.play.OneAppPerSuite
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.i18n.MessagesApi
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
-import test_utils.TestUtility
-import uk.gov.hmrc.play.test.UnitSpec
+import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 
 
 class EligibilityCalcControllerTest extends ControllerBaseSpec {
-
-  //TODO content
 
   "Check eligibility benefit" should {
 

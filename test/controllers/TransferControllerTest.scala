@@ -22,23 +22,21 @@ import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
-import services.{CachingService, TimeService, TransferService}
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
-import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import test_utils.{MockTemporaryAuthenticatedAction, TestData}
+import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import test_utils.data.{ConfirmationModelData, RecipientRecordData, RelationshipRecordData}
+import test_utils.{MockTemporaryAuthenticatedAction, TestData}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYearResolver
-
-import scala.concurrent.ExecutionContext
 
 class TransferControllerTest extends ControllerBaseSpec {
 

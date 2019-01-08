@@ -16,7 +16,7 @@
 
 package controllers
 
-import play.api.test.Helpers.{cookies, defaultAwaitTimeout, _}
+import play.api.test.Helpers._
 
 class LanguageControllerTest extends ControllerBaseSpec {
 

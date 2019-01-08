@@ -28,7 +28,6 @@ import org.mockito.Mockito._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
 import services.{CachingService, TimeService, TransferService}
-import test_utils.TestConstants
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -42,6 +41,8 @@ class ContentTest extends ControllerBaseSpec {
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
     "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
     "Insurance is taken off."
+
+  val ERROR_HEADING = "There is a problem"
 
   "Calling Transfer Submit page" should {
 
@@ -200,7 +201,6 @@ class ContentTest extends ControllerBaseSpec {
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s last name"
       document.getElementById("last-name-error").text() shouldBe "Confirm your partner’s last name"
-      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(last-name)").size() shouldBe 1
     }
 
     "display form error message (last name is empty)" in {
@@ -337,7 +337,6 @@ class ContentTest extends ControllerBaseSpec {
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s National Insurance number"
       document.getElementById("nino-error").text() shouldBe "Confirm your partner’s National Insurance number"
-      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(nino)").size() shouldBe 1
     }
 
     "display form error message (NINO is empty)" in {
@@ -647,7 +646,7 @@ class ContentTest extends ControllerBaseSpec {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -675,7 +674,7 @@ class ContentTest extends ControllerBaseSpec {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 

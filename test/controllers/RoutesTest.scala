@@ -25,7 +25,6 @@ import org.mockito.Mockito._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
 import services.{CachingService, TimeService, TransferService}
-import test_utils.TestConstants
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -118,7 +117,7 @@ class RoutesTest extends ControllerBaseSpec {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -134,7 +133,7 @@ class RoutesTest extends ControllerBaseSpec {
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
     }
@@ -148,7 +147,7 @@ class RoutesTest extends ControllerBaseSpec {
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe controllers.routes.EligibilityController.eligibilityCheck().url
@@ -166,7 +165,7 @@ class RoutesTest extends ControllerBaseSpec {
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
       document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherThreshold"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
@@ -183,7 +182,7 @@ class RoutesTest extends ControllerBaseSpec {
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherScotThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
       document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherScotThreshold"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
@@ -198,7 +197,7 @@ class RoutesTest extends ControllerBaseSpec {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -214,7 +213,7 @@ class RoutesTest extends ControllerBaseSpec {
 
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementById("form-error-heading").text() shouldBe TestConstants.ERROR_HEADING
+      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
       document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
 
@@ -223,6 +222,8 @@ class RoutesTest extends ControllerBaseSpec {
       back.attr("href") shouldBe ("https://www.gov.uk/apply-marriage-allowance")
     }
   }
+
+  val ERROR_HEADING = "There is a problem"
 
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]

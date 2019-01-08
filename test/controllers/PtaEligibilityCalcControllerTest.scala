@@ -19,7 +19,7 @@ package controllers
 import config.ApplicationConfig
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
+import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 
 class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
 
@@ -50,7 +50,6 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
     }
   }
 
-  //TODO content
   "Check eligibility benefit" should {
 
     "be GBP 80 if transferor income=9000 (< 11500) and recipient income=11900 (11900-11500)" in {
