@@ -60,7 +60,7 @@ class EligibilityController @Inject()(
   def eligibilityCheckAction(): Action[AnyContent] = {
 
       def finishUrl(isLoggedIn: Boolean): String =
-        if (isLoggedIn) ptaFinishedUrl else "https://www.gov.uk/marriage-allowance-guide"
+        if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
 
     unauthenticatedAction {
       implicit request =>

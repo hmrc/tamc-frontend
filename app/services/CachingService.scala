@@ -125,8 +125,8 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             dateOfMarriage= cacheMap.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE))))
 
   def getCachedData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[CacheData]] =
-    getCacheData(nino) map (
-      _ map (
+    getCacheData(nino).map {
+      _.map {
         cacheMap =>
           CacheData(
             transferor = cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD),
@@ -135,7 +135,9 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipCreated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE),
             selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
-            dateOfMarriage= cacheMap.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE))))
+            dateOfMarriage = cacheMap.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE))
+      }
+    }
 
 
   def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =

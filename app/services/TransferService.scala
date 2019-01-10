@@ -204,7 +204,7 @@ trait TransferService {
   private def transformCache(cacheData: CacheData)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] =
     Future {
       ConfirmationModel(
-        transferorFullName = cacheData.transferor.fold(None: Option[CitizenName])(_.name),
+        transferorFullName = cacheData.transferor.flatMap(_.name),
         transferorEmail = cacheData.notification.get.transferor_email,
         recipientFirstName = cacheData.recipient.get.data.name,
         recipientLastName = cacheData.recipient.get.data.lastName,

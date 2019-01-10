@@ -92,7 +92,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
         val result = controller().eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide"
+        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.gdsFinishedUrl
       }
     }
 
