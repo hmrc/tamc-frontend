@@ -19,8 +19,6 @@
 @import views.helpers.TextGenerators
 @import utils.LanguageUtils
 
-
-
 <div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
     @relevantDate match {
         case optionDate@Some(date) => {<strong class="bold-small">@Html(Messages(messageKey, TextGenerators.ukDateTransformer(optionDate, LanguageUtils.isWelsh(messages))))</strong>}

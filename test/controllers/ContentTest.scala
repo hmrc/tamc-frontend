@@ -190,7 +190,11 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "gender" -> "M", "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -204,7 +208,12 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name is empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "", "gender" -> "M", "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -218,7 +227,12 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name is blank)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> " ", "gender" -> "M", "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> " ",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -232,7 +246,12 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name contains more than 35 characters)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "a" * 36, "gender" -> "M", "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "a" * 36,
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -246,7 +265,12 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name contains numbers)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "12345", "gender" -> "M", "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "12345",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -260,7 +284,12 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (last name contains letters and numbers)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "abc123", "gender" -> "M", "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "abc123",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -295,7 +324,11 @@ class ContentTest extends ControllerBaseSpec {
 
   "Calling Transfer Submit page with error in gender field" should {
     "display form error message (gender missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "nino" -> Ninos.nino1, "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -306,11 +339,15 @@ class ContentTest extends ControllerBaseSpec {
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
       labelName.getElementsByClass("error-notification").first().text() shouldBe "Tell us your partner’s gender"
       document.getElementById("gender-error").text() shouldBe "Confirm your partner’s gender"
-      //document.getElementsByAttributeValue("data-journey", "marriage-allowance:stage:transfer-erroneous(gender)").size() shouldBe 1
     }
 
     "display form error message (gender code is invalid)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "X", "nino" -> Ninos.nino1)
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "X",
+        "nino" -> Ninos.nino1
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -326,7 +363,11 @@ class ContentTest extends ControllerBaseSpec {
 
   "Calling Transfer Submit page with error in NINO field" should {
     "display form error message (NINO missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M")
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "M"
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -340,7 +381,12 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (NINO is empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", ("nino" -> ""))
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> ""
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -354,7 +400,12 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (NINO is invalid)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "name" -> "foo", "last-name" -> "bar", "gender" -> "M", "nino" -> "ZZ")
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> "ZZ"
+      )
       val result = transferController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -371,7 +422,11 @@ class ContentTest extends ControllerBaseSpec {
   "Calling Date Of Marriage page with error in dom field" should {
 
     "display form error message (date of marriage is before 1900)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "1899")
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "dateOfMarriage.day" -> "1",
+        "dateOfMarriage.month" -> "1",
+        "dateOfMarriage.year" -> "1899"
+      )
       val result = transferController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -391,7 +446,11 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (date of marriage is after today’s date)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "1", "dateOfMarriage.month" -> "1", "dateOfMarriage.year" -> "2020")
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "dateOfMarriage.day" -> "1",
+        "dateOfMarriage.month" -> "1",
+        "dateOfMarriage.year" -> "2020"
+      )
       val result = transferController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -407,7 +466,11 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (date of marriage is left empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "dateOfMarriage.day" -> "", "dateOfMarriage.month" -> "", "dateOfMarriage.year" -> "")
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "dateOfMarriage.day" -> "",
+        "dateOfMarriage.month" -> "",
+        "dateOfMarriage.year" -> ""
+      )
       val result = transferController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST

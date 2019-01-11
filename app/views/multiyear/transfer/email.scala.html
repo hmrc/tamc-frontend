@@ -27,25 +27,25 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.confirm-email"))
+    title = Messages("title.application.pattern", Messages("title.confirm-email"))
 ){
-@helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
-@templates.form_error_notification(recipientForm)
-<div class="form-group">
-    <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
-    <p>@Html(Messages("pages.form.field.yourDetails"))</p>
-    @templates.input(recipientForm("transferor-email"),
-    '_label -> Html(Messages("pages.form.field.transferor-email")),
-    '_labelClass -> "form-label",
-    '_inputClass -> "form-control",
-    '_dataAttributes -> "autocomplete=off"
-    )
-</div>
+    @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
+        @templates.form_error_notification(recipientForm)
+        <div class="form-group">
+            <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
+            <p>@Html(Messages("pages.form.field.yourDetails"))</p>
+            @templates.input(recipientForm("transferor-email"),
+            '_label -> Html(Messages("pages.form.field.transferor-email")),
+            '_labelClass -> "form-label",
+            '_inputClass -> "form-control",
+            '_dataAttributes -> "autocomplete=off"
+            )
+        </div>
 
-<p class="get-started group" id="get-started">
-    <button class="button" type="submit" data-journey-click="marriage-allowance:button:email_continue">@Html(Messages("generic.continue"))</button>
-</p>
-}
-<br>
-<a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+        <p class="get-started group" id="get-started">
+            <button class="button" type="submit" data-journey-click="marriage-allowance:button:email_continue">@Html(Messages("generic.continue"))</button>
+        </p>
+    }
+    <br>
+    <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 }
