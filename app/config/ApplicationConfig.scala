@@ -16,6 +16,7 @@
 
 package config
 
+import config.ApplicationConfig.loadConfig
 import org.joda.time.LocalDate
 import play.api.Play.{configuration, current}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -140,4 +141,5 @@ trait ApplicationConfig {
   val webchatId: String
   /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
   lazy val refreshInterval = 900
+  val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
 }
