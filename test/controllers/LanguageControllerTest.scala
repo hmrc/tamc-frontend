@@ -16,6 +16,7 @@
 
 package controllers
 
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 
 class LanguageControllerTest extends ControllerBaseSpec {
@@ -34,6 +35,18 @@ class LanguageControllerTest extends ControllerBaseSpec {
       val result = controller.cyGb("/test")(request)
       cookies(result).get("PLAY_LANG").get.value shouldBe "cy"
       status(result) shouldBe SEE_OTHER
+    }
+  }
+
+  "changeLang" should {
+    "redirect" when {
+      "redirect URI contains the path" in {
+        val request = FakeRequest("GET", "http://localhost:9000")
+        val result = controller.cyGb(request.path + "/test")(request)
+        cookies(result).get("PLAY_LANG").get.value shouldBe "cy"
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).get shouldBe request.path + "/test"
+      }
     }
   }
 }

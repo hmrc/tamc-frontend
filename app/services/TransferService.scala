@@ -16,34 +16,30 @@
 
 package services
 
-import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
-import errors._
 import errors.ErrorResponseStatus._
+import errors._
 import events._
 import models._
 import play.Logger
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import services.UpdateRelationshipService._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.time.TaxYearResolver
 import utils.LanguageUtils
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future}
 
 object TransferService extends TransferService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
   override val customAuditConnector = ApplicationAuditConnector
   override val cachingService = CachingService
   override val timeService = TimeService
+  override val updateRelationshipService = UpdateRelationshipService
 }
 
 trait TransferService {
@@ -52,58 +48,37 @@ trait TransferService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
   val timeService: TimeService
+  val updateRelationshipService: UpdateRelationshipService
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }
 
-  def getEligibleTransferorName(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[CitizenName]] = {
-    for {
-      initialCacheState <- cachingService.getCachedData
-      name <- validateTransferorName(initialCacheState)
-    } yield name
-  }
-
-  private def validateTransferorName(cache: Option[CacheData]): Future[Option[CitizenName]] = {
-    Logger.info("validateTransferorName has been called.")
-    Future {
-      cache match {
-        case None => throw CacheMissingTransferor()
-        case Some(CacheData(_, _, _, Some(true), _, _, _)) => throw CacheRelationshipAlreadyCreated()
-        case Some(CacheData(None, _, _, _, _, _, _)) => throw CacheMissingTransferor()
-        case Some(CacheData(Some(UserRecord(_, _, _, name)), _, _, _, _, _, _)) => name
-      }
-    }
-  }
-
-  def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
+  def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
+                         (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     checkRecipientEligible(transferorNino, recipientData).map(eligible => eligible) recoverWith {
       case error =>
         handleAudit(RecipientFailureEvent(transferorNino, error))
         Future.failed(error)
     }
 
-  private def checkRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
+  private def checkRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
+                                    (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     for {
       cache <- cachingService.getUpdateRelationshipCachedData
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      savedRecipientRecord <- cachingService.saveRecipientRecord(
-        recipientRecord,
-        recipientData,
-        taxYears.getOrElse(List[TaxYear]()))
-    } yield (true)
+      _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, taxYears.getOrElse(Nil))
+    } yield true
 
-  private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
+  private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])
+                                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
-        if canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
-        Future {
-          cache
-        }
-      case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _))) =>
-        Future.failed(new NoTaxYearsForTransferor())
+        if updateRelationshipService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
+        Future(cache)
+      case (_, Some(_)) => throw NoTaxYearsForTransferor()
       case _ => throw CacheMissingTransferor()
     }
 
@@ -224,11 +199,12 @@ trait TransferService {
     else
       None
 
-  private def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] =
+  private def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
+                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] =
     marriageAllowanceConnector.getRecipientRelationship(transferorNino, recipientData) map {
       httpResponse =>
         Json.fromJson[GetRelationshipResponse](httpResponse.json).get match {
-          case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => (recipientRecord, availableYears)
+          case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) =>(recipientRecord, availableYears)
           case _ => throw RecipientNotFound()
         }
     }

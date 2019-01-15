@@ -71,7 +71,8 @@ private object AppDependencies {
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.scalacheck" %% "scalacheck" % scalacheckVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
-        "org.mockito" % "mockito-core" % mockitoCoreVerison % scope
+        "org.mockito" % "mockito-core" % mockitoCoreVerison % scope,
+        "com.github.tomakehurst" % "wiremock-standalone" % "2.17.0" % scope
       )
     }.test
   }

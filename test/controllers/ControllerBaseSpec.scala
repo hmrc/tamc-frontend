@@ -45,6 +45,6 @@ trait ControllerBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSu
   def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]
 
   implicit val request: Request[AnyContent] = FakeRequest()
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 }

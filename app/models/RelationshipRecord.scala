@@ -38,18 +38,16 @@ case class RelationshipRecordList(
     activeRecord: Boolean,
     historicRecord: Boolean,
     historicActiveRecord: Boolean) {
+
   def this(
     activeRelationship: Option[RelationshipRecord],
     historicRelationships: Option[Seq[RelationshipRecord]],
     loggedInUserInfo: Option[LoggedInUserInfo]) = this(activeRelationship,
     historicRelationships, loggedInUserInfo,
-    if (activeRelationship != None && activeRelationship.get.participant1EndDate == None) true else false,
-    if (historicRelationships != None) true else false,
-    if (activeRelationship != None && activeRelationship.get.participant1EndDate != None) true else false)
-}
-
-object RelationshipRecordList {
-
+    activeRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isEmpty,
+    historicRecord = historicRelationships.isDefined,
+    historicActiveRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isDefined
+  )
 }
 
 object RelationshipRecord {
