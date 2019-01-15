@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,13 @@
  * limitations under the License.
  *@
 
-@()(implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
+@import play.twirl.api.Html
+@import models.auth.UserRequest
+
+@()(implicit messages: Messages,
+        request: UserRequest[_],
         templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
         formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-@import play.twirl.api.Html
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.other-ways")),
@@ -37,13 +34,13 @@
 
     <p>@Html(Messages("hmrc.contact-details-2")) <br>
 
-        @if(lang.code == "en"){@Html(Messages("hmrc.contact-details-3")) <br>
+        @if(messages.lang.code == "en"){@Html(Messages("hmrc.contact-details-3")) <br>
             @Html(Messages("hmrc.contact-details-4"))}else{
             @Html(Messages("hmrc.contact-details-5"))
         }
     </p>
 
-    @if(lang.code == "en"){
+    @if(messages.lang.code == "en"){
         <p>@Html(Messages("hmrc.contact-details-5")) <br>
         @Html(Messages("hmrc.contact-details-6"))</p>
         <p>@Html(Messages("hmrc.contact-details-7")) <br>

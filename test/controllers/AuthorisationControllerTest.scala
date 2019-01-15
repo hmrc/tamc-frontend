@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,48 +16,33 @@
 
 package controllers
 
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.MessagesApi
-import play.api.test.FakeRequest
-import play.api.test.Helpers.OK
-import test_utils.TestUtility
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.test.UnitSpec
+import config.ApplicationConfig
+import play.api.test.Helpers._
 
-import scala.concurrent.{ExecutionContext, Future}
+class AuthorisationControllerTest extends ControllerBaseSpec {
 
-class AuthorisationControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
-
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val fakeCustomAuditConnector = new AuditConnector {
-    override lazy val auditingConfig = ???
-    var auditEventsToTest: List[DataEvent] = List()
-
-    override def sendEvent(event: DataEvent)(implicit hc: HeaderCarrier = HeaderCarrier(), ec: ExecutionContext): Future[AuditResult] = {
-      auditEventsToTest = auditEventsToTest :+ event
-      Future {
-        AuditResult.Success
-      }
-    }
-  }
+  lazy val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
 
   "Calling notAuthorised" should {
     "return OK" in {
-      val controller = makeFakeHomeController
-      val request = FakeRequest()
-      val result = await(controller.notAuthorised.apply(request))
+      val result = await(controller.notAuthorised()(request))
       status(result) shouldBe OK
     }
   }
 
   "Calling sessionTimeout" should {
     "return OK" in {
-      val controller = makeFakeHomeController
-      val request = FakeRequest()
-      val result = await(controller.sessionTimeout.apply(request))
+      val result = await(controller.sessionTimeout()(request))
       status(result) shouldBe OK
+    }
+  }
+
+  "Calling logout" should {
+    "redirect" in {
+      val result = await(controller.logout()(request))
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(ApplicationConfig.logoutUrl)
+      result.session(request).data("postLogoutPage") shouldBe ApplicationConfig.logoutCallbackUrl
     }
   }
 

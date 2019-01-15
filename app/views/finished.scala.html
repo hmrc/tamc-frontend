@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,15 @@
  * limitations under the License.
  *@
 
-@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(
-    implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import config.ApplicationConfig
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+@import models.auth.AuthenticatedUserRequest
+
+@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(
+    implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.application.pattern", Messages("title.finished"))
@@ -40,8 +36,12 @@
     <p id="paragraph-2">@Html(Messages("pages.finished.para2"))</p>
     <h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
     <p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
-    <div class="panel-indent panel panel-border-wide">
-        <p>@Html(Messages("pages.finished.backdated-payments"))</p>
-    </div>
+
+    @if(!request.authState.isLoggedIn){
+        <div class="panel-indent panel panel-border-wide">
+            <p>@Html(Messages("pages.finished.backdated-payments"))</p>
+        </div>
+    }
+
     <p id="paragraph-5">@Html(Messages("pages.finished.check-link-para", "https://www.gov.uk/personal-tax-account"))</p>
 }

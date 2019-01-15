@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,17 @@
  * limitations under the License.
  *@
 
- 
-@(reason: String, effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None)(implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 @import play.twirl.api.Html
 @import services.TimeService
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
-
-
-
+@import models.auth.AuthenticatedUserRequest
+ 
+@(reason: String, effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None)(implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.change.reason")),
@@ -41,8 +33,8 @@
         @if(reason == EndReasonCode.CANCEL) {
 
             <h1 class="heading-xlarge" id="cancel-heading" >@Html(Messages("change.status.cancel.h1"))</h1>
-            <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate, LanguageUtils.isWelsh(lang))))</p>
-            <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
+            <p class ="lede" id="cancel-content">@Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate, LanguageUtils.isWelsh(messages))))</p>
+            <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
             <div class="form-group booster">
                 <p>
                 <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
@@ -52,10 +44,10 @@
         @if(reason == EndReasonCode.REJECT) {
             @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
-                <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
+                <p id="reject-content">@Html(Messages("change.status.reject.previous.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
-                    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(lang))))</strong>
+                    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(messages))))</strong>
                 </div>
                 <div class="form-group booster">
                     <p>
@@ -65,11 +57,11 @@
 
              }else {
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
-                <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(lang))))</p>
-                <p id="reject-partner">@Html(Messages("change.status.reject.partner", TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfCurrentTaxYear), LanguageUtils.isWelsh(lang))))</p>
+                <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
+                <p id="reject-partner">@Html(Messages("change.status.reject.partner", TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfCurrentTaxYear), LanguageUtils.isWelsh(messages))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
-                    <strong class="bold-small">@Html(Messages("change.status.reject.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(lang))))</strong>
+                    <strong class="bold-small">@Html(Messages("change.status.reject.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(messages))))</strong>
                 </div>
                 <div class="form-group booster">
                     <p>

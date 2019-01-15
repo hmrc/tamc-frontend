@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,13 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.WSHttp
 
 object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
-  override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
+  override lazy val templateServiceBaseUrl: String = baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes
 
-  private implicit val hc = HeaderCarrier()
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
   import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
   override def fetchTemplate(path: String): Future[String] =  {

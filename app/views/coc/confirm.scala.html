@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,6 @@
  * limitations under the License.
  *@
 
-@(data: models.UpdateRelationshipConfirmationModel,
-    relevantDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None,relationEndDate: Option[org.joda.time.LocalDate]=None
-   )(implicit lang: Lang,
-      request: Request[_],
-      context: config.TamcContext,
-      breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-      user: details.TamcUser,
-      templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-      formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.twirl.api.Html
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
@@ -32,15 +22,21 @@
 @import models.EndReasonCode._
 @import models.Role._
 @import utils.LanguageUtils
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+@import models.auth.AuthenticatedUserRequest
+
+@(data: models.UpdateRelationshipConfirmationModel,
+    relevantDate: Option[org.joda.time.LocalDate] = None, isEnded: Boolean = false, relationEndDate: Option[org.joda.time.LocalDate]=None
+   )(implicit messages: Messages,
+      request: AuthenticatedUserRequest[_],
+      templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+      formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.confirm-transferor")),
   mainConfig = views.helpers.MainConfig(
     maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
 ) {
-    @(data.endRelationshipReason.endReason == "REJECT" && isEnded.getOrElse(false) && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) match {
+    @(data.endRelationshipReason.endReason == "REJECT" && isEnded && relevantDate.get.getYear!= TimeService.getCurrentTaxYear) match {
         case retroRejection@true => {
                 <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("confirm.recipient.ended.reject.heading"))</h1>
                 @templates.coc.confirmSummary(data, retroRejection)
@@ -49,7 +45,7 @@
                         TimeService.getTaxYearForDate(relationEndDate.get))))</strong>
                 </div>
                 <ul class="list-bullet space-smaller">
-                    <li>@Html(Messages("pages.ended.reject.message1",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(lang))))</li>
+                    <li>@Html(Messages("pages.ended.reject.message1",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(messages))))</li>
                     <li>@Html(Messages("pages.ended.reject.message2"))</li>
                 </ul>
 
@@ -67,14 +63,14 @@
                 case CANCEL => {
                     @templates.coc.confirmIconHeading("pages.confirm.message")
                     <ul class="list-bullet space-smaller">
-                        <li>@Html(Messages("pages.confirm.message1",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(lang))))</li>
-                        <li>@Html(Messages("pages.confirm.message2",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)), LanguageUtils.isWelsh(lang))))</li>
+                        <li>@Html(Messages("pages.confirm.message1",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(messages))))</li>
+                        <li>@Html(Messages("pages.confirm.message2",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)), LanguageUtils.isWelsh(messages))))</li>
                     </ul>
                 }
                 case REJECT => {
                     @templates.coc.confirmIconHeading("pages.confirm.message")
                     <ul class="list-bullet space-smaller">
-                        <li>@Html(Messages("pages.reject.message1",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(lang))))</li>
+                        <li>@Html(Messages("pages.reject.message1",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(messages))))</li>
                         <li>@Html(Messages("pages.reject.message2"))</li>
                         <li>@Html(Messages("pages.reject.message3"))</li>
                     </ul>
@@ -84,13 +80,13 @@
                         @if(data.endRelationshipReason.dateOfDivorce.get.getYear != TimeService.getCurrentTaxYear){
                             @templates.coc.confirmIconHeading("pages.confirm.divorce.cy.prev.message")
                             <ul class="list-bullet space-smaller">
-                                <li>@Html(Messages("pages.confirm.divorce.cy.prev.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get), LanguageUtils.isWelsh(lang))))</li>
+                                <li>@Html(Messages("pages.confirm.divorce.cy.prev.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get), LanguageUtils.isWelsh(messages))))</li>
                                 <li>@Html(Messages("pages.confirm.divorce.cy.prev.message2"))</li>
                             </ul>
                         } else {
                             @templates.coc.confirmIconHeading("pages.confirm.divorce.cy.message", relevantDate)
                             <ul class="list-bullet space-smaller">
-                                <li>@Html(Messages("pages.confirm.divorce.cy.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)), LanguageUtils.isWelsh(lang))))</li>
+                                <li>@Html(Messages("pages.confirm.divorce.cy.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)), LanguageUtils.isWelsh(messages))))</li>
                             </ul>
                         }
                     }
@@ -98,14 +94,14 @@
                         @if(data.endRelationshipReason.dateOfDivorce.get.getYear != TimeService.getCurrentTaxYear){
                             @templates.coc.confirmIconHeading("pages.confirm.divorce.cy.prev.message")
                             <ul class="list-bullet space-smaller">
-                                <li>@Html(Messages("pages.confirm.recipient.divorce.cy.prev.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get), LanguageUtils.isWelsh(lang))))</li>
+                                <li>@Html(Messages("pages.confirm.recipient.divorce.cy.prev.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get), LanguageUtils.isWelsh(messages))))</li>
                                 <li>@Html(Messages("pages.confirm.recipient.divorce.cy.prev.message2"))</li>
                             </ul>
                         } else {
                             @templates.coc.confirmIconHeading("pages.confirm.divorce.cy.prev.message", relevantDate)
                             <ul class="list-bullet space-smaller">
-                                <li id="message1">@Html(Messages("pages.confirm.recipient.divorce.cy.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get), LanguageUtils.isWelsh(lang))))</li>
-                                <li id="message2">@Html(Messages("pages.confirm.recipient.divorce.cy.message2",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)), LanguageUtils.isWelsh(lang))))</li>
+                                <li id="message1">@Html(Messages("pages.confirm.recipient.divorce.cy.message1",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveUntilDate(data.endRelationshipReason).get), LanguageUtils.isWelsh(messages))))</li>
+                                <li id="message2">@Html(Messages("pages.confirm.recipient.divorce.cy.message2",TextGenerators.ukDateTransformer(Some(TimeService.getEffectiveDate(data.endRelationshipReason)), LanguageUtils.isWelsh(messages))))</li>
                             </ul>
                         }
                     }
@@ -114,7 +110,7 @@
                     @templates.coc.confirmIconHeading("pages.confirm.divorce.py.message", relevantDate)
                     <ul class="list-bullet space-smaller">
                         <li>@Html(Messages("pages.confirm.divorce.py.message1"))</li>
-                        <li>@Html(Messages("pages.confirm.divorce.py.message2",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(lang))))</li>
+                        <li>@Html(Messages("pages.confirm.divorce.py.message2",TextGenerators.ukDateTransformer(relevantDate, LanguageUtils.isWelsh(messages))))</li>
                     </ul>
                 }
                 case _ => {""}

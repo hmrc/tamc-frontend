@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,33 +16,31 @@
 
 package controllers
 
-import actions.UnauthorisedActions
+import com.google.inject.Inject
 import config.ApplicationConfig
-import connectors.ApplicationAuditConnector
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import utils.TamcBreadcrumb
+import play.api.i18n.MessagesApi
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-object AuthorisationController extends AuthorisationController {
-  override val logoutUrl = ApplicationConfig.logoutUrl
-  override val logoutCallbackUrl = ApplicationConfig.logoutCallbackUrl
-  override val auditConnector = ApplicationAuditConnector
-}
+class AuthorisationController @Inject()(
+                                         override val messagesApi: MessagesApi,
+                                         unauthenticatedAction: UnauthenticatedActionTransformer
+                                       )(implicit templateRenderer: TemplateRenderer,
+                                         formPartialRetriever: FormPartialRetriever) extends BaseController {
 
-trait AuthorisationController extends BaseController with UnauthorisedActions with TamcBreadcrumb {
-  val logoutUrl: String
-  val logoutCallbackUrl: String
-  val auditConnector: AuditConnector
+  val logoutUrl: String = ApplicationConfig.logoutUrl
+  val logoutCallbackUrl: String = ApplicationConfig.logoutCallbackUrl
 
-  def notAuthorised = unauthorisedAction {
+  def notAuthorised = unauthenticatedAction {
     implicit request =>
       Ok(views.html.errors.other_ways())
   }
 
-  def logout = unauthorisedAction {
+  def logout = unauthenticatedAction {
     implicit request =>
       Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
-  def sessionTimeout = unauthorisedAction {
+  def sessionTimeout = unauthenticatedAction {
     implicit request =>
       Ok(views.html.errors.session_timeout())
   }

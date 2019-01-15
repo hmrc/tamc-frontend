@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,9 @@
  * limitations under the License.
  *@
 
-@(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit lang: Lang, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@import play.twirl.api.Html
 
-    @import play.twirl.api.Html
-    @import play.api.Play.current
-    @import play.api.i18n.Messages.Implicits._
+@(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit messages: Messages)
 
     @{
         calculationResult match {

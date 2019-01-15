@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,17 @@
  * limitations under the License.
  *@
 
-@(calculatorForm: Form[models.EligibilityCalculatorInput],
-        calculationResult: Option[models.EligibilityCalculatorResult] = None)(
-        implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
+@import models.auth.RequestWithAuthState
+
+@(calculatorForm: Form[models.EligibilityCalculatorInput],
+        calculationResult: Option[models.EligibilityCalculatorResult] = None)(
+        implicit messages: Messages,
+        request: RequestWithAuthState[_],
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("title.eligibility-criteria"))
@@ -43,7 +39,7 @@
         <p>@Messages("pages.calc.para2")</p>
     </div>
 
-    @helpers.form(action = routes.GdsEligibilityController.calculatorAction(), args = ('id -> "calculator")) {
+    @helpers.form(action = routes.EligibilityController.gdsCalculatorAction(), args = ('id -> "calculator")) {
     <fieldset>
         <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
 

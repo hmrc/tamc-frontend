@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,9 @@
  * limitations under the License.
  *@
 
-@()(implicit lang: Lang, request: Request[_], context: config.TamcContext, breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@import models.auth.UserRequest
 
-@import play.twirl.api.Html
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+@()(implicit messages: Messages, request: UserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
   title = Messages("title.pattern", Messages("session.timeout.title"))
@@ -30,7 +28,7 @@
 <p></p>
 <p>@Html(Messages("session.timeout.verbose-statement2"))</p>
 <p class="get-started group" id="continue-to-application">
-    <a href="@controllers.routes.MultiYearGdsEligibilityController.home()" class="button" role="button" id="timed-out" data-journey-click="button - click:Signed out - Marriage Allowance - GOV.UK:start again">
+    <a href="@controllers.routes.EligibilityController.home()" class="button" role="button" id="timed-out" data-journey-click="button - click:Signed out - Marriage Allowance - GOV.UK:start again">
         @Html(Messages("session.timeout.button"))
     </a>
 </p>

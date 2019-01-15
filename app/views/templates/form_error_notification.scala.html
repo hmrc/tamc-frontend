@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
-@(form: Form[_], formErrorMessage: String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.", lowerLimit: Option[Int] = None, upperLimit: Option[Int] = None)(implicit lang: Lang, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(form: Form[_], formErrorMessage: String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.", lowerLimit: Option[Int] = None, upperLimit: Option[Int] = None)(implicit messages: Messages)
 @import play.twirl.api.Html
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
+
+
 
 @if(form.hasErrors) {
     <div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary validation-summary">

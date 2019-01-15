@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,82 +18,35 @@ package controllers
 
 import config.ApplicationConfig
 import org.jsoup.Jsoup
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.i18n.MessagesApi
-import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
-import test_utils.TestUtility
-import uk.gov.hmrc.play.test.UnitSpec
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 
-class PtaEligibilityCalcControllerTest extends UnitSpec with TestUtility with GuiceOneAppPerSuite {
-
-  val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
 
   private def calculatorRequestAction(income: Map[String, String] = null) = {
-    val testComponent = makePtaEligibilityTestComponent("user_happy_path")
-    val request = income match {
-      case nullMap if (null == income) =>
-        val request = testComponent.request
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculator()(request)
+    val controller = app.injector.instanceOf[EligibilityController]
+    income match {
+      case nullMap if null == income =>
+        controller.ptaCalculator()(request)
 
       case bothKeys if (income.contains("transferor-income") &&
         income.contains("recipient-income")) =>
-        val request = testComponent.request.
-          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income.get("transferor-income").get,
-            "recipient-income" -> income.get("recipient-income").get)
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculatorAction()(request)
+        val fakeRequest = FakeRequest()
+          .withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"),
+            "recipient-income" -> income("recipient-income"))
+        controller.ptaCalculatorAction()(fakeRequest)
 
       case transferorKey if (income.contains("transferor-income") &&
         !income.contains("recipient-income")) =>
-        val request = testComponent.request.
-          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income.get("transferor-income").get)
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculatorAction()(request)
+        val request = FakeRequest().
+          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"))
+        controller.ptaCalculatorAction()(request)
 
       case transferorKey if (!income.contains("transferor-income") &&
         income.contains("recipient-income")) =>
-        val request = testComponent.request.
-          withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income.get("recipient-income").get)
-        val controllerToTest = testComponent.controller
-        controllerToTest.calculatorAction()(request)
-    }
-
-    request
-  }
-
-  "Hitting calculator page" should {
-    "return OK (200) response" in {
-      val result = calculatorRequestAction()
-      status(result) shouldBe OK
-    }
-
-    "have form" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator") shouldNot be(null)
-    }
-
-    "have form calculate button" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form.getElementsByClass("button").attr("type") shouldEqual "submit"
-    }
-
-    "have required fields" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form.select("input[name=transferor-income]").first() shouldNot be(null)
-      form.select("input[name=recipient-income]").first() shouldNot be(null)
-    }
-
-    "not have calculation result" in {
-      val result = calculatorRequestAction()
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result") shouldBe null
+        val request = FakeRequest().
+          withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income("recipient-income"))
+        controller.ptaCalculatorAction()(request)
     }
   }
 

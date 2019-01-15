@@ -1,0 +1,57 @@
+@*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.Html
+@import config.ApplicationConfig
+@import java.text.NumberFormat
+@import uk.gov.hmrc.time.TaxYearResolver
+@import views.helpers.TextGenerators
+@import utils.LanguageUtils
+@import models.auth.RequestWithAuthState
+
+@()(implicit messages: Messages,
+        request: RequestWithAuthState[_],
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@templates.tamc_main(
+  title = Messages("title.pattern", Messages("title.how-it-works"))
+){
+    <h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
+    <p class="lede">
+        @Html(Messages("pages.how-it-works.lede-pre1", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER)))
+    </p>
+    <p class="lede">
+        @Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))
+    </p>
+    <p class="lede">
+        @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
+    </p>
+    <div class="panel panel-border-wide">
+    	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5"))</p>
+    </div>
+    <p class="lede">@Html(Messages("pages.how-it-works.lede-pre6"))</p>
+    <h4 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h4>
+    <p class="lede">@Html(Messages("pages.how-it-works.detail"))</p>
+    <p class="lede">@Html(Messages("pages.how-it-works.email"))</p>
+    <p id="get-started" class="get-started group">
+        <a href="/marriage-allowance-application/benefit-calculator-pta" data-transaction-slug="marriage-allowance" class="button button-start" role="button" id="start-now">
+            @Html(Messages("generic.start-now"))
+        </a>
+        <span class="destination">@Html(Messages("pages.how-it-works.tse"))</span>
+    </p>
+
+}

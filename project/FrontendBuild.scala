@@ -51,6 +51,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "time" % timeVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
+    "uk.gov.hmrc" %% "auth-client" % "2.17.0-play-25",
     "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion
   )
@@ -70,7 +71,8 @@ private object AppDependencies {
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.scalacheck" %% "scalacheck" % scalacheckVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
-        "org.mockito" % "mockito-core" % mockitoCoreVerison % scope
+        "org.mockito" % "mockito-core" % mockitoCoreVerison % scope,
+        "com.github.tomakehurst" % "wiremock-standalone" % "2.17.0" % scope
       )
     }.test
   }

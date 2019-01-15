@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,12 @@
 @import play.api.i18n._
 @import views.html.helper._
 @import play.twirl.api.Html
-@import uk.gov.hmrc.renderer.TemplateRenderer
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 @(
     field: Field,
     radioOptions: Seq[(String, String)],
     args: (Symbol, Any)*
-)(implicit
-    messages: Messages,
-    request: Request[_],
-    templateRenderer: TemplateRenderer,
-    formPartialRetriever: FormPartialRetriever
-)
+)(implicit messages: Messages)
 
 @elements = @{new FieldElements(field.id, field, null, args.toMap, messages) }
 @fieldsetClass = {@elements.args.get('_groupClass)@if(elements.hasErrors){ form-field--error}}

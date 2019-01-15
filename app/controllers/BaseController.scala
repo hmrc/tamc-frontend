@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,7 @@
 
 package controllers
 
-import config.{LocalTemplateRenderer, TamcFormPartialRetriever}
+import play.api.i18n.I18nSupport
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-trait BaseController extends FrontendController {
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
-  implicit val formPartialRetriver: FormPartialRetriever = TamcFormPartialRetriever
-}
+trait BaseController extends FrontendController with I18nSupport

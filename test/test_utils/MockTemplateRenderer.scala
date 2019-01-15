@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ object MockTemplateRenderer extends TemplateRenderer {
   override def fetchTemplate(path: String): Future[String] = ???
 
   override def renderDefaultTemplate(path: String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages):Html = {
-    Html("<title>" + extraArgs("pageTitle") + "</title>" + "<div id=full-width-banner>"+extraArgs("fullWidthBannerTitle")+extraArgs("fullWidthBannerText")+"</div>"
-      +"<div id=fullWidthBannerDismissText>"+extraArgs("fullWidthBannerDismissText")+"<div>"+ "<div id=fullWidthBannerLink>"+extraArgs("fullWidthBannerLink")+"<div>"+content)
+    Html("<title>" + extraArgs("pageTitle") + "</title>" + "<div id=full-width-banner>"+"</div>"
+      +"<div id=fullWidthBannerDismissText>"+"</div>"+ "<div id=fullWidthBannerLink>"+"</div>"+content)
   }
 }

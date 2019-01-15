@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import events.{UpdateRelationshipCacheFailureEvent, UpdateRelationshipFailureEve
 import models._
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import play.api.i18n.Lang
+import play.api.i18n.{Lang, Messages}
 import play.api.libs.json.Json
 import services.TimeService._
 import uk.gov.hmrc.domain.Nino
@@ -62,7 +62,7 @@ trait UpdateRelationshipService {
 
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordList, Boolean)] =
     for {
-      relationshipRecordWrapper <- fetchListRelationship(transferorNino)
+      relationshipRecordWrapper <- marriageAllowanceConnector.listRelationship(transferorNino)
       activeRelationship <- getActiveRelationship(relationshipRecordWrapper)
       historicRelationships <- getHistoricRelationships(relationshipRecordWrapper)
       transformedHistoricRelationships <- transformHistoricRelationships(historicRelationships)
@@ -80,7 +80,7 @@ trait UpdateRelationshipService {
     val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
     val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
     val unavailableYears: Set[Int] = getUnavailableYears(historicRelationships, activeRelationship)
-    (availableYears -- unavailableYears).size > 0
+    (availableYears -- unavailableYears).nonEmpty
   }
 
   private def canApplyForCurrentYears(
@@ -157,20 +157,12 @@ trait UpdateRelationshipService {
   }
 
   def transformRecord(rec: Option[LoggedInUserInfo], activeRel: Option[RelationshipRecord]): Future[UserRecord] =
-    Future {
+    Future.successful {
       rec.fold(throw TransferorNotFound())(rec => UserRecord(
         cid = rec.cid,
         timestamp = rec.timestamp,
         has_allowance = None,
         name = rec.name))
-    }
-
-  private def fetchListRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordWrapper] =
-    marriageAllowanceConnector.listRelationship(transferorNino) map {
-      case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK"))      => relationshipRecordWrapper
-      case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
-      case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND))    => throw CitizenNotFound()
-      case RelationshipRecordStatusWrapper(_, ResponseStatus(BAD_REQUEST))          => throw BadFetchRequest()
     }
 
   private def getActiveRelationship(relationshipRecordWrapper: RelationshipRecordWrapper)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
@@ -206,18 +198,18 @@ trait UpdateRelationshipService {
       relationshipRecordWrapper.userRecord
     }
 
-  private def doUpdateRelationship(transferorNino: Nino, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
+  private def doUpdateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier,messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
     for {
       updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
       validated <- validateupdateRelationshipCompleteCache(updateRelationshipCacheData)
-      postUpdateData <- sendUpdateRelationship(transferorNino, validated, lang)
+      postUpdateData <- sendUpdateRelationship(transferorNino, validated)
       _ <- auditUpdateRelationship(postUpdateData)
     } yield (validated.notification.get)
 
   private def lockUpdateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     cachingService.lockUpdateRelationship()
 
-  private def transformUpdateData(sessionData: UpdateRelationshipCacheData, lang: Lang): UpdateRelationshipRequestHolder = {
+  private def transformUpdateData(sessionData: UpdateRelationshipCacheData, messages: Messages): UpdateRelationshipRequestHolder = {
     val loggedInUser = sessionData.loggedInUserInfo.get
     val relationshipRecord = sessionData.relationshipEndReasonRecord.get
     val endReason = getEndReasonCode(relationshipRecord)
@@ -246,7 +238,7 @@ trait UpdateRelationshipService {
 
     val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
     val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participiants._1, participant2 = participiants._2, relationship = relationship)
-    val sendNotificationData = UpdateRelationshipNotificationRequest(full_name = "UNKNOWN", email = sessionData.notification.get.transferor_email, role = role, welsh = LanguageUtils.isWelsh(lang), isRetrospective = isRetrospective)
+    val sendNotificationData = UpdateRelationshipNotificationRequest(full_name = "UNKNOWN", email = sessionData.notification.get.transferor_email, role = role, welsh = LanguageUtils.isWelsh(messages), isRetrospective = isRetrospective)
     UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
   }
 
@@ -261,8 +253,8 @@ trait UpdateRelationshipService {
     }
   }
 
-  private def sendUpdateRelationship(transferorNino: Nino, data: UpdateRelationshipCacheData, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
-    marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, lang)) map {
+  private def sendUpdateRelationship(transferorNino: Nino, data: UpdateRelationshipCacheData)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
+    marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, messages)) map {
       httpResponse =>
         Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
           case UpdateRelationshipResponse(ResponseStatus("OK"))                                    => data
@@ -353,8 +345,8 @@ trait UpdateRelationshipService {
         false
     }
 
-  def updateRelationship(transferorNino: Nino, lang: Lang)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
-    doUpdateRelationship(transferorNino, lang) recover {
+  def updateRelationship(transferorNino: Nino, lang: Lang)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
+    doUpdateRelationship(transferorNino) recover {
       case error =>
         handleAudit(UpdateRelationshipCacheFailureEvent(error))
         throw error
@@ -380,7 +372,7 @@ trait UpdateRelationshipService {
     })
 
   def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
-     (LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd")))
+     LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd"))
 
 
   private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {

@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,12 @@
  * limitations under the License.
  *@
 
-@(formItem:Form[_], fieldName: String)(implicit lang: play.api.i18n.Lang, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(formItem:Form[_], fieldName: String)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import uk.gov.hmrc.play.mappers.DateFields._
 @import play.api.i18n._
 @import views.html.helper._
 @import uk.gov.hmrc.play.mappers.DateFormatSymbols
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 
 @dayElem = @{ fieldName + "." + day }
 @dayInputId = @{ fieldName + "." + day }

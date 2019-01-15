@@ -1,5 +1,5 @@
 @*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,22 @@
  * limitations under the License.
  *@
 
-@(changeRelationshipForm: Form[ChangeRelationship],
-    cyEffectiveUntilDate: Option[org.joda.time.LocalDate] = None,
-    cyEffectiveDate: Option[org.joda.time.LocalDate] = None,
-    pyEffectiveDate: Option[org.joda.time.LocalDate] = None
-    )(implicit lang: Lang,
-        request: Request[_],
-        context: config.TamcContext,
-        breadcrumb: uk.gov.hmrc.play.breadcrumb.model.Breadcrumb,
-        user: details.TamcUser,
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-@import play.api.Play.current
-@import play.api.i18n.Messages.Implicits._
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.time.TaxYearResolver
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
+@import models.auth.AuthenticatedUserRequest
+
+@(changeRelationshipForm: Form[ChangeRelationship],
+    cyEffectiveUntilDate: Option[org.joda.time.LocalDate] = None,
+    cyEffectiveDate: Option[org.joda.time.LocalDate] = None,
+    pyEffectiveDate: Option[org.joda.time.LocalDate] = None
+    )(implicit messages: Messages,
+        request: AuthenticatedUserRequest[_],
+        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
 
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.make-a-change")),
@@ -55,10 +52,10 @@
             @(changeRelationshipForm.get.role.get, TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)) match {
                 case (Role.TRANSFEROR, true) => {
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
-                    <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang)),TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(lang))))</p>
-                    <p>@Html(Messages("change.status.divorce.transferor.option1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang))))</p>
-                    <p>@Html(Messages("change.status.divorce.transferor.option2",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(lang))))</p></br>
-                    <p class="heading-medium"> @Html(Messages("change.status.reason-for-divorce",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang))))</p>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages)),TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))</p>
+                    <p>@Html(Messages("change.status.divorce.transferor.option1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</p>
+                    <p>@Html(Messages("change.status.divorce.transferor.option2",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))</p></br>
+                    <p class="heading-medium"> @Html(Messages("change.status.reason-for-divorce",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</p>
                     @templates.input_radio_group(
                         changeRelationshipForm("endReason"),
                         Seq((EndReasonCode.DIVORCE_CY, Messages("generic.yes")),
@@ -72,41 +69,41 @@
                     )
 
                     <div class="tamc-js-hidden panel-indent" id="eoy-no">
-                        @Html(Messages("change.status.divorce.transferor.eoy-no",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(lang))))
+                        @Html(Messages("change.status.divorce.transferor.eoy-no",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))
                     </div>
                 }
                 case (Role.TRANSFEROR, _) => {
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.conditional1.h1"))</h1>
-                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(lang))))</p>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(messages))))</p>
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
                     </div>
                     <ul class="list-bullet space-smaller">
-                        <li>@Html(Messages("change.status.divorce.transferor.conditional1.para3",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang))))</li>
+                        <li>@Html(Messages("change.status.divorce.transferor.conditional1.para3",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</li>
                         <li>@Html(Messages("change.status.divorce.transferor.conditional1.para4"))</li>
                     </ul></br>
                     <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
                 }
                 case (_, true) => {
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
-                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(lang))))</p>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(messages))))</p>
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.recipient.content1"))</p>
                     </div>
                     <ul class="list-bullet space-smaller">
-                        <li>@Html(Messages("change.status.divorce.recipient.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang))))</li>
-                        <li>@Html(Messages("pages.confirm.message2",TextGenerators.ukDateTransformer(cyEffectiveDate, LanguageUtils.isWelsh(lang))))</li>
+                        <li>@Html(Messages("change.status.divorce.recipient.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</li>
+                        <li>@Html(Messages("pages.confirm.message2",TextGenerators.ukDateTransformer(cyEffectiveDate, LanguageUtils.isWelsh(messages))))</li>
                     </ul></br>
                     <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
                 }
                 case _ => {
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
-                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(lang))))</p>
+                    <p class="lede">@Html(Messages("change.status.divorce.transferor.conditional1.para1",TextGenerators.ukDateTransformer(Some(changeRelationshipForm.get.dateOfDivorce.get), LanguageUtils.isWelsh(messages))))</p>
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
                     </div>
                     <ul class="list-bullet space-smaller">
-                        <li>@Html(Messages("change.status.divorce.recipient.previous.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(lang))))</li>
+                        <li>@Html(Messages("change.status.divorce.recipient.previous.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</li>
                         <li>@Html(Messages("change.status.divorce.recipient.previous.para2"))</li></ul></br>
                     <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
                 }

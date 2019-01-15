@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,19 @@
 
 package utils
 
+import connectors.ApplicationAuditConnector
 import uk.gov.hmrc.http.{HttpDelete, HttpGet, HttpPost, HttpPut}
-import uk.gov.hmrc.play.config.AppName
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.http.ws.WSDelete
-import uk.gov.hmrc.play.http.ws.WSGet
-import uk.gov.hmrc.play.http.ws.WSPost
-import uk.gov.hmrc.play.http.ws.WSPut
+import uk.gov.hmrc.play.audit.http.HttpAuditing
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.config.{AppName, RunMode}
+import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
 
 object WSHttp extends WSGet with HttpGet
   with WSPut with HttpPut
   with WSPost with HttpPost
   with WSDelete with HttpDelete
-  with AppName with RunMode {
-  override val hooks = NoneRequired
+  with AppName with RunMode
+  with HttpAuditing {
+  override val hooks = Seq(AuditingHook)
+  val auditConnector: AuditConnector = ApplicationAuditConnector
 }
