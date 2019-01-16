@@ -32,7 +32,7 @@
 ){
     @templates.form_error_notification(calculatorForm)
     <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
-    <p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("pages.calc.skip-it"))</a></p>
+    <p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("pages.calc.skip-it"))</a></p>
 
     <p>@Html(Messages("pages.calc.para1"))</p>
 
@@ -76,7 +76,7 @@
         </p>
         <div class="calculator-apply-link">
             <p>
-                <a id="continue" href="/marriage-allowance-application/eligibility-check-pta">@Html(Messages("change.status.apply"))</a>
+                <a id="continue" href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("change.status.apply"))</a>
             </p>
         </div>
     }
