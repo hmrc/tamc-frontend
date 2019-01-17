@@ -107,7 +107,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
     <meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
 }
 
-@isUserResearchBannerHidden = @{true}
+@isUserResearchBannerHidden = @{request.cookies.exists((x: Cookie) => x.name == "mdtpurr")}
 
 @mustacheCheck(str: String) = @{
     if(str.trim=="") false else str
@@ -177,7 +177,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
       "googleAnalytics" -> googleAnalytics,
 
       "scriptElems" -> Seq(
-        Map("url" -> routes.Assets.at("javascripts/tamc.js"))
+        Map("url" -> routes.Assets.at("javascripts/tamc.js")),
+        Map("url" -> routes.Assets.at("javascripts/banner_close.js"))
       ),
 
       "mainAttributes" -> mainConfig.maybeMainDataAttributes,
@@ -199,7 +200,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
         "fullWidthBannerText" -> Messages("tamc.banner.recruitment.link"),
         "fullWidthBannerLink" -> Messages("tamc.banner.recruitment.linkURL"),
         "fullWidthBannerDismissText" -> Messages("tamc.banner.recruitment.reject"),
-        "fullWidthBannerGaAction" -> "link - click:homepage UR banner:Help improve digital services by joining the HMRC user panel (opens in new window)"
+        "fullWidthBannerGaAction" -> "homepage UR banner:Help improve digital services by joining the HMRC user panel (opens in new window)"
       )
     } else arguments
   }
