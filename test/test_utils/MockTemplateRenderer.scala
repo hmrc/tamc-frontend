@@ -45,7 +45,6 @@ object MockTemplateRenderer extends TemplateRenderer {
   override def fetchTemplate(path: String): Future[String] = ???
 
   override def renderDefaultTemplate(path: String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages):Html = {
-    Html("<title>" + extraArgs("pageTitle") + "</title>" + "<div id=full-width-banner>"+"</div>"
-      +"<div id=fullWidthBannerDismissText>"+"</div>"+ "<div id=fullWidthBannerLink>"+"</div>"+content)
+    Html("<title>" + extraArgs("pageTitle") + "</title>" + content)
   }
 }
