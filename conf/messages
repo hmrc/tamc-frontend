@@ -558,7 +558,7 @@ technical.issue.para1=We are experiencing technical difficulties
 technical.issue.para2=We are having difficulties with the service, try again in a few minutes.
 technical.issue.back=Return to GOV.UK
 technical.other-ways.h1=Other ways to apply for Marriage Allowance
-technical.other-ways.para0=You can apply for Marriage Allowance through your <a href="https://www.gov.uk/personal-tax-account">personal tax account</a>, under ‘services you might need’. 
+technical.other-ways.para0=You can apply for Marriage Allowance through your <a href="/personal-account">personal account</a>, under ‘services you might need’.
 technical.other-ways.para1=You can also call HM Revenue and Customs (HMRC) to make an application.
 technical.other-ways.para2=You will need to know you and your partner’s National Insurance number.
 title.cannot-find-details = Cannot find details
