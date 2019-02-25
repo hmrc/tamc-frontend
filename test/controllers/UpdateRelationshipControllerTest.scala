@@ -37,7 +37,7 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time
 
 import scala.concurrent.Future
 
@@ -93,8 +93,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           .thenReturn(
             Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
           )
-        when(mockTimeService.taxYearResolver)
-          .thenReturn(TaxYearResolver)
 
         val result: Future[Result] = controller().history()(request)
         status(result) shouldBe OK
@@ -105,8 +103,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           .thenReturn(
             Future.successful((RelationshipRecordData.historicRelationshipRecordList,true))
           )
-        when(mockTimeService.taxYearResolver)
-          .thenReturn(TaxYearResolver)
 
         val result: Future[Result] = controller().history()(request)
         status(result) shouldBe OK
@@ -143,7 +139,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "endReason" -> endReason,
       "historicActiveRecord" -> "true",
       "creationTimestamp" -> "timestamp",
-      "dateOfDivorce" -> new LocalDate(TaxYearResolver.currentTaxYear, 6, 12).toString()
+      "dateOfDivorce" -> new LocalDate(time.TaxYear.current.startYear, 6, 12).toString()
     )
     when(mockCachingService.saveRoleRecord(any())(any(), any())).thenReturn("OK")
     when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))

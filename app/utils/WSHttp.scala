@@ -16,7 +16,11 @@
 
 package utils
 
+import akka.actor.ActorSystem
+import com.typesafe.config.Config
 import connectors.ApplicationAuditConnector
+import play.api.{Configuration, Play}
+import play.api.Mode.Mode
 import uk.gov.hmrc.http.{HttpDelete, HttpGet, HttpPost, HttpPut}
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -31,4 +35,10 @@ object WSHttp extends WSGet with HttpGet
   with HttpAuditing {
   override val hooks = Seq(AuditingHook)
   val auditConnector: AuditConnector = ApplicationAuditConnector
+
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  override protected def appNameConfiguration: Configuration = runModeConfiguration
+  override protected def mode: Mode = Play.current.mode
+  override protected def actorSystem: ActorSystem = Play.current.actorSystem
+  override protected def configuration: Option[Config] = Some(runModeConfiguration.underlying)
 }

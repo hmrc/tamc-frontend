@@ -31,6 +31,7 @@ import services.{CachingService, TimeService, TransferService, UpdateRelationshi
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.time
 
 import scala.concurrent.Future
 
@@ -64,7 +65,7 @@ class UpdateRelationshipController @Inject()(
               historicRecord = historicRecord,
               historicActiveRecord = historicActiveRecord,
               canApplyPreviousYears = canApplyPreviousYears,
-              endOfYear = Some(timeService.taxYearResolver.endOfCurrentTaxYear)))
+              endOfYear = Some(time.TaxYear.current.finishes)))
           }
         }
       } recover handleError

@@ -16,7 +16,7 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.time.TaxYearResolver
+@import uk.gov.hmrc.time.TaxYear
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
 @import models.auth.AuthenticatedUserRequest
@@ -49,7 +49,7 @@
         <input name="dateOfDivorce.day" id="dayOfDateOfDivorce" type="hidden" value="@changeRelationshipForm.get.dateOfDivorce.get.dayOfMonth.get"/>
         <input name="dateOfDivorce.month" id="monthOfDateOfDivorce" type="hidden" value="@changeRelationshipForm.get.dateOfDivorce.get.monthOfYear.get"/>
         <input name="dateOfDivorce.year" id="yearOfDateOfDivorce" type="hidden" value="@changeRelationshipForm.get.dateOfDivorce.get.year.get"/>
-            @(changeRelationshipForm.get.role.get, TaxYearResolver.fallsInThisTaxYear(changeRelationshipForm.get.dateOfDivorce.get)) match {
+            @(changeRelationshipForm.get.role.get, TaxYear.current.contains(changeRelationshipForm.get.dateOfDivorce.get)) match {
                 case (Role.TRANSFEROR, true) => {
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
                     <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages)),TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))</p>

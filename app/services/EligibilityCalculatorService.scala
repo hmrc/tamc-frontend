@@ -20,9 +20,9 @@ import java.text.NumberFormat
 import java.util.Locale
 
 import config.ApplicationConfig._
-import models.{EligibilityCalculatorResult, _}
+import models._
 import play.api.libs.json.Json
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time
 import utils.BenefitCalculatorHelper
 
 import scala.io.Source
@@ -30,6 +30,8 @@ import scala.io.Source
 object EligibilityCalculatorService extends EligibilityCalculatorService
 
 trait EligibilityCalculatorService {
+
+  val currentTaxYear: Int = time.TaxYear.current.startYear
 
   private def maxLimit(country: Country): Int = country match {
     case England => MAX_LIMIT
@@ -55,12 +57,12 @@ trait EligibilityCalculatorService {
       EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
     else if(bothOverMaxLimit)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible-" +
-        TaxYearResolver.currentTaxYear, messageParam = Some(maxLimitToFormattedCurrency(countryOfResidence)))
+        currentTaxYear, messageParam = Some(maxLimitToFormattedCurrency(countryOfResidence)))
     else if(recipientNotEligible)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible-" +
-        TaxYearResolver.currentTaxYear, messageParam = Some(maxLimitToFormattedCurrency(countryOfResidence)))
+        currentTaxYear, messageParam = Some(maxLimitToFormattedCurrency(countryOfResidence)))
     else if(transferorIncome>PERSONAL_ALLOWANCE)
-      EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear)
+      EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear)
     else if(hasMaxBenefit) {
       val basicRate = getCountryTaxBandsFromFile(countryOfResidence).find(band => band.name == "BasicRate").head.rate
       val maxBenefit = (MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER * basicRate).ceil.toInt

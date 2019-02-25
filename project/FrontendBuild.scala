@@ -26,21 +26,22 @@ private object AppDependencies {
   import play.core.PlayVersion
 
   private val scalaTestPlusPlayVersion = "2.0.1"
-  private val emailAddressVersion = "1.1.0"
-  private val frontendBootstrapVersion = "10.7.0"
-  private val httpCachingClientVersion = "7.2.0"
+  private val emailAddressVersion = "3.2.0"
+  private val frontendBootstrapVersion = "12.4.0"
+  private val httpCachingClientVersion = "8.1.0"
   private val playBreadcrumbVersion = "1.0.0"
-  private val playPartialsVersion = "6.2.0"
-  private val timeVersion = "2.1.0"
-  private val domainVersion = "5.2.0"
-  private val urlBuilderVersion = "2.1.0"
-  private val hmrcTestVersion = "3.2.0"
-  private val jsoupVerison = "1.8.3"
+  private val playPartialsVersion = "6.5.0"
+  private val timeVersion = "3.2.0"
+  private val domainVersion = "5.3.0"
+  private val urlBuilderVersion = "3.1.0"
+  private val hmrcTestVersion = "3.5.0-play-25"
+  private val jsoupVerison = "1.11.3"
   private val pegdownVersion = "1.6.0"
   private val scalacheckVersion = "1.14.0"
   private val scalaTestVersion = "3.0.5"
-  private val mockitoCoreVerison = "2.23.0"
-  private val localTemplateRendererVersion  = "2.1.0"
+  private val mockitoCoreVerison = "2.24.5"
+  private val localTemplateRendererVersion  = "2.3.0"
+  private val taxYearVersion = "0.5.0"
 
   val compile = Seq(
     "uk.gov.hmrc" %% "emailaddress" % emailAddressVersion,
@@ -51,9 +52,10 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "time" % timeVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "uk.gov.hmrc" %% "auth-client" % "2.17.0-play-25",
+    "uk.gov.hmrc" %% "auth-client" % "2.19.0-play-25",
     "uk.gov.hmrc" %% "url-builder" % urlBuilderVersion,
-    "uk.gov.hmrc" %% "play-partials" % playPartialsVersion
+    "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
+    "uk.gov.hmrc" %% "tax-year" % taxYearVersion
   )
 
   trait TestDependencies {
@@ -72,7 +74,7 @@ private object AppDependencies {
         "org.scalacheck" %% "scalacheck" % scalacheckVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.mockito" % "mockito-core" % mockitoCoreVerison % scope,
-        "com.github.tomakehurst" % "wiremock-standalone" % "2.17.0" % scope
+        "com.github.tomakehurst" % "wiremock-standalone" % "2.21.0" % scope
       )
     }.test
   }

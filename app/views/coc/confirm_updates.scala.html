@@ -16,7 +16,7 @@
 
 @import play.twirl.api.Html
 @import services.TimeService
-@import uk.gov.hmrc.time.TaxYearResolver
+@import uk.gov.hmrc.time.TaxYear
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
 @import models.auth.AuthenticatedUserRequest
@@ -58,7 +58,7 @@
              }else {
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
                 <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
-                <p id="reject-partner">@Html(Messages("change.status.reject.partner", TextGenerators.ukDateTransformer(Some(TaxYearResolver.endOfCurrentTaxYear), LanguageUtils.isWelsh(messages))))</p>
+                <p id="reject-partner">@Html(Messages("change.status.reject.partner", TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))))</p>
                 <div class="confirmation-notice">
                     <div class="icon-important"></div>
                     <strong class="bold-small">@Html(Messages("change.status.reject.warning", TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)), LanguageUtils.isWelsh(messages))))</strong>
@@ -73,7 +73,7 @@
         }
         @if(reason == EndReasonCode.DIVORCE_PY) {
             <h1 class="heading-large" id="divorce-py-heading">@Html(Messages("change.status.divorce-py-heading"))</h1>
-            <p id="divorce-py-content">@Html(Messages("change.status.divorce-py-content", (TaxYearResolver.currentTaxYear-1)))</p>
+            <p id="divorce-py-content">@Html(Messages("change.status.divorce-py-content", (TaxYear.current.startYear-1)))</p>
             <div class="form-group booster">
                 <p>
                     <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
@@ -82,7 +82,7 @@
         }
         @if(reason == EndReasonCode.DIVORCE_CY) {
             <h1 class="heading-large" id="divorce-cy-heading">@Html(Messages("change.status.divorce-cy-heading"))</h1>
-            <p id="divorce-cy-content">@Html(Messages("change.status.divorce-cy-content", TaxYearResolver.currentTaxYear))</p>
+            <p id="divorce-cy-content">@Html(Messages("change.status.divorce-cy-content", TaxYear.current.startYear))</p>
             <div class="form-group booster">
                 <p>
                     <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"

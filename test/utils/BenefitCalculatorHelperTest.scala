@@ -21,9 +21,8 @@ import config.ApplicationConfig._
 import models._
 import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.time.TaxYearResolver
 
-class BenefitCalculatorHelperTest extends UnitSpec with TaxYearResolver with OneAppPerSuite {
+class BenefitCalculatorHelperTest extends UnitSpec with OneAppPerSuite {
 
   "BenefitCalculatorHelper" when {
 

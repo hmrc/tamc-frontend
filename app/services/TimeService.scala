@@ -16,45 +16,40 @@
 
 package services
 
+import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
-import uk.gov.hmrc.time.TaxYearResolver
-import models.EndRelationshipReason
-import models.EndReasonCode
 import org.joda.time.format.DateTimeFormat
+import uk.gov.hmrc.time.TaxYear
 
-object TimeService extends TimeService {
-  
-  override val taxYearResolver = TaxYearResolver
-   
-}
+object TimeService extends TimeService
 
 trait TimeService {
-  
-  val taxYearResolver: TaxYearResolver
-  
+
+  val currentTaxYear: TaxYear = TaxYear.current
+
   def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] = 
     endReason.endReason match {
-      case EndReasonCode.CANCEL => Some(taxYearResolver.endOfCurrentTaxYear)
-      case EndReasonCode.DIVORCE_CY => Some(taxYearResolver.endOfTaxYear(taxYearResolver.taxYearFor(endReason.dateOfDivorce.get)))
+      case EndReasonCode.CANCEL => Some(currentTaxYear.finishes)
+      case EndReasonCode.DIVORCE_CY => Some(TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes)
       case EndReasonCode.DIVORCE_PY => None
     }
 
   def getEffectiveDate(endReason: EndRelationshipReason): LocalDate =
     endReason.endReason match {
-      case EndReasonCode.CANCEL => taxYearResolver.startOfNextTaxYear
-      case EndReasonCode.DIVORCE_CY => taxYearResolver.endOfTaxYear(taxYearResolver.taxYearFor(endReason.dateOfDivorce.get)).plusDays(1)
-      case EndReasonCode.DIVORCE_PY => taxYearResolver.startOfTaxYear(taxYearResolver.taxYearFor(endReason.dateOfDivorce.get))
+      case EndReasonCode.CANCEL => currentTaxYear.next.starts
+      case EndReasonCode.DIVORCE_CY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes.plusDays(1)
+      case EndReasonCode.DIVORCE_PY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).starts
     }
   
-  def getCurrentDate = LocalDate.now()
+  def getCurrentDate: LocalDate = LocalDate.now()
     
-  def getCurrentTaxYear = taxYearResolver.currentTaxYear
+  def getCurrentTaxYear: Int = currentTaxYear.startYear
     
-  def getTaxYearForDate(date: LocalDate) = taxYearResolver.taxYearFor(date)
+  def getTaxYearForDate(date: LocalDate): Int = TaxYear.taxYearFor(date).startYear
     
-  def getStartDateForTaxYear(year: Int) = taxYearResolver.startOfTaxYear(year)
+  def getStartDateForTaxYear(year: Int): LocalDate = TaxYear.firstDayOfTaxYear(year)
 
-  def getPreviousYearDate() = LocalDate.now().minusYears(1)
+  def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
 
-  def parseDateWtihFormat(date: String, format: String) = LocalDate.parse(date, DateTimeFormat.forPattern(format))
+  def parseDateWithFormat(date: String, format: String): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

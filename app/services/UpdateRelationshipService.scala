@@ -34,7 +34,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.frontend.auth.AuthContext
-import uk.gov.hmrc.time.TaxYearResolver._
+import uk.gov.hmrc.time
 import utils.LanguageUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -53,7 +53,7 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
   val timeService: TimeService
-  private val parseRelationshipStartDate = parseDateWtihFormat(_ :String, format = "yyyyMMdd")
+  private val parseRelationshipStartDate = parseDateWithFormat(_ :String, format = "yyyyMMdd")
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
@@ -363,13 +363,14 @@ trait UpdateRelationshipService {
     }
 
   def getEndDate(endRelationshipReason: EndRelationshipReason, selectedRelationship: RelationshipRecord): LocalDate =
-    (endRelationshipReason match {
+    endRelationshipReason match {
       case EndRelationshipReason(EndReasonCode.DIVORCE_PY, _, _) => getPreviousYearDate
-      case EndRelationshipReason(EndReasonCode.DIVORCE_CY, _, _) => if (fallsInThisTaxYear(endRelationshipReason.dateOfDivorce.get)) getCurrentDate
-                                                                      else endOfTaxYear(taxYearFor(endRelationshipReason.dateOfDivorce.get))
+      case EndRelationshipReason(EndReasonCode.DIVORCE_CY, _, _) =>
+        if (time.TaxYear.current.contains(endRelationshipReason.dateOfDivorce.get)) getCurrentDate
+        else time.TaxYear.taxYearFor(endRelationshipReason.dateOfDivorce.get).finishes
       case EndRelationshipReason(EndReasonCode.CANCEL, _, _) => getCurrentDate
-      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => startOfTaxYear(taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)))
-    })
+      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => time.TaxYear.taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)).starts
+    }
 
   def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
      LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd"))

@@ -18,15 +18,21 @@ package config
 
 import config.ApplicationConfig.loadConfig
 import org.joda.time.LocalDate
-import play.api.Play.{configuration, current}
+import play.api.Mode.Mode
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time.TaxYear
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
-  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
+  
+  val currentTaxYear: Int = TaxYear.current.startYear
 
-  private val contactHost = configuration.getString("tamc.external-urls.contact-frontend").getOrElse("")
+  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
+
+  private val contactHost = runModeConfiguration.getString("tamc.external-urls.contact-frontend").getOrElse("")
   private val contactFrontendService = baseUrl("contact-frontend")
   val contactFormServiceIdentifier = "TAMC"
   val pageTitle = "Your personal tax account"
@@ -35,8 +41,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version") + '/'
 
-  override lazy val analyticsToken: Option[String] = configuration.getString("google-analytics.token")
-  override lazy val analyticsHost: String = configuration.getString("google-analytics.host").getOrElse("auto")
+  override lazy val analyticsToken: Option[String] = runModeConfiguration.getString("google-analytics.token")
+  override lazy val analyticsHost: String = runModeConfiguration.getString("google-analytics.host").getOrElse("auto")
 
   override lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
   override lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
@@ -46,9 +52,9 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
 
-  lazy val enableRefresh = configuration.getBoolean("enableRefresh").getOrElse(true)
+  lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
 
-  lazy val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+  lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
 
 
   val TAMC_BEGINNING_YEAR = 2015
@@ -70,14 +76,14 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
 
-  val PERSONAL_ALLOWANCE = configuration.getInt("personal-allowance-" + TaxYearResolver.currentTaxYear).get
-  val MAX_LIMIT = configuration.getInt("max-limit-" + TaxYearResolver.currentTaxYear).get
-  val MAX_LIMIT_SCOT = configuration.getInt("max-limit-scot-" + TaxYearResolver.currentTaxYear).get
-  val MAX_LIMIT_WALES = configuration.getInt("max-limit-wales-" + TaxYearResolver.currentTaxYear).get
-  val MAX_LIMIT_NORTHERN_IRELAND = configuration.getInt("max-limit-northern-ireland-" + TaxYearResolver.currentTaxYear).get
+  val PERSONAL_ALLOWANCE = runModeConfiguration.getInt("personal-allowance-" + currentTaxYear).get
+  val MAX_LIMIT = runModeConfiguration.getInt("max-limit-" + currentTaxYear).get
+  val MAX_LIMIT_SCOT = runModeConfiguration.getInt("max-limit-scot-" + currentTaxYear).get
+  val MAX_LIMIT_WALES = runModeConfiguration.getInt("max-limit-wales-" + currentTaxYear).get
+  val MAX_LIMIT_NORTHERN_IRELAND = runModeConfiguration.getInt("max-limit-northern-ireland-" + currentTaxYear).get
 
-  val MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER = configuration.getInt("max-allowed-personal-allowance-transfer-" + TaxYearResolver.currentTaxYear).get
-  val MAX_BENEFIT = configuration.getInt("max-benefit-" + TaxYearResolver.currentTaxYear).get
+  val MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER = runModeConfiguration.getInt("max-allowed-personal-allowance-transfer-" + currentTaxYear).get
+  val MAX_BENEFIT = runModeConfiguration.getInt("max-benefit-" + currentTaxYear).get
   val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER
   val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
@@ -86,14 +92,14 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
   override val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
 
-  lazy val urBannerEnabled = configuration.getString("feature.ur-banner.enabled").getOrElse("true").toBoolean
+  lazy val urBannerEnabled = runModeConfiguration.getString("feature.ur-banner.enabled").getOrElse("true").toBoolean
 
   override val LANG_CODE_ENGLISH = "en-GB"
   override val LANG_CODE_WELSH = "cy-GB"
   override val LANG_LANG_ENGLISH = "en"
   override val LANG_LANG_WELSH = "cy"
 
-  override val isWelshEnabled = configuration.getBoolean("welsh-translation").getOrElse(false)
+  override val isWelshEnabled = runModeConfiguration.getBoolean("welsh-translation").getOrElse(false)
   lazy val webchatId = loadConfig("webchat.id")
 }
 

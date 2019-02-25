@@ -19,10 +19,9 @@ package forms
 
 import config.ApplicationConfig
 import models.MultiYearPartnersIncomeQuestionInput
-import play.api.data.{Form, FormError}
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
-import uk.gov.hmrc.time.TaxYearResolver
+import play.api.data.{Form, FormError}
 
 object MultiYearPartnersIncomeQuestionForm {
 
