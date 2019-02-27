@@ -71,9 +71,9 @@ object TextGenerators {
   def taxDateIntervalString(taxYear: String, taxAnotherYear: Option[String] = None, isWelsh: Boolean = false): String = {
     val presentText = if(isWelsh) " i’r Presennol" else " to Present"
     taxAnotherYear.fold(
-      TaxYear(dateTransformerActive(taxYear).getYear).startYear + presentText
+      TaxYear.taxYearFor(dateTransformerActive(taxYear)).startYear + presentText
     )(syear =>
-      TaxYear(dateTransformer(taxYear).getYear).startYear + separator(isWelsh) + TaxYear.taxYearFor(dateTransformer(syear)).finishYear
+      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + separator(isWelsh) + TaxYear.taxYearFor(dateTransformer(syear)).finishYear
     )
   }
 }

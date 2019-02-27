@@ -83,7 +83,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "2012 to 2013"
+      document.getElementById("line0-start").text shouldBe "2011 to 2013"
       document.getElementById("line0-reason").text shouldBe "Bereavement"
       document.getElementById("line0-remove") shouldBe null
     }
@@ -109,11 +109,11 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "2012 to 2013"
+      document.getElementById("line0-start").text shouldBe "2011 to 2013"
       document.getElementById("line0-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line0-remove") shouldBe null
 
-      document.getElementById("line1-start").text shouldBe "2002 to 2013"
+      document.getElementById("line1-start").text shouldBe "2001 to 2013"
       document.getElementById("line1-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line1-remove") shouldNot be(null)
     }
@@ -162,8 +162,8 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("active").text shouldBe "2013 to Present"
-      historicRecord.toString should include("2012 to 2013")
+      document.getElementById("active").text shouldBe "2012 to Present"
+      historicRecord.toString should include("2011 to 2013")
     }
 
     "display historical active relationship details" in {
@@ -200,7 +200,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      historicRecord.toString should include("2012 to 2013")
+      historicRecord.toString should include("2011 to 2013")
 
       val incomeMessage = document.getElementById("incomeMessage")
       val bereavementMessage = document.getElementById("bereavementMessage")
