@@ -244,7 +244,7 @@ pages.form.field.description.selectedYear=You need to select an answer
 
 
 #********************************************************************************
-# Should be added every yearwi
+# Should be added every year
 #********************************************************************************
 
 
@@ -252,9 +252,9 @@ eligibility.feedback.transferor-not-eligible-2016=You are not eligible for Marri
 eligibility.feedback.transferor-not-eligible-2017=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £45,000.
 eligibility.feedback.transferor-not-eligible-2018=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below {0}.
 eligibility.feedback.transferor-not-eligible-2019=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below {0}.
-eligibility.feedback.recipient-not-eligible-2016=You are not eligible for Marriage Allowance. Your partner's annual income must be between £11,001 and £43,000.
-eligibility.feedback.recipient-not-eligible-2017=You are not eligible for Marriage Allowance. Your partner's annual income must be between £11,501 and £45,000.
-eligibility.feedback.recipient-not-eligible-2018=You are not eligible for Marriage Allowance. Your partner's annual income must be between £11,851 and {0}.
+eligibility.feedback.recipient-not-eligible-2016=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,001 and £43,000.
+eligibility.feedback.recipient-not-eligible-2017=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,501 and £45,000.
+eligibility.feedback.recipient-not-eligible-2018=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £11,851 and {0}.
 eligibility.feedback.recipient-not-eligible-2019=You are not eligible for Marriage Allowance. Your partner’s annual income must be between £12,501 and {0}.
 eligibility.check.unlike-benefit-as-couple-2016 = You will not benefit as a couple because your income is over £11,000.
 eligibility.check.unlike-benefit-as-couple-2017 = You will not benefit as a couple because your income is over £11,500.
@@ -270,7 +270,6 @@ your-income-2015=your income was £10,600 or less
 your-income-2016=your income was £11,000 or less
 your-income-2017=your income was £11,500 or less
 your-income-2018=your income was £11,850 or less
-your-income-2019=your income was £12,500 or less
 income-between-2015= {0} income was between £10,601 and £42,385
 income-between-2016= {0} income was between £11,001 and £43,000
 income-between-2017= {0} income was between £11,501 and £45,000 (or £43,000 if you live in Scotland)
