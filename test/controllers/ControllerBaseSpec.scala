@@ -32,7 +32,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 trait ControllerBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
 
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+  override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
     .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
     .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))

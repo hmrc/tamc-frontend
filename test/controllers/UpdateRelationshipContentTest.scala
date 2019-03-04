@@ -27,7 +27,7 @@ import services.{CachingService, TimeService, TransferService, UpdateRelationshi
 import test_utils.data.RelationshipRecordData
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time
 
 import scala.concurrent.Future
 
@@ -83,7 +83,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "2012 to 2013"
+      document.getElementById("line0-start").text shouldBe "2011 to 2013"
       document.getElementById("line0-reason").text shouldBe "Bereavement"
       document.getElementById("line0-remove") shouldBe null
     }
@@ -109,11 +109,11 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("line0-start").text shouldBe "2012 to 2013"
+      document.getElementById("line0-start").text shouldBe "2011 to 2013"
       document.getElementById("line0-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line0-remove") shouldBe null
 
-      document.getElementById("line1-start").text shouldBe "2002 to 2013"
+      document.getElementById("line1-start").text shouldBe "2001 to 2013"
       document.getElementById("line1-reason").text shouldBe "Divorce or end of civil partnership"
       document.getElementById("line1-remove") shouldNot be(null)
     }
@@ -162,8 +162,8 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      document.getElementById("active").text shouldBe "2013 to Present"
-      historicRecord.toString should include("2012 to 2013")
+      document.getElementById("active").text shouldBe "2012 to Present"
+      historicRecord.toString should include("2011 to 2013")
     }
 
     "display historical active relationship details" in {
@@ -177,7 +177,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val contentAsStringFromResult = contentAsString(result)
       val document = Jsoup.parse(contentAsString(result))
       val historicActiveMessage = document.getElementById("historicActiveMessage").text()
-      val nextTaxYear = TaxYearResolver.currentTaxYear + 1
+      val nextTaxYear = time.TaxYear.current.startYear + 1
       historicActiveMessage should be(s"You will stop receiving Marriage Allowance from your partner at end of the tax year (5 April $nextTaxYear).")
 
       val historicRecord = document.getElementById("historicRecords")
@@ -200,7 +200,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val historicRecord = document.getElementById("historicRecords")
       historicRecord shouldNot be(null)
 
-      historicRecord.toString should include("2012 to 2013")
+      historicRecord.toString should include("2011 to 2013")
 
       val incomeMessage = document.getElementById("incomeMessage")
       val bereavementMessage = document.getElementById("bereavementMessage")
@@ -265,9 +265,9 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       when(mockUpdateRelationshipService.saveEndRelationshipReason(ArgumentMatchers.eq(EndRelationshipReason(EndReasonCode.CANCEL)))(any(), any()))
         .thenReturn(EndRelationshipReason(EndReasonCode.CANCEL))
       when(mockTimeService.getEffectiveUntilDate(EndRelationshipReason(EndReasonCode.CANCEL)))
-        .thenReturn(Some(TaxYearResolver.endOfCurrentTaxYear))
+        .thenReturn(Some(time.TaxYear.current.finishes))
       when(mockTimeService.getEffectiveDate(EndRelationshipReason(EndReasonCode.CANCEL)))
-        .thenReturn(TaxYearResolver.startOfNextTaxYear)
+        .thenReturn(time.TaxYear.current.next.starts)
       val result = controller.confirmCancel()(request)
       status(result) shouldBe OK
 
@@ -277,7 +277,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
       cancelHeading shouldNot be(null)
       cancelContent shouldNot be(null)
-      val taxYear = TaxYearResolver.currentTaxYear + 1
+      val taxYear = time.TaxYear.current.startYear + 1
       cancelHeading.toString should include("Cancelling Marriage Allowance")
       cancelContent.text() shouldBe s"We will cancel your Marriage Allowance, but it will remain in place until 5 April $taxYear, the end of the current tax year."
 
@@ -377,7 +377,4 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       mockCachingService,
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
-
-  when(mockTimeService.taxYearResolver)
-    .thenReturn(TaxYearResolver)
 }

@@ -16,6 +16,8 @@
 
 package config
 
+import play.api.{Configuration, Play}
+import play.api.Mode.Mode
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -34,4 +36,7 @@ object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
   override def fetchTemplate(path: String): Future[String] =  {
     WSHttp.GET(path).map(_.body)
   }
+
+  override protected def mode: Mode = Play.current.mode
+  override protected def runModeConfiguration: Configuration = Play.current.configuration
 }

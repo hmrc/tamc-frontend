@@ -27,7 +27,7 @@ import utils.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object MarriageAllowanceConnector extends MarriageAllowanceConnector with ServicesConfig {
+object MarriageAllowanceConnector extends MarriageAllowanceConnector {
   override def httpGet = WSHttp
   override def httpPost = WSHttp
   override def httpPut = WSHttp

@@ -28,7 +28,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time
 import utils.LanguageUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -194,7 +194,7 @@ trait TransferService {
     }.sortWith((m1, m2) => m1.year > m2.year)
 
   private def isCurrentTaxYear(year: Int): Option[Boolean] =
-    if (TaxYearResolver.currentTaxYear == year)
+    if (time.TaxYear.current.startYear == year)
       Some(true)
     else
       None

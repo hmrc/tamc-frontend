@@ -33,7 +33,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time
 
 class ContentTest extends ControllerBaseSpec {
 
@@ -495,7 +495,7 @@ class ContentTest extends ControllerBaseSpec {
     val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
     "display dynamic message " in {
       when(mockTransferService.getCurrentAndExtraYearEligibility(any(), any())).thenReturn((true, recrecord.availableTaxYears, recrecord))
-      when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(recrecord), ArgumentMatchers.eq(List(TaxYearResolver.currentTaxYear)))(any(), any()))
+      when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(recrecord), ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any()))
         .thenReturn(Nil)
       val request = FakeRequest().withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
       val result = transferController.eligibleYearsAction(request)
@@ -933,7 +933,8 @@ class ContentTest extends ControllerBaseSpec {
     mockTimeService
   )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
+  val currentTaxYear = time.TaxYear.current.startYear
   when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
-  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(TaxYearResolver.currentTaxYear))).thenReturn(TaxYearResolver.startOfCurrentTaxYear)
-  when(mockTimeService.getCurrentTaxYear).thenReturn(TaxYearResolver.currentTaxYear)
+  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear))).thenReturn(time.TaxYear.current.starts)
+  when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)
 }

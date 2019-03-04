@@ -16,10 +16,12 @@
 
 package config
 
+import play.api.Play
+import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 
 trait SessionCookieCryptoFilterWrapper {
   def encryptCookieString(cookie: String) : String = {
-    SessionCookieCryptoFilter.encrypt(cookie)
+    new SessionCookieCryptoFilter(new ApplicationCrypto(Play.current.configuration.underlying)).encrypt(cookie)
   }
 }

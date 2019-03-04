@@ -19,40 +19,27 @@ package services
 import controllers.ControllerBaseSpec
 import models.EndRelationshipReason
 import org.joda.time.LocalDate
-import uk.gov.hmrc.time.TaxYearResolver
-import org.mockito.Mockito._
+import uk.gov.hmrc.time.TaxYear
 
 class TimeServiceTest extends ControllerBaseSpec {
 
-  def service: TimeService = new TimeService {
-    override val taxYearResolver: TaxYearResolver = mock[TaxYearResolver]
-    when(taxYearResolver.endOfCurrentTaxYear).thenReturn(LocalDate.now.plusDays(1))
-    when(taxYearResolver.startOfCurrentTaxYear).thenReturn(LocalDate.now())
-    when(taxYearResolver.currentTaxYear).thenReturn(2018)
-    when(taxYearResolver.startOfNextTaxYear).thenReturn(LocalDate.now().plusDays(5))
-  }
+  def service: TimeService = TimeService
 
   "getEffectiveUntilDate" should {
     "return end of current tax year" when{
       "End reason code is CANCEL" in {
         val timeService = service
         val result = timeService.getEffectiveUntilDate(EndRelationshipReason("CANCEL"))
-        result shouldBe Some(LocalDate.now.plusDays(1))
-        verify(timeService.taxYearResolver, times(1)).endOfCurrentTaxYear
+        result shouldBe Some(TaxYear.current.finishes)
       }
     }
 
     "return end tax year for divorce date" when {
       "End reason code is DIVORCE_CY" in {
         val timeService = service
-        val date = LocalDate.now().plusDays(2)
         val data = EndRelationshipReason("DIVORCE_CY", Some(LocalDate.now()))
-        when(timeService.taxYearResolver.taxYearFor(data.dateOfDivorce.get))
-          .thenReturn(2018)
-        when(timeService.taxYearResolver.endOfTaxYear(2018)).thenReturn(date)
         val result = timeService.getEffectiveUntilDate(data)
-        result shouldBe Some(LocalDate.now().plusDays(2))
-        verify(timeService.taxYearResolver, times(1)).taxYearFor(LocalDate.now())
+        result shouldBe Some(TaxYear.taxYearFor(data.dateOfDivorce.get).finishes)
       }
     }
 
@@ -62,7 +49,6 @@ class TimeServiceTest extends ControllerBaseSpec {
         val data = EndRelationshipReason("DIVORCE_PY")
         val result = timeService.getEffectiveUntilDate(data)
         result shouldBe None
-        verifyZeroInteractions(service.taxYearResolver)
       }
     }
   }
@@ -72,8 +58,7 @@ class TimeServiceTest extends ControllerBaseSpec {
       "End reason code is CANCEL" in {
         val timeService = service
         val data = EndRelationshipReason("CANCEL")
-        timeService.getEffectiveDate(data) shouldBe LocalDate.now().plusDays(5)
-        verify(timeService.taxYearResolver, times(1)).startOfNextTaxYear
+        timeService.getEffectiveDate(data) shouldBe TaxYear.current.next.starts
       }
     }
 
@@ -82,11 +67,7 @@ class TimeServiceTest extends ControllerBaseSpec {
         val timeService = service
         val date = LocalDate.now().plusDays(2)
         val data = EndRelationshipReason("DIVORCE_CY", Some(LocalDate.now()))
-        when(timeService.taxYearResolver.taxYearFor(data.dateOfDivorce.get))
-          .thenReturn(2018)
-        when(timeService.taxYearResolver.endOfTaxYear(2018)).thenReturn(date)
-        timeService.getEffectiveDate(data) shouldBe date.plusDays(1)
-        verify(timeService.taxYearResolver, times(1)).taxYearFor(LocalDate.now())
+        timeService.getEffectiveDate(data) shouldBe TaxYear.taxYearFor(date).finishes.plusDays(1)
       }
     }
 
@@ -94,18 +75,14 @@ class TimeServiceTest extends ControllerBaseSpec {
       "End reason code is DIVORCE_PY" in {
         val timeService = service
         val data = EndRelationshipReason("DIVORCE_PY", Some(LocalDate.now().minusDays(1)))
-        when(timeService.taxYearResolver.taxYearFor(data.dateOfDivorce.get))
-          .thenReturn(2017)
-        when(timeService.taxYearResolver.startOfTaxYear(2017))
-          .thenReturn(LocalDate.now().minusDays(2))
-        timeService.getEffectiveDate(data) shouldBe LocalDate.now().minusDays(2)
+        timeService.getEffectiveDate(data) shouldBe TaxYear.taxYearFor(data.dateOfDivorce.get).starts
       }
     }
   }
 
   "getPreviousYearDate" should {
     "return previous year" in {
-      service.getPreviousYearDate() shouldBe LocalDate.now().minusYears(1)
+      service.getPreviousYearDate shouldBe LocalDate.now().minusYears(1)
     }
   }
 
@@ -113,7 +90,7 @@ class TimeServiceTest extends ControllerBaseSpec {
     "parse date with format of yyyyMMdd" in {
       val format = "yyyyMMdd"
       val date = "20170822"
-      service.parseDateWtihFormat(date, format) shouldBe new LocalDate(2017, 8, 22)
+      service.parseDateWithFormat(date, format) shouldBe new LocalDate(2017, 8, 22)
     }
   }
 }

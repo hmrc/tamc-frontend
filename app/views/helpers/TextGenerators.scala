@@ -16,17 +16,18 @@
 
 package views.helpers
 
-import play.api.data.Form
+import java.util.Locale
+
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
-import java.text.SimpleDateFormat
-import java.util.Locale
-import services.TimeService
-import uk.gov.hmrc.time.TaxYearResolver
+import play.api.data.Form
+import uk.gov.hmrc.time.TaxYear
 import views.helpers.WelshDateConverter._
 
 object TextGenerators {
+
+  def separator(isWelsh: Boolean): String = if (!isWelsh) " to " else " i "
+
   def formPageDataJourney(prefix: String, form: Form[_]): String =
     form.hasErrors match {
       case true => s"${prefix}-erroneous(${form.errors.map { x => x.key}.sorted.distinct.mkString(",")})"
@@ -55,31 +56,24 @@ object TextGenerators {
       case true => noun
     }
 
-  def taxDateInterval(taxYear: Int, isWelsh: Boolean): String =
-    isWelsh match {
-      case false => ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear)), isWelsh) + " to " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)), isWelsh)
-      case true => (ukDateTransformer(Some(TaxYearResolver.startOfTaxYear(taxYear)), isWelsh) + " i " + ukDateTransformer(Some(TaxYearResolver.endOfTaxYear(taxYear)), isWelsh))
-    }
+  def taxDateInterval(taxYear: Int, isWelsh: Boolean): String = {
+    ukDateTransformer(Some(TaxYear(taxYear).starts), isWelsh) + separator(isWelsh) + ukDateTransformer(Some(TaxYear(taxYear).finishes), isWelsh)
+  }
 
-  def taxDateIntervalMultiYear(taxYear: Int,taxEndYear: Int, isWelsh: Boolean = false): String =
-    isWelsh match {
-      case false => TaxYearResolver.startOfTaxYear(taxYear).getYear + " to " + TaxYearResolver.endOfTaxYear(taxEndYear).getYear
-      case true => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxEndYear).getYear)
-    }
+  def taxDateIntervalMultiYear(taxYear: Int,taxEndYear: Int, isWelsh: Boolean = false): String = {
+    taxYear + separator(isWelsh) + (taxEndYear + 1)
+  }
 
-  def taxDateIntervalShort(taxYear: Int, isWelsh: Boolean = false): String =
-    isWelsh match {
-      case false => TaxYearResolver.startOfTaxYear(taxYear).getYear + " to " + TaxYearResolver.endOfTaxYear(taxYear).getYear
-      case true => (TaxYearResolver.startOfTaxYear(taxYear).getYear + " i " + TaxYearResolver.endOfTaxYear(taxYear).getYear)
-    }
+  def taxDateIntervalShort(taxYear: Int, isWelsh: Boolean = false): String = {
+    taxYear + separator(isWelsh) + (taxYear + 1)
+  }
 
   def taxDateIntervalString(taxYear: String, taxAnotherYear: Option[String] = None, isWelsh: Boolean = false): String = {
-    isWelsh match
-    {
-      case false if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " to Present"
-      case false => TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " to " + TaxYearResolver.endOfTaxYear(TimeService.getTaxYearForDate(dateTransformer(taxAnotherYear.get))).getYear
-      case true if(!(taxAnotherYear.isDefined)) => TaxYearResolver.startOfTaxYear(dateTransformerActive(taxYear).getYear).getYear + " i’r Presennol"
-      case true => (TaxYearResolver.startOfTaxYear(dateTransformer(taxYear).getYear).getYear + " i " + TaxYearResolver.endOfTaxYear(dateTransformer(taxAnotherYear.get).getYear).getYear)
-    }
-}
+    val presentText = if(isWelsh) " i’r Presennol" else " to Present"
+    taxAnotherYear.fold(
+      TaxYear.taxYearFor(dateTransformerActive(taxYear)).startYear + presentText
+    )(syear =>
+      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + separator(isWelsh) + TaxYear.taxYearFor(dateTransformer(syear)).finishYear
+    )
+  }
 }

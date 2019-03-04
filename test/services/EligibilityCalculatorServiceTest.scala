@@ -22,10 +22,12 @@ import java.util.Locale
 import config.ApplicationConfig._
 import controllers.ControllerBaseSpec
 import models._
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time
 
 class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
 
+  val currentTaxYear: Int = time.TaxYear.current.startYear
+  
   private def maxLimitToFormattedCurrency(limit: Int): String = {
     val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
     formatter.setMaximumFractionDigits(0)
@@ -41,7 +43,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val lowerEarnerIncome = 9000
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT)))}
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT)))}
 
         "The lower earners income is above personal allowance" in {
 
@@ -49,7 +51,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear))
         }
 
         "Both higher earners income is taxed at higher rate and lower earners income is above personal allowance" in {
@@ -58,7 +60,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val lowerEarnerIncome = 12000
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT)))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT)))
         }
 
         "potential gain is less than £1" in {
@@ -132,7 +134,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = MAX_LIMIT_SCOT+1
           val lowerEarnerIncome = 9000
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_SCOT)))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_SCOT)))
         }
 
         "The lower earners income is above personal allowance" in {
@@ -140,7 +142,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear))
         }
 
         "Both higher earners income is taxed at higher rate and lower earners income is above personal allowance" in {
@@ -148,7 +150,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = MAX_LIMIT_SCOT+1
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_SCOT)))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear),  messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_SCOT)))
         }
 
         "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {
@@ -218,7 +220,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = MAX_LIMIT_WALES+1
           val lowerEarnerIncome = 9000
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_WALES)))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_WALES)))
         }
 
         "The lower earners income is above personal allowance" in {
@@ -226,7 +228,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear))
         }
 
         "Both higher earners income is taxed at higher rate and lower earners income is above personal allowance" in {
@@ -234,7 +236,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = MAX_LIMIT_WALES+1
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_WALES)))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_WALES)))
         }
       }
 
@@ -290,7 +292,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = MAX_LIMIT_NORTHERN_IRELAND+1
           val lowerEarnerIncome = 9000
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_NORTHERN_IRELAND)))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_NORTHERN_IRELAND)))
         }
 
         "The lower earners income is above personal allowance" in {
@@ -298,7 +300,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + TaxYearResolver.currentTaxYear))
+            EligibilityCalculatorResult(messageKey = ("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear))
         }
 
         "Both higher earners income is taxed at higher rate and lower earners income is above personal allowance" in {
@@ -306,7 +308,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val higherEarnerIncome = MAX_LIMIT_NORTHERN_IRELAND+1
           val lowerEarnerIncome = PERSONAL_ALLOWANCE+1
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
-            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + TaxYearResolver.currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_NORTHERN_IRELAND)))
+            EligibilityCalculatorResult(messageKey = ("eligibility.feedback.recipient-not-eligible-" + currentTaxYear), messageParam = Some(maxLimitToFormattedCurrency(MAX_LIMIT_NORTHERN_IRELAND)))
         }
       }
 

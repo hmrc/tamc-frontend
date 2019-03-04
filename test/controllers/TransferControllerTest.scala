@@ -36,7 +36,7 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.TaxYearResolver
+import uk.gov.hmrc.time
 
 class TransferControllerTest extends ControllerBaseSpec {
 
@@ -127,7 +127,7 @@ class TransferControllerTest extends ControllerBaseSpec {
       "there are available tax years including current year" in {
         when(mockTransferService.deleteSelectionAndGetCurrentAndExtraYearEligibility(any(), any()))
           .thenReturn((true, List(TaxYear(2015)), RecipientRecordData.recipientRecord))
-        when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(TaxYearResolver.startOfCurrentTaxYear)
+        when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(time.TaxYear.current.starts)
         val result = controller().eligibleYears()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
@@ -165,14 +165,14 @@ class TransferControllerTest extends ControllerBaseSpec {
           .thenReturn((false, List(TaxYear(2015)), RecipientRecordData.recipientRecord))
         when(mockTransferService.saveSelectedYears(
           ArgumentMatchers.eq(RecipientRecordData.recipientRecord),
-          ArgumentMatchers.eq(List(TaxYearResolver.currentTaxYear)))(any(), any()))
-          .thenReturn(List(TaxYearResolver.currentTaxYear))
+          ArgumentMatchers.eq(List(currentTaxYear)))(any(), any()))
+          .thenReturn(List(currentTaxYear))
         val result = controller().eligibleYearsAction()(request)
         status(result) shouldBe OK
         val doc = Jsoup.parse(contentAsString(result))
         doc.title shouldBe  messagesApi("title.application.pattern", messagesApi("title.extra-years"))
         verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(RecipientRecordData.recipientRecord),
-          ArgumentMatchers.eq(List(TaxYearResolver.currentTaxYear)))(any(), any())
+          ArgumentMatchers.eq(List(currentTaxYear)))(any(), any())
       }
 
       "extra years is not empty and applyForCurrentYear is false" in {
@@ -210,8 +210,8 @@ class TransferControllerTest extends ControllerBaseSpec {
           .thenReturn((true, Nil, RecipientRecordData.recipientRecord))
         when(mockTransferService.saveSelectedYears(
           ArgumentMatchers.eq(RecipientRecordData.recipientRecord),
-          ArgumentMatchers.eq(List(TaxYearResolver.currentTaxYear)))(any(), any()))
-          .thenReturn(List(TaxYearResolver.currentTaxYear))
+          ArgumentMatchers.eq(List(currentTaxYear)))(any(), any()))
+          .thenReturn(List(currentTaxYear))
         val result = controller().eligibleYearsAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
@@ -437,6 +437,8 @@ class TransferControllerTest extends ControllerBaseSpec {
     }
   }
 
+  val currentTaxYear: Int = time.TaxYear.current.startYear
+
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
@@ -448,5 +450,5 @@ class TransferControllerTest extends ControllerBaseSpec {
     mockTimeService
   )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
   when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn TaxYearResolver.currentTaxYear
+  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
 }
