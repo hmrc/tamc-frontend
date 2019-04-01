@@ -386,6 +386,7 @@ p.blue-underline-large {
     padding: 0;
     outline: none;
     outline-offset: 0;
+    width: max-content;
     /* Additional styles to look like a link */
     color: #2a4f69;
     cursor: pointer;
@@ -409,6 +410,13 @@ p.blue-underline-large {
     text-decoration: underline;
     box-shadow: none;
     }
+
+.remove-block:focus{
+    background-color: #ffbf47;
+    outline: 3px solid #ffbf47;
+    color: #4c2c92;
+}
+
 .service-info {
     text-align: initial;
 }
@@ -526,7 +534,12 @@ font-weight: 400 !important;
 strong {
 font-size : bold !important
 }
+
+
 .move-left{
-    margin-left: -55px;
     margin-bottom: 20px;
+}
+
+br.clear {
+    clear: both;
 }
