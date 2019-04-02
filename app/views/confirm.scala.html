@@ -116,7 +116,7 @@
     </div>
     @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
         <p>
-            <button data-journey-click="marriage-allowance:button:application_confirm" id="create" type="submit"> @Html(Messages("pages.confirm.button"))</button>
+            <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit"> @Html(Messages("pages.confirm.button"))</button>
         </p>
     }
     <br>
