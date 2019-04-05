@@ -65,8 +65,8 @@ class TimeServiceTest extends ControllerBaseSpec {
     "return end of tax year of divorce date" when {
       "End reason code is DIVORCE_CY" in {
         val timeService = service
-        val date = LocalDate.now().plusDays(2)
-        val data = EndRelationshipReason("DIVORCE_CY", Some(LocalDate.now()))
+        val date = new LocalDate(2018, 9, 1)
+        val data = EndRelationshipReason("DIVORCE_CY", Some(new LocalDate(2019, 1, 1)))
         timeService.getEffectiveDate(data) shouldBe TaxYear.taxYearFor(date).finishes.plusDays(1)
       }
     }
