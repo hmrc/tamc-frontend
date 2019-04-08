@@ -2,19 +2,19 @@
   "taxBands": [
     {
       "name": "StarterRate",
-      "lowerThreshold": 11851,
-      "upperThreshold": 13850,
+      "lowerThreshold": 12501,
+      "upperThreshold": 14549,
       "rate": 0.19
     },
     {
       "name": "BasicRate",
-      "lowerThreshold": 13851,
-      "upperThreshold": 24000,
+      "lowerThreshold": 14550,
+      "upperThreshold": 24944,
       "rate": 0.20
     },
     {
       "name": "IntermediateRate",
-      "lowerThreshold": 24001,
+      "lowerThreshold": 24945,
       "upperThreshold": 43430,
       "rate": 0.21
     }
