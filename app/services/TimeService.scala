@@ -25,7 +25,7 @@ object TimeService extends TimeService
 
 trait TimeService {
 
-  val currentTaxYear: TaxYear = TaxYear.current
+  def currentTaxYear: TaxYear = TaxYear.current
 
   def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] = 
     endReason.endReason match {
