@@ -52,36 +52,23 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
 
   "Check eligibility benefit" should {
 
-    "be GBP 80 if transferor income=9000 (< 11500) and recipient income=11900 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "11,900"))
+    "be GBP 80 if transferor income=9000 (< 11500) and recipient income=14000" in {
+      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "14,000"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
-    "be GBP 212 if transferor income=0 (< 11500) and recipient income=12060 (10600-11660)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "0", "recipient-income" -> "12060"))
+    "be GBP 212 if transferor income=0 (< 11500) and recipient income=14000" in {
+      val result = calculatorRequestAction(Map("transferor-income" -> "0", "recipient-income" -> "14000"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
-    "be GBP 100 if transferor income=9000 (< 9540) and recipient income=12000 (> 11660)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "12000"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
-    }
-
-    "be GBP 20 if transferor income=9580 (9540-11000) and recipient income=11650 (11000-11660)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9580", "recipient-income" -> "11950"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
-    }
-
-    "be negative (12) if transferor income=11000 (9540-11000) and recipient income=12000 (11000-11660)" in {
+    "if transferor income=14000 and recipient income=20000" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
-      val result = calculatorRequestAction(Map("transferor-income" -> "11000", "recipient-income" -> "12000"))
+      val result = calculatorRequestAction(Map("transferor-income" -> "14000", "recipient-income" -> "20000"))
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple."
+      document.getElementById("calculator-result").text() should include("You will not benefit as a couple")
     }
 
     "be GBP 230 if transferor income=10000 (9540-11000) and recipient income=20000 (11660-42385)" in {
@@ -112,66 +99,6 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
         s"Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
 
-  }
-
-  "When transferor income is in different format, calculation" should {
-
-    "be GBP 80 if transferor income=9000.05 (< 9540) and recipient income=11400 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000.05", "recipient-income" -> "11900"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-
-    "be GBP 80 if transferor income=9,000.05 (< 9540) and recipient income=11400 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9,000.05", "recipient-income" -> "11900"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-
-    "be GBP 80 if transferor income=£9,000.05 (< 9540) and recipient income=11400 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "£9,000.05", "recipient-income" -> "11900"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-
-    "be GBP 80 if transferor income=£9 000.05 (< 9540) and recipient income=11400 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "£9 000,05", "recipient-income" -> "11900"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-
-    "be GBP 80 if transferor income=£9.000.05 (< 9540) and recipient income=11400 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "£9.000,05", "recipient-income" -> "11900"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-  }
-
-  "When recipient income is in different format, calculation" should {
-
-    "be GBP 80 if transferor income=9000 (< 9540) and recipient income=11900.05 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "£9.000,05", "recipient-income" -> "11900"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-
-    "be GBP 80 if transferor income=9000 (< 9540) and recipient income=11900 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "11,900.05"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-
-    "be GBP 80 if transferor income=9000 (< 9540) and recipient income=£11,900.05 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "£11,900.05"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
-
-    "be GBP 80 if transferor income=9000 (< 9540) and recipient income=£11.900,05 (11900-11500)" in {
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "£11.900,05"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around £")
-    }
   }
 
   "Check validation message" should {
@@ -301,27 +228,19 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
 
-    "be displayed if transferor income=9000 (< 9540) and recipient income=47000 (> 45000)" in {
+    "be displayed if transferor income=9000 (< 9540) and recipient income=50001" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
       val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "46500"))
+      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "50001"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
 
-    "be displayed if transferor income=10000 (9540-10600) and recipient income=46000 (> 45000)" in {
-      val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val result = calculatorRequestAction(Map("transferor-income" -> "10000", "recipient-income" -> "46500"))
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
-    }
-    "be displayed if transferor income=11001 (>11000) and recipient income=20000" in {
+    "be displayed if transferor income=12600 and recipient income=20000" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
-      val result = calculatorRequestAction(Map("transferor-income" -> "11901", "recipient-income" -> "20000"))
+      val result = calculatorRequestAction(Map("transferor-income" -> "12600", "recipient-income" -> "20000"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple because your income is over £$lowerThreshold."
     }
