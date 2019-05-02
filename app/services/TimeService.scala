@@ -27,7 +27,7 @@ trait TimeService {
 
   def currentTaxYear: TaxYear = TaxYear.current
 
-  def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] = 
+  def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] =
     endReason.endReason match {
       case EndReasonCode.CANCEL => Some(currentTaxYear.finishes)
       case EndReasonCode.DIVORCE_CY => Some(TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes)
