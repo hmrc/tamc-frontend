@@ -22,7 +22,7 @@
         calculationResult match {
             case Some(result) =>
                 val message = result.monetaryGain match {
-                    case None => Html(Messages(result.messageKey, result.messageParam.getOrElse("")))
+                    case None => Html(Messages(result.messageKey, result.messageParam.getOrElse(""), result.messageParam2.getOrElse("")))
                     case Some(gain) => Html(Messages(result.messageKey, {
                         gain
                     }))

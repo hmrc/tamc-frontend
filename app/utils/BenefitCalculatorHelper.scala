@@ -16,8 +16,11 @@
 
 package utils
 
+import java.text.NumberFormat
+import java.util.Locale
+
 import config.ApplicationConfig._
-import models.TaxBand
+import models.{Country, England, NorthernIreland, Scotland, TaxBand, Wales}
 
 object BenefitCalculatorHelper {
 
@@ -48,5 +51,26 @@ object BenefitCalculatorHelper {
         }
     }.toMap
   }
+
+  def maxLimit(country: Country): Int = country match {
+    case England => MAX_LIMIT
+    case Scotland => MAX_LIMIT_SCOT
+    case Wales => MAX_LIMIT_WALES
+    case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND
+  }
+
+  def currencyFormatter(country: Country, amountType: String): String = {
+    val limit: Int = if(amountType == "PA") {
+      PERSONAL_ALLOWANCE + 1
+    } else {
+      maxLimit(country)
+    }
+
+    val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
+    formatter.setMaximumFractionDigits(0)
+    formatter.format(limit)
+  }
+
+
 
 }
