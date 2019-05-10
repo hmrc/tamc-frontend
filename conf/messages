@@ -180,6 +180,7 @@ title.make-a-change=Cancelling your Marriage Allowance
 title.bereavement=Tell us about a bereavement
 title.divorce=Date of divorce or end of civil partnership
 title.date-of-marriage=Date of marriage or civil partnership
+title.cannot-use-service=You cannot use this service
 
 #********************************************************************************
 # User Status
@@ -206,6 +207,7 @@ hmrc.contact-details-7=Closed Sundays and bank holidays.
 hmrc.contact-detials.calling.time=Best time to call
 hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday.
 hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about call charges</a>
+hmrc.contact-income-tax-helpline=/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees
 
 
 #********************************************************************************
@@ -573,6 +575,8 @@ technical.cannot-find-details.h1 = We cannot find your Marriage Allowance detail
 technical.cannot-find-details.para1 = Call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call
 technical.technical-error.h1 = There has been a technical error
 technical.technical-error.para1 = Try again. If the problem persists, call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call.
+technical.transferor-dead-p1=Contact the Income Tax Helpline
+technical.transferor-dead-p2=if you need to discuss your Marriage Allowance application.
 
 
 #********************************************************************************
@@ -699,3 +703,8 @@ tamc.banner.recruitment.link=Help improve digital services by joining the HMRC u
 tamc.banner.recruitment.reject=No thanks
 tamc.banner.recruitment.title=Help improve GOV.UK
 tamc.banner.recruitment.linkURL=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133
+
+#*************************************************************
+# General
+#*************************************************************
+tamc.app-name=tamc-frontend

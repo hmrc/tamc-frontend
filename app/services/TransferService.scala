@@ -205,6 +205,7 @@ trait TransferService {
       httpResponse =>
         Json.fromJson[GetRelationshipResponse](httpResponse.json).get match {
           case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) =>(recipientRecord, availableYears)
+          case GetRelationshipResponse(_, _, ResponseStatus(TRANSFEROR_DECEASED)) => throw TransferorDeceased()
           case _ => throw RecipientNotFound()
         }
     }

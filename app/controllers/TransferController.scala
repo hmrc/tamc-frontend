@@ -235,7 +235,7 @@ class TransferController @Inject()(
         throwable match {
           case _: TransferorNotFound               => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
           case _: RecipientNotFound                => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
-          case _: TransferorDeceased               => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
+          case _: TransferorDeceased               => handle(Logger.warn, InternalServerError(views.html.errors.transferer_deceased()))
           case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: CacheTransferorInRelationship    => handle(Logger.warn, Ok(views.html.transferor_status()))
           case _: CacheMissingRecipient            => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
