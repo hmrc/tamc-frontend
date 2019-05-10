@@ -28,7 +28,7 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found")))) {
 <h1 id="error">@Messages("title.cannot-use-service")</h1>
 <p class="get-started group" id="contact-helpline">
-    <a href=@Messages("hmrc.contact-income-tax-helpline") role="button" data-journey-click='click - link:@Messages("technical.transferor-dead-p1"):@Messages("title.pattern", Messages("title.cannot-use-service"))'>
+    <a href=@Messages("hmrc.contact-income-tax-helpline") target="_blank" role="button" data-journey-click='click - link:@Messages("technical.transferor-dead-p1"):@Messages("title.pattern", Messages("title.cannot-use-service"))'>
         @Messages("technical.transferor-dead-p1")
     </a>
     @Messages("technical.transferor-dead-p2")
