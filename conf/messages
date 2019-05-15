@@ -119,7 +119,6 @@ pages.form.field.description.country=Select where you live
 #********************************************************************************
 # General
 #********************************************************************************
-
 #General messages
 generic.ma=Marriage Allowance
 generic.ma.apply=Apply for Marriage Allowance
@@ -147,8 +146,6 @@ radio.no=No
 #********************************************************************************
 # Titles
 #********************************************************************************
-
-
 title.pattern={0} - Marriage Allowance - GOV.UK
 title.eligibility.pattern={0} - Marriage Allowance eligibility - GOV.UK
 title.application.pattern={0} - Marriage Allowance application - GOV.UK
@@ -183,8 +180,6 @@ title.cannot-use-service=You cannot use this service
 #********************************************************************************
 # User Status
 #********************************************************************************
-
-
 user-status.first-time-login={0} is the first time you have logged in
 user-status.previous-login-time={0} last signed in {1}
 user-status.sign-out=Sign out
@@ -192,7 +187,6 @@ user-status.sign-out=Sign out
 #********************************************************************************
 # Contact details
 #********************************************************************************
-
 hmrc.contact-details = You can call HMRC on:
 hmrc.contact-details-1=You can let HMRC know of a change in income on:
 hmrc.contact-details-2=Telephone: 0300 200 3300
@@ -211,8 +205,6 @@ hmrc.contact-income-tax-helpline=https://www.gov.uk/government/organisations/hm-
 #********************************************************************************
 # Eligibility Calculator
 #********************************************************************************
-
-
 pages.calc.header=Marriage Allowance calculator
 pages.calc.para1=As a couple, find out how much tax you would save if you applied for Marriage Allowance this year.
 pages.calc.para2=This calculator does not include any allowances such as Personal Savings Allowance or Dividend Allowance.
@@ -235,7 +227,6 @@ eligibility.feedback.loose = You will not benefit as a couple.
 #********************************************************************************
 # Year selection
 #********************************************************************************
-
 #Multi-year select
 pages.multi-year-select.heading=Confirm the earlier years you want to apply for
 
@@ -246,7 +237,6 @@ pages.form.field.description.selectedYear=You need to select an answer
 #********************************************************************************
 # Should be added every year
 #********************************************************************************
-
 eligibility.feedback.transferor-not-eligible=You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below {0}.
 eligibility.feedback.recipient-not-eligible=You are not eligible for Marriage Allowance. Your partner’s annual income must be between {0} and {1}.
 eligibility.check.unlike-benefit-as-couple = You will not benefit as a couple because your income is over {0}.
@@ -261,7 +251,6 @@ income-between-2019= {0} income was between {1} and {2} (or {3} if you live in S
 #********************************************************************************
 # Confirmation Message
 #********************************************************************************
-
 pages.confirm.html.h1=Check your details and confirm the application
 pages.confirm.html.check-details=Check the details you have entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,050 of your Personal Allowance to them.
 
@@ -269,7 +258,6 @@ pages.confirm.html.check-details=Check the details you have entered and confirm 
 #********************************************************************************
 # Eligibility Check
 #********************************************************************************
-
 eligibility.check.header=Your eligibility
 eligibility.check.h1=Are you married or in a civil partnership?
 eligibility.check.span.h1=Check your eligibility
@@ -320,8 +308,6 @@ pages.finished.hidden-warning=Warning
 #********************************************************************************
 # Registration page - Your spouse details
 #********************************************************************************
-
-
 pages.form.h1=Enter your partner’s details
 pages.form.details= As you have the lower income, you can apply to help reduce the amount of tax they pay.
 pages.form.enter-data=Enter your partner’s details:
@@ -350,8 +336,6 @@ pages.form.field.dod.question=When did you legally end your marriage or civil pa
 #********************************************************************************
 # Date of Marriage
 #********************************************************************************
-
-
 pages.date-of-marriage.heading=Date of marriage or civil partnership
 pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
 pages.date-of-marriage.para2=You can claim from when Marriage Allowance was first introduced on <span class=nowrap>6 April 2015.</span> This means you might be able to claim for previous tax years.
@@ -361,8 +345,6 @@ pages.date-of-marriage.h2=When did you marry or form a civil partnership with yo
 #********************************************************************************
 # How it works
 #********************************************************************************
-
-
 pages.how-it-works.heading=How it works
 pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
@@ -380,8 +362,6 @@ pages.how-it-works.detail=You need you and your partner’s National Insurance n
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
-
-
 change.status.button=Cancel Marriage Allowance
 change.status.transferor.ha.button=End Marriage Allowance
 change.status.recipient.ha.button=Stop Marriage Allowance
@@ -516,8 +496,6 @@ pages.confirm.recipient.divorce.cy.message2=your Personal Allowance will go back
 #********************************************************************************
 # application errors
 #********************************************************************************
-
-
 pages.form.error-header=There is a problem
 pages.errors.timeout-pta.header=You have been logged out of your Personal Tax Account.
 pages.errors.timeout-pta.action=Please login to your Personal Tax Account again to apply for Marriage Allowance.
@@ -560,8 +538,6 @@ technical.transferor-dead-p2=if you need to discuss your Marriage Allowance appl
 #********************************************************************************
 # history page
 #********************************************************************************
-
-
 pages.history.help.partner=You are currently helping your partner benefit from Marriage Allowance.
 pages.history.helped.by.partner=Your partner is currently helping you benefit from Marriage Allowance.
 pages.history.cancellation=You can cancel Marriage Allowance online
@@ -580,8 +556,6 @@ pages.history.button.remove=Remove allowance
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-
-
 pages.eligibleyear.currentyear=You can apply for the current tax year
 pages.eligibleyear.toldus=You have told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
 pages.eligibleyear.thisyear=This current tax year</span><br>{0} onwards
@@ -595,8 +569,6 @@ pages.eligibleyear.notice=You can apply for earlier years if you continue.
 #********************************************************************************
 # multiyear
 #********************************************************************************
-
-
 pages.multiyear.taxyear={0} tax year
 pages.multiyear.canclaim=You and <span id="firstNameOnly">{0}</span> can claim Marriage Allowance for the {1} tax year if:
 pages.multiyear.successful=If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
@@ -606,8 +578,6 @@ pages.multiyear.extrayears=Do you want to apply for this extra tax year too?
 #********************************************************************************
 # previous-years
 #********************************************************************************
-
-
 pages.previousyear.header=You can apply for earlier tax years
 pages.previousyear.lede=You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.
 pages.previousyear.para=You told us you married or formed a civil partnership with <span id=firstNameOnly>{0}</span> on <span id=marriageDate class=nowrap>{1}</span>. This means you can apply for earlier tax years.
@@ -616,8 +586,6 @@ pages.previousyear.para=You told us you married or formed a civil partnership wi
 #********************************************************************************
 # confirm-page
 #********************************************************************************
-
-
 pages.confirm.lower.earner=Your details (low income)
 pages.confirm.higher.earner=Your partner’s details (high income)
 pages.confirm.current.tax=Current tax year: <span class=nowrap>{0}</span> onwards
@@ -633,8 +601,6 @@ pages.confirm.date.of.marriage=Date of marriage or civil partnership
 #********************************************************************************
 # change-of-circs-finish-page
 #********************************************************************************
-
-
 pages.coc.finish.header=Marriage Allowance cancelled
 pages.coc.finish.acknowledgement=An email acknowledging your cancellation will be sent to you at <strong>{0}</strong> from <strong>noreply&#64;tax.service.gov.uk</strong> within 24 hours.
 pages.coc.finish.junk=If it does not appear in your inbox, please check your spam or junk folder.
@@ -660,7 +626,6 @@ error.invalid.date.format=You must specify a valid date
 #********************************************************************************
 # no years selected page
 #********************************************************************************
-
 pages.noyears.h1=You have not selected any tax years to apply for
 pages.noyears.content1=Go back if you want to select a year to apply for.
 pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works</a>.
@@ -668,7 +633,6 @@ pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.u
 #********************************************************************************
 # Breadcrumb
 #********************************************************************************
-
 tamc.breadcrumb.home = Account home
 tamc.breadcrumb.incometax = Income Tax
 tamc.menu = Menu

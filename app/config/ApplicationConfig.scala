@@ -53,7 +53,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
-
   lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
 
 
@@ -76,7 +75,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
 
-//  val PERSONAL_ALLOWANCE = runModeConfiguration.getInt("personal-allowance-" + currentTaxYear).get
 val PERSONAL_ALLOWANCE = {
   Logger.debug(s"*******************************\n\n currentTaxYear::::::$currentTaxYear")
   runModeConfiguration.getInt("personal-allowance-" + currentTaxYear).get

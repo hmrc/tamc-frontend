@@ -24,12 +24,12 @@ import models.{Country, England, NorthernIreland, Scotland, TaxBand, Wales}
 
 object BenefitCalculatorHelper {
 
-  def calculateTotalBenefitAcrossBands(income: Int, countryTaxbands: List[TaxBand]): Int = {
-    val rates = countryTaxbands.map(band => band.name -> band.rate).toMap
-    val basicRate = countryTaxbands.find(band => band.name == "BasicRate").head.rate
+  def calculateTotalBenefitAcrossBands(income: Int, countryTaxBands: List[TaxBand]): Int = {
+    val rates = countryTaxBands.map(band => band.name -> band.rate).toMap
+    val basicRate = countryTaxBands.find(band => band.name == "BasicRate").head.rate
     val maxBenefit = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER * basicRate
 
-    val benefitsFromBandedIncome = dividedIncome(countryTaxbands, income).map(
+    val benefitsFromBandedIncome = dividedIncome(countryTaxBands, income).map(
       i => i._2 * rates(i._1)).filterNot(_ < 0).sum.toInt
 
     Math.min(benefitsFromBandedIncome, maxBenefit.toInt)
@@ -59,18 +59,20 @@ object BenefitCalculatorHelper {
     case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND
   }
 
-  def currencyFormatter(country: Country, amountType: String): String = {
-    val limit: Int = if(amountType == "PA") {
+  def setCurrencyFormat(country: Country, allowanceType: String): String = {
+    val limit: Int = if(allowanceType == "PA") {
       PERSONAL_ALLOWANCE + 1
     } else {
       maxLimit(country)
     }
 
+    currencyFormatter(limit)
+  }
+
+  def currencyFormatter(limit: Int): String = {
     val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
     formatter.setMaximumFractionDigits(0)
     formatter.format(limit)
   }
-
-
 
 }

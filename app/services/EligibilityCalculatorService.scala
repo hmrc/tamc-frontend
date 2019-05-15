@@ -38,17 +38,17 @@ trait EligibilityCalculatorService {
 
     val hasMaxBenefit = transferorIncome < TRANSFEROR_ALLOWANCE&&recipientIncome > RECIPIENT_ALLOWANCE
     val recipientNotEligible = recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)||recipientIncome < PERSONAL_ALLOWANCE
-    val bothOverMaxLimit = transferorIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)&&recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)
+    val bothOverMaxLimit = transferorIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence) && recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)
 
-    if(transferorIncome>recipientIncome)
+    if(transferorIncome > recipientIncome)
       EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
     else if(bothOverMaxLimit)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible",
-        messageParam = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "ML")))
+        messageParam = Some(BenefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "ML")))
     else if(recipientNotEligible)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-        messageParam = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "PA")),
-        messageParam2 = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "ML")))
+        messageParam = Some(BenefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "PA")),
+        messageParam2 = Some(BenefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "ML")))
     else if(transferorIncome > PERSONAL_ALLOWANCE) {
       val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
       formatter.setMaximumFractionDigits(0)
@@ -66,7 +66,7 @@ trait EligibilityCalculatorService {
   private def partialEligibilityScenario(transferorIncome: Int, recipientIncome: Int,
                                          countryOfResidence: Country, countryTaxBands: List[TaxBand]): EligibilityCalculatorResult = {
     val possibleGain = calculateGain(transferorIncome, recipientIncome, countryOfResidence, countryTaxBands)
-    if(possibleGain>=1)
+    if(possibleGain >= 1)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(possibleGain))
     else
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
