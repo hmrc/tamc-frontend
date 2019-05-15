@@ -26,6 +26,7 @@ import uk.gov.hmrc.time
 import utils.BenefitCalculatorHelper
 
 import scala.io.Source
+import play.api.Logger
 
 object EligibilityCalculatorService extends EligibilityCalculatorService
 
@@ -42,16 +43,17 @@ trait EligibilityCalculatorService {
     if(transferorIncome>recipientIncome)
       EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
     else if(bothOverMaxLimit)
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible-" +
-        currentTaxYear, messageParam = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "ML")))
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible",
+        messageParam = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "ML")))
     else if(recipientNotEligible)
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible-" +
-        currentTaxYear, messageParam = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "PA")), messageParam2 = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "ML")))
+      EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
+        messageParam = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "PA")),
+        messageParam2 = Some(BenefitCalculatorHelper.currencyFormatter(countryOfResidence, "ML")))
     else if(transferorIncome > PERSONAL_ALLOWANCE) {
       val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
       formatter.setMaximumFractionDigits(0)
       val paFormat = formatter.format(PERSONAL_ALLOWANCE)
-      EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple-" + currentTaxYear, messageParam = Some(paFormat))
+      EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple", messageParam = Some(paFormat))
     } else if(hasMaxBenefit) {
       val basicRate = getCountryTaxBandsFromFile(countryOfResidence).find(band => band.name == "BasicRate").head.rate
       val maxBenefit = (MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER * basicRate).ceil.toInt

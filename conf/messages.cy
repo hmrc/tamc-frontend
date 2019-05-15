@@ -169,6 +169,7 @@ hmrc.contact-details-7=Ar gau ar Ddydd Sul a gwyliau’r banc.
 hmrc.contact-detials.calling.time=Yr amser gorau i gysylltu &#226; ni
 hmrc.contact-details-8=Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener.
 hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Gwybodaeth am gost galwadau</a>
+
 #********************************************************************************
 # Eligibility Calculator
 #********************************************************************************
@@ -190,6 +191,7 @@ pages.calc.skip-it=Ewch heibio
 estimate.tax.saving=Cyfrifo
 eligibility.feedback.gain=Ar sail yr wybodaeth yr ydych wedi’i rhoi i ni, byddech yn elwa o tua <strong>£{0}</strong> y flwyddyn fel p&#226;r.
 eligibility.feedback.loose=Ni fyddwch yn elwa fel pâr fod.
+
 #********************************************************************************
 # Year selection
 #********************************************************************************
@@ -197,42 +199,27 @@ eligibility.feedback.loose=Ni fyddwch yn elwa fel pâr fod.
 pages.multi-year-select.heading=Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
 #Single-year select
 pages.form.field.description.selectedYear=Mae angen i chi ddewis ateb
+
 #********************************************************************************
 # Should be added every year
 #********************************************************************************
-eligibility.feedback.transferor-not-eligible-2016=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
-eligibility.feedback.transferor-not-eligible-2017=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
-eligibility.feedback.transferor-not-eligible-2018=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
-eligibility.feedback.transferor-not-eligible-2019=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
-eligibility.feedback.recipient-not-eligible-2016=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
-eligibility.feedback.recipient-not-eligible-2017=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
-eligibility.feedback.recipient-not-eligible-2018=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
-eligibility.feedback.recipient-not-eligible-2019=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
-eligibility.check.unlike-benefit-as-couple-2016=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
-eligibility.check.unlike-benefit-as-couple-2017=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
-eligibility.check.unlike-benefit-as-couple-2018=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
-eligibility.check.unlike-benefit-as-couple-2019=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
-max-benefit-2014=£212
-max-benefit-2015=£212
-max-benefit-2016=£220
-max-benefit-2017=£230
-max-benefit-2018=£238
-max-benefit-2019=£250
-your-income-2015=os oedd eich incwm yn {0} neu’n llai
-your-income-2016=os oedd eich incwm yn {0} neu’n llai
-your-income-2017=os oedd eich incwm yn {0} neu’n llai
-your-income-2018=os oedd eich incwm yn {0} neu’n llai
-your-income-2019=os oedd eich incwm yn {0} neu’n llai
+eligibility.feedback.transferor-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
+eligibility.feedback.recipient-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
+eligibility.check.unlike-benefit-as-couple=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
+max-benefit={0}
+your-income=os oedd eich incwm yn {0} neu’n llai
 income-between-2015=os oedd incwm rhwng {0} {1} a {2}
 income-between-2016=os oedd incwm rhwng {0} {1} a {2}
 income-between-2017=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
 income-between-2018=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
 income-between-2019=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
+
 #********************************************************************************
 # Confirmation Message
 #********************************************************************************
 pages.confirm.html.h1=Gwirio’ch manylion a chadarnhau’r cais
 pages.confirm.html.check-details=Dylech wirio’r manylion yr ydych wedi’i rhoi, a chadarnhau mai’r unigolyn hwn yw’ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,050 o’ch Lwfans Personol iddo/iddi.
+
 #********************************************************************************
 # Eligibility Check
 #********************************************************************************
@@ -263,6 +250,7 @@ eligibility.check.date.of.birth.span.para=I elwa o Lwfans Priodasol, dylai’ch 
 eligibility.check.date.of.birth.span.married=A yw hyn yn berthnasol i chi a’ch partner?
 eligibility.check.date.of.birth.error=Mae''n bosibl y byddwch yn elwa mwy fel pâr drwy wneud cais am <a href="https://www.gov.uk/married-couples-allowance"  data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi wneud cais am Lwfans Priodasol ond ni allwch gael Lwfans Priodasol a Lwfans Pâr Priod ar yr un pryd.
 eligibility.check.do.you.want.to.apply.h1=A ydych am wneud cais am Lwfans Priodasol?
+
 #********************************************************************************
 # Finished Message
 #********************************************************************************

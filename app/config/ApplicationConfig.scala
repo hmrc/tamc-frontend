@@ -19,7 +19,7 @@ package config
 import config.ApplicationConfig.loadConfig
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
-import play.api.{Configuration, Play}
+import play.api.{Configuration, Logger, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 
@@ -76,7 +76,12 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
 
-  val PERSONAL_ALLOWANCE = runModeConfiguration.getInt("personal-allowance-" + currentTaxYear).get
+//  val PERSONAL_ALLOWANCE = runModeConfiguration.getInt("personal-allowance-" + currentTaxYear).get
+val PERSONAL_ALLOWANCE = {
+  Logger.debug(s"*******************************\n\n currentTaxYear::::::$currentTaxYear")
+  runModeConfiguration.getInt("personal-allowance-" + currentTaxYear).get
+}
+
   val MAX_LIMIT = runModeConfiguration.getInt("max-limit-" + currentTaxYear).get
   val MAX_LIMIT_SCOT = runModeConfiguration.getInt("max-limit-scot-" + currentTaxYear).get
   val MAX_LIMIT_WALES = runModeConfiguration.getInt("max-limit-wales-" + currentTaxYear).get
