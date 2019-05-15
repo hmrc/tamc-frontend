@@ -417,7 +417,7 @@ class TransferControllerTest extends ControllerBaseSpec {
       val data = List(
         (new TransferorNotFound, INTERNAL_SERVER_ERROR, "transferor.not.found"),
         (new RecipientNotFound, INTERNAL_SERVER_ERROR, "recipient.not.found.para1"),
-        (new TransferorDeceased, INTERNAL_SERVER_ERROR, "transferor.not.found"),
+        (new TransferorDeceased, INTERNAL_SERVER_ERROR, "technical.transferor-dead-p1"),
         (new CacheRecipientInRelationship, INTERNAL_SERVER_ERROR, "recipient.has.relationship.para1"),
         (new CannotCreateRelationship, INTERNAL_SERVER_ERROR, "create.relationship.failure"),
         (new NoTaxYearsAvailable, OK, "transferor.no-eligible-years"),

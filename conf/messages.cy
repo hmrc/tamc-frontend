@@ -148,6 +148,7 @@ title.make-a-change=Canslo’ch Lwfans Priodasol
 title.bereavement=Profedigaeth
 title.divorce=Dyddiad ysgaru neu ddod &#226;’r bartneriaeth sifil i ben
 title.date-of-marriage=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
+title.cannot-use-service=Ni allwch ddefnyddio’r gwasanaeth hwn
 #********************************************************************************
 # User Status
 #********************************************************************************
@@ -480,6 +481,8 @@ technical.cannot-find-details.h1=Ni allwn ddod o hyd i fanylion eich Lwfans Prio
 technical.cannot-find-details.para1=Ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio
 technical.technical-error.h1=Mae problem dechnegol wedi codi
 technical.technical-error.para1=Rhowch gynnig arall arni. Os yw’r broblem yn parhau, ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio.
+technical.transferor-dead-p1=Cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM
+technical.transferor-dead-p2=os bydd angen i chi drafod eich cais am Lwfans Priodasol.
 #********************************************************************************
 # history page
 #********************************************************************************
