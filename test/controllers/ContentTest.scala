@@ -18,6 +18,7 @@ package controllers
 
 import java.text.NumberFormat
 
+import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import models._
 import org.joda.time.LocalDate
@@ -27,7 +28,6 @@ import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
-import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -39,8 +39,8 @@ class ContentTest extends ControllerBaseSpec {
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
-    "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
-    "Insurance is taken off."
+      "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
+      "Insurance is taken off."
 
   val ERROR_HEADING = "There is a problem"
 
@@ -853,7 +853,7 @@ class ContentTest extends ControllerBaseSpec {
 
     "successfully authenticate the user and have lower earner page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() )
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE())
       val result = eligibilityController.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
@@ -924,7 +924,9 @@ class ContentTest extends ControllerBaseSpec {
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+
   def transferController: TransferController = new TransferController(
     messagesApi,
     instanceOf[AuthenticatedActionRefiner],

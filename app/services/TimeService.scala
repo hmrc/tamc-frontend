@@ -40,13 +40,13 @@ trait TimeService {
       case EndReasonCode.DIVORCE_CY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes.plusDays(1)
       case EndReasonCode.DIVORCE_PY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).starts
     }
-  
+
   def getCurrentDate: LocalDate = LocalDate.now()
-    
+
   def getCurrentTaxYear: Int = currentTaxYear.startYear
-    
+
   def getTaxYearForDate(date: LocalDate): Int = TaxYear.taxYearFor(date).startYear
-    
+
   def getStartDateForTaxYear(year: Int): LocalDate = TaxYear.firstDayOfTaxYear(year)
 
   def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)

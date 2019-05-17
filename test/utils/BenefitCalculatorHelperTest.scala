@@ -63,7 +63,7 @@ class BenefitCalculatorHelperTest extends UnitSpec with OneAppPerSuite {
 
         val hypotheticalBandsThree = List(
           TaxBand("StarterRate", 11851, 12050, 0.10), TaxBand("BasicRate", 12051, 22050, 0.15), TaxBand("FakeRate1", 22051, 27050, 0.20),
-          TaxBand("FakeRate2", 27051,32050,0.25))
+          TaxBand("FakeRate2", 27051, 32050, 0.25))
 
         val personOne = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - PERSONAL_ALLOWANCE(), hypotheticalBandsThree)
         val personTwo = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(11650 - TRANSFEROR_ALLOWANCE, hypotheticalBandsThree)
@@ -101,24 +101,24 @@ class BenefitCalculatorHelperTest extends UnitSpec with OneAppPerSuite {
     "getCountryTaxBandsFromFile is called" must {
       "return the correct banded income for an English tax payer" in {
         EligibilityCalculatorService.getCountryTaxBandsFromFile(England) shouldBe
-          List(TaxBand("BasicRate",PERSONAL_ALLOWANCE() + 1, MAX_LIMIT(),0.20))
+          List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT(), 0.20))
       }
 
       "return the correct banded income for a Scottish tax payer" in {
         EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland) shouldBe
-          List(TaxBand("StarterRate",PERSONAL_ALLOWANCE() + 1, 14549,0.19),
-            TaxBand("BasicRate",14550, 24944,0.20),
-            TaxBand("IntermediateRate",24945, MAX_LIMIT_SCOT(),0.21))
+          List(TaxBand("StarterRate", PERSONAL_ALLOWANCE() + 1, 14549, 0.19),
+            TaxBand("BasicRate", 14550, 24944, 0.20),
+            TaxBand("IntermediateRate", 24945, MAX_LIMIT_SCOT(), 0.21))
       }
 
       "return the correct banded income for a Welsh tax payer" in {
         EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales) shouldBe
-          List(TaxBand("BasicRate",PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_WALES(),0.20))
+          List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_WALES(), 0.20))
       }
 
       "return the correct banded income for a Northern Irish tax payer" in {
         EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland) shouldBe
-          List(TaxBand("BasicRate",PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_NORTHERN_IRELAND(),0.20))
+          List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_NORTHERN_IRELAND(), 0.20))
       }
     }
   }

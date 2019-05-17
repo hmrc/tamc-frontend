@@ -26,7 +26,7 @@ class TimeServiceTest extends ControllerBaseSpec {
   def service: TimeService = TimeService
 
   "getEffectiveUntilDate" should {
-    "return end of current tax year" when{
+    "return end of current tax year" when {
       "End reason code is CANCEL" in {
         val timeService = service
         val result = timeService.getEffectiveUntilDate(EndRelationshipReason("CANCEL"))

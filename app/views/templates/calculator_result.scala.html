@@ -18,16 +18,17 @@
 
 @(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit messages: Messages)
 
-    @{
-        calculationResult match {
-            case Some(result) =>
-                val message = result.monetaryGain match {
-                    case None => Html(Messages(result.messageKey, result.messageParam.getOrElse(""), result.messageParam2.getOrElse("")))
-                    case Some(gain) => Html(Messages(result.messageKey, {
-                        gain
-                    }))
-                }
-                Html(s"""<div class="panel panel-border-wide estimator-feedback" id="calculator-result">${message}</div>""")
-            case None => ""
-        }
-    }
+@{
+calculationResult match {
+case Some(result) =>
+val message = result.monetaryGain match {
+case None => Html(Messages(result.messageKey, result.messageParam.getOrElse(""), result.messageParam2.getOrElse("")))
+case Some(gain) => Html(Messages(result.messageKey, {
+gain
+}))
+}
+Html(s"""
+<div class="panel panel-border-wide estimator-feedback" id="calculator-result">${message}</div>""")
+case None => ""
+}
+}

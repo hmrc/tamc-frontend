@@ -20,8 +20,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 import config.ApplicationConfig._
-import models.{Country, England, NorthernIreland, Scotland, TaxBand, Wales}
-import play.api.Logger
+import models._
 
 object BenefitCalculatorHelper {
 
@@ -49,7 +48,7 @@ object BenefitCalculatorHelper {
             Math.min(
               incomeLessPersonalAllowance - valueOfPreviousBands,
               band.diffBetweenLowerAndUpperThreshold)
-        }
+          }
     }.toMap
   }
 
@@ -61,7 +60,7 @@ object BenefitCalculatorHelper {
   }
 
   def setCurrencyFormat(country: Country, allowanceType: String): String = {
-    val limit: Int = if(allowanceType == "PA") {
+    val limit: Int = if (allowanceType == "PA") {
       PERSONAL_ALLOWANCE() + 1
     } else {
       maxLimit(country)

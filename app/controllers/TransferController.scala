@@ -16,8 +16,8 @@
 
 package controllers
 
-import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
 import config.ApplicationConfig
+import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
 import errors._
 import forms.CurrentYearForm.currentYearForm
 import forms.DateOfMarriageForm.dateOfMarriageForm
@@ -41,11 +41,11 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferController @Inject()(
-                                   override val messagesApi: MessagesApi,
-                                   authenticatedActionRefiner: AuthenticatedActionRefiner,
-                                   registrationService: TransferService,
-                                   cachingService: CachingService,
-                                   timeService: TimeService
+                                    override val messagesApi: MessagesApi,
+                                    authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                    registrationService: TransferService,
+                                    cachingService: CachingService,
+                                    timeService: TimeService
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever) extends BaseController {
 

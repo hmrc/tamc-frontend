@@ -19,29 +19,31 @@
 @import models.auth.AuthenticatedUserRequest
 
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(
-    implicit messages: Messages,
-        request: AuthenticatedUserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+implicit messages: Messages,
+request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.finished"))
+title = Messages("title.application.pattern", Messages("title.finished"))
 ){
 
-    <div class="highlighted-event govuk-box-highlight">
-        <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")"> @Html(Messages("pages.finished.successful"))</h1>
-    </div>
+<div class="highlighted-event govuk-box-highlight">
+    <h1 class="heading-large"><img src="@routes.Assets.at(" images/tick.png")">
+        @Html(Messages("pages.finished.successful"))</h1>
+</div>
 
-    <p id="paragraph-1">@Html(Messages("pages.finished.para1.email1", transferorEmail)) @Html(Messages("pages.finished.para1.email2"))</p>
-    <p id="paragraph-2">@Html(Messages("pages.finished.para2"))</p>
-    <h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
-    <p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
+<p id="paragraph-1">@Html(Messages("pages.finished.para1.email1", transferorEmail))
+    @Html(Messages("pages.finished.para1.email2"))</p>
+<p id="paragraph-2">@Html(Messages("pages.finished.para2"))</p>
+<h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
+<p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
 
-    @if(!request.authState.isLoggedIn){
-        <div class="panel-indent panel panel-border-wide">
-            <p>@Html(Messages("pages.finished.backdated-payments"))</p>
-        </div>
-    }
+@if(!request.authState.isLoggedIn){
+<div class="panel-indent panel panel-border-wide">
+    <p>@Html(Messages("pages.finished.backdated-payments"))</p>
+</div>
+}
 
-    <p id="paragraph-5">@Html(Messages("pages.finished.check-link-para", "/personal-account"))</p>
+<p id="paragraph-5">@Html(Messages("pages.finished.check-link-para", "/personal-account"))</p>
 }

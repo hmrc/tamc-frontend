@@ -19,30 +19,30 @@ package models
 import play.api.libs.json.Json
 
 case class RelationshipRecordWrapper(
-  relationships: Seq[RelationshipRecord],
-  userRecord: Option[LoggedInUserInfo] = None)
+                                      relationships: Seq[RelationshipRecord],
+                                      userRecord: Option[LoggedInUserInfo] = None)
 
 case class RelationshipRecord(
-  participant: String,
-  creationTimestamp: String,
-  participant1StartDate: String,
-  relationshipEndReason: Option[String] = None,
-  participant1EndDate: Option[String] = None,
-  otherParticipantInstanceIdentifier: String,
-  otherParticipantUpdateTimestamp: String)
+                               participant: String,
+                               creationTimestamp: String,
+                               participant1StartDate: String,
+                               relationshipEndReason: Option[String] = None,
+                               participant1EndDate: Option[String] = None,
+                               otherParticipantInstanceIdentifier: String,
+                               otherParticipantUpdateTimestamp: String)
 
 case class RelationshipRecordList(
-    activeRelationship: Option[RelationshipRecord] = None,
-    historicRelationships: Option[Seq[RelationshipRecord]] = None,
-    LoggedInUserInfo: Option[LoggedInUserInfo] = None,
-    activeRecord: Boolean,
-    historicRecord: Boolean,
-    historicActiveRecord: Boolean) {
+                                   activeRelationship: Option[RelationshipRecord] = None,
+                                   historicRelationships: Option[Seq[RelationshipRecord]] = None,
+                                   LoggedInUserInfo: Option[LoggedInUserInfo] = None,
+                                   activeRecord: Boolean,
+                                   historicRecord: Boolean,
+                                   historicActiveRecord: Boolean) {
 
   def this(
-    activeRelationship: Option[RelationshipRecord],
-    historicRelationships: Option[Seq[RelationshipRecord]],
-    loggedInUserInfo: Option[LoggedInUserInfo]) = this(activeRelationship,
+            activeRelationship: Option[RelationshipRecord],
+            historicRelationships: Option[Seq[RelationshipRecord]],
+            loggedInUserInfo: Option[LoggedInUserInfo]) = this(activeRelationship,
     historicRelationships, loggedInUserInfo,
     activeRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isEmpty,
     historicRecord = historicRelationships.isDefined,

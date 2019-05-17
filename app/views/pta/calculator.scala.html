@@ -21,64 +21,68 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 
 @(calculatorForm: Form[models.EligibilityCalculatorInput],
-        calculationResult: Option[models.EligibilityCalculatorResult] = None
+calculationResult: Option[models.EligibilityCalculatorResult] = None
 )(implicit messages: Messages,
-        request: RequestWithAuthState[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: RequestWithAuthState[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.pattern", Messages("title.eligibility-criteria"))
+title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
-    @templates.form_error_notification(calculatorForm)
-    <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
-    <p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("pages.calc.skip-it"))</a></p>
+@templates.form_error_notification(calculatorForm)
+<h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
+<p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a
+        href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("pages.calc.skip-it"))</a></p>
 
-    <p>@Html(Messages("pages.calc.para1"))</p>
+<p>@Html(Messages("pages.calc.para1"))</p>
 
-    @helpers.form(action = routes.EligibilityController.ptaCalculatorAction(), args = ('id -> "calculator")) {
-        <fieldset>
-            <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
-            <div class="form-group">
-                @input_radio_group(
-                calculatorForm("country"),
-                Seq(
-                "england" -> Messages("label.england"),
-                "northernireland" -> Messages("label.ni"),
-                "scotland" -> Messages("label.scotland"),
-                "wales" -> Messages("label.wales")
-                ),
-                '_legendClass -> "heading-small",
-                '_legend -> Messages("pages.calc.where")
-                )
-            </div>
-            <div class="form-group">
-            @templates.input(calculatorForm("transferor-income"),
-                '_label -> Html(Messages("pages.form.field.income")),
-                '_labelClass -> "form-label-bold",
-                '_inputClass -> "form-control",
-                '_inputPrefix -> "£",
-                '_dataAttributes -> "autocomplete=on"
-            )
-            </div>
-            <div class="form-group">
-            @templates.input(calculatorForm("recipient-income"),
-                '_label -> Html(Messages("pages.form.field.recipient-income")),
-                '_labelClass -> "form-label-bold",
-                '_inputClass -> "form-control",
-                '_inputPrefix -> "£",
-                '_dataAttributes -> "autocomplete=on"
-            )
-            </div>
-        </fieldset>
-        @templates.calculator_result(calculationResult)
-        <p><button class="button button-calculate" data-journey-click="marriage-allowance:click:calculate" id="calculate" type="submit">@Html(Messages("estimate.tax.saving"))</button>
-        </p>
-        <div class="calculator-apply-link">
-            <p>
-                <a id="continue" href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("change.status.apply"))</a>
-            </p>
-        </div>
-    }
-    <a href="@controllers.routes.EligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>
+@helpers.form(action = routes.EligibilityController.ptaCalculatorAction(), args = ('id -> "calculator")) {
+<fieldset>
+    <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
+    <div class="form-group">
+        @input_radio_group(
+        calculatorForm("country"),
+        Seq(
+        "england" -> Messages("label.england"),
+        "northernireland" -> Messages("label.ni"),
+        "scotland" -> Messages("label.scotland"),
+        "wales" -> Messages("label.wales")
+        ),
+        '_legendClass -> "heading-small",
+        '_legend -> Messages("pages.calc.where")
+        )
+    </div>
+    <div class="form-group">
+        @templates.input(calculatorForm("transferor-income"),
+        '_label -> Html(Messages("pages.form.field.income")),
+        '_labelClass -> "form-label-bold",
+        '_inputClass -> "form-control",
+        '_inputPrefix -> "£",
+        '_dataAttributes -> "autocomplete=on"
+        )
+    </div>
+    <div class="form-group">
+        @templates.input(calculatorForm("recipient-income"),
+        '_label -> Html(Messages("pages.form.field.recipient-income")),
+        '_labelClass -> "form-label-bold",
+        '_inputClass -> "form-control",
+        '_inputPrefix -> "£",
+        '_dataAttributes -> "autocomplete=on"
+        )
+    </div>
+</fieldset>
+@templates.calculator_result(calculationResult)
+<p>
+    <button class="button button-calculate" data-journey-click="marriage-allowance:click:calculate" id="calculate"
+            type="submit">@Html(Messages("estimate.tax.saving"))
+    </button>
+</p>
+<div class="calculator-apply-link">
+    <p>
+        <a id="continue" href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("change.status.apply"))</a>
+    </p>
+</div>
+}
+<a href="@controllers.routes.EligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>
 }

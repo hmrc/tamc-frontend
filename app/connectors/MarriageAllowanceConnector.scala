@@ -42,7 +42,7 @@ trait MarriageAllowanceConnector {
   def marriageAllowanceUrl: String
 
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordWrapper] =
-    httpGet.GET[RelationshipRecordStatusWrapper](s"${marriageAllowanceUrl}/paye/${transferorNino}/list-relationship") map {
+    httpGet.GET[RelationshipRecordStatusWrapper](s"$marriageAllowanceUrl/paye/$transferorNino/list-relationship") map {
       case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK"))      => relationshipRecordWrapper
       case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
       case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND))    => throw CitizenNotFound()
@@ -50,12 +50,12 @@ trait MarriageAllowanceConnector {
     }
 
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    httpPost.POST(s"${marriageAllowanceUrl}/paye/${transferorNino}/get-recipient-relationship", body = recipientData)
+    httpPost.POST(s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData)
 
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    httpPut.PUT(s"${marriageAllowanceUrl}/paye/${transferorNino}/create-multi-year-relationship/${journey}", data)
+    httpPut.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/$journey", data)
   }
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    httpPut.PUT(s"${marriageAllowanceUrl}/paye/${transferorNino}/update-relationship", data)
+    httpPut.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data)
 }

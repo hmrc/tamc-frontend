@@ -1,12 +1,12 @@
 digital-service: Marriage Allowance
 
 leakDetectionExemptions:
- - ruleId: 'tax_service_gov_uk'
-   filePaths: 
+  - ruleId: 'tax_service_gov_uk'
+    filePaths:
       - '/test/controllers/ContentTest.scala'
       - '/conf/messages.cy'
       - '/conf/messages'
       - '/conf/application.conf'
-   
-  
+
+
 repoVisibility: public_0C3F0CE3E6E6448FAD341E7BFA50FCD333E06A20CFF05FCACE61154DDBBADF71

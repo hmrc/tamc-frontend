@@ -16,6 +16,7 @@
 
 package controllers
 
+import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import models._
 import org.joda.time.LocalDate
@@ -24,7 +25,6 @@ import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
-import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -228,7 +228,9 @@ class RoutesTest extends ControllerBaseSpec {
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+
   def transferController: TransferController = new TransferController(
     messagesApi,
     instanceOf[AuthenticatedActionRefiner],

@@ -26,8 +26,9 @@ import uk.gov.hmrc.time.TaxYear
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override protected def mode: Mode = Play.current.mode
+
   override protected def runModeConfiguration: Configuration = Play.current.configuration
-  
+
   val currentTaxYear: Int = TaxYear.current.startYear
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
@@ -74,13 +75,20 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
 
-  def actualTaxYear(taxYear: Int = 0): Int = if(taxYear == 0) currentTaxYear else taxYear
+  def actualTaxYear(taxYear: Int = 0): Int = if (taxYear == 0) currentTaxYear else taxYear
+
   def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)
+
   def MAX_LIMIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-" + actualTaxYear(taxYear)).getOrElse(0)
+
   def MAX_LIMIT_SCOT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-scot-" + actualTaxYear(taxYear)).getOrElse(0)
+
   def MAX_LIMIT_WALES(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-wales-" + actualTaxYear(taxYear)).getOrElse(0)
+
   def MAX_LIMIT_NORTHERN_IRELAND(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-northern-ireland-" + actualTaxYear(taxYear)).getOrElse(0)
+
   def MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-allowed-personal-allowance-transfer-" + actualTaxYear(taxYear)).getOrElse(0)
+
   def MAX_BENEFIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-benefit-" + actualTaxYear(taxYear)).getOrElse(0)
 
   val TRANSFEROR_ALLOWANCE: Int = PERSONAL_ALLOWANCE() - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()

@@ -82,7 +82,7 @@ trait TransferService {
       case _ => throw CacheMissingTransferor()
     }
 
-  def createRelationship(transferorNino: Nino, journey: String)(implicit hc: HeaderCarrier, messages:Messages, ec: ExecutionContext): Future[NotificationRecord] = {
+  def createRelationship(transferorNino: Nino, journey: String)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
     doCreateRelationship(transferorNino, journey)(hc, messages, ec) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
@@ -204,7 +204,7 @@ trait TransferService {
     marriageAllowanceConnector.getRecipientRelationship(transferorNino, recipientData) map {
       httpResponse =>
         Json.fromJson[GetRelationshipResponse](httpResponse.json).get match {
-          case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) =>(recipientRecord, availableYears)
+          case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => (recipientRecord, availableYears)
           case GetRelationshipResponse(_, _, ResponseStatus(TRANSFEROR_DECEASED)) => throw TransferorDeceased()
           case _ => throw RecipientNotFound()
         }

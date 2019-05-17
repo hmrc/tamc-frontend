@@ -19,39 +19,40 @@
 @import models.auth.UserRequest
 
 @(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
-        request: UserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.divorce")),
-    mainConfig = views.helpers.MainConfig()) {
-   
-    @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
-        
-        <h1 class="heading-xlarge text mainpage">@Html(Messages("change.status.divorce.date.invalid.h1"))</h1>
-        <p style="margin-top:-15px">@Html(Messages("change.status.divorce.date.invalid.para1"))</p>
-        <p>@Html(Messages("change.status.divorce.date.invalid.para2"))</p>
-        <p>@Html(Messages("change.status.divorce.date.invalid.para3"))</p>
+title = Messages("title.pattern", Messages("title.divorce")),
+mainConfig = views.helpers.MainConfig()) {
 
-        <strong>@Html(Messages("hmrc.contact-details"))</strong>
-	    <ul>
-	        <li>@Html(Messages("hmrc.contact-details-2"))</li>
-	        <li>@Html(Messages("hmrc.contact-details-3"))</li>
-	        <li>@Html(Messages("hmrc.contact-details-4"))</li>
-	        <li>@Html(Messages("hmrc.contact-details-5"))</li>
-	        <li>@Html(Messages("hmrc.contact-details-6"))</li>
-	        <li>@Html(Messages("hmrc.contact-details-7"))</li>
-	        <li>@Html(Messages("hmrc.contact-details-8"))</li>
-	        <li>@Html(Messages("hmrc.contact-details-9"))</li>
-	    </ul>
+@helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
 
-        <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
-        <input name="historicActiveRecord" type="hidden" id="historicActiveRecord" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
-        <input name="endReason" id="endReason" type="hidden" value="@EndReasonCode.DIVORCE"/>
-        <p>
-            <button class="button" type="submit" >@Html(Messages("generic.back"))</button>
-        </p>
-    }
-        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<h1 class="heading-xlarge text mainpage">@Html(Messages("change.status.divorce.date.invalid.h1"))</h1>
+<p style="margin-top:-15px">@Html(Messages("change.status.divorce.date.invalid.para1"))</p>
+<p>@Html(Messages("change.status.divorce.date.invalid.para2"))</p>
+<p>@Html(Messages("change.status.divorce.date.invalid.para3"))</p>
+
+<strong>@Html(Messages("hmrc.contact-details"))</strong>
+<ul>
+    <li>@Html(Messages("hmrc.contact-details-2"))</li>
+    <li>@Html(Messages("hmrc.contact-details-3"))</li>
+    <li>@Html(Messages("hmrc.contact-details-4"))</li>
+    <li>@Html(Messages("hmrc.contact-details-5"))</li>
+    <li>@Html(Messages("hmrc.contact-details-6"))</li>
+    <li>@Html(Messages("hmrc.contact-details-7"))</li>
+    <li>@Html(Messages("hmrc.contact-details-8"))</li>
+    <li>@Html(Messages("hmrc.contact-details-9"))</li>
+</ul>
+
+<input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
+<input name="historicActiveRecord" type="hidden" id="historicActiveRecord"
+       value="@changeRelationshipForm.get.historicActiveRecord.get"/>
+<input name="endReason" id="endReason" type="hidden" value="@EndReasonCode.DIVORCE"/>
+<p>
+    <button class="button" type="submit">@Html(Messages("generic.back"))</button>
+</p>
+}
+<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

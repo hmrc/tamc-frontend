@@ -23,151 +23,182 @@
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
-@(changeRelationshipForm: Form[ChangeRelationship], 
-    activeRelationship: Option[RelationshipRecord], 
-    historicRelationships: Option[Seq[RelationshipRecord]], 
-    loggedInUserInfo: Option[LoggedInUserInfo], 
-    activeRecord: Boolean, 
-    historicRecord: Boolean, 
-    historicActiveRecord: Boolean,
-    canApplyPreviousYears: Boolean,
-    endOfYear: Option[org.joda.time.LocalDate]
-    )(implicit messages: Messages,
-        request: AuthenticatedUserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(changeRelationshipForm: Form[ChangeRelationship],
+activeRelationship: Option[RelationshipRecord],
+historicRelationships: Option[Seq[RelationshipRecord]],
+loggedInUserInfo: Option[LoggedInUserInfo],
+activeRecord: Boolean,
+historicRecord: Boolean,
+historicActiveRecord: Boolean,
+canApplyPreviousYears: Boolean,
+endOfYear: Option[org.joda.time.LocalDate]
+)(implicit messages: Messages,
+request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.pattern", Messages("title.history")),
-  mainConfig = views.helpers.MainConfig()
+title = Messages("title.pattern", Messages("title.history")),
+mainConfig = views.helpers.MainConfig()
 ) {
-		<h1 class="heading-xlarge">@Html(Messages("generic.ma"))
-			<div class="secondary-text-colour bold-xlarge">@loggedInUserInfo.get.name.get.firstName @loggedInUserInfo.get.name.get.lastName</div>
-		</h1>
+<h1 class="heading-xlarge">@Html(Messages("generic.ma"))
+    <div class="secondary-text-colour bold-xlarge">@loggedInUserInfo.get.name.get.firstName
+        @loggedInUserInfo.get.name.get.lastName
+    </div>
+</h1>
 
-		@helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
-			<div class="grid-row" >
-				<div class="column-two-thirds">
-					<style type="text/css">
+@helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <style type="text/css">
 						.content__body {
 							float: left;
 							width: 100%;
 						}"
-					</style>
 
-				@if(activeRecord) {
-                    @if(activeRelationship.get.participant == "Transferor") {
-                        <p id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
-                    } else {
-                        <p id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
-                    }
-                    <div class="panel-indent panel panel-border-wide">
-                        <p>@Html(Messages("pages.finished.backdated-payments"))</p>
-                    </div>
-					<div>
-						<p>@Html(Messages("pages.history.cancellation1"))</p>
-                        <p>@Html(Messages("pages.history.cancellation2"))</p>
-                        <i class="icon icon-important">
-                            <span class="visually-hidden">@Html(Messages("pages.finished.hidden-warning"))</span>
-                        </i>
-                        <strong class="heading-small">
-                            @Html(Messages("pages.history.cancellation"))
-                        </strong>
-					</div>
-					<input name="role" id="role" type="hidden" value="@activeRelationship.get.participant"/>
-					<input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/><br class="clear">
-					<div class="form-group">
-						<button id="cancel-marriage-allowance" class="button move-left" type="submit" data-journey-click="marriage-allowance:button:history_cancel">@Html(Messages("change.status.button"))</button>
-					</div>
-				} else {
-					@if(historicActiveRecord) {
-						@if(historicRelationships.get(0).participant == "Transferor") {
-							<p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
-							<p>@Html(Messages("change.status.transferor.stop-sooner"))</p>
-							<p>
-							  <button class="button" type="submit" >@Html(Messages("change.status.transferor.ha.button"))</button>
-							</p>
-						} else {
-							<p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount", TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
-							<p>@Html(Messages("change.status.recipient.stop-sooner"))</p>
-							<p>
-							  <button class="button" type="submit" >@Html(Messages("change.status.recipient.ha.button"))</button>
-							</p>
-						}
-						<input name="role" id="role" type="hidden" value="@historicRelationships.get(0).participant"/>
-						<input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
-					} else {
+        </style>
 
-						<p class="lede" style="margin-top:-30px">@Html(Messages("change.status.have-not-applied"))</p>
-						<p class="heading-medium">@Html(Messages("change.status.apply"))</p>
-						<p>@Html(Messages("change.status.ask-to-check"))</p>
-						<a class="button button-start" id="start-now" href="@controllers.routes.EligibilityController.howItWorks()" role="button">@Html(Messages("generic.start-now"))</a>
-					}
-				}
-            }
-
-			@if(canApplyPreviousYears) {
-				<div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
-				<a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a></div>
-			 }
-            <div id="historicRecords">
-                <section>
-                    <h3 class="heading-medium blue-underline-no-padding">@Html(Messages("change.status.history.h4"))</h3>
-                    <table>
-                        <tr>
-                            <th>@Html(Messages("change.status.start-date"))</th>
-                            <th colspan="2">@Html(Messages("change.status.history.reason"))</th>
-                        </tr>
-                        @if(activeRecord) {
-                        <tr>
-                            <td id="active">@TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh =LanguageUtils.isWelsh(messages))</td>
-                            <td id="active-reason" colspan="2">@Html(Messages("change.status.active"))</td>
-                        </tr>
-                        }
-                        @if(historicRecord) {
-                            @for((historicRelationship, index) <- historicRelationships.get.zipWithIndex) {
-                                <tr>
-                                    <td id="line@index-start">@TextGenerators.taxDateIntervalString(historicRelationship.participant1StartDate, Some(historicRelationship.participant1EndDate.get),LanguageUtils.isWelsh(messages))</td>
-                                    <td id="line@index-reason">
-                                        @Html(Messages(s"coc.end-reason.${historicRelationship.relationshipEndReason.getOrElse("")}"))
-                                    </td>
-                                    @(historicRelationship.relationshipEndReason.get, historicRelationship.participant) match {
-                                        case (("DIVORCE"|"CANCELLED"|"RETROSPECTIVE"), "Recipient") => {
-                                            <td>
-                                                @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> s"line${index}-remove")) {
-                                                <input name="role" id="role" type="hidden" value="@historicRelationship.participant"/>
-                                                <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
-                                                <input name="endReason" id="endReason-reject" type="hidden" value="@EndReasonCode.REJECT"/>
-                                                <input name="creationTimestamp" id="creationTimestamp" type="hidden" value="@historicRelationship.creationTimestamp"/>
-                                                <button class="remove-block" type="submit" data-journey-click="marriage-allowance:link:history_remove">@Html(Messages("pages.history.button.remove"))</button>
-                                                }
-                                            </td>
-                                        }
-                                        case _ => {
-                                            <td></td>
-                                        }
-                                    }
-                                </tr>
-                            }
-                        }
-                    </table>
-                </section>
-            </div>
-
-            </div>
-            <div class="column-one-third">
-                <h2 class="heading-medium no-top-margin space">@Html(Messages("change.other.caption"))</h2>
-
-                <h2 class="heading-small">@Html(Messages("change.other.sub.caption1"))</h2>
-                <p class=font-xsmall>@Html(Messages("change.other.income.content", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()),
-                    NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()+1),NumberFormat.getIntegerInstance().format(MAX_LIMIT()),NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())))</p>
-                <p id="incomeMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.changeOfIncome" id="incomeLink" data-journey-click="marriage-allowance:link:history_income">@Html(Messages("change.other.income.link"))</a>.</p>
-                <h2 class="heading-small">@Html(Messages("change.other.sub.caption2"))</h2>
-                <p class=font-xsmall>@Html(Messages("change.other.bereavement.content"))</p>
-                <p id="bereavementMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.bereavement" id="bereavementLink" data-journey-click="marriage-allowance:link:history_bereavement">@Html(Messages("change.other.bereavement.link"))</a>.</p>
-            </div>
+        @if(activeRecord) {
+        @if(activeRelationship.get.participant == "Transferor") {
+        <p id="activeRecord">@Html(Messages("pages.history.help.partner"))</p>
+        } else {
+        <p id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
+        }
+        <div class="panel-indent panel panel-border-wide">
+            <p>@Html(Messages("pages.finished.backdated-payments"))</p>
         </div>
-        <script>
+        <div>
+            <p>@Html(Messages("pages.history.cancellation1"))</p>
+            <p>@Html(Messages("pages.history.cancellation2"))</p>
+            <i class="icon icon-important">
+                <span class="visually-hidden">@Html(Messages("pages.finished.hidden-warning"))</span>
+            </i>
+            <strong class="heading-small">
+                @Html(Messages("pages.history.cancellation"))
+            </strong>
+        </div>
+        <input name="role" id="role" type="hidden" value="@activeRelationship.get.participant"/>
+        <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/><br
+            class="clear">
+        <div class="form-group">
+            <button id="cancel-marriage-allowance" class="button move-left" type="submit"
+                    data-journey-click="marriage-allowance:button:history_cancel">
+                @Html(Messages("change.status.button"))
+            </button>
+        </div>
+        } else {
+        @if(historicActiveRecord) {
+        @if(historicRelationships.get(0).participant == "Transferor") {
+        <p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount",
+            TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
+        <p>@Html(Messages("change.status.transferor.stop-sooner"))</p>
+        <p>
+            <button class="button" type="submit">@Html(Messages("change.status.transferor.ha.button"))</button>
+        </p>
+        } else {
+        <p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount",
+            TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
+        <p>@Html(Messages("change.status.recipient.stop-sooner"))</p>
+        <p>
+            <button class="button" type="submit">@Html(Messages("change.status.recipient.ha.button"))</button>
+        </p>
+        }
+        <input name="role" id="role" type="hidden" value="@historicRelationships.get(0).participant"/>
+        <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
+        } else {
+
+        <p class="lede" style="margin-top:-30px">@Html(Messages("change.status.have-not-applied"))</p>
+        <p class="heading-medium">@Html(Messages("change.status.apply"))</p>
+        <p>@Html(Messages("change.status.ask-to-check"))</p>
+        <a class="button button-start" id="start-now" href="@controllers.routes.EligibilityController.howItWorks()"
+           role="button">@Html(Messages("generic.start-now"))</a>
+        }
+        }
+        }
+
+        @if(canApplyPreviousYears) {
+        <div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
+            <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a>
+        </div>
+        }
+        <div id="historicRecords">
+            <section>
+                <h3 class="heading-medium blue-underline-no-padding">@Html(Messages("change.status.history.h4"))</h3>
+                <table>
+                    <tr>
+                        <th>@Html(Messages("change.status.start-date"))</th>
+                        <th colspan="2">@Html(Messages("change.status.history.reason"))</th>
+                    </tr>
+                    @if(activeRecord) {
+                    <tr>
+                        <td id="active">
+                            @TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh
+                            =LanguageUtils.isWelsh(messages))
+                        </td>
+                        <td id="active-reason" colspan="2">@Html(Messages("change.status.active"))</td>
+                    </tr>
+                    }
+                    @if(historicRecord) {
+                    @for((historicRelationship, index) <- historicRelationships.get.zipWithIndex) {
+                    <tr>
+                        <td id="line@index-start">
+                            @TextGenerators.taxDateIntervalString(historicRelationship.participant1StartDate,
+                            Some(historicRelationship.participant1EndDate.get),LanguageUtils.isWelsh(messages))
+                        </td>
+                        <td id="line@index-reason">
+                            @Html(Messages(s"coc.end-reason.${historicRelationship.relationshipEndReason.getOrElse("")}"))
+                        </td>
+                        @(historicRelationship.relationshipEndReason.get, historicRelationship.participant) match {
+                        case (("DIVORCE"|"CANCELLED"|"RETROSPECTIVE"), "Recipient") => {
+                        <td>
+                            @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args =
+                            ('id -> s"line${index}-remove")) {
+                            <input name="role" id="role" type="hidden" value="@historicRelationship.participant"/>
+                            <input name="historicActiveRecord" id="historicActiveRecord" type="hidden"
+                                   value="@historicActiveRecord"/>
+                            <input name="endReason" id="endReason-reject" type="hidden" value="@EndReasonCode.REJECT"/>
+                            <input name="creationTimestamp" id="creationTimestamp" type="hidden"
+                                   value="@historicRelationship.creationTimestamp"/>
+                            <button class="remove-block" type="submit"
+                                    data-journey-click="marriage-allowance:link:history_remove">
+                                @Html(Messages("pages.history.button.remove"))
+                            </button>
+                            }
+                        </td>
+                        }
+                        case _ => {
+                        <td></td>
+                        }
+                        }
+                    </tr>
+                    }
+                    }
+                </table>
+            </section>
+        </div>
+
+    </div>
+    <div class="column-one-third">
+        <h2 class="heading-medium no-top-margin space">@Html(Messages("change.other.caption"))</h2>
+
+        <h2 class="heading-small">@Html(Messages("change.other.sub.caption1"))</h2>
+        <p class=font-xsmall>@Html(Messages("change.other.income.content",
+            NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()),
+            NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()+1),NumberFormat.getIntegerInstance().format(MAX_LIMIT()),NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())))</p>
+        <p id="incomeMessage" class="font-xsmall"><a
+                href="@controllers.routes.UpdateRelationshipController.changeOfIncome" id="incomeLink"
+                data-journey-click="marriage-allowance:link:history_income">@Html(Messages("change.other.income.link"))</a>.
+        </p>
+        <h2 class="heading-small">@Html(Messages("change.other.sub.caption2"))</h2>
+        <p class=font-xsmall>@Html(Messages("change.other.bereavement.content"))</p>
+        <p id="bereavementMessage" class="font-xsmall"><a
+                href="@controllers.routes.UpdateRelationshipController.bereavement" id="bereavementLink"
+                data-journey-click="marriage-allowance:link:history_bereavement">@Html(Messages("change.other.bereavement.link"))</a>.
+        </p>
+    </div>
+</div>
+<script>
                 var _gaq = [];
-        </script>
+
+</script>
 }

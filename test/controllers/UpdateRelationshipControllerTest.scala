@@ -56,11 +56,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       mockRegistrationService,
       mockCachingService,
       mockTimeService
-  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+    )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
   "History" should {
     "redirect to transfer" when {
-      "has no active record, no historic and temporary authentication" in{
+      "has no active record, no historic and temporary authentication" in {
         when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
@@ -78,7 +78,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
-              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false),true)
+              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
             )
           )
         val result: Future[Result] = controller().history()(request)
@@ -101,7 +101,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "has some historic record" in {
         when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
-            Future.successful((RelationshipRecordData.historicRelationshipRecordList,true))
+            Future.successful((RelationshipRecordData.historicRelationshipRecordList, true))
           )
 
         val result: Future[Result] = controller().history()(request)
@@ -251,7 +251,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   "divorceSelectYear" should {
     "return bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("role"-> "")
+        val request = FakeRequest().withFormUrlEncodedBody("role" -> "")
         val result = controller().divorceSelectYear()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -259,7 +259,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "return a success" when {
       def request = FakeRequest().withFormUrlEncodedBody(
-        "role"-> "some role",
+        "role" -> "some role",
         "endReason" -> "DIVORCE",
         "historicActiveRecord" -> "true",
         "creationTimeStamp" -> "timestamp",
@@ -392,7 +392,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           .thenReturn(endDate)
 
         val result = controller().getConfirmationInfoFromReason(endRelationshipReason, RelationshipRecordData.updateRelationshipCacheData)
-        result shouldBe (true, Some(relationshipEndDate), Some(endDate))
+        result shouldBe(true, Some(relationshipEndDate), Some(endDate))
       }
     }
 
@@ -407,7 +407,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           .thenReturn(endDate)
 
         val result = controller().getConfirmationInfoFromReason(endRelationshipReason, RelationshipRecordData.updateRelationshipCacheData)
-        result shouldBe (false, None, Some(endDate))
+        result shouldBe(false, None, Some(endDate))
       }
 
       "the end reason code is DIVORCE_PY" in {
@@ -417,7 +417,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           .thenReturn(date)
 
         val result = controller().getConfirmationInfoFromReason(endRelationshipReason, RelationshipRecordData.updateRelationshipCacheData)
-        result shouldBe (false, None, Some(date))
+        result shouldBe(false, None, Some(date))
       }
 
       "the end reason code is DIVORCE_CY" in {
@@ -427,7 +427,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           .thenReturn(date)
 
         val result = controller().getConfirmationInfoFromReason(endRelationshipReason, RelationshipRecordData.updateRelationshipCacheData)
-        result shouldBe (false, None, Some(date))
+        result shouldBe(false, None, Some(date))
       }
 
       "the end reason code is CANCEL" in {
@@ -437,7 +437,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           .thenReturn(date)
 
         val result = controller().getConfirmationInfoFromReason(endRelationshipReason, RelationshipRecordData.updateRelationshipCacheData)
-        result shouldBe (false, None, Some(date))
+        result shouldBe(false, None, Some(date))
       }
     }
 
@@ -511,7 +511,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         (new Exception, "technical.issue.para1")
       )
 
-      for((error, message) <- errors) {
+      for ((error, message) <- errors) {
         s"a $error has been thrown" in {
           val result = controller().handleError(HeaderCarrier(), auhtRequest)(error)
           status(result) shouldBe INTERNAL_SERVER_ERROR

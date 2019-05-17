@@ -18,35 +18,35 @@
 @import models.auth.UserRequest
 
 @()(implicit messages: Messages,
-        request: UserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.other-ways")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
-    <h1 class="heading-large">@Html(Messages("technical.other-ways.h1"))</h1>
-    <p id="pta-redirect">@Html(Messages("technical.other-ways.para0"))</p>
-    <p id="unable-to-confirm-identity">@Html(Messages("technical.other-ways.para1"))</p>
-    <p id="need-nino">@Html(Messages("technical.other-ways.para2"))</p>
-    <p><strong>@Html(Messages("hmrc.contact-details"))</strong></p>
+title = Messages("title.pattern", Messages("title.other-ways")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
+<h1 class="heading-large">@Html(Messages("technical.other-ways.h1"))</h1>
+<p id="pta-redirect">@Html(Messages("technical.other-ways.para0"))</p>
+<p id="unable-to-confirm-identity">@Html(Messages("technical.other-ways.para1"))</p>
+<p id="need-nino">@Html(Messages("technical.other-ways.para2"))</p>
+<p><strong>@Html(Messages("hmrc.contact-details"))</strong></p>
 
-    <p>@Html(Messages("hmrc.contact-details-2")) <br>
+<p>@Html(Messages("hmrc.contact-details-2")) <br>
 
-        @if(messages.lang.code == "en"){@Html(Messages("hmrc.contact-details-3")) <br>
-            @Html(Messages("hmrc.contact-details-4"))}else{
-            @Html(Messages("hmrc.contact-details-5"))
-        }
-    </p>
-
-    @if(messages.lang.code == "en"){
-        <p>@Html(Messages("hmrc.contact-details-5")) <br>
-        @Html(Messages("hmrc.contact-details-6"))</p>
-        <p>@Html(Messages("hmrc.contact-details-7")) <br>
-        @Html(Messages("hmrc.contact-details-8"))</p>
+    @if(messages.lang.code == "en"){@Html(Messages("hmrc.contact-details-3")) <br>
+    @Html(Messages("hmrc.contact-details-4"))}else{
+    @Html(Messages("hmrc.contact-details-5"))
     }
-    <p id="call-charges">@Html(Messages("hmrc.contact-details-9"))</p>
+</p>
+
+@if(messages.lang.code == "en"){
+<p>@Html(Messages("hmrc.contact-details-5")) <br>
+    @Html(Messages("hmrc.contact-details-6"))</p>
+<p>@Html(Messages("hmrc.contact-details-7")) <br>
+    @Html(Messages("hmrc.contact-details-8"))</p>
+}
+<p id="call-charges">@Html(Messages("hmrc.contact-details-9"))</p>
 
 }
 

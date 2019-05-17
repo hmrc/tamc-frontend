@@ -21,45 +21,47 @@
 
 @(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)]
 )(implicit messages: Messages,
-        request: RequestWithAuthState[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: RequestWithAuthState[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
 @templates.tamc_main(
-  title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
+title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 ) {
 
-        @templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+@templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
 
-        <h1 class="heading-xlarge">
-            <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
-            @Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
+<h1 class="heading-xlarge">
+    <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
+    @Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
 
-        @helpers.form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
-            <div class="form-group inline">
-                @templates.input_radio_group(
-                    dateofBirthCheckForm("date-of-birth"),
-                    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-                    '_legend -> Html(Messages("eligibility.check.date.of.birth.legend")),
-                    '_legendClass -> "visuallyhidden",
-                    '_labelClass -> "block-label",
-                    '_labelAfter -> true,
-                    '_fieldsetAttributes -> "data-inline-error=married-js-error",
-                    '_groupClass -> "inline spacingBottom"
-                )
-            </div>
+@helpers.form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
+<div class="form-group inline">
+    @templates.input_radio_group(
+    dateofBirthCheckForm("date-of-birth"),
+    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+    '_legend -> Html(Messages("eligibility.check.date.of.birth.legend")),
+    '_legendClass -> "visuallyhidden",
+    '_labelClass -> "block-label",
+    '_labelAfter -> true,
+    '_fieldsetAttributes -> "data-inline-error=married-js-error",
+    '_groupClass -> "inline spacingBottom"
+    )
+</div>
 
-            <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
-            @Html(Messages("eligibility.check.date.of.birth.error"))
-            </div>
+<div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
+    @Html(Messages("eligibility.check.date.of.birth.error"))
+</div>
 
-            <div class="form-group">
-                <button class="button button-calculate" data-journey-click="marriage-allowance:button:married_continue" id="continue" type="submit">
-                @Html(Messages("generic.continue"))
-                </button>
-            </div>
-        }
+<div class="form-group">
+    <button class="button button-calculate" data-journey-click="marriage-allowance:button:married_continue"
+            id="continue" type="submit">
+        @Html(Messages("generic.continue"))
+    </button>
+</div>
+}
 
-        <a href="@controllers.routes.EligibilityController.eligibilityCheck" class="link-back">@Html(Messages("generic.back"))</a>
-    }
+<a href="@controllers.routes.EligibilityController.eligibilityCheck"
+   class="link-back">@Html(Messages("generic.back"))</a>
+}

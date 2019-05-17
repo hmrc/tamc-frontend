@@ -19,5 +19,7 @@ package models.auth
 sealed abstract class AuthState(val isLoggedIn: Boolean, val permanent: Boolean)
 
 case object PermanentlyAuthenticated extends AuthState(true, true)
+
 case object TemporarilyAuthenticated extends AuthState(true, false)
+
 case object Unauthenticated extends AuthState(false, false)

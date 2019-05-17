@@ -17,27 +17,28 @@
 @(formItem: Form[_], fieldName: String, label: Html, extraClass: Option[String], args: (Symbol, Any)*)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-    @import play.api.i18n._
-    @import views.html.helper.FieldElements
+@import play.api.i18n._
+@import views.html.helper.FieldElements
 
-    @elements = @{
-        new FieldElements(formItem(fieldName).id, formItem(fieldName), null, args.toMap, messages)
+@elements = @{
+new FieldElements(formItem(fieldName).id, formItem(fieldName), null, args.toMap, messages)
+}
+
+<fieldset class="@elements.args.get('_groupClass) touch @if(elements.hasErrors) {form-field--error}"
+          id="@fieldName.replaceAll(" [.]", "_")">
+<legend class="form-label-bold"><p class="bold-small">@label</p></legend>
+<div class="form-date">
+    @if(elements.args.get('_hintText).isDefined) {
+    <p class="form-hint">@elements.args.get('_hintText)</p>
     }
 
-    <fieldset class="@elements.args.get('_groupClass) touch @if(elements.hasErrors) {form-field--error}" id="@fieldName.replaceAll("[.]", "_")">
-        <legend class="form-label-bold"> <p class="bold-small" >@label</p></legend>
-        <div class="form-date">
-            @if(elements.args.get('_hintText).isDefined) {
-                <p class="form-hint">@elements.args.get('_hintText)</p>
-            }
-
-            @elements.errors.map { error => <span class="error-notification">@Messages(error)</span>}
-            <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
-                @elements.label
-            </span>
-        <div class="no-touch native-date-picker form-date" id="date-fields">
+    @elements.errors.map { error => <span class="error-notification">@Messages(error)</span>}
+    <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
+    @elements.label
+    </span>
+    <div class="no-touch native-date-picker form-date" id="date-fields">
         @dateFieldsContent(formItem, fieldName)
-        </div>
-        </div>
-    </fieldset>
+    </div>
+</div>
+</fieldset>
     

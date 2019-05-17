@@ -18,16 +18,16 @@
 @import models.auth.UserRequest
 
 @()(implicit messages: Messages,
-        request: UserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.error")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:no-eligible-years")))) {
-    <p id="error">@Html(Messages("transferor.no-eligible-years"))</p>
-    <a href="@controllers.routes.UpdateRelationshipController.history" id="back" class="link-back">
-        @Html(Messages("generic.back"))
-    </a>
+title = Messages("title.pattern", Messages("title.error")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:no-eligible-years")))) {
+<p id="error">@Html(Messages("transferor.no-eligible-years"))</p>
+<a href="@controllers.routes.UpdateRelationshipController.history" id="back" class="link-back">
+    @Html(Messages("generic.back"))
+</a>
 }

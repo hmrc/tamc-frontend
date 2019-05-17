@@ -16,13 +16,12 @@
 
 package details
 
-import org.joda.time.DateTime
 import play.api.libs.json.Json
-import uk.gov.hmrc.domain.Nino
 
 object Person {
   implicit val formats = Json.format[Person]
 }
+
 case class Person(firstName: Option[String]) {
   lazy val shortName = firstName map (_.toLowerCase.capitalize)
 }

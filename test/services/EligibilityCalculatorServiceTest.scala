@@ -44,7 +44,8 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(MAX_LIMIT())))}
+              messageParam = Some(currencyFormatter(PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(MAX_LIMIT())))
+        }
 
         "The lower earners income is above personal allowance" in {
 
@@ -92,7 +93,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT()-1))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT() - 1))
         }
 
         "The higher earners income is just below recipient allowance and the lower earners income is just above transferor allowance" in {
@@ -100,7 +101,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE + 1
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT()-1))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT() - 1))
         }
 
         "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {
@@ -206,14 +207,14 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
 
         "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
           val incomes = List(
-            (14000,9000,250),
-            (14000,11000,250),
-            (30000,11000,250)
+            (14000, 9000, 250),
+            (14000, 11000, 250),
+            (30000, 11000, 250)
           )
 
-          incomes.foreach( income =>
-          EligibilityCalculatorService.calculate(income._2, income._1, Scotland) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(income._3))
+          incomes.foreach(income =>
+            EligibilityCalculatorService.calculate(income._2, income._1, Scotland) shouldBe
+              EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(income._3))
           )
         }
       }
@@ -264,7 +265,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
             val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
 
             EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
-              EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT()-1))
+              EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT() - 1))
           }
 
           "The higher earners income is just below recipient allowance and the lower earners income is just above transferor allowance" in {
@@ -272,7 +273,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
             val lowerEarnerIncome = TRANSFEROR_ALLOWANCE + 1
 
             EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
-              EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT()-1))
+              EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT() - 1))
           }
 
           "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {
@@ -339,7 +340,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT()-1))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT() - 1))
         }
 
         "The higher earners income is just below recipient allowance and the lower earners income is just above transferor allowance" in {
@@ -347,7 +348,7 @@ class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
           val lowerEarnerIncome = TRANSFEROR_ALLOWANCE + 1
 
           EligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT()-1))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(MAX_BENEFIT() - 1))
         }
 
         "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {

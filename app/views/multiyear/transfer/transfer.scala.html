@@ -29,71 +29,75 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.transfer")),
-  mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
+title = Messages("title.application.pattern", Messages("title.transfer")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
 ) {
 
-    @templates.form_error_notification(recipientForm)
+@templates.form_error_notification(recipientForm)
 
-    <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
-    <p class="blue-underline-large">@Html(Messages("pages.form.details"))</p>
-    <h2 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h2>
+<h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
+<p class="blue-underline-large">@Html(Messages("pages.form.details"))</p>
+<h2 class="heading-medium">@Html(Messages("pages.form.enter-data"))</h2>
 
-    @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
-    <fieldset>
-            <div class="form-group">
-            @templates.input(recipientForm("name"),
-                '_label -> Html(Messages("pages.form.field.name")),
-                '_labelClass -> "form-label",
-                '_inputClass -> "form-control",
-                '_dataAttributes -> "autocomplete=off"
-            )
-            </div>
-            <div class="form-group">
-            @templates.input(recipientForm("last-name"),
-                '_label -> Html(Messages("pages.form.field.last-name")),
-                '_labelClass -> "form-label",
-                '_inputClass -> "form-control",
-                '_dataAttributes -> "autocomplete=off"
-            )
-            </div>
-            <div class="form-group">
-            @templates.input_radio_group(
-                recipientForm("gender"),
-                Seq((Gender("M").gender, Messages("pages.form.field.gender.male")), (Gender("F").gender, Messages("pages.form.field.gender.female"))),
-                '_legend -> Html(Messages("pages.form.field.gender")),
-                '_labelClass -> "block-label",
-                '_labelAfter -> true,
-                '_fieldHelper -> Html(Messages("pages.form.field-helper.gender")),
-                '_groupClass -> "inline spacingBottom"
-            )
-            </div>
-            <div class="form-group">
-            @templates.input(recipientForm("nino"),
-                '_label -> Html(Messages("pages.form.field.nino")),
-                '_labelClass -> "form-label",
-                '_inputClass -> "form-control",
-                '_fieldHelper -> Html(Messages("pages.form.field-helper.nino-example")),
-                '_dataAttributes -> "autocomplete=off"
-            )
-            <details>
-             <summary><span class="summary accordion">@Html(Messages("pages.form.field-helper.nino-where"))</span></summary>
-                <span class="visuallyhidden">click to expand</span>
-             <div class="panel-indent panel panel-border-narrow">
-             <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
-             </div>
-            </details>
-            </div>
-    </fieldset>
-    <div class="notice">
-        <i class="icon icon-important">
-            <span class="visually-hidden">@Html(Messages("pages.form.field.warning-hidden"))</span>
-        </i>
-        <p class="icon-important-text ">@Html(Messages("pages.form.field.warning"))</p>
+@helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
+<fieldset>
+    <div class="form-group">
+        @templates.input(recipientForm("name"),
+        '_label -> Html(Messages("pages.form.field.name")),
+        '_labelClass -> "form-label",
+        '_inputClass -> "form-control",
+        '_dataAttributes -> "autocomplete=off"
+        )
     </div>
-    <p class="get-started group" id="get-started">
-        <button class="button" type="submit" data-journey-click="marriage-allowance:button:recipient_continue">@Html(Messages("generic.continue"))</button>
-    </p>
-    }
+    <div class="form-group">
+        @templates.input(recipientForm("last-name"),
+        '_label -> Html(Messages("pages.form.field.last-name")),
+        '_labelClass -> "form-label",
+        '_inputClass -> "form-control",
+        '_dataAttributes -> "autocomplete=off"
+        )
+    </div>
+    <div class="form-group">
+        @templates.input_radio_group(
+        recipientForm("gender"),
+        Seq((Gender("M").gender, Messages("pages.form.field.gender.male")), (Gender("F").gender,
+        Messages("pages.form.field.gender.female"))),
+        '_legend -> Html(Messages("pages.form.field.gender")),
+        '_labelClass -> "block-label",
+        '_labelAfter -> true,
+        '_fieldHelper -> Html(Messages("pages.form.field-helper.gender")),
+        '_groupClass -> "inline spacingBottom"
+        )
+    </div>
+    <div class="form-group">
+        @templates.input(recipientForm("nino"),
+        '_label -> Html(Messages("pages.form.field.nino")),
+        '_labelClass -> "form-label",
+        '_inputClass -> "form-control",
+        '_fieldHelper -> Html(Messages("pages.form.field-helper.nino-example")),
+        '_dataAttributes -> "autocomplete=off"
+        )
+        <details>
+            <summary><span class="summary accordion">@Html(Messages("pages.form.field-helper.nino-where"))</span>
+            </summary>
+            <span class="visuallyhidden">click to expand</span>
+            <div class="panel-indent panel panel-border-narrow">
+                <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
+            </div>
+        </details>
+    </div>
+</fieldset>
+<div class="notice">
+    <i class="icon icon-important">
+        <span class="visually-hidden">@Html(Messages("pages.form.field.warning-hidden"))</span>
+    </i>
+    <p class="icon-important-text ">@Html(Messages("pages.form.field.warning"))</p>
+</div>
+<p class="get-started group" id="get-started">
+    <button class="button" type="submit" data-journey-click="marriage-allowance:button:recipient_continue">
+        @Html(Messages("generic.continue"))
+    </button>
+</p>
+}
 }

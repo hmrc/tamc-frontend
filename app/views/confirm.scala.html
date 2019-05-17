@@ -25,100 +25,118 @@
 @import models.auth.AuthenticatedUserRequest
 
 @(data: models.ConfirmationModel, emptyForm: Form[Option[String]])(
-    implicit messages: Messages,
-        request: AuthenticatedUserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+implicit messages: Messages,
+request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.confirm"))
+title = Messages("title.application.pattern", Messages("title.confirm"))
 ){
-    <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
-    <table>
+<h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
+<table>
     <col width="30%">
     <col width="60%">
     <col width="10%">
-            <caption class="align-left">@Html(Messages("pages.confirm.lower.earner"))</caption>
-      <tr>
-@data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
+    <caption class="align-left">@Html(Messages("pages.confirm.lower.earner"))</caption>
+    <tr>
+        @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
         <td>@Html(Messages("generic.name"))</td>
         <td id="transferor-name">@name</td>
         <td>&nbsp;</td>
-      </tr>
+    </tr>
     <tr class="grey-underline-large-thick">
-}.getOrElse("")
-            <td>@Html(Messages("generic.email"))</td>
-              <td id="transferor-email">@data.transferorEmail</td>
-            <td>
-                <a href="@controllers.routes.TransferController.confirmYourEmail()" data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
-                    @Html(Messages("generic.change"))
-                </a>
-            </td>
-        </tr>
-        </table>
-        <table  class="grey-underline-large-thick">
-  <col width="30%">
-  <col width="60%">
-  <col width="10%"> 
-        <tr>
-          <caption class="align-left">@Html(Messages("pages.confirm.higher.earner"))</caption>
-        </tr>
-        <tr>
-            <td>@Html(Messages("generic.name"))</td>
-            <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
-            <td>
-                <a href="@controllers.routes.TransferController.transfer()" data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
-                    @Html(Messages("generic.change"))
-                </a>
-            </td>
-        </tr>
-        <tr class="grey-underline-large-thick">
-            <td>@Html(Messages("generic.nino-full"))</td>
-            <td id="recipient-nino">@templates.ninoRenderer(data.recipientNino)</td>
-            <td>&nbsp;</td>
-        </tr>
-        </table>
-  <table  class="grey-underline-large-thick">
-      <col width="30%">
-      <col width="60%">
-      <col width="10%">
-          <caption class="align-left">@Html(Messages("pages.confirm.marriage.details"))</caption>
-      <tr>
-          <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
-          <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage), LanguageUtils.isWelsh(messages))</td>
-          <td>
-              <a href="@controllers.routes.TransferController.dateOfMarriage()" data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
-                  @Html(Messages("generic.change"))
-              </a>
-          </td>
-      </tr>
-      @for(taxYear <- data.availableYears) {
-          <tr>
-              @if(taxYear.isCurrent) {
-                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts), LanguageUtils.isWelsh(messages))))</td>
-                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(messages)), data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT()), data.recipientFirstName))
-              } else {
-                  <td id="year-@taxYear.year">@Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts), LanguageUtils.isWelsh(messages)), TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).finishes), LanguageUtils.isWelsh(messages))))</td>
-                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName, Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT()))))</td>
-              }
-            <td>
-                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">
-                    @Html(Messages("generic.change"))
-                </a>
-            </td>
-          </tr>
+        }.getOrElse("")
+        <td>@Html(Messages("generic.email"))</td>
+        <td id="transferor-email">@data.transferorEmail</td>
+        <td>
+            <a href="@controllers.routes.TransferController.confirmYourEmail()"
+               data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
+                @Html(Messages("generic.change"))
+            </a>
+        </td>
+    </tr>
+</table>
+<table class="grey-underline-large-thick">
+    <col width="30%">
+    <col width="60%">
+    <col width="10%">
+    <tr>
+        <caption class="align-left">@Html(Messages("pages.confirm.higher.earner"))</caption>
+    </tr>
+    <tr>
+        <td>@Html(Messages("generic.name"))</td>
+        <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
+        <td>
+            <a href="@controllers.routes.TransferController.transfer()"
+               data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
+                @Html(Messages("generic.change"))
+            </a>
+        </td>
+    </tr>
+    <tr class="grey-underline-large-thick">
+        <td>@Html(Messages("generic.nino-full"))</td>
+        <td id="recipient-nino">@templates.ninoRenderer(data.recipientNino)</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>
+<table class="grey-underline-large-thick">
+    <col width="30%">
+    <col width="60%">
+    <col width="10%">
+    <caption class="align-left">@Html(Messages("pages.confirm.marriage.details"))</caption>
+    <tr>
+        <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
+        <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage),
+            LanguageUtils.isWelsh(messages))
+        </td>
+        <td>
+            <a href="@controllers.routes.TransferController.dateOfMarriage()"
+               data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
+                @Html(Messages("generic.change"))
+            </a>
+        </td>
+    </tr>
+    @for(taxYear <- data.availableYears) {
+    <tr>
+        @if(taxYear.isCurrent) {
+        <td id="year-@taxYear.year">
+            @Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts),
+            LanguageUtils.isWelsh(messages))))
+        </td>
+        <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
+            TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(messages)),
+            data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT()), data.recipientFirstName))
+            } else {
+        <td id="year-@taxYear.year">
+            @Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts),
+            LanguageUtils.isWelsh(messages)), TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).finishes),
+            LanguageUtils.isWelsh(messages))))
+        </td>
+        <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
+            Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT()))))
+        </td>
         }
-    </table>
-    <div class="panel-indent panel panel-border-wide">
-        <p>
-            @Html(Messages("pages.confirm.warning"))
-        </p>
-    </div>
-    @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
-        <p>
-            <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit"> @Html(Messages("pages.confirm.button"))</button>
-        </p>
+        <td>
+            <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">
+                @Html(Messages("generic.change"))
+            </a>
+        </td>
+    </tr>
     }
-    <br>
-    <a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
+</table>
+<div class="panel-indent panel panel-border-wide">
+    <p>
+        @Html(Messages("pages.confirm.warning"))
+    </p>
+</div>
+@helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
+<p>
+    <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit">
+        @Html(Messages("pages.confirm.button"))
+    </button>
+</p>
+}
+<br>
+<a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
 }

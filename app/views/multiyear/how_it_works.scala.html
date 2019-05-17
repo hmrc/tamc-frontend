@@ -22,35 +22,37 @@
 @import models.auth.RequestWithAuthState
 
 @()(implicit messages: Messages,
-        request: RequestWithAuthState[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: RequestWithAuthState[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.pattern", Messages("title.how-it-works"))
+title = Messages("title.pattern", Messages("title.how-it-works"))
 ){
-    <h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
-    <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre1", NumberFormat.getIntegerInstance().format(MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())))
-    </p>
-    <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(MAX_BENEFIT())))
-    </p>
-    <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
-    </p>
-    <div class="panel panel-border-wide">
-    	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5"))</p>
-    </div>
-    <p class="lede">@Html(Messages("pages.how-it-works.lede-pre6"))</p>
-    <h4 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h4>
-    <p class="lede">@Html(Messages("pages.how-it-works.detail"))</p>
-    <p class="lede">@Html(Messages("pages.how-it-works.email"))</p>
-    <p id="get-started" class="get-started group">
-        <a href="@controllers.routes.EligibilityController.ptaCalculator" data-transaction-slug="marriage-allowance" class="button button-start" role="button" id="start-now">
-            @Html(Messages("generic.start-now"))
-        </a>
-        <span class="destination">@Html(Messages("pages.how-it-works.tse"))</span>
-    </p>
+<h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
+<p class="lede">
+    @Html(Messages("pages.how-it-works.lede-pre1",
+    NumberFormat.getIntegerInstance().format(MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())))
+</p>
+<p class="lede">
+    @Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(MAX_BENEFIT())))
+</p>
+<p class="lede">
+    @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
+</p>
+<div class="panel panel-border-wide">
+    <p class="lede">@Html(Messages("pages.how-it-works.lede-pre5"))</p>
+</div>
+<p class="lede">@Html(Messages("pages.how-it-works.lede-pre6"))</p>
+<h4 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h4>
+<p class="lede">@Html(Messages("pages.how-it-works.detail"))</p>
+<p class="lede">@Html(Messages("pages.how-it-works.email"))</p>
+<p id="get-started" class="get-started group">
+    <a href="@controllers.routes.EligibilityController.ptaCalculator" data-transaction-slug="marriage-allowance"
+       class="button button-start" role="button" id="start-now">
+        @Html(Messages("generic.start-now"))
+    </a>
+    <span class="destination">@Html(Messages("pages.how-it-works.tse"))</span>
+</p>
 
 }

@@ -16,25 +16,16 @@
 
 package forms
 
-import models.Gender
-import models.RegistrationFormInput
-import play.api.data.FormError
-import play.api.data.Form
-import play.api.data.Forms.mapping
-import play.api.data.Forms.number
-import play.api.data.Forms.of
-import play.api.data.Forms.optional
-import play.api.data.Mapping
-import play.api.data.format.Formatter
-import play.api.data.validation.Constraint
-import play.api.data.validation.Constraints.pattern
-import play.api.data.validation.Invalid
-import play.api.data.validation.Valid
-import play.api.data.validation.ValidationError
-import uk.gov.hmrc.domain.Nino
-import org.joda.time.LocalDate
-import uk.gov.hmrc.play.mappers.DateTuple._
 import config.ApplicationConfig
+import models.{Gender, RegistrationFormInput}
+import org.joda.time.LocalDate
+import play.api.data.Forms.{mapping, of}
+import play.api.data.format.Formatter
+import play.api.data.validation.Constraints.pattern
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import play.api.data.{Form, FormError, Mapping}
+import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.play.mappers.DateTuple._
 
 object RegistrationForm {
 
@@ -45,8 +36,11 @@ object RegistrationForm {
   private def nonEmptyTrimmer(error: String = "error.required"): Mapping[String] =
     of(new Formatter[String] {
       def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
+
       def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
-        data.get(key).map { _.trim }.filterNot(_.isEmpty()).toRight(Seq(FormError(key, error)))
+        data.get(key).map {
+          _.trim
+        }.filterNot(_.isEmpty()).toRight(Seq(FormError(key, error)))
       }
     })
 
@@ -73,31 +67,36 @@ object RegistrationForm {
       transform[Nino](Nino(_), _.nino)
 
   private def firstNameMessageCustomizer(messageKey: String): String = s"pages.form.field.name.error.${messageKey}"
+
   private def firstName: Mapping[String] =
     nameMappingCustomizer(
       messageCustomizer = firstNameMessageCustomizer)
 
   private def lastNameMessageCustomizer(messageKey: String): String = s"pages.form.field.last-name.error.${messageKey}"
+
   private def lastName: Mapping[String] =
     nameMappingCustomizer(
       messageCustomizer = lastNameMessageCustomizer)
 
   private def genderMessageCustomizer(messageKey: String): String = s"pages.form.field.gender.error.${messageKey}"
+
   private def gender: Mapping[Gender] =
     genderMapping(
       errorRequired = genderMessageCustomizer("error.required"),
       errorInvalid = genderMessageCustomizer("error.invalid"))
 
   private def ninoMessageCustomizer(messageKey: String): String = s"pages.form.field.nino.error.${messageKey}"
+
   private def nino: Mapping[Nino] =
     ninoMapping(
       errorRequired = ninoMessageCustomizer("error.required"),
       errorInvalid = ninoMessageCustomizer("error.invalid"))
-      
+
   private def dateOfMarriageValidator(today: LocalDate) = {
     mandatoryDateTuple("pages.form.field.dom.error.required").
       verifying(error = "pages.form.field.dom.error.min-date", constraint = _.isAfter(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1))).
-      verifying(error = "pages.form.field.dom.error.max-date", constraint = _.isBefore(today.plusDays(1))) }
+      verifying(error = "pages.form.field.dom.error.max-date", constraint = _.isBefore(today.plusDays(1)))
+  }
 
   def registrationForm(today: LocalDate, transferorNino: Nino) = Form[RegistrationFormInput](
     mapping(

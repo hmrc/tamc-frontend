@@ -32,7 +32,7 @@ class GenderTest extends ControllerBaseSpec {
 
     "throw an exception" when {
       "a letter other than m or f is used" in {
-        intercept[Exception]{
+        intercept[Exception] {
           Gender("A")
         }
       }

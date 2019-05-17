@@ -16,11 +16,10 @@
 
 import java.net.URLEncoder
 
+import config.ApplicationConfig._
 import play.api.mvc.Request
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import config.ApplicationConfig._
 
 package object utils {
 

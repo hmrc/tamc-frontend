@@ -16,24 +16,17 @@
 
 package events
 
-import models.CacheData
-import models.CitizenName
-import models.UserRecord
+import models.{CacheData, UpdateRelationshipCacheData}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.audit.model.DataEvent
-import play.api.mvc.Request
-import config.ApplicationConfig
-import uk.gov.hmrc.play.frontend.auth.AuthContext
-import play.api.mvc.AnyContent
-import models.UpdateRelationshipCacheData
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.model.DataEvent
 
 object CreateRelationshipSuccessEvent {
   def apply(cacheData: CacheData, journey: String)(implicit hc: HeaderCarrier) =
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(
-        "event" -> ("create-relationship-"+journey),
+        "event" -> ("create-relationship-" + journey),
         "data" -> cacheData.toString()))
 }
 
@@ -47,11 +40,11 @@ object UpdateRelationshipSuccessEvent {
 }
 
 object CreateRelationshipFailureEvent {
-  def apply(cacheData: CacheData, journey : String, error: Throwable)(implicit hc: HeaderCarrier) =
+  def apply(cacheData: CacheData, journey: String, error: Throwable)(implicit hc: HeaderCarrier) =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
-        "event" -> ("create-relationship-"+journey),
+        "event" -> ("create-relationship-" + journey),
         "error" -> error.toString(),
         "data" -> cacheData.toString()))
 }
@@ -74,6 +67,7 @@ object UpdateRelationshipFailureEvent {
         "error" -> error.toString(),
         "data" -> cacheData.toString()))
 }
+
 object CreateRelationshipCacheFailureEvent {
   def apply(error: Throwable)(implicit hc: HeaderCarrier) =
     new BusinessEvent(

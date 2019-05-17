@@ -27,11 +27,13 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:non-e
 <p id="description">@Html(Messages("transferor.no-previous-years-available"))</p>
 
 <p>
-    <a id="button-finished" class="button" role="button" href="https://www.gov.uk/marriage-allowance-guide/how-it-works">
+    <a id="button-finished" class="button" role="button"
+       href="https://www.gov.uk/marriage-allowance-guide/how-it-works">
         @Html(Messages("generic.finish"))
     </a>
 </p>
-<a href="@controllers.routes.UpdateRelationshipController.history" data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back" class="link-back">
+<a href="@controllers.routes.UpdateRelationshipController.history"
+   data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back" class="link-back">
     @Html(Messages("generic.back"))
 </a>
 }

@@ -21,7 +21,7 @@ import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 
 trait SessionCookieCryptoFilterWrapper {
-  def encryptCookieString(cookie: String) : String = {
+  def encryptCookieString(cookie: String): String = {
     new SessionCookieCryptoFilter(new ApplicationCrypto(Play.current.configuration.underlying)).encrypt(cookie)
   }
 }

@@ -192,22 +192,19 @@ pages.calc.skip-it=Ewch heibio
 estimate.tax.saving=Cyfrifo
 eligibility.feedback.gain=Ar sail yr wybodaeth yr ydych wedi’i rhoi i ni, byddech yn elwa o tua <strong>£{0}</strong> y flwyddyn fel p&#226;r.
 eligibility.feedback.loose=Ni fyddwch yn elwa fel pâr fod.
+eligibility.feedback.transferor-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
+eligibility.feedback.recipient-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
+eligibility.check.unlike-benefit-as-couple=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
+max-benefit={0}
 
 #********************************************************************************
 # Year selection
 #********************************************************************************
 #Multi-year select
 pages.multi-year-select.heading=Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
+
 #Single-year select
 pages.form.field.description.selectedYear=Mae angen i chi ddewis ateb
-
-#********************************************************************************
-# Should be added every year
-#********************************************************************************
-eligibility.feedback.transferor-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Fel yr unigolyn sy’n gwneud y trosglwyddiad, mae’n rhaid i’ch incwm fod yn llai na {0}.
-eligibility.feedback.recipient-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
-eligibility.check.unlike-benefit-as-couple=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
-max-benefit={0}
 your-income=os oedd eich incwm yn {0} neu’n llai
 income-between=os oedd incwm rhwng {0} {1} a {2}
 income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)

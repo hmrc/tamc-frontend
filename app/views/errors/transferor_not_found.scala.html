@@ -18,24 +18,24 @@
 @import models.auth.UserRequest
 
 @()(implicit messages: Messages,
-        request: UserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.error")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-not-found")))) {
-    <p id="error">@Html(Messages("transferor.not.found"))</p>
-    <strong>@Html(Messages("hmrc.contact-details"))</strong>
-    <ul>
-        <li>@Html(Messages("hmrc.contact-details-2"))</li>
-        <li>@Html(Messages("hmrc.contact-details-3"))</li>
-        <li>@Html(Messages("hmrc.contact-details-4"))</li>
-        <li>@Html(Messages("hmrc.contact-details-5"))</li>
-        <li>@Html(Messages("hmrc.contact-details-6"))</li>
-        <li>@Html(Messages("hmrc.contact-details-7"))</li>
-        <li>@Html(Messages("hmrc.contact-details-8"))</li>
-        <li>@Html(Messages("hmrc.contact-details-9"))</li>
-    </ul>
+title = Messages("title.pattern", Messages("title.error")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-not-found")))) {
+<p id="error">@Html(Messages("transferor.not.found"))</p>
+<strong>@Html(Messages("hmrc.contact-details"))</strong>
+<ul>
+    <li>@Html(Messages("hmrc.contact-details-2"))</li>
+    <li>@Html(Messages("hmrc.contact-details-3"))</li>
+    <li>@Html(Messages("hmrc.contact-details-4"))</li>
+    <li>@Html(Messages("hmrc.contact-details-5"))</li>
+    <li>@Html(Messages("hmrc.contact-details-6"))</li>
+    <li>@Html(Messages("hmrc.contact-details-7"))</li>
+    <li>@Html(Messages("hmrc.contact-details-8"))</li>
+    <li>@Html(Messages("hmrc.contact-details-9"))</li>
+</ul>
 }

@@ -16,27 +16,26 @@
 
 package forms
 
-import scala.Left
-import scala.Right
-import play.api.data.Form
-import play.api.data.FormError
-import play.api.data.Forms.mapping
-import play.api.data.Forms.of
-import play.api.data.format.Formatter
 import models.MultiYearIncomeFormInput
+import play.api.data.Forms.{mapping, of}
+import play.api.data.format.Formatter
+import play.api.data.{Form, FormError}
 
 object MultiYearIncomeCheckForm {
 
   private val PRE_ERROR_KEY = "pages.form.field-required."
+
   implicit def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
     override val format = Some(("format.boolean", Nil))
+
     def bind(key: String, data: Map[String, String]) = {
       Right(data.get(key).getOrElse("")).right.flatMap {
-        case "true"  => Right(true)
+        case "true" => Right(true)
         case "false" => Right(false)
-        case _       => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Nil)))
+        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Nil)))
       }
     }
+
     def unbind(key: String, value: Boolean) = Map(key -> value.toString)
   }
 

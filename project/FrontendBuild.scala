@@ -40,7 +40,7 @@ private object AppDependencies {
   private val scalacheckVersion = "1.14.0"
   private val scalaTestVersion = "3.0.5"
   private val mockitoCoreVerison = "2.24.5"
-  private val localTemplateRendererVersion  = "2.3.0"
+  private val localTemplateRendererVersion = "2.3.0"
   private val taxYearVersion = "0.5.0"
 
   val compile = Seq(
@@ -49,7 +49,7 @@ private object AppDependencies {
     "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % httpCachingClientVersion,
     "uk.gov.hmrc" %% "play-breadcrumb" % playBreadcrumbVersion,
-    "uk.gov.hmrc" %% "local-template-renderer"  % localTemplateRendererVersion,
+    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "time" % timeVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "uk.gov.hmrc" %% "auth-client" % "2.19.0-play-25",

@@ -17,26 +17,43 @@
 package errors
 
 case class TransferorNotFound() extends ServiceError
+
 case class RecipientNotFound() extends ServiceError
+
 case class CannotCreateRelationship() extends ServiceError
+
 case class CacheMissingTransferor() extends ServiceError
+
 case class CacheRelationshipAlreadyCreated() extends ServiceError
+
 case class CacheTransferorInRelationship() extends ServiceError
+
 case class CacheMissingRecipient() extends ServiceError
+
 case class CacheRecipientInRelationship() extends ServiceError
+
 case class CacheMissingEmail() extends ServiceError
+
 case class CacheCreateRequestNotSent() extends ServiceError
+
 case class TransferorDeceased() extends ServiceError
+
 case class NoTaxYearsSelected() extends ServiceError
+
 case class NoTaxYearsAvailable() extends ServiceError
+
 case class NoTaxYearsForTransferor() extends ServiceError
 
 case class CacheRelationshipAlreadyUpdated() extends ServiceError
+
 case class CacheUpdateRequestNotSent() extends ServiceError
+
 case class CannotUpdateRelationship() extends ServiceError
+
 case class CacheMissingUpdateRecord() extends ServiceError
 
 case class CitizenNotFound() extends ServiceError
+
 case class BadFetchRequest() extends ServiceError
 
 case class RelationshipMightBeCreated() extends ServiceError

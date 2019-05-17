@@ -18,15 +18,15 @@
 @import models.auth.UserRequest
 
 @()(implicit messages: Messages,
-        request: UserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.error")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:technical-issue")))) {
-    <p id="error"><strong>@Html(Messages("technical.issue.para1"))</strong></p>
-    <p id="error">@Html(Messages("technical.issue.para2"))</p>
-    <a href="https://www.gov.uk/">@Html(Messages("technical.issue.back"))</a>
+title = Messages("title.pattern", Messages("title.error")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:technical-issue")))) {
+<p id="error"><strong>@Html(Messages("technical.issue.para1"))</strong></p>
+<p id="error">@Html(Messages("technical.issue.para2"))</p>
+<a href="https://www.gov.uk/">@Html(Messages("technical.issue.back"))</a>
 }

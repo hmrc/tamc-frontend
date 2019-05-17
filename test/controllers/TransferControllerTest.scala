@@ -170,7 +170,7 @@ class TransferControllerTest extends ControllerBaseSpec {
         val result = controller().eligibleYearsAction()(request)
         status(result) shouldBe OK
         val doc = Jsoup.parse(contentAsString(result))
-        doc.title shouldBe  messagesApi("title.application.pattern", messagesApi("title.extra-years"))
+        doc.title shouldBe messagesApi("title.application.pattern", messagesApi("title.extra-years"))
         verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(RecipientRecordData.recipientRecord),
           ArgumentMatchers.eq(List(currentTaxYear)))(any(), any())
       }
@@ -331,7 +331,7 @@ class TransferControllerTest extends ControllerBaseSpec {
     }
 
     "redirect" when {
-      "a valid form is submitted" in{
+      "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "test@test.com")
         when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(RelationshipRecordData.notificationRecord))(any(), any()))
           .thenReturn(RelationshipRecordData.notificationRecord)
@@ -404,7 +404,7 @@ class TransferControllerTest extends ControllerBaseSpec {
         (new CacheCreateRequestNotSent, "/marriage-allowance-application/history"),
         (new RelationshipMightBeCreated, "/marriage-allowance-application/history")
       )
-      for((error, redirectUrl) <- data) {
+      for ((error, redirectUrl) <- data) {
         s"a $error has been thrown" in {
           val result = controller().handleError(HeaderCarrier(), authRequest)(error)
           status(result) shouldBe SEE_OTHER
@@ -426,7 +426,7 @@ class TransferControllerTest extends ControllerBaseSpec {
         (new NoTaxYearsSelected, OK, "title.other-ways"),
         (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.para1")
       )
-      for((error, responseStatus, message) <- data) {
+      for ((error, responseStatus, message) <- data) {
         s"an $error has been thrown" in {
           val result = controller().handleError(HeaderCarrier(), authRequest)(error)
           status(result) shouldBe responseStatus
@@ -442,6 +442,7 @@ class TransferControllerTest extends ControllerBaseSpec {
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+
   def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]) = new TransferController(
     messagesApi,
     authAction,
@@ -449,6 +450,7 @@ class TransferControllerTest extends ControllerBaseSpec {
     mockCachingService,
     mockTimeService
   )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+
   when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
 }

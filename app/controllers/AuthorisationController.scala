@@ -40,6 +40,7 @@ class AuthorisationController @Inject()(
     implicit request =>
       Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
+
   def sessionTimeout = unauthenticatedAction {
     implicit request =>
       Ok(views.html.errors.session_timeout())
