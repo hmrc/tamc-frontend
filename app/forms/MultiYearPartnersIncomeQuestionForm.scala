@@ -33,7 +33,8 @@ object MultiYearPartnersIncomeQuestionForm {
       Right(data.get(key).getOrElse("")).right.flatMap {
         case "true"  => Right(true)
         case "false" => Right(false)
-        case _       => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.PERSONAL_ALLOWANCE+1, ApplicationConfig.MAX_LIMIT, ApplicationConfig.MAX_LIMIT_SCOT))))
+        case _       => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.PERSONAL_ALLOWANCE() + 1,
+          ApplicationConfig.MAX_LIMIT(), ApplicationConfig.MAX_LIMIT_SCOT()))))
       }
     }
     def unbind(key: String, value: Boolean) = Map(key -> value.toString)

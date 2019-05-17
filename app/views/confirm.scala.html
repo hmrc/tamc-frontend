@@ -18,7 +18,7 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.time.TaxYear
 @import views.helpers.TextGenerators
-@import config.ApplicationConfig
+@import config.ApplicationConfig._
 @import java.text.NumberFormat
 @import utils.LanguageUtils
 @import org.joda.time.LocalDate
@@ -96,10 +96,10 @@
           <tr>
               @if(taxYear.isCurrent) {
                   <td id="year-@taxYear.year">@Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts), LanguageUtils.isWelsh(messages))))</td>
-                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(messages)), data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT), data.recipientFirstName))
+                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc", TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(messages)), data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT()), data.recipientFirstName))
               } else {
                   <td id="year-@taxYear.year">@Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts), LanguageUtils.isWelsh(messages)), TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).finishes), LanguageUtils.isWelsh(messages))))</td>
-                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName, Messages("max-benefit", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT))))</td>
+                  <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName, Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT()))))</td>
               }
             <td>
                 <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">

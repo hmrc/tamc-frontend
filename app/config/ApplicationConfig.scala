@@ -19,7 +19,7 @@ package config
 import config.ApplicationConfig.loadConfig
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
-import play.api.{Configuration, Logger, Play}
+import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 
@@ -55,7 +55,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
   lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
 
-
   val TAMC_BEGINNING_YEAR = 2015
   val TAMC_MIN_DATE = new LocalDate(1900, 1, 1)
 
@@ -75,20 +74,17 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
 
-val PERSONAL_ALLOWANCE = {
-  Logger.debug(s"*******************************\n\n currentTaxYear::::::$currentTaxYear")
-  runModeConfiguration.getInt("personal-allowance-" + currentTaxYear).get
-}
+  def actualTaxYear(taxYear: Int = 0): Int = if(taxYear == 0) currentTaxYear else taxYear
+  def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)
+  def MAX_LIMIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-" + actualTaxYear(taxYear)).getOrElse(0)
+  def MAX_LIMIT_SCOT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-scot-" + actualTaxYear(taxYear)).getOrElse(0)
+  def MAX_LIMIT_WALES(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-wales-" + actualTaxYear(taxYear)).getOrElse(0)
+  def MAX_LIMIT_NORTHERN_IRELAND(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-northern-ireland-" + actualTaxYear(taxYear)).getOrElse(0)
+  def MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-allowed-personal-allowance-transfer-" + actualTaxYear(taxYear)).getOrElse(0)
+  def MAX_BENEFIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-benefit-" + actualTaxYear(taxYear)).getOrElse(0)
 
-  val MAX_LIMIT = runModeConfiguration.getInt("max-limit-" + currentTaxYear).get
-  val MAX_LIMIT_SCOT = runModeConfiguration.getInt("max-limit-scot-" + currentTaxYear).get
-  val MAX_LIMIT_WALES = runModeConfiguration.getInt("max-limit-wales-" + currentTaxYear).get
-  val MAX_LIMIT_NORTHERN_IRELAND = runModeConfiguration.getInt("max-limit-northern-ireland-" + currentTaxYear).get
-
-  val MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER = runModeConfiguration.getInt("max-allowed-personal-allowance-transfer-" + currentTaxYear).get
-  val MAX_BENEFIT = runModeConfiguration.getInt("max-benefit-" + currentTaxYear).get
-  val TRANSFEROR_ALLOWANCE = PERSONAL_ALLOWANCE - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER
-  val RECIPIENT_ALLOWANCE = PERSONAL_ALLOWANCE + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER
+  val TRANSFEROR_ALLOWANCE: Int = PERSONAL_ALLOWANCE() - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
+  val RECIPIENT_ALLOWANCE: Int = PERSONAL_ALLOWANCE() + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
   val SCOTTISH_RESIDENT = "scottish_resident"
 

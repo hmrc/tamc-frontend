@@ -94,7 +94,7 @@ trait TransferService {
     for {
       cacheData <- cachingService.getCachedData
       notification <- validateFinishedData(cacheData)
-    } yield (notification)
+    } yield notification
 
   private def validateFinishedData(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     Future {
@@ -111,7 +111,7 @@ trait TransferService {
       postCreateData <- sendCreateRelationship(transferorNino, validated, journey)(hc, messages, ec)
       _ <- lockCreateRelationship()
       _ <- auditCreateRelationship(postCreateData, journey)
-    } yield (validated.notification.get)
+    } yield validated.notification.get
   }
 
   private def lockCreateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
@@ -124,7 +124,7 @@ trait TransferService {
     for {
       cacheData <- cachingService.getCachedData
       registrationData <- validateRegistrationData(cacheData)
-    } yield (registrationData)
+    } yield registrationData
 
   private def validateRegistrationData(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientDetailsFormInput] =
     Future {
@@ -295,7 +295,7 @@ trait TransferService {
         selectedYears
       }
     } else {
-      Future.failed(new IllegalArgumentException(s"${selectedYears} is not a subset of ${availableTaxYears}"))
+      Future.failed(new IllegalArgumentException(s"$selectedYears is not a subset of $availableTaxYears"))
     }
 
   private def updateSelectedYears(cy: Option[List[Int]], extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =

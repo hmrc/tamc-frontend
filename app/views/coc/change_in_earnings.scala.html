@@ -15,7 +15,7 @@
  *@
 
 @import play.twirl.api.Html
-@import config.ApplicationConfig
+@import config.ApplicationConfig._
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
  
@@ -31,8 +31,8 @@
     <h1 class="heading-large">@Html(Messages("change.status.earnings.h1"))</h1>
     <p class="lede">@Html(Messages("change.status.earnings.h2"))</p>
         <ul class="list list-bullet">
-      <li>@Html(Messages("change.status.earnings.tr.instruction-1", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)))</li>
-      <li>@Html(Messages("change.status.earnings.tr.instruction-2", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))</li>
+      <li>@Html(Messages("change.status.earnings.tr.instruction-1", NumberFormat.getIntegerInstance().format(MAX_LIMIT())))</li>
+      <li>@Html(Messages("change.status.earnings.tr.instruction-2", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))</li>
     </ul>
         <h3 class="heading-medium">@Html(Messages("hmrc.contact-details-1"))</h3>
     <p>@Html(Messages("hmrc.contact-details-2")) <br><br>

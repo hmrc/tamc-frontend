@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.TextGenerators
 @import uk.gov.hmrc.time.DateConverter
-@import config.ApplicationConfig
+@import config.ApplicationConfig._
 @import utils.LanguageUtils
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
@@ -159,8 +159,8 @@
                 <h2 class="heading-medium no-top-margin space">@Html(Messages("change.other.caption"))</h2>
 
                 <h2 class="heading-small">@Html(Messages("change.other.sub.caption1"))</h2>
-                <p class=font-xsmall>@Html(Messages("change.other.income.content", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE),
-                    NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE+1),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT),NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)))</p>
+                <p class=font-xsmall>@Html(Messages("change.other.income.content", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()),
+                    NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()+1),NumberFormat.getIntegerInstance().format(MAX_LIMIT()),NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())))</p>
                 <p id="incomeMessage" class="font-xsmall"><a href="@controllers.routes.UpdateRelationshipController.changeOfIncome" id="incomeLink" data-journey-click="marriage-allowance:link:history_income">@Html(Messages("change.other.income.link"))</a>.</p>
                 <h2 class="heading-small">@Html(Messages("change.other.sub.caption2"))</h2>
                 <p class=font-xsmall>@Html(Messages("change.other.bereavement.content"))</p>

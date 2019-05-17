@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.ApplicationConfig
+import config.ApplicationConfig._
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
@@ -158,8 +158,8 @@ class RoutesTest extends ControllerBaseSpec {
 
     "display errors as no radio buttons is selected for English resident" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(MAX_LIMIT())
       val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
@@ -175,8 +175,8 @@ class RoutesTest extends ControllerBaseSpec {
     "display errors as no radio buttons is selected for Scottish resident" in {
       val request = FakeRequest().withSession("scottish_resident" -> "true")
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherScotThreshold = formatter.format(ApplicationConfig.MAX_LIMIT_SCOT)
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val higherScotThreshold = formatter.format(MAX_LIMIT_SCOT())
       val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
@@ -219,7 +219,7 @@ class RoutesTest extends ControllerBaseSpec {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe ("https://www.gov.uk/apply-marriage-allowance")
+      back.attr("href") shouldBe "https://www.gov.uk/apply-marriage-allowance"
     }
   }
 

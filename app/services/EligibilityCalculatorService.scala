@@ -22,22 +22,18 @@ import java.util.Locale
 import config.ApplicationConfig._
 import models._
 import play.api.libs.json.Json
-import uk.gov.hmrc.time
 import utils.BenefitCalculatorHelper
 
 import scala.io.Source
-import play.api.Logger
 
 object EligibilityCalculatorService extends EligibilityCalculatorService
 
 trait EligibilityCalculatorService {
 
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-
   def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country): EligibilityCalculatorResult = {
 
-    val hasMaxBenefit = transferorIncome < TRANSFEROR_ALLOWANCE&&recipientIncome > RECIPIENT_ALLOWANCE
-    val recipientNotEligible = recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)||recipientIncome < PERSONAL_ALLOWANCE
+    val hasMaxBenefit = transferorIncome < TRANSFEROR_ALLOWANCE && recipientIncome > RECIPIENT_ALLOWANCE
+    val recipientNotEligible = recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)||recipientIncome < PERSONAL_ALLOWANCE()
     val bothOverMaxLimit = transferorIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence) && recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)
 
     if(transferorIncome > recipientIncome)
@@ -49,14 +45,12 @@ trait EligibilityCalculatorService {
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
         messageParam = Some(BenefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "PA")),
         messageParam2 = Some(BenefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "ML")))
-    else if(transferorIncome > PERSONAL_ALLOWANCE) {
-      val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
-      formatter.setMaximumFractionDigits(0)
-      val paFormat = formatter.format(PERSONAL_ALLOWANCE)
+    else if(transferorIncome > PERSONAL_ALLOWANCE()) {
+      val paFormat = BenefitCalculatorHelper.currencyFormatter(PERSONAL_ALLOWANCE())
       EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple", messageParam = Some(paFormat))
     } else if(hasMaxBenefit) {
       val basicRate = getCountryTaxBandsFromFile(countryOfResidence).find(band => band.name == "BasicRate").head.rate
-      val maxBenefit = (MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER * basicRate).ceil.toInt
+      val maxBenefit = (MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate).ceil.toInt
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(maxBenefit))
     } else {
       partialEligibilityScenario(transferorIncome,recipientIncome,countryOfResidence, getCountryTaxBandsFromFile(countryOfResidence))
@@ -73,7 +67,7 @@ trait EligibilityCalculatorService {
   }
 
   private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
-    val recipientIncomeMinusPA = recipientIncome - PERSONAL_ALLOWANCE
+    val recipientIncomeMinusPA = recipientIncome - PERSONAL_ALLOWANCE()
     val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncomeMinusPA, countryTaxBands)
 
     val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE

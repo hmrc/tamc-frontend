@@ -15,7 +15,7 @@
  *@
 
 @import play.twirl.api.Html
-@import config.ApplicationConfig
+@import config.ApplicationConfig._
 @import java.text.NumberFormat
 @import views.helpers.TextGenerators
 @import utils.LanguageUtils
@@ -31,13 +31,13 @@
 ){
     <h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
     <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre1", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER)))
+        @Html(Messages("pages.how-it-works.lede-pre1", NumberFormat.getIntegerInstance().format(MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())))
     </p>
     <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_BENEFIT)))
+        @Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(MAX_BENEFIT())))
     </p>
     <p class="lede">
-        @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE)))
+        @Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
     </p>
     <div class="panel panel-border-wide">
     	<p class="lede">@Html(Messages("pages.how-it-works.lede-pre5"))</p>

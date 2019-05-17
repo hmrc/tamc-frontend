@@ -209,11 +209,8 @@ eligibility.feedback.recipient-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans 
 eligibility.check.unlike-benefit-as-couple=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
 max-benefit={0}
 your-income=os oedd eich incwm yn {0} neu’n llai
-income-between-2015=os oedd incwm rhwng {0} {1} a {2}
-income-between-2016=os oedd incwm rhwng {0} {1} a {2}
-income-between-2017=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
-income-between-2018=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
-income-between-2019=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
+income-between=os oedd incwm rhwng {0} {1} a {2}
+income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
 
 #********************************************************************************
 # Confirmation Message

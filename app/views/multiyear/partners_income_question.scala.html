@@ -34,13 +34,13 @@
 )
 
 @maxLimit = @{
-    if (scottishResident) MAX_LIMIT_SCOT else MAX_LIMIT
+    if (scottishResident) MAX_LIMIT_SCOT() else MAX_LIMIT()
 }
 
 @tamc_main(
     title = Messages("title.eligibility.pattern",
         Messages("eligibility.check.partners.income.h1",
-            NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE+1),
+            NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1),
             NumberFormat.getIntegerInstance().format(maxLimit)
         )
     )
@@ -48,13 +48,13 @@
     @form_error_notification(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
-        lowerLimit = Some(PERSONAL_ALLOWANCE+1),
+        lowerLimit = Some(PERSONAL_ALLOWANCE()+1),
         upperLimit = Some(maxLimit)
     )
 
     <h1 class="heading-xlarge">
         <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
-        @Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))
+        @Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1), NumberFormat.getIntegerInstance().format(maxLimit))
     </h1>
 
     <p>@Messages("eligibility.check.partners.income.information1")</p>
