@@ -12,7 +12,8 @@ This service allow a customer to apply for apply for Marriage Allowance as we as
 
 Tax rates
 ------------
-The service should now dynamically pick the tax year from the system. The tax year rates must be updated every tax year before 6 April in [conf/data/tax-rates.conf] file to pick the new tax rates.
+The service should now dynamically pick the tax year from the current system date. The tax year rates must be updated every tax year before 6 April in [conf/data/tax-rates.conf] file to pick the new tax rates.
+If the rates are not updated it will take consider zero (0) for all the fields from tax-rates files
 
 
 Requirements
