@@ -100,13 +100,14 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
     @for(taxYear <- data.availableYears) {
     <tr>
         @if(taxYear.isCurrent) {
+
         <td id="year-@taxYear.year">
             @Html(Messages("pages.confirm.current.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts),
             LanguageUtils.isWelsh(messages))))
         </td>
         <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
             TextGenerators.formPossessive(data.recipientFirstName, LanguageUtils.isWelsh(messages)),
-            data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT()), data.recipientFirstName))
+            data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
             } else {
         <td id="year-@taxYear.year">
             @Html(Messages("pages.confirm.previous.tax",TextGenerators.ukDateTransformer(Some(TaxYear(taxYear.year).starts),
@@ -114,7 +115,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             LanguageUtils.isWelsh(messages))))
         </td>
         <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
-            Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT()))))
+            Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)))))
         </td>
         }
         <td>

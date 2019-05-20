@@ -524,7 +524,7 @@ pages.confirm.higher.earner=Manylion eich partner (incwm uchel)
 pages.confirm.current.tax=Blwyddyn dreth bresennol: <span class=nowrap>{0}</span> ymlaen
 pages.confirm.current.tax.desc=Bydd CThEM yn newid codau treth chi a {0} er mwyn arbed {1} hyd at £{2}. Bydd eich Lwfans Priodasol yn parhau’n awtomatig oni bai’ch bod chi neu {3} yn ei ganslo, neu nad ydych bellach yn gymwys fel p&#226;r.
 pages.confirm.previous.tax=Blwyddyn dreth flaenorol: <span class=nowrap>{0}</span> i <span class=nowrap>{1}</span>
-pages.confirm.previous.tax.desc=Bydd CThEM yn gwirio’r manylion yr ydych wedi’u rhoi cyn anfon siec at {0} drwy’r post am hyd at {1}.
+pages.confirm.previous.tax.desc=Bydd CThEM yn gwirio’r manylion yr ydych wedi’u rhoi cyn anfon siec at {0} drwy’r post am hyd at £{1}.
 pages.confirm.warning=Gwiriwch y manylion yr ydych wedi’u nodi a gwnewch yn siŵr eu bod yn gywir.
 pages.confirm.button=Cadarnhau’ch cais
 pages.confirm.marriage.details=Manylion eich Lwfans Priodasol
