@@ -23,7 +23,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.error")),
+title = Messages("title.pattern", Messages("title.cannot-use-service")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found")))) {
 <h1 id="error">@Messages("title.cannot-use-service")</h1>
