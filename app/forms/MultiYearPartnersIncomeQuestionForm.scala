@@ -30,7 +30,11 @@ object MultiYearPartnersIncomeQuestionForm {
     override val format = Some(("format.boolean", Nil))
 
     def bind(key: String, data: Map[String, String]) = {
-      val isScottish: Boolean = data.get("is-scottish").getOrElse("false").toBoolean
+      val isScottish: Boolean = data.get("is-scottish") match {
+        case Some("true") => true
+        case _ => false
+      }
+
       val maxLimit = if(isScottish) ApplicationConfig.MAX_LIMIT_SCOT() else ApplicationConfig.MAX_LIMIT()
       Right(data.getOrElse(key, "")).right.flatMap {
         case "true" => Right(true)
