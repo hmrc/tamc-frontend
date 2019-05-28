@@ -225,7 +225,8 @@ class EligibilityControllerTest extends ControllerBaseSpec {
     "redirect to want to apply" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
-          "partners-income" -> "true")
+          "partners-income" -> "true",
+          "is-scottish" -> "true")
         val result = controller().partnersIncomeCheckAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouWantToApply().url)
