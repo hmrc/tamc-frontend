@@ -222,6 +222,11 @@ class TransferController @Inject()(
       } recover handleError
   }
 
+  def cannotUseService: Action[AnyContent] = authenticatedActionRefiner {
+    implicit request =>
+      InternalServerError(views.html.errors.transferer_deceased())
+  }
+
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
@@ -235,7 +240,7 @@ class TransferController @Inject()(
         throwable match {
           case _: TransferorNotFound               => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
           case _: RecipientNotFound                => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
-          case _: TransferorDeceased               => handle(Logger.warn, InternalServerError(views.html.errors.transferer_deceased()))
+          case _: TransferorDeceased               => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: CacheTransferorInRelationship    => handle(Logger.warn, Ok(views.html.transferor_status()))
           case _: CacheMissingRecipient            => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))

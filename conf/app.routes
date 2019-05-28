@@ -27,6 +27,7 @@ POST   /confirm-your-email                         @controllers.TransferControll
 GET    /confirm                                    @controllers.TransferController.confirm
 POST   /confirm                                    @controllers.TransferController.confirmAction
 GET    /finished                                   @controllers.TransferController.finished
+GET    /you-cannot-use-this-service                @controllers.TransferController.cannotUseService
 
 #Change of Circumstances
 GET    /history                                    @controllers.UpdateRelationshipController.history
