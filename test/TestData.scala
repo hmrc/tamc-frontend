@@ -40,9 +40,9 @@ object TestData {
     val ninoWithRelationship: String = ninos(6)
     val ninoWithLOA1_5: String = ninos(7)
     val ninoWithLOA1: String = ninos(8)
-    val ninoWithLOA1Spaces: String = ninoWithLOA1.substring(0, 2)+ " " + ninoWithLOA1.substring(2, 4) +" "+ninoWithLOA1.substring(4, 6) + " " + ninoWithLOA1.substring(6, 8) + " " + ninoWithLOA1.substring(8, 9)
+    val ninoWithLOA1Spaces: String = ninoWithLOA1.substring(0, 2) + " " + ninoWithLOA1.substring(2, 4) + " " + ninoWithLOA1.substring(4, 6) + " " + ninoWithLOA1.substring(6, 8) + " " + ninoWithLOA1.substring(8, 9)
     val ninoHappyPath: String = ninos(9)
-    val ninoHappyPathWithSpaces: String = ninoHappyPath.substring(0, 2)+ " " + ninoHappyPath.substring(2, 4) +" "+ninoHappyPath.substring(4, 6) + " " + ninoHappyPath.substring(6, 8) + " " + ninoHappyPath.substring(8, 9)
+    val ninoHappyPathWithSpaces: String = ninoHappyPath.substring(0, 2) + " " + ninoHappyPath.substring(2, 4) + " " + ninoHappyPath.substring(4, 6) + " " + ninoHappyPath.substring(6, 8) + " " + ninoHappyPath.substring(8, 9)
     val ninoTransferorNotFound: String = ninos(10)
     val ninoTransferorDeceased: String = ninos(11)
     val ninoError: String = ninos(12)
@@ -74,4 +74,5 @@ object TestData {
     val cid1: Cid = cids(0)
     val cid2: Cid = cids(1)
   }
+
 }

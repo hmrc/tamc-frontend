@@ -60,6 +60,7 @@ object MarriageAllowanceAuditFilter extends FrontendAuditFilter with AppName wit
   override lazy val maskedFormFields: Seq[String] = Seq.empty[String]
   override lazy val applicationPort: Option[Int] = None
   override lazy val auditConnector = ApplicationAuditConnector
+
   override def controllerNeedsAuditing(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsAuditing
 
   override protected def appNameConfiguration: Configuration = current.configuration

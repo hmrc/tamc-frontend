@@ -16,14 +16,14 @@
 
 package models
 
-import play.api.libs.json.Writes
-import play.api.libs.json.Reads
-import uk.gov.hmrc.domain.SimpleObjectReads
-import uk.gov.hmrc.domain.SimpleObjectWrites
+import play.api.libs.json.{Reads, Writes}
+import uk.gov.hmrc.domain.{SimpleObjectReads, SimpleObjectWrites}
 
 object Gender {
   private val validValues: List[String] = List("M", "F")
+
   def isValid(code: String) = validValues.contains(code)
+
   implicit val genderWrite: Writes[Gender] = new SimpleObjectWrites[Gender](_.gender)
   implicit val genderRead: Reads[Gender] = new SimpleObjectReads[Gender]("gender", Gender.apply)
 }

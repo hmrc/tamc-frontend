@@ -18,7 +18,8 @@ package controllers
 
 import java.text.NumberFormat
 
-import config.ApplicationConfig
+import _root_.services.{CachingService, TimeService, TransferService}
+import config.ApplicationConfig._
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
@@ -27,7 +28,6 @@ import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
-import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -39,8 +39,8 @@ class ContentTest extends ControllerBaseSpec {
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
-    "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
-    "Insurance is taken off."
+      "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
+      "Insurance is taken off."
 
   val ERROR_HEADING = "There is a problem"
 
@@ -764,7 +764,7 @@ class ContentTest extends ControllerBaseSpec {
 
     "successfully authenticate the user and have income-check page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE())
       val result = eligibilityController.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
@@ -780,8 +780,8 @@ class ContentTest extends ControllerBaseSpec {
     "have partners-income page and content for English resident" in {
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(MAX_LIMIT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -795,8 +795,8 @@ class ContentTest extends ControllerBaseSpec {
       val request = FakeRequest().withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -853,7 +853,7 @@ class ContentTest extends ControllerBaseSpec {
 
     "successfully authenticate the user and have lower earner page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE )
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE())
       val result = eligibilityController.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
@@ -867,8 +867,8 @@ class ContentTest extends ControllerBaseSpec {
     "have partners-income page and content for English resident" in {
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT)
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(MAX_LIMIT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -882,8 +882,8 @@ class ContentTest extends ControllerBaseSpec {
       val request = FakeRequest().withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThresholdScot = NumberFormat.getIntegerInstance().format(ApplicationConfig.MAX_LIMIT_SCOT)
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -924,7 +924,9 @@ class ContentTest extends ControllerBaseSpec {
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+
   def transferController: TransferController = new TransferController(
     messagesApi,
     instanceOf[AuthenticatedActionRefiner],
@@ -933,7 +935,7 @@ class ContentTest extends ControllerBaseSpec {
     mockTimeService
   )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
-  val currentTaxYear = time.TaxYear.current.startYear
+  val currentTaxYear: Int = time.TaxYear.current.startYear
   when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
   when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear))).thenReturn(time.TaxYear.current.starts)
   when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)

@@ -17,10 +17,6 @@
 package models
 
 import play.api.libs.json.Json
-import play.api.libs.json.JsValue
-import play.api.libs.json.JsSuccess
-import play.api.libs.json.Format
-import play.api.libs.json._
 
 object RelationshipRecordStatusWrapper {
   implicit val formats = Json.format[RelationshipRecordStatusWrapper]

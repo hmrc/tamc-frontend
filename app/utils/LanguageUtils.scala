@@ -16,9 +16,8 @@
 
 package utils
 
-import play.api.i18n.{Lang, Messages}
 import config.ApplicationConfig
-import models.EndReasonCode
+import play.api.i18n.Messages
 
 object LanguageUtils {
 

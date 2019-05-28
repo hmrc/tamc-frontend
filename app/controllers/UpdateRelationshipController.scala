@@ -36,12 +36,12 @@ import uk.gov.hmrc.time
 import scala.concurrent.Future
 
 class UpdateRelationshipController @Inject()(
-                                             override val messagesApi: MessagesApi,
-                                             authenticatedActionRefiner: AuthenticatedActionRefiner,
-                                             updateRelationshipService: UpdateRelationshipService,
-                                             registrationService: TransferService,
-                                             cachingService: CachingService,
-                                             timeService: TimeService
+                                              override val messagesApi: MessagesApi,
+                                              authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                              updateRelationshipService: UpdateRelationshipService,
+                                              registrationService: TransferService,
+                                              cachingService: CachingService,
+                                              timeService: TimeService
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
 
@@ -145,13 +145,13 @@ class UpdateRelationshipController @Inject()(
   }
 
   def divorceYear: Action[AnyContent] = authenticatedActionRefiner.async {
-      implicit request =>
-          updateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce map {
-            case Some(UpdateRelationshipCacheData(_, roleRecord, _, historicRelationships, _, relationshipEndReasonRecord,_)) =>
-              val divorceForm = updateRelationshipDivorceForm.fill(ChangeRelationship(role= roleRecord, endReason = Some(relationshipEndReasonRecord.get.endReason), historicActiveRecord = Some(historicRelationships.isEmpty)))
-              Ok(views.html.coc.divorce_select_year(changeRelationshipForm = divorceForm))
-            case _ => throw CacheMissingUpdateRecord()
-          } recover handleError
+    implicit request =>
+      updateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce map {
+        case Some(UpdateRelationshipCacheData(_, roleRecord, _, historicRelationships, _, relationshipEndReasonRecord, _)) =>
+          val divorceForm = updateRelationshipDivorceForm.fill(ChangeRelationship(role = roleRecord, endReason = Some(relationshipEndReasonRecord.get.endReason), historicActiveRecord = Some(historicRelationships.isEmpty)))
+          Ok(views.html.coc.divorce_select_year(changeRelationshipForm = divorceForm))
+        case _ => throw CacheMissingUpdateRecord()
+      } recover handleError
   }
 
   def divorceSelectYear(): Action[AnyContent] = authenticatedActionRefiner.async {
@@ -179,7 +179,7 @@ class UpdateRelationshipController @Inject()(
   private def getOptionalLocalDate(day: Option[String], month: Option[String], year: Option[String]): Option[LocalDate] =
     (day, month, year) match {
       case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y.toInt, m.toInt, d.toInt))
-      case _                           => None
+      case _ => None
     }
 
   def divorceAction(): Action[AnyContent] = authenticatedActionRefiner.async {
@@ -196,7 +196,7 @@ class UpdateRelationshipController @Inject()(
             BadRequest(views.html.coc.divorce(form,
               cyEffectiveUntilDate = timeService.getEffectiveUntilDate(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year")))),
               cyEffectiveDate = Some(timeService.getEffectiveDate(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_CY, dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year"))))),
-              pyEffectiveDate = Some(timeService.getEffectiveDate(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_PY,dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year")))))))
+              pyEffectiveDate = Some(timeService.getEffectiveDate(EndRelationshipReason(endReason = EndReasonCode.DIVORCE_PY, dateOfDivorce = getOptionalLocalDate(formWithErrors.data.get("dateOfDivorce.day"), formWithErrors.data.get("dateOfDivorce.month"), formWithErrors.data.get("dateOfDivorce.year")))))))
           },
         formData =>
           updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(formData.endReason.get, formData.dateOfDivorce)) map {
@@ -209,7 +209,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       updateRelationshipService.getUpdateNotification map {
         case Some(NotificationRecord(transferorEmail)) => Ok(views.html.coc.email(emailForm.fill(transferorEmail)))
-        case None                                      => Ok(views.html.coc.email(emailForm))
+        case None => Ok(views.html.coc.email(emailForm))
       } recover handleError
   }
 
@@ -219,7 +219,7 @@ class UpdateRelationshipController @Inject()(
         cache =>
           val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
           val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
-          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate,isEnded=Some(selectedRelationship.participant1EndDate.isDefined
+          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate, isEnded = Some(selectedRelationship.participant1EndDate.isDefined
             && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
       }
   }
@@ -302,14 +302,14 @@ class UpdateRelationshipController @Inject()(
 
         throwable match {
           case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-          case _: CacheMissingUpdateRecord        => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CacheUpdateRequestNotSent       => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CannotUpdateRelationship        => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CitizenNotFound                 => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
-          case _: BadFetchRequest                 => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
-          case _: TransferorNotFound              => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound               => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
-          case _                                  => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
+          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
+          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
+          case _: TransferorNotFound => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
+          case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }
 

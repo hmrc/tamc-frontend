@@ -17,27 +17,9 @@
 package forms
 
 import models.MultiYearInput
-import models.Gender
-import models.RegistrationFormInput
-import play.api.data.FormError
-import play.api.data.Form
-import play.api.data.Forms.mapping
-import play.api.data.Forms.text
-import play.api.data.Forms.nonEmptyText
-import play.api.data.Forms.of
-import play.api.data.Forms.list
-import play.api.data.Forms.number
-import play.api.data.Forms.optional
-import play.api.data.Mapping
-import play.api.data.format.Formatter
-import play.api.data.validation.Invalid
-import play.api.data.validation.Valid
-import play.api.data.validation.ValidationError
-import uk.gov.hmrc.domain.Nino
-import org.joda.time.LocalDate
-import models.MultiYearInput
+import play.api.data.Forms.{mapping, number}
 import play.api.data.validation.Constraint
-import play.api.data.RepeatedMapping
+import play.api.data.{Form, FormError, Mapping, RepeatedMapping}
 
 object MultiYearForm {
 
@@ -57,15 +39,15 @@ object MultiYearForm {
     }
 
     private def findMissingFields(data: Map[String, String]): Seq[Either[Seq[FormError], T]] =
-      extraYears.filter { year => data.get(s"year[${year}]").isEmpty}.map { 
-        year =>  Left(Seq(FormError(s"year[${year}]",s"pages.form.extra-year.field-required",Seq(year.toString, (year+1).toString))))}
-    
+      extraYears.filter { year => data.get(s"year[${year}]").isEmpty }.map {
+        year => Left(Seq(FormError(s"year[${year}]", s"pages.form.extra-year.field-required", Seq(year.toString, (year + 1).toString))))
+      }
+
     def bind(data: Map[String, String]): Either[Seq[FormError], List[T]] = {
-      val allErrorsOrItems: Seq[Either[Seq[FormError], T]] = 
+      val allErrorsOrItems: Seq[Either[Seq[FormError], T]] =
         RepeatedMapping.indexes(key, data).map(i => wrapped.withPrefix(key + "[" + i + "]").bind(data)) ++ findMissingFields(data)
 
-      
-      
+
       if (allErrorsOrItems.forall(_.isRight)) {
         Right(allErrorsOrItems.map(_.right.get).toList).right.flatMap(applyConstraints)
       } else {

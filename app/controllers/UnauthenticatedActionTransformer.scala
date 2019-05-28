@@ -21,15 +21,15 @@ import models.auth._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.HeaderCarrierConverter
-import uk.gov.hmrc.auth.core.retrieve.~
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class UnauthenticatedActionTransformer @Inject()(
-                                               val authConnector: AuthConnector
-                                             )(implicit ec: ExecutionContext) extends ActionTransformer[Request, RequestWithAuthState] with ActionBuilder[RequestWithAuthState] with AuthorisedFunctions {
+                                                  val authConnector: AuthConnector
+                                                )(implicit ec: ExecutionContext) extends ActionTransformer[Request, RequestWithAuthState] with ActionBuilder[RequestWithAuthState] with AuthorisedFunctions {
 
   override protected def transform[A](request: Request[A]): Future[RequestWithAuthState[A]] = {
 
@@ -38,7 +38,7 @@ class UnauthenticatedActionTransformer @Inject()(
 
     authorised(ConfidenceLevel.L100).retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
       case cl ~ saUtr ~ credentials =>
-        val authState = if(credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
+        val authState = if (credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
         Future.successful(RequestWithAuthState(request, authState = authState, Some(cl), saUtr.isDefined, credentials.map(_.providerType)))
     } recover {
       case _: NoActiveSession | _: InsufficientConfidenceLevel =>

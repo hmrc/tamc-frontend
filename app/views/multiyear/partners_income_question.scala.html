@@ -24,70 +24,75 @@
 @import models.auth.RequestWithAuthState
 
 @(
-    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
-    scottishResident: Boolean
+partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
+scottishResident: Boolean
 )(implicit
-    messages: Messages,
-    request: RequestWithAuthState[_],
-    templateRenderer: TemplateRenderer,
-    formPartialRetriever: FormPartialRetriever
+messages: Messages,
+request: RequestWithAuthState[_],
+templateRenderer: TemplateRenderer,
+formPartialRetriever: FormPartialRetriever
 )
 
 @maxLimit = @{
-    if (scottishResident) MAX_LIMIT_SCOT else MAX_LIMIT
+if (scottishResident) MAX_LIMIT_SCOT() else MAX_LIMIT()
 }
 
 @tamc_main(
-    title = Messages("title.eligibility.pattern",
-        Messages("eligibility.check.partners.income.h1",
-            NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE+1),
-            NumberFormat.getIntegerInstance().format(maxLimit)
-        )
-    )
+title = Messages("title.eligibility.pattern",
+Messages("eligibility.check.partners.income.h1",
+NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1),
+NumberFormat.getIntegerInstance().format(maxLimit)
+)
+)
 ){
-    @form_error_notification(
-        partnersIncomeFormInput,
-        formErrorMessage = "pages.form.error.mandatory.data",
-        lowerLimit = Some(PERSONAL_ALLOWANCE+1),
-        upperLimit = Some(maxLimit)
+@form_error_notification(
+partnersIncomeFormInput,
+formErrorMessage = "pages.form.error.mandatory.data",
+lowerLimit = Some(PERSONAL_ALLOWANCE()+1),
+upperLimit = Some(maxLimit)
+)
+
+<h1 class="heading-xlarge">
+    <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
+    @Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() +
+    1), NumberFormat.getIntegerInstance().format(maxLimit))
+</h1>
+
+<p>@Messages("eligibility.check.partners.income.information1")</p>
+
+@helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
+<div class="form-group inline">
+    @input_radio_group(
+    partnersIncomeFormInput("partners-income"),
+    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+    '_legend -> Messages("multiyear.check.income"),
+    '_legendClass -> "visuallyhidden",
+    '_labelClass -> "block-label",
+    '_labelAfter -> true,
+    '_fieldsetAttributes -> "data-inline-error=inline-partners-income-error",
+    '_groupClass -> "inline spacingBottom"
     )
+</div>
 
-    <h1 class="heading-xlarge">
-        <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
-        @Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE + 1), NumberFormat.getIntegerInstance().format(maxLimit))
-    </h1>
+<div class="tamc-js-hidden error-inline validation-summary partners-inc-error" id="inline-partners-income-error">
+    @Messages("eligibility.check.partners.income.error")
+</div>
 
-    <p>@Messages("eligibility.check.partners.income.information1")</p>
-
-    @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
-        <div class="form-group inline">
-            @input_radio_group(
-                partnersIncomeFormInput("partners-income"),
-                Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-                '_legend -> Messages("multiyear.check.income"),
-                '_legendClass -> "visuallyhidden",
-                '_labelClass -> "block-label",
-                '_labelAfter -> true,
-                '_fieldsetAttributes -> "data-inline-error=inline-partners-income-error",
-                '_groupClass -> "inline spacingBottom"
-            )
-        </div>
-
-        <div class="tamc-js-hidden error-inline validation-summary partners-inc-error" id="inline-partners-income-error">
-            @Messages("eligibility.check.partners.income.error")
-        </div>
-
-        <script>
+<script>
                 var _gaq = [];
-        </script>
 
-        <div class="form-group">
-            <button class="button button-calculate" data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue" type="submit">
-                @Messages("generic.continue")
-            </button>
-        </div>
+</script>
 
-    }
+<div class="form-group">
+    <button class="button button-calculate"
+            data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
+            type="submit">
+        @Messages("generic.continue")
+    </button>
+</div>
 
-    <a href="@controllers.routes.EligibilityController.lowerEarnerCheck" class="link-back">@Html(Messages("generic.back"))</a>
+}
+
+<a href="@controllers.routes.EligibilityController.lowerEarnerCheck"
+   class="link-back">@Html(Messages("generic.back"))</a>
 }

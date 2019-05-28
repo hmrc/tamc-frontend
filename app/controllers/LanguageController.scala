@@ -24,8 +24,9 @@ import scala.concurrent.Future
 
 class LanguageController @Inject()(val messagesApi: MessagesApi) extends BaseController {
 
-  def enGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl=redirectUrl, language="en")
-  def cyGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl=redirectUrl, language="cy")
+  def enGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl = redirectUrl, language = "en")
+
+  def cyGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl = redirectUrl, language = "cy")
 
   def changeLang(redirectUrl: String, language: String) = Action.async { implicit request =>
 

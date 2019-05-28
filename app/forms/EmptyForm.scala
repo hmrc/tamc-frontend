@@ -17,11 +17,7 @@
 package forms
 
 import play.api.data.Form
-import play.api.data.Forms.optional
-import play.api.data.Forms.text
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailAddress
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailMaxLength
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailPattern
+import play.api.data.Forms.{optional, text}
 
 object EmptyForm {
   val form = Form[Option[String]]("value" -> optional(text))

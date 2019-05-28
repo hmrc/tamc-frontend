@@ -19,14 +19,14 @@ package controllers
 import config.ApplicationConfig
 import models.auth.{PermanentlyAuthenticated, TemporarilyAuthenticated}
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito._
 import play.api.mvc.{Controller, Result}
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
-import org.mockito.Mockito._
-import org.mockito.ArgumentMatchers._
 import test_utils.TestData.Ninos
-import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
+import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,6 +40,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
 
   class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
     def onPageLoad() = authAction { implicit request => Ok.withHeaders("authState" -> request.authState.toString) }
+
     when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L100), ArgumentMatchers.eq(retrievals))(any(), any()))
       .thenReturn(authReturn)
   }
@@ -83,6 +84,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
   }
 
   object NoActiveSessionException extends NoActiveSession("")
+
   val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
     new ~(new ~(new ~(None, None), ConfidenceLevel.L100), None)
   }

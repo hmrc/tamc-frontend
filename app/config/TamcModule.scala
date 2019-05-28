@@ -17,8 +17,8 @@
 package config
 
 import connectors.{ApplicationAuditConnector, TamcAuthConnector}
-import play.api.{Configuration, Environment}
 import play.api.inject.{Binding, Module}
+import play.api.{Configuration, Environment}
 import services._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector

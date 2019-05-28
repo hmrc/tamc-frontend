@@ -18,12 +18,12 @@ package models
 
 
 case class CacheData(
-  transferor: Option[UserRecord],
-  recipient: Option[RecipientRecord],
-  notification: Option[NotificationRecord],
-  relationshipCreated: Option[Boolean] = None,
-  selectedYears: Option[List[Int]] = None,
-  recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
-  dateOfMarriage : Option[DateOfMarriageFormInput] = None)
+                      transferor: Option[UserRecord],
+                      recipient: Option[RecipientRecord],
+                      notification: Option[NotificationRecord],
+                      relationshipCreated: Option[Boolean] = None,
+                      selectedYears: Option[List[Int]] = None,
+                      recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
+                      dateOfMarriage: Option[DateOfMarriageFormInput] = None)
 
-case class UpdateRelationshipCacheData(loggedInUserInfo: Option[LoggedInUserInfo] = None, roleRecord: Option[String] = None,activeRelationshipRecord: Option[RelationshipRecord] = None, historicRelationships: Option[Seq[RelationshipRecord]] = None, notification: Option[NotificationRecord], relationshipEndReasonRecord: Option[EndRelationshipReason] = None, relationshipUpdated: Option[Boolean] = None)
+case class UpdateRelationshipCacheData(loggedInUserInfo: Option[LoggedInUserInfo] = None, roleRecord: Option[String] = None, activeRelationshipRecord: Option[RelationshipRecord] = None, historicRelationships: Option[Seq[RelationshipRecord]] = None, notification: Option[NotificationRecord], relationshipEndReasonRecord: Option[EndRelationshipReason] = None, relationshipUpdated: Option[Boolean] = None)

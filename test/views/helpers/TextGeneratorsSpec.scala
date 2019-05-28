@@ -44,10 +44,10 @@ class TextGeneratorsSpec extends WordSpec with Matchers {
 
     "taxDateIntervalString" must {
       "return dates for one tax year to present" in {
-        TextGenerators.taxDateIntervalString("05-05-2016",Some("05-05-2017"),isWelsh = false) shouldBe "2016 to 2018"
+        TextGenerators.taxDateIntervalString("05-05-2016", Some("05-05-2017"), isWelsh = false) shouldBe "2016 to 2018"
       }
       "return dates for one tax year to another" in {
-        TextGenerators.taxDateIntervalString("20160505",None,isWelsh = false) shouldBe "2016 to Present"
+        TextGenerators.taxDateIntervalString("20160505", None, isWelsh = false) shouldBe "2016 to Present"
 
       }
     }

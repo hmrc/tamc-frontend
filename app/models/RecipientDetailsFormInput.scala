@@ -17,11 +17,7 @@
 package models
 
 import org.joda.time.LocalDate
-
-import play.api.libs.json.Format
-import play.api.libs.json.Json
-import play.api.libs.json.Reads
-import play.api.libs.json.Writes
+import play.api.libs.json.{Format, Json, Reads, Writes}
 import uk.gov.hmrc.domain.Nino
 
 object RecipientDetailsFormInput {

@@ -16,12 +16,8 @@
 
 package models
 
-import play.api.libs.json.Json
-import uk.gov.hmrc.domain.Nino
 import org.joda.time.LocalDate
-import play.api.libs.json.Writes
-import play.api.libs.json.Reads
-import play.api.libs.json.Format
+import play.api.libs.json.{Format, Json, Reads, Writes}
 
 object EndRelationshipReason {
   private val pattern = "dd/MM/yyyy"

@@ -18,14 +18,14 @@
 @import models.auth.UserRequest
 
 @()(implicit messages: Messages,
-        request: UserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.other-ways")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
+title = Messages("title.pattern", Messages("title.other-ways")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
 <h1 class="heading-xlarge text mainpage" id="message">@Html(Messages("pages.noyears.h1"))</h1>
 <div class="panel panel-border-narrow">@Html(Messages("pages.noyears.content1"))</div>
 <p>@Html(Messages("pages.noyears.findoutmore"))</p>

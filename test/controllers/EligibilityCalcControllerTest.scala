@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.ApplicationConfig
+import config.ApplicationConfig._
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
@@ -27,7 +27,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
   "Check eligibility benefit" should {
 
     "be GBP 230 if transferor income=0 (< 11500) and recipient income=13000 (13000-11500)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "0", "recipient-income" -> "13000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "0", "recipient-income" -> "13000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
@@ -35,16 +35,16 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "Transferor not eligible if transferor income is more than maximum limit" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val overThreshold = formatter.format(ApplicationConfig.MAX_LIMIT + 100)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> overThreshold, "recipient-income" -> "51000")
+      val higherThreshold = formatter.format(MAX_LIMIT())
+      val overThreshold = formatter.format(MAX_LIMIT() + 100)
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> overThreshold, "recipient-income" -> "51000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. As the person making the transfer, your income must be below £$higherThreshold."
     }
 
     "be GBP 238 if transferor income=9000 (< 9540) and recipient income=12000 (> 11660)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9000", "recipient-income" -> "16000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9000", "recipient-income" -> "16000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
@@ -52,14 +52,14 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "be negative (12) if transferor income=10000 (9540-10600) and recipient income=11000 (10600-11660)" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "11000", "recipient-income" -> "12501")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "11000", "recipient-income" -> "12501")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple."
     }
 
     "be GBP 230 if transferor income=10000 (9540-10600) and recipient income=20000 (11660-42385)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "10000", "recipient-income" -> "20000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "10000", "recipient-income" -> "20000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
@@ -67,9 +67,9 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "be 0 if transferor income=9540  and recipient income=11501" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE+1)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9540", "recipient-income" -> lowerThreshold)
+      val higherThreshold = formatter.format(MAX_LIMIT())
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9540", "recipient-income" -> lowerThreshold)
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() should include("You will not benefit as a couple.")
@@ -77,9 +77,9 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income<11501" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE+1)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9540", "recipient-income" -> "11000")
+      val higherThreshold = formatter.format(MAX_LIMIT())
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9540", "recipient-income" -> "11000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
@@ -87,10 +87,10 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income>45000" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val overThreshold = formatter.format(ApplicationConfig.MAX_LIMIT + 200)
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE+1)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9540", "recipient-income" -> overThreshold)
+      val higherThreshold = formatter.format(MAX_LIMIT())
+      val overThreshold = formatter.format(MAX_LIMIT() + 200)
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9540", "recipient-income" -> overThreshold)
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
@@ -100,7 +100,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
   "Check validation message" should {
 
     "display form error message (one error)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -118,7 +118,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if transferor income is not provided (None)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","recipient-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "recipient-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -129,7 +129,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if transferor income is not provided (Empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "", "recipient-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "", "recipient-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -140,7 +140,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if transferor income is not provided (Blank)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> " ", "recipient-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> " ", "recipient-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -151,7 +151,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if transferor income contains letters" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "abc", "recipient-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "abc", "recipient-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -161,7 +161,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if transferor income contains negative number" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "-1", "recipient-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "-1", "recipient-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -171,7 +171,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if transferor income exceeds max Int" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "2147483648", "recipient-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "2147483648", "recipient-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -181,7 +181,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if recipient income is not provided (None)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -192,7 +192,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if recipient income is not provided (Empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","recipient-income" -> "", "transferor-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "recipient-income" -> "", "transferor-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -203,7 +203,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if recipient income is not provided (Blank)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","recipient-income" -> " ", "transferor-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "recipient-income" -> " ", "transferor-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -214,7 +214,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if recipient income contains letters" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","recipient-income" -> "abc", "transferor-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "recipient-income" -> "abc", "transferor-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -224,7 +224,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if recipient income contains negative number" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","recipient-income" -> "-1", "transferor-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "recipient-income" -> "-1", "transferor-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -234,7 +234,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
     }
 
     "be displayed if recipient income exceeds max Int" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","recipient-income" -> "2147483648", "transferor-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "recipient-income" -> "2147483648", "transferor-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
@@ -245,16 +245,16 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "be displayed if transferor income=0 (< 9540) and recipient income=0 (10600-11660)" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "0", "recipient-income" -> "0")
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(MAX_LIMIT())
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "0", "recipient-income" -> "0")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
 
     "be displayed if transferor income=9000 (< 9540) and recipient income=5000 (< 10600)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9000", "recipient-income" -> "5000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9000", "recipient-income" -> "5000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
@@ -262,9 +262,9 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "be displayed if transferor income=9000 (< 9540) and recipient exeeds limit" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "9000", "recipient-income" -> (ApplicationConfig.MAX_LIMIT + 1).toString)
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(MAX_LIMIT())
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9000", "recipient-income" -> (MAX_LIMIT() + 1).toString)
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
@@ -272,29 +272,29 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
 
     "be displayed if transferor income=10000 (9540-11000) and recipient exceeds limit" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE + 1)
-      val higherThreshold = formatter.format(ApplicationConfig.MAX_LIMIT)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "10000", "recipient-income" -> (ApplicationConfig.MAX_LIMIT + 1).toString)
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(MAX_LIMIT())
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "10000", "recipient-income" -> (MAX_LIMIT() + 1).toString)
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
     "be displayed if transferor income is below limit and recipient income=20000" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(ApplicationConfig.PERSONAL_ALLOWANCE)
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> (ApplicationConfig.PERSONAL_ALLOWANCE + 1).toString,
+      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE())
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> (PERSONAL_ALLOWANCE() + 1).toString,
         "recipient-income" -> "20000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple because your income is over £$lowerThreshold."
     }
     "be displayed if transferor income exceeds limit and recipient income=20000" in {
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england","transferor-income" -> "43001", "recipient-income" -> "20000")
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "43001", "recipient-income" -> "20000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
   }
-  
+
   lazy val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
 }

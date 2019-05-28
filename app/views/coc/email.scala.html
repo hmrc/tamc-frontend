@@ -22,32 +22,34 @@
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None
 )(implicit messages: Messages,
-        request: AuthenticatedUserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.confirm-email")),
-  mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
+title = Messages("title.application.pattern", Messages("title.confirm-email")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
 ) {
-    @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
-            @templates.form_error_notification(recipientForm)
-            <div class="form-group">
-                <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
-                <p class="lede">@Html(Messages("change.status.confirm.info"))</p>
-                <p>@Html(Messages("change.status.confirm.more.info"))</p>
-                   @templates.input(recipientForm("transferor-email"),
-                    '_label -> Html(Messages("pages.form.field.transferor-email")),
-                    '_labelClass -> "form-label",
-                    '_inputClass -> "form-control",
-                    '_dataAttributes -> "autocomplete=on"
-                )
-            </div>
+@helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
+@templates.form_error_notification(recipientForm)
+<div class="form-group">
+    <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
+    <p class="lede">@Html(Messages("change.status.confirm.info"))</p>
+    <p>@Html(Messages("change.status.confirm.more.info"))</p>
+    @templates.input(recipientForm("transferor-email"),
+    '_label -> Html(Messages("pages.form.field.transferor-email")),
+    '_labelClass -> "form-label",
+    '_inputClass -> "form-control",
+    '_dataAttributes -> "autocomplete=on"
+    )
+</div>
 
-        <p class="get-started group" id="get-started">
-            <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">@Html(Messages("generic.continue"))</button>
-        </p>
-    }
-        <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<p class="get-started group" id="get-started">
+    <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">
+        @Html(Messages("generic.continue"))
+    </button>
+</p>
+}
+<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

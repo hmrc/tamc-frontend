@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.emailaddress
 
-import play.api.data.FormError
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.Matchers
-import org.scalatest.WordSpec
+import org.scalatest.{Matchers, WordSpec}
+import play.api.data.FormError
 import play.api.data.Forms.optional
 
 class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks with EmailAddressGenerators {
@@ -67,17 +66,23 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks w
     }
 
     "reject too long email address (when using 'emailMaxLength' constraint)" in {
-      emailAddressMapping.verifying { maxLengthConstraint }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
+      emailAddressMapping.verifying {
+        maxLengthConstraint
+      }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
         List(FormError("email", List("error.maxLength"), List(10)))
     }
 
     "reject too long email address (when using 'emailMaxLength' constraint and custom error)" in {
-      emailAddressMapping.verifying { maxLengthConstraintWithError }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
+      emailAddressMapping.verifying {
+        maxLengthConstraintWithError
+      }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
         List(FormError("email", List("field.exceeds"), List(10)))
     }
 
     "reject email address which does not match given regex" in {
-      val errors: Seq[FormError] = emailAddressMapping.verifying { patternConstraint }.bind(Map("email" -> "example@example")).left.get
+      val errors: Seq[FormError] = emailAddressMapping.verifying {
+        patternConstraint
+      }.bind(Map("email" -> "example@example")).left.get
       errors.size shouldBe 1
       val headError = errors.head
       headError.key shouldBe "email"
@@ -88,7 +93,9 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks w
     }
 
     "reject email address which does not match given regex (with custom error)" in {
-      val errors: Seq[FormError] = emailAddressMapping.verifying { patternConstraintWithError }.bind(Map("email" -> "example@example")).left.get
+      val errors: Seq[FormError] = emailAddressMapping.verifying {
+        patternConstraintWithError
+      }.bind(Map("email" -> "example@example")).left.get
       errors.size shouldBe 1
       val headError = errors.head
       headError.key shouldBe "email"

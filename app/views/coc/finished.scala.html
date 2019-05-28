@@ -20,22 +20,22 @@
 @import models.auth.AuthenticatedUserRequest
 
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(implicit messages: Messages,
-        request: AuthenticatedUserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.pattern", Messages("title.change.complete")),
-  mainConfig = views.helpers.MainConfig(
-    maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))
+title = Messages("title.pattern", Messages("title.change.complete")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))
 ) {
-        <div class="highlighted-event govuk-box-highlight">
-            <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">
-             @Html(Messages("pages.coc.finish.header"))</h1>
-        </div>
-        <p>@Html(Messages("pages.coc.finish.acknowledgement", transferorEmail))</p>       
-        <p>@Html(Messages("pages.coc.finish.junk"))</p>
-        <h2 class="heading-medium">@Html(Messages("pages.coc.finish.whn"))</h2>
-        <p>@Html(Messages("pages.coc.finish.para1"))</p>
-        <p>@Html(Messages("pages.coc.finish.para2"))</p>
+<div class="highlighted-event govuk-box-highlight">
+    <h1 class="heading-large"><img src="@routes.Assets.at(" images/tick.png")" alt="">
+        @Html(Messages("pages.coc.finish.header"))</h1>
+</div>
+<p>@Html(Messages("pages.coc.finish.acknowledgement", transferorEmail))</p>
+<p>@Html(Messages("pages.coc.finish.junk"))</p>
+<h2 class="heading-medium">@Html(Messages("pages.coc.finish.whn"))</h2>
+<p>@Html(Messages("pages.coc.finish.para1"))</p>
+<p>@Html(Messages("pages.coc.finish.para2"))</p>
 }

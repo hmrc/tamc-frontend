@@ -19,7 +19,7 @@
 @()(implicit messages: Messages, request: UserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.pattern", Messages("session.timeout.title"))
+title = Messages("title.pattern", Messages("session.timeout.title"))
 ){
 
 <h1 class="heading-large">@Html(Messages("session.timeout.statement"))</h1>
@@ -28,7 +28,8 @@
 <p></p>
 <p>@Html(Messages("session.timeout.verbose-statement2"))</p>
 <p class="get-started group" id="continue-to-application">
-    <a href="@controllers.routes.EligibilityController.home()" class="button" role="button" id="timed-out" data-journey-click="button - click:Signed out - Marriage Allowance - GOV.UK:start again">
+    <a href="@controllers.routes.EligibilityController.home()" class="button" role="button" id="timed-out"
+       data-journey-click="button - click:Signed out - Marriage Allowance - GOV.UK:start again">
         @Html(Messages("session.timeout.button"))
     </a>
 </p>

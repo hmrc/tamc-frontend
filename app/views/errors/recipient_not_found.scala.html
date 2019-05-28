@@ -18,19 +18,19 @@
 @import play.twirl.api.Html
 
 @()(implicit messages: Messages,
-        request: UserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.error")),
-    mainConfig = views.helpers.MainConfig(
-        maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found")))) {
-    <p id="error">@Html(Messages("recipient.not.found.para1"))</p>
-    <p>@Html(Messages("recipient.not.found.para2"))</p>
-    <p class="get-started group" id="get-started">
-        <a href="@controllers.routes.UpdateRelationshipController.history" class="button" role="button">
-            @Html(Messages("generic.back"))
-        </a>
-    </p>
+title = Messages("title.pattern", Messages("title.error")),
+mainConfig = views.helpers.MainConfig(
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found")))) {
+<p id="error">@Html(Messages("recipient.not.found.para1"))</p>
+<p>@Html(Messages("recipient.not.found.para2"))</p>
+<p class="get-started group" id="get-started">
+    <a href="@controllers.routes.UpdateRelationshipController.history" class="button" role="button">
+        @Html(Messages("generic.back"))
+    </a>
+</p>
 }

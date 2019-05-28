@@ -44,15 +44,16 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 
 @scriptElement = {
 
-        <script type="text/javascript">
+<script type="text/javascript">
             ga('require', 'linker');
             if(document.referrer === "https://www.gov.uk/marriage-allowance"){
                 ga('set', 'referrer', '');
             }
             ga('require', 'displayfeatures');
-        </script>
 
-        <script type="text/javascript">
+</script>
+
+<script type="text/javascript">
                         function initCobrowse() {
                             if (typeof(eGain) != 'undefined' && eGain.cobrowse) {
                                 eGain.cobrowse.startCobrowse();
@@ -61,70 +62,73 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
                                 console.warn('eGain is not initialized')
                             }
                         }
-                </script>
 
-        <script type="text/javascript">
+</script>
+
+<script type="text/javascript">
                       $.timeoutDialog({
                                          timeout: 900,
                                          countdown:120,
                                          keep_alive_url: '/keep-alive',
                                          logout_url: '/marriage-allowance-application/logout'
                                         });
-                </script>
 
-        <script type="text/javascript" id="webchat" data-webchat-id="@config.ApplicationConfig.webchatId">var EG_ACT_ID="@config.ApplicationConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
+</script>
+
+<script type="text/javascript" id="webchat" data-webchat-id="@config.ApplicationConfig.webchatId">var EG_ACT_ID="@config.ApplicationConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
             {c=a.contentWindow.document}
             catch(g)
             {d=e.domain,a.src="javascript:var d=document.open();d.domain='"+d+"';void(0);",c=a.contentWindow.document}
                 c.open()._d=function()
                 {var a=this.createElement("script");d&&(this.domain=d);a.src=f;this.isEGFIF= !0;this.body.appendChild(a)}
                 ;c.write('<body onload="document._d();">');c.close()})(document,"//analytics.analytics-egain.com/onetag/"+EG_ACT_ID);
-        </script>
-}
 
+</script>
+}
 
 
 @isWelsh = @{
-    if(messages.lang.code == "cy"){
-        true
-    }
-    else {
-        false
-    }
+if(messages.lang.code == "cy"){
+true
+}
+else {
+false
+}
 }
 @getHelpForm = {
-   @includes.report_problem(supportLinkEnabled, formPartialRetriever, appConfig)
+@includes.report_problem(supportLinkEnabled, formPartialRetriever, appConfig)
 }
 
 @commonContentHeader = {
 
-    @if(ApplicationConfig.isWelshEnabled) {
-        @langSwitch
-    }
+@if(ApplicationConfig.isWelshEnabled) {
+@langSwitch
+}
 }
 
 @if(ApplicationConfig.enableRefresh) {
-    <meta http-equiv="refresh" content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
+<meta http-equiv="refresh"
+      content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
 }
 
 @isUserResearchBannerHidden = @{request.cookies.exists((x: Cookie) => x.name == "mdtpurr")}
 
 @mustacheCheck(str: String) = @{
-    if(str.trim=="") false else str
+if(str.trim=="") false else str
 }
 
 @sidebar = {
-    @if(sidebarLinks.isDefined) {
-        @layouts.sidebar(sidebarLinks.get, sidebarClass)
-    }
+@if(sidebarLinks.isDefined) {
+@layouts.sidebar(sidebarLinks.get, sidebarClass)
+}
 }
 
 @titleName = @{
-    if(request.authState.permanent) {
-        appConfig.pageTitle
-    } else {
-        ""
-    }
+if(request.authState.permanent) {
+appConfig.pageTitle
+} else {
+""
+}
 }
 
 @* user.fold(HtmlFormat.empty) {
@@ -135,76 +139,76 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 *}
 *@
 @actingAttorneyBanner = @{
-    HtmlFormat.empty
+HtmlFormat.empty
 }
 
 @googleAnalytics = @{
-    Map[String, Any](
-        "trackingId" -> ApplicationConfig.analyticsToken,
-        "cookieDomain" -> ApplicationConfig.analyticsHost,
-        "confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
-        "authProvider" -> request.authProvider
-    ) ++ gaDimensions.getOrElse(Map.empty)
+Map[String, Any](
+"trackingId" -> ApplicationConfig.analyticsToken,
+"cookieDomain" -> ApplicationConfig.analyticsHost,
+"confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
+"authProvider" -> request.authProvider
+) ++ gaDimensions.getOrElse(Map.empty)
 }
 
 @{
 
-  val arguments = Map[String, Any](
-      "pageTitle" -> s"$title",
-      "linkElems" -> Map(
-        "url" -> routes.Assets.at("stylesheets/tamc.css")
-      ),
-      "hasNavLinks" -> true,
-      "navTitle" -> titleName,
-      "removeServiceInfo" -> false,
+val arguments = Map[String, Any](
+"pageTitle" -> s"$title",
+"linkElems" -> Map(
+"url" -> routes.Assets.at("stylesheets/tamc.css")
+),
+"hasNavLinks" -> true,
+"navTitle" -> titleName,
+"removeServiceInfo" -> false,
 
-      "betaBanner" -> true,
-      "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
-      "includeHMRCBranding" -> true,
+"betaBanner" -> true,
+"feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
+"includeHMRCBranding" -> true,
 
-      "hideAccountMenu" -> !request.authState.permanent,
-      "assetsPath" -> appConfig.assetsPrefix,
+"hideAccountMenu" -> !request.authState.permanent,
+"assetsPath" -> appConfig.assetsPrefix,
 
-      "isGovernmentGateway" -> request.authProvider.contains("GovernmentGateway"),
-      "isVerify" -> request.authProvider.contains("Verify"),
-      "isSa" -> request.isSA,
-      "signOutUrl" -> (if(request.authState.isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
+"isGovernmentGateway" -> request.authProvider.contains("GovernmentGateway"),
+"isVerify" -> request.authProvider.contains("Verify"),
+"isSa" -> request.isSA,
+"signOutUrl" -> (if(request.authState.isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
 
-      "actingAttorneyBanner" -> actingAttorneyBanner,
-      "mainContentHeader" -> commonContentHeader,
-      "sidebar" -> sidebar,
-      "getHelpForm" -> getHelpForm,
-      "googleAnalytics" -> googleAnalytics,
+"actingAttorneyBanner" -> actingAttorneyBanner,
+"mainContentHeader" -> commonContentHeader,
+"sidebar" -> sidebar,
+"getHelpForm" -> getHelpForm,
+"googleAnalytics" -> googleAnalytics,
 
-      "scriptElems" -> Seq(
-        Map("url" -> routes.Assets.at("javascripts/tamc.js")),
-        Map("url" -> routes.Assets.at("javascripts/banner_close.js"))
-      ),
+"scriptElems" -> Seq(
+Map("url" -> routes.Assets.at("javascripts/tamc.js")),
+Map("url" -> routes.Assets.at("javascripts/banner_close.js"))
+),
 
-      "mainAttributes" -> mainConfig.maybeMainDataAttributes,
-      "inlineScript" -> scriptElement,
-      "mainClass" -> mainConfig,
-      "isWelsh" -> isWelsh,
-      "optimizelyProjectId"  -> "8421482974",
-      "showPropositionLinks" -> true,
-      "langSelector" -> {
-        Map("enUrl" -> controllers.routes.LanguageController.enGb(request.uri).url,
-          "cyUrl" -> controllers.routes.LanguageController.cyGb(request.uri).url)
-      }
-    )
+"mainAttributes" -> mainConfig.maybeMainDataAttributes,
+"inlineScript" -> scriptElement,
+"mainClass" -> mainConfig,
+"isWelsh" -> isWelsh,
+"optimizelyProjectId"  -> "8421482974",
+"showPropositionLinks" -> true,
+"langSelector" -> {
+Map("enUrl" -> controllers.routes.LanguageController.enGb(request.uri).url,
+"cyUrl" -> controllers.routes.LanguageController.cyGb(request.uri).url)
+}
+)
 
-  val templateArguments = {
-    if(!isUserResearchBannerHidden && ApplicationConfig.urBannerEnabled) {
-      arguments ++ Map[String, Any](
-        "fullWidthBannerTitle" -> Messages("tamc.banner.recruitment.title"),
-        "fullWidthBannerText" -> Messages("tamc.banner.recruitment.link"),
-        "fullWidthBannerLink" -> Messages("tamc.banner.recruitment.linkURL"),
-        "fullWidthBannerDismissText" -> Messages("tamc.banner.recruitment.reject"),
-        "fullWidthBannerGaAction" -> "homepage UR banner:Help improve digital services by joining the HMRC user panel (opens in new window)"
-      )
-    } else arguments
-  }
+val templateArguments = {
+if(!isUserResearchBannerHidden && ApplicationConfig.urBannerEnabled) {
+arguments ++ Map[String, Any](
+"fullWidthBannerTitle" -> Messages("tamc.banner.recruitment.title"),
+"fullWidthBannerText" -> Messages("tamc.banner.recruitment.link"),
+"fullWidthBannerLink" -> Messages("tamc.banner.recruitment.linkURL"),
+"fullWidthBannerDismissText" -> Messages("tamc.banner.recruitment.reject"),
+"fullWidthBannerGaAction" -> "homepage UR banner:Help improve digital services by joining the HMRC user panel (opens in new window)"
+)
+} else arguments
+}
 
-  templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent, false, None), templateArguments)
+templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent, false, None), templateArguments)
 }
 

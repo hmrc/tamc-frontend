@@ -19,40 +19,42 @@
 @import play.twirl.api.Html
 
 @(
-    field: Field,
-    radioOptions: Seq[(String, String)],
-    args: (Symbol, Any)*
+field: Field,
+radioOptions: Seq[(String, String)],
+args: (Symbol, Any)*
 )(implicit messages: Messages)
 
 @elements = @{new FieldElements(field.id, field, null, args.toMap, messages) }
 @fieldsetClass = {@elements.args.get('_groupClass)@if(elements.hasErrors){ form-field--error}}
 @labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
 
-<fieldset class="@fieldsetClass" id="@elements.field.id" @if(elements.args.get('_fieldsetAttributes).isDefined) {@elements.args.get('_fieldsetAttributes)}>
-    @if(elements.args.get('_legend).isDefined) {
-        <legend @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}>
-            @elements.args.get('_legend)
-        </legend>
-    }
-    @if(elements.args.contains('_fieldHelper)) {
-        <span class="form-hint">@elements.args.get('_fieldHelper).getOrElse("")</span>
-    }
-    @elements.errors.map{ error =>
-        <span class="error-notification">@Messages(error)</span>
-    }
-    @radioOptions.map { case (value, label) =>
-        @defining(s"${elements.field.name}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
-            <label for="@inputId" @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
-                <input
-                    type="radio"
-                    id="@inputId"
-                    name="@elements.field.name"
-                    value="@value"
-                    @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
-                    @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
-                    @field.value.filter( _ == value).map{_ => checked="checked"}/>
-                @label
-            </label>
-        }
-    }
+<fieldset class="@fieldsetClass" id="@elements.field.id"
+          @if(elements.args.get('_fieldsetAttributes).isDefined) {@elements.args.get('_fieldsetAttributes)}>
+@if(elements.args.get('_legend).isDefined) {
+<legend @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}>
+@elements.args.get('_legend)
+</legend>
+}
+@if(elements.args.contains('_fieldHelper)) {
+<span class="form-hint">@elements.args.get('_fieldHelper).getOrElse("")</span>
+}
+@elements.errors.map{ error =>
+<span class="error-notification">@Messages(error)</span>
+}
+@radioOptions.map { case (value, label) =>
+@defining(s"${elements.field.name}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
+<label for="@inputId"
+       @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
+<input
+        type="radio"
+        id="@inputId"
+        name="@elements.field.name"
+        value="@value"
+        @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
+@if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
+@field.value.filter( _ == value).map{_ => checked="checked"}/>
+@label
+</label>
+}
+}
 </fieldset>

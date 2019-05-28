@@ -91,7 +91,7 @@ class MarriageAllowanceConnectorTest extends ControllerBaseSpec with WireMockHel
       await(MarriageAllowanceConnector.getRecipientRelationship(nino, data))
       verify(1,
         postRequestedFor(urlEqualTo(s"/paye/$nino/get-recipient-relationship"))
-        .withRequestBody(equalToJson(Json.toJson(data).toString()))
+          .withRequestBody(equalToJson(Json.toJson(data).toString()))
       )
     }
   }
@@ -137,7 +137,7 @@ class MarriageAllowanceConnectorTest extends ControllerBaseSpec with WireMockHel
     .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
     .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))
     .overrides(bind[FormPartialRetriever].toInstance(MockFormPartialRetriever)
-  ).configure(
+    ).configure(
     "metrics.jvm" -> false,
     "metrics.enabled" -> false,
     "microservice.services.marriage-allowance.port" -> server.port()

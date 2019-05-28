@@ -52,8 +52,8 @@ class TransferServiceTest extends ControllerBaseSpec {
         val response = GetRelationshipResponse(Some(RecipientRecordData.userRecord), None, ResponseStatus("OK"))
 
         when(service.cachingService.getUpdateRelationshipCachedData)
-          .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord),Some(List(relationshipRecord)), None)))
-        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)),Some(relationshipRecord)))
+          .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
+        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
           .thenReturn(true)
         when(service.marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
@@ -69,8 +69,8 @@ class TransferServiceTest extends ControllerBaseSpec {
       "recipient is not returned" in {
         val response = GetRelationshipResponse(None, None, ResponseStatus("OK"))
         when(service.cachingService.getUpdateRelationshipCachedData)
-          .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord),Some(List(relationshipRecord)), None)))
-        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)),Some(relationshipRecord)))
+          .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
+        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
           .thenReturn(true)
         when(service.marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
@@ -87,7 +87,7 @@ class TransferServiceTest extends ControllerBaseSpec {
 
       "the active relationship record is not returned" in {
         when(service.cachingService.getUpdateRelationshipCachedData)
-          .thenReturn(Some(UpdateRelationshipCacheData(None, None, None,Some(List(relationshipRecord)), None)))
+          .thenReturn(Some(UpdateRelationshipCacheData(None, None, None, Some(List(relationshipRecord)), None)))
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }

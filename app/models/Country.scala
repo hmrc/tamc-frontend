@@ -29,6 +29,9 @@ object Country {
 }
 
 case object England extends Country
+
 case object Scotland extends Country
+
 case object Wales extends Country
+
 case object NorthernIreland extends Country

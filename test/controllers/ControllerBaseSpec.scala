@@ -37,7 +37,7 @@ trait ControllerBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSu
     .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
     .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))
     .overrides(bind[FormPartialRetriever].toInstance(MockFormPartialRetriever)
-  ).configure(
+    ).configure(
     "metrics.jvm" -> false,
     "metrics.enabled" -> false
   ).build()
@@ -45,6 +45,8 @@ trait ControllerBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSu
   def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]
 
   implicit val request: Request[AnyContent] = FakeRequest()
+
   implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 }

@@ -18,10 +18,9 @@ package views.helpers
 
 import java.util.Locale
 
-import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
+import org.joda.time.{DateTime, LocalDate}
 import uk.gov.hmrc.play.views.formatting.Dates._
-import org.joda.time.DateTime
 
 object WelshDateConverter {
 

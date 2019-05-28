@@ -19,58 +19,78 @@
 @import models.Gender
 @import uk.gov.hmrc.play.views.html._
 @import utils.LanguageUtils
-@import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
+@import utils.BenefitCalculatorHelper._
+
+@import config.ApplicationConfig._
+@import java.text.NumberFormat
 
 @(form: Form[models.EarlierYearsInput],
-        input: RegistrationFormInput,
-        availableYears: List[TaxYear] = List[TaxYear]())(
-        implicit messages: Messages,
-        request: AuthenticatedUserRequest[_],
-        templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-        formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+input: RegistrationFormInput,
+availableYears: List[TaxYear] = List[TaxYear]())(
+implicit messages: Messages,
+request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-  title = Messages("title.application.pattern", Messages("title.extra-years"))
+title = Messages("title.application.pattern", Messages("title.extra-years"))
 ) {
 
-    @templates.form_error_notification(form)
+@templates.form_error_notification(form)
 
-    <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
+<h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
 
-    @helpers.form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
-        <fieldset class="inline spacingBottom" id="earlierYears">
-            <div class="form-group" id="year-@availableYears.head.year">
-                <h2 class="heading-medium"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages))))</span>
-                    <br>@TextGenerators.taxDateInterval(availableYears.head.year, LanguageUtils.isWelsh(messages))</h2>
-                <div style="margin-top: 30px">
-                    <p>@Html(Messages("pages.multiyear.canclaim", input.name, TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages))))</p>
-                    <ul class="list list-bullet">
-                        <li>@Html(Messages("your-income-" + availableYears.head.year)) </li>
-                        <li>@Html(Messages("income-between-" + availableYears.head.year, TextGenerators.formPossessive(input.name, LanguageUtils.isWelsh(messages))))</li>
-                    </ul>
-                    <p>@Html(Messages("pages.multiyear.successful", TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages)), input.name, Html(Messages("max-benefit-" + availableYears.head.year))))</p>
-                </div>
-                <p class="bold-small">@Html(Messages("pages.multiyear.extrayears"))</p>
-                @templates.input_radio_group(
-                    form(s"selectedYear"),
-                    Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
-                    '_labelClass -> "block-label",
-                    '_labelAfter -> true,
-                    '_legend -> "Extra year",
-                    '_legendClass -> "visuallyhidden",
-                    '_groupClass -> "inline spacingBottom"
-                )
-                <input type="hidden" name="furtherYears" value="@availableYears.tail.map(_.year).mkString(",")" />
-                <input type="hidden" name="yearAvailableForSelection" value="@availableYears.head.year" />
+@helpers.form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
+<fieldset class="inline spacingBottom" id="earlierYears">
+    <div class="form-group" id="year-@availableYears.head.year">
+        <h2 class="heading-medium"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages))))</span>
+            <br>@TextGenerators.taxDateInterval(availableYears.head.year, LanguageUtils.isWelsh(messages))</h2>
+        <div style="margin-top: 30px">
+            <p>@Html(Messages("pages.multiyear.canclaim", input.name,
+                TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages))))</p>
+            <ul class="list list-bullet">
+                <li>@Html(Messages("your-income", currencyFormatter(PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
+                @if(MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
+                <li>@Html(Messages("income-between", TextGenerators.formPossessive(input.name,
+                    LanguageUtils.isWelsh(messages)),currencyFormatter(PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                    currencyFormatter(MAX_LIMIT(availableYears.head.year))))
+                </li>
+                } else {
+                <li>@Html(Messages("income-between-scots", TextGenerators.formPossessive(input.name,
+                    LanguageUtils.isWelsh(messages)),currencyFormatter(PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                    currencyFormatter(MAX_LIMIT(availableYears.head.year)),
+                    currencyFormatter(MAX_LIMIT_SCOT(availableYears.head.year))))
+                </li>
+                }
+            </ul>
+            <p>@Html(Messages("pages.multiyear.successful",
+                TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages)),
+                input.name, currencyFormatter(MAX_BENEFIT(availableYears.head.year))))</p>
+        </div>
+        <p class="bold-small">@Html(Messages("pages.multiyear.extrayears"))</p>
+        @templates.input_radio_group(
+        form(s"selectedYear"),
+        Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
+        '_labelClass -> "block-label",
+        '_labelAfter -> true,
+        '_legend -> "Extra year",
+        '_legendClass -> "visuallyhidden",
+        '_groupClass -> "inline spacingBottom"
+        )
+        <input type="hidden" name="furtherYears" value="@availableYears.tail.map(_.year).mkString(" ,")" />
+        <input type="hidden" name="yearAvailableForSelection" value="@availableYears.head.year"/>
 
-            </div>
-        </fieldset>
-        <p class="get-started group" id="get-started">
-            <button class="button" type="submit" data-journey-click="marriage-allowance:button:previousyear_continue">@Html(Messages("generic.continue"))</button>
-        </p>
-    }
-    <br>
-    <a href="@controllers.routes.TransferController.eligibleYearsAction" class="link-back">@Html(Messages("generic.back"))</a>
+    </div>
+</fieldset>
+<p class="get-started group" id="get-started">
+    <button class="button" type="submit" data-journey-click="marriage-allowance:button:previousyear_continue">
+        @Html(Messages("generic.continue"))
+    </button>
+</p>
+}
+<br>
+<a href="@controllers.routes.TransferController.eligibleYearsAction"
+   class="link-back">@Html(Messages("generic.back"))</a>
 }
 

@@ -16,31 +16,13 @@
 
 package forms
 
-import models.MultiYearInput
-import models.Gender
-import models.RegistrationFormInput
-import play.api.data.FormError
-import play.api.data.Form
-import play.api.data.Forms.mapping
-import play.api.data.Forms.number
-import play.api.data.Forms.of
-import play.api.data.Forms.list
-import play.api.data.Forms.boolean
-import play.api.data.Forms.optional
-import play.api.data.Mapping
-import play.api.data.format.Formatter
-import play.api.data.validation.Constraint
-import play.api.data.validation.Constraints.pattern
-import play.api.data.validation.Invalid
-import play.api.data.validation.Valid
-import play.api.data.validation.ValidationError
-import uk.gov.hmrc.domain.Nino
-import org.joda.time.LocalDate
 import models.CurrentYearInput
+import play.api.data.Form
+import play.api.data.Forms.{boolean, mapping, optional}
 
 object CurrentYearForm {
   def currentYearForm(historicYearsAvailable: Boolean = false) = Form[CurrentYearInput](mapping(
     "applyForCurrentYear" ->
       optional(boolean).verifying("pages.form.field-required.applyForCurrentYear", _.isDefined)
-    )(CurrentYearInput.apply)(CurrentYearInput.unapply))
+  )(CurrentYearInput.apply)(CurrentYearInput.unapply))
 }

@@ -21,42 +21,43 @@
 @import models.auth.RequestWithAuthState
 
 @(
-    doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
-    )(implicit
-    messages: Messages,
-    request: RequestWithAuthState[_],
-    templateRenderer: TemplateRenderer,
-    formPartialRetriever: FormPartialRetriever
-    )
+doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
+)(implicit
+messages: Messages,
+request: RequestWithAuthState[_],
+templateRenderer: TemplateRenderer,
+formPartialRetriever: FormPartialRetriever
+)
 
 @tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
+title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
-    @form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
+@form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 
-    <h1 class="heading-xlarge">
-        <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
-        @Messages("eligibility.check.do.you.want.to.apply.h1")
-    </h1>
+<h1 class="heading-xlarge">
+    <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
+    @Messages("eligibility.check.do.you.want.to.apply.h1")
+</h1>
 
-    @helpers.form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
-        <div class="form-group inline">
-            @input_radio_group(
-                doYouWantToApplyForm("do-you-want-to-apply"),
-                Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-                '_legend -> Messages("do.you.want.to.apply.legend"),
-                '_legendClass -> "visuallyhidden",
-                '_labelClass -> "block-label",
-                '_groupClass -> "inline spacingBottom"
-            )
-        </div>
+@helpers.form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
+<div class="form-group inline">
+    @input_radio_group(
+    doYouWantToApplyForm("do-you-want-to-apply"),
+    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+    '_legend -> Messages("do.you.want.to.apply.legend"),
+    '_legendClass -> "visuallyhidden",
+    '_labelClass -> "block-label",
+    '_groupClass -> "inline spacingBottom"
+    )
+</div>
 
-        <div class="form-group">
-            <button class="button button-calculate" data-journey-click="marriage-allowance:button:doYouWantToApply_continue" id="continue" type="submit">
-                @Messages("generic.continue")
-            </button>
-        </div>
-    }
+<div class="form-group">
+    <button class="button button-calculate" data-journey-click="marriage-allowance:button:doYouWantToApply_continue"
+            id="continue" type="submit">
+        @Messages("generic.continue")
+    </button>
+</div>
+}
 
-    <a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

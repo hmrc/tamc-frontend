@@ -16,17 +16,20 @@
 
 package utils
 
+import java.text.NumberFormat
+import java.util.Locale
+
 import config.ApplicationConfig._
-import models.TaxBand
+import models._
 
 object BenefitCalculatorHelper {
 
-  def calculateTotalBenefitAcrossBands(income: Int, countryTaxbands: List[TaxBand]): Int = {
-    val rates = countryTaxbands.map(band => band.name -> band.rate).toMap
-    val basicRate = countryTaxbands.find(band => band.name == "BasicRate").head.rate
-    val maxBenefit = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER * basicRate
+  def calculateTotalBenefitAcrossBands(income: Int, countryTaxBands: List[TaxBand]): Int = {
+    val rates = countryTaxBands.map(band => band.name -> band.rate).toMap
+    val basicRate = countryTaxBands.find(band => band.name == "BasicRate").head.rate
+    val maxBenefit = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate
 
-    val benefitsFromBandedIncome = dividedIncome(countryTaxbands, income).map(
+    val benefitsFromBandedIncome = dividedIncome(countryTaxBands, income).map(
       i => i._2 * rates(i._1)).filterNot(_ < 0).sum.toInt
 
     Math.min(benefitsFromBandedIncome, maxBenefit.toInt)
@@ -45,8 +48,31 @@ object BenefitCalculatorHelper {
             Math.min(
               incomeLessPersonalAllowance - valueOfPreviousBands,
               band.diffBetweenLowerAndUpperThreshold)
-        }
+          }
     }.toMap
+  }
+
+  def maxLimit(country: Country): Int = country match {
+    case England => MAX_LIMIT()
+    case Scotland => MAX_LIMIT_SCOT()
+    case Wales => MAX_LIMIT_WALES()
+    case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND()
+  }
+
+  def setCurrencyFormat(country: Country, allowanceType: String): String = {
+    val limit: Int = if (allowanceType == "PA") {
+      PERSONAL_ALLOWANCE() + 1
+    } else {
+      maxLimit(country)
+    }
+
+    currencyFormatter(limit)
+  }
+
+  def currencyFormatter(limit: Int): String = {
+    val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
+    formatter.setMaximumFractionDigits(0)
+    formatter.format(limit)
   }
 
 }

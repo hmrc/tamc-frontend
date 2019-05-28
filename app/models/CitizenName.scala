@@ -16,8 +16,7 @@
 
 package models
 
-import play.api.libs.json.Format
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 object CitizenName {
   implicit val formats: Format[CitizenName] = Json.format[CitizenName]

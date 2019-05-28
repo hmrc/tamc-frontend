@@ -17,30 +17,29 @@
 @(pageTitle: String, heading: String, message: String, appConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
-
 @import uk.gov.hmrc.play.views.html.layouts
 
 @contentHeader = {
-    <h1>@heading</h1>
+<h1>@heading</h1>
 }
 
 @mainContent = {
-    <p>@message</p>
+<p>@message</p>
 }
 
 
 @{
-    templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
-        "pageTitle" -> pageTitle,
-        "linkElems" -> None,
-        "scriptElems" -> None,
-        "googleAnalytics" -> Map(
-            "trackingId" -> appConfig.analyticsToken,
-            "cookieDomain" -> appConfig.analyticsHost
-        ),
-        "includeHMRCBranding" -> true,
-        "mainContentHeader" -> contentHeader,
-        "betaBanner" -> true,
-        "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier
-    ))
+templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
+"pageTitle" -> pageTitle,
+"linkElems" -> None,
+"scriptElems" -> None,
+"googleAnalytics" -> Map(
+"trackingId" -> appConfig.analyticsToken,
+"cookieDomain" -> appConfig.analyticsHost
+),
+"includeHMRCBranding" -> true,
+"mainContentHeader" -> contentHeader,
+"betaBanner" -> true,
+"feedbackIdentifier" -> appConfig.contactFormServiceIdentifier
+))
 }

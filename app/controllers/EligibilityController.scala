@@ -59,8 +59,8 @@ class EligibilityController @Inject()(
 
   def eligibilityCheckAction(): Action[AnyContent] = {
 
-      def finishUrl(isLoggedIn: Boolean): String =
-        if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
+    def finishUrl(isLoggedIn: Boolean): String =
+      if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
 
     unauthenticatedAction {
       implicit request =>

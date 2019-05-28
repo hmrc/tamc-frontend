@@ -16,16 +16,14 @@
 
 package forms
 
-import config.ApplicationConfig
-import models.{RecipientDetailsFormInput, Gender, RegistrationFormInput}
+import models.{Gender, RecipientDetailsFormInput}
 import org.joda.time.LocalDate
 import play.api.data.Forms.{mapping, of}
-import play.api.data.{Form, FormError, Mapping}
 import play.api.data.format.Formatter
 import play.api.data.validation.Constraints.pattern
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import play.api.data.{Form, FormError, Mapping}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.mappers.DateTuple._
 
 object RecipientDetailsForm {
 
@@ -36,8 +34,11 @@ object RecipientDetailsForm {
   private def nonEmptyTrimmer(error: String = "error.required"): Mapping[String] =
     of(new Formatter[String] {
       def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
+
       def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
-        data.get(key).map { _.trim }.filterNot(_.isEmpty()).toRight(Seq(FormError(key, error)))
+        data.get(key).map {
+          _.trim
+        }.filterNot(_.isEmpty()).toRight(Seq(FormError(key, error)))
       }
     })
 
@@ -64,22 +65,26 @@ object RecipientDetailsForm {
       transform[Nino](Nino(_), _.nino)
 
   private def firstNameMessageCustomizer(messageKey: String): String = s"pages.form.field.name.error.${messageKey}"
+
   private def firstName: Mapping[String] =
     nameMappingCustomizer(
       messageCustomizer = firstNameMessageCustomizer)
 
   private def lastNameMessageCustomizer(messageKey: String): String = s"pages.form.field.last-name.error.${messageKey}"
+
   private def lastName: Mapping[String] =
     nameMappingCustomizer(
       messageCustomizer = lastNameMessageCustomizer)
 
   private def genderMessageCustomizer(messageKey: String): String = s"pages.form.field.gender.error.${messageKey}"
+
   private def gender: Mapping[Gender] =
     genderMapping(
       errorRequired = genderMessageCustomizer("error.required"),
       errorInvalid = genderMessageCustomizer("error.invalid"))
 
   private def ninoMessageCustomizer(messageKey: String): String = s"pages.form.field.nino.error.${messageKey}"
+
   private def nino: Mapping[Nino] =
     ninoMapping(
       errorRequired = ninoMessageCustomizer("error.required"),

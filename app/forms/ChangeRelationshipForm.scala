@@ -16,19 +16,14 @@
 
 package forms
 
-import play.api.data._
-import play.api.data.Forms._
-import models.ChangeRelationship
-import models.EndReasonCode
-import org.joda.time.LocalDate
-import uk.gov.hmrc.play.mappers.DateTuple._
 import config.ApplicationConfig
-import services.TimeService
-import play.api.data.validation.Constraint
-import play.api.data.validation.Invalid
-import play.api.data.validation.Valid
-import play.api.data.validation.ValidationError
+import models.ChangeRelationship
 import org.joda.time.LocalDate
+import play.api.data.Forms._
+import play.api.data._
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import services.TimeService
+import uk.gov.hmrc.play.mappers.DateTuple._
 
 object ChangeRelationshipForm {
 
@@ -52,7 +47,7 @@ object ChangeRelationshipForm {
     dod match {
       case None => Invalid(ValidationError("pages.form.field.dod.error.required"))
       case Some(date) if date.isAfter(TimeService.getCurrentDate) => Invalid(ValidationError("pages.form.field.dom.error.max-date"))
-      case Some(date) if date.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)) => Invalid (ValidationError ("pages.form.field.dom.error.min-date") )
+      case Some(date) if date.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)) => Invalid(ValidationError("pages.form.field.dom.error.min-date"))
       case _ => Valid
     }
   }

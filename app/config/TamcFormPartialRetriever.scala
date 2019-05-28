@@ -21,6 +21,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.WSHttp
 
 object TamcFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
-   override def httpGet: HttpGet = WSHttp
-   override val crypto = encryptCookieString _
+  override def httpGet: HttpGet = WSHttp
+
+  override val crypto = encryptCookieString _
 }

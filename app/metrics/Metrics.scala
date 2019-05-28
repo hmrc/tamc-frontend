@@ -16,8 +16,8 @@
 
 package metrics
 
-import com.codahale.metrics.{MetricRegistry, Timer}
 import com.codahale.metrics.Timer.Context
+import com.codahale.metrics.{MetricRegistry, Timer}
 import uk.gov.hmrc.play.graphite.MicroserviceMetrics
 
 

@@ -17,18 +17,19 @@
 package forms
 
 import play.api.data.Form
-import play.api.data.Forms.single
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailAddress
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailMaxLength
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.emailPattern
+import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailAddress, emailMaxLength, emailPattern}
 
 object EmailForm {
 
   private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.error.${messageKey}"
 
   private def email = emailAddress(errorRequired = messageCustomizer("error.required"), errorEmail = messageCustomizer("error.email")).
-    verifying { emailPattern(regex = """^([a-zA-Z0-9\-\_]+[.])*[a-zA-Z0-9\-\_]+@([a-zA-Z0-9-]{2,}[.])+[a-zA-Z0-9-]+$""".r, error = messageCustomizer("error.email")) }.
-    verifying { emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength")) }
+    verifying {
+      emailPattern(regex = """^([a-zA-Z0-9\-\_]+[.])*[a-zA-Z0-9\-\_]+@([a-zA-Z0-9-]{2,}[.])+[a-zA-Z0-9-]+$""".r, error = messageCustomizer("error.email"))
+    }.
+    verifying {
+      emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))
+    }
 
   val emailForm = Form("transferor-email" -> email)
 }

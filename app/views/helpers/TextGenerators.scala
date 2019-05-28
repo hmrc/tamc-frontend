@@ -30,7 +30,7 @@ object TextGenerators {
 
   def formPageDataJourney(prefix: String, form: Form[_]): String =
     form.hasErrors match {
-      case true => s"${prefix}-erroneous(${form.errors.map { x => x.key}.sorted.distinct.mkString(",")})"
+      case true => s"${prefix}-erroneous(${form.errors.map { x => x.key }.sorted.distinct.mkString(",")})"
       case _ => prefix
     }
 
@@ -60,7 +60,7 @@ object TextGenerators {
     ukDateTransformer(Some(TaxYear(taxYear).starts), isWelsh) + separator(isWelsh) + ukDateTransformer(Some(TaxYear(taxYear).finishes), isWelsh)
   }
 
-  def taxDateIntervalMultiYear(taxYear: Int,taxEndYear: Int, isWelsh: Boolean = false): String = {
+  def taxDateIntervalMultiYear(taxYear: Int, taxEndYear: Int, isWelsh: Boolean = false): String = {
     taxYear + separator(isWelsh) + (taxEndYear + 1)
   }
 
@@ -69,7 +69,7 @@ object TextGenerators {
   }
 
   def taxDateIntervalString(taxYear: String, taxAnotherYear: Option[String] = None, isWelsh: Boolean = false): String = {
-    val presentText = if(isWelsh) " i’r Presennol" else " to Present"
+    val presentText = if (isWelsh) " i’r Presennol" else " to Present"
     taxAnotherYear.fold(
       TaxYear.taxYearFor(dateTransformerActive(taxYear)).startYear + presentText
     )(syear =>

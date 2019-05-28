@@ -18,7 +18,6 @@ package forms
 
 import models.EligibilityCalculatorInput
 import play.api.data.Forms.mapping
-import play.api.data.format.Formats._
 import play.api.data.format.Formatter
 import play.api.data.{FieldMapping, Form, FormError, Forms}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
@@ -27,21 +26,25 @@ object EligibilityCalculatorForm {
 
   def cleanMoneyString(moneyString: String): String = {
     val moneyFormatSimple = """^(?:\s*)(?:\£?)(?:\s?)(0|[1-9]\d*)(?:\.\d{2})?(?:\s*)$""".r //£0.56 or £1234.56
-    val moneyFormatBritish = """^(?:\s*)(?:\£?)(?:\s?)([1-9]\d{0,2}(?:\,\d{3})*)(?:\.\d{2})?(?:\s*)$""".r //£1,234.56
-    val moneyFormatContinental = """^(?:\s*)(?:\£?)(?:\s?)([1-9]\d{0,2}(?:[ \.]\d{3})*)(?:\,\d{2})?(?:\s*)$""".r //£1 234,56 or £1.234,56
+    val moneyFormatBritish =
+      """^(?:\s*)(?:\£?)(?:\s?)([1-9]\d{0,2}(?:\,\d{3})*)(?:\.\d{2})?(?:\s*)$""".r //£1,234.56
+    val moneyFormatContinental =
+      """^(?:\s*)(?:\£?)(?:\s?)([1-9]\d{0,2}(?:[ \.]\d{3})*)(?:\,\d{2})?(?:\s*)$""".r //£1 234,56 or £1.234,56
 
     moneyString match {
-      case moneyFormatSimple(poundsTotal)      => poundsTotal
-      case moneyFormatBritish(poundsTotal)     => poundsTotal.replaceAll(""",""", "")
+      case moneyFormatSimple(poundsTotal) => poundsTotal
+      case moneyFormatBritish(poundsTotal) => poundsTotal.replaceAll(""",""", "")
       case moneyFormatContinental(poundsTotal) => poundsTotal.replaceAll("""[ \.]""", "")
-      case _                                   => throw new NumberFormatException
+      case _ => throw new NumberFormatException
     }
   }
 
   val currencyFormatter = new Formatter[Int] {
     private def messageCustomizer(fieldKey: String, messageKey: String): String = s"pages.form.field.${fieldKey}.error.${messageKey}"
+
     override def unbind(key: String, value: Int): Map[String, String] =
       Map(key -> MoneyPounds(value, 0).quantity)
+
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Int] =
       data.get(key) match {
         case Some(num) if num.trim().isEmpty => Left(Seq(FormError(key, messageCustomizer(key, "field-required"))))
@@ -66,7 +69,7 @@ object EligibilityCalculatorForm {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
       data.get(key) match {
         case Some(c) if c.trim().isEmpty => Left(Seq(FormError(key, "pages.form.field.description.country")))
-        case Some(c) if Set("england","wales","scotland","northernireland").contains(c.trim()) => Right(c)
+        case Some(c) if Set("england", "wales", "scotland", "northernireland").contains(c.trim()) => Right(c)
         case None => Left(Seq(FormError(key, "pages.form.field.description.country")))
       }
     }
