@@ -24,25 +24,31 @@ import play.api.data.{Form, FormError}
 
 object MultiYearPartnersIncomeQuestionForm {
 
-  private val PRE_ERROR_KEY = ("pages.form.field-required.")
+  private val PRE_ERROR_KEY = "pages.form.field-required."
 
   implicit def requiredBooleanFormatter: Formatter[Boolean] = new Formatter[Boolean] {
     override val format = Some(("format.boolean", Nil))
 
     def bind(key: String, data: Map[String, String]) = {
-      Right(data.get(key).getOrElse("")).right.flatMap {
+      val isScottish: Boolean = data.get("is-scottish").getOrElse("false").toBoolean
+      val maxLimit = if(isScottish) ApplicationConfig.MAX_LIMIT_SCOT() else ApplicationConfig.MAX_LIMIT()
+      Right(data.getOrElse(key, "")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
         case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.PERSONAL_ALLOWANCE() + 1,
-          ApplicationConfig.MAX_LIMIT(), ApplicationConfig.MAX_LIMIT_SCOT()))))
+            maxLimit))))
       }
     }
 
     def unbind(key: String, value: Boolean) = Map(key -> value.toString)
   }
 
-  val partnersIncomeForm = Form[MultiYearPartnersIncomeQuestionInput](
+  val partnersIncomeForm = {
+    Form[MultiYearPartnersIncomeQuestionInput](
     mapping(
-      "partners-income" -> of(requiredBooleanFormatter))(MultiYearPartnersIncomeQuestionInput.apply)(MultiYearPartnersIncomeQuestionInput.unapply))
+      "partners-income" -> of(requiredBooleanFormatter)
+    )(MultiYearPartnersIncomeQuestionInput.apply)(MultiYearPartnersIncomeQuestionInput.unapply)
+  )
+}
 
 }
