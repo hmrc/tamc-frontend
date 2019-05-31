@@ -3,43 +3,57 @@
 #********************************************************************************
 pages.form.field.description.transferor-income=Cadarnhewch eich incwm blynyddol
 pages.form.field.description.recipient-income=Cadarnhewch incwm blynyddol eich partner
+
 pages.form.field.description.name=Cadarnhewch enw cyntaf eich partner
 pages.form.field.name.error.error.required=Rhowch enw cyntaf eich partner
 pages.form.field.name.error.error.pattern=Defnyddiwch lythrennau yn unig
 pages.form.field.name.error.error.maxLength=Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
+
 pages.form.field.description.last-name=Cadarnhewch enw olaf eich partner
 pages.form.field.last-name.error.error.required=Rhowch enw olaf eich partner
 pages.form.field.last-name.error.error.pattern=Defnyddiwch lythrennau yn unig
 pages.form.field.last-name.error.error.maxLength=Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
+
 pages.form.field.description.gender=Cadarnhewch ryw eich partner
 pages.form.field.gender.error.error.required=Rhowch enw eich partner
 pages.form.field.gender.error.error.invalid=Rhowch enw eich partner
+
 pages.form.field.dom.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch briodi
 pages.form.field.dod.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch ysgaru
 pages.form.field.dom.error.min-date=Mae’r dyddiad hwn yn rhy bell yn y gorffennol
 pages.form.field.dom.error.max-date=Mae’r dyddiad hwn yn y dyfodol
+
 pages.form.field.description.nino=Cadarnhewch rif Yswiriant Gwladol eich partner
 pages.form.field.nino.error.error.required=Rhowch rif Yswiriant Gwladol eich partner
 pages.form.field.nino.error.error.invalid=Rhaid i chi wirio’r rhif Yswiriant Gwladol a’i nodi’n gywir
 pages.form.field.nino.error.self=Ni allwch nodi’ch manylion eich hun
+
 pages.form.field.description.dateOfMarriage=Cadarnhewch eich dyddiad priodi
 pages.form.field.description-alt.dateOfDivorce=Cadarnhewch eich dyddiad ysgaru
 pages.form.field.description.transferor-email=Cadarnhewch eich cyfeiriad e-bost
+
 pages.form.field.transferor-email.error.error.maxLength=Nodwch ddim mwy na {0} o gymeriadau
 pages.form.field.transferor-email.error.error.email=Rhowch gyfeiriad e-bost dilys
 pages.form.field.transferor-email.error.error.required=Rhowch wybod beth yw’ch cyfeiriad e-bost
+
 pages.form.field.description.marriage-criteria=Cadarnhewch a ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon
+pages.form.field-required.marriage-criteria=Rhowch wybod a ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon
+
 pages.form.field.description.lower-earner=Cadarnhewch os mai chi yw’r un â’r incwm isaf yn y berthynas
+pages.form.field-required.lower-earner=Rhowch wybod os mai chi yw’r un â’r incwm isaf yn y berthynas
+
 pages.form.field.description.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
 pages.form.field.description.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015?
-pages.form.field-required.marriage-criteria=Rhowch wybod a ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon
+
 pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
 pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
-pages.form.field-required.lower-earner=Rhowch wybod os mai chi yw’r un â’r incwm isaf yn y berthynas
+
 pages.form.field-required.applyForCurrentYear=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol
-pages.form.field-required.applyForHistoricYears=Rhowch wybod a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
 pages.form.field.description.applyForCurrentYear=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol
+
+pages.form.field-required.applyForHistoricYears=Rhowch wybod a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
 pages.form.field.description.applyForHistoricYears=Cadarnhewch a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
+
 pages.form.extra-year.field-required=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}
 pages.form.field.description.year-2015-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2015 i 2016
 pages.form.field.description.year-2016-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2016 i 2017
@@ -53,23 +67,39 @@ pages.form.field.description.year-2023-=Cadarnhewch a hoffech wneud cais ar gyfe
 pages.form.field.description.year-2024-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2024 i 2025
 pages.form.field.description.year-2025-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2025 i 2026
 pages.form.field.description.year-2026-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2026 i 2027
+
 pages.form.field.transferor-income.error.field-required=Rhowch wybod beth yw’ch incwm blynyddol
 pages.form.field.transferor-income.error.field-invalid=Defnyddiwch rifau’n unig
-eligibility.feedback.incorrect-role=Gwiriwch y rhifau yr ydych wedi’u nodi. Nodwch incwm yr unigolyn &#226;’r cyflog isaf, wedi’i ddilyn gan incwm yr unigolyn &#226;’r cyflog uchaf.
+
 pages.form.field.recipient-income.error.field-required=Rhowch wybod beth yw incwm blynyddol eich partner
 pages.form.field.recipient-income.error.field-invalid=Defnyddiwch rifau’n unig
+
+pages.form.field-required.partners-income=Rhowch wybod a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
+pages.form.field.description.partners-income=Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
+
+pages.form.field.description.date-of-birth=Cadarnhewch os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>6 Ebrill 1935</span>
+pages.form.field-required.date-of-birth=Rhowch wybod os cawsoch chi a’ch partner eich geni ar ôl 6 Ebrill 1935
+
+pages.form.field.description.country=Dewiswch ble’r ydych yn byw
+
+eligibility.feedback.incorrect-role=Gwiriwch y rhifau yr ydych wedi’u nodi. Nodwch incwm yr unigolyn &#226;’r cyflog isaf, wedi’i ddilyn gan incwm yr unigolyn &#226;’r cyflog uchaf.
+
+pages.form.field.description.endReason=Dewiswch reswm dros newid eich Lwfans Priodasol isod
+pages.form.field.description-alt.endReason=Dewiswch ateb am gadw’ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth
+
+error.end-reason.required=Dewiswch reswm dros newid eich Lwfans Priodasol isod.
+error.divorce-reason.required=Dewiswch ateb am gadw’ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth.
+
 change.status.reason-CANCEL=Rwyf am roi’r gorau i gael taliadau Lwfans Priodasol
 change.status.reason-REJECT=Rwyf am roi’r gorau i gael taliadau Lwfans Priodasol
 change.status.reason-DIVORCE_CY=Ysgariad neu ddiwedd partneriaeth sifil
 change.status.reason-DIVORCE_PY=Ysgariad neu ddiwedd partneriaeth sifil
+
 change.status.relevantDate-CANCEL=Caiff hyn ei ddileu ar ddiwedd y flwyddyn dreth ({0}).
 change.status.relevantDate-REJECT=Caiff hyn ei ddileu o ddechrau’r flwyddyn dreth y cawsoch Lwfans Priodasol ({0}) am y tro cyntaf.
 change.status.relevantDate-DIVORCE_CY=Caiff hyn ei ddileu o ddiwedd y flwyddyn dreth pan wnaethoch ysgaru ({0}).
 change.status.relevantDate-DIVORCE_PY=Caiff hyn ei ddileu o ddechrau’r flwyddyn dreth ({0}).
-error.end-reason.required=Dewiswch reswm dros newid eich Lwfans Priodasol isod.
-pages.form.field.description.endReason=Dewiswch reswm dros newid eich Lwfans Priodasol isod
-error.divorce-reason.required=Dewiswch ateb am gadw’ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth.
-pages.form.field.description-alt.endReason=Dewiswch ateb am gadw’ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth
+
 coc.end-reason.DEATH=Profedigaeth
 coc.end-reason.DIVORCE=Ysgariad neu ddiwedd partneriaeth sifil
 coc.end-reason.INELIGIBLE_PARTICIPANT=Gwneud Cais am Lwfans P&#226;r Priod
@@ -82,11 +112,6 @@ coc.end-reason.MERGER=Uno cyfrifon cwsmeriaid
 coc.end-reason.RETROSPECTIVE=Wedi gwneud cais am Lwfans Priodasol yn &#244;l-weithredol
 coc.end-reason.SYSTEM=CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT=Lwfans Priodasol wedi dod i ben
-pages.form.field-required.partners-income=Rhowch wybod a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
-pages.form.field.description.partners-income=Cadarnhewch a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
-pages.form.field.description.date-of-birth=Cadarnhewch os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>6 Ebrill 1935</span>
-pages.form.field-required.date-of-birth=Rhowch wybod os cawsoch chi a’ch partner eich geni ar ôl 6 Ebrill 1935
-pages.form.field.description.country=Dewiswch ble’r ydych yn byw
 
 #********************************************************************************
 # General
