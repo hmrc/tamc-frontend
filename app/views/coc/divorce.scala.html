@@ -34,6 +34,9 @@
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.make-a-change")),
     mainConfig = views.helpers.MainConfig()) {
+
+    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+
     <style>
     .panel-indent
     {
@@ -113,5 +116,4 @@
             <button class="button" type="submit" data-journey-click="marriage-allowance:button:divorceselectyear_continue">@Html(Messages("generic.continue"))</button>
         </p>
     }
-    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

@@ -30,6 +30,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
 ){
 
+<a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data")
 
 <h1 class="heading-xlarge">
@@ -70,5 +72,4 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.
 </div>
 
 }
-<a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
 }

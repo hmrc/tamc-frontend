@@ -32,6 +32,9 @@ formPartialRetriever: FormPartialRetriever
 @tamc_main(
 title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
+
+<a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
+
 @form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 
 <h1 class="heading-xlarge">
@@ -59,5 +62,4 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
 </div>
 }
 
-<a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
 }

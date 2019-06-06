@@ -29,6 +29,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1"))
 ){
 
+<a href="@controllers.routes.EligibilityController.dateOfBirthCheck"
+   class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(doYouLiveInScotlandForm, formErrorMessage = "pages.form.error.mandatory.data")
 
 <h1 class="heading-xlarge">
@@ -57,6 +60,4 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
 </div>
 }
 
-<a href="@controllers.routes.EligibilityController.dateOfBirthCheck"
-   class="link-back">@Html(Messages("generic.back"))</a>
 }

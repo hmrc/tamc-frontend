@@ -34,6 +34,8 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
 ) {
 
+<a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(recipientForm)
 
 <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
