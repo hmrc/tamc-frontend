@@ -711,11 +711,11 @@ class ContentTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a legally registered civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Select yes if you are married or in a legally registered civil partnership"
 
     }
   }
@@ -739,11 +739,11 @@ class ContentTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a legally registered civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Select yes if you are married or in a legally registered civil partnership"
 
     }
   }

@@ -39,11 +39,17 @@ pages.form.field.transferor-email.error.error.required=Tell us your email addres
 pages.form.field.description.marriage-criteria=Select yes if you are married or in a legally registered civil partnership
 pages.form.field-required.marriage-criteria=Select yes if you are married or in a legally registered civil partnership
 
+pages.form.field.description.date-of-birth=Select yes if you and your partner were born after <span class=nowrap>6 April 1935</span>
+pages.form.field-required.date-of-birth=Select yes if you and your partner were born after 6 April 1935
+
 pages.form.field.description.do-you-live-in-scotland = Select yes if you live in Scotland
 pages.form.field-required.do-you-live-in-scotland = Select yes if you live in Scotland
 
-pages.form.field.description.lower-earner=Confirm if you have the lower income in the relationship
-pages.form.field-required.lower-earner= Tell us if you have the lower income in the relationship
+pages.form.field.description.lower-earner=Select yes if you have the lower income in the relationship
+pages.form.field-required.lower-earner=Select yes if you have the lower income in the relationship
+
+pages.form.field.description.partners-income=Select yes if your partner has an annual income of between £{0} and £{1}
+pages.form.field-required.partners-income=Select yes if your partner has an annual income of between £{0} and £{1}
 
 pages.form.field.description.do-you-want-to-apply = Select yes if you want to apply for Marriage Allowance
 pages.form.field-required.do-you-want-to-apply = Select yes if you want to apply for Marriage Allowance
@@ -54,23 +60,17 @@ pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your a
 pages.form.field.description.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
 pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
 
-pages.form.field.description.applyForCurrentYear=Confirm whether you would like to apply for this current tax year
-pages.form.field-required.applyForCurrentYear=Tell us whether you would like to apply for this current tax year
+pages.form.field.description.applyForCurrentYear=Select yes whether you would like to apply for this current tax year
+pages.form.field-required.applyForCurrentYear=Select yes whether you would like to apply for this current tax year
 
-pages.form.field.description.applyForHistoricYears=Confirm whether you would like to apply for earlier tax years
-pages.form.field-required.applyForHistoricYears=Tell us whether you would like to apply for earlier tax years
+pages.form.field.description.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
+pages.form.field-required.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
 
 error.end-reason.required=Select a reason for changing your Marriage Allowance below.
-error.divorce-reason.required=Select an answer for keeping your Marriage Allowance until the end of the tax year.
-
 pages.form.field.description.endReason=Select a reason for changing your Marriage Allowance below
+
+error.divorce-reason.required=Select an answer for keeping your Marriage Allowance until the end of the tax year.
 pages.form.field.description-alt.endReason=Select an answer for keeping your Marriage Allowance until the end of the tax year
-
-pages.form.field.description.partners-income=Confirm if your partner has an annual income of between £{0} and £{1}
-pages.form.field-required.partners-income=Tell us if your partner has an annual income of between £{0} and £{1}
-
-pages.form.field.description.date-of-birth=Confirm if you and your partner were born after <span class=nowrap>6 April 1935</span>
-pages.form.field-required.date-of-birth=Tell us if you and your partner were born after 6 April 1935
 
 pages.form.extra-year.field-required=Tell us whether you would like to apply for the previous {0} to {1} tax year
 pages.form.field.description.year-2015-=Confirm whether you would like to apply for the previous 2015 to 2016 tax year
