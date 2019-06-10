@@ -38,6 +38,8 @@ case class CacheCreateRequestNotSent() extends ServiceError
 
 case class TransferorDeceased() extends ServiceError
 
+case class RecipientDeceased() extends ServiceError
+
 case class NoTaxYearsSelected() extends ServiceError
 
 case class NoTaxYearsAvailable() extends ServiceError
