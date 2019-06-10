@@ -255,7 +255,7 @@ trait TransferService {
           case CreateRelationshipResponse(ResponseStatus("OK")) => data
           case CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP)) => throw CannotCreateRelationship()
           case CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED)) => throw RelationshipMightBeCreated()
-
+          case CreateRelationshipResponse(ResponseStatus(RECIPIENT_DECEASED)) => throw RecipientDeceased()
         }
     } recover {
       case error =>

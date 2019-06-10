@@ -404,6 +404,7 @@ class TransferControllerTest extends ControllerBaseSpec {
         (new CacheCreateRequestNotSent, "/marriage-allowance-application/history"),
         (new RelationshipMightBeCreated, "/marriage-allowance-application/history"),
         (new TransferorDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
+        (new RecipientDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
       )
       for ((error, redirectUrl) <- data) {
         s"a $error has been thrown" in {
