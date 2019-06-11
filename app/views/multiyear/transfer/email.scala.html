@@ -29,6 +29,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.confirm-email"))
 ){
+
+<a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+
 @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)
 <div class="form-group">
@@ -49,5 +52,4 @@ title = Messages("title.application.pattern", Messages("title.confirm-email"))
 </p>
 }
 <br>
-<a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 }

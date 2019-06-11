@@ -31,6 +31,8 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
 ){
 
+<a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(marriageForm)
 
 <h1 class="heading-xlarge">@Html(Messages("pages.date-of-marriage.heading"))</h1>
@@ -58,5 +60,4 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
 </p>
 }
 <br>
-<a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>
 }

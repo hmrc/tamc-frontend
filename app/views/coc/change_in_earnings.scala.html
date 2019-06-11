@@ -28,6 +28,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.pattern", Messages("title.change.earnings")),
 mainConfig = views.helpers.MainConfig()
 ) {
+
+<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+
 <h1 class="heading-large">@Html(Messages("change.status.earnings.h1"))</h1>
 <p class="lede">@Html(Messages("change.status.earnings.h2"))</p>
 <ul class="list list-bullet">
@@ -49,5 +52,4 @@ mainConfig = views.helpers.MainConfig()
 <h3>@Html(Messages("hmrc.contact-detials.calling.time"))</h3>
 @Html(Messages("hmrc.contact-details-8"))</p>
 <p>@Html(Messages("hmrc.contact-details-9"))</p>
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

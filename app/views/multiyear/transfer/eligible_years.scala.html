@@ -38,6 +38,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.application.pattern", Messages("title.eligible-years"))
 ){
 
+<a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(form)
 
 <h1 class="heading-xlarge">@Html(Messages("pages.eligibleyear.currentyear"))</h1>
@@ -90,5 +92,4 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
 </p>
 }
 <br>
-<a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
 }

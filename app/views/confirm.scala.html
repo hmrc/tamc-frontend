@@ -33,6 +33,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.confirm"))
 ){
+
+<a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
+
 <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
 <table>
     <col width="30%">
@@ -139,5 +142,4 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
 </p>
 }
 <br>
-<a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
 }
