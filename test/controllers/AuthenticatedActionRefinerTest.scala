@@ -17,6 +17,7 @@
 package controllers
 
 import config.ApplicationConfig
+import controllers.actions.AuthenticatedActionRefiner
 import models.auth.{PermanentlyAuthenticated, TemporarilyAuthenticated}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._

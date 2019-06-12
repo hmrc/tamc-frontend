@@ -295,9 +295,6 @@ trait UpdateRelationshipService {
       case _ => throw CacheMissingUpdateRecord()
     }
 
-  def saveSource(source: String)(implicit hc: HeaderCarrier, ec: ExecutionContext, user: AuthContext): Future[String] =
-    cachingService.saveSource(source)
-
   def getConfirmationUpdateData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UpdateRelationshipConfirmationModel, Option[UpdateRelationshipCacheData])] =
     for {
       updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData

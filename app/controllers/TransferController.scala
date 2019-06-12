@@ -18,6 +18,7 @@ package controllers
 
 import config.ApplicationConfig
 import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
+import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.CurrentYearForm.currentYearForm
 import forms.DateOfMarriageForm.dateOfMarriageForm
@@ -42,19 +43,19 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class TransferController @Inject()(
                                     override val messagesApi: MessagesApi,
-                                    authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                    authenticate: AuthenticatedActionRefiner,
                                     registrationService: TransferService,
                                     cachingService: CachingService,
                                     timeService: TimeService
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever) extends BaseController {
 
-  def transfer: Action[AnyContent] = authenticatedActionRefiner {
+  def transfer: Action[AnyContent] = authenticate {
     implicit request =>
       Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)))
   }
 
-  def transferAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def transferAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
         formWithErrors =>
@@ -67,12 +68,12 @@ class TransferController @Inject()(
   }
 
 
-  def dateOfMarriage: Action[AnyContent] = authenticatedActionRefiner {
+  def dateOfMarriage: Action[AnyContent] = authenticate {
     implicit request =>
       Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
-  def dateOfMarriageAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def dateOfMarriageAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
         formWithErrors => Future.successful(BadRequest(views.html.date_of_marriage(formWithErrors)))
@@ -92,7 +93,7 @@ class TransferController @Inject()(
         }) recover handleError
   }
 
-  def eligibleYears: Action[AnyContent] = authenticatedActionRefiner.async {
+  def eligibleYears: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.deleteSelectionAndGetCurrentAndExtraYearEligibility map {
         case (false, Nil, _) => throw new NoTaxYearsAvailable
@@ -103,7 +104,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def eligibleYearsAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def eligibleYearsAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.getCurrentAndExtraYearEligibility flatMap {
         case (currentYearAvailable, extraYears, recipient) =>
@@ -135,7 +136,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def previousYears: Action[AnyContent] = authenticatedActionRefiner.async {
+  def previousYears: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.getCurrentAndExtraYearEligibility.map {
         case (currentYearAvailable, extraYears, recipient) =>
@@ -143,7 +144,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def extraYearsAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def extraYearsAction: Action[AnyContent] = authenticate.async {
     implicit request =>
 
       def toTaxYears(years: List[Int]): List[TaxYear] = {
@@ -170,7 +171,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def confirmYourEmail: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmYourEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
       cachingService.fetchAndGetEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD) map {
         case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail)))
@@ -178,7 +179,7 @@ class TransferController @Inject()(
       }
   }
 
-  def confirmYourEmailAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmYourEmailAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       emailForm.bindFromRequest.fold(
         formWithErrors =>
@@ -189,7 +190,7 @@ class TransferController @Inject()(
           }) recover handleError
   }
 
-  def confirm: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirm: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.getConfirmationData(request.nino) map {
         data =>
@@ -197,7 +198,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def confirmAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmAction: Action[AnyContent] = authenticate.async {
     implicit request =>
 
       val getJourneyName: String =
@@ -214,7 +215,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def finished: Action[AnyContent] = authenticatedActionRefiner.async {
+  def finished: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.getFinishedData(request.nino) map {
         case NotificationRecord(email) =>
@@ -222,7 +223,7 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def cannotUseService: Action[AnyContent] = authenticatedActionRefiner {
+  def cannotUseService: Action[AnyContent] = authenticate {
     implicit request =>
       InternalServerError(views.html.errors.transferer_deceased())
   }

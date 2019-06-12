@@ -17,7 +17,7 @@
 package test_utils
 
 import com.google.inject.Inject
-import controllers.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import models.auth._
 import play.api.mvc.{Request, Result}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel}

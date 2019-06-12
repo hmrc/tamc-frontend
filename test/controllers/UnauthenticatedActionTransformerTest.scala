@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.actions.UnauthenticatedActionTransformer
 import models.auth.{PermanentlyAuthenticated, TemporarilyAuthenticated, Unauthenticated}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
