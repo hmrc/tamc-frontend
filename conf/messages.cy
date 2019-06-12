@@ -108,6 +108,18 @@ coc.end-reason.SYSTEM=CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT=Lwfans Priodasol wedi dod i ben
 
 #********************************************************************************
+# Year selection
+#********************************************************************************
+#Multi-year select
+pages.multi-year-select.heading=Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
+
+#Single-year select
+pages.form.field.description.selectedYear=Mae angen i chi ddewis ateb
+your-income=os oedd eich incwm yn {0} neu’n llai
+income-between=os oedd incwm rhwng {0} {1} a {2}
+income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
+
+#********************************************************************************
 # General
 #********************************************************************************
 #General messages
@@ -134,6 +146,7 @@ generic.translation.english=English
 generic.translation.welsh=Cymraeg
 radio.yes=Iawn
 radio.no=Na
+
 #********************************************************************************
 # Titles
 #********************************************************************************
@@ -215,18 +228,6 @@ eligibility.feedback.transferor-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans
 eligibility.feedback.recipient-not-eligible=Nid ydych yn gymwys ar gyfer Lwfans Priodasol. Rhaid i incwm blynyddol eich partner fod rhwng {0} a {1}.
 eligibility.check.unlike-benefit-as-couple=Ni fyddwch yn elwa fel pâr gan fod eich incwm dros {0}.
 max-benefit={0}
-
-#********************************************************************************
-# Year selection
-#********************************************************************************
-#Multi-year select
-pages.multi-year-select.heading=Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
-
-#Single-year select
-pages.form.field.description.selectedYear=Mae angen i chi ddewis ateb
-your-income=os oedd eich incwm yn {0} neu’n llai
-income-between=os oedd incwm rhwng {0} {1} a {2}
-income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
 
 #********************************************************************************
 # Confirmation Message

@@ -108,6 +108,18 @@ coc.end-reason.SYSTEM=Ended by HMRC
 coc.end-reason.DEFAULT=Marriage Allowance Ended
 
 #********************************************************************************
+# Year selection
+#********************************************************************************
+#Multi-year select
+pages.multi-year-select.heading=Confirm the earlier years you want to apply for
+
+#Single-year select
+pages.form.field-required.selectedYear=You need to select an answer
+your-income=your income was {0} or less
+income-between= {0} income was between {1} and {2}
+income-between-scots= {0} income was between {1} and {2} (or {3} if you live in Scotland)
+
+#********************************************************************************
 # General
 #********************************************************************************
 #General messages
@@ -218,18 +230,6 @@ eligibility.feedback.transferor-not-eligible=You are not eligible for Marriage A
 eligibility.feedback.recipient-not-eligible=You are not eligible for Marriage Allowance. Your partner’s annual income must be between {0} and {1}.
 eligibility.check.unlike-benefit-as-couple= You will not benefit as a couple because your income is over {0}.
 max-benefit={0}
-
-#********************************************************************************
-# Year selection
-#********************************************************************************
-#Multi-year select
-pages.multi-year-select.heading=Confirm the earlier years you want to apply for
-
-#Single-year select
-pages.form.field-required.selectedYear=You need to select an answer
-your-income=your income was {0} or less
-income-between= {0} income was between {1} and {2}
-income-between-scots= {0} income was between {1} and {2} (or {3} if you live in Scotland)
 
 #********************************************************************************
 # Confirmation Message
