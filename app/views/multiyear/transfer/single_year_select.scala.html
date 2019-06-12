@@ -37,6 +37,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.application.pattern", Messages("title.extra-years"))
 ) {
 
+<a href="@controllers.routes.TransferController.eligibleYearsAction"
+   class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(form)
 
 <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
@@ -90,7 +93,5 @@ title = Messages("title.application.pattern", Messages("title.extra-years"))
 </p>
 }
 <br>
-<a href="@controllers.routes.TransferController.eligibleYearsAction"
-   class="link-back">@Html(Messages("generic.back"))</a>
 }
 

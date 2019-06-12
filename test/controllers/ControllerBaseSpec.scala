@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application

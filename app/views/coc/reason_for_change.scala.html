@@ -26,6 +26,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.make-a-change")),
 mainConfig = views.helpers.MainConfig()) {
+
+<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data")
 <h1 class="heading-xlarge">@Html(Messages("change.status.cancel-your.h1"))</h1>
 <p>@Html(Messages("change.status.cancel-your.p"))</p>
@@ -88,5 +91,4 @@ mainConfig = views.helpers.MainConfig()) {
 </p>
 
 }
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

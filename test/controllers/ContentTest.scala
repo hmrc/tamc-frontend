@@ -20,6 +20,7 @@ import java.text.NumberFormat
 
 import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
+import controllers.actions.AuthenticatedActionRefiner
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup

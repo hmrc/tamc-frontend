@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}

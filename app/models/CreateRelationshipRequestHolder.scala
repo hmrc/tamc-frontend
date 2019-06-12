@@ -17,8 +17,6 @@
 package models
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
 
 object CreateRelationshipRequestHolder {
   implicit val formats = Json.format[CreateRelationshipRequestHolder]

@@ -30,6 +30,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
+
+<a href="@controllers.routes.EligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(calculatorForm)
 <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
 <p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a
@@ -84,5 +87,4 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     </p>
 </div>
 }
-<a href="@controllers.routes.EligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>
 }

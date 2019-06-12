@@ -28,43 +28,43 @@
     title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
 ){
 
-@form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(PERSONAL_ALLOWANCE()))
+    @form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(PERSONAL_ALLOWANCE()))
+    <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
 
-<h1 class="heading-xlarge">
-    <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
-    @Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
-</h1>
+    <h1 class="heading-xlarge">
+        <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
+        @Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
+    </h1>
 
-@helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
-<div class="form-group inline">
-    <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>
-    @input_radio_group(
-    lowerEarnerFormInput("lower-earner"),
-    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-    '_legend -> Html(Messages("eligibility.check.lower.earner.h1")),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_labelAfter -> true,
-    '_fieldsetAttributes -> "data-inline-error=inline-lower-earner-error",
-    '_groupClass -> "inline spacingBottom"
-    )
-</div>
+    @helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
+    <div class="form-group inline">
+        <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>
+        @input_radio_group(
+        lowerEarnerFormInput("lower-earner"),
+        Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+        '_legend -> Html(Messages("eligibility.check.lower.earner.h1")),
+        '_legendClass -> "visuallyhidden",
+        '_labelClass -> "block-label",
+        '_labelAfter -> true,
+        '_fieldsetAttributes -> "data-inline-error=inline-lower-earner-error",
+        '_groupClass -> "inline spacingBottom"
+        )
+    </div>
 
-<div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
-    @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()))
-</div>
+    <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
+        @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()))
+    </div>
 
-<script>
-                var _gaq = [];
-</script>
-<div class="form-group">
-    <button class="button button-calculate"
-            data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
-            type="submit">
-        @Html(Messages("generic.continue"))
-    </button>
-</div>
+    <script>
+                    var _gaq = [];
+    </script>
+    <div class="form-group">
+        <button class="button button-calculate"
+                data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
+                type="submit">
+            @Html(Messages("generic.continue"))
+        </button>
+    </div>
 
-}
-<a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
+    }
 }

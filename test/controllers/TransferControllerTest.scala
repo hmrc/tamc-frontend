@@ -16,6 +16,7 @@
 
 package controllers
 
+import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
@@ -403,7 +404,8 @@ class TransferControllerTest extends ControllerBaseSpec {
         (new CacheRelationshipAlreadyCreated, "/marriage-allowance-application/history"),
         (new CacheCreateRequestNotSent, "/marriage-allowance-application/history"),
         (new RelationshipMightBeCreated, "/marriage-allowance-application/history"),
-        (new TransferorDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
+        (new TransferorDeceased, "/marriage-allowance-application/you-cannot-use-this-service"),
+        (new RecipientDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
       )
       for ((error, redirectUrl) <- data) {
         s"a $error has been thrown" in {

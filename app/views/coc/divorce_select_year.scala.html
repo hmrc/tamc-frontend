@@ -27,6 +27,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.pattern", Messages("title.divorce")),
 mainConfig = views.helpers.MainConfig()) {
 
+<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data", prefix = "pages.form.field.description-alt.")
 
 <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.h1"))</h1>
@@ -65,5 +67,4 @@ mainConfig = views.helpers.MainConfig()) {
 </p>
 
 }
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 }

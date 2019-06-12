@@ -30,6 +30,9 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 ) {
 
+<a href="@controllers.routes.EligibilityController.eligibilityCheck"
+   class="link-back">@Html(Messages("generic.back"))</a>
+
 @templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
 
 <h1 class="heading-xlarge">
@@ -62,6 +65,4 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 </div>
 }
 
-<a href="@controllers.routes.EligibilityController.eligibilityCheck"
-   class="link-back">@Html(Messages("generic.back"))</a>
 }

@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
+import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, updateRelationshipDivorceForm, updateRelationshipForm}
 import forms.EmailForm.emailForm
@@ -37,7 +38,7 @@ import scala.concurrent.Future
 
 class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
-                                              authenticatedActionRefiner: AuthenticatedActionRefiner,
+                                              authenticate: AuthenticatedActionRefiner,
                                               updateRelationshipService: UpdateRelationshipService,
                                               registrationService: TransferService,
                                               cachingService: CachingService,
@@ -45,7 +46,7 @@ class UpdateRelationshipController @Inject()(
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
 
-  def history(): Action[AnyContent] = authenticatedActionRefiner.async {
+  def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.listRelationship(request.nino) map {
         case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
@@ -71,7 +72,7 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def makeChange(): Action[AnyContent] = authenticatedActionRefiner {
+  def makeChange(): Action[AnyContent] = authenticate {
     implicit request =>
       changeRelationshipForm.bindFromRequest.fold(
         formWithErrors => {
@@ -84,7 +85,7 @@ class UpdateRelationshipController @Inject()(
       )
   }
 
-  def updateRelationshipAction(): Action[AnyContent] = authenticatedActionRefiner.async {
+  def updateRelationshipAction(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipForm.bindFromRequest.fold(
         formWithErrors => Future {
@@ -122,17 +123,17 @@ class UpdateRelationshipController @Inject()(
       )
   }
 
-  def changeOfIncome: Action[AnyContent] = authenticatedActionRefiner {
+  def changeOfIncome: Action[AnyContent] = authenticate {
     implicit request =>
       Ok(views.html.coc.change_in_earnings())
   }
 
-  def bereavement: Action[AnyContent] = authenticatedActionRefiner {
+  def bereavement: Action[AnyContent] = authenticate {
     implicit request =>
       Ok(views.html.coc.bereavement_transferor())
   }
 
-  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       emailForm.bindFromRequest.fold(
         formWithErrors =>
@@ -144,7 +145,7 @@ class UpdateRelationshipController @Inject()(
       ) recover handleError
   }
 
-  def divorceYear: Action[AnyContent] = authenticatedActionRefiner.async {
+  def divorceYear: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce map {
         case Some(UpdateRelationshipCacheData(_, roleRecord, _, historicRelationships, _, relationshipEndReasonRecord, _)) =>
@@ -154,7 +155,7 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def divorceSelectYear(): Action[AnyContent] = authenticatedActionRefiner.async {
+  def divorceSelectYear(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipDivorceForm.bindFromRequest.fold(
         formWithErrors =>
@@ -182,7 +183,7 @@ class UpdateRelationshipController @Inject()(
       case _ => None
     }
 
-  def divorceAction(): Action[AnyContent] = authenticatedActionRefiner.async {
+  def divorceAction(): Action[AnyContent] = authenticate.async {
     implicit request =>
       divorceForm.bindFromRequest.fold(
         formWithErrors =>
@@ -205,7 +206,7 @@ class UpdateRelationshipController @Inject()(
       )
   }
 
-  def confirmEmail: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getUpdateNotification map {
         case Some(NotificationRecord(transferorEmail)) => Ok(views.html.coc.email(emailForm.fill(transferorEmail)))
@@ -213,7 +214,7 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def confirmReject(): Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmReject(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getUpdateRelationshipCacheForReject map {
         cache =>
@@ -224,7 +225,7 @@ class UpdateRelationshipController @Inject()(
       }
   }
 
-  def confirmCancel(): Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmCancel(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(EndReasonCode.CANCEL)) map {
         endReason =>
@@ -255,7 +256,7 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-  def confirmUpdate: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getConfirmationUpdateData map {
         case (data, Some(updateCache)) =>
@@ -269,7 +270,7 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def confirmUpdateAction: Action[AnyContent] = authenticatedActionRefiner.async {
+  def confirmUpdateAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       EmptyForm.form.bindFromRequest().fold(
         formWithErrors =>
@@ -281,7 +282,7 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def finishUpdate: Action[AnyContent] = authenticatedActionRefiner.async {
+  def finishUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getupdateRelationshipFinishedData(request.nino) map {
         case (NotificationRecord(email), _) =>
