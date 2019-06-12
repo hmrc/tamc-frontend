@@ -14,13 +14,12 @@
  * limitations under the License.
  *@
 
-@(form: Form[_], formErrorMessage: String = "pages.form.error.confirm.data", prefix: String = "pages.form.field.description.", lowerLimit: Option[Int] = None, upperLimit: Option[Int] = None)(implicit messages: Messages)
+@(form: Form[_], formErrorMessage: String = "pages.form.error.confirm.data", prefix: String = "pages.form.field-required.", lowerLimit: Option[Int] = None, upperLimit: Option[Int] = None)(implicit messages: Messages)
 @import play.twirl.api.Html
-
+@import play.api.Logger
 
 @if(form.hasErrors) {
-<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading"
-     class="error-summary validation-summary">
+<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary validation-summary">
     <h1 id="form-error-heading" class="heading-medium error-summary-heading">@Messages("pages.form.error-header")</h1>
     <ul class="error-summary-list">
 
@@ -28,10 +27,14 @@
         <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
             <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")'
                data-focuses='@errorKey.replaceAll("""[\.\[\]]""", "-")'>
-                @if(lowerLimit.isDefined || upperLimit.isDefined) {
-                @Html(Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get, upperLimit.get))
+                @if(lowerLimit.isDefined && upperLimit.isDefined) {
+                    @Html(Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get, upperLimit.get))
                 } else {
-                @Html(Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-")))
+                    @if(lowerLimit.isDefined) {
+                        @Html(Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-"), lowerLimit.get))
+                    } else {
+                        @Html(Messages(prefix + errorKey.replaceAll("""[\.\[\]]""", "-")))
+                    }
                 }
             </a>
         </li>

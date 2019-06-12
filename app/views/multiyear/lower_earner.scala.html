@@ -16,21 +16,19 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
+@import views.html.templates._
 @import config.ApplicationConfig._
 @import java.text.NumberFormat
 @import models.auth.RequestWithAuthState
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
-implicit messages: Messages,
-request: RequestWithAuthState[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+    implicit messages: Messages, request: RequestWithAuthState[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
 ){
 
-@templates.form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data")
+@form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(PERSONAL_ALLOWANCE()))
 
 <h1 class="heading-xlarge">
     <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
@@ -38,10 +36,9 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.
 </h1>
 
 @helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
-
 <div class="form-group inline">
     <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>
-    @templates.input_radio_group(
+    @input_radio_group(
     lowerEarnerFormInput("lower-earner"),
     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
     '_legend -> Html(Messages("eligibility.check.lower.earner.h1")),
@@ -54,12 +51,11 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.
 </div>
 
 <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
-    @Html(Messages("eligibility.check.lower.earner.error",
-    NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
+    @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()))
 </div>
+
 <script>
                 var _gaq = [];
-
 </script>
 <div class="form-group">
     <button class="button button-calculate"

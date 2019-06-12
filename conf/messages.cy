@@ -4,19 +4,19 @@
 pages.form.field.description.transferor-income=Cadarnhewch eich incwm blynyddol
 pages.form.field.description.recipient-income=Cadarnhewch incwm blynyddol eich partner
 
-pages.form.field.description.name=Cadarnhewch enw cyntaf eich partner
-pages.form.field.name.error.error.required=Rhowch enw cyntaf eich partner
+pages.form.field.description.name=Nodwch enw cyntaf eich partner
+pages.form.field.name.error.error.required=Nodwch enw cyntaf eich partner
 pages.form.field.name.error.error.pattern=Defnyddiwch lythrennau yn unig
 pages.form.field.name.error.error.maxLength=Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
 
-pages.form.field.description.last-name=Cadarnhewch enw olaf eich partner
-pages.form.field.last-name.error.error.required=Rhowch enw olaf eich partner
+pages.form.field.description.last-name=Nodwch enw olaf eich partner
+pages.form.field.last-name.error.error.required=Nodwch enw olaf eich partner
 pages.form.field.last-name.error.error.pattern=Defnyddiwch lythrennau yn unig
 pages.form.field.last-name.error.error.maxLength=Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
 
-pages.form.field.description.gender=Cadarnhewch ryw eich partner
-pages.form.field.gender.error.error.required=Rhowch enw eich partner
-pages.form.field.gender.error.error.invalid=Rhowch enw eich partner
+pages.form.field.description.gender=Dewiswch ryw eich partner
+pages.form.field.gender.error.error.required=Dewiswch enw eich partner
+pages.form.field.gender.error.error.invalid=Dewiswch enw eich partner
 
 pages.form.field.dom.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch briodi
 pages.form.field.dod.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch ysgaru
@@ -36,23 +36,23 @@ pages.form.field.transferor-email.error.error.maxLength=Nodwch ddim mwy na {0} o
 pages.form.field.transferor-email.error.error.email=Rhowch gyfeiriad e-bost dilys
 pages.form.field.transferor-email.error.error.required=Rhowch wybod beth yw’ch cyfeiriad e-bost
 
-pages.form.field.description.marriage-criteria=Dewiswch Iawn a ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon
-pages.form.field-required.marriage-criteria=Dewiswch Iawn a ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon
+pages.form.field.description.marriage-criteria=Dewiswch lawn os ydych yn briod neu mewn partneriaeth sifil
+pages.form.field-required.marriage-criteria=Dewiswch lawn os ydych yn briod neu mewn partneriaeth sifil
 
-pages.form.field.description.date-of-birth=Dewiswch Iawn os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>6 Ebrill 1935</span>
-pages.form.field-required.date-of-birth=Dewiswch Iawn os cawsoch chi a’ch partner eich geni ar ôl 6 Ebrill 1935
+pages.form.field.description.date-of-birth=Dewiswch lawn os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>5 Ebrill 1935</span>
+pages.form.field-required.date-of-birth=Dewiswch lawn os cawsoch chi a’ch partner eich geni ar ôl 5 Ebrill 1935
 
-pages.form.field-required.do-you-live-in-scotland=Dewiswch Iawn os ydych yn byw yn yr Alban
-pages.form.field.description.do-you-live-in-scotland=Dewiswch Iawn os ydych yn byw yn yr Alban
+pages.form.field-required.do-you-live-in-scotland=Dewiswch lawn os ydych yn byw yn yr Alban
+pages.form.field.description.do-you-live-in-scotland=Dewiswch lawn os ydych yn byw yn yr Alban
 
-pages.form.field.description.lower-earner=Dewiswch Iawn os mai chi yw’r un â’r incwm isaf yn y berthynas
-pages.form.field-required.lower-earner=Dewiswch Iawn os mai chi yw’r un â’r incwm isaf yn y berthynas
+pages.form.field.description.lower-earner=Dewiswch lawn os mai chi yw’r un â’r incwm isaf yn y berthynas
+pages.form.field-required.lower-earner=Dewiswch lawn os mai chi yw’r un â’r incwm isaf yn y berthynas
 
-pages.form.field-required.partners-income=Dewiswch Iawn a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
-pages.form.field.description.partners-income=Dewiswch Iawn a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
+pages.form.field-required.partners-income=Dewiswch lawn a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
+pages.form.field.description.partners-income=Dewiswch lawn a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
 
-pages.form.field.description.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
-pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
+pages.form.field.description.do-you-want-to-apply=Dewiswch lawn os ydych am wneud cais am Lwfans Priodasol
+pages.form.field-required.do-you-want-to-apply=Dewiswch lawn os ydych am wneud cais am Lwfans Priodasol
 
 pages.form.field.description.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
 pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.

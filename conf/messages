@@ -4,19 +4,19 @@
 pages.form.field.description.transferor-income=Confirm your annual income
 pages.form.field.description.recipient-income=Confirm your partner’s annual income
 
-pages.form.field.description.name=Confirm your partner’s first name
-pages.form.field.name.error.error.required=Tell us your partner’s first name
+pages.form.field.description.name=Enter your partner’s first name
+pages.form.field.name.error.error.required=Enter your partner’s first name
 pages.form.field.name.error.error.pattern=Use letters only
 pages.form.field.name.error.error.maxLength=Use up to or no more than {0} letters
 
-pages.form.field.description.last-name=Confirm your partner’s last name
-pages.form.field.last-name.error.error.required=Tell us your partner’s last name
+pages.form.field.description.last-name=Enter your partner’s last name
+pages.form.field.last-name.error.error.required=Enter your partner’s last name
 pages.form.field.last-name.error.error.pattern=Use letters only
 pages.form.field.last-name.error.error.maxLength=Use up to or no more than {0} letters
 
-pages.form.field.description.gender = Confirm your partner’s gender
-pages.form.field.gender.error.error.required=Tell us your partner’s gender
-pages.form.field.gender.error.error.invalid=Tell us your partner’s gender
+pages.form.field.description.gender=Select your partner’s gender
+pages.form.field.gender.error.error.required=Select your partner’s gender
+pages.form.field.gender.error.error.invalid=Select your partner’s gender
 
 pages.form.field.dom.error.required=Tell us your date of marriage
 pages.form.field.dod.error.required=Tell us your date of divorce
@@ -36,17 +36,17 @@ pages.form.field.transferor-email.error.error.maxLength=Enter no more than {0} c
 pages.form.field.transferor-email.error.error.email=Give a valid email address
 pages.form.field.transferor-email.error.error.required=Tell us your email address
 
-pages.form.field.description.marriage-criteria=Select yes if you are married or in a legally registered civil partnership
-pages.form.field-required.marriage-criteria=Select yes if you are married or in a legally registered civil partnership
+pages.form.field.description.marriage-criteria=Select yes if you are married or in a civil partnership
+pages.form.field-required.marriage-criteria=Select yes if you are married or in a civil partnership
 
-pages.form.field.description.date-of-birth=Select yes if you and your partner were born after <span class=nowrap>6 April 1935</span>
-pages.form.field-required.date-of-birth=Select yes if you and your partner were born after 6 April 1935
+pages.form.field.description.date-of-birth=Select yes if you and your partner were born after <span class=nowrap>5 April 1935</span>
+pages.form.field-required.date-of-birth=Select yes if you and your partner were born after 5 April 1935
 
 pages.form.field.description.do-you-live-in-scotland = Select yes if you live in Scotland
 pages.form.field-required.do-you-live-in-scotland = Select yes if you live in Scotland
 
-pages.form.field.description.lower-earner=Select yes if you have the lower income in the relationship
-pages.form.field-required.lower-earner=Select yes if you have the lower income in the relationship
+pages.form.field.description.lower-earner=Select yes if your income is less than £{0} a year
+pages.form.field-required.lower-earner=Select yes if your income is less than £{0} a year
 
 pages.form.field.description.partners-income=Select yes if your partner has an annual income of between £{0} and £{1}
 pages.form.field-required.partners-income=Select yes if your partner has an annual income of between £{0} and £{1}
