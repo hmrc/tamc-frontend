@@ -1,57 +1,46 @@
 #********************************************************************************
 # Forms and  Unit tests validation messages
 #********************************************************************************
-pages.form.field.description.transferor-income=Cadarnhewch eich incwm blynyddol
-pages.form.field.description.recipient-income=Cadarnhewch incwm blynyddol eich partner
+pages.form.field-required.transferor-income=Cadarnhewch eich incwm blynyddol
+pages.form.field-required.recipient-income=Cadarnhewch incwm blynyddol eich partner
 
-pages.form.field.description.name=Nodwch enw cyntaf eich partner
+pages.form.field-required.name=Nodwch enw cyntaf eich partner
 pages.form.field.name.error.error.required=Nodwch enw cyntaf eich partner
 pages.form.field.name.error.error.pattern=Defnyddiwch lythrennau yn unig
 pages.form.field.name.error.error.maxLength=Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
 
-pages.form.field.description.last-name=Nodwch enw olaf eich partner
+pages.form.field-required.last-name=Nodwch enw olaf eich partner
 pages.form.field.last-name.error.error.required=Nodwch enw olaf eich partner
 pages.form.field.last-name.error.error.pattern=Defnyddiwch lythrennau yn unig
 pages.form.field.last-name.error.error.maxLength=Defnyddiwch hyd at {0} o lythrennau, neu ddim mwy na hynny
 
-pages.form.field.description.gender=Dewiswch ryw eich partner
-pages.form.field.gender.error.error.required=Dewiswch enw eich partner
-pages.form.field.gender.error.error.invalid=Dewiswch enw eich partner
+pages.form.field-required.gender=Dewiswch ryw eich partner
+pages.form.field.gender.error.error.required=Dewiswch ryw eich partner
+pages.form.field.gender.error.error.invalid=Dewiswch ryw eich partner
 
-pages.form.field.dom.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch briodi
+pages.form.field.dom.error.required=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.dod.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch ysgaru
-pages.form.field.dom.error.min-date=Mae’r dyddiad hwn yn rhy bell yn y gorffennol
-pages.form.field.dom.error.max-date=Mae’r dyddiad hwn yn y dyfodol
+pages.form.field.dom.error.min-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod cyn [today’s date]
+pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod ar ôl [cut off past date]
 
-pages.form.field.description.nino=Cadarnhewch rif Yswiriant Gwladol eich partner
-pages.form.field.nino.error.error.required=Rhowch rif Yswiriant Gwladol eich partner
-pages.form.field.nino.error.error.invalid=Rhaid i chi wirio’r rhif Yswiriant Gwladol a’i nodi’n gywir
+pages.form.field-required.nino=Nodwch rif Yswiriant Gwladol eich partner
+pages.form.field.nino.error.error.required=Nodwch rif Yswiriant Gwladol eich partner
+pages.form.field.nino.error.error.invalid=Nodwch rif Yswiriant Gwladol go iawn
 pages.form.field.nino.error.self=Ni allwch nodi’ch manylion eich hun
 
-pages.form.field.description.dateOfMarriage=Cadarnhewch eich dyddiad priodi
+pages.form.field-required.dateOfMarriage=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.description-alt.dateOfDivorce=Cadarnhewch eich dyddiad ysgaru
-pages.form.field.description.transferor-email=Cadarnhewch eich cyfeiriad e-bost
 
+pages.form.field.description.transferor-email=Cadarnhewch eich cyfeiriad e-bost
 pages.form.field.transferor-email.error.error.maxLength=Nodwch ddim mwy na {0} o gymeriadau
 pages.form.field.transferor-email.error.error.email=Rhowch gyfeiriad e-bost dilys
 pages.form.field.transferor-email.error.error.required=Rhowch wybod beth yw’ch cyfeiriad e-bost
 
-pages.form.field.description.marriage-criteria=Dewiswch lawn os ydych yn briod neu mewn partneriaeth sifil
-pages.form.field-required.marriage-criteria=Dewiswch lawn os ydych yn briod neu mewn partneriaeth sifil
-
-pages.form.field.description.date-of-birth=Dewiswch lawn os cawsoch chi a’ch partner eich geni ar ôl <span class=nowrap>5 Ebrill 1935</span>
-pages.form.field-required.date-of-birth=Dewiswch lawn os cawsoch chi a’ch partner eich geni ar ôl 5 Ebrill 1935
-
-pages.form.field-required.do-you-live-in-scotland=Dewiswch lawn os ydych yn byw yn yr Alban
-pages.form.field.description.do-you-live-in-scotland=Dewiswch lawn os ydych yn byw yn yr Alban
-
-pages.form.field.description.lower-earner=Dewiswch lawn os mai chi yw’r un â’r incwm isaf yn y berthynas
-pages.form.field-required.lower-earner=Dewiswch lawn os mai chi yw’r un â’r incwm isaf yn y berthynas
-
-pages.form.field-required.partners-income=Dewiswch lawn a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
-pages.form.field.description.partners-income=Dewiswch lawn a oes gan eich partner incwm blynyddol rhwng £{0} a £{1}
-
-pages.form.field.description.do-you-want-to-apply=Dewiswch lawn os ydych am wneud cais am Lwfans Priodasol
+pages.form.field-required.marriage-criteria=Dewiswch ‘Iawn’ os ydych yn briod neu mewn partneriaeth sifil
+pages.form.field-required.date-of-birth=Dewiswch ‘Iawn’ os cawsoch chi a’ch partner eich geni ar ôl 5 Ebrill 1935
+pages.form.field-required.do-you-live-in-scotland=Dewiswch ‘Iawn’ os ydych yn byw yn yr Alban
+pages.form.field-required.lower-earner=Dewiswch ‘Iawn’ os yw’ch incwm yn llai na £{0} y flwyddyn
+pages.form.field-required.partners-income=Dewiswch ‘Iawn’ os yw incwm eich partner rhwng £{0} a £{1} y flwyddyn
 pages.form.field-required.do-you-want-to-apply=Dewiswch lawn os ydych am wneud cais am Lwfans Priodasol
 
 pages.form.field.description.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
@@ -60,8 +49,7 @@ pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oe
 pages.form.field.description.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015?
 pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch priod neu bartner sifil yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015.
 
-pages.form.field-required.applyForCurrentYear=Dewiswch Iawn a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol
-pages.form.field.description.applyForCurrentYear=Dewiswch Iawn a hoffech wneud cais ar gyfer y flwyddyn dreth bresennol
+pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 
 pages.form.field-required.applyForHistoricYears=Dewiswch Iawn a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
 pages.form.field.description.applyForHistoricYears=Dewiswch Iawn a hoffech wneud cais ar gyfer blynyddoedd treth cynharach

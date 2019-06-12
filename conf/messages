@@ -1,58 +1,47 @@
 #********************************************************************************
 # Forms and  Unit tests validation messages
 #********************************************************************************
-pages.form.field.description.transferor-income=Confirm your annual income
-pages.form.field.description.recipient-income=Confirm your partner’s annual income
+pages.form.field-required.transferor-income=Confirm your annual income
+pages.form.field-required.recipient-income=Confirm your partner’s annual income
 
-pages.form.field.description.name=Enter your partner’s first name
+pages.form.field-required.name=Enter your partner’s first name
 pages.form.field.name.error.error.required=Enter your partner’s first name
 pages.form.field.name.error.error.pattern=Use letters only
 pages.form.field.name.error.error.maxLength=Use up to or no more than {0} letters
 
-pages.form.field.description.last-name=Enter your partner’s last name
+pages.form.field-required.last-name=Enter your partner’s last name
 pages.form.field.last-name.error.error.required=Enter your partner’s last name
 pages.form.field.last-name.error.error.pattern=Use letters only
 pages.form.field.last-name.error.error.maxLength=Use up to or no more than {0} letters
 
-pages.form.field.description.gender=Select your partner’s gender
+pages.form.field-required.gender=Select your partner’s gender
 pages.form.field.gender.error.error.required=Select your partner’s gender
 pages.form.field.gender.error.error.invalid=Select your partner’s gender
 
-pages.form.field.dom.error.required=Tell us your date of marriage
+pages.form.field.dom.error.required=Enter the date of your marriage or civil partnership
 pages.form.field.dod.error.required=Tell us your date of divorce
-pages.form.field.dom.error.min-date=This date is too far in the past
-pages.form.field.dom.error.max-date=This date is in the future
+pages.form.field.dom.error.min-date=The date of your marriage or civil partnership must be before [today’s date]
+pages.form.field.dom.error.max-date=The date of your marriage or civil partnership must be after [cut off past date]
 
-pages.form.field.description.nino = Confirm your partner’s National Insurance number
-pages.form.field.nino.error.error.required=Tell us your partner’s National Insurance number
-pages.form.field.nino.error.error.invalid=Check their National Insurance number and enter it correctly
+pages.form.field-required.nino=Enter your partner’s National Insurance number
+pages.form.field.nino.error.error.required=Enter your partner’s National Insurance number
+pages.form.field.nino.error.error.invalid=Enter a real National Insurance number
 pages.form.field.nino.error.self=You cannot enter your own details
 
-pages.form.field.description.dateOfMarriage=Confirm your date of marriage
+pages.form.field-required.dateOfMarriage=Enter the date of your marriage or civil partnership
 pages.form.field.description-alt.dateOfDivorce=Confirm your date of divorce
 
-pages.form.field.description.transferor-email=Confirm your email
+pages.form.field-required.transferor-email=Confirm your email
 pages.form.field.transferor-email.error.error.maxLength=Enter no more than {0} characters
 pages.form.field.transferor-email.error.error.email=Give a valid email address
 pages.form.field.transferor-email.error.error.required=Tell us your email address
 
-pages.form.field.description.marriage-criteria=Select yes if you are married or in a civil partnership
 pages.form.field-required.marriage-criteria=Select yes if you are married or in a civil partnership
-
-pages.form.field.description.date-of-birth=Select yes if you and your partner were born after <span class=nowrap>5 April 1935</span>
 pages.form.field-required.date-of-birth=Select yes if you and your partner were born after 5 April 1935
-
-pages.form.field.description.do-you-live-in-scotland = Select yes if you live in Scotland
-pages.form.field-required.do-you-live-in-scotland = Select yes if you live in Scotland
-
-pages.form.field.description.lower-earner=Select yes if your income is less than £{0} a year
+pages.form.field-required.do-you-live-in-scotland=Select yes if you live in Scotland
 pages.form.field-required.lower-earner=Select yes if your income is less than £{0} a year
-
-pages.form.field.description.partners-income=Select yes if your partner has an annual income of between £{0} and £{1}
-pages.form.field-required.partners-income=Select yes if your partner has an annual income of between £{0} and £{1}
-
-pages.form.field.description.do-you-want-to-apply = Select yes if you want to apply for Marriage Allowance
-pages.form.field-required.do-you-want-to-apply = Select yes if you want to apply for Marriage Allowance
+pages.form.field-required.partners-income=Select yes if your partner’s income is between £{0} and £{1} a year
+pages.form.field-required.do-you-want-to-apply=Select yes if you want to apply for Marriage Allowance
 
 pages.form.field.description.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
 pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
@@ -60,8 +49,7 @@ pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your a
 pages.form.field.description.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
 pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
 
-pages.form.field.description.applyForCurrentYear=Select yes whether you would like to apply for this current tax year
-pages.form.field-required.applyForCurrentYear=Select yes whether you would like to apply for this current tax year
+pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
 
 pages.form.field.description.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
 pages.form.field-required.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
@@ -238,7 +226,7 @@ max-benefit={0}
 pages.multi-year-select.heading=Confirm the earlier years you want to apply for
 
 #Single-year select
-pages.form.field.description.selectedYear=You need to select an answer
+pages.form.field-required.selectedYear=You need to select an answer
 your-income=your income was {0} or less
 income-between= {0} income was between {1} and {2}
 income-between-scots= {0} income was between {1} and {2} (or {3} if you live in Scotland)
