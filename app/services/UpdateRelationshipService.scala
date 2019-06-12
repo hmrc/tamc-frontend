@@ -33,7 +33,6 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.time
 import utils.LanguageUtils
 
@@ -294,9 +293,6 @@ trait UpdateRelationshipService {
       notificationRecord, _, _)) if (active.isDefined || historic.isDefined) => notificationRecord
       case _ => throw CacheMissingUpdateRecord()
     }
-
-  def saveSource(source: String)(implicit hc: HeaderCarrier, ec: ExecutionContext, user: AuthContext): Future[String] =
-    cachingService.saveSource(source)
 
   def getConfirmationUpdateData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UpdateRelationshipConfirmationModel, Option[UpdateRelationshipCacheData])] =
     for {
