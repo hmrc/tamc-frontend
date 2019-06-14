@@ -1,27 +1,22 @@
 #********************************************************************************
-# Forms and  Unit tests validation messages
+# Forms and Unit tests validation messages
 #********************************************************************************
 pages.form.field-required.transferor-income=Confirm your annual income
 pages.form.field-required.recipient-income=Confirm your partner’s annual income
 
 pages.form.field-required.name=Enter your partner’s first name
 pages.form.field.name.error.error.required=Enter your partner’s first name
-pages.form.field.name.error.error.pattern=Use letters only
-pages.form.field.name.error.error.maxLength=Use up to or no more than {0} letters
+pages.form.field.name.error.error.pattern=Your partner’s first name must only include letters a to z and hyphens
+pages.form.field.name.error.error.maxLength=Your partner’s first name must be {0} characters or less
 
 pages.form.field-required.last-name=Enter your partner’s last name
 pages.form.field.last-name.error.error.required=Enter your partner’s last name
-pages.form.field.last-name.error.error.pattern=Use letters only
-pages.form.field.last-name.error.error.maxLength=Use up to or no more than {0} letters
+pages.form.field.last-name.error.error.pattern=Your partner’s last name must only include letters a to z and hyphens
+pages.form.field.last-name.error.error.maxLength=Your partner’s last name must be {0} characters or less
 
 pages.form.field-required.gender=Select your partner’s gender
 pages.form.field.gender.error.error.required=Select your partner’s gender
 pages.form.field.gender.error.error.invalid=Select your partner’s gender
-
-pages.form.field.dom.error.required=Enter the date of your marriage or civil partnership
-pages.form.field.dod.error.required=Tell us your date of divorce
-pages.form.field.dom.error.min-date=The date of your marriage or civil partnership must be before [today’s date]
-pages.form.field.dom.error.max-date=The date of your marriage or civil partnership must be after [cut off past date]
 
 pages.form.field-required.nino=Enter your partner’s National Insurance number
 pages.form.field.nino.error.error.required=Enter your partner’s National Insurance number
@@ -29,12 +24,18 @@ pages.form.field.nino.error.error.invalid=Enter a real National Insurance number
 pages.form.field.nino.error.self=You cannot enter your own details
 
 pages.form.field-required.dateOfMarriage=Enter the date of your marriage or civil partnership
-pages.form.field.description-alt.dateOfDivorce=Confirm your date of divorce
+pages.form.field.dom.error.required=Enter the date of your marriage or civil partnership
+pages.form.field.dom.error.min-date=The date of your marriage or civil partnership must be before [today’s date]
+pages.form.field.dom.error.max-date=The date of your marriage or civil partnership must be after [cut off past date]
+error.invalid.date.format=Enter the date of your marriage or civil partnership and include a day, month and year
 
-pages.form.field-required.transferor-email=Confirm your email
+pages.form.field.dod.error.required=Tell us your date of divorce
+pages.form.field-required-alt.dateOfDivorce=Confirm your date of divorce
+
+pages.form.field-required.transferor-email=Enter your email address
+pages.form.field.transferor-email.error.error.required=Enter your email address
 pages.form.field.transferor-email.error.error.maxLength=Enter no more than {0} characters
-pages.form.field.transferor-email.error.error.email=Give a valid email address
-pages.form.field.transferor-email.error.error.required=Tell us your email address
+pages.form.field.transferor-email.error.error.email=Enter an email address with a name, @ symbol and a domain name, like yourname@example.com
 
 pages.form.field-required.marriage-criteria=Select yes if you are married or in a civil partnership
 pages.form.field-required.date-of-birth=Select yes if you and your partner were born after 5 April 1935
@@ -43,44 +44,38 @@ pages.form.field-required.lower-earner=Select yes if your income is less than £
 pages.form.field-required.partners-income=Select yes if your partner’s income is between £{0} and £{1} a year
 pages.form.field-required.do-you-want-to-apply=Select yes if you want to apply for Marriage Allowance
 
-pages.form.field.description.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
-pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
-
-pages.form.field.description.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
-pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
-
 pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
-
-pages.form.field.description.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
+pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
+pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
 pages.form.field-required.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
 
 error.end-reason.required=Select a reason for changing your Marriage Allowance below.
-pages.form.field.description.endReason=Select a reason for changing your Marriage Allowance below
+pages.form.field-required.endReason=Select a reason for changing your Marriage Allowance below
 
 error.divorce-reason.required=Select an answer for keeping your Marriage Allowance until the end of the tax year.
-pages.form.field.description-alt.endReason=Select an answer for keeping your Marriage Allowance until the end of the tax year
+pages.form.field-required-alt.endReason=Select an answer for keeping your Marriage Allowance until the end of the tax year
 
-pages.form.extra-year.field-required=Tell us whether you would like to apply for the previous {0} to {1} tax year
-pages.form.field.description.year-2015-=Confirm whether you would like to apply for the previous 2015 to 2016 tax year
-pages.form.field.description.year-2016-=Confirm whether you would like to apply for the previous 2016 to 2017 tax year
-pages.form.field.description.year-2017-=Confirm whether you would like to apply for the previous 2017 to 2018 tax year
-pages.form.field.description.year-2018-=Confirm whether you would like to apply for the previous 2018 to 2019 tax year
-pages.form.field.description.year-2019-=Confirm whether you would like to apply for the previous 2019 to 2020 tax year
-pages.form.field.description.year-2020-=Confirm whether you would like to apply for the previous 2020 to 2021 tax year
-pages.form.field.description.year-2021-=Confirm whether you would like to apply for the previous 2021 to 2022 tax year
-pages.form.field.description.year-2022-=Confirm whether you would like to apply for the previous 2022 to 2023 tax year
-pages.form.field.description.year-2023-=Confirm whether you would like to apply for the previous 2023 to 2024 tax year
-pages.form.field.description.year-2024-=Confirm whether you would like to apply for the previous 2024 to 2025 tax year
-pages.form.field.description.year-2025-=Confirm whether you would like to apply for the previous 2025 to 2026 tax year
-pages.form.field.description.year-2026-=Confirm whether you would like to apply for the previous 2026 to 2027 tax year
+pages.form.extra-year.field.description=Tell us whether you would like to apply for the previous {0} to {1} tax year
+pages.form.field-required.year-2015-=Confirm whether you would like to apply for the previous 2015 to 2016 tax year
+pages.form.field-required.year-2016-=Confirm whether you would like to apply for the previous 2016 to 2017 tax year
+pages.form.field-required.year-2017-=Confirm whether you would like to apply for the previous 2017 to 2018 tax year
+pages.form.field-required.year-2018-=Confirm whether you would like to apply for the previous 2018 to 2019 tax year
+pages.form.field-required.year-2019-=Confirm whether you would like to apply for the previous 2019 to 2020 tax year
+pages.form.field-required.year-2020-=Confirm whether you would like to apply for the previous 2020 to 2021 tax year
+pages.form.field-required.year-2021-=Confirm whether you would like to apply for the previous 2021 to 2022 tax year
+pages.form.field-required.year-2022-=Confirm whether you would like to apply for the previous 2022 to 2023 tax year
+pages.form.field-required.year-2023-=Confirm whether you would like to apply for the previous 2023 to 2024 tax year
+pages.form.field-required.year-2024-=Confirm whether you would like to apply for the previous 2024 to 2025 tax year
+pages.form.field-required.year-2025-=Confirm whether you would like to apply for the previous 2025 to 2026 tax year
+pages.form.field-required.year-2026-=Confirm whether you would like to apply for the previous 2026 to 2027 tax year
 
 pages.form.field.transferor-income.error.field-required = Tell us your annual income
-pages.form.field.recipient-income.error.field-required = Tell us your partner’s annual income
-
 pages.form.field.transferor-income.error.field-invalid = Use numbers only
+
+pages.form.field.recipient-income.error.field-required = Tell us your partner’s annual income
 pages.form.field.recipient-income.error.field-invalid = Use numbers only
 
-pages.form.field.description.country=Select where you live
+pages.form.field-required.country=Select where you live
 
 eligibility.feedback.incorrect-role=Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income.
 
@@ -145,6 +140,7 @@ generic.translation.english=English
 generic.translation.welsh=Cymraeg
 radio.yes=Yes
 radio.no=No
+tamc.app-name=tamc-frontend
 
 #********************************************************************************
 # Titles
@@ -203,7 +199,6 @@ hmrc.contact-detials.calling.time=Best time to call
 hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday.
 hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about call charges</a>
 hmrc.contact-income-tax-helpline=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees
-
 
 #********************************************************************************
 # Eligibility Calculator
@@ -517,7 +512,6 @@ technical.technical-error.para1 = Try again. If the problem persists, call us to
 technical.transferor-dead-p1=Contact the Income Tax Helpline
 technical.transferor-dead-p2=if you need to discuss your Marriage Allowance application.
 
-
 #********************************************************************************
 # history page
 #********************************************************************************
@@ -535,7 +529,6 @@ pages.history.cancel3=want to reject the allowance
 pages.history.cancel4=have suffered a bereavement
 pages.history.button.remove=Remove allowance
 
-
 #********************************************************************************
 # eligible year page
 #********************************************************************************
@@ -548,7 +541,6 @@ pages.eligibleyear.li3=it will automatically renew every year until you or <span
 pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
 pages.eligibleyear.notice=You can apply for earlier years if you continue.
 
-
 #********************************************************************************
 # multiyear
 #********************************************************************************
@@ -557,14 +549,12 @@ pages.multiyear.canclaim=You and <span id="firstNameOnly">{0}</span> can claim M
 pages.multiyear.successful=If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
 pages.multiyear.extrayears=Do you want to apply for this extra tax year too?
 
-
 #********************************************************************************
 # previous-years
 #********************************************************************************
 pages.previousyear.header=You can apply for earlier tax years
 pages.previousyear.lede=You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.
 pages.previousyear.para=You told us you married or formed a civil partnership with <span id=firstNameOnly>{0}</span> on <span id=marriageDate class=nowrap>{1}</span>. This means you can apply for earlier tax years.
-
 
 #********************************************************************************
 # confirm-page
@@ -579,7 +569,6 @@ pages.confirm.warning=Check the details you have entered and make sure they are 
 pages.confirm.button=Confirm your application
 pages.confirm.marriage.details=Your Marriage Allowance details
 pages.confirm.date.of.marriage=Date of marriage or civil partnership
-
 
 #********************************************************************************
 # change-of-circs-finish-page
@@ -603,9 +592,6 @@ change.other.sub.caption2=Bereavement
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
 change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 
-error.invalid.date.format=You must specify a valid date
-
-
 #********************************************************************************
 # no years selected page
 #********************************************************************************
@@ -628,8 +614,3 @@ tamc.banner.recruitment.link=Help improve digital services by joining the HMRC u
 tamc.banner.recruitment.reject=No thanks
 tamc.banner.recruitment.title=Help improve GOV.UK
 tamc.banner.recruitment.linkURL=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133
-
-#*************************************************************
-# General
-#*************************************************************
-tamc.app-name=tamc-frontend
