@@ -41,11 +41,11 @@ class LanguageControllerTest extends ControllerBaseSpec {
   "changeLang" should {
     "redirect" when {
       "redirect URI contains the path" in {
-        val request = FakeRequest("GET", "http://localhost:9948")
+        val request = FakeRequest("GET", "http://localhost:9900")
         val result = controller.cyGb()(request)
         cookies(result).get("PLAY_LANG").get.value shouldBe "cy"
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).get shouldBe request.path + "/mdtp"
+        redirectLocation(result).get shouldBe request.path + "/marriage-allowance-application/history"
       }
     }
   }

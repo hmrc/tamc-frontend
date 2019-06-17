@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.ApplicationConfig.loginUrl
+import config.ApplicationConfig.callbackUrl
 import javax.inject.Inject
 import play.api.Environment
 import play.api.Play.current
@@ -30,7 +30,7 @@ class LanguageController @Inject()(implicit val environment: Environment) extend
 
   def cyGb(): Action[AnyContent] = switchToLanguage(language = "cymraeg")
 
-  def fallbackURL: String = loginUrl
+  def fallbackURL: String = callbackUrl
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
