@@ -5,28 +5,28 @@ pages.form.field-required.transferor-income=Confirm your annual income
 pages.form.field-required.recipient-income=Confirm your partner’s annual income
 
 pages.form.field-required.name=Enter your partner’s first name
-pages.form.field.name.error.error.required=Enter your partner’s first name
-pages.form.field.name.error.error.pattern=Your partner’s first name must only include letters a to z and hyphens
-pages.form.field.name.error.error.maxLength=Your partner’s first name must be {0} characters or less
+pages.form.field.name.error.required=Enter your partner’s first name
+pages.form.field.name.error.pattern=Your partner’s first name must only include letters a to z and hyphens
+pages.form.field.name.error.maxLength=Your partner’s first name must be {0} characters or less
 
 pages.form.field-required.last-name=Enter your partner’s last name
-pages.form.field.last-name.error.error.required=Enter your partner’s last name
-pages.form.field.last-name.error.error.pattern=Your partner’s last name must only include letters a to z and hyphens
-pages.form.field.last-name.error.error.maxLength=Your partner’s last name must be {0} characters or less
+pages.form.field.last-name.error.required=Enter your partner’s last name
+pages.form.field.last-name.error.pattern=Your partner’s last name must only include letters a to z and hyphens
+pages.form.field.last-name.error.maxLength=Your partner’s last name must be {0} characters or less
 
 pages.form.field-required.gender=Select your partner’s gender
-pages.form.field.gender.error.error.required=Select your partner’s gender
-pages.form.field.gender.error.error.invalid=Select your partner’s gender
+pages.form.field.gender.error.required=Select your partner’s gender
+pages.form.field.gender.error.invalid=Select your partner’s gender
 
 pages.form.field-required.nino=Enter your partner’s National Insurance number
-pages.form.field.nino.error.error.required=Enter your partner’s National Insurance number
-pages.form.field.nino.error.error.invalid=Enter a real National Insurance number
+pages.form.field.nino.error.required=Enter your partner’s National Insurance number
+pages.form.field.nino.error.invalid=Your partner’s National Insurance number must only include letters a to z and numbers 0 to 9
 pages.form.field.nino.error.self=You cannot enter your own details
 
 pages.form.field-required.dateOfMarriage=Enter the date of your marriage or civil partnership
 pages.form.field.dom.error.required=Enter the date of your marriage or civil partnership
-pages.form.field.dom.error.min-date=The date of your marriage or civil partnership must be before [today’s date]
-pages.form.field.dom.error.max-date=The date of your marriage or civil partnership must be after [cut off past date]
+pages.form.field.dom.error.max-date=The date of your marriage or civil partnership must be before {0}
+pages.form.field.dom.error.min-date=The date of your marriage or civil partnership must be after {0}
 error.invalid.date.format=Enter the date of your marriage or civil partnership and include a day, month and year
 
 pages.form.field.dod.error.required=Tell us your date of divorce

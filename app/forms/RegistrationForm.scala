@@ -16,6 +16,7 @@
 
 package forms
 
+import java.text.SimpleDateFormat
 import config.ApplicationConfig
 import models.{Gender, RegistrationFormInput}
 import org.joda.time.LocalDate
@@ -24,13 +25,14 @@ import play.api.data.format.Formatter
 import play.api.data.validation.Constraints.pattern
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, FormError, Mapping}
+import play.api.i18n.Messages
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.mappers.DateTuple._
 
 object RegistrationForm {
 
   private def maxLengthWithError(maxLength: Int, error: String = "error.maxLength"): Constraint[String] = Constraint[String]("constraint.maxLength", maxLength) { o =>
-    if (o == null) Invalid(ValidationError(error, maxLength)) else if (o.size <= maxLength) Valid else Invalid(ValidationError(error, maxLength))
+    if (o == null) Invalid(ValidationError(error, maxLength)) else if (o.length <= maxLength) Valid else Invalid(ValidationError(error, maxLength))
   }
 
   private def nonEmptyTrimmer(error: String = "error.required"): Mapping[String] =
@@ -49,7 +51,7 @@ object RegistrationForm {
       verifying(maxLengthWithError(maxLength = 35, error = errorMaxLength)).
       verifying(pattern(regex = """[ \.\,\-\"\'\`\(\)A-Za-z]+""".r, error = errorPattern))
 
-  private def nameMappingCustomizer(messageCustomizer: (String => String)): Mapping[String] =
+  private def nameMappingCustomizer(messageCustomizer: String => String): Mapping[String] =
     nameMapping(
       errorRequired = messageCustomizer.apply("error.required"),
       errorMaxLength = messageCustomizer.apply("error.maxLength"),
@@ -66,39 +68,41 @@ object RegistrationForm {
       verifying(error = errorInvalid, constraint = Nino.isValid(_)).
       transform[Nino](Nino(_), _.nino)
 
-  private def firstNameMessageCustomizer(messageKey: String): String = s"pages.form.field.name.error.${messageKey}"
+  private def firstNameMessageCustomizer(messageKey: String): String = s"pages.form.field.name.$messageKey"
 
-  private def firstName: Mapping[String] =
-    nameMappingCustomizer(
-      messageCustomizer = firstNameMessageCustomizer)
+  def firstName: Mapping[String] =
+    nameMappingCustomizer(messageCustomizer = firstNameMessageCustomizer)
 
-  private def lastNameMessageCustomizer(messageKey: String): String = s"pages.form.field.last-name.error.${messageKey}"
+  private def lastNameMessageCustomizer(messageKey: String): String = s"pages.form.field.last-name.$messageKey"
 
-  private def lastName: Mapping[String] =
-    nameMappingCustomizer(
-      messageCustomizer = lastNameMessageCustomizer)
+  def lastName: Mapping[String] =
+    nameMappingCustomizer(messageCustomizer = lastNameMessageCustomizer)
 
-  private def genderMessageCustomizer(messageKey: String): String = s"pages.form.field.gender.error.${messageKey}"
+  private def genderMessageCustomizer(messageKey: String): String = s"pages.form.field.gender.$messageKey"
 
-  private def gender: Mapping[Gender] =
+  def gender: Mapping[Gender] =
     genderMapping(
       errorRequired = genderMessageCustomizer("error.required"),
-      errorInvalid = genderMessageCustomizer("error.invalid"))
+      errorInvalid = genderMessageCustomizer("error.invalid")
+    )
 
-  private def ninoMessageCustomizer(messageKey: String): String = s"pages.form.field.nino.error.${messageKey}"
+  private def ninoMessageCustomizer(messageKey: String): String = s"pages.form.field.nino.$messageKey"
 
-  private def nino: Mapping[Nino] =
+  def nino: Mapping[Nino] =
     ninoMapping(
       errorRequired = ninoMessageCustomizer("error.required"),
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
-  private def dateOfMarriageValidator(today: LocalDate) = {
+  def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages) = {
+    val dateFormatter: SimpleDateFormat = new SimpleDateFormat("dd MM YYYY")
+    val minDate = ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)
+    val maxDate = today.plusDays(1)
     mandatoryDateTuple("pages.form.field.dom.error.required").
-      verifying(error = "pages.form.field.dom.error.min-date", constraint = _.isAfter(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1))).
-      verifying(error = "pages.form.field.dom.error.max-date", constraint = _.isBefore(today.plusDays(1)))
+      verifying(error = Messages("pages.form.field.dom.error.min-date", dateFormatter.format(minDate.toDate)), constraint = _.isAfter(minDate)).
+      verifying(error = Messages("pages.form.field.dom.error.max-date", dateFormatter.format(maxDate.toDate)), constraint = _.isBefore(maxDate))
   }
 
-  def registrationForm(today: LocalDate, transferorNino: Nino) = Form[RegistrationFormInput](
+  def registrationForm(today: LocalDate, transferorNino: Nino)(implicit messages: Messages) = Form[RegistrationFormInput](
     mapping(
       "name" -> firstName,
       "last-name" -> lastName,

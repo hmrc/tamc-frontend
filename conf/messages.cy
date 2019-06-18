@@ -5,28 +5,28 @@ pages.form.field-required.transferor-income=Cadarnhewch eich incwm blynyddol
 pages.form.field-required.recipient-income=Cadarnhewch incwm blynyddol eich partner
 
 pages.form.field-required.name=Nodwch enw cyntaf eich partner
-pages.form.field.name.error.error.required=Nodwch enw cyntaf eich partner
-pages.form.field.name.error.error.pattern=Mae’n rhaid i enw cyntaf eich partner gynnwys llythrennau a i z a chysylltnodau yn unig
-pages.form.field.name.error.error.maxLength=Mae’n rhaid i enw cyntaf eich partner fod yn {0} o gymeriadau neu lai
+pages.form.field.name.error.required=Nodwch enw cyntaf eich partner
+pages.form.field.name.error.pattern=Mae’n rhaid i enw cyntaf eich partner gynnwys llythrennau a i z a chysylltnodau yn unig
+pages.form.field.name.error.maxLength=Mae’n rhaid i enw cyntaf eich partner fod yn {0} o gymeriadau neu lai
 
 pages.form.field-required.last-name=Nodwch enw olaf eich partner
-pages.form.field.last-name.error.error.required=Nodwch enw olaf eich partner
-pages.form.field.last-name.error.error.pattern=Mae’n rhaid i enw olaf eich partner gynnwys llythrennau a i z a chysylltnodau yn unig
-pages.form.field.last-name.error.error.maxLength=Mae’n rhaid i enw olaf eich partner fod yn {0} o gymeriadau neu lai
+pages.form.field.last-name.error.required=Nodwch enw olaf eich partner
+pages.form.field.last-name.error.pattern=Mae’n rhaid i enw olaf eich partner gynnwys llythrennau a i z a chysylltnodau yn unig
+pages.form.field.last-name.error.maxLength=Mae’n rhaid i enw olaf eich partner fod yn {0} o gymeriadau neu lai
 
 pages.form.field-required.gender=Dewiswch ryw eich partner
-pages.form.field.gender.error.error.required=Dewiswch ryw eich partner
-pages.form.field.gender.error.error.invalid=Dewiswch ryw eich partner
+pages.form.field.gender.error.required=Dewiswch ryw eich partner
+pages.form.field.gender.error.invalid=Dewiswch ryw eich partner
 
 pages.form.field-required.nino=Nodwch rif Yswiriant Gwladol eich partner
-pages.form.field.nino.error.error.required=Nodwch rif Yswiriant Gwladol eich partner
-pages.form.field.nino.error.error.invalid=Nodwch rif Yswiriant Gwladol go iawn
+pages.form.field.nino.error.required=Nodwch rif Yswiriant Gwladol eich partner
+pages.form.field.nino.error.invalid=Mae’n rhaid i rif Yswiriant Gwladol eich partner gynnwys llythrennau a i z a rhifau 0 i 9 yn unig
 pages.form.field.nino.error.self=Ni allwch nodi’ch manylion eich hun
 
 pages.form.field-required.dateOfMarriage=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.dom.error.required=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
-pages.form.field.dom.error.min-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod cyn [today’s date]
-pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod ar ôl [cut off past date]
+pages.form.field.dom.error.min-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod ar ôl {0}
+pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod cyn {0}
 error.invalid.date.format=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil. Rhowch ddiwrnod, mis a blwyddyn
 
 pages.form.field.dod.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch ysgaru
