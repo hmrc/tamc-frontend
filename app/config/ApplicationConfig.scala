@@ -99,7 +99,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val LANG_LANG_ENGLISH = "en"
   override val LANG_LANG_WELSH = "cy"
 
-  override val isWelshEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation.welsh-translation").getOrElse(false)
+  override val isWelshEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
   lazy val webchatId = loadConfig("webchat.id")
 }
 

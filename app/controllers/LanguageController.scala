@@ -34,6 +34,6 @@ class LanguageController @Inject()(implicit val environment: Environment) extend
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
-    "cymraeg" -> Lang("cy"))
-
+    "cymraeg" -> Lang("cy")
+  )
 }
