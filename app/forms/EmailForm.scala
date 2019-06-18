@@ -21,7 +21,7 @@ import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailAddress, emailMaxLength,
 
 object EmailForm {
 
-  private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.error.${messageKey}"
+  private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
 
   private def email = emailAddress(errorRequired = messageCustomizer("error.required"), errorEmail = messageCustomizer("error.email")).
     verifying {

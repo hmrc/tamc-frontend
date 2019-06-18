@@ -33,9 +33,9 @@ pages.form.field.dod.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch ysg
 pages.form.field-required-alt.dateOfDivorce=Cadarnhewch eich dyddiad ysgaru
 
 pages.form.field-required.transferor-email=Nodwch eich cyfeiriad e-bost
-pages.form.field.transferor-email.error.error.required=Nodwch eich cyfeiriad e-bost
-pages.form.field.transferor-email.error.error.maxLength=Nodwch ddim mwy na {0} o gymeriadau
-pages.form.field.transferor-email.error.error.email=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis eichenw@enghraifft.com
+pages.form.field.transferor-email.error.required=Nodwch eich cyfeiriad e-bost
+pages.form.field.transferor-email.error.maxLength=Nodwch ddim mwy na {0} o gymeriadau
+pages.form.field.transferor-email.error.email=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis eichenw@enghraifft.com
 
 pages.form.field-required.marriage-criteria=Dewiswch ‘Iawn’ os ydych yn briod neu mewn partneriaeth sifil
 pages.form.field-required.date-of-birth=Dewiswch ‘Iawn’ os cawsoch chi a’ch partner eich geni ar ôl 5 Ebrill 1935
