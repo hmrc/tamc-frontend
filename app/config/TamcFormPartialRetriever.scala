@@ -20,10 +20,11 @@ import javax.inject.Inject
 import uk.gov.hmrc.crypto.PlainText
 import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class TamcFormPartialRetriever @Inject()(sessionCookieCrypto: SessionCookieCrypto,
-                                        defaultHttpClient: DefaultHttpClient) extends FormPartialRetriever {
+                                        defaultHttpClient: HttpClient) extends FormPartialRetriever {
   override def httpGet: HttpGet = defaultHttpClient
 
   override def crypto: String => String = cookie => sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value

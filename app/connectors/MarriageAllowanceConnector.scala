@@ -16,22 +16,23 @@
 
 package connectors
 
-import config.{ApplicationConfig, DefaultHttpClient}
+import config.ApplicationConfig
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import javax.inject.Inject
 import models._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MarriageAllowanceConnector @Inject() (defaultHttpClient: DefaultHttpClient) {
+class MarriageAllowanceConnector @Inject() (httpClient: HttpClient) {
 
   val marriageAllowanceUrl = ApplicationConfig.marriageAllowanceUrl
 
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordWrapper] =
-    defaultHttpClient.GET[RelationshipRecordStatusWrapper](s"$marriageAllowanceUrl/paye/$transferorNino/list-relationship") map {
+    httpClient.GET[RelationshipRecordStatusWrapper](s"$marriageAllowanceUrl/paye/$transferorNino/list-relationship") map {
       case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK"))      => relationshipRecordWrapper
       case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
       case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND))    => throw CitizenNotFound()
@@ -39,12 +40,12 @@ class MarriageAllowanceConnector @Inject() (defaultHttpClient: DefaultHttpClient
     }
 
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    defaultHttpClient.POST(s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData)
+    httpClient.POST(s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData)
 
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    defaultHttpClient.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/$journey", data)
+    httpClient.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/$journey", data)
   }
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    defaultHttpClient.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data)
+    httpClient.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data)
 }

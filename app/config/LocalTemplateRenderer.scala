@@ -20,13 +20,14 @@ import javax.inject.Inject
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class LocalTemplateRenderer @Inject() (defaultHttpClient: DefaultHttpClient) extends TemplateRenderer with ServicesConfig {
+class LocalTemplateRenderer @Inject() (defaultHttpClient: HttpClient) extends TemplateRenderer with ServicesConfig {
   override lazy val templateServiceBaseUrl: String = baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes
 

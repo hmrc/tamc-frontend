@@ -27,19 +27,19 @@ import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.http.ws.WSHttp
 
-trait HttpClient extends HttpGet with HttpPut with HttpPost with HttpDelete with HttpPatch
-
-@Singleton
-class DefaultHttpClient @Inject()(
-                                   config: Configuration,
-                                   val actorSystem: ActorSystem,
-                                   override val auditConnector: AuditConnector,
-                                   override val wsClient: WSClient
-                                 ) extends HttpClient with WSHttp with HttpAuditing {
-
-  override lazy val configuration: Option[Config] = Option(config.underlying)
-
-  override val appName: String = config.underlying.getString("appName")
-
-  override val hooks: Seq[HttpHook] = Seq(AuditingHook)
-}
+//trait HttpClient extends HttpGet with HttpPut with HttpPost with HttpDelete with HttpPatch
+//
+//@Singleton
+//class DefaultHttpClient @Inject()(
+//                                   config: Configuration,
+//                                   val actorSystem: ActorSystem,
+//                                   override val auditConnector: AuditConnector,
+//                                   override val wsClient: WSClient
+//                                 ) extends HttpClient with WSHttp with HttpAuditing {
+//
+//  override lazy val configuration: Option[Config] = Option(config.underlying)
+//
+//  override val appName: String = config.underlying.getString("appName")
+//
+//  override val hooks: Seq[HttpHook] = Seq(AuditingHook)
+//}

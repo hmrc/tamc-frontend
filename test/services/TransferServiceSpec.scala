@@ -29,18 +29,17 @@ import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.audit.DefaultAuditConnector
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class TransferServiceTest extends ControllerBaseSpec {
-
-  val service: TransferService = new TransferService {
-    override val cachingService: CachingService = mock[CachingService]
-    override val timeService: TimeService = mock[TimeService]
-    override val marriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
-    override val customAuditConnector: AuditConnector = mock[AuditConnector]
-    override val updateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
-  }
+class TransferServiceSpec extends ControllerBaseSpec {
+     val cachingService: CachingService = mock[CachingService]
+     val timeService: TimeService = mock[TimeService]
+     val marriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
+     val updateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
+     val auditConnector = mock[DefaultAuditConnector]
+  val service: TransferService = new TransferService(auditConnector,marriageAllowanceConnector,cachingService,timeService,updateRelationshipService)
 
   val nino = Nino(Ninos.nino1)
   val recipientData = RegistrationFormInput("", "", Gender("F"), nino, LocalDate.now())
@@ -51,13 +50,13 @@ class TransferServiceTest extends ControllerBaseSpec {
       "checkRecipientEligible is true" in {
         val response = GetRelationshipResponse(Some(RecipientRecordData.userRecord), None, ResponseStatus("OK"))
 
-        when(service.cachingService.getUpdateRelationshipCachedData)
+        when(cachingService.getUpdateRelationshipCachedData)
           .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
-        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
+        when(updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
           .thenReturn(true)
-        when(service.marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
+        when(marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
-        when(service.cachingService.saveRecipientRecord(RecipientRecordData.userRecord, recipientData, Nil))
+        when(cachingService.saveRecipientRecord(RecipientRecordData.userRecord, recipientData, Nil))
           .thenReturn(RecipientRecordData.userRecord)
 
         val result = service.isRecipientEligible(nino, recipientData)
@@ -68,32 +67,32 @@ class TransferServiceTest extends ControllerBaseSpec {
     "throw an error" when {
       "recipient is not returned" in {
         val response = GetRelationshipResponse(None, None, ResponseStatus("OK"))
-        when(service.cachingService.getUpdateRelationshipCachedData)
+        when(cachingService.getUpdateRelationshipCachedData)
           .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
-        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
+        when(updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
           .thenReturn(true)
-        when(service.marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
+        when(marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
 
         intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the cache returns no data" in {
-        when(service.cachingService.getUpdateRelationshipCachedData)
+        when(cachingService.getUpdateRelationshipCachedData)
           .thenReturn(None)
 
         intercept[CacheMissingTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the active relationship record is not returned" in {
-        when(service.cachingService.getUpdateRelationshipCachedData)
+        when(cachingService.getUpdateRelationshipCachedData)
           .thenReturn(Some(UpdateRelationshipCacheData(None, None, None, Some(List(relationshipRecord)), None)))
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the historic relationship record is not returned" in {
-        when(service.cachingService.getUpdateRelationshipCachedData)
+        when(cachingService.getUpdateRelationshipCachedData)
           .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord), None, None)))
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))

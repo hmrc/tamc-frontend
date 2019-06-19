@@ -16,7 +16,7 @@
 
 package services
 
-import config.{ApplicationConfig, DefaultHttpClient}
+import config.{ApplicationConfig}
 import connectors.MarriageAllowanceConnector
 import details.PersonDetails
 import errors.TransferorNotFound
@@ -27,11 +27,12 @@ import play.api.{Configuration, Play}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CachingService @Inject() (defaultHttpClient: DefaultHttpClient,
+class CachingService @Inject() (defaultHttpClient: HttpClient,
                                marriageAllowanceConnector: MarriageAllowanceConnector) extends SessionCache with AppName with ServicesConfig {
 
   override lazy val http = defaultHttpClient
