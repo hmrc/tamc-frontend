@@ -8,7 +8,7 @@ object AppDependencies {
     "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % "8.4.0-play-25",
     "uk.gov.hmrc" %% "play-breadcrumb" % "1.0.0",
-    "uk.gov.hmrc" %% "local-template-renderer" % "2.4.0",
+    "uk.gov.hmrc" %% "local-template-renderer" % "2.5.0",
     "uk.gov.hmrc" %% "time" % "3.6.0",
     "uk.gov.hmrc" %% "domain" % "5.6.0-play-25",
     "uk.gov.hmrc" %% "auth-client" % "2.22.0-play-25",

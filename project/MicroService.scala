@@ -15,6 +15,7 @@
  */
 
 import play.routes.compiler.StaticRoutesGenerator
+import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
 import sbt.Tests.{Group, SubProcess}
@@ -50,6 +51,7 @@ trait MicroService {
 
   lazy val microservice: Project = Project(appName, file("."))
     .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+    .settings(PlayKeys.playDefaultPort := 9351)
     .settings(playSettings: _*)
     .settings(scoverageSettings: _*)
     .settings(publishingSettings: _*)
@@ -91,6 +93,6 @@ private object TestPhases {
 
   def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
     tests map {
-      test => new Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
+      test => Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
     }
 }
