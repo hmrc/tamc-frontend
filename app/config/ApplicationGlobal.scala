@@ -17,7 +17,6 @@
 package config
 
 import com.typesafe.config.Config
-import connectors.ApplicationAuditConnector
 import net.ceedubs.ficus.Ficus.{configValueReader, toFicusConfig}
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
@@ -26,42 +25,35 @@ import play.api.{Application, Configuration}
 import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig}
-import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
-import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport}
 
-object ApplicationGlobal extends DefaultFrontendGlobal {
-
-  override val auditConnector = ApplicationAuditConnector
-  override val loggingFilter = MarriageAllowanceLoggingFilter
-  override val frontendAuditFilter = MarriageAllowanceAuditFilter
-  implicit val templateRenderer = config.LocalTemplateRenderer
-  implicit val formPartialRetriever = TamcFormPartialRetriever
-
-  override def onStart(app: Application) {
-    super.onStart(app)
-    new ApplicationCrypto(current.configuration.underlying).verifyConfiguration()
-  }
-
-  override def microserviceMetricsConfig(implicit app: Application) = app.configuration.getConfig("microservice.metrics")
-
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-    views.html.templates.error_template(pageTitle, heading, message)
-}
+//object ApplicationGlobal {
+//
+//  val auditConnector: ApplicationAuditConnector.type = ApplicationAuditConnector
+//  val loggingFilter: MarriageAllowanceLoggingFilter.type = MarriageAllowanceLoggingFilter
+//  val frontendAuditFilter: MarriageAllowanceAuditFilter.type = MarriageAllowanceAuditFilter
+//  val templateRenderer: LocalTemplateRenderer.type = config.LocalTemplateRenderer
+//  val formPartialRetriever: TamcFormPartialRetriever.type = TamcFormPartialRetriever
+//
+//  def microserviceMetricsConfig(implicit app: Application) = app.configuration.getConfig("microservice.metrics")
+//
+//  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
+//    views.html.templates.error_template(pageTitle, heading, message)
+//}
 
 object ControllerConfiguration extends ControllerConfig {
-  lazy val controllerConfigs = current.configuration.underlying.as[Config]("controllers")
+  lazy val controllerConfigs: Config = current.configuration.underlying.as[Config]("controllers")
 }
 
-object MarriageAllowanceLoggingFilter extends FrontendLoggingFilter with MicroserviceFilterSupport {
-  override def controllerNeedsLogging(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsLogging
-}
+//object MarriageAllowanceLoggingFilter extends FrontendLoggingFilter with MicroserviceFilterSupport {
+//  override def controllerNeedsLogging(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsLogging
+//}
 
-object MarriageAllowanceAuditFilter extends FrontendAuditFilter with AppName with MicroserviceFilterSupport {
-  override lazy val maskedFormFields: Seq[String] = Seq.empty[String]
-  override lazy val applicationPort: Option[Int] = None
-  override lazy val auditConnector = ApplicationAuditConnector
-
-  override def controllerNeedsAuditing(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsAuditing
-
-  override protected def appNameConfiguration: Configuration = current.configuration
-}
+//object MarriageAllowanceAuditFilter extends FrontendAuditFilter with AppName with MicroserviceFilterSupport {
+//  override lazy val maskedFormFields: Seq[String] = Seq.empty[String]
+//  override lazy val applicationPort: Option[Int] = None
+//  override lazy val auditConnector = ApplicationAuditConnector
+//
+//  override def controllerNeedsAuditing(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsAuditing
+//
+//  override protected def appNameConfiguration: Configuration = current.configuration
+//}

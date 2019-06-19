@@ -16,17 +16,17 @@
 
 package config
 
+import javax.inject.Inject
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.WSHttp
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
+class LocalTemplateRenderer @Inject() (defaultHttpClient: DefaultHttpClient) extends TemplateRenderer with ServicesConfig {
   override lazy val templateServiceBaseUrl: String = baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes
 
@@ -35,7 +35,7 @@ object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
   import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
   override def fetchTemplate(path: String): Future[String] = {
-    WSHttp.GET(path).map(_.body)
+    defaultHttpClient.GET(path).map(_.body)
   }
 
   override protected def mode: Mode = Play.current.mode

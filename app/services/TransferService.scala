@@ -16,10 +16,11 @@
 
 package services
 
-import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
+import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors._
 import events._
+import javax.inject.Inject
 import models._
 import play.Logger
 import play.api.i18n.Messages
@@ -28,31 +29,22 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.play.bootstrap.audit.DefaultAuditConnector
 import uk.gov.hmrc.time
 import utils.LanguageUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-object TransferService extends TransferService {
-  override val marriageAllowanceConnector = MarriageAllowanceConnector
-  override val customAuditConnector = ApplicationAuditConnector
-  override val cachingService = CachingService
-  override val timeService = TimeService
-  override val updateRelationshipService = UpdateRelationshipService
-}
-
-trait TransferService {
-
-  val marriageAllowanceConnector: MarriageAllowanceConnector
-  val customAuditConnector: AuditConnector
-  val cachingService: CachingService
-  val timeService: TimeService
-  val updateRelationshipService: UpdateRelationshipService
+class TransferService @Inject ()(defaultAuditConnector : DefaultAuditConnector,
+                                marriageAllowanceConnector : MarriageAllowanceConnector,
+                                cachingService : CachingService,
+                                timeService : TimeService,
+                                updateRelationshipService : UpdateRelationshipService) {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
-      customAuditConnector.sendEvent(event)
+      defaultAuditConnector.sendEvent(event)
     }
 
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)

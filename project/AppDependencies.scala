@@ -3,8 +3,10 @@ import sbt._
 
 object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
-   "uk.gov.hmrc" %% "emailaddress" % "3.2.0",
-    "uk.gov.hmrc" %% "frontend-bootstrap" % "12.9.0",
+    "uk.gov.hmrc" %% "emailaddress" % "3.2.0",
+    "uk.gov.hmrc" %% "bootstrap-play-25" % "4.13.0",
+    "uk.gov.hmrc" %% "govuk-template" % "5.36.0-play-25",
+    "uk.gov.hmrc" %% "play-ui" % "7.40.0-play-25",
     "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % "8.4.0-play-25",
     "uk.gov.hmrc" %% "play-breadcrumb" % "1.0.0",
@@ -19,15 +21,15 @@ object AppDependencies {
   )
 
   val test: Seq[ModuleID] = Seq(
-        "uk.gov.hmrc" %% "hmrctest" % "3.9.0-play-25",
-        "com.typesafe.play" %% "play-test" % PlayVersion.current,
-        "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1",
-        "org.jsoup" % "jsoup" % "1.11.3",
-        "org.pegdown" % "pegdown" % "1.6.0",
-        "org.scalacheck" %% "scalacheck" % "1.14.0",
-        "org.mockito" % "mockito-core" % "2.24.5",
-        "com.github.tomakehurst" % "wiremock-standalone" % "2.21.0"
-      ).map(_ % "test")
+    "uk.gov.hmrc" %% "hmrctest" % "3.9.0-play-25",
+    "com.typesafe.play" %% "play-test" % PlayVersion.current,
+    "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1",
+    "org.jsoup" % "jsoup" % "1.11.3",
+    "org.pegdown" % "pegdown" % "1.6.0",
+    "org.scalacheck" %% "scalacheck" % "1.14.0",
+    "org.mockito" % "mockito-core" % "2.24.5",
+    "com.github.tomakehurst" % "wiremock-standalone" % "2.21.0"
+  ).map(_ % "test")
 
   val all: Seq[ModuleID] = compile ++ test
 }

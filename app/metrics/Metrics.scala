@@ -18,25 +18,16 @@ package metrics
 
 import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.{MetricRegistry, Timer}
-import uk.gov.hmrc.play.graphite.MicroserviceMetrics
+import javax.inject.Inject
 
-
-trait Metrics {
-  def incrementSuccessCitizenDetail(): Unit
-
-  def incrementFailedCitizenDetail(): Unit
-
-  def citizenDetailStartTimer(): Timer.Context
-}
-
-object Metrics extends Metrics with MicroserviceMetrics {
+class Metrics @Inject()(metrics: com.kenshoo.play.metrics.Metrics) {
 
   val registry: MetricRegistry = metrics.defaultRegistry
 
-  override def incrementSuccessCitizenDetail(): Unit = registry.counter("citizen-detail-success").inc()
+  def incrementSuccessCitizenDetail(): Unit = registry.counter("citizen-detail-success").inc()
 
-  override def incrementFailedCitizenDetail(): Unit = registry.counter("citizen-detail-failed").inc()
+  def incrementFailedCitizenDetail(): Unit = registry.counter("citizen-detail-failed").inc()
 
-  override def citizenDetailStartTimer(): Context = registry.timer("citizen-detail-response-timer").time()
+  def citizenDetailStartTimer(): Context = registry.timer("citizen-detail-response-timer").time()
 
 }

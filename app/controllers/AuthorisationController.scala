@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import config.ApplicationConfig
 import controllers.actions.UnauthenticatedActionTransformer
 import play.api.i18n.MessagesApi
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -32,17 +33,17 @@ class AuthorisationController @Inject()(
   val logoutUrl: String = ApplicationConfig.logoutUrl
   val logoutCallbackUrl: String = ApplicationConfig.logoutCallbackUrl
 
-  def notAuthorised = unauthenticatedAction {
+  def notAuthorised: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(views.html.errors.other_ways())
   }
 
-  def logout = unauthenticatedAction {
+  def logout: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
 
-  def sessionTimeout = unauthenticatedAction {
+  def sessionTimeout: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(views.html.errors.session_timeout())
   }

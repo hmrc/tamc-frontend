@@ -16,12 +16,16 @@
 
 package config
 
+import javax.inject.Inject
+import uk.gov.hmrc.crypto.PlainText
 import uk.gov.hmrc.http.HttpGet
+import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import utils.WSHttp
 
-object TamcFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
-  override def httpGet: HttpGet = WSHttp
+class TamcFormPartialRetriever @Inject()(sessionCookieCrypto: SessionCookieCrypto,
+                                        defaultHttpClient: DefaultHttpClient) extends FormPartialRetriever {
+  override def httpGet: HttpGet = defaultHttpClient
 
-  override val crypto = encryptCookieString _
+  override def crypto: String => String = cookie => sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).value
+
 }

@@ -19,10 +19,11 @@ package services
 import java.text.SimpleDateFormat
 
 import config.ApplicationConfig
-import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
+import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
 import events.{UpdateRelationshipCacheFailureEvent, UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
+import javax.inject.Inject
 import models._
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -33,30 +34,23 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import uk.gov.hmrc.play.bootstrap.audit.DefaultAuditConnector
 import uk.gov.hmrc.time
 import utils.LanguageUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-object UpdateRelationshipService extends UpdateRelationshipService {
-  override val marriageAllowanceConnector = MarriageAllowanceConnector
-  override val customAuditConnector = ApplicationAuditConnector
-  override val cachingService = CachingService
-  override val timeService = TimeService
-}
+class UpdateRelationshipService @Inject ()(defaultAuditConnector : DefaultAuditConnector,
+                                marriageAllowanceConnector : MarriageAllowanceConnector,
+                                cachingService : CachingService,
+                                timeService : TimeService) {
 
-trait UpdateRelationshipService {
-
-  val marriageAllowanceConnector: MarriageAllowanceConnector
-  val customAuditConnector: AuditConnector
-  val cachingService: CachingService
-  val timeService: TimeService
   private val parseRelationshipStartDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
-      customAuditConnector.sendEvent(event)
+      defaultAuditConnector.sendEvent(event)
     }
 
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordList, Boolean)] =

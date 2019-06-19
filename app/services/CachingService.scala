@@ -16,10 +16,11 @@
 
 package services
 
-import config.ApplicationConfig
+import config.{ApplicationConfig, DefaultHttpClient}
 import connectors.MarriageAllowanceConnector
 import details.PersonDetails
 import errors.TransferorNotFound
+import javax.inject.Inject
 import models._
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
@@ -27,26 +28,20 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
-import utils.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object CachingService extends CachingService {
-  override lazy val http = WSHttp
+class CachingService @Inject() (defaultHttpClient: DefaultHttpClient,
+                               marriageAllowanceConnector: MarriageAllowanceConnector) extends SessionCache with AppName with ServicesConfig {
+
+  override lazy val http = defaultHttpClient
   override lazy val defaultSource = appName
   override lazy val baseUri = baseUrl("cachable.session-cache")
   override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
-  override def marriageAllowanceConnector: MarriageAllowanceConnector = MarriageAllowanceConnector
-
-}
-
-trait CachingService extends SessionCache with AppName with ServicesConfig {
 
   override protected def mode: Mode = Play.current.mode
   override protected def runModeConfiguration: Configuration = Play.current.configuration
   override protected def appNameConfiguration: Configuration = runModeConfiguration
-
-  def marriageAllowanceConnector: MarriageAllowanceConnector
 
   def saveTransferorRecord(transferorRecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cache[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD, transferorRecord) map
