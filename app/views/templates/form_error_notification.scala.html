@@ -31,7 +31,7 @@
         <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
             <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")' data-focuses='@errorKey.replaceAll("""[\.\[\]]""", "-")'>
                 @if(lowerLimit.isDefined && upperLimit.isDefined) {
-                    @Messages(form.error(errorKey).get.message,form.error(errorKey).get.args.headOption.getOrElse(""), lowerLimit.get, upperLimit.get)
+                    @Messages(form.error(errorKey).get.message, lowerLimit.get, upperLimit.get)
                 } else {
                     @if(lowerLimit.isDefined) {
                         @Messages(form.error(errorKey).get.message,form.error(errorKey).get.args.headOption.getOrElse(""), lowerLimit.get)
