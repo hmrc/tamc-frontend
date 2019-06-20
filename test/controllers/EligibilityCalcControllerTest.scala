@@ -124,7 +124,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      document.getElementById("transferor-income-error").text shouldBe "Confirm your annual income"
+      document.getElementById("transferor-income-error").text shouldBe "Tell us your annual income"
       yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
     }
 
@@ -135,7 +135,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      document.getElementById("transferor-income-error").text shouldBe "Confirm your annual income"
+      document.getElementById("transferor-income-error").text shouldBe "Tell us your annual income"
       yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
     }
 
@@ -145,7 +145,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
-      document.getElementById("transferor-income-error").text shouldBe "Confirm your annual income"
+      document.getElementById("transferor-income-error").text shouldBe "Tell us your annual income"
       val yourIncome = form.select("label[for=transferor-income]").first()
       yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
     }
@@ -187,7 +187,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your partner’s annual income"
+      document.getElementById("recipient-income-error").text shouldBe "Tell us your partner’s annual income"
       yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
     }
 
@@ -198,7 +198,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your partner’s annual income"
+      document.getElementById("recipient-income-error").text shouldBe "Tell us your partner’s annual income"
       yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
     }
 
@@ -209,7 +209,7 @@ class EligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Confirm your partner’s annual income"
+      document.getElementById("recipient-income-error").text shouldBe "Tell us your partner’s annual income"
       yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
     }
 

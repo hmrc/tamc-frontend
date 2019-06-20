@@ -19,13 +19,14 @@
     lowerLimit: Option[Int] = None,
     upperLimit: Option[Int] = None)(implicit messages: Messages)
 @import play.twirl.api.Html
-@import play.api.Logger
 
 @if(form.hasErrors) {
-<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading" class="error-summary validation-summary">
+<div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading"
+     data-journey="error - field:error:@messages(form.errors.head.message)"
+     class="flash error-summary@if(form.hasErrors) { error-summary--show} validation-summary">
     <h1 id="form-error-heading" class="heading-medium error-summary-heading">@Messages("pages.form.error-header")</h1>
-    <ul class="error-summary-list">
 
+    <ul class="error-summary-list">
         @form.errors.map(_.key).distinct.map { errorKey =>
         <li class="validation-message" id='@errorKey.replaceAll("""[\.\[\]]""", "-")-error'>
             <a href='#@errorKey.replaceAll("""[\.\[\]]""", "-")' data-focuses='@errorKey.replaceAll("""[\.\[\]]""", "-")'>

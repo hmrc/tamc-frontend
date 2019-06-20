@@ -149,7 +149,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s first name must be 35 characters or less"
-      document.getElementById("name-error").text() shouldBe "Enter your partner’s first name"
+      document.getElementById("name-error").text() shouldBe "Your partner’s first name must be 35 characters or less"
     }
 
     "display form error message (first name contains numbers)" in {
@@ -168,7 +168,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
-      document.getElementById("name-error").text() shouldBe "Enter your partner’s first name"
+      document.getElementById("name-error").text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (first name contains letters and numbers)" in {
@@ -187,7 +187,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
-      document.getElementById("name-error").text() shouldBe "Enter your partner’s first name"
+      document.getElementById("name-error").text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name missing from request)" in {
@@ -262,7 +262,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s last name must be 35 characters or less"
-      document.getElementById("last-name-error").text() shouldBe "Enter your partner’s last name"
+      document.getElementById("last-name-error").text() shouldBe "Your partner’s last name must be 35 characters or less"
     }
 
     "display form error message (last name contains numbers)" in {
@@ -281,7 +281,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
-      document.getElementById("last-name-error").text() shouldBe "Enter your partner’s last name"
+      document.getElementById("last-name-error").text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name contains letters and numbers)" in {
@@ -300,7 +300,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
-      document.getElementById("last-name-error").text() shouldBe "Enter your partner’s last name"
+      document.getElementById("last-name-error").text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
     }
 
     "display form error message when recipient nino equals transferor nino" in {
@@ -319,7 +319,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelNino = form.select("label[for=nino]").first()
       labelNino.getElementsByClass("error-message").first() shouldNot be(null)
       labelNino.getElementsByClass("error-message").first().text() shouldBe "You cannot enter your own details"
-      document.getElementById("nino-error").text() shouldBe "Enter your partner’s National Insurance number"
+      document.getElementById("nino-error").text() shouldBe "You cannot enter your own details"
     }
   }
 
@@ -416,7 +416,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s National Insurance number must only include letters a to z and numbers 0 to 9"
-      document.getElementById("nino-error").text() shouldBe "Enter your partner’s National Insurance number"
+      document.getElementById("nino-error").text() shouldBe "Your partner’s National Insurance number must only include letters a to z and numbers 0 to 9"
     }
   }
 
@@ -523,7 +523,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("fieldset[id=selectedYear]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
       labelName.getElementsByClass("error-notification").first().text() shouldBe "Select an answer"
-      document.getElementById("selectedYear-error").text() shouldBe "You need to select an answer"
+      document.getElementById("selectedYear-error").text() shouldBe "Select an answer"
     }
   }
 
@@ -584,7 +584,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter no more than 100 characters"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text() shouldBe "Enter no more than 100 characters"
     }
 
     "display form error message (transferor email is invalid)" in {
@@ -598,7 +598,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
     }
 
     "display form error message (transferor email has consequent dots)" in {
@@ -612,7 +612,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
     }
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
@@ -626,7 +626,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
     }
 
     "display form error message (transferor email does not include TLD)" in {
@@ -640,7 +640,7 @@ class ContentTest extends ControllerBaseSpec {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
     }
   }
 
