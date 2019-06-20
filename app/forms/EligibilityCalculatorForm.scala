@@ -68,9 +68,9 @@ object EligibilityCalculatorForm {
   val countryFormatter = new Formatter[String] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
       data.get(key) match {
-        case Some(c) if c.trim().isEmpty => Left(Seq(FormError(key, "pages.form.field.description.country")))
+        case Some(c) if c.trim().isEmpty => Left(Seq(FormError(key, "pages.form.field-required.country")))
         case Some(c) if Set("england", "wales", "scotland", "northernireland").contains(c.trim()) => Right(c)
-        case None => Left(Seq(FormError(key, "pages.form.field.description.country")))
+        case None => Left(Seq(FormError(key, "pages.form.field-required.country")))
       }
     }
 
