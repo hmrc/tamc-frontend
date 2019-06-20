@@ -32,7 +32,7 @@ import uk.gov.hmrc.time
 
 import scala.concurrent.Future
 
-class UpdateRelationshipContentTest extends ControllerBaseSpec {
+class UpdateRelationshipContentSpec extends ControllerBaseSpec {
 
   "list relationship page" should {
 

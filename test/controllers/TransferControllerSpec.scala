@@ -39,7 +39,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 
-class TransferControllerTest extends ControllerBaseSpec {
+class TransferControllerSpec extends ControllerBaseSpec {
 
   "transfer" should {
     "return success" in {

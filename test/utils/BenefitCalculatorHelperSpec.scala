@@ -22,7 +22,7 @@ import models._
 import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.play.test.UnitSpec
 
-class BenefitCalculatorHelperTest extends UnitSpec with OneAppPerSuite {
+class BenefitCalculatorHelperSpec extends UnitSpec with OneAppPerSuite {
 
   "BenefitCalculatorHelper" when {
 

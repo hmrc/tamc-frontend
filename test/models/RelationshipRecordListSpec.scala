@@ -19,7 +19,7 @@ package models
 import controllers.ControllerBaseSpec
 import test_utils.data.RelationshipRecordData._
 
-class RelationshipRecordListTest extends ControllerBaseSpec {
+class RelationshipRecordListSpec extends ControllerBaseSpec {
 
   "RelationshipRecordList" should {
     "set activeRecord as true" when {

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.emailaddress
+package emailaddress
 
 import play.api.data.Forms.of
 import play.api.data.format.Formatter
 import play.api.data.validation._
 import play.api.data.{FormError, Mapping}
+import uk.gov.hmrc.emailaddress.EmailAddress
 
 import scala.util.matching.Regex
 
@@ -61,7 +62,7 @@ object PlayFormFormatter {
     * {{{
     * Form("email" -> emailAddress)
     * }}}
-    * @see [[uk.gov.hmrc.emailaddress.PlayFormFormatter.emailAddress(String,String)]]
+    * @see [[emailaddress.PlayFormFormatter.emailAddress(String,String)]]
     */
   def emailAddress: Mapping[EmailAddress] = emailAddress()
 

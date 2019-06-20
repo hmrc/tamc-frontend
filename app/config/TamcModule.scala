@@ -32,11 +32,7 @@ class TamcModule extends Module {
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
       bind[HttpClient].to[DefaultHttpClient],
-//      bind[AuditConnector].toInstance(DefaultAuditConnector),
       bind[TimeService].toInstance(TimeService),
-      //bind[TransferService].toInstance(TransferService),
-      //bind[UpdateRelationshipService].toInstance(UpdateRelationshipService),
-      //bind[CachingService].toInstance(CachingService),
       bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService),
       bind[TemplateRenderer].to(classOf[LocalTemplateRenderer]),
       bind[FormPartialRetriever].to(classOf[TamcFormPartialRetriever])

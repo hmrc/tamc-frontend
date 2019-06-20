@@ -36,7 +36,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 
-class ContentTest extends ControllerBaseSpec {
+class ContentSpec extends ControllerBaseSpec {
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +

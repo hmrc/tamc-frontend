@@ -17,7 +17,7 @@
 package forms
 
 import play.api.data.Form
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailAddress, emailMaxLength, emailPattern}
+import emailaddress.PlayFormFormatter.{emailAddress, emailMaxLength, emailPattern}
 
 object EmailForm {
 

@@ -32,7 +32,7 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class RoutesTest extends ControllerBaseSpec {
+class RoutesSpec extends ControllerBaseSpec {
 
   "Hitting calculator page" should {
     "have a ’previous’ and ’next’ links to gov.ukpage" in {

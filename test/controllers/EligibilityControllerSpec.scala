@@ -30,7 +30,7 @@ import test_utils.MockPermUnauthenticatedAction
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-class EligibilityControllerTest extends ControllerBaseSpec {
+class EligibilityControllerSpec extends ControllerBaseSpec {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
 

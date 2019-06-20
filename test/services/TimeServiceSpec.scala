@@ -21,7 +21,7 @@ import models.EndRelationshipReason
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 
-class TimeServiceTest extends ControllerBaseSpec {
+class TimeServiceSpec extends ControllerBaseSpec {
 
   def service: TimeService = TimeService
 

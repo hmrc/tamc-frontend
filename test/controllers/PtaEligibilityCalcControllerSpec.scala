@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 
-class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
+class PtaEligibilityCalcControllerSpec extends ControllerBaseSpec {
 
   private def calculatorRequestAction(income: Map[String, String] = null) = {
     val controller = app.injector.instanceOf[EligibilityController]

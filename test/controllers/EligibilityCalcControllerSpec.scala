@@ -21,8 +21,7 @@ import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 
-
-class EligibilityCalcControllerTest extends ControllerBaseSpec {
+class EligibilityCalcControllerSpec extends ControllerBaseSpec {
 
   "Check eligibility benefit" should {
 

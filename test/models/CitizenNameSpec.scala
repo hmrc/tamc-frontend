@@ -18,7 +18,7 @@ package models
 
 import controllers.ControllerBaseSpec
 
-class CitizenNameTest extends ControllerBaseSpec {
+class CitizenNameSpec extends ControllerBaseSpec {
 
   "fullName" should {
     "return both names" when {

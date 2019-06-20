@@ -42,7 +42,7 @@ import uk.gov.hmrc.time
 
 import scala.concurrent.Future
 
-class UpdateRelationshipControllerTest extends ControllerBaseSpec {
+class UpdateRelationshipControllerSpec extends ControllerBaseSpec {
 
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]

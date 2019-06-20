@@ -32,7 +32,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfid
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
+class AuthenticatedActionRefinerSpec extends ControllerBaseSpec {
 
   type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]

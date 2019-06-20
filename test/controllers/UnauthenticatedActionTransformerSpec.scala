@@ -29,7 +29,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfid
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class UnauthenticatedActionTransformerTest extends ControllerBaseSpec {
+class UnauthenticatedActionTransformerSpec extends ControllerBaseSpec {
 
   type AuthRetrievals = ConfidenceLevel ~ Option[String] ~ Option[Credentials]
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials

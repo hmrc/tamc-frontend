@@ -18,8 +18,7 @@ import play.routes.compiler.StaticRoutesGenerator
 import play.sbt.PlayImport.PlayKeys
 import play.sbt.routes.RoutesKeys.routesGenerator
 import sbt.Keys._
-import sbt.Tests.{Group, SubProcess}
-import sbt._
+import sbt.{Def, _}
 import scoverage._
 import uk.gov.hmrc.DefaultBuildSettings._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
@@ -30,16 +29,13 @@ import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
 
 trait MicroService {
 
-
-  import TestPhases._
-
   val appName: String
 
   lazy val appDependencies: Seq[ModuleID] = Seq.empty
   lazy val plugins: Seq[Plugins] = Seq(play.sbt.PlayScala)
   lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
-  lazy val scoverageSettings = {
+  lazy val scoverageSettings: Seq[Def.Setting[_ >: String with Double with Boolean]] = {
 
     Seq(
       ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*;connectors.ApplicationAuditConnector;connectors.ApplicationAuthConnector;services.CachingService;metrics.Metrics;utils.WSHttp;events",
@@ -51,48 +47,25 @@ trait MicroService {
 
   lazy val microservice: Project = Project(appName, file("."))
     .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
-    .settings(PlayKeys.playDefaultPort := 9351)
-    .settings(playSettings: _*)
-    .settings(scoverageSettings: _*)
-    .settings(publishingSettings: _*)
-    .settings(scalaSettings: _*)
-    .settings(defaultSettings(): _*)
     .settings(
+      PlayKeys.playDefaultPort := 9900,
+      playSettings,
+      scoverageSettings,
       targetJvm := "jvm-1.8",
       scalaVersion := "2.11.11",
+      scoverageSettings,
+      publishingSettings,
+      scalaSettings,
+      defaultSettings(),
       libraryDependencies ++= appDependencies,
       parallelExecution in Test := false,
       fork in Test := false,
       retrieveManaged := true,
-      routesGenerator := StaticRoutesGenerator
+      routesGenerator := StaticRoutesGenerator,
+      majorVersion := 7,
+      resolvers ++= Seq(
+        Resolver.bintrayRepo("hmrc", "releases"),
+        Resolver.jcenterRepo
+      )
     )
-    .settings(inConfig(TemplateTest)(Defaults.testSettings): _*)
-    .configs(IntegrationTest)
-    .settings(inConfig(TemplateItTest)(Defaults.itSettings): _*)
-    .settings(
-      Keys.fork in IntegrationTest := false,
-      unmanagedSourceDirectories in IntegrationTest <<= (baseDirectory in IntegrationTest) (base => Seq(base / "it")),
-      addTestReportOption(IntegrationTest, "int-test-reports"),
-      testGrouping in IntegrationTest := oneForkedJvmPerTest((definedTests in IntegrationTest).value),
-      parallelExecution in IntegrationTest := false)
-    .settings(resolvers ++= Seq(
-      Resolver.bintrayRepo("hmrc", "releases"),
-      Resolver.jcenterRepo,
-      "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
-    ))
-    .settings(majorVersion := 7)
-}
-
-private object TestPhases {
-
-  val allPhases = "tt->test;test->test;test->compile;compile->compile"
-  val allItPhases = "tit->it;it->it;it->compile;compile->compile"
-
-  lazy val TemplateTest: Configuration = config("tt") extend Test
-  lazy val TemplateItTest: Configuration = config("tit") extend IntegrationTest
-
-  def oneForkedJvmPerTest(tests: Seq[TestDefinition]): Seq[Group] =
-    tests map {
-      test => Group(test.name, Seq(test), SubProcess(ForkOptions(runJVMOptions = Seq("-Dtest.name=" + test.name))))
-    }
 }
