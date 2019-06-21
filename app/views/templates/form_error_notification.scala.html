@@ -34,9 +34,9 @@
                     @Messages(form.error(errorKey).get.message, lowerLimit.get, upperLimit.get)
                 } else {
                     @if(lowerLimit.isDefined) {
-                        @Messages(form.error(errorKey).get.message,form.error(errorKey).get.args.headOption.getOrElse(""), lowerLimit.get)
+                        @Messages(form.error(errorKey).get.message,lowerLimit.get)
                     } else {
-                        @Messages(form.error(errorKey).get.message,form.error(errorKey).get.args.headOption.getOrElse(""))
+                        @Messages(form.error(errorKey).get.message, form.error(errorKey).get.args.headOption.getOrElse(""))
                     }
                 }
             </a>

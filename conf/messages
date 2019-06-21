@@ -55,7 +55,7 @@ pages.form.field-required.endReason=Select a reason for changing your Marriage A
 error.divorce-reason.required=Select an answer for keeping your Marriage Allowance until the end of the tax year.
 pages.form.field-required-alt.endReason=Select an answer for keeping your Marriage Allowance until the end of the tax year
 
-pages.form.extra-year.field.description=Tell us whether you would like to apply for the previous {0} to {1} tax year
+pages.form.extra-year.field-required=Tell us whether you would like to apply for the previous {0} to {1} tax year
 pages.form.field-required.year-2015-=Confirm whether you would like to apply for the previous 2015 to 2016 tax year
 pages.form.field-required.year-2016-=Confirm whether you would like to apply for the previous 2016 to 2017 tax year
 pages.form.field-required.year-2017-=Confirm whether you would like to apply for the previous 2017 to 2018 tax year
