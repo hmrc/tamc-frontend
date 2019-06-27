@@ -1,9 +1,16 @@
 #********************************************************************************
 # Forms and Unit tests validation messages
 #********************************************************************************
-pages.form.field-required.transferor-income=Confirm your annual income
-pages.form.field-required.recipient-income=Confirm your partner’s annual income
+####### Benefit Calculator journey ######
+pages.form.field-required.transferor-income=Enter your income (low), before tax is taken off
+pages.form.field-invalid.transferor-income=Your income (low), before tax is taken off must only include numbers 0 to 9
 
+pages.form.field-required.recipient-income=Enter your partner’s income (high), before tax is taken off
+pages.form.field-invalid.recipient-income=Your partner’s income (high), before tax is taken off must only include numbers 0 to 9
+
+pages.form.field-required.country=Select where you live
+
+####### Eligibility Check journey #######
 pages.form.field-required.name=Enter your partner’s first name
 pages.form.field.name.error.required=Enter your partner’s first name
 pages.form.field.name.error.pattern=Your partner’s first name must only include letters a to z and hyphens
@@ -69,13 +76,6 @@ pages.form.field-required.year-2024-=Confirm whether you would like to apply for
 pages.form.field-required.year-2025-=Confirm whether you would like to apply for the previous 2025 to 2026 tax year
 pages.form.field-required.year-2026-=Confirm whether you would like to apply for the previous 2026 to 2027 tax year
 
-pages.form.field.transferor-income.error.field-required = Tell us your annual income
-pages.form.field.transferor-income.error.field-invalid = Use numbers only
-
-pages.form.field.recipient-income.error.field-required = Tell us your partner’s annual income
-pages.form.field.recipient-income.error.field-invalid = Use numbers only
-
-pages.form.field-required.country=Select where you live
 
 eligibility.feedback.incorrect-role=Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income.
 

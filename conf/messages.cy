@@ -1,9 +1,16 @@
 #********************************************************************************
 # Forms and  Unit tests validation messages
 #********************************************************************************
-pages.form.field-required.transferor-income=Cadarnhewch eich incwm blynyddol
-pages.form.field-required.recipient-income=Cadarnhewch incwm blynyddol eich partner
+####### Benefit Calculator journey ######
+pages.form.field-required.transferor-income=Nodwch eich incwm (isel), cyn didynnu treth
+pages.form.field-invalid.transferor-income=Mae’n rhaid i’ch incwm (isel), cyn didynnu treth, gynnwys y rhifau 0 i 9 yn unig
 
+pages.form.field-required.recipient-income=Incwm incwm eich partner (uchel), cyn didynnu treth
+pages.form.field-invalid.recipient-income=Mae’n rhaid i incwm eich partner (uchel), cyn didynnu treth, gynnwys y rhifau 0 i 9 yn unig
+
+pages.form.field-required.country=Dewiswch ble’r ydych yn byw
+
+####### Eligibility Check journey #######
 pages.form.field-required.name=Nodwch enw cyntaf eich partner
 pages.form.field.name.error.required=Nodwch enw cyntaf eich partner
 pages.form.field.name.error.pattern=Mae’n rhaid i enw cyntaf eich partner gynnwys llythrennau a i z a chysylltnodau yn unig
@@ -62,14 +69,6 @@ pages.form.field-required.year-2023-=Cadarnhewch a hoffech wneud cais ar gyfer y
 pages.form.field-required.year-2024-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2024 i 2025
 pages.form.field-required.year-2025-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2025 i 2026
 pages.form.field-required.year-2026-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2026 i 2027
-
-pages.form.field.transferor-income.error.field-required=Rhowch wybod beth yw’ch incwm blynyddol
-pages.form.field.transferor-income.error.field-invalid=Defnyddiwch rifau’n unig
-
-pages.form.field.recipient-income.error.field-required=Rhowch wybod beth yw incwm blynyddol eich partner
-pages.form.field.recipient-income.error.field-invalid=Defnyddiwch rifau’n unig
-
-pages.form.field-required.country=Dewiswch ble’r ydych yn byw
 
 eligibility.feedback.incorrect-role=Gwiriwch y rhifau yr ydych wedi’u nodi. Nodwch incwm yr unigolyn &#226;’r cyflog isaf, wedi’i ddilyn gan incwm yr unigolyn &#226;’r cyflog uchaf.
 

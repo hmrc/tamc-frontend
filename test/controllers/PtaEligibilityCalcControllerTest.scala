@@ -125,8 +125,8 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      document.getElementById("transferor-income-error").text shouldBe "Tell us your annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
+      document.getElementById("transferor-income-error").text shouldBe "Enter your income (low), before tax is taken off"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your income (low), before tax is taken off"
     }
 
     "be displayed if transferor income is not provided (Empty)" in {
@@ -135,8 +135,8 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      document.getElementById("transferor-income-error").text shouldBe "Tell us your annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your annual income"
+      document.getElementById("transferor-income-error").text shouldBe "Enter your income (low), before tax is taken off"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your income (low), before tax is taken off"
     }
 
     "be displayed if transferor income contains letters" in {
@@ -145,7 +145,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if transferor income contains negative number" in {
@@ -154,7 +154,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if transferor income exceeds max Int" in {
@@ -163,7 +163,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if recipient income is not provided (None)" in {
@@ -172,8 +172,8 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Tell us your partner’s annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
+      document.getElementById("recipient-income-error").text shouldBe "Enter your partner’s income (high), before tax is taken off"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s income (high), before tax is taken off"
     }
 
     "be displayed if recipient income is not provided (Empty)" in {
@@ -182,8 +182,8 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Tell us your partner’s annual income"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Tell us your partner’s annual income"
+      document.getElementById("recipient-income-error").text shouldBe "Enter your partner’s income (high), before tax is taken off"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s income (high), before tax is taken off"
     }
 
     "be displayed if recipient income contains letters" in {
@@ -192,7 +192,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if recipient income contains negative number" in {
@@ -201,7 +201,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if recipient income exceeds max Int" in {
@@ -210,7 +210,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseSpec {
       val form = document.getElementById("calculator")
       form.getElementsByClass("error-message").first() shouldNot be(null)
       val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Use numbers only"
+      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if transferor income=0 (< 9540) and recipient income=0 (10600-11660)" in {
