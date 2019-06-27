@@ -46,7 +46,7 @@
     </style>
     @helpers.form(action = routes.UpdateRelationshipController.divorceAction, args = 'id -> "change-relationship-form") {
         <div>
-        @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data", prefix = "pages.form.field.description-alt.")
+        @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data")
         <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
         <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@changeRelationshipForm.get.historicActiveRecord.get"/>
         <input name="dateOfDivorce.day" id="dayOfDateOfDivorce" type="hidden" value="@changeRelationshipForm.get.dateOfDivorce.get.dayOfMonth.get"/>
