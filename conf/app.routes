@@ -70,8 +70,8 @@ GET    /do-you-want-to-apply                       @controllers.EligibilityContr
 POST   /do-you-want-to-apply                       @controllers.EligibilityController.doYouWantToApplyAction
 
 #Welsh Translation
-GET     /lang/enGb                                 @controllers.LanguageController.enGb(redirectUrl: String)
-GET     /lang/cyGb                                 @controllers.LanguageController.cyGb(redirectUrl: String)
+GET     /lang/enGb                                 @controllers.LanguageController.enGb()
+GET     /lang/cyGb                                 @controllers.LanguageController.cyGb()
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /assets/*file                               controllers.Assets.at(path="/public", file)

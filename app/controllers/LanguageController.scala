@@ -16,25 +16,24 @@
 
 package controllers
 
+import config.ApplicationConfig.callbackUrl
 import javax.inject.Inject
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.Environment
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc.{Action, AnyContent}
 
-import scala.concurrent.Future
+class LanguageController @Inject()(implicit val environment: Environment) extends uk.gov.hmrc.play.language.LanguageController with I18nSupport with BaseController {
 
-class LanguageController @Inject()(val messagesApi: MessagesApi) extends BaseController {
+  def enGb(): Action[AnyContent] = switchToLanguage(language = "english")
 
-  def enGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl = redirectUrl, language = "en")
+  def cyGb(): Action[AnyContent] = switchToLanguage(language = "cymraeg")
 
-  def cyGb(redirectUrl: String): Action[AnyContent] = changeLang(redirectUrl = redirectUrl, language = "cy")
+  def fallbackURL: String = callbackUrl
 
-  def changeLang(redirectUrl: String, language: String) = Action.async { implicit request =>
-
-    val path = request.path.split('/').filter(_ != "")
-
-    if (path.length > 0 && (redirectUrl contains path.head))
-      Future.successful(Redirect(redirectUrl).withLang(Lang(language)))
-    else
-      Future.successful(Redirect("/" + path + "/" + redirectUrl).withLang(Lang(language)))
-  }
+  def languageMap: Map[String, Lang] = Map(
+    "english" -> Lang("en"),
+    "cymraeg" -> Lang("cy")
+  )
 }

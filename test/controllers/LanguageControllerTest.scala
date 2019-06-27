@@ -21,10 +21,10 @@ import play.api.test.Helpers._
 
 class LanguageControllerTest extends ControllerBaseSpec {
 
-  val controller = app.injector.instanceOf[LanguageController]
+  lazy val controller = app.injector.instanceOf[LanguageController]
   "Calling LanguageController.enGb" should {
     "change the language to English and return 303" in {
-      val result = controller.enGb("/test")(request)
+      val result = controller.enGb()(request)
       cookies(result).get("PLAY_LANG").get.value shouldBe "en"
       status(result) shouldBe SEE_OTHER
     }
@@ -32,7 +32,7 @@ class LanguageControllerTest extends ControllerBaseSpec {
 
   "Calling LanguageController.cyGb" should {
     "change the language to Welsh and return 303" in {
-      val result = controller.cyGb("/test")(request)
+      val result = controller.cyGb()(request)
       cookies(result).get("PLAY_LANG").get.value shouldBe "cy"
       status(result) shouldBe SEE_OTHER
     }
@@ -41,11 +41,11 @@ class LanguageControllerTest extends ControllerBaseSpec {
   "changeLang" should {
     "redirect" when {
       "redirect URI contains the path" in {
-        val request = FakeRequest("GET", "http://localhost:9000")
-        val result = controller.cyGb(request.path + "/test")(request)
+        val request = FakeRequest("GET", "http://localhost:9900")
+        val result = controller.cyGb()(request)
         cookies(result).get("PLAY_LANG").get.value shouldBe "cy"
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).get shouldBe request.path + "/test"
+        redirectLocation(result).get shouldBe request.path + "/marriage-allowance-application/history"
       }
     }
   }
