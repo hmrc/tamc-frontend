@@ -49,7 +49,7 @@ object RegistrationForm {
   private def nameMapping(errorRequired: String, errorMaxLength: String, errorPattern: String): Mapping[String] =
     nonEmptyTrimmer(error = errorRequired).
       verifying(maxLengthWithError(maxLength = 35, error = errorMaxLength)).
-      verifying(pattern(regex = """[ \.\,\-\"\'\`\(\)A-Za-z]+""".r, error = errorPattern))
+      verifying(pattern(regex = """[ \-\(\)A-Za-z]+""".r, error = errorPattern))
 
   private def nameMappingCustomizer(messageCustomizer: String => String): Mapping[String] =
     nameMapping(
@@ -62,9 +62,10 @@ object RegistrationForm {
       verifying(error = errorInvalid, constraint = Gender.isValid(_)).
       transform[Gender](Gender(_), _.gender)
 
-  private def ninoMapping(errorRequired: String = "error.required", errorInvalid: String = "error.invalid"): Mapping[Nino] =
+  private def ninoMapping(errorRequired: String = "error.required", errorMaxLength: String = "error.maxLength", errorInvalid: String = "error.invalid"): Mapping[Nino] =
     nonEmptyTrimmer(error = errorRequired).
       transform[String](utils.normaliseNino(_), _.toString()).
+      verifying(maxLengthWithError(maxLength = 9, error = errorMaxLength)).
       verifying(error = errorInvalid, constraint = Nino.isValid(_)).
       transform[Nino](Nino(_), _.nino)
 
@@ -91,13 +92,14 @@ object RegistrationForm {
   def nino: Mapping[Nino] =
     ninoMapping(
       errorRequired = ninoMessageCustomizer("error.required"),
+      errorMaxLength = ninoMessageCustomizer("error.maxLength"),
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
   def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages) = {
     val dateFormatter: SimpleDateFormat = new SimpleDateFormat("dd MM YYYY")
     val minDate = ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)
     val maxDate = today.plusDays(1)
-    mandatoryDateTuple("pages.form.field.dom.error.required").
+    mandatoryDateTuple("pages.form.field-required.dateOfMarriage").
       verifying(error = Messages("pages.form.field.dom.error.min-date", dateFormatter.format(minDate.toDate)), constraint = _.isAfter(minDate)).
       verifying(error = Messages("pages.form.field.dom.error.max-date", dateFormatter.format(maxDate.toDate)), constraint = _.isBefore(maxDate))
   }

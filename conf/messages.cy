@@ -27,11 +27,11 @@ pages.form.field.gender.error.invalid=Dewiswch ryw eich partner
 
 pages.form.field-required.nino=Nodwch rif Yswiriant Gwladol eich partner
 pages.form.field.nino.error.required=Nodwch rif Yswiriant Gwladol eich partner
+pages.form.field.nino.error.maxLength=Nodwch rif Yswiriant Gwladol go iawn
 pages.form.field.nino.error.invalid=Mae’n rhaid i rif Yswiriant Gwladol eich partner gynnwys llythrennau a i z a rhifau 0 i 9 yn unig
 pages.form.field.nino.error.self=Ni allwch nodi’ch manylion eich hun
 
 pages.form.field-required.dateOfMarriage=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
-pages.form.field.dom.error.required=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.dom.error.min-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod ar ôl {0}
 pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod cyn {0}
 error.invalid.date.format=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil. Rhowch ddiwrnod, mis a blwyddyn
@@ -49,7 +49,7 @@ pages.form.field-required.date-of-birth=Dewiswch ‘Iawn’ os cawsoch chi a’c
 pages.form.field-required.do-you-live-in-scotland=Dewiswch ‘Iawn’ os ydych yn byw yn yr Alban
 pages.form.field-required.lower-earner=Dewiswch ‘Iawn’ os yw’ch incwm yn llai na £{0} y flwyddyn
 pages.form.field-required.partners-income=Dewiswch ‘Iawn’ os yw incwm eich partner rhwng £{0} a £{1} y flwyddyn
-pages.form.field-required.do-you-want-to-apply=Dewiswch lawn os ydych am wneud cais am Lwfans Priodasol
+pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
 
 pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
