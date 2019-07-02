@@ -485,8 +485,8 @@ class ContentTest extends ControllerBaseSpec {
       val err = field.getElementsByClass("client-error-notification")
       val labelName = form.select("fieldset[id=dateOfMarriage]").first()
       err.size() shouldBe 1
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Enter the date of your marriage or civil partnership"
-      document.getElementById("dateOfMarriage-error").text() shouldBe "Enter the date of your marriage or civil partnership"
+      labelName.getElementsByClass("error-notification").first().text() shouldBe "Enter the date of your marriage or civil partnership and include a day, month and year"
+      document.getElementById("dateOfMarriage-error").text() shouldBe "Enter the date of your marriage or civil partnership and include a day, month and year"
     }
   }
 

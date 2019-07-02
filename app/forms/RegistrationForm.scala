@@ -17,9 +17,10 @@
 package forms
 
 import java.text.SimpleDateFormat
+
 import config.ApplicationConfig
 import models.{Gender, RegistrationFormInput}
-import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
 import play.api.data.validation.Constraints.pattern
@@ -27,7 +28,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, FormError, Mapping}
 import play.api.i18n.Messages
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.mappers.DateTuple._
+import uk.gov.hmrc.emailaddress.PlayFormFormatter.validDateTuple
 
 object RegistrationForm {
 
@@ -95,13 +96,15 @@ object RegistrationForm {
       errorMaxLength = ninoMessageCustomizer("error.maxLength"),
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
-  def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages) = {
-    val dateFormatter: SimpleDateFormat = new SimpleDateFormat("dd MM YYYY")
+  def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages): Mapping[LocalDate] = {
+    val dateFormatter: SimpleDateFormat = new SimpleDateFormat("d MM YYYY")
     val minDate = ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)
     val maxDate = today.plusDays(1)
-    mandatoryDateTuple("pages.form.field-required.dateOfMarriage").
-      verifying(error = Messages("pages.form.field.dom.error.min-date", dateFormatter.format(minDate.toDate)), constraint = _.isAfter(minDate)).
-      verifying(error = Messages("pages.form.field.dom.error.max-date", dateFormatter.format(maxDate.toDate)), constraint = _.isBefore(maxDate))
+
+    validDateTuple("pages.form.field.dom.error.enter_a_date", "pages.form.field.dom.error.enter_numbers", "pages.form.field.dom.error.enter_valid_date")
+      .transform[LocalDate](dt => dt.toLocalDate, ld => new DateTime(ld.getYear(), ld.getMonthOfYear(), ld.getDayOfMonth(), 0, 0).withTimeAtStartOfDay())
+      .verifying(error = Messages("pages.form.field.dom.error.min-date", dateFormatter.format(minDate.toDate)), constraint = _.isAfter(minDate))
+      .verifying(error = Messages("pages.form.field.dom.error.max-date", dateFormatter.format(maxDate.toDate)), constraint = _.isBefore(maxDate))
   }
 
   def registrationForm(today: LocalDate, transferorNino: Nino)(implicit messages: Messages) = Form[RegistrationFormInput](

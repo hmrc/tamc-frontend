@@ -16,11 +16,13 @@
 
 package uk.gov.hmrc.emailaddress
 
-import play.api.data.Forms.of
+import org.joda.time.DateTime
+import play.api.data.Forms.{of, optional, text, tuple}
 import play.api.data.format.Formatter
 import play.api.data.validation._
 import play.api.data.{FormError, Mapping}
 
+import scala.util.Try
 import scala.util.matching.Regex
 
 object PlayFormFormatter {
@@ -36,6 +38,9 @@ object PlayFormFormatter {
       }
     })
 
+  def valueIsPresent(errorRequired: String = "error.required"): Mapping[String] =
+    nonEmptyTrimmer(error = errorRequired)
+
   /**
     * Constructs a simple mapping for email address field (using a [[uk.gov.hmrc.emailaddress.EmailAddress]] type behind).
     *
@@ -49,10 +54,11 @@ object PlayFormFormatter {
     * @param errorEmail    'this field has invalid format' error message with default value `"error.email"`
     * @param errorRequired 'this field is required' error message with default value `"error.required"`
     */
-  def emailAddress(errorRequired: String = "error.required", errorEmail: String = "error.email"): Mapping[EmailAddress] =
+  def emailAddress(errorRequired: String = "error.required", errorEmail: String = "error.email"): Mapping[EmailAddress] = {
     nonEmptyTrimmer(error = errorRequired).
       verifying(error = errorEmail, constraint = EmailAddress.isValid(_)).
       transform[EmailAddress](EmailAddress(_), _.value)
+  }
 
   /**
     * Constructs a simple mapping for email address field (using a [[uk.gov.hmrc.emailaddress.EmailAddress]] type behind).
@@ -90,4 +96,23 @@ object PlayFormFormatter {
         else if (email.value.size <= maxLength) Valid
         else Invalid(ValidationError(error, maxLength))
     }
+
+  def validDateTuple(notPresentError: String = "error.enter_a_date",
+                     nonNumericError: String = "error.enter_numbers",
+                     invalidError: String = "error.enter_valid_date"): Mapping[DateTime] = {
+
+    def verifyDigits(triple: (String, String, String )) =
+      triple._1.forall(_.isDigit) && triple._2.forall(_.isDigit) && triple._3.forall(_.isDigit)
+
+    tuple(
+      "year" -> optional(text),
+      "month" -> optional(text),
+      "day" -> optional(text)
+    )
+      .verifying(notPresentError, x => x._1.isDefined && x._2.isDefined && x._3.isDefined)
+      .transform[(String,String,String)]( x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
+      .verifying(nonNumericError, verifyDigits _)
+      .verifying(invalidError, x => !verifyDigits(x) || Try(new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
+      .transform[DateTime](x => new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0).withTimeAtStartOfDay, x => (x.getYear.toString, x.getMonthOfYear.toString, x.getDayOfMonth.toString))
+  }
 }

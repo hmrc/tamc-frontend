@@ -34,7 +34,9 @@ pages.form.field.nino.error.self=You cannot enter your own details
 pages.form.field-required.dateOfMarriage=Enter the date of your marriage or civil partnership
 pages.form.field.dom.error.max-date=The date of your marriage or civil partnership must be before {0}
 pages.form.field.dom.error.min-date=The date of your marriage or civil partnership must be after {0}
-error.invalid.date.format=Enter the date of your marriage or civil partnership and include a day, month and year
+pages.form.field.dom.error.enter_a_date=Enter the date of your marriage or civil partnership and include a day, month and year
+pages.form.field.dom.error.enter_numbers=Enter a real date for your marriage or civil partnership
+pages.form.field.dom.error.enter_valid_date=Enter a real date for your marriage or civil partnership
 
 pages.form.field.dod.error.required=Tell us your date of divorce
 pages.form.field-required-alt.dateOfDivorce=Confirm your date of divorce
@@ -43,6 +45,7 @@ pages.form.field-required.transferor-email=Enter your email address
 pages.form.field.transferor-email.error.required=Enter your email address
 pages.form.field.transferor-email.error.maxLength=Enter no more than {0} characters
 pages.form.field.transferor-email.error.email=Enter an email address with a name, @ symbol and a domain name, like yourname@example.com
+pages.form.field.transferor-email.error.character=Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores
 
 pages.form.field-required.marriage-criteria=Select yes if you are married or in a civil partnership
 pages.form.field-required.date-of-birth=Select yes if you and your partner were born after 5 April 1935

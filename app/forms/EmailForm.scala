@@ -17,17 +17,37 @@
 package forms
 
 import play.api.data.Form
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailAddress, emailMaxLength, emailPattern}
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.emailaddress.PlayFormFormatter.{valueIsPresent, emailMaxLength, emailPattern}
 
 object EmailForm {
 
   private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
+  private val initialCharCheckRegexStr = """^[a-zA-Z0-9\-\_\.\@]+"""
 
-  private def email = emailAddress(errorRequired = messageCustomizer("error.required"), errorEmail = messageCustomizer("error.email")).
-    verifying {
-      emailPattern(regex = """^([a-zA-Z0-9\-\_]+[.])*[a-zA-Z0-9\-\_]+@([a-zA-Z0-9-]{2,}[.])+[a-zA-Z0-9-]+$""".r, error = messageCustomizer("error.email"))
-    }.
-    verifying {
+  private def emailIsValidFormat(name: String = "constraint.emailFormat",
+                                 formatError: String,
+                                 charError: String): Constraint[String] =
+    Constraint[String](name) {
+      email =>
+        if (EmailAddress.isValid(email)) Valid else {
+          if(!email.matches(initialCharCheckRegexStr)){
+            Invalid(ValidationError(charError))
+          } else {
+            Invalid(ValidationError(formatError))
+          }
+        }
+    }
+
+  private def email =
+    valueIsPresent(errorRequired = messageCustomizer("error.required"))
+    .verifying(emailIsValidFormat(formatError = messageCustomizer("error.email"), charError = messageCustomizer("error.character")))
+    .transform[EmailAddress](EmailAddress(_), _.value)
+    .verifying {
+      emailPattern(regex = """^([a-zA-Z0-9\-\_]+[.])*[a-zA-Z0-9\-\_]+@([a-zA-Z0-9-]{2,}[.])+[a-zA-Z0-9-]+$""".r, error = messageCustomizer("error.email")) //Why the second regex?
+    }
+    .verifying {
       emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))
     }
 
