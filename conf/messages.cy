@@ -28,13 +28,16 @@ pages.form.field.gender.error.invalid=Dewiswch ryw eich partner
 pages.form.field-required.nino=Nodwch rif Yswiriant Gwladol eich partner
 pages.form.field.nino.error.required=Nodwch rif Yswiriant Gwladol eich partner
 pages.form.field.nino.error.maxLength=Nodwch rif Yswiriant Gwladol go iawn
-pages.form.field.nino.error.invalid=Mae’n rhaid i rif Yswiriant Gwladol eich partner gynnwys llythrennau a i z a rhifau 0 i 9 yn unig
+pages.form.field.nino.error.invalid=Nodwch rif Yswiriant Gwladol go iawn
+pages.form.field.nino.error.invalid.chars=Mae’n rhaid i rif Yswiriant Gwladol eich partner gynnwys llythrennau a i z a rhifau 0 i 9 yn unig
 pages.form.field.nino.error.self=Ni allwch nodi’ch manylion eich hun
 
 pages.form.field-required.dateOfMarriage=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.dom.error.min-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod ar ôl {0}
 pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod cyn {0}
-error.invalid.date.format=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil. Rhowch ddiwrnod, mis a blwyddyn
+pages.form.field.dom.error.enter_a_date=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil. Rhowch ddiwrnod, mis a blwyddyn
+pages.form.field.dom.error.enter_numbers=Nodwch ddyddiad go iawn ar gyfer eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
+pages.form.field.dom.error.enter_valid_date=Nodwch ddyddiad go iawn ar gyfer eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 
 pages.form.field.dod.error.required=Rhowch wybod ar ba ddyddiad y gwnaethoch ysgaru
 pages.form.field-required-alt.dateOfDivorce=Cadarnhewch eich dyddiad ysgaru
@@ -43,6 +46,7 @@ pages.form.field-required.transferor-email=Nodwch eich cyfeiriad e-bost
 pages.form.field.transferor-email.error.required=Nodwch eich cyfeiriad e-bost
 pages.form.field.transferor-email.error.maxLength=Nodwch ddim mwy na {0} o gymeriadau
 pages.form.field.transferor-email.error.email=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis eichenw@enghraifft.com
+pages.form.field.transferor-email.error.character=Mae’n rhaid i’ch cyfeiriad e-bost gynnwys y llythrennau a i z, y rhifau 0 i 9, atalnodau llawn, cysylltnodau a thanlinellau yn unig
 
 pages.form.field-required.marriage-criteria=Dewiswch ‘Iawn’ os ydych yn briod neu mewn partneriaeth sifil
 pages.form.field-required.date-of-birth=Dewiswch ‘Iawn’ os cawsoch chi a’ch partner eich geni ar ôl 5 Ebrill 1935
