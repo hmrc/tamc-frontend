@@ -16,10 +16,10 @@
 
 package forms
 
-import play.api.data.Form
+import play.api.data.{Form, Mapping}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.{valueIsPresent, emailMaxLength, emailPattern}
+import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, emailPattern, valueIsPresent}
 
 object EmailForm {
 
@@ -40,7 +40,7 @@ object EmailForm {
         }
     }
 
-  private def email =
+  private def email: Mapping[EmailAddress] =
     valueIsPresent(errorRequired = messageCustomizer("error.required"))
     .verifying(emailIsValidFormat(formatError = messageCustomizer("error.email"), charError = messageCustomizer("error.character")))
     .transform[EmailAddress](EmailAddress(_), _.value)

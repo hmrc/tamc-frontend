@@ -63,12 +63,34 @@ object RegistrationForm {
       verifying(error = errorInvalid, constraint = Gender.isValid(_)).
       transform[Gender](Gender(_), _.gender)
 
-  private def ninoMapping(errorRequired: String = "error.required", errorMaxLength: String = "error.maxLength", errorInvalid: String = "error.invalid"): Mapping[Nino] =
+  private def ninoMapping(errorRequired: String = "error.required",
+                          errorMaxLength: String = "error.maxLength",
+                          errorInvalidChars: String = "error.invalid.chars",
+                          errorInvalid: String = "error.invalid"): Mapping[Nino] =
     nonEmptyTrimmer(error = errorRequired).
       transform[String](utils.normaliseNino(_), _.toString()).
       verifying(maxLengthWithError(maxLength = 9, error = errorMaxLength)).
-      verifying(error = errorInvalid, constraint = Nino.isValid(_)).
+      verifying(ninoIsValidFormat(formatError = errorInvalid, charError = errorInvalidChars)).
+  //    verifying(error = errorInvalid, constraint = Nino.isValid(_)). // TODO amend for fune grained error
       transform[Nino](Nino(_), _.nino)
+
+
+  private def ninoIsValidFormat(name: String = "constraint.ninoFormat",
+                                 formatError: String,
+                                 charError: String): Constraint[String] = {
+    val validNinoCharRegexString = """^[a-zA-Z0-9]+"""
+
+    Constraint[String](name) {
+      nino =>
+        if (Nino.isValid(nino)) Valid else {
+          if (!nino.matches(validNinoCharRegexString)) {
+            Invalid(ValidationError(charError))
+          } else {
+            Invalid(ValidationError(formatError))
+          }
+        }
+    }
+  }
 
   private def firstNameMessageCustomizer(messageKey: String): String = s"pages.form.field.name.$messageKey"
 
@@ -94,6 +116,7 @@ object RegistrationForm {
     ninoMapping(
       errorRequired = ninoMessageCustomizer("error.required"),
       errorMaxLength = ninoMessageCustomizer("error.maxLength"),
+      errorInvalidChars = ninoMessageCustomizer("error.invalid.chars"),
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
   def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages): Mapping[LocalDate] = {

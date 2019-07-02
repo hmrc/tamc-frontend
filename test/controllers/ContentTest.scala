@@ -415,8 +415,8 @@ class ContentTest extends ControllerBaseSpec {
       form shouldNot be(null)
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s National Insurance number must only include letters a to z and numbers 0 to 9"
-      document.getElementById("nino-error").text() shouldBe "Your partner’s National Insurance number must only include letters a to z and numbers 0 to 9"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter a real National Insurance number"
+      document.getElementById("nino-error").text() shouldBe "Enter a real National Insurance number"
     }
   }
 

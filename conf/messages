@@ -28,7 +28,8 @@ pages.form.field.gender.error.invalid=Select your partner’s gender
 pages.form.field-required.nino=Enter your partner’s National Insurance number
 pages.form.field.nino.error.required=Enter your partner’s National Insurance number
 pages.form.field.nino.error.maxLength=Enter a real National Insurance number
-pages.form.field.nino.error.invalid=Your partner’s National Insurance number must only include letters a to z and numbers 0 to 9
+pages.form.field.nino.error.invalid=Enter a real National Insurance number
+pages.form.field.nino.error.invalid.chars=Your partner’s National Insurance number must only include letters a to z and numbers 0 to 9
 pages.form.field.nino.error.self=You cannot enter your own details
 
 pages.form.field-required.dateOfMarriage=Enter the date of your marriage or civil partnership
