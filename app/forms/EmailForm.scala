@@ -45,7 +45,7 @@ object EmailForm {
     .verifying(emailIsValidFormat(formatError = messageCustomizer("error.email"), charError = messageCustomizer("error.character")))
     .transform[EmailAddress](EmailAddress(_), _.value)
     .verifying {
-      emailPattern(regex = """^([a-zA-Z0-9\-\_]+[.])*[a-zA-Z0-9\-\_]+@([a-zA-Z0-9-]{2,}[.])+[a-zA-Z0-9-]+$""".r, error = messageCustomizer("error.email")) //Why the second regex?
+      emailPattern(regex = """^([a-zA-Z0-9\-\_]+[.])*[a-zA-Z0-9\-\_]+@([a-zA-Z0-9-]{2,}[.])+[a-zA-Z0-9-]+$""".r, error = messageCustomizer("error.email"))
     }
     .verifying {
       emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))
