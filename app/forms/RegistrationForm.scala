@@ -72,7 +72,6 @@ object RegistrationForm {
       verifying(ninoIsValidFormat(formatError = errorInvalid, charError = errorInvalidChars, maxLengthError = errorMaxLength)).
       transform[Nino](Nino(_), _.nino)
 
-
   private def ninoIsValidFormat(name: String = "constraint.ninoFormat",
                                 formatError: String,
                                 charError: String,
@@ -92,7 +91,6 @@ object RegistrationForm {
         }
     }
   }
-
 
   private def firstNameMessageCustomizer(messageKey: String): String = s"pages.form.field.name.$messageKey"
 
