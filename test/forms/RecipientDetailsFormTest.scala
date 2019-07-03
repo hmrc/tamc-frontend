@@ -67,6 +67,20 @@ class RecipientDetailsFormTest extends UnitSpec with I18nSupport with GuiceOneAp
       ))
     }
 
+    "fail to bind an invalid nino which is longer than 9 characters" in {
+      val formInput = Map[String, String](
+        "name" -> "name",
+        "last-name" -> "last-name",
+        "gender" -> "M",
+        "nino" -> "A1123456AA"
+      )
+      val res = form.mapping.bind(formInput)
+
+      res shouldBe Left(Seq(
+        FormError("nino", "pages.form.field.nino.error.maxLength", Nil)
+      ))
+    }
+
     "bind a valid nino successfully" in {
 
       val testValidNino = new Generator(new Random).nextNino

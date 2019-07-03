@@ -69,15 +69,14 @@ object RegistrationForm {
                           errorInvalid: String = "error.invalid"): Mapping[Nino] =
     nonEmptyTrimmer(error = errorRequired).
       transform[String](utils.normaliseNino(_), _.toString()).
-      verifying(maxLengthWithError(maxLength = 9, error = errorMaxLength)).
-      verifying(ninoIsValidFormat(formatError = errorInvalid, charError = errorInvalidChars)).
-  //    verifying(error = errorInvalid, constraint = Nino.isValid(_)). // TODO amend for fune grained error
+      verifying(ninoIsValidFormat(formatError = errorInvalid, charError = errorInvalidChars, maxLengthError = errorMaxLength)).
       transform[Nino](Nino(_), _.nino)
 
 
   private def ninoIsValidFormat(name: String = "constraint.ninoFormat",
-                                 formatError: String,
-                                 charError: String): Constraint[String] = {
+                                formatError: String,
+                                charError: String,
+                                maxLengthError: String): Constraint[String] = {
     val validNinoCharRegexString = """^[a-zA-Z0-9]+"""
 
     Constraint[String](name) {
@@ -85,12 +84,15 @@ object RegistrationForm {
         if (Nino.isValid(nino)) Valid else {
           if (!nino.matches(validNinoCharRegexString)) {
             Invalid(ValidationError(charError))
+          } else if (nino.length > 9) {
+            Invalid(ValidationError(maxLengthError))
           } else {
             Invalid(ValidationError(formatError))
           }
         }
     }
   }
+
 
   private def firstNameMessageCustomizer(messageKey: String): String = s"pages.form.field.name.$messageKey"
 
@@ -124,7 +126,10 @@ object RegistrationForm {
     val minDate = ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)
     val maxDate = today.plusDays(1)
 
-    validDateTuple("pages.form.field.dom.error.enter_a_date", "pages.form.field.dom.error.enter_numbers", "pages.form.field.dom.error.enter_valid_date")
+    validDateTuple("pages.form.field.dom.error.enter_full_date",
+      "pages.form.field.dom.error.enter_a_date",
+      "pages.form.field.dom.error.enter_numbers",
+      "pages.form.field.dom.error.enter_valid_date")
       .transform[LocalDate](dt => dt.toLocalDate, ld => new DateTime(ld.getYear(), ld.getMonthOfYear(), ld.getDayOfMonth(), 0, 0).withTimeAtStartOfDay())
       .verifying(error = Messages("pages.form.field.dom.error.min-date", dateFormatter.format(minDate.toDate)), constraint = _.isAfter(minDate))
       .verifying(error = Messages("pages.form.field.dom.error.max-date", dateFormatter.format(maxDate.toDate)), constraint = _.isBefore(maxDate))

@@ -97,7 +97,8 @@ object PlayFormFormatter {
         else Invalid(ValidationError(error, maxLength))
     }
 
-  def validDateTuple(notPresentError: String = "error.enter_a_date",
+  def validDateTuple(missingPartError: String = "error.enter_full_date",
+                     allAbsentError: String = "error.enter_a_date",
                      nonNumericError: String = "error.enter_numbers",
                      invalidError: String = "error.enter_valid_date"): Mapping[DateTime] = {
 
@@ -109,10 +110,26 @@ object PlayFormFormatter {
       "month" -> optional(text),
       "day" -> optional(text)
     )
-      .verifying(notPresentError, x => x._1.isDefined && x._2.isDefined && x._3.isDefined)
+      .verifying(datePartsArePresent(allAbsentError = allAbsentError, missingPartError = missingPartError))
       .transform[(String,String,String)]( x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
       .verifying(invalidError, x => !verifyDigits(x) || Try(new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
       .transform[DateTime](x => new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0).withTimeAtStartOfDay, x => (x.getYear.toString, x.getMonthOfYear.toString, x.getDayOfMonth.toString))
+  }
+
+  private def datePartsArePresent(name: String = "constraint.datepresent",
+                                  allAbsentError: String,
+                                  missingPartError: String): Constraint[(Option[String], Option[String], Option[String])] = {
+
+    Constraint[(Option[String], Option[String], Option[String])](name) {
+      tup =>
+        if (tup._1.isDefined && tup._2.isDefined && tup._3.isDefined) Valid else {
+          if (tup._1.isEmpty && tup._2.isEmpty && tup._3.isEmpty) {
+            Invalid(ValidationError(allAbsentError))
+          } else {
+            Invalid(ValidationError(missingPartError))
+          }
+        }
+    }
   }
 }

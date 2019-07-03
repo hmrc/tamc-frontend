@@ -43,6 +43,28 @@ class RegistrationFormTest extends UnitSpec with I18nSupport with GuiceOneAppPer
       res shouldBe Right(new LocalDate(2019, 2, 12))
     }
 
+    "fail to bind a date which is entirely absent" in {
+
+      val formInput = Map.empty[String, String]
+      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+
+      res shouldBe Left(Seq(
+        FormError("", "pages.form.field.dom.error.enter_a_date", Nil)
+      ))
+    }
+
+    "fail to bind a date is partially absent" in {
+      val formInput = Map[String, String](
+        "day" -> "12",
+        "year" -> "2019"
+      )
+      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+
+      res shouldBe Left(Seq(
+        FormError("", "pages.form.field.dom.error.enter_full_date", Nil)
+      ))
+    }
+
     "fail to bind a date which is earlier the minimum configured date" in {
 
       val earliestDate = ApplicationConfig.TAMC_MIN_DATE.minusDays(1)
