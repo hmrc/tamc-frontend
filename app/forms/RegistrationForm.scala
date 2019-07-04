@@ -120,8 +120,7 @@ object RegistrationForm {
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
   def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages): Mapping[LocalDate] = {
-    val dateFormatter: SimpleDateFormat = new SimpleDateFormat("d MM YYYY")
-    val minDate = ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)
+    val minDate = ApplicationConfig.TAMC_MIN_DATE.minusDays(1)
     val maxDate = today.plusDays(1)
 
     validDateTuple("pages.form.field.dom.error.enter_full_date",
@@ -129,8 +128,8 @@ object RegistrationForm {
       "pages.form.field.dom.error.enter_numbers",
       "pages.form.field.dom.error.enter_valid_date")
       .transform[LocalDate](dt => dt.toLocalDate, ld => new DateTime(ld.getYear(), ld.getMonthOfYear(), ld.getDayOfMonth(), 0, 0).withTimeAtStartOfDay())
-      .verifying(error = Messages("pages.form.field.dom.error.min-date", dateFormatter.format(minDate.toDate)), constraint = _.isAfter(minDate))
-      .verifying(error = Messages("pages.form.field.dom.error.max-date", dateFormatter.format(maxDate.toDate)), constraint = _.isBefore(maxDate))
+      .verifying(error = Messages("pages.form.field.dom.error.min-date", minDate.toString("d MM YYYY")), constraint = _.isAfter(minDate))
+      .verifying(error = Messages("pages.form.field.dom.error.max-date", maxDate.toString("d MM YYYY")), constraint = _.isBefore(maxDate))
   }
 
   def registrationForm(today: LocalDate, transferorNino: Nino)(implicit messages: Messages) = Form[RegistrationFormInput](
