@@ -16,6 +16,7 @@
 
 package forms
 
+import config.ApplicationConfig
 import models.MultiYearLowerEarnerFormInput
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
@@ -29,18 +30,23 @@ object MultiYearLowerEarnerForm {
     override val format = Some(("format.boolean", Nil))
 
     def bind(key: String, data: Map[String, String]) = {
-      Right(data.get(key).getOrElse("")).right.flatMap {
+
+      Right(data.getOrElse(key, "")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Nil)))
+        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.PERSONAL_ALLOWANCE()))))
       }
     }
 
     def unbind(key: String, value: Boolean) = Map(key -> value.toString)
   }
 
-  val lowerEarnerForm = Form[MultiYearLowerEarnerFormInput](
-    mapping(
-      "lower-earner" -> of(requiredBooleanFormatter))(MultiYearLowerEarnerFormInput.apply)(MultiYearLowerEarnerFormInput.unapply))
+  val lowerEarnerForm = {
+    Form[MultiYearLowerEarnerFormInput](
+      mapping(
+        "lower-earner" -> of(requiredBooleanFormatter)
+      )(MultiYearLowerEarnerFormInput.apply)(MultiYearLowerEarnerFormInput.unapply)
+    )
+  }
 
 }

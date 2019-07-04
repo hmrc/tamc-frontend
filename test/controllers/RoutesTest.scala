@@ -120,12 +120,12 @@ class RoutesTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Select yes if you are married or in a civil partnership"
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
@@ -136,7 +136,7 @@ class RoutesTest extends ControllerBaseSpec {
       document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a civil partnership"
     }
   }
 
@@ -167,7 +167,7 @@ class RoutesTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
-      document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherThreshold"
+      document.getElementById("partners-income-error").text() shouldBe s"Select yes if your partner’s income is between £$lowerThreshold and £$higherThreshold a year"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck().url
@@ -184,7 +184,7 @@ class RoutesTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherScotThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
-      document.getElementById("partners-income-error").text() shouldBe s"Confirm if your partner has an annual income of between £$lowerThreshold and £$higherScotThreshold"
+      document.getElementById("partners-income-error").text() shouldBe s"Select yes if your partner’s income is between £$lowerThreshold and £$higherScotThreshold a year"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck().url
@@ -200,12 +200,12 @@ class RoutesTest extends ControllerBaseSpec {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset.getElementsByClass("error-notification") shouldNot be(null)
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Tell us if you are married or in a legally registered civil partnership"
+      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Select yes if you are married or in a civil partnership"
     }
 
     "diplay errors as wrong input is provided by selected radio button" in {
@@ -216,7 +216,7 @@ class RoutesTest extends ControllerBaseSpec {
       document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Confirm if you are married or in a legally registered civil partnership"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a civil partnership"
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
