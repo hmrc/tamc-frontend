@@ -114,7 +114,7 @@ trait UpdateRelationshipService {
         val taxYear = timeService.getTaxYearForDate(date)
 
         relationship.relationshipEndReason match {
-          case Some("Divorce") if date == timeService.getStartDateForTaxYear(taxYear) => taxYear - 1
+          case Some(RelationshipEndReason.Divorce) if date == timeService.getStartDateForTaxYear(taxYear) => taxYear - 1
           case _ => taxYear
         }
       })

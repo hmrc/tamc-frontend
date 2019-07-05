@@ -22,6 +22,7 @@
 @import utils.LanguageUtils
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
+@import models.RelationshipEndReason
 
 @(changeRelationshipForm: Form[ChangeRelationship],
 activeRelationship: Option[RelationshipRecord],
@@ -146,10 +147,10 @@ mainConfig = views.helpers.MainConfig()
                             Some(historicRelationship.participant1EndDate.get),LanguageUtils.isWelsh(messages))
                         </td>
                         <td id="line@index-reason">
-                            @Html(Messages(s"coc.end-reason.${historicRelationship.relationshipEndReason.getOrElse("")}"))
+                            @Html(Messages(s"coc.end-reason.${historicRelationship.relationshipEndReason.map(_.value).getOrElse("")}"))
                         </td>
                         @(historicRelationship.relationshipEndReason.get, historicRelationship.participant) match {
-                        case (("DIVORCE"|"CANCELLED"|"RETROSPECTIVE"), "Recipient") => {
+                        case ((RelationshipEndReason.Divorce|RelationshipEndReason.Cancelled|RelationshipEndReason.Retrospective), "Recipient") => {
                         <td>
                             @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args =
                             ('id -> s"line${index}-remove")) {
