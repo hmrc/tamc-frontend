@@ -52,7 +52,7 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
   val timeService: TimeService
-  private val parseRelationshipStartDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
+  private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
@@ -78,14 +78,14 @@ trait UpdateRelationshipService {
                                         startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
     val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
     val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
-    val unavailableYears: Set[Int] = getUnavailableYears(historicRelationships, activeRelationship)
+    val unavailableYears: Set[Int] = taxYearsThatAreUnavailableForUpdate(historicRelationships, activeRelationship)
     (availableYears -- unavailableYears).nonEmpty
   }
 
   private def canApplyForCurrentYears(
                                        historicRelationships: Option[Seq[RelationshipRecord]],
                                        activeRelationship: Option[RelationshipRecord]): Boolean =
-    !getUnavailableYears(historicRelationships, activeRelationship).contains(timeService.getCurrentTaxYear)
+    !taxYearsThatAreUnavailableForUpdate(historicRelationships, activeRelationship).contains(timeService.getCurrentTaxYear)
 
   def canApplyForMarriageAllowance(
                                     historicRelationships: Option[Seq[RelationshipRecord]],
@@ -94,32 +94,40 @@ trait UpdateRelationshipService {
     canApplyForPreviousYears(historicRelationships, activeRelationship, startingFromTaxYear) ||
       canApplyForCurrentYears(historicRelationships, activeRelationship)
 
-  private def getUnavailableYears(historicRelationships: Option[Seq[RelationshipRecord]], activeRelationship: Option[RelationshipRecord]): Set[Int] = {
+  private def taxYearsThatAreUnavailableForUpdate(historicRelationships: Option[Seq[RelationshipRecord]], activeRelationship: Option[RelationshipRecord]): Set[Int] = {
     val historicYears: Set[Set[Int]] = historicRelationships.getOrElse(Seq[RelationshipRecord]()).toSet.filter {
-      relationship => List(Some("DIVORCE"), Some("CANCELLED"), Some("MERGER"), Some("RETROSPECTIVE")) contains (relationship.relationshipEndReason)
+      relationship =>
+        val unavailableReasonCodes = List(
+          Some(RelationshipEndReason.Divorce),
+          Some(RelationshipEndReason.Cancelled),
+          Some(RelationshipEndReason.Merger),
+          Some(RelationshipEndReason.Retrospective)
+        )
+        unavailableReasonCodes contains relationship.relationshipEndReason
     }.map {
-      relationship => findOccupiedYears(relationship)
+      relationship => taxYearsOverlappingWithRelationship(relationship)
     }
 
-    val activeYears: Set[Int] = activeRelationship.map { relationship => findOccupiedYears(relationship) }.getOrElse(Set[Int]())
+    val activeYears: Set[Int] = activeRelationship.map { relationship => taxYearsOverlappingWithRelationship(relationship) }.getOrElse(Set[Int]())
     val allYears: Set[Set[Int]] = historicYears.+(activeYears)
     allYears.flatten
   }
 
-  private def findOccupiedYears(relationship: RelationshipRecord): Set[Int] = {
-    val relStartDate = timeService.getTaxYearForDate(parseRelationshipStartDate(relationship.participant1StartDate))
-    val relEndDate = relationship.participant1EndDate.fold(timeService.getCurrentTaxYear)(
-      year => {
-        val date = parseRelationshipStartDate(year)
-        val taxYear = timeService.getTaxYearForDate(date)
+  private def taxYearsOverlappingWithRelationship(relationship: RelationshipRecord): Set[Int] = {
+    val taxYearOfRelationshipStart = timeService.getTaxYearForDate(parseDate(relationship.participant1StartDate))
+    val taxYearOfRelationshipEnd = relationship.participant1EndDate.fold(timeService.getCurrentTaxYear)(
+      participant1EndDateAsString => {
+        val participant1EndDate = parseDate(participant1EndDateAsString)
+        val taxYearOfParticipant1EndDate = timeService.getTaxYearForDate(participant1EndDate)
+        val isParticipant1EndDateOnTheFirstDayOfTaxYear: Boolean = participant1EndDate == timeService.getStartDateForTaxYear(taxYearOfParticipant1EndDate)
 
         relationship.relationshipEndReason match {
-          case Some(RelationshipEndReason.Divorce) if date == timeService.getStartDateForTaxYear(taxYear) => taxYear - 1
-          case _ => taxYear
+          case Some(RelationshipEndReason.Divorce) if isParticipant1EndDateOnTheFirstDayOfTaxYear => taxYearOfParticipant1EndDate - 1
+          case _ => taxYearOfParticipant1EndDate
         }
       })
 
-    (relStartDate to relEndDate).toSet
+    (taxYearOfRelationshipStart to taxYearOfRelationshipEnd).toSet
   }
 
   private def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
@@ -371,7 +379,7 @@ trait UpdateRelationshipService {
         if (time.TaxYear.current.contains(endRelationshipReason.dateOfDivorce.get)) getCurrentDate
         else time.TaxYear.taxYearFor(endRelationshipReason.dateOfDivorce.get).finishes
       case EndRelationshipReason(EndReasonCode.CANCEL, _, _) => getCurrentDate
-      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => time.TaxYear.taxYearFor(parseRelationshipStartDate(selectedRelationship.participant1StartDate)).starts
+      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => time.TaxYear.taxYearFor(parseDate(selectedRelationship.participant1StartDate)).starts
     }
 
   def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
