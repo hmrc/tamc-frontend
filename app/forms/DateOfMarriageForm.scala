@@ -16,21 +16,15 @@
 
 package forms
 
-import config.ApplicationConfig
 import models.DateOfMarriageFormInput
 import org.joda.time.LocalDate
 import play.api.data.Form
 import play.api.data.Forms.mapping
-import uk.gov.hmrc.play.mappers.DateTuple._
+import play.api.i18n.Messages
 
 object DateOfMarriageForm {
 
-  private def dateOfMarriageValidator(today: LocalDate) =
-    mandatoryDateTuple("pages.form.field.dom.error.required").
-      verifying(error = "pages.form.field.dom.error.min-date", constraint = _.isAfter(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1))).
-      verifying(error = "pages.form.field.dom.error.max-date", constraint = _.isBefore(today.plusDays(1)))
-
-  def dateOfMarriageForm(today: LocalDate) = Form[DateOfMarriageFormInput](
+  def dateOfMarriageForm(today: LocalDate)(implicit messages: Messages) = Form[DateOfMarriageFormInput](
     mapping(
-      "dateOfMarriage" -> dateOfMarriageValidator(today))(DateOfMarriageFormInput.apply)(DateOfMarriageFormInput.unapply))
+      "dateOfMarriage" -> RegistrationForm.dateOfMarriageValidator(today))(DateOfMarriageFormInput.apply)(DateOfMarriageFormInput.unapply))
 }
