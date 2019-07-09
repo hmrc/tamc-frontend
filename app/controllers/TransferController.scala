@@ -32,10 +32,11 @@ import models.auth.UserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
 import play.api.data.FormError
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc._
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -71,6 +72,18 @@ class TransferController @Inject()(
   def dateOfMarriage: Action[AnyContent] = authenticate {
     implicit request =>
       Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
+  }
+
+  def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
+    implicit request =>
+      Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
+        .flashing(LanguageUtils.FlashWithSwitchIndicator)
+  }
+
+  def dateOfMarriageWithEn: Action[AnyContent] = authenticate {
+    implicit request =>
+      Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
+        .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async {
