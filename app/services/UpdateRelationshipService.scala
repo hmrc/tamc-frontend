@@ -62,7 +62,7 @@ trait UpdateRelationshipService {
   def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordList, Boolean)] =
     for {
       relationshipRecordWrapper <- marriageAllowanceConnector.listRelationship(transferorNino)
-      activeRelationship <- getActiveRelationship(relationshipRecordWrapper)
+      activeRelationship <- cacheActiveRelationship(relationshipRecordWrapper.activeRelationship)
       historicRelationships <- getHistoricRelationships(relationshipRecordWrapper)
       transformedHistoricRelationships <- transformHistoricRelationships(historicRelationships)
       loggedInUserInfo <- getLoggedInUserInfo(relationshipRecordWrapper)
@@ -172,17 +172,12 @@ trait UpdateRelationshipService {
         name = rec.name))
     }
 
-  private def getActiveRelationship(relationshipRecordWrapper: RelationshipRecordWrapper)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
-    val relationships = relationshipRecordWrapper.relationships
-    if (relationships.size > 0 && (relationships.head.participant1EndDate == None || isFutureDate(relationships.head.participant1EndDate))) {
-      cachingService.saveActiveRelationshipRecord(relationships.head)
-      Future {
-        Some(relationships.head)
-      }
-    } else {
-      Future {
-        None
-      }
+  private def cacheActiveRelationship(activeRelationship: Option[RelationshipRecord])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
+    activeRelationship match{
+      case None =>  Future(None)
+      case Some(active) =>
+        cachingService.saveActiveRelationshipRecord(active)
+        Future {Some(active)}
     }
   }
 

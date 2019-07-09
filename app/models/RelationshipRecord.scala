@@ -17,10 +17,15 @@
 package models
 
 import play.api.libs.json.Json
+import utils.DateUtils
 
 case class RelationshipRecordWrapper(
                                       relationships: Seq[RelationshipRecord],
-                                      userRecord: Option[LoggedInUserInfo] = None)
+                                      userRecord: Option[LoggedInUserInfo] = None){
+
+  def activeRelationship: Option[RelationshipRecord] = relationships.find(_.isActive)
+}
+
 
 case class RelationshipRecord(
                                participant: String,
@@ -29,7 +34,13 @@ case class RelationshipRecord(
                                relationshipEndReason: Option[RelationshipEndReason] = None,
                                participant1EndDate: Option[String] = None,
                                otherParticipantInstanceIdentifier: String,
-                               otherParticipantUpdateTimestamp: String)
+                               otherParticipantUpdateTimestamp: String){
+
+  def isActive:Boolean = participant1EndDate match{
+    case None => true
+    case Some(date) => DateUtils.isFutureDate(date)
+  }
+}
 
 case class RelationshipRecordList(
                                    activeRelationship: Option[RelationshipRecord] = None,
