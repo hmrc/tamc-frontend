@@ -44,6 +44,7 @@ object UpdateRelationshipService extends UpdateRelationshipService {
   override val customAuditConnector = ApplicationAuditConnector
   override val cachingService = CachingService
   override val timeService = TimeService
+  override val applicationService: ApplicationService = ApplicationService
 }
 
 trait UpdateRelationshipService {
@@ -52,6 +53,7 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
   val timeService: TimeService
+  val applicationService: ApplicationService
   private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
@@ -63,72 +65,15 @@ trait UpdateRelationshipService {
     for {
       relationshipRecordWrapper <- marriageAllowanceConnector.listRelationship(transferorNino)
       activeRelationship <- cacheActiveRelationship(relationshipRecordWrapper.activeRelationship)
-      historicRelationships <- getHistoricRelationships(relationshipRecordWrapper)
+      historicRelationships <- cachingService.saveHistoricRelationships(relationshipRecordWrapper.historicRelationships)
       transformedHistoricRelationships <- transformHistoricRelationships(historicRelationships)
-      loggedInUserInfo <- getLoggedInUserInfo(relationshipRecordWrapper)
+      loggedInUserInfo = relationshipRecordWrapper.userRecord
       savedLoggedInUserInfo <- cachingService.saveLoggedInUserInfo(loggedInUserInfo.get)
-      transferorRec <- transformRecord(relationshipRecordWrapper.userRecord, activeRelationship)
+      transferorRec = UserRecord(relationshipRecordWrapper.userRecord)
       checkedRecord <- checkCreateActionLock(transferorRec)
       savedTransferorRecord <- cachingService.saveTransferorRecord(transferorRec)
-    } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo), canApplyForPreviousYears(historicRelationships, activeRelationship))
-
-  private def canApplyForPreviousYears(
-                                        historicRelationships: Option[Seq[RelationshipRecord]],
-                                        activeRelationship: Option[RelationshipRecord],
-                                        startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
-    val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
-    val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
-    val unavailableYears: Set[Int] = taxYearsThatAreUnavailableForUpdate(historicRelationships, activeRelationship)
-    (availableYears -- unavailableYears).nonEmpty
-  }
-
-  private def canApplyForCurrentYears(
-                                       historicRelationships: Option[Seq[RelationshipRecord]],
-                                       activeRelationship: Option[RelationshipRecord]): Boolean =
-    !taxYearsThatAreUnavailableForUpdate(historicRelationships, activeRelationship).contains(timeService.getCurrentTaxYear)
-
-  def canApplyForMarriageAllowance(
-                                    historicRelationships: Option[Seq[RelationshipRecord]],
-                                    activeRelationship: Option[RelationshipRecord],
-                                    startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean =
-    canApplyForPreviousYears(historicRelationships, activeRelationship, startingFromTaxYear) ||
-      canApplyForCurrentYears(historicRelationships, activeRelationship)
-
-  private def taxYearsThatAreUnavailableForUpdate(historicRelationships: Option[Seq[RelationshipRecord]], activeRelationship: Option[RelationshipRecord]): Set[Int] = {
-    val historicYears: Set[Set[Int]] = historicRelationships.getOrElse(Seq[RelationshipRecord]()).toSet.filter {
-      relationship =>
-        val unavailableReasonCodes = List(
-          Some(RelationshipEndReason.Divorce),
-          Some(RelationshipEndReason.Cancelled),
-          Some(RelationshipEndReason.Merger),
-          Some(RelationshipEndReason.Retrospective)
-        )
-        unavailableReasonCodes contains relationship.relationshipEndReason
-    }.map {
-      relationship => taxYearsOverlappingWithRelationship(relationship)
-    }
-
-    val activeYears: Set[Int] = activeRelationship.map { relationship => taxYearsOverlappingWithRelationship(relationship) }.getOrElse(Set[Int]())
-    val allYears: Set[Set[Int]] = historicYears.+(activeYears)
-    allYears.flatten
-  }
-
-  private def taxYearsOverlappingWithRelationship(relationship: RelationshipRecord): Set[Int] = {
-    val taxYearOfRelationshipStart = timeService.getTaxYearForDate(parseDate(relationship.participant1StartDate))
-    val taxYearOfRelationshipEnd = relationship.participant1EndDate.fold(timeService.getCurrentTaxYear)(
-      participant1EndDateAsString => {
-        val participant1EndDate = parseDate(participant1EndDateAsString)
-        val taxYearOfParticipant1EndDate = timeService.getTaxYearForDate(participant1EndDate)
-        val isParticipant1EndDateOnTheFirstDayOfTaxYear: Boolean = participant1EndDate == timeService.getStartDateForTaxYear(taxYearOfParticipant1EndDate)
-
-        relationship.relationshipEndReason match {
-          case Some(RelationshipEndReason.Divorce) if isParticipant1EndDateOnTheFirstDayOfTaxYear => taxYearOfParticipant1EndDate - 1
-          case _ => taxYearOfParticipant1EndDate
-        }
-      })
-
-    (taxYearOfRelationshipStart to taxYearOfRelationshipEnd).toSet
-  }
+    } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo),
+      applicationService.canApplyForPreviousYears(historicRelationships, activeRelationship))
 
   private def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cachingService.unlockCreateRelationship().map { _ => trrecord }
@@ -163,15 +108,6 @@ trait UpdateRelationshipService {
     }
   }
 
-  def transformRecord(rec: Option[LoggedInUserInfo], activeRel: Option[RelationshipRecord]): Future[UserRecord] =
-    Future.successful {
-      rec.fold(throw TransferorNotFound())(rec => UserRecord(
-        cid = rec.cid,
-        timestamp = rec.timestamp,
-        has_allowance = None,
-        name = rec.name))
-    }
-
   private def cacheActiveRelationship(activeRelationship: Option[RelationshipRecord])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
     activeRelationship match{
       case None =>  Future(None)
@@ -181,41 +117,18 @@ trait UpdateRelationshipService {
     }
   }
 
-  private def isFutureDate(date: Option[String]): Boolean = {
-    val format = new java.text.SimpleDateFormat("yyyyMMdd")
-    val time = format.parse(date.get).getTime
-    time > System.currentTimeMillis()
-  }
-
-  private def getHistoricRelationships(relationshipRecordWrapper: RelationshipRecordWrapper)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Seq[RelationshipRecord]]] = {
-    val relationships = relationshipRecordWrapper.relationships
-
-    val historic: Option[Seq[RelationshipRecord]] = if (relationships.size > 1 && relationships.head.participant1EndDate == None) {
-      Some(relationships.tail)
-    } else if (relationships.size > 0 && relationships.head.participant1EndDate != None) {
-      Some(relationships)
-    } else None
-
-    cachingService.saveHistoricRelationships(historic)
-  }
-
-  private def getLoggedInUserInfo(relationshipRecordWrapper: RelationshipRecordWrapper)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LoggedInUserInfo]] =
-    Future {
-      relationshipRecordWrapper.userRecord
-    }
-
-  private def doUpdateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
+  private def doUpdateRelationship(transferorNino: Nino, isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     for {
       updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
       validated <- validateupdateRelationshipCompleteCache(updateRelationshipCacheData)
-      postUpdateData <- sendUpdateRelationship(transferorNino, validated)
+      postUpdateData <- sendUpdateRelationship(transferorNino, validated, isWelsh)
       _ <- auditUpdateRelationship(postUpdateData)
     } yield (validated.notification.get)
 
   private def lockUpdateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     cachingService.lockUpdateRelationship()
 
-  private def transformUpdateData(sessionData: UpdateRelationshipCacheData, messages: Messages): UpdateRelationshipRequestHolder = {
+  private def transformUpdateData(sessionData: UpdateRelationshipCacheData, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
     val loggedInUser = sessionData.loggedInUserInfo.get
     val relationshipRecord = sessionData.relationshipEndReasonRecord.get
     val endReason = getEndReasonCode(relationshipRecord)
@@ -244,7 +157,7 @@ trait UpdateRelationshipService {
 
     val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
     val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participiants._1, participant2 = participiants._2, relationship = relationship)
-    val sendNotificationData = UpdateRelationshipNotificationRequest(full_name = "UNKNOWN", email = sessionData.notification.get.transferor_email, role = role, welsh = LanguageUtils.isWelsh(messages), isRetrospective = isRetrospective)
+    val sendNotificationData = UpdateRelationshipNotificationRequest(full_name = "UNKNOWN", email = sessionData.notification.get.transferor_email, role = role, welsh = isWelsh, isRetrospective = isRetrospective)
     UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
   }
 
@@ -259,8 +172,8 @@ trait UpdateRelationshipService {
     }
   }
 
-  private def sendUpdateRelationship(transferorNino: Nino, data: UpdateRelationshipCacheData)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
-    marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, messages)) map {
+  private def sendUpdateRelationship(transferorNino: Nino, data: UpdateRelationshipCacheData, isWelsh:Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
+    marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, isWelsh)) map {
       httpResponse =>
         Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
           case UpdateRelationshipResponse(ResponseStatus("OK")) => data
@@ -350,8 +263,8 @@ trait UpdateRelationshipService {
         false
     }
 
-  def updateRelationship(transferorNino: Nino, lang: Lang)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
-    doUpdateRelationship(transferorNino) recover {
+  def updateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
+    doUpdateRelationship(transferorNino, LanguageUtils.isWelsh(messages)) recover {
       case error =>
         handleAudit(UpdateRelationshipCacheFailureEvent(error))
         throw error

@@ -469,7 +469,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   "confirmUpdateAction" should {
     "redirct the user" when {
       "update relationship returns a future successful" in {
-        when(mockUpdateRelationshipService.updateRelationship(any(), any())(any(), any(), any()))
+        when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any()))
           .thenReturn(RelationshipRecordData.notificationRecord)
         val result = controller().confirmUpdateAction()(request)
         status(result) shouldBe SEE_OTHER

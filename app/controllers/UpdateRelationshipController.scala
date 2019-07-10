@@ -277,7 +277,7 @@ class UpdateRelationshipController @Inject()(
           Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
         success =>
           success)
-      updateRelationshipService.updateRelationship(request.nino, request2lang(request)) map {
+      updateRelationshipService.updateRelationship(request.nino) map {
         _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
       } recover handleError
   }
