@@ -29,7 +29,7 @@ import org.mockito.Mockito._
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import services._
 import test_utils._
 import test_utils.data.{ConfirmationModelData, RelationshipRecordData}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -46,6 +46,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
+  val mockListRelationshipService: ListRelationshipService = mock[ListRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
 
@@ -54,6 +55,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       messagesApi,
       auth,
       mockUpdateRelationshipService,
+      mockListRelationshipService,
       mockRegistrationService,
       mockCachingService,
       mockTimeService
@@ -62,7 +64,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   "History" should {
     "redirect to transfer" when {
       "has no active record, no historic and temporary authentication" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
               (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
@@ -76,7 +78,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "redirect to how-it-works" when {
       "has no active record, no historic and permanent authentication" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
               (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
@@ -90,7 +92,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "load change of circumstances page" when {
       "has some active record" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
           )
@@ -100,7 +102,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       }
 
       "has some historic record" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful((RelationshipRecordData.historicRelationshipRecordList, true))
           )
