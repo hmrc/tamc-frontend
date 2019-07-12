@@ -34,8 +34,13 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.extra-years"))
-) {
+    title = Messages("title.application.pattern", Messages("title.extra-years")),
+    langSelectorOverride = Some(
+        Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
+            "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
+        )
+    )
+){
 
 
 <a href="@controllers.routes.TransferController.eligibleYearsAction"
