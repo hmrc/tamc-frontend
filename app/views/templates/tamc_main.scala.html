@@ -27,18 +27,18 @@
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
 @(title: String,
-pageName:Option[String] = None,
-sidebarLinks: Option[Html] = None,
-sidebarClass: Option[String] = None,
-mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
-appConfig: config.ApplicationConfig = config.ApplicationConfig,
-supportLinkEnabled: Boolean = true,
-langSwitch: Option[play.twirl.api.Html] = None,
-scriptElem: Option[Html] = None)(mainContent: Html)(implicit messages: Messages,
-request: UserRequest[_],
-gaDimensions: Option[Map[String, String]] = None,
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
+  pageName:Option[String] = None,
+  sidebarLinks: Option[Html] = None,
+  sidebarClass: Option[String] = None,
+  mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
+  appConfig: config.ApplicationConfig = config.ApplicationConfig,
+  supportLinkEnabled: Boolean = true,
+  langSwitch: Option[play.twirl.api.Html] = None,
+  scriptElem: Option[Html] = None)(mainContent: Html)(implicit messages: Messages,
+  request: UserRequest[_],
+  gaDimensions: Option[Map[String, String]] = None,
+  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
 
 
@@ -88,47 +88,43 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 
 
 @isWelsh = @{
-if(messages.lang.code == "cy"){
-true
-}
-else {
-false
-}
+  if(messages.lang.code == "cy"){
+    true
+  }
+  else {
+    false
+  }
 }
 @getHelpForm = {
-@includes.report_problem(supportLinkEnabled, formPartialRetriever, appConfig)
+  @includes.report_problem(supportLinkEnabled, formPartialRetriever, appConfig)
 }
 
 @commonContentHeader = {
 
-@if(ApplicationConfig.isWelshEnabled) {
-@langSwitch
-}
+  @if(ApplicationConfig.isWelshEnabled) {
+    @langSwitch
+  }
 }
 
-@if(ApplicationConfig.enableRefresh) {
-<meta http-equiv="refresh"
-      content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
-}
 
 @isUserResearchBannerHidden = @{request.cookies.exists((x: Cookie) => x.name == "mdtpurr")}
 
 @mustacheCheck(str: String) = @{
-if(str.trim=="") false else str
+    if(str.trim=="") false else str
 }
 
 @sidebar = {
-@if(sidebarLinks.isDefined) {
-@layouts.sidebar(sidebarLinks.get, sidebarClass)
-}
+    @if(sidebarLinks.isDefined) {
+        @layouts.sidebar(sidebarLinks.get, sidebarClass)
+    }
 }
 
 @titleName = @{
-if(request.authState.permanent) {
-appConfig.pageTitle
-} else {
-""
-}
+    if(request.authState.permanent) {
+        appConfig.pageTitle
+    } else {
+        ""
+    }
 }
 
 @* user.fold(HtmlFormat.empty) {
@@ -139,16 +135,16 @@ appConfig.pageTitle
 *}
 *@
 @actingAttorneyBanner = @{
-HtmlFormat.empty
+    HtmlFormat.empty
 }
 
 @googleAnalytics = @{
-Map[String, Any](
-"trackingId" -> ApplicationConfig.analyticsToken,
-"cookieDomain" -> ApplicationConfig.analyticsHost,
-"confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
-"authProvider" -> request.authProvider
-) ++ gaDimensions.getOrElse(Map.empty)
+    Map[String, Any](
+    "trackingId" -> ApplicationConfig.analyticsToken,
+    "cookieDomain" -> ApplicationConfig.analyticsHost,
+    "confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
+    "authProvider" -> request.authProvider
+    ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
 @{

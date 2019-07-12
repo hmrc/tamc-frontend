@@ -42,7 +42,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confi
 case retroRejection@true => {
 <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("confirm.recipient.ended.reject.heading"))</h1>
 @templates.coc.confirmSummary(data, retroRejection)
-<div class="notice"><img class="icon icon-information" src="@routes.Assets.at(" images/icon-information.png")" alt="">
+<div class="notice"><img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt="">
     <strong id=confirm-note class="bold-small">@Html(Messages("pages.ended.reject.message",TextGenerators.taxDateIntervalMultiYear(relevantDate.get.getYear,
         TimeService.getTaxYearForDate(relationEndDate.get))))</strong>
 </div>

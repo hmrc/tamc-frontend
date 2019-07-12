@@ -37,13 +37,6 @@
 
     <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 
-    <style>
-    .panel-indent
-    {
-    margin-top:30px;
-    margin-bottom:30px;
-    }
-    </style>
     @helpers.form(action = routes.UpdateRelationshipController.divorceAction, args = 'id -> "change-relationship-form") {
         <div>
         @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data")
@@ -84,7 +77,7 @@
                     <ul class="list-bullet space-smaller">
                         <li>@Html(Messages("change.status.divorce.transferor.conditional1.para3",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</li>
                         <li>@Html(Messages("change.status.divorce.transferor.conditional1.para4"))</li>
-                    </ul></br>
+                    </ul><br/>
                     <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
                 }
                 case (_, true) => {

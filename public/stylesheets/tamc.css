@@ -543,3 +543,27 @@ font-size : bold !important
 br.clear {
     clear: both;
 }
+
+.width10 {
+    width: 10%;
+}
+.width30 {
+    width: 30%;
+}
+.width60 {
+    width: 60%;
+}
+
+span.block {
+    display: block;
+}
+
+.content__body {
+    float: left;
+    width: 100%;
+}
+
+.panel-indent {
+    margin-top:30px;
+    margin-bottom:30px;
+}
