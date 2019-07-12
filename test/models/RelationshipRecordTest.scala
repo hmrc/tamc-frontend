@@ -26,9 +26,7 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
   "isActive" should {
     "return true" when {
       "there is no relationship end date" in {
-        val relationshipRecord =
-          RelationshipRecord(Role.RECIPIENT, "56787", "20130101", Some(RelationshipEndReason.Default), None, "", "")
-        relationshipRecord.isActive shouldBe true
+        relationshipRecordWitNoEndDate.isActive shouldBe true
       }
       "relationship end date is a future date" in {
         val relationshipEndDateTomorrow = new DateTime().plusDays(1).toString("yyyyMMdd")
