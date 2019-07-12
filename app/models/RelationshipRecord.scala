@@ -26,7 +26,7 @@ case class RelationshipRecord(
                                participant: String,
                                creationTimestamp: String,
                                participant1StartDate: String,
-                               relationshipEndReason: Option[String] = None,
+                               relationshipEndReason: Option[RelationshipEndReason] = None,
                                participant1EndDate: Option[String] = None,
                                otherParticipantInstanceIdentifier: String,
                                otherParticipantUpdateTimestamp: String)
