@@ -40,7 +40,9 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
@@ -108,6 +110,28 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         val result: Future[Result] = controller().history()(request)
         status(result) shouldBe OK
       }
+    }
+  }
+
+  "historyWithCy" should {
+    "redirect to history, with a welsh language setting" in {
+      val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).historyWithCy()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
+      val resolved = Await.result(result, 5 seconds)
+      resolved.header.headers.keys should contain("Set-Cookie")
+      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
+    }
+  }
+
+  "historyWithEn" should {
+    "redirect to history, with an english language setting" in {
+      val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).historyWithEn()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
+      val resolved = Await.result(result, 5 seconds)
+      resolved.header.headers.keys should contain("Set-Cookie")
+      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=en")
     }
   }
 
