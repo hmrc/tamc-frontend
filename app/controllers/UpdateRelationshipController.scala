@@ -26,10 +26,11 @@ import models._
 import models.auth.UserRequest
 import org.joda.time.LocalDate
 import play.Logger
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
@@ -71,6 +72,18 @@ class UpdateRelationshipController @Inject()(
           }
         }
       } recover handleError
+  }
+
+  def historyWithCy: Action[AnyContent] = authenticate {
+    implicit request =>
+      Redirect(controllers.routes.UpdateRelationshipController.history()).withLang(Lang("cy"))
+        .flashing(LanguageUtils.FlashWithSwitchIndicator)
+  }
+
+  def historyWithEn: Action[AnyContent] = authenticate {
+    implicit request =>
+      Redirect(controllers.routes.UpdateRelationshipController.history()).withLang(Lang("en"))
+        .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
   def makeChange(): Action[AnyContent] = authenticate {
@@ -314,6 +327,4 @@ class UpdateRelationshipController @Inject()(
           case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }
-
-
 }
