@@ -39,7 +39,7 @@ class TransferServiceTest extends ControllerBaseSpec {
     override val timeService: TimeService = mock[TimeService]
     override val marriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
     override val customAuditConnector: AuditConnector = mock[AuditConnector]
-    override val updateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
+    override val applicationService: ApplicationService = mock[ApplicationService]
   }
 
   val nino = Nino(Ninos.nino1)
@@ -53,7 +53,7 @@ class TransferServiceTest extends ControllerBaseSpec {
 
         when(service.cachingService.getUpdateRelationshipCachedData)
           .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
-        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
+        when(service.applicationService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
           .thenReturn(true)
         when(service.marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
@@ -70,7 +70,7 @@ class TransferServiceTest extends ControllerBaseSpec {
         val response = GetRelationshipResponse(None, None, ResponseStatus("OK"))
         when(service.cachingService.getUpdateRelationshipCachedData)
           .thenReturn(Some(UpdateRelationshipCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
-        when(service.updateRelationshipService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
+        when(service.applicationService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
           .thenReturn(true)
         when(service.marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
