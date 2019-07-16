@@ -55,7 +55,7 @@
                     <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.transferor.h1"))</h1>
                     <p class="lede">@Html(Messages("change.status.divorce.transferor.directions", TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages)),TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))</p>
                     <p>@Html(Messages("change.status.divorce.transferor.option1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</p>
-                    <p>@Html(Messages("change.status.divorce.transferor.option2",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))</p></br>
+                    <p>@Html(Messages("change.status.divorce.transferor.option2",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))</p>
                     <p class="heading-medium"> @Html(Messages("change.status.reason-for-divorce",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</p>
                     @templates.input_radio_group(
                         changeRelationshipForm("endReason"),
@@ -79,10 +79,10 @@
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
                     </div>
-                    <ul class="list-bullet space-smaller">
+                    <ul class="list-bullet space-smaller subsection">
                         <li>@Html(Messages("change.status.divorce.transferor.conditional1.para3",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</li>
                         <li>@Html(Messages("change.status.divorce.transferor.conditional1.para4"))</li>
-                    </ul><br/>
+                    </ul>
                     <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
                 }
                 case (_, true) => {
@@ -91,10 +91,10 @@
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.recipient.content1"))</p>
                     </div>
-                    <ul class="list-bullet space-smaller">
+                    <ul class="list-bullet space-smaller subsection">
                         <li>@Html(Messages("change.status.divorce.recipient.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</li>
                         <li>@Html(Messages("pages.confirm.message2",TextGenerators.ukDateTransformer(cyEffectiveDate, LanguageUtils.isWelsh(messages))))</li>
-                    </ul></br>
+                    </ul>
                     <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
                 }
                 case _ => {
@@ -103,9 +103,9 @@
                     <div class="notice add-spacing-small">
                         <p class="bold-small"> <img class="icon icon-information" src="@routes.Assets.at("images/icon-information.png")" alt=""> @Html(Messages("change.status.divorce.transferor.conditional1.para2"))</p>
                     </div>
-                    <ul class="list-bullet space-smaller">
+                    <ul class="list-bullet space-smaller subsection">
                         <li>@Html(Messages("change.status.divorce.recipient.previous.para1",TextGenerators.ukDateTransformer(cyEffectiveUntilDate, LanguageUtils.isWelsh(messages))))</li>
-                        <li>@Html(Messages("change.status.divorce.recipient.previous.para2"))</li></ul></br>
+                        <li>@Html(Messages("change.status.divorce.recipient.previous.para2"))</li></ul>
                     <input name="endReason" id="endReason-divorce_cy" type="hidden" value="@EndReasonCode.DIVORCE_CY"/>
                 }
             }
