@@ -29,7 +29,7 @@ import org.mockito.Mockito._
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import services._
 import test_utils._
 import test_utils.data.{ConfirmationModelData, RelationshipRecordData}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -40,12 +40,15 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
+  val mockListRelationshipService: ListRelationshipService = mock[ListRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
 
@@ -54,6 +57,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       messagesApi,
       auth,
       mockUpdateRelationshipService,
+      mockListRelationshipService,
       mockRegistrationService,
       mockCachingService,
       mockTimeService
@@ -62,7 +66,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   "History" should {
     "redirect to transfer" when {
       "has no active record, no historic and temporary authentication" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
               (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
@@ -76,7 +80,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "redirect to how-it-works" when {
       "has no active record, no historic and permanent authentication" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
               (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
@@ -90,7 +94,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "load change of circumstances page" when {
       "has some active record" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
           )
@@ -100,7 +104,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       }
 
       "has some historic record" in {
-        when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful((RelationshipRecordData.historicRelationshipRecordList, true))
           )
@@ -108,6 +112,28 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         val result: Future[Result] = controller().history()(request)
         status(result) shouldBe OK
       }
+    }
+  }
+
+  "historyWithCy" should {
+    "redirect to history, with a welsh language setting" in {
+      val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).historyWithCy()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
+      val resolved = Await.result(result, 5 seconds)
+      resolved.header.headers.keys should contain("Set-Cookie")
+      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
+    }
+  }
+
+  "historyWithEn" should {
+    "redirect to history, with an english language setting" in {
+      val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).historyWithEn()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
+      val resolved = Await.result(result, 5 seconds)
+      resolved.header.headers.keys should contain("Set-Cookie")
+      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=en")
     }
   }
 
@@ -469,7 +495,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   "confirmUpdateAction" should {
     "redirct the user" when {
       "update relationship returns a future successful" in {
-        when(mockUpdateRelationshipService.updateRelationship(any(), any())(any(), any(), any()))
+        when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any()))
           .thenReturn(RelationshipRecordData.notificationRecord)
         val result = controller().confirmUpdateAction()(request)
         status(result) shouldBe SEE_OTHER

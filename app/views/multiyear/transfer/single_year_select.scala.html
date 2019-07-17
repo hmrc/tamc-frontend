@@ -25,7 +25,7 @@
 @import config.ApplicationConfig._
 @import java.text.NumberFormat
 
-@(form: Form[models.EarlierYearsInput],
+@(earlierYearsForm: Form[models.EarlierYearsInput],
 input: RegistrationFormInput,
 availableYears: List[TaxYear] = List[TaxYear]())(
 implicit messages: Messages,
@@ -34,13 +34,19 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.extra-years"))
-) {
+    title = Messages("title.application.pattern", Messages("title.extra-years")),
+    langSelectorOverride = Some(
+        Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
+            "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
+        )
+    )
+){
+
 
 <a href="@controllers.routes.TransferController.eligibleYearsAction"
    class="link-back">@Html(Messages("generic.back"))</a>
 
-@templates.form_error_notification(form)
+    @templates.form_error_notification(earlierYearsForm)
 
 <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
 
@@ -73,17 +79,16 @@ title = Messages("title.application.pattern", Messages("title.extra-years"))
         </div>
         <p class="bold-small">@Html(Messages("pages.multiyear.extrayears"))</p>
         @templates.input_radio_group(
-        form(s"selectedYear"),
-        Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
-        '_labelClass -> "block-label",
-        '_labelAfter -> true,
-        '_legend -> "Extra year",
-        '_legendClass -> "visuallyhidden",
-        '_groupClass -> "inline spacingBottom"
+            earlierYearsForm("selectedYear"),
+            Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
+            '_labelClass -> "block-label",
+            '_labelAfter -> true,
+            '_legend -> "Extra year",
+            '_legendClass -> "visuallyhidden",
+            '_groupClass -> "inline spacingBottom"
         )
         <input type="hidden" name="furtherYears" value="@availableYears.tail.map(_.year).mkString(" ,")" />
         <input type="hidden" name="yearAvailableForSelection" value="@availableYears.head.year"/>
-
     </div>
 </fieldset>
 <p class="get-started group" id="get-started">

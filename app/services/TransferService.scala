@@ -39,7 +39,7 @@ object TransferService extends TransferService {
   override val customAuditConnector = ApplicationAuditConnector
   override val cachingService = CachingService
   override val timeService = TimeService
-  override val updateRelationshipService = UpdateRelationshipService
+  override val applicationService = ApplicationService
 }
 
 trait TransferService {
@@ -48,7 +48,7 @@ trait TransferService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
   val timeService: TimeService
-  val updateRelationshipService: UpdateRelationshipService
+  val applicationService: ApplicationService
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
@@ -76,7 +76,7 @@ trait TransferService {
                                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
-        if updateRelationshipService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
+        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
         Future(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()
       case _ => throw CacheMissingTransferor()

@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package forms
+package utils
 
-import models.DateOfMarriageFormInput
-import org.joda.time.LocalDate
-import play.api.data.Form
-import play.api.data.Forms.mapping
-import play.api.i18n.Messages
+object DateUtils {
 
-object DateOfMarriageForm {
+  val DatePattern: String = "yyyyMMdd"
 
-  def dateOfMarriageForm(today: LocalDate)(implicit messages: Messages) = Form[DateOfMarriageFormInput](
-    mapping(
-      "dateOfMarriage" -> RegistrationForm.dateOfMarriageValidator(today))(DateOfMarriageFormInput.apply)(DateOfMarriageFormInput.unapply))
+  def isFutureDate(date: String): Boolean = {
+    val format = new java.text.SimpleDateFormat(DatePattern)
+    val time = format.parse(date).getTime
+    time > System.currentTimeMillis()
+  }
 }

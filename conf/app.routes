@@ -17,6 +17,8 @@ POST   /benefit-calculator-pta                     @controllers.EligibilityContr
 GET    /transfer-allowance                         @controllers.TransferController.transfer
 POST   /transfer-allowance                         @controllers.TransferController.transferAction
 GET    /date-of-marriage                           @controllers.TransferController.dateOfMarriage
+GET    /date-of-marriage-en                        @controllers.TransferController.dateOfMarriageWithEn
+GET    /date-of-marriage-cy                        @controllers.TransferController.dateOfMarriageWithCy
 POST   /date-of-marriage                           @controllers.TransferController.dateOfMarriageAction
 GET    /eligible-years                             @controllers.TransferController.eligibleYears
 POST   /eligible-years                             @controllers.TransferController.eligibleYearsAction
@@ -31,6 +33,8 @@ GET    /you-cannot-use-this-service                @controllers.TransferControll
 
 #Change of Circumstances
 GET    /history                                    @controllers.UpdateRelationshipController.history
+GET    /history-en                                 @controllers.UpdateRelationshipController.historyWithEn
+GET    /history-cy                                 @controllers.UpdateRelationshipController.historyWithCy
 POST   /make-changes                               @controllers.UpdateRelationshipController.makeChange
 GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
