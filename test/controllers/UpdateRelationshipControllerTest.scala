@@ -528,14 +528,14 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "return internal server error" when {
       val errors = List(
-        (new CacheMissingUpdateRecord, "technical.issue.para1"),
-        (new CacheUpdateRequestNotSent, "technical.issue.para1"),
-        (new CannotUpdateRelationship, "technical.issue.para1"),
+        (new CacheMissingUpdateRecord, "technical.issue.heading"),
+        (new CacheUpdateRequestNotSent, "technical.issue.heading"),
+        (new CannotUpdateRelationship, "technical.issue.heading"),
         (new CitizenNotFound, "technical.cannot-find-details.para1"),
         (new BadFetchRequest, "technical.technical-error.para1"),
         (new TransferorNotFound, "transferor.not.found"),
         (new RecipientNotFound, "recipient.not.found.para1"),
-        (new Exception, "technical.issue.para1")
+        (new Exception, "technical.issue.heading")
       )
 
       for ((error, message) <- errors) {

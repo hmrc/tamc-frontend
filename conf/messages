@@ -501,8 +501,8 @@ session.timeout.verbose-statement2=Please sign in again.
 
 create.relationship.failure=Cannot create relationship
 not.authorised=Sorry, you have not been authorised to proceed.
-technical.issue.para1=We are experiencing technical difficulties
-technical.issue.para2=We are having difficulties with the service, try again in a few minutes.
+technical.issue.heading=Sorry, there is a problem with the service
+technical.issue.try.later=Try again later.
 technical.issue.back=Return to GOV.UK
 technical.other-ways.h1=Other ways to apply for Marriage Allowance
 technical.other-ways.para0=You can apply for Marriage Allowance through your <a href="/personal-account">personal account</a>, under ‘services you might need’.

@@ -481,8 +481,8 @@ session.timeout.verbose-statement=Nid ydych wedi gwneud unrhyw beth am 15 munud,
 session.timeout.verbose-statement2=Mewngofnodwch eto.
 create.relationship.failure=Ni ellir creu perthynas
 not.authorised=Mae’n ddrwg gennym. Nid oes gennych yr awdurdod i fynd yn eich blaen.
-technical.issue.para1=Mae problemau technegol wedi codi
-technical.issue.para2=Mae problemau technegol wedi codi. Rhowch gynnig arall arni mewn ychydig o funudau.
+technical.issue.heading=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
+technical.issue.try.later=Rhowch gynnig arall arni yn nes ymlaen.
 technical.issue.back=Dychwelyd i GOV.UK
 technical.other-ways.h1=Ffyrdd eraill o wneud cais am Lwfans Priodasol
 technical.other-ways.para0=Gallwch wneud cais am Lwfans Priodasol drwy''ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan ‘gwasanaethau y mae''n bosibl y bydd eu hangen arnoch’.
