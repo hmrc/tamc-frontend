@@ -59,7 +59,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <div class="form-group">
         @templates.input(calculatorForm("transferor-income"),
         '_label -> Html(Messages("pages.form.field.income")),
-        '_labelClass -> "form-label-bold",
+        '_labelClass -> "form-label",
         '_inputClass -> "form-control",
         '_inputPrefix -> "£",
         '_dataAttributes -> "autocomplete=on"
@@ -68,7 +68,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <div class="form-group">
         @templates.input(calculatorForm("recipient-income"),
         '_label -> Html(Messages("pages.form.field.recipient-income")),
-        '_labelClass -> "form-label-bold",
+        '_labelClass -> "form-label",
         '_inputClass -> "form-control",
         '_inputPrefix -> "£",
         '_dataAttributes -> "autocomplete=on"
