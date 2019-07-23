@@ -258,7 +258,7 @@ class EligibilityControllerTest extends ControllerBaseSpec {
           "do-you-want-to-apply" -> "true")
         val result = controller().doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.PartnersDetailsController.onPageLoad().url)
       }
     }
 

@@ -119,7 +119,7 @@ mainConfig = views.helpers.MainConfig()
 
         @if(canApplyPreviousYears) {
         <div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
-            <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a>
+            <a id="previousYearsApply" href="@controllers.transfer.routes.PartnersDetailsController.onPageLoad()" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a>
         </div>
         }
         <div id="historicRecords">

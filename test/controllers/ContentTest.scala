@@ -21,6 +21,7 @@ import java.text.NumberFormat
 import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import controllers.actions.AuthenticatedActionRefiner
+import controllers.transfer.PartnersDetailsController
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
@@ -53,7 +54,7 @@ class ContentTest extends ControllerBaseSpec {
         "nino" -> Ninos.nino1,
         "transferor-email" -> "example@example.com"
       )
-      val result = transferController.transferAction()(request)
+      val result = partnersDetailsController.onSubmit()(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -64,7 +65,7 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (request body missing form data)" in {
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -82,7 +83,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -102,7 +103,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -121,7 +122,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -140,7 +141,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -159,7 +160,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -178,7 +179,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -196,7 +197,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -215,7 +216,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -234,7 +235,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -253,7 +254,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -272,7 +273,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -291,7 +292,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -310,7 +311,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -330,7 +331,7 @@ class ContentTest extends ControllerBaseSpec {
         "last-name" -> "bar",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -349,7 +350,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "X",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -369,7 +370,7 @@ class ContentTest extends ControllerBaseSpec {
         "last-name" -> "bar",
         "gender" -> "M"
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -388,7 +389,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> ""
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -407,7 +408,7 @@ class ContentTest extends ControllerBaseSpec {
         "gender" -> "M",
         "nino" -> "ZZ"
       )
-      val result = transferController.transferAction(request)
+      val result = partnersDetailsController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -443,7 +444,7 @@ class ContentTest extends ControllerBaseSpec {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.TransferController.transfer().url
+      back.attr("href") shouldBe controllers.transfer.routes.PartnersDetailsController.onPageLoad().url
     }
 
     "display form error message (date of marriage is after today’s date)" in {
@@ -932,6 +933,13 @@ class ContentTest extends ControllerBaseSpec {
     messagesApi,
     instanceOf[AuthenticatedActionRefiner],
     mockTransferService,
+    mockCachingService,
+    mockTimeService
+  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+
+  def partnersDetailsController: PartnersDetailsController = new PartnersDetailsController(
+    messagesApi,
+    instanceOf[AuthenticatedActionRefiner],
     mockCachingService,
     mockTimeService
   )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])

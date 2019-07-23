@@ -51,23 +51,6 @@ class TransferController @Inject()(
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever) extends BaseController {
 
-  def transfer: Action[AnyContent] = authenticate {
-    implicit request =>
-      Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)))
-  }
-
-  def transferAction: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
-        formWithErrors =>
-          Future.successful(BadRequest(views.html.multiyear.transfer.transfer(formWithErrors))),
-        recipientData => {
-          cachingService.saveRecipientDetails(recipientData).map { _ =>
-            Redirect(controllers.routes.TransferController.dateOfMarriage())
-          }
-        })
-  }
-
 
   def dateOfMarriage: Action[AnyContent] = authenticate {
     implicit request =>

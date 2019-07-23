@@ -54,7 +54,7 @@ class UpdateRelationshipController @Inject()(
         case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
           if (!activeRecord && !historicRecord) {
             if (!request.authState.permanent) {
-              Redirect(controllers.routes.TransferController.transfer())
+              Redirect(controllers.transfer.routes.PartnersDetailsController.onPageLoad())
             } else {
               Redirect(controllers.routes.EligibilityController.howItWorks())
             }

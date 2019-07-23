@@ -31,7 +31,7 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
 ){
 
-<a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.transfer.routes.PartnersDetailsController.onPageLoad()" class="link-back">@Html(Messages("generic.back"))</a>
 
 @templates.form_error_notification(marriageForm)
 

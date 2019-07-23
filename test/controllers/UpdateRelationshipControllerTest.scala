@@ -74,7 +74,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           )
         val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.PartnersDetailsController.onPageLoad().url)
       }
     }
 

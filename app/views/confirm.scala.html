@@ -71,7 +71,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         <td>@Html(Messages("generic.name"))</td>
         <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
         <td>
-            <a href="@controllers.routes.TransferController.transfer()"
+            <a href="@controllers.transfer.routes.PartnersDetailsController.onPageLoad()"
                data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
                 @Html(Messages("generic.change"))
             </a>

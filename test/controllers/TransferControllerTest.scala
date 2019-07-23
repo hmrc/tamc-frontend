@@ -45,43 +45,6 @@ import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class TransferControllerTest extends ControllerBaseSpec {
-
-  "transfer" should {
-    "return success" in {
-      val result = controller().transfer()(request)
-      status(result) shouldBe OK
-    }
-  }
-
-  "transferAction" should {
-    "return bad request" when {
-      "an invalid form is submitted" in {
-        val recipientDetails: RecipientDetailsFormInput = RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.saveRecipientDetails(ArgumentMatchers.eq(recipientDetails))(any(), any()))
-          .thenReturn(recipientDetails)
-        val result = controller().transferAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "redirect the user" when {
-      "a valid form is submitted" in {
-        val recipientDetails: RecipientDetailsFormInput = RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        val request = FakeRequest().withFormUrlEncodedBody(
-          "name" -> "Test",
-          "last-name" -> "User",
-          "gender" -> "M",
-          "nino" -> Ninos.nino2
-        )
-        when(mockCachingService.saveRecipientDetails(ArgumentMatchers.eq(recipientDetails))(any(), any()))
-          .thenReturn(recipientDetails)
-        val result = controller().transferAction()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      }
-    }
-  }
-
   "dateOfMarriage" should {
     "return success" in {
       val result = controller().dateOfMarriage()(request)
