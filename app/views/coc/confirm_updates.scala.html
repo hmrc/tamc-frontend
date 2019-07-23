@@ -31,7 +31,7 @@ title = Messages("title.pattern", Messages("title.change.reason")),
 mainConfig = views.helpers.MainConfig()
 ) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.updateRelationship.routes.HistoryController.onPageLoad" class="link-back">@Html(Messages("generic.back"))</a>
 
 @if(reason == EndReasonCode.CANCEL) {
 

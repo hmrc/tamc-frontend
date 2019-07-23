@@ -34,13 +34,13 @@
 @templates.tamc_main(
     title = Messages("title.pattern", Messages("title.make-a-change")),
     langSelectorOverride = Some(
-        Map("enUrl" -> controllers.routes.UpdateRelationshipController.historyWithEn(),
-            "cyUrl" -> controllers.routes.UpdateRelationshipController.historyWithCy()
+        Map("enUrl" -> controllers.updateRelationship.routes.HistoryController.onPageLoadWithEn(),
+            "cyUrl" -> controllers.updateRelationship.routes.HistoryController.onPageLoadWithCy()
         )
     ),
     mainConfig = views.helpers.MainConfig()) {
 
-    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.updateRelationship.routes.HistoryController.onPageLoad" class="link-back">@Html(Messages("generic.back"))</a>
 
     <style>
     .panel-indent

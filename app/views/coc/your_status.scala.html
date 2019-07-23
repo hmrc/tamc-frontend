@@ -48,7 +48,7 @@ mainConfig = views.helpers.MainConfig()
     </div>
 </h1>
 
-@helpers.form(action = routes.UpdateRelationshipController.makeChange, args = ('id -> "change-relationship-form")) {
+@helpers.form(action = controllers.updateRelationship.routes.HistoryController.onSubmit, args = ('id -> "change-relationship-form")) {
 <div class="grid-row">
     <div class="column-two-thirds">
         <style type="text/css">

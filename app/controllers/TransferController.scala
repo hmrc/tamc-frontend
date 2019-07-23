@@ -39,6 +39,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import controllers.updateRelationship
 
 import scala.concurrent.Future
 
@@ -256,18 +257,18 @@ class TransferController @Inject()(
           case _: RecipientNotFound                => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
           case _: TransferorDeceased               => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: RecipientDeceased                => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
-          case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.updateRelationship.routes.HistoryController.onPageLoad()))
           case _: CacheTransferorInRelationship    => handle(Logger.warn, Ok(views.html.transferor_status()))
-          case _: CacheMissingRecipient            => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: CacheMissingRecipient            => handle(Logger.warn, Redirect(controllers.updateRelationship.routes.HistoryController.onPageLoad()))
           case _: CacheRecipientInRelationship     => handle(Logger.warn, InternalServerError(views.html.errors.recipient_relationship_exists()))
           case _: CacheMissingEmail                => handle(Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
           case _: CannotCreateRelationship         => handle(Logger.warn, InternalServerError(views.html.errors.relationship_cannot_create()))
-          case _: CacheRelationshipAlreadyCreated  => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-          case _: CacheCreateRequestNotSent        => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: CacheRelationshipAlreadyCreated  => handle(Logger.warn, Redirect(controllers.updateRelationship.routes.HistoryController.onPageLoad()))
+          case _: CacheCreateRequestNotSent        => handle(Logger.warn, Redirect(controllers.updateRelationship.routes.HistoryController.onPageLoad()))
           case _: NoTaxYearsSelected               => handle(Logger.info, Ok(views.html.errors.no_year_selected()))
           case _: NoTaxYearsAvailable              => handle(Logger.info, Ok(views.html.errors.no_eligible_years()))
           case _: NoTaxYearsForTransferor          => handle(Logger.info, InternalServerError(views.html.errors.no_tax_year_transferor()))
-          case _: RelationshipMightBeCreated       => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          case _: RelationshipMightBeCreated       => handle(Logger.warn, Redirect(controllers.updateRelationship.routes.HistoryController.onPageLoad()))
           case _                                   => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }

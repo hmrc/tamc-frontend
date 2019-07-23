@@ -24,7 +24,7 @@ title = Messages("title.pattern", Messages("title.no-tax-years")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:non-eligible")))) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history"
+<a href="@controllers.updateRelationship.routes.HistoryController.onPageLoad"
    data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back" class="link-back">
     @Html(Messages("generic.back"))
 </a>

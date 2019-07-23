@@ -32,10 +32,10 @@ GET    /finished                                   @controllers.TransferControll
 GET    /you-cannot-use-this-service                @controllers.TransferController.cannotUseService
 
 #Change of Circumstances
-GET    /history                                    @controllers.UpdateRelationshipController.history
-GET    /history-en                                 @controllers.UpdateRelationshipController.historyWithEn
-GET    /history-cy                                 @controllers.UpdateRelationshipController.historyWithCy
-POST   /make-changes                               @controllers.UpdateRelationshipController.makeChange
+GET    /history                                    @controllers.updateRelationship.HistoryController.onPageLoad
+GET    /history-cy                                 @controllers.updateRelationship.HistoryController.onPageLoadWithCy
+GET    /history-en                                 @controllers.updateRelationship.HistoryController.onPageLoadWithEn
+POST   /make-changes                               @controllers.updateRelationship.HistoryController.onSubmit
 GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
 POST   /reason-for-change                          @controllers.UpdateRelationshipController.updateRelationshipAction

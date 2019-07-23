@@ -27,7 +27,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.pattern", Messages("title.divorce")),
 mainConfig = views.helpers.MainConfig()) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.updateRelationship.routes.HistoryController.onPageLoad" class="link-back">@Html(Messages("generic.back"))</a>
 
 @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
 

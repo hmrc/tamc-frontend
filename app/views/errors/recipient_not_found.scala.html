@@ -29,7 +29,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recip
 <p id="error">@Html(Messages("recipient.not.found.para1"))</p>
 <p>@Html(Messages("recipient.not.found.para2"))</p>
 <p class="get-started group" id="get-started">
-    <a href="@controllers.routes.UpdateRelationshipController.history" class="button" role="button">
+    <a href="@controllers.updateRelationship.routes.HistoryController.onPageLoad" class="button" role="button">
         @Html(Messages("generic.back"))
     </a>
 </p>

@@ -32,7 +32,7 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
 ) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.updateRelationship.routes.HistoryController.onPageLoad" class="link-back">@Html(Messages("generic.back"))</a>
 
 @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)

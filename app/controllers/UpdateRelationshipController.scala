@@ -48,57 +48,6 @@ class UpdateRelationshipController @Inject()(
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
 
-  def history(): Action[AnyContent] = authenticate.async {
-    implicit request =>
-      listRelationshipService.listRelationship(request.nino) map {
-        case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
-          if (!activeRecord && !historicRecord) {
-            if (!request.authState.permanent) {
-              Redirect(controllers.routes.TransferController.transfer())
-            } else {
-              Redirect(controllers.routes.EligibilityController.howItWorks())
-            }
-          } else {
-            Ok(views.html.coc.your_status(
-              changeRelationshipForm = changeRelationshipForm,
-              activeRelationship = activeRelationship,
-              historicRelationships = historicRelationships,
-              loggedInUserInfo = loggedInUserInfo,
-              activeRecord = activeRecord,
-              historicRecord = historicRecord,
-              historicActiveRecord = historicActiveRecord,
-              canApplyPreviousYears = canApplyPreviousYears,
-              endOfYear = Some(time.TaxYear.current.finishes)))
-          }
-        }
-      } recover handleError
-  }
-
-  def historyWithCy: Action[AnyContent] = authenticate {
-    implicit request =>
-      Redirect(controllers.routes.UpdateRelationshipController.history()).withLang(Lang("cy"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
-
-  def historyWithEn: Action[AnyContent] = authenticate {
-    implicit request =>
-      Redirect(controllers.routes.UpdateRelationshipController.history()).withLang(Lang("en"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
-
-  def makeChange(): Action[AnyContent] = authenticate {
-    implicit request =>
-      changeRelationshipForm.bindFromRequest.fold(
-        formWithErrors => {
-          Logger.warn("unexpected error in makeChange()")
-          Redirect(controllers.routes.UpdateRelationshipController.history())
-        },
-        formData => {
-          Ok(views.html.coc.reason_for_change(changeRelationshipForm.fill(formData)))
-        }
-      )
-  }
-
   def updateRelationshipAction(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipForm.bindFromRequest.fold(
