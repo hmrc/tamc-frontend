@@ -35,15 +35,15 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.extra-years")),
 langSelectorOverride = Some(
- Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
-     "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
+ Map("enUrl" -> controllers.transfer.routes.DateOfMarriageController.onPageLoadWithEn(),
+     "cyUrl" -> controllers.transfer.routes.DateOfMarriageController.onPageLoadWithCy()
  )
 )){
 
 @if(currentYearAvailable) {
     <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 } else {
-    <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.transfer.routes.DateOfMarriageController.onPageLoad" class="link-back">@Html(Messages("generic.back"))</a>
 }
 
 <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>

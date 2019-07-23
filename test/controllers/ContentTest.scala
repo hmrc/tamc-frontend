@@ -21,7 +21,7 @@ import java.text.NumberFormat
 import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import controllers.actions.AuthenticatedActionRefiner
-import controllers.transfer.PartnersDetailsController
+import controllers.transfer.{DateOfMarriageController, PartnersDetailsController}
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
@@ -429,7 +429,7 @@ class ContentTest extends ControllerBaseSpec {
         "dateOfMarriage.month" -> "1",
         "dateOfMarriage.year" -> "1899"
       )
-      val result = transferController.dateOfMarriageAction(request)
+      val result = dateOfMarriageController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -453,7 +453,7 @@ class ContentTest extends ControllerBaseSpec {
         "dateOfMarriage.month" -> "1",
         "dateOfMarriage.year" -> "2020"
       )
-      val result = transferController.dateOfMarriageAction(request)
+      val result = dateOfMarriageController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -473,7 +473,7 @@ class ContentTest extends ControllerBaseSpec {
         "dateOfMarriage.month" -> "",
         "dateOfMarriage.year" -> ""
       )
-      val result = transferController.dateOfMarriageAction(request)
+      val result = dateOfMarriageController.onSubmit(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -940,6 +940,14 @@ class ContentTest extends ControllerBaseSpec {
   def partnersDetailsController: PartnersDetailsController = new PartnersDetailsController(
     messagesApi,
     instanceOf[AuthenticatedActionRefiner],
+    mockCachingService,
+    mockTimeService
+  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+
+  def dateOfMarriageController: DateOfMarriageController = new DateOfMarriageController(
+    messagesApi,
+    instanceOf[AuthenticatedActionRefiner],
+    mockTransferService,
     mockCachingService,
     mockTimeService
   )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])

@@ -36,8 +36,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
     title = Messages("title.application.pattern", Messages("title.extra-years")),
     langSelectorOverride = Some(
-        Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
-            "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
+        Map("enUrl" -> controllers.transfer.routes.DateOfMarriageController.onPageLoadWithEn(),
+            "cyUrl" -> controllers.transfer.routes.DateOfMarriageController.onPageLoadWithCy()
         )
     )
 ){

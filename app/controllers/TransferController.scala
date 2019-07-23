@@ -21,22 +21,19 @@ import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.CurrentYearForm.currentYearForm
-import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
 import forms.EmptyForm
-import forms.RecipientDetailsForm.recipientDetailsForm
 import javax.inject.Inject
 import models._
 import models.auth.UserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
 import play.api.data.FormError
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc._
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -50,44 +47,6 @@ class TransferController @Inject()(
                                     timeService: TimeService
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever) extends BaseController {
-
-
-  def dateOfMarriage: Action[AnyContent] = authenticate {
-    implicit request =>
-      Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
-  }
-
-  def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
-    implicit request =>
-      Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
-
-  def dateOfMarriageWithEn: Action[AnyContent] = authenticate {
-    implicit request =>
-      Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
-  }
-
-  def dateOfMarriageAction: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
-        formWithErrors => Future.successful(BadRequest(views.html.date_of_marriage(formWithErrors)))
-        ,
-        marriageData => {
-          cachingService.saveDateOfMarriage(marriageData)
-
-
-          registrationService.getRecipientDetailsFormData flatMap {
-            case RecipientDetailsFormInput(name, lastName, gender, nino) => {
-              val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
-              registrationService.isRecipientEligible(request.nino, dataToSend) map {
-                _ => Redirect(controllers.routes.TransferController.eligibleYears())
-              }
-            }
-          }
-        }) recover handleError
-  }
 
   def eligibleYears: Action[AnyContent] = authenticate.async {
     implicit request =>

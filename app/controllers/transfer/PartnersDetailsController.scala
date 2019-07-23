@@ -49,7 +49,7 @@ class PartnersDetailsController @Inject()(
           Future.successful(BadRequest(views.html.multiyear.transfer.transfer(formWithErrors))),
         recipientData => {
           cachingService.saveRecipientDetails(recipientData).map { _ =>
-            Redirect(controllers.routes.TransferController.dateOfMarriage())
+            Redirect(controllers.transfer.routes.DateOfMarriageController.onPageLoad())
           }
         })
   }

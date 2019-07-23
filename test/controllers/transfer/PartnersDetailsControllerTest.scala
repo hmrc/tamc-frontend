@@ -67,7 +67,7 @@ class PartnersDetailsControllerTest  extends ControllerBaseSpec {
           .thenReturn(recipientDetails)
         val result = controller().onSubmit()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.onPageLoad().url)
       }
     }
   }
