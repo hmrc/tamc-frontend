@@ -74,6 +74,6 @@ class DateOfMarriageController @Inject()(
               }
             }
           }
-        }) recover HandleError.apply
+        }) recover HandleError()
   }
 }

@@ -58,7 +58,7 @@ class HandleErrorTest extends ControllerBaseSpec {
       )
       for ((error, redirectUrl) <- data) {
         s"a $error has been thrown" in {
-          val result = HandleError.apply(HeaderCarrier(), authRequest, messages, instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])(error)
+          val result = HandleError()(HeaderCarrier(), authRequest, messages, instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])(error)
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(redirectUrl)
         }
@@ -79,7 +79,7 @@ class HandleErrorTest extends ControllerBaseSpec {
       )
       for ((error, responseStatus, message) <- data) {
         s"an $error has been thrown" in {
-          val result = HandleError.apply(HeaderCarrier(), authRequest, messages, instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])(error)
+          val result = HandleError()(HeaderCarrier(), authRequest, messages, instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])(error)
           status(result) shouldBe responseStatus
           val doc = Jsoup.parse(contentAsString(result))
           doc.text() should include(messagesApi(message))

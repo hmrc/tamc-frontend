@@ -29,7 +29,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 
 object HandleError {
-  def apply(implicit hc: HeaderCarrier, request: UserRequest[_], messages: Messages, templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever): PartialFunction[Throwable, Result] =
+  def apply()(implicit hc: HeaderCarrier, request: UserRequest[_], messages: Messages, templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
         val message: String = s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils.getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"
