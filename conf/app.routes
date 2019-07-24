@@ -36,9 +36,9 @@ GET    /history                                    @controllers.updateRelationsh
 GET    /history-cy                                 @controllers.updateRelationship.HistoryController.onPageLoadWithCy
 GET    /history-en                                 @controllers.updateRelationship.HistoryController.onPageLoadWithEn
 POST   /make-changes                               @controllers.updateRelationship.HistoryController.onSubmit
-GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
-GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
-POST   /reason-for-change                          @controllers.UpdateRelationshipController.updateRelationshipAction
+GET    /change-of-income                           @controllers.updateRelationship.ChangeOfCircsController.changeOfIncome
+GET    /bereavement                                @controllers.updateRelationship.ChangeOfCircsController.bereavement
+POST   /reason-for-change                          @controllers.updateRelationship.ChangeOfCircsController.updateRelationshipAction
 POST   /divorce                                    @controllers.UpdateRelationshipController.divorceAction
 GET    /divorce-select-year                        @controllers.UpdateRelationshipController.divorceYear
 POST   /divorce-select-year                        @controllers.UpdateRelationshipController.divorceSelectYear

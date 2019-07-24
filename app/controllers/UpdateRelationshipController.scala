@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.Inject
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
-import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, updateRelationshipDivorceForm, updateRelationshipForm}
+import forms.ChangeRelationshipForm.{divorceForm, updateRelationshipDivorceForm}
 import forms.EmailForm.emailForm
 import forms.EmptyForm
 import models._
@@ -30,10 +30,8 @@ import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time
 
 import scala.concurrent.Future
 
@@ -47,54 +45,6 @@ class UpdateRelationshipController @Inject()(
                                               timeService: TimeService
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
-
-  def updateRelationshipAction(): Action[AnyContent] = authenticate.async {
-    implicit request =>
-      updateRelationshipForm.bindFromRequest.fold(
-        formWithErrors => Future {
-          Logger.warn("unexpected error in updateRelationshipAction()")
-          val form = formWithErrors.fill(ChangeRelationship(formWithErrors.data.get("role"), None, Some(formWithErrors.data.get("historicActiveRecord").forall(_.equals("true")))))
-          BadRequest(views.html.coc.reason_for_change(form))
-        },
-        formData => {
-          cachingService.saveRoleRecord(formData.role.get).flatMap { _ =>
-            (formData.endReason, formData.role) match {
-              case (Some(EndReasonCode.CANCEL), _) => Future.successful {
-                Redirect(controllers.routes.UpdateRelationshipController.confirmCancel())
-              }
-              case (Some(EndReasonCode.REJECT), _) =>
-                updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(endReason = EndReasonCode.REJECT, timestamp = formData.creationTimestamp)) map {
-                  _ => Redirect(controllers.routes.UpdateRelationshipController.confirmReject())
-                }
-              case (Some(EndReasonCode.DIVORCE), _) => Future.successful {
-                Ok(views.html.coc.divorce_select_year(changeRelationshipForm.fill(formData)))
-              }
-              case (Some(EndReasonCode.EARNINGS), _) => Future.successful {
-                Ok(views.html.coc.change_in_earnings_recipient())
-              }
-              case (Some(EndReasonCode.BEREAVEMENT), _) => Future.successful {
-                Ok(views.html.coc.bereavement_recipient())
-              }
-              case (None, _) =>
-                throw new Exception("Missing EndReasonCode")
-              case _ => Future.successful {
-                BadRequest(views.html.coc.reason_for_change(updateRelationshipForm.fill(formData)))
-              }
-            }
-          }
-        }
-      )
-  }
-
-  def changeOfIncome: Action[AnyContent] = authenticate {
-    implicit request =>
-      Ok(views.html.coc.change_in_earnings())
-  }
-
-  def bereavement: Action[AnyContent] = authenticate {
-    implicit request =>
-      Ok(views.html.coc.bereavement_transferor())
-  }
 
   def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>

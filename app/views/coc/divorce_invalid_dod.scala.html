@@ -29,7 +29,7 @@ mainConfig = views.helpers.MainConfig()) {
 
 <a href="@controllers.updateRelationship.routes.HistoryController.onPageLoad" class="link-back">@Html(Messages("generic.back"))</a>
 
-@helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
+@helpers.form(action = updateRelationship.routes.ChangeOfCircsController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
 
 <h1 class="heading-xlarge text mainpage">@Html(Messages("change.status.divorce.date.invalid.h1"))</h1>
 <p style="margin-top:-15px">@Html(Messages("change.status.divorce.date.invalid.para1"))</p>
