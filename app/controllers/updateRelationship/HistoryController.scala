@@ -29,7 +29,6 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import forms.ChangeRelationshipForm.changeRelationshipForm
 import play.Logger
-import controllers.updateRelationship.HandleErrors.handleError
 
 class HistoryController @Inject()(
                                   override val messagesApi: MessagesApi,
@@ -68,7 +67,7 @@ class HistoryController @Inject()(
               canApplyPreviousYears = canApplyPreviousYears,
               endOfYear = Some(time.TaxYear.current.finishes)))
           }
-      } recover handleError
+      } recover HandleErrors()
   }
 
   def onPageLoadWithCy: Action[AnyContent] = authenticate {

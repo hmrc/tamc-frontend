@@ -31,7 +31,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 object HandleErrors {
 
-  def handleError(
+  def apply()(
     implicit hc: HeaderCarrier, request: UserRequest[_], templateRenderer: TemplateRenderer, messages: Messages, formPartialRetriever: FormPartialRetriever
   ): PartialFunction[Throwable, Result] = PartialFunction[Throwable, Result] { throwable: Throwable =>
 
