@@ -77,7 +77,11 @@
                     )
 
                     <div class="tamc-js-hidden panel-indent" id="eoy-no">
-                        @Html(Messages("change.status.divorce.transferor.eoy-no",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))
+                        @Html(Messages("change.status.divorce.transferor.eoy-no1",TextGenerators.ukDateTransformer(pyEffectiveDate, LanguageUtils.isWelsh(messages))))
+                        <br>
+                        <p>
+                            @Html(@Messages("change.status.divorce.transferor.eoy-no2"))
+                        </p>
                     </div>
                 }
                 case (Role.TRANSFEROR, _) => {
