@@ -337,8 +337,6 @@ change.status.recipient.ha.button=Dod &#226; Lwfans Priodasol i ben
 change.status.recipient.previous.year.button=Gwneud cais ar gyfer blynyddoedd blaenorol
 change.status.transferor.p1=Gallwch ddileu Lwfans Priodasol os yw un o’r canlynol yn berthnasol:
 change.status.receiver.p1=Gallwch ganslo Lwfans Priodasol os yw un o’r canlynol yn berthnasol:
-change.status.transferor.list=<li>rydych wedi ysgaru neu ddod &#226;’ch partneriaeth sifil i ben</li><li>mae’ch incwm wedi newid</li><li>rydych am ganslo’r lwfans</li><li>rydych wedi dioddef profedigaeth</li>
-change.status.receiver.list=<li>rydych wedi ysgaru neu ddod &#226;’ch partneriaeth sifil i be</li><li>mae’ch incwm wedi newid</li><li>rydych am wrthod y lwfans</li><li>rydych wedi dioddef profedigaeth</li>
 change.status.reason-for=Rheswm dros newid
 change.status.reason-for-divorce=A ydych am gadw’ch Lwfans Priodasol yn ei le tan {0}?
 change.status.confirm.info=Byddwn yn e-bostio cadarnhad eich bod wedi canslo’ch Lwfans Priodasol cyn pen 24 awr.
@@ -374,7 +372,8 @@ change.status.divorce.transferor.option1=Os ydych yn penderfynu cadw’r lwfans 
 change.status.divorce.transferor.option2=Os ydych yn dewis dod ag ef i ben o {0}, efallai na fydd eich cyn-bartner wedi talu digon o dreth a bydd yn rhaid iddo dalu’r dreth honno. Byddwn yn casglu unrhyw dreth sydd arno drwy addasu’i god treth.
 change.status.divorce.transferor.keep=A hoffech gadw’ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth?
 change.status.divorce.transferor.eoy-yes=Bydd eich Lwfans Priodasol yn parhau tan ddiwedd y flwyddyn dreth hon ({0}). Bydd eich Lwfans Personol yn cael ei addasu ar ddechrau’r flwyddyn dreth newydd ar {1}.
-change.status.divorce.transferor.eoy-no=Bydd eich Lwfans Priodasol yn dod i ben o {0} ymlaen.<br><p>Gallai hyn arwain at eich cyn-bartner yn gorfod ad-dalu unrhyw dreth sydd arno.</p>
+change.status.divorce.transferor.eoy-no1=Bydd eich Lwfans Priodasol yn dod i ben o {0} ymlaen.
+change.status.divorce.transferor.eoy-no2=Gallai hyn arwain at eich cyn-bartner yn gorfod ad-dalu unrhyw dreth sydd arno.
 change.status.divorce.recipient.para1=bydd eich Lwfans Priodasol yn cael ei ddileu o {0}, sef diwedd y flwyddyn dreth bresennol
 change.status.divorce.recipient.previous.para1=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
 change.status.divorce.recipient.previous.para2=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
@@ -516,7 +515,8 @@ pages.history.button.remove=Dileu lwfans
 #********************************************************************************
 pages.eligibleyear.currentyear=Gallwch wneud cais ar gyfer y flwyddyn dreth bresennol
 pages.eligibleyear.toldus=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda <span id="firstNameOnly">{0}</span> ar
-pages.eligibleyear.thisyear=Yn ystod y flwyddyn dreth bresennol</span><br>{0} ymlaen
+pages.eligibleyear.thisyear1=Yn ystod y flwyddyn dreth bresennol
+pages.eligibleyear.thisyear2={0} ymlaen
 pages.eligibleyear.li1=bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn
 pages.eligibleyear.li2=byddwn yn addasu cod treth <span id="firstNameOnly3">{0}</span> i gynnwys y lwfans ychwanegol hwn
 pages.eligibleyear.li3=bydd yn adnewyddu’n awtomatig bob blwyddyn oni bai’ch bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">nad ydych bellach yn gymwys</a>
