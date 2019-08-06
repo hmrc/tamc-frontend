@@ -23,10 +23,9 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.error")),
+title = Messages("title.pattern", Messages("technical.issue.heading")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:technical-issue")))) {
-<p id="error"><strong>@Html(Messages("technical.issue.para1"))</strong></p>
-<p id="error">@Html(Messages("technical.issue.para2"))</p>
-<a href="https://www.gov.uk/">@Html(Messages("technical.issue.back"))</a>
+  <h1 class="heading-xlarge" id="error">@Messages("technical.issue.heading")</h1>
+  <p>@Messages("technical.issue.try.later")</p>
 }

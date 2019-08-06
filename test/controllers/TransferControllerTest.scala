@@ -453,7 +453,7 @@ class TransferControllerTest extends ControllerBaseSpec {
         (new NoTaxYearsForTransferor, INTERNAL_SERVER_ERROR, ""),
         (new CacheTransferorInRelationship, OK, "title.transfer-in-place"),
         (new NoTaxYearsSelected, OK, "title.other-ways"),
-        (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.para1")
+        (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.heading")
       )
       for ((error, responseStatus, message) <- data) {
         s"an $error has been thrown" in {

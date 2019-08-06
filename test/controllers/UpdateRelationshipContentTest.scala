@@ -24,7 +24,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{OK, contentAsString, defaultAwaitTimeout}
-import services.{CachingService, TimeService, TransferService, UpdateRelationshipService}
+import services._
 import test_utils.data.RelationshipRecordData
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -37,7 +37,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
   "list relationship page" should {
 
     "display 'Cancel Marriage Allowance' button" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
         )
@@ -49,7 +49,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "display only active relationship details" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
         )
@@ -65,7 +65,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "display only historic relationship details and link to how-it-works" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.historicRelationshipRecordList, false))
         )
@@ -90,7 +90,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "display reject button when it should be displayed" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.multiHistoricRelRecordList, false))
         )
@@ -120,7 +120,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "display ’apply for previous years’ button if historic year is available" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.activeRelationshipRecordList, true))
         )
@@ -134,7 +134,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "don't display apply for previous years button when previous years are available" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
         )
@@ -148,7 +148,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "display active and historic relationship details " in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
         )
@@ -168,7 +168,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "display historical active relationship details" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.activeHistoricRelRecordList, false))
         )
@@ -186,7 +186,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "display bereavement and change of income related details" in {
-      when(mockUpdateRelationshipService.listRelationship(any())(any(), any()))
+      when(mockListRelationshipService.listRelationship(any())(any(), any()))
         .thenReturn(
           Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
         )
@@ -368,12 +368,15 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+  val mockListRelationshipService: ListRelationshipService = mock[ListRelationshipService]
+
 
   def controller: UpdateRelationshipController =
     new UpdateRelationshipController(
       messagesApi,
       instanceOf[AuthenticatedActionRefiner],
       mockUpdateRelationshipService,
+      mockListRelationshipService,
       mockRegistrationService,
       mockCachingService,
       mockTimeService

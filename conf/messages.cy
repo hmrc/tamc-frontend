@@ -113,7 +113,6 @@ coc.end-reason.DEFAULT=Lwfans Priodasol wedi dod i ben
 pages.multi-year-select.heading=Cadarnhewch y blynyddoedd cynharach yr ydych am wneud cais ar eu cyfer
 
 #Single-year select
-pages.form.field-required.selectedYear=Mae angen i chi ddewis ateb
 your-income=os oedd eich incwm yn {0} neu’n llai
 income-between=os oedd incwm rhwng {0} {1} a {2}
 income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw yn yr Alban)
@@ -138,7 +137,6 @@ generic.email=E-bost
 generic.nino-full=Rhif Yswiriant Gwladol
 generic.yes=Iawn
 generic.no=Na
-generic.sharescreen=Rhannu sgrin
 generic.select.answer=Dewiswch ateb
 generic.translation.text=Mae’r dudalen hon hefyd ar gael yn
 generic.translation.english=English
@@ -172,7 +170,6 @@ title.other-ways=Ffyrdd eraill o wneud cais
 title.change.complete=Lwfans Priodasol wedi’i ganslo
 title.change.earnings=Newid mewn incwm
 title.change.reason=Dileu cais blaenorol
-title.complete=Cwblhau
 title.error=Gwall
 title.history=Crynodeb o’ch Lwfans Priodasol
 title.make-a-change=Canslo’ch Lwfans Priodasol
@@ -180,12 +177,6 @@ title.bereavement=Profedigaeth
 title.divorce=Dyddiad ysgaru neu ddod &#226;’r bartneriaeth sifil i ben
 title.date-of-marriage=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
 title.cannot-use-service=Ni allwch ddefnyddio’r gwasanaeth hwn
-#********************************************************************************
-# User Status
-#********************************************************************************
-user-status.first-time-login={0} yw’r tro cyntaf i chi fewngofnodi
-user-status.previous-login-time={0} mewngofnodi diwethaf {1}
-user-status.sign-out=Allgofnodi
 #********************************************************************************
 # Contact details
 #********************************************************************************
@@ -240,7 +231,6 @@ pages.confirm.html.check-details=Dylech wirio’r manylion yr ydych wedi’i rho
 eligibility.check.header=A ydych yn gymwys?
 eligibility.check.h1=A ydych yn briod neu mewn partneriaeth sifil?
 eligibility.check.span.h1=Gwiriwch a ydych yn gymwys
-eligibility.check.span.para=Er mwyn gwneud cais am Lwfans Priodasol, rhaid i chi fod yn briod neu mewn partneriaeth sifil.
 eligibility.check.married=A yw hyn yn berthnasol i chi?
 eligibility.check.married.legend=A ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon?
 eligibility.check.yes=Iawn
@@ -248,19 +238,15 @@ eligibility.check.married.error1=Nid ydych yn gymwys ar gyfer Lwfans Priodasol a
 eligibility.check.married.error2=Gallwch wneud cais am Lwfans Priodasol os yw’ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
 multiyear.check.income=Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible=Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
-eligibility.check.lower.earner.information1=Er mwyn elwa o Lwfans Priodasol, chi sy’n gorfod cael yr incwm lleiaf yn y perthynas (£{0} neu lai’r flwyddyn).
 eligibility.check.lower.earner.information2=Dyma gyfanswm eich enillion o bob cyflogaeth, pensiwn, buddiant, ymddiriedolaeth, incwm rhent, gan gynnwys incwm difidend sy’n fwy na’ch Lwfans Difidend – cyn i unrhyw dreth ac Yswiriant Gwladol gael eu didynnu.
 eligibility.check.lower.earner.h1=A yw’ch incwm yn llai na £{0} y flwyddyn?
-eligibility.check.lower.earner.question=A yw hyn yn berthnasol i chi?
 eligibility.check.lower.earner.error=Mae''n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm dros £{0}. Mae''n dal yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
 eligibility.check.partners.income.h1=A yw incwm eich partner rhwng £{0} a £{1} y flwyddyn?
 eligibility.check.partners.income.information1=Dyma gyfanswm ei enillion o bob cyflogaeth, pensiwn, buddiant, ymddiriedolaeth, incwm rhent, gan gynnwys incwm difidend sy'n fwy na'i Lwfans Difidend – cyn i unrhyw dreth ac Yswiriant Gwladol gael eu didynnu.
-eligibility.check.partners.income.information2=Mae hyn cyn y didynnir unrhyw dreth.
 eligibility.check.partners.income.h2=A yw hyn yn berthnasol i’ch partner?
 eligibility.check.partners.income.before.tax=Mae hyn cyn didynnu treth.
 eligibility.check.partners.income.error=Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal i fod yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd ei incwm yn is neu''n uwch yn y gorffennol.
 eligibility.check.date.of.birth.h1=A gawsoch chi neu''ch partner eich geni ar ôl 5 Ebrill 1935?
-eligibility.check.date.of.birth.span.para=I elwa o Lwfans Priodasol, dylai’ch dyddiad geni chi a’ch partner fod ar neu ar &#244;l 6 Ebrill 1935.
 eligibility.check.date.of.birth.span.married=A yw hyn yn berthnasol i chi a’ch partner?
 eligibility.check.date.of.birth.error=Mae''n bosibl y byddwch yn elwa mwy fel pâr drwy wneud cais am <a href="https://www.gov.uk/married-couples-allowance"  data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank">Lwfans P&#226;r Priod</a>.<p></p>Mae''n dal i fod yn bosibl i chi wneud cais am Lwfans Priodasol ond ni allwch gael Lwfans Priodasol a Lwfans Pâr Priod ar yr un pryd.
 eligibility.check.do.you.want.to.apply.h1=A ydych am wneud cais am Lwfans Priodasol?
@@ -274,9 +260,6 @@ pages.finished.para1.email2=o noreply@tax.service.gov.uk cyn pen 24 awr.
 pages.finished.para2=Os nad yw’n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
 pages.finished.now=Yr hyn sy’n digwydd nesaf
 pages.finished.para4=Bydd CThEM yn prosesu’ch cais am Lwfans Priodasol. Gwiriwch yr e-bost yr ydym wedi’i anfon atoch am fanylion llawn ynghylch sut y byddwch yn cael Lwfans Priodasol.
-pages.finished.para5=Os ydynt yn gyflogedig ac yn talu treth trwy TWE, byddwn yn anfon hysbysiad o god treth diwygiedig ato/ati drwy’r post. Byddwn hefyd yn rhoi gwybod i’r cyflogwr i ddechrau defnyddio’r cod treth newydd.
-pages.finished.para6=Bydd eich hysbysiad o god treth diwygiedig yn ymddangos yn eich cyfrif treth personol cyn pen 24 awr.
-pages.finished.para7=Nid oes angen i chi gysylltu &#226; ni.
 pages.finished.back-pta=Yn &#244;l i’r Cyfrif Treth Personol
 pages.finished.check-link-para=Gallwch <a id="pta-link" href="{0}" data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">wirio’ch Lwfans Priodasol presennol a gwneud newidiadau</a> ar unrhyw bryd drwy’ch cyfrif treth personol.
 pages.finished.backdated-payments=Gall taliadau sydd wedi’u hôl-ddyddio gymryd hyd at 8 wythnos i’w prosesu.
@@ -323,7 +306,6 @@ pages.how-it-works.lede-pre4=Er mwyn elwa fel pâr, mae angen i’ch incwm fod y
 pages.how-it-works.lede-pre5=Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2015 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
 pages.how-it-works.lede-pre6=Gallwch wneud cais am Lwfans Priodasol os yw'ch partner wedi marw, cyn belled â bod yr amodau'n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
 pages.how-it-works.lede-in=Lwfans Personol
-pages.how-it-works.lede-post=i’ch partner.
 pages.how-it-works.tse=i weld a ydych yn gymwys ar gyfer Lwfans Priodasol
 pages.how-it-works.apply.heading=Cyn i chi wneud cais
 pages.how-it-works.email=Cewch e-bost yn cadarnhau’ch cais.
@@ -337,8 +319,6 @@ change.status.recipient.ha.button=Dod &#226; Lwfans Priodasol i ben
 change.status.recipient.previous.year.button=Gwneud cais ar gyfer blynyddoedd blaenorol
 change.status.transferor.p1=Gallwch ddileu Lwfans Priodasol os yw un o’r canlynol yn berthnasol:
 change.status.receiver.p1=Gallwch ganslo Lwfans Priodasol os yw un o’r canlynol yn berthnasol:
-change.status.transferor.list=<li>rydych wedi ysgaru neu ddod &#226;’ch partneriaeth sifil i ben</li><li>mae’ch incwm wedi newid</li><li>rydych am ganslo’r lwfans</li><li>rydych wedi dioddef profedigaeth</li>
-change.status.receiver.list=<li>rydych wedi ysgaru neu ddod &#226;’ch partneriaeth sifil i be</li><li>mae’ch incwm wedi newid</li><li>rydych am wrthod y lwfans</li><li>rydych wedi dioddef profedigaeth</li>
 change.status.reason-for=Rheswm dros newid
 change.status.reason-for-divorce=A ydych am gadw’ch Lwfans Priodasol yn ei le tan {0}?
 change.status.confirm.info=Byddwn yn e-bostio cadarnhad eich bod wedi canslo’ch Lwfans Priodasol cyn pen 24 awr.
@@ -368,13 +348,11 @@ change.status.divorce.transferor.conditional1.para1=Rhoesoch wybod y gwnaethoch 
 change.status.divorce.transferor.conditional1.para2=Gan fod y dyddiad hwn yn ystod y flwyddyn dreth flaenorol:
 change.status.divorce.transferor.conditional1.para3=bydd eich lwfans yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru
 change.status.divorce.transferor.conditional1.para4=os nad yw’ch cyn-bartner wedi talu digon o dreth, byddwn yn ei chasglu drwy addasu’i god treth
-change.status.divorce.transferor.conditional2.para2=Gallwch gadw’ch Lwfans Priodasol tan {0}, sef diwedd y flwyddyn dreth pan wnaethoch ysgaru. Bydd eich Lwfans Priodasol yn cael ei ddileu o {1}, sef dechrau’r flwyddyn dreth bresennol ymlaen.
-change.status.divorce.transferor.conditional2.para3=Rhown wybod i chi os ydych wedi talu’r swm cywir o dreth ar ddiwedd y flwyddyn dreth. Os nad ydych wedi talu digon, byddwn yn ei chasglu drwy addasu’ch cod treth.
 change.status.divorce.transferor.option1=Os ydych yn penderfynu cadw’r lwfans yn ei le tan {0}, ni fydd yn rhaid i’ch cyn-bartner dalu unrhyw dreth.
 change.status.divorce.transferor.option2=Os ydych yn dewis dod ag ef i ben o {0}, efallai na fydd eich cyn-bartner wedi talu digon o dreth a bydd yn rhaid iddo dalu’r dreth honno. Byddwn yn casglu unrhyw dreth sydd arno drwy addasu’i god treth.
-change.status.divorce.transferor.keep=A hoffech gadw’ch Lwfans Priodasol tan ddiwedd y flwyddyn dreth?
 change.status.divorce.transferor.eoy-yes=Bydd eich Lwfans Priodasol yn parhau tan ddiwedd y flwyddyn dreth hon ({0}). Bydd eich Lwfans Personol yn cael ei addasu ar ddechrau’r flwyddyn dreth newydd ar {1}.
-change.status.divorce.transferor.eoy-no=Bydd eich Lwfans Priodasol yn dod i ben o {0} ymlaen.<br><p>Gallai hyn arwain at eich cyn-bartner yn gorfod ad-dalu unrhyw dreth sydd arno.</p>
+change.status.divorce.transferor.eoy-no1=Bydd eich Lwfans Priodasol yn dod i ben o {0} ymlaen.
+change.status.divorce.transferor.eoy-no2=Gallai hyn arwain at eich cyn-bartner yn gorfod ad-dalu unrhyw dreth sydd arno.
 change.status.divorce.recipient.para1=bydd eich Lwfans Priodasol yn cael ei ddileu o {0}, sef diwedd y flwyddyn dreth bresennol
 change.status.divorce.recipient.previous.para1=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
 change.status.divorce.recipient.previous.para2=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
@@ -481,8 +459,8 @@ session.timeout.verbose-statement=Nid ydych wedi gwneud unrhyw beth am 15 munud,
 session.timeout.verbose-statement2=Mewngofnodwch eto.
 create.relationship.failure=Ni ellir creu perthynas
 not.authorised=Mae’n ddrwg gennym. Nid oes gennych yr awdurdod i fynd yn eich blaen.
-technical.issue.para1=Mae problemau technegol wedi codi
-technical.issue.para2=Mae problemau technegol wedi codi. Rhowch gynnig arall arni mewn ychydig o funudau.
+technical.issue.heading=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
+technical.issue.try.later=Rhowch gynnig arall arni yn nes ymlaen.
 technical.issue.back=Dychwelyd i GOV.UK
 technical.other-ways.h1=Ffyrdd eraill o wneud cais am Lwfans Priodasol
 technical.other-ways.para0=Gallwch wneud cais am Lwfans Priodasol drwy''ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan ‘gwasanaethau y mae''n bosibl y bydd eu hangen arnoch’.
@@ -516,7 +494,8 @@ pages.history.button.remove=Dileu lwfans
 #********************************************************************************
 pages.eligibleyear.currentyear=Gallwch wneud cais ar gyfer y flwyddyn dreth bresennol
 pages.eligibleyear.toldus=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda <span id="firstNameOnly">{0}</span> ar
-pages.eligibleyear.thisyear=Yn ystod y flwyddyn dreth bresennol</span><br><span>{0} ymlaen
+pages.eligibleyear.thisyear1=Yn ystod y flwyddyn dreth bresennol
+pages.eligibleyear.thisyear2={0} ymlaen
 pages.eligibleyear.li1=bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn
 pages.eligibleyear.li2=byddwn yn addasu cod treth <span id="firstNameOnly3">{0}</span> i gynnwys y lwfans ychwanegol hwn
 pages.eligibleyear.li3=bydd yn adnewyddu’n awtomatig bob blwyddyn oni bai’ch bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">nad ydych bellach yn gymwys</a>

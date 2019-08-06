@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import errors.TransferorNotFound
-import play.api.libs.json.Json
+object DateUtils {
 
-object UserRecord {
-  implicit val formats = Json.format[UserRecord]
+  val DatePattern: String = "yyyyMMdd"
 
-  def apply(rec: Option[LoggedInUserInfo]): UserRecord =
-      rec.fold(throw TransferorNotFound())(rec => UserRecord(
-        cid = rec.cid,
-        timestamp = rec.timestamp,
-        has_allowance = None,
-        name = rec.name))
+  def isFutureDate(date: String): Boolean = {
+    val format = new java.text.SimpleDateFormat(DatePattern)
+    val time = format.parse(date).getTime
+    time > System.currentTimeMillis()
+  }
 }
-
-case class UserRecord(cid: Cid, timestamp: Timestamp, has_allowance: Option[Boolean] = None, name: Option[CitizenName] = None)
