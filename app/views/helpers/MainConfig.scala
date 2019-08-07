@@ -29,5 +29,5 @@ case class MainConfig(maybeMainClass: Option[String] = None,
 
   def mainDataAttributes: Html = maybeMainDataAttributes.getOrElse(HtmlConst.empty)
 
-  private def asClassAttr(clazz: String): Html = Html(s"""class="$clazz"""")
+  private def asClassAttr(clazz: String): Html = Html(s"$clazz")
 }
