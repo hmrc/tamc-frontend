@@ -83,7 +83,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
             Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
             '_labelClass -> "block-label",
             '_labelAfter -> true,
-            '_legend -> "Extra year",
+            '_legend -> Messages("pages.multiyear.extrayears"),
             '_legendClass -> "visuallyhidden",
             '_groupClass -> "inline spacingBottom"
         )
