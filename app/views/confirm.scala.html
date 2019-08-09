@@ -37,11 +37,11 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
 <a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
 
 <h1 id="confirm-page" class="heading-xlarge">@Html(Messages("pages.confirm.html.h1"))</h1>
+<h2>@Html(Messages("pages.confirm.lower.earner"))</h2>
 <table>
-    <col width="30%">
-    <col width="60%">
-    <col width="10%">
-    <caption class="align-left">@Html(Messages("pages.confirm.lower.earner"))</caption>
+    <col class="width30">
+    <col class="width60">
+    <col class="width10">
     <tr>
         @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
         <td>@Html(Messages("generic.name"))</td>
@@ -60,13 +60,12 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         </td>
     </tr>
 </table>
+<h2>@Html(Messages("pages.confirm.higher.earner"))</h2>
 <table class="grey-underline-large-thick">
-    <col width="30%">
-    <col width="60%">
-    <col width="10%">
-    <tr>
-        <caption class="align-left">@Html(Messages("pages.confirm.higher.earner"))</caption>
-    </tr>
+    <col class="width30">
+    <col class="width60">
+    <col class="width10">
+
     <tr>
         <td>@Html(Messages("generic.name"))</td>
         <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
@@ -83,11 +82,11 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         <td>&nbsp;</td>
     </tr>
 </table>
+<h2>@Html(Messages("pages.confirm.marriage.details"))</h2>
 <table class="grey-underline-large-thick">
-    <col width="30%">
-    <col width="60%">
-    <col width="10%">
-    <caption class="align-left">@Html(Messages("pages.confirm.marriage.details"))</caption>
+    <col class="width30">
+    <col class="width60">
+    <col class="width10">
     <tr>
         <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
         <td id="marriage-date">@TextGenerators.ukDateTransformer(Some(data.dateOfMarriage.dateOfMarriage),

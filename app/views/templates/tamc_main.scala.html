@@ -107,11 +107,6 @@
  }
 }
 
-@if(ApplicationConfig.enableRefresh) {
-<meta http-equiv="refresh"
-      content="@config.ApplicationConfig.refreshInterval; url=@controllers.routes.AuthorisationController.sessionTimeout()">
-}
-
 @isUserResearchBannerHidden = @{request.cookies.exists((x: Cookie) => x.name == "mdtpurr")}
 
 @mustacheCheck(str: String) = @{
