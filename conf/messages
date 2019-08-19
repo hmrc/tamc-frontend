@@ -287,6 +287,7 @@ pages.form.field.warning=You must have the lower income to apply. If you have th
 pages.form.field.warning-hidden=Important information
 pages.form.field-helper.nino-example=For example, QQ 12 34 56 C
 pages.form.field-helper.nino-where=Where do I find this?
+pages.form.field-helper.nino.expand=click to expand
 pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits.
 pages.form.field-helper.dom=For example, 31 3 1980
 pages.form.field-helper.dod=For example, 31 3 1980
