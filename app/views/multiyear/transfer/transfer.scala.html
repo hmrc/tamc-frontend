@@ -80,15 +80,16 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
         '_fieldHelper -> Html(Messages("pages.form.field-helper.nino-example")),
         '_dataAttributes -> "autocomplete=off"
         )
-        <details>
-            <summary><span class="summary accordion">@Html(Messages("pages.form.field-helper.nino-where"))</span>
-            </summary>
-            <span class="visuallyhidden">@Messages("pages.form.field-helper.nino.expand")</span>
-            <div class="panel-indent panel panel-border-narrow">
+
+        <details role="group">
+            <summary><span class="summary">@Html(Messages("pages.form.field-helper.nino-where"))</span></summary>
+            <div class="panel-indent">
                 <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
             </div>
         </details>
+
     </div>
+
 </fieldset>
 <div class="notice">
     <i class="icon icon-important">
