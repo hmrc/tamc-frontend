@@ -280,6 +280,7 @@ pages.form.field.warning=Er mwyn gwneud cais, rhaid mai chi sydd â'r incwm isaf
 pages.form.field.warning-hidden=Gwybodaeth bwysig
 pages.form.field-helper.nino-example=Er enghraifft, QQ 12 34 56 C
 pages.form.field-helper.nino-where=Ble y gallaf ddod o hyd i hwn?
+pages.form.field-helper.nino.expand=cliciwch i ehangu
 pages.form.field-helper.nino-found=Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.
 pages.form.field-helper.dom=Er enghraifft, 31 3 1980
 pages.form.field-helper.dod=Er enghraifft, 31 3 1980

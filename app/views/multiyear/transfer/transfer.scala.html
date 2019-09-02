@@ -83,7 +83,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
         <details>
             <summary><span class="summary accordion">@Html(Messages("pages.form.field-helper.nino-where"))</span>
             </summary>
-            <span class="visuallyhidden">click to expand</span>
+            <span class="visuallyhidden">@Messages("pages.form.field-helper.nino.expand")</span>
             <div class="panel-indent panel panel-border-narrow">
                 <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
             </div>
