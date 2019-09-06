@@ -58,6 +58,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   val TAMC_BEGINNING_YEAR = 2015
   val TAMC_MIN_DATE = new LocalDate(1900, 1, 1)
+  val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
 
   val CACHE_TRANSFEROR_RECORD = "TRANSFEROR_RECORD"
   val CACHE_RECIPIENT_RECORD = "RECIPIENT_RECORD"
