@@ -595,7 +595,7 @@ tamc.yourtaxaccount = Your personal tax account
 #*************************************************************
 # User Research Banner Messages
 #*************************************************************
-tamc.banner.recruitment.link=Help improve digital services by joining the HMRC user panel (opens in new window)
+tamc.banner.recruitment.link=Help improve digital services by joining the HMRC user panel (opens in a new window or tab)
 tamc.banner.recruitment.reject=No thanks
 tamc.banner.recruitment.title=Help improve GOV.UK
 tamc.banner.recruitment.linkURL=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133
