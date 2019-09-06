@@ -219,10 +219,12 @@ class TransferController @Inject()(
 
       EmptyForm.form.bindFromRequest().fold(
         formWithErrors =>
-          Logger.error(s"unexpected error in emty form, SID [${utils.getSid(request)}]"),
+          Logger.error(s"unexpected error in empty form, SID [${utils.getSid(request)}]"),
         success =>
           success)
+
       Logger.info("registration service.createRelationship - confirm action.")
+
       registrationService.createRelationship(request.nino, getJourneyName) map {
         _ => Redirect(controllers.routes.TransferController.finished())
       } recover handleError
@@ -238,7 +240,7 @@ class TransferController @Inject()(
 
   def cannotUseService: Action[AnyContent] = authenticate {
     implicit request =>
-      InternalServerError(views.html.errors.transferer_deceased())
+      BadRequest(views.html.errors.transferer_deceased())
   }
 
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
@@ -252,8 +254,8 @@ class TransferController @Inject()(
         }
 
         throwable match {
-          case _: TransferorNotFound               => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound                => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
+          case _: TransferorNotFound               => handle(Logger.warn, NotFound(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound                => handle(Logger.warn, NotFound(views.html.errors.recipient_not_found()))
           case _: TransferorDeceased               => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: RecipientDeceased                => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
@@ -266,7 +268,7 @@ class TransferController @Inject()(
           case _: CacheCreateRequestNotSent        => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: NoTaxYearsSelected               => handle(Logger.info, Ok(views.html.errors.no_year_selected()))
           case _: NoTaxYearsAvailable              => handle(Logger.info, Ok(views.html.errors.no_eligible_years()))
-          case _: NoTaxYearsForTransferor          => handle(Logger.info, InternalServerError(views.html.errors.no_tax_year_transferor()))
+          case _: NoTaxYearsForTransferor          => handle(Logger.info, Ok(views.html.errors.no_tax_year_transferor()))
           case _: RelationshipMightBeCreated       => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _                                   => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }
