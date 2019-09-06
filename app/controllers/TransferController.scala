@@ -240,7 +240,7 @@ class TransferController @Inject()(
 
   def cannotUseService: Action[AnyContent] = authenticate {
     implicit request =>
-      BadRequest(views.html.errors.transferer_deceased())
+      Ok(views.html.errors.transferer_deceased())
   }
 
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
@@ -254,8 +254,8 @@ class TransferController @Inject()(
         }
 
         throwable match {
-          case _: TransferorNotFound               => handle(Logger.warn, NotFound(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound                => handle(Logger.warn, NotFound(views.html.errors.recipient_not_found()))
+          case _: TransferorNotFound               => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound                => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
           case _: TransferorDeceased               => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: RecipientDeceased                => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))

@@ -546,7 +546,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       }
     }
 
-    "return NotFound" when {
+    "return OK" when {
       val errors = List(
         (new TransferorNotFound, "transferor.not.found"),
         (new RecipientNotFound, "recipient.not.found.para1")
@@ -555,7 +555,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       for ((error, message) <- errors) {
         s"a $error has been thrown" in {
           val result = controller().handleError(HeaderCarrier(), auhtRequest)(error)
-          status(result) shouldBe NOT_FOUND
+          status(result) shouldBe OK
           val doc = Jsoup.parse(contentAsString(result))
           doc.getElementById("error").text() shouldBe messagesApi(message)
         }

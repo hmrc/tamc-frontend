@@ -445,8 +445,8 @@ class TransferControllerTest extends ControllerBaseSpec {
 
     "handle an error" when {
       val data = List(
-        (new TransferorNotFound, NOT_FOUND, "transferor.not.found"),
-        (new RecipientNotFound, NOT_FOUND, "recipient.not.found.para1"),
+        (new TransferorNotFound, OK, "transferor.not.found"),
+        (new RecipientNotFound, OK, "recipient.not.found.para1"),
         (new CacheRecipientInRelationship, INTERNAL_SERVER_ERROR, "recipient.has.relationship.para1"),
         (new CannotCreateRelationship, INTERNAL_SERVER_ERROR, "create.relationship.failure"),
         (new NoTaxYearsAvailable, OK, "transferor.no-eligible-years"),
