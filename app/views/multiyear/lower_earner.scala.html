@@ -31,10 +31,11 @@
     @form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(PERSONAL_ALLOWANCE()))
     <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
 
-    <h1 class="heading-xlarge">
-        <span class="heading-large secondary-text-colour"> @Html(Messages("eligibility.check.span.h1"))</span><br/>
-        @Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
-    </h1>
+
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))</h1>
+        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
+    </header>
 
     @helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
     <div class="form-group inline">
@@ -59,7 +60,7 @@
                     var _gaq = [];
     </script>
     <div class="form-group">
-        <button class="button button-calculate"
+        <button class="button"
                 data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
                 type="submit">
             @Html(Messages("generic.continue"))
