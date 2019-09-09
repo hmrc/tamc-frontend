@@ -787,8 +787,8 @@ class ContentTest extends ControllerBaseSpec {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByTag("p").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
 
     }
 
@@ -802,8 +802,8 @@ class ContentTest extends ControllerBaseSpec {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByTag("p").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
+      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
 
     }
   }
@@ -874,8 +874,8 @@ class ContentTest extends ControllerBaseSpec {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByTag("p").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
 
     }
 
@@ -889,8 +889,8 @@ class ContentTest extends ControllerBaseSpec {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByTag("p").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Check your eligibility Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
+      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
 
     }
   }

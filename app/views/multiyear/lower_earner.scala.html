@@ -31,7 +31,6 @@
     @form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(PERSONAL_ALLOWANCE()))
     <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
 
-
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))</h1>
         <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>

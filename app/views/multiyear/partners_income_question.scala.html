@@ -56,7 +56,7 @@
 
 
 
-    <p>@Messages("eligibility.check.partners.income.information1")</p>
+    <p class="bold-small">@Messages("eligibility.check.partners.income.information1")</p>
 
     @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
