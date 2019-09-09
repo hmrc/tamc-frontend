@@ -59,7 +59,7 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
     <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName,
         LanguageUtils.isWelsh(messages))))
     </li>
-    <li>@Html(Messages("pages.eligibleyear.li3",recipientName))</li>
+    <li>@Html(Messages("pages.eligibleyear.li3",recipientName)) <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change" target="_blank">@Messages("pages.eligibleyear.li3.link.text") @Messages("tamc.open.in.new.window")</a></li>
 </ul>
 
 @helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {

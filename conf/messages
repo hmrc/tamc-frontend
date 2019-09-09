@@ -525,7 +525,8 @@ pages.eligibleyear.thisyear2={0} onwards
 
 pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
 pages.eligibleyear.li2=we will adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
-pages.eligibleyear.li3=it will automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change">no longer eligible</a>
+pages.eligibleyear.li3=it will automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are
+pages.eligibleyear.li3.link.text=no longer eligible
 pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
 pages.eligibleyear.notice=You can apply for earlier years if you continue.
 
