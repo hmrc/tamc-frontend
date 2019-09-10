@@ -144,6 +144,7 @@ generic.translation.welsh=Cymraeg
 radio.yes=Yes
 radio.no=No
 tamc.app-name=tamc-frontend
+tamc.open.in.new.window=(opens in a new window or tab)
 
 #********************************************************************************
 # Titles
@@ -252,7 +253,9 @@ eligibility.check.partners.income.error=You are not eligible for Marriage Allowa
 eligibility.check.date.of.birth.h1=Were you and your partner born after 5 April 1935?
 eligibility.check.date.of.birth.legend=Were you and your partner born after 5 April 1935?
 eligibility.check.date.of.birth.span.married=Does this apply to you and your partner?
-eligibility.check.date.of.birth.error=You might benefit more as a couple if you apply for <a href="https://www.gov.uk/married-couples-allowance" data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank">Married Couple’s Allowance</a>.<p></p>You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
+eligibility.check.date.of.birth.error.text.before.link=You might benefit more as a couple if you apply for
+eligibility.check.date.of.birth.error.link.text=Married Couple’s Allowance
+eligibility.check.date.of.birth.error.text.after.link=You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
 eligibility.check.do.you.live.in.scotland.h1 = Do you live in Scotland?
 eligibility.check.do.you.want.to.apply.h1 = Do you want to apply for Marriage Allowance?
 
@@ -595,7 +598,7 @@ tamc.yourtaxaccount = Your personal tax account
 #*************************************************************
 # User Research Banner Messages
 #*************************************************************
-tamc.banner.recruitment.link=Help improve digital services by joining the HMRC user panel (opens in new window)
+tamc.banner.recruitment.link=Help improve digital services by joining the HMRC user panel (opens in a new window or tab)
 tamc.banner.recruitment.reject=No thanks
 tamc.banner.recruitment.title=Help improve GOV.UK
 tamc.banner.recruitment.linkURL=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133

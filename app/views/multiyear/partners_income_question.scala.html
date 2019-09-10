@@ -47,13 +47,16 @@
         upperLimit = Some(maxLimit)
     )
 
-    <h1 class="heading-xlarge">
-        <span class="heading-large secondary-text-colour">@Messages("eligibility.check.span.h1")</span><br/>
-        @Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() +
-        1), NumberFormat.getIntegerInstance().format(maxLimit))
-    </h1>
 
-    <p>@Messages("eligibility.check.partners.income.information1")</p>
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() +
+        1), NumberFormat.getIntegerInstance().format(maxLimit))</h1>
+        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
+    </header>
+
+
+
+    <p class="bold-small">@Messages("eligibility.check.partners.income.information1")</p>
 
     @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
@@ -80,7 +83,7 @@
         </script>
 
         <div class="form-group">
-            <button class="button button-calculate"
+            <button class="button"
                     data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
                     type="submit">
                 @Messages("generic.continue")

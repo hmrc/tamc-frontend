@@ -247,7 +247,8 @@ class UpdateRelationshipController @Inject()(
       }
   }
 
-  private[controllers] def getConfirmationInfoFromReason(reason: EndRelationshipReason, cacheData: UpdateRelationshipCacheData): (Boolean, Option[LocalDate], Option[LocalDate]) = {
+  private[controllers] def getConfirmationInfoFromReason(reason: EndRelationshipReason,
+                                                         cacheData: UpdateRelationshipCacheData): (Boolean, Option[LocalDate], Option[LocalDate]) = {
     reason.endReason match {
       case EndReasonCode.DIVORCE_PY =>
         (false, None, Some(timeService.getEffectiveDate(reason)))
@@ -291,6 +292,7 @@ class UpdateRelationshipController @Inject()(
           Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
         success =>
           success)
+
       updateRelationshipService.updateRelationship(request.nino) map {
         _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
       } recover handleError
@@ -322,8 +324,8 @@ class UpdateRelationshipController @Inject()(
           case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
           case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
-          case _: TransferorNotFound => handle(Logger.warn, InternalServerError(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound => handle(Logger.warn, InternalServerError(views.html.errors.recipient_not_found()))
+          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
           case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }

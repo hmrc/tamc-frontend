@@ -533,8 +533,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         (new CannotUpdateRelationship, "technical.issue.heading"),
         (new CitizenNotFound, "technical.cannot-find-details.para1"),
         (new BadFetchRequest, "technical.technical-error.para1"),
-        (new TransferorNotFound, "transferor.not.found"),
-        (new RecipientNotFound, "recipient.not.found.para1"),
         (new Exception, "technical.issue.heading")
       )
 
@@ -542,6 +540,22 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         s"a $error has been thrown" in {
           val result = controller().handleError(HeaderCarrier(), auhtRequest)(error)
           status(result) shouldBe INTERNAL_SERVER_ERROR
+          val doc = Jsoup.parse(contentAsString(result))
+          doc.getElementById("error").text() shouldBe messagesApi(message)
+        }
+      }
+    }
+
+    "return OK" when {
+      val errors = List(
+        (new TransferorNotFound, "transferor.not.found"),
+        (new RecipientNotFound, "recipient.not.found.para1")
+      )
+
+      for ((error, message) <- errors) {
+        s"a $error has been thrown" in {
+          val result = controller().handleError(HeaderCarrier(), auhtRequest)(error)
+          status(result) shouldBe OK
           val doc = Jsoup.parse(contentAsString(result))
           doc.getElementById("error").text() shouldBe messagesApi(message)
         }
