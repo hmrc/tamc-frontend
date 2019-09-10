@@ -101,7 +101,7 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
                 <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
             } else {
 
-                <p class="lede" style="margin-top:-30px">@Html(Messages("change.status.have-not-applied"))</p>
+                <p>@Html(Messages("change.status.have-not-applied"))</p>
                 <p class="heading-medium">@Html(Messages("change.status.apply"))</p>
                 <p>@Html(Messages("change.status.ask-to-check"))</p>
                 <a class="button button-start" id="start-now" href="@controllers.routes.EligibilityController.howItWorks()"
