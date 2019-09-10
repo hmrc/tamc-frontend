@@ -276,9 +276,9 @@ pages.finished.hidden-warning=Warning
 #********************************************************************************
 # Registration page - Your spouse details
 #********************************************************************************
-pages.form.h1=Enter your partner’s details
+pages.form.h1=Your partner’s details
 pages.form.details= As you have the lower income, you can apply to help reduce the amount of tax they pay.
-pages.form.enter-data=Enter your partner’s details:
+pages.form.enter-data=Enter your partner’s details
 pages.form.field.name=First name
 pages.form.field.last-name=Last name
 pages.form.field.gender=What is their gender?
