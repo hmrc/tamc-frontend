@@ -42,11 +42,18 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.pattern", Messages("title.history")),
 mainConfig = views.helpers.MainConfig(Some("history-page"))
 ) {
-<h1 class="heading-xlarge">@Html(Messages("generic.ma"))
-    <span class="secondary-text-colour bold-xlarge block">@loggedInUserInfo.get.name.get.firstName
-        @loggedInUserInfo.get.name.get.lastName
-    </span>
-</h1>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+
+        <header class="page-heading">
+            <p class="heading-secondary">@loggedInUserInfo.get.name.get.firstName
+                @loggedInUserInfo.get.name.get.lastName</p>
+            <h1 class="heading-xlarge">@Html(Messages("generic.ma"))</h1>
+        </header>
+
+    </div>
+</div>
 
 <div class="grid-row">
     <div class="column-two-thirds">
@@ -58,25 +65,17 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
             } else {
                 <p id="activeRecord">@Html(Messages("pages.history.helped.by.partner"))</p>
             }
-            <div class="panel-indent panel panel-border-wide">
-                <p>@Html(Messages("pages.finished.backdated-payments"))</p>
-            </div>
 
-            <div>
-                <p>@Html(Messages("pages.history.cancellation1"))</p>
-                <p>@Html(Messages("pages.history.cancellation2"))</p>
-                <i class="icon icon-important">
-                    <span class="visually-hidden">@Html(Messages("pages.finished.hidden-warning"))</span>
-                </i>
-                <strong class="heading-small">
-                    @Html(Messages("pages.history.cancellation"))
-                </strong>
-            </div>
+            <p>@Html(Messages("pages.finished.backdated-payments"))</p>
+
+            <h2 class="heading-medium">@Html(Messages("change.status.heading"))</h2>
+            <p>@Html(Messages("pages.history.cancellation1"))</p>
+            <p>@Html(Messages("pages.history.cancellation2"))</p>
 
             <input name="role" id="role" type="hidden" value="@activeRelationship.get.participant"/>
-            <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/><br class="clear">
+            <input name="historicActiveRecord" id="historicActiveRecord" type="hidden" value="@historicActiveRecord"/>
             <div class="form-group">
-                <button id="cancel-marriage-allowance" class="button move-left" type="submit"
+                <button id="cancel-marriage-allowance" class="button" type="submit"
                         data-journey-click="marriage-allowance:button:history_cancel">
                     @Html(Messages("change.status.button"))
                 </button>
@@ -112,9 +111,11 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
     }
 
         @if(canApplyPreviousYears) {
-            <div class="panel-indent"><p>@Html(Messages("change.status.previous-years"))</p>
-                <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a>
-            </div>
+
+            <h2 class="heading-medium">@Html(Messages("change.status.recipient.previous.year.heading"))</h2>
+            <p>@Html(Messages("change.status.previous-years"))</p>
+            <a id="previousYearsApply" href="@routes.TransferController.transfer" class="grey-button">@Html(Messages("change.status.recipient.previous.year.button"))</a>
+
         }
 
         <div id="historicRecords">
@@ -175,21 +176,20 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
 
     </div>
     <div class="column-one-third">
-        <h2 class="heading-medium no-top-margin space">@Html(Messages("change.other.caption"))</h2>
-
+        <h2 class="heading-medium no-top-margin">@Html(Messages("change.other.caption"))</h2>
         <h2 class="heading-small">@Html(Messages("change.other.sub.caption1"))</h2>
-        <p class=font-xsmall>@Html(Messages("change.other.income.content",
+        <p>@Html(Messages("change.other.income.content",
             NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()),
             NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()+1),NumberFormat.getIntegerInstance().format(MAX_LIMIT()),NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())))</p>
-        <p id="incomeMessage" class="font-xsmall"><a
+        <p id="incomeMessage"><a
                 href="@controllers.routes.UpdateRelationshipController.changeOfIncome" id="incomeLink"
-                data-journey-click="marriage-allowance:link:history_income">@Html(Messages("change.other.income.link"))</a>.
+                data-journey-click="marriage-allowance:link:history_income">@Html(Messages("change.other.income.link"))</a>
         </p>
         <h2 class="heading-small">@Html(Messages("change.other.sub.caption2"))</h2>
-        <p class=font-xsmall>@Html(Messages("change.other.bereavement.content"))</p>
-        <p id="bereavementMessage" class="font-xsmall"><a
+        <p>@Html(Messages("change.other.bereavement.content"))</p>
+        <p id="bereavementMessage"><a
                 href="@controllers.routes.UpdateRelationshipController.bereavement" id="bereavementLink"
-                data-journey-click="marriage-allowance:link:history_bereavement">@Html(Messages("change.other.bereavement.link"))</a>.
+                data-journey-click="marriage-allowance:link:history_bereavement">@Html(Messages("change.other.bereavement.link"))</a>
         </p>
     </div>
 </div>

@@ -317,9 +317,11 @@ pages.how-it-works.detail=Mae angen eich rhif Yswiriant Gwladol arnoch, ac un ei
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
+change.status.heading=Canslo Lwfans Priodasol
 change.status.button=Canslo Lwfans Priodasol
 change.status.transferor.ha.button=Dod &#226; Lwfans Priodasol i ben
 change.status.recipient.ha.button=Dod &#226; Lwfans Priodasol i ben
+change.status.recipient.previous.year.heading=Gwneud cais ar gyfer blynyddoedd blaenorol
 change.status.recipient.previous.year.button=Gwneud cais ar gyfer blynyddoedd blaenorol
 change.status.transferor.p1=Gallwch ddileu Lwfans Priodasol os yw un o’r canlynol yn berthnasol:
 change.status.receiver.p1=Gallwch ganslo Lwfans Priodasol os yw un o’r canlynol yn berthnasol:
