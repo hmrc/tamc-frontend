@@ -46,15 +46,15 @@ langSelectorOverride = Some(
     <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
 }
 
-<h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
-<p class="lede">@Html(Messages("pages.previousyear.lede"))</p>
+    <header class="page-heading">
+        <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
+    </header>
+    <p>@Html(Messages("pages.previousyear.lede"))</p>
+    <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage),
+        LanguageUtils.isWelsh(messages))))</p>
 
-
-<p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage),
-    LanguageUtils.isWelsh(messages))))</p>
-<a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button"
+    <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button"
    data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
-<br>
-<br>
+
 }
 
