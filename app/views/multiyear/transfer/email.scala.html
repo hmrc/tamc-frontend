@@ -34,22 +34,24 @@ title = Messages("title.application.pattern", Messages("title.confirm-email"))
 
 @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)
-<div class="form-group">
-    <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
+    </header>
     <p>@Html(Messages("pages.form.field.yourDetails"))</p>
-    @templates.input(recipientForm("transferor-email"),
-    '_label -> Html(Messages("pages.form.field.transferor-email")),
-    '_labelClass -> "form-label",
-    '_inputClass -> "form-control",
-    '_dataAttributes -> "autocomplete=off"
-    )
-</div>
 
-<p class="get-started group" id="get-started">
+    <div class="form-group">
+        @templates.input(recipientForm("transferor-email"),
+        '_label -> Html(Messages("pages.form.field.transferor-email")),
+        '_labelClass -> "form-label",
+        '_inputClass -> "form-control",
+        '_dataAttributes -> "autocomplete=off"
+        )
+    </div>
+
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:email_continue">
         @Html(Messages("generic.continue"))
     </button>
-</p>
+
 }
-<br>
+
 }
