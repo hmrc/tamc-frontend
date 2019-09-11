@@ -50,21 +50,27 @@ mainConfig = views.helpers.MainConfig()
 }
 @if(reason == EndReasonCode.REJECT) {
 @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
-<h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
+
+<header class="page-heading">
+  <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
+</header>
 <p id="reject-content">@Html(Messages("change.status.reject.previous.content",
     TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
+
 <div class="confirmation-notice">
-    <div class="icon-important"></div>
+    <div class="icon-important">
+      <span class="visually-hidden">@Html(Messages("pages.finished.hidden-warning"))</span>
+    </div>
     <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning",
         TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)),
         LanguageUtils.isWelsh(messages))))</strong>
 </div>
-<div class="form-group booster">
-    <p>
-        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-           id="confirmUpdate" class="button"
-           data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
-</div>
+
+  <p>
+    <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+       id="confirmUpdate" class="button"
+       data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a></p>
+
 
 }else {
 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
