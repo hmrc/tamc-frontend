@@ -48,16 +48,20 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     @templates.form_error_notification(earlierYearsForm)
 
-<h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
+    <header class="page-heading">
+        <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
+    </header>
 
 @helpers.form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
 <fieldset class="inline spacingBottom" id="earlierYears">
     <div class="form-group" id="year-@availableYears.head.year">
         <h2 class="heading-medium"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages))))</span>
             <br>@TextGenerators.taxDateInterval(availableYears.head.year, LanguageUtils.isWelsh(messages))</h2>
-        <div style="margin-top: 30px">
+
+
             <p>@Html(Messages("pages.multiyear.canclaim", input.name,
                 TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages))))</p>
+
             <ul class="list list-bullet">
                 <li>@Html(Messages("your-income", currencyFormatter(PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
                 @if(MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
@@ -76,8 +80,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
             <p>@Html(Messages("pages.multiyear.successful",
                 TextGenerators.taxDateIntervalShort(availableYears.head.year, LanguageUtils.isWelsh(messages)),
                 input.name, currencyFormatter(MAX_BENEFIT(availableYears.head.year))))</p>
-        </div>
-        <p class="bold-small">@Html(Messages("pages.multiyear.extrayears"))</p>
+
+        <p class="heading-medium">@Html(Messages("pages.multiyear.extrayears"))</p>
         @templates.input_radio_group(
             earlierYearsForm("selectedYear"),
             Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
@@ -91,11 +95,11 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         <input type="hidden" name="yearAvailableForSelection" value="@availableYears.head.year"/>
     </div>
 </fieldset>
-<p class="get-started group" id="get-started">
+
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:previousyear_continue">
         @Html(Messages("generic.continue"))
     </button>
-</p>
+
 }
 <br>
 }

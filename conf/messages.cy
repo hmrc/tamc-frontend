@@ -269,7 +269,7 @@ pages.finished.backdated-payments=Gall taliadau sydd wedi’u hôl-ddyddio gymry
 #********************************************************************************
 # Registration page - Your spouse details
 #********************************************************************************
-pages.form.h1=Nodwch fanylion eich partner
+pages.form.h1=Manylion eich partner
 pages.form.details=Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i helpu gostwng swm y dreth y mae ef/hi’n ei dalu.
 pages.form.enter-data=Nodwch fanylion eich partner:
 pages.form.field.name=Enw cyntaf

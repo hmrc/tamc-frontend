@@ -35,13 +35,16 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
 
 @templates.form_error_notification(marriageForm)
 
-<h1 class="heading-xlarge">@Html(Messages("pages.date-of-marriage.heading"))</h1>
-<p class="lede">@Html(Messages("pages.date-of-marriage.para1"))</p>
-<p class="information">@Html(Messages("pages.date-of-marriage.para2"))</p>
+<header class="page-heading">
+    <h1 class="heading-xlarge">@Html(Messages("pages.date-of-marriage.heading"))</h1>
+</header>
+
+<p>@Html(Messages("pages.date-of-marriage.para1"))</p>
+<p>@Html(Messages("pages.date-of-marriage.para2"))</p>
 
 @helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 <fieldset>
-    <div class="form-group client-validated">
+    <div class="form-group">
         @templates.dateFields(
         marriageForm,
         "dateOfMarriage",
@@ -53,11 +56,11 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
     </div>
 </fieldset>
 
-<p class="get-started group" id="get-started">
+
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofmarriage_continue">
         @Html(Messages("generic.continue"))
     </button>
-</p>
+
 }
 <br>
 }
