@@ -35,10 +35,15 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 
 @templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data")
-<h1 class="heading-xlarge">@Html(Messages("change.status.cancel-your.h1"))</h1>
+
+<header class="page-heading">
+    <h1 class="heading-xlarge">@Html(Messages("change.status.cancel-your.h1"))</h1>
+</header>
+
 <p>@Html(Messages("change.status.cancel-your.p"))</p>
 @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
-<div>
+
+<div class="form-group">
     @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
     @if(changeRelationshipForm.get.historicActiveRecord.get) {
     @templates.input_radio_group(
@@ -89,11 +94,11 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
            value="@changeRelationshipForm.get.historicActiveRecord.get"/>
 </div>
 
-<p>
+
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:reason_continue">
         @Html(Messages("generic.continue"))
     </button>
-</p>
+
 
 }
 }
