@@ -207,8 +207,8 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       val bereavementMessage = document.getElementById("bereavementMessage")
       val incomeLink = document.getElementById("incomeLink")
       val bereavementLink = document.getElementById("bereavementLink")
-      incomeMessage.text() shouldBe "To let us know about a change in income, contact HMRC."
-      bereavementMessage.text() shouldBe "To let us know about a bereavement, contact HMRC."
+      incomeMessage.text() shouldBe "To let us know about a change in income, contact HMRC"
+      bereavementMessage.text() shouldBe "To let us know about a bereavement, contact HMRC"
       incomeLink.attr("href") shouldBe "/marriage-allowance-application/change-of-income"
       bereavementLink.attr("href") shouldBe "/marriage-allowance-application/bereavement"
     }
