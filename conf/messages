@@ -212,7 +212,7 @@ pages.form.field.recipient-income=Your partner’s income (high), before tax is 
 pages.calc.field-helper.income=This is your income figure before any tax is deducted.
 pages.calc.field-helper.partners-income=This is their income figure before any tax is deducted.
 pages.calc.how-to-apply=How to apply
-pages.calc.skip-it.pre=The step is optional,
+pages.calc.skip-it.pre=This step is optional,
 pages.calc.skip-it=skip it
 estimate.tax.saving=Calculate
 eligibility.feedback.gain=Based on the information you have given us, as a couple you would benefit by around <strong>£{0}</strong> a year.
@@ -330,9 +330,11 @@ pages.how-it-works.detail=You need you and your partner’s National Insurance n
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
+change.status.heading=Cancel Marriage Allowance
 change.status.button=Cancel Marriage Allowance
 change.status.transferor.ha.button=End Marriage Allowance
 change.status.recipient.ha.button=Stop Marriage Allowance
+change.status.recipient.previous.year.heading=Apply for previous years
 change.status.recipient.previous.year.button=Apply for previous years
 change.status.transferor.p1=If one of the following applies, you can remove Marriage Allowance because you:
 change.status.receiver.p1=If one of the following applies, you can cancel Marriage Allowance because you:

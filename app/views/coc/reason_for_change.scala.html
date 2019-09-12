@@ -42,6 +42,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 <p>@Html(Messages("change.status.cancel-your.p"))</p>
 @helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
+
 <div class="form-group">
     @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
     @if(changeRelationshipForm.get.historicActiveRecord.get) {
@@ -92,6 +93,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     <input name="historicActiveRecord" id="historicActiveRecord" type="hidden"
            value="@changeRelationshipForm.get.historicActiveRecord.get"/>
 </div>
+
+
 
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:reason_continue">
         @Html(Messages("generic.continue"))

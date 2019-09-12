@@ -34,8 +34,12 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 <a href="@controllers.routes.EligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>
 
 @templates.form_error_notification(calculatorForm)
-<h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
-<p class="lede">@Html(Messages("pages.calc.skip-it.pre")) <a
+
+<header class="page-heading">
+    <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
+</header>
+
+<p>@Html(Messages("pages.calc.skip-it.pre")) <a
         href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("pages.calc.skip-it"))</a></p>
 
 <p>@Html(Messages("pages.calc.para1"))</p>
@@ -59,7 +63,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <div class="form-group">
         @templates.input(calculatorForm("transferor-income"),
         '_label -> Html(Messages("pages.form.field.income")),
-        '_labelClass -> "form-label",
+        '_labelClass -> "form-label-bold",
         '_inputClass -> "form-control",
         '_inputPrefix -> "£",
         '_dataAttributes -> "autocomplete=on"
@@ -68,7 +72,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <div class="form-group">
         @templates.input(calculatorForm("recipient-income"),
         '_label -> Html(Messages("pages.form.field.recipient-income")),
-        '_labelClass -> "form-label",
+        '_labelClass -> "form-label-bold",
         '_inputClass -> "form-control",
         '_inputPrefix -> "£",
         '_dataAttributes -> "autocomplete=on"
@@ -76,15 +80,16 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     </div>
 </fieldset>
 @templates.calculator_result(calculationResult)
-<p>
-    <button class="button button-calculate" data-journey-click="marriage-allowance:click:calculate" id="calculate"
+    <div class="form-group">
+        <button class="button" data-journey-click="marriage-allowance:click:calculate" id="calculate"
             type="submit">@Html(Messages("estimate.tax.saving"))
-    </button>
-</p>
-<div class="calculator-apply-link">
+        </button>
+    </div>
+
+
     <p>
         <a id="continue" href="@controllers.routes.EligibilityController.eligibilityCheck">@Html(Messages("change.status.apply"))</a>
     </p>
-</div>
+
 }
 }
