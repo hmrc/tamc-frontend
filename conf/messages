@@ -330,9 +330,11 @@ pages.how-it-works.detail=You need you and your partner’s National Insurance n
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
+change.status.heading=Cancel Marriage Allowance
 change.status.button=Cancel Marriage Allowance
 change.status.transferor.ha.button=End Marriage Allowance
 change.status.recipient.ha.button=Stop Marriage Allowance
+change.status.recipient.previous.year.heading=Apply for previous years
 change.status.recipient.previous.year.button=Apply for previous years
 change.status.transferor.p1=If one of the following applies, you can remove Marriage Allowance because you:
 change.status.receiver.p1=If one of the following applies, you can cancel Marriage Allowance because you:

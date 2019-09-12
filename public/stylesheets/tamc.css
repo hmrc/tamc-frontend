@@ -35,7 +35,7 @@ table {
 .icon-important {
     background-repeat: no-repeat;
     float: left;
-    height: 80px;
+    /*height: 80px;*/
     margin-bottom: 10px;
     margin-right: 10px;
     margin-top: 6px;
@@ -565,4 +565,8 @@ span.block {
 
 .history-page .content__body {
     width: 100%;
+}
+
+.no-top-margin {
+    margin-top: 0;
 }
