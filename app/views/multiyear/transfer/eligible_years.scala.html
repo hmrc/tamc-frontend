@@ -49,7 +49,6 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
     <p>@Html(Messages("pages.eligibleyear.toldus",recipientName)) <span id="marriageDate">@TextGenerators.ukDateTransformer(dom, LanguageUtils.isWelsh(messages)).</span></p>
 
     <h2 class="heading-medium">
-
         @Html(Messages("pages.eligibleyear.thisyear1"))
         @Html(Messages("pages.eligibleyear.thisyear2",TextGenerators.ukDateTransformer(cy, LanguageUtils.isWelsh(messages))))
     </h2>
