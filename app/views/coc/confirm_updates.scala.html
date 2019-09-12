@@ -35,76 +35,79 @@ mainConfig = views.helpers.MainConfig()
 
 @if(reason == EndReasonCode.CANCEL) {
 
-<h1 class="heading-xlarge" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
-<p class="lede" id="cancel-content">
-    @Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate,
-    LanguageUtils.isWelsh(messages))))</p>
-<p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate,
-    LanguageUtils.isWelsh(messages))))</p>
-<div class="form-group booster">
-    <p>
-        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-           id="confirmUpdate" class="button" role="button"
-           data-journey-click="marriage-allowance:button:confirmupdatescancel_continue">@Html(Messages("change.status.continue"))</a>
-</div>
-}
-@if(reason == EndReasonCode.REJECT) {
-@if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
-<h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
-<p id="reject-content">@Html(Messages("change.status.reject.previous.content",
-    TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
-<div class="confirmation-notice">
-    <div class="icon-important"></div>
-    <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning",
-        TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)),
-        LanguageUtils.isWelsh(messages))))</strong>
-</div>
-<div class="form-group booster">
-    <p>
-        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-           id="confirmUpdate" class="button" role="button"
-           data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
-</div>
+    <header class="page-heading">
+        <h1 class="heading-xlarge" id="cancel-heading">@Html(Messages("change.status.cancel.h1"))</h1>
+    </header>
+    <p id="cancel-content">
+        @Html(Messages("change.status.cancel.content",TextGenerators.ukDateTransformer(effectiveUntilDate,
+        LanguageUtils.isWelsh(messages))))</p>
+    <p> @Html(Messages("change.status.cancel.content1",TextGenerators.ukDateTransformer(effectiveDate,
+        LanguageUtils.isWelsh(messages))))</p>
 
-}else {
-<h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
-<p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate,
-    LanguageUtils.isWelsh(messages))))</p>
-<p id="reject-partner">@Html(Messages("change.status.reject.partner",
-    TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))))</p>
-<div class="confirmation-notice">
-    <div class="icon-important"></div>
-    <strong class="bold-small">@Html(Messages("change.status.reject.warning",
-        TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)),
-        LanguageUtils.isWelsh(messages))))</strong>
-</div>
-<div class="form-group booster">
-    <p>
+    <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+       id="confirmUpdate" class="button" role="button"
+       data-journey-click="marriage-allowance:button:confirmupdatescancel_continue">@Html(Messages("change.status.continue"))</a>
+
+}
+
+@if(reason == EndReasonCode.REJECT) {
+    @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
+        <header class="page-heading">
+            <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
+        </header>
+
+        <p id="reject-content">@Html(Messages("change.status.reject.previous.content",
+            TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
+        <div class="confirmation-notice">
+            <div class="icon-important"></div>
+            <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning",
+                TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)),
+                LanguageUtils.isWelsh(messages))))</strong>
+        </div>
         <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
            id="confirmUpdate" class="button" role="button"
            data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
-</div>
-}
+
+    }else {
+        <header class="page-heading">
+            <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
+        </header>
+        <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerators.ukDateTransformer(effectiveDate,
+            LanguageUtils.isWelsh(messages))))</p>
+        <p id="reject-partner">@Html(Messages("change.status.reject.partner",
+            TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))))</p>
+        <div class="confirmation-notice">
+            <div class="icon-important"></div>
+            <strong class="bold-small">@Html(Messages("change.status.reject.warning",
+                TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)),
+                LanguageUtils.isWelsh(messages))))</strong>
+        </div>
+        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+           id="confirmUpdate" class="button" role="button"
+           data-journey-click="marriage-allowance:button:confirmupdatereject_continue">@Html(Messages("change.status.continue"))</a>
+
+    }
 
 }
 @if(reason == EndReasonCode.DIVORCE_PY) {
-<h1 class="heading-large" id="divorce-py-heading">@Html(Messages("change.status.divorce-py-heading"))</h1>
-<p id="divorce-py-content">@Html(Messages("change.status.divorce-py-content", (TaxYear.current.startYear-1)))</p>
-<div class="form-group booster">
-    <p>
-        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-           id="confirmUpdate" class="button" role="button"
-           data-journey-click="marriage-allowance:button:confirmupdatedivorceprevious_continue">@Html(Messages("generic.continue"))</a>
-</div>
+    <header class="page-heading">
+        <h1 class="heading-large" id="divorce-py-heading">@Html(Messages("change.status.divorce-py-heading"))</h1>
+    </header>
+    <p id="divorce-py-content">@Html(Messages("change.status.divorce-py-content", (TaxYear.current.startYear-1)))</p>
+    <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+       id="confirmUpdate" class="button" role="button"
+       data-journey-click="marriage-allowance:button:confirmupdatedivorceprevious_continue">@Html(Messages("generic.continue"))</a>
+
 }
+
 @if(reason == EndReasonCode.DIVORCE_CY) {
-<h1 class="heading-large" id="divorce-cy-heading">@Html(Messages("change.status.divorce-cy-heading"))</h1>
-<p id="divorce-cy-content">@Html(Messages("change.status.divorce-cy-content", TaxYear.current.startYear))</p>
-<div class="form-group booster">
-    <p>
-        <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-           id="confirmUpdate" class="button" role="button"
-           data-journey-click="marriage-allowance:button:confirmupdatedivorcecurrent_continue">@Html(Messages("generic.continue"))</a>
-</div>
-}
+    <header class="page-heading">
+        <h1 class="heading-large" id="divorce-cy-heading">@Html(Messages("change.status.divorce-cy-heading"))</h1>
+    </header>
+    <p id="divorce-cy-content">@Html(Messages("change.status.divorce-cy-content", TaxYear.current.startYear))</p>
+    <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+       id="confirmUpdate" class="button" role="button"
+       data-journey-click="marriage-allowance:button:confirmupdatedivorcecurrent_continue">@Html(Messages("generic.continue"))</a>
+
+    }
 }

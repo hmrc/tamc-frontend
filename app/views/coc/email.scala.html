@@ -36,22 +36,26 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageData
 
 @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)
-<div class="form-group">
-    <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
-    <p class="lede">@Html(Messages("change.status.confirm.info"))</p>
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
+    </header>
+
+    <p>@Html(Messages("change.status.confirm.info"))</p>
     <p>@Html(Messages("change.status.confirm.more.info"))</p>
+
+    <div class="form-group">
     @templates.input(recipientForm("transferor-email"),
     '_label -> Html(Messages("pages.form.field.transferor-email")),
     '_labelClass -> "form-label",
     '_inputClass -> "form-control",
     '_dataAttributes -> "autocomplete=on"
     )
-</div>
+    </div>
 
-<p class="get-started group" id="get-started">
+
     <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">
         @Html(Messages("generic.continue"))
     </button>
-</p>
+
 }
 }
