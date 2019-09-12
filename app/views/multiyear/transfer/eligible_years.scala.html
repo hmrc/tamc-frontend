@@ -42,57 +42,58 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
 
 @templates.form_error_notification(form)
 
-<h1 class="heading-xlarge">@Html(Messages("pages.eligibleyear.currentyear"))</h1>
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@Html(Messages("pages.eligibleyear.currentyear"))</h1>
+    </header>
 
-<p class="lede">@Html(Messages("pages.eligibleyear.toldus",recipientName)) <span id="marriageDate">@TextGenerators.ukDateTransformer(dom, LanguageUtils.isWelsh(messages)).</span>
-</p>
+    <p>@Html(Messages("pages.eligibleyear.toldus",recipientName)) <span id="marriageDate">@TextGenerators.ukDateTransformer(dom, LanguageUtils.isWelsh(messages)).</span></p>
 
-<h2 class="heading-medium"><span style="color:grey">
-    @Html(Messages("pages.eligibleyear.thisyear1"))
-     </span><br>
-    @Html(Messages("pages.eligibleyear.thisyear2",TextGenerators.ukDateTransformer(cy, LanguageUtils.isWelsh(messages))))
-</h2>
-<ul class="list list-bullet">
-    <li>@Html(Messages("pages.eligibleyear.li1",recipientName,
-        NumberFormat.getIntegerInstance().format(MAX_BENEFIT())))
-    </li>
-    <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName,
-        LanguageUtils.isWelsh(messages))))
-    </li>
-    <li>@Html(Messages("pages.eligibleyear.li3",recipientName))</li>
-</ul>
+    <h2 class="heading-medium">
 
-@helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
-<div @if(historicYearsAvailable) {class="form-group" } id="apply-For-CurrentYear">
-    <h3 class="heading-small">@Html(Messages("pages.eligibleyear.doyou.want"))</h3>
-    @templates.input_radio_group(
-    form("applyForCurrentYear"),
-    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-    '_labelClass -> "block-label",
-    '_labelAfter -> true,
-    '_fieldsetAttributes -> "data-inline-error=current-year-error",
-    '_legend -> Messages("pages.eligibleyear.doyou.want"),
-    '_legendClass -> "visuallyhidden",
-    '_groupClass -> "inline spacingBottom"
-    )
+        @Html(Messages("pages.eligibleyear.thisyear1"))
+        @Html(Messages("pages.eligibleyear.thisyear2",TextGenerators.ukDateTransformer(cy, LanguageUtils.isWelsh(messages))))
+    </h2>
 
-    @if(historicYearsAvailable) {
-    <div class="tamc-js-hidden error-inline validation-summary" id="current-year-error">
-        @Html(Messages("pages.eligibleyear.notice"))
+    <ul class="list list-bullet">
+        <li>@Html(Messages("pages.eligibleyear.li1",recipientName,
+            NumberFormat.getIntegerInstance().format(MAX_BENEFIT())))
+        </li>
+        <li>@Html(Messages("pages.eligibleyear.li2",TextGenerators.formPossessive(recipientName,
+            LanguageUtils.isWelsh(messages))))
+        </li>
+        <li>@Html(Messages("pages.eligibleyear.li3",recipientName))</li>
+    </ul>
+
+    @helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
+    <div @if(historicYearsAvailable) {class="form-group" } id="apply-For-CurrentYear">
+        <h3 class="heading-small">@Html(Messages("pages.eligibleyear.doyou.want"))</h3>
+        @templates.input_radio_group(
+        form("applyForCurrentYear"),
+        Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+        '_labelClass -> "block-label",
+        '_labelAfter -> true,
+        '_fieldsetAttributes -> "data-inline-error=current-year-error",
+        '_legend -> Messages("pages.eligibleyear.doyou.want"),
+        '_legendClass -> "visuallyhidden",
+        '_groupClass -> "inline spacingBottom"
+        )
+
+        @if(historicYearsAvailable) {
+        <div class="tamc-js-hidden error-inline validation-summary" id="current-year-error">
+            @Html(Messages("pages.eligibleyear.notice"))
+        </div>
+        <script>
+                        var _gaq = [];
+
+        </script>
+        }
+
     </div>
-    <script>
-                    var _gaq = [];
 
-    </script>
-    }
-    <br><br>
-</div>
-
-<p class="get-started group" id="get-started">
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:currentyear_continue">
         @Html(Messages("generic.continue"))
     </button>
-</p>
+
 }
 <br>
 }
