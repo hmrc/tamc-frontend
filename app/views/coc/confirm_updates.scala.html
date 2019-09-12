@@ -60,14 +60,17 @@ mainConfig = views.helpers.MainConfig()
 <p id="reject-content">@Html(Messages("change.status.reject.previous.content",
     TextGenerators.ukDateTransformer(effectiveDate, LanguageUtils.isWelsh(messages))))</p>
 
-<div class="confirmation-notice">
-    <div class="icon-important">
+<p>&nbsp;</p>
+
+<div class="notice form-group">
+    <i class="icon icon-important">
       <span class="visually-hidden">@Html(Messages("pages.finished.hidden-warning"))</span>
-    </div>
+    </i>
     <strong class="bold-small">@Html(Messages("change.status.reject.previous.warning",
         TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)),
         LanguageUtils.isWelsh(messages))))</strong>
 </div>
+
 
     <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
       id="confirmUpdate" class="button"
@@ -82,8 +85,10 @@ mainConfig = views.helpers.MainConfig()
     LanguageUtils.isWelsh(messages))))</p>
 <p id="reject-partner">@Html(Messages("change.status.reject.partner",
     TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))))</p>
-<div class="confirmation-notice">
-    <div class="icon-important"></div>
+
+<p>&nbsp;</p>
+<div class="notice form-group">
+    <div class="icon icon-important"></div>
     <strong class="bold-small">@Html(Messages("change.status.reject.warning",
         TextGenerators.ukDateTransformer(Some(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear)),
         LanguageUtils.isWelsh(messages))))</strong>
