@@ -30,8 +30,11 @@ title = Messages("title.eligibility.pattern", Messages("title.non-eligible"))
 <a href="@controllers.routes.EligibilityController.eligibilityCheck"
    class="link-back">@Html(Messages("generic.back"))</a>
 
-<h1>@Html(Messages("eligibility.check.header"))</h1>
-<p class="panel-indent">@Html(Messages("eligibility.check.non-eligible"))</p>
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.header"))</h1>
+    </header>
+
+    <p>@Html(Messages("eligibility.check.non-eligible"))</p>
 
 <p>
     <a id="button-finished" class="button" role="button" href="@finishedUrl">

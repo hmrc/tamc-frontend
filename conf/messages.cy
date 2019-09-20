@@ -269,7 +269,7 @@ pages.finished.backdated-payments=Gall taliadau sydd wedi’u hôl-ddyddio gymry
 #********************************************************************************
 # Registration page - Your spouse details
 #********************************************************************************
-pages.form.h1=Nodwch fanylion eich partner
+pages.form.h1=Manylion eich partner
 pages.form.details=Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i helpu gostwng swm y dreth y mae ef/hi’n ei dalu.
 pages.form.enter-data=Nodwch fanylion eich partner:
 pages.form.field.name=Enw cyntaf
@@ -317,9 +317,11 @@ pages.how-it-works.detail=Mae angen eich rhif Yswiriant Gwladol arnoch, ac un ei
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
+change.status.heading=Canslo Lwfans Priodasol
 change.status.button=Canslo Lwfans Priodasol
 change.status.transferor.ha.button=Dod &#226; Lwfans Priodasol i ben
 change.status.recipient.ha.button=Dod &#226; Lwfans Priodasol i ben
+change.status.recipient.previous.year.heading=Gwneud cais ar gyfer blynyddoedd blaenorol
 change.status.recipient.previous.year.button=Gwneud cais ar gyfer blynyddoedd blaenorol
 change.status.transferor.p1=Gallwch ddileu Lwfans Priodasol os yw un o’r canlynol yn berthnasol:
 change.status.receiver.p1=Gallwch ganslo Lwfans Priodasol os yw un o’r canlynol yn berthnasol:

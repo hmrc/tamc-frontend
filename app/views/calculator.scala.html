@@ -31,13 +31,16 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
 @templates.form_error_notification(calculatorForm)
 
-<h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
+    </header>
 
-<p>@Messages("pages.calc.para1")</p>
+    <p>@Messages("pages.calc.para1")</p>
 
-<div class="panel panel-border-wide">
-    <p>@Messages("pages.calc.para2")</p>
-</div>
+    <div class="panel panel-border-wide form-group">
+        <p>@Messages("pages.calc.para2")</p>
+    </div>
+
 
 @helpers.form(action = routes.EligibilityController.gdsCalculatorAction(), args = ('id -> "calculator")) {
 <fieldset>
@@ -52,7 +55,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
         "scotland" -> Messages("label.scotland"),
         "wales" -> Messages("label.wales")
         ),
-        '_legendClass -> "heading-small",
+        '_legendClass -> "heading-medium",
         '_legend -> Messages("pages.calc.where")
         )
     </div>
@@ -60,7 +63,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <div class="form-group">
         @templates.input(calculatorForm("transferor-income"),
         '_label -> Html(Messages("pages.form.field.income")),
-        '_labelClass -> "form-label",
+        '_labelClass -> "form-label-bold",
         '_inputClass -> "form-control",
         '_inputPrefix -> "£",
         '_dataAttributes -> "autocomplete=on"
@@ -69,7 +72,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <div class="form-group">
         @templates.input(calculatorForm("recipient-income"),
         '_label -> Html(Messages("pages.form.field.recipient-income")),
-        '_labelClass -> "form-label",
+        '_labelClass -> "form-label-bold",
         '_inputClass -> "form-control",
         '_inputPrefix -> "£",
         '_dataAttributes -> "autocomplete=on"
@@ -77,13 +80,14 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     </div>
 </fieldset>
 
+
 @templates.calculator_result(calculationResult)
 
-<p>
+
     <button class="button button-calculate" data-journey-click="marriage-allowance:button:calculate" id="calculate"
             type="submit">@Html(Messages("estimate.tax.saving"))
     </button>
-</p>
+
 }
 
 <div class="blue-underline-large"></div>

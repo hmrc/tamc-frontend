@@ -28,7 +28,9 @@ gain
 }))
 }
 Html(s"""
-<div class="panel panel-border-wide estimator-feedback" id="calculator-result">${message}</div>""")
+<div class="form-group">
+    <div class="panel panel-border-wide" id="calculator-result">${message}</div>
+</div>""")
 case None => ""
 }
 }
