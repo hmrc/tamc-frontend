@@ -58,7 +58,7 @@ class TransferController @Inject()(
       case _ => true
     }
   }
-
+ 
   def transfer(T: Boolean = true): Action[AnyContent] = authenticate.async {
     implicit request =>
       (DisplayingPage(!t))match{
