@@ -42,9 +42,19 @@ import uk.gov.hmrc.time
 class TransferControllerTest extends ControllerBaseSpec {
 
   "transfer" should {
+
+    //passes
     "return success" in {
-      val result = controller().transfer()(request)
+      val result = controller().transfer(true)(request)
       status(result) shouldBe OK
+    }
+
+    //passes
+    "400" when {
+      ""in {
+        val result = controller().transfer(false)(request)
+        status(result) shouldBe OK
+      }
     }
   }
 
