@@ -49,11 +49,19 @@ class TransferController @Inject()(
                                     timeService: TimeService
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever) extends BaseController {
-
+  //t is feature toggle
+  val t = true
+  //If the toggle is true, dont display the page
+  def DisplayingPage(toggle: Boolean): Boolean = {
+    toggle match {
+      case true => false
+      case _ => true
+    }
+  }
 
   def transfer(T: Boolean = true): Action[AnyContent] = authenticate.async {
     implicit request =>
-      (T)match{
+      (DisplayingPage(!t))match{
         case true=>
           Future {
             Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)))
