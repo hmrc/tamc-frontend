@@ -50,9 +50,20 @@ class TransferController @Inject()(
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever) extends BaseController {
 
-  def transfer: Action[AnyContent] = authenticate {
+
+  def transfer(T: Boolean = true): Action[AnyContent] = authenticate.async {
     implicit request =>
-      Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)))
+      (T)match{
+        case true=>
+          Future {
+            Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)))
+          }
+        case false=>{
+          Future{
+            BadRequest
+          }
+        }
+  }
   }
 
   def transferAction: Action[AnyContent] = authenticate.async {
