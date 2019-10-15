@@ -35,26 +35,27 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.extra-years")),
 langSelectorOverride = Some(
- Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
-     "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
- )
+Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
+"cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
+)
 )){
 
-@if(currentYearAvailable) {
-    <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
-} else {
-    <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
-}
+    @if(currentYearAvailable) {
+        <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+    } else {
+        <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
+    }
 
     <header class="page-heading">
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
     </header>
+
     <p>@Html(Messages("pages.previousyear.lede"))</p>
+
     <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage),
         LanguageUtils.isWelsh(messages))))</p>
 
-    <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button"
-   data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
+    <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" role="button"
+       data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
 
 }
-
