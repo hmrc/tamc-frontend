@@ -33,8 +33,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactHost = runModeConfiguration.getString("tamc.external-urls.contact-frontend").getOrElse("")
-  private val contactFrontendService = baseUrl("contact-frontend")
+  private lazy val contactHost = runModeConfiguration.getString("tamc.external-urls.contact-frontend").getOrElse("")
+  private lazy val contactFrontendService = baseUrl("contact-frontend")
   val contactFormServiceIdentifier = "TAMC"
   val pageTitle = "Your personal tax account"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
@@ -85,13 +85,11 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   def MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-allowed-personal-allowance-transfer-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_BENEFIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-benefit-" + actualTaxYear(taxYear)).getOrElse(0)
 
-  val TRANSFEROR_ALLOWANCE: Int = PERSONAL_ALLOWANCE() - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
-  val RECIPIENT_ALLOWANCE: Int = PERSONAL_ALLOWANCE() + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
-  val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
-  val SCOTTISH_RESIDENT = "scottish_resident"
+  lazy val TRANSFEROR_ALLOWANCE: Int = PERSONAL_ALLOWANCE() - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
+  lazy val RECIPIENT_ALLOWANCE: Int = PERSONAL_ALLOWANCE() + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
 
-  override val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
-  override val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
+  override lazy val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
+  override lazy val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
 
   lazy val urBannerEnabled = runModeConfiguration.getString("feature.ur-banner.enabled").getOrElse("true").toBoolean
 
@@ -100,7 +98,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override val LANG_LANG_ENGLISH = "en"
   override val LANG_LANG_WELSH = "cy"
 
-  override val isWelshEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
+  override lazy val isWelshEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
   lazy val webchatId = loadConfig("webchat.id")
 }
 
@@ -136,6 +134,9 @@ trait ApplicationConfig {
   val TAMC_JOURNEY_PTA = "PTA"
   val TAMC_JOURNEY_GDS = "GDS"
 
+  val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
+  val SCOTTISH_RESIDENT = "scottish_resident"
+
   val gdsFinishedUrl: String
   val ptaFinishedUrl: String
 
@@ -148,5 +149,5 @@ trait ApplicationConfig {
   val webchatId: String
   /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
   lazy val refreshInterval = 900
-  val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
+  lazy val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
 }

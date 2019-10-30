@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.ApplicationConfig.{SCOTTISH_RESIDENT, gdsFinishedUrl, ptaFinishedUrl}
+import config.ApplicationConfig
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import forms.EligibilityCalculatorForm.calculatorForm
 import forms.MultiYearDateOfBirthForm.dateOfBirthForm
@@ -39,7 +39,8 @@ class EligibilityController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
                                        authenticatedActionRefiner: AuthenticatedActionRefiner,
-                                       eligibilityCalculatorService: EligibilityCalculatorService
+                                       eligibilityCalculatorService: EligibilityCalculatorService,
+                                       applicationConfig: ApplicationConfig
                                      )(implicit templateRenderer: TemplateRenderer,
                                        formPartialRetriever: FormPartialRetriever) extends BaseController {
 
@@ -61,7 +62,7 @@ class EligibilityController @Inject()(
   def eligibilityCheckAction(): Action[AnyContent] = {
 
     def finishUrl(isLoggedIn: Boolean): String =
-      if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
+      if (isLoggedIn) applicationConfig.ptaFinishedUrl else applicationConfig.gdsFinishedUrl
 
     unauthenticatedAction {
       implicit request =>
@@ -96,7 +97,7 @@ class EligibilityController @Inject()(
   def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
-        .withSession(request.session - SCOTTISH_RESIDENT)
+        .withSession(request.session - applicationConfig.SCOTTISH_RESIDENT)
   }
 
   def doYouLiveInScotlandAction(): Action[AnyContent] = unauthenticatedAction {
@@ -106,7 +107,7 @@ class EligibilityController @Inject()(
           BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
           Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
-            .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
+            .withSession(request.session + (applicationConfig.SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
 
@@ -148,7 +149,7 @@ class EligibilityController @Inject()(
   def doYouWantToApplyAction(): Action[AnyContent] = {
 
     def finishUrl(isLoggedIn: Boolean): String =
-      if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
+      if (isLoggedIn) applicationConfig.ptaFinishedUrl else applicationConfig.gdsFinishedUrl
 
     unauthenticatedAction {
       implicit request =>

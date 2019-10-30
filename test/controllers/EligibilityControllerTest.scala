@@ -39,7 +39,8 @@ class EligibilityControllerTest extends ControllerBaseSpec {
       messagesApi,
       unAuthAction,
       instanceOf[AuthenticatedActionRefiner],
-      mockEligibilityCalculatorService
+      mockEligibilityCalculatorService,
+      instanceOf[ApplicationConfig]
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
   "howItWorks" should {
