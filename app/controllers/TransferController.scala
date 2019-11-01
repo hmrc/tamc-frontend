@@ -256,7 +256,6 @@ class TransferController @Inject()(
         }
 
         def handleWithException(ex: Throwable, view: Html): Result = {
-          Logger.warn(message)
           Logger.error(ex.getMessage(), ex)
           InternalServerError(view)
         }
