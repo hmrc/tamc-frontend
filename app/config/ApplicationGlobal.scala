@@ -28,6 +28,7 @@ import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig}
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport}
+import play.api.i18n.Lang
 
 object ApplicationGlobal extends DefaultFrontendGlobal {
 
@@ -36,6 +37,9 @@ object ApplicationGlobal extends DefaultFrontendGlobal {
   override val frontendAuditFilter = MarriageAllowanceAuditFilter
   implicit val templateRenderer = config.LocalTemplateRenderer
   implicit val formPartialRetriever = TamcFormPartialRetriever
+
+  private def lang(implicit request: Request[_]): Lang =
+    Lang(request.cookies.get("PLAY_LANG").map(_.value).getOrElse("en"))
 
   override def onStart(app: Application) {
     super.onStart(app)
@@ -46,6 +50,11 @@ object ApplicationGlobal extends DefaultFrontendGlobal {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     views.html.templates.error_template(pageTitle, heading, message)
+
+  override def notFoundTemplate(implicit request: Request[_]): Html = {
+    implicit val _: Lang = lang
+    views.html.templates.page_not_found_template(config.ApplicationConfig, formPartialRetriever)
+  }
 }
 
 object ControllerConfiguration extends ControllerConfig {

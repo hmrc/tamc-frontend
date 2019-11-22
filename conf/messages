@@ -605,3 +605,13 @@ tamc.banner.recruitment.link=Help improve digital services by joining the HMRC u
 tamc.banner.recruitment.reject=No thanks
 tamc.banner.recruitment.title=Help improve GOV.UK
 tamc.banner.recruitment.linkURL=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133
+
+#*************************************************************
+# Page not found
+#*************************************************************
+global.page.not.found.error.title=Page not found
+global.page.not.found.error.check.web.address.correct=If you typed the web address, check it is correct.
+global.page.not.found.error.check.web.address.full=If you pasted the web address, check you copied the entire address.
+global.page.not.found.error.contact=If the web address is correct or you selected a link or button, {0} if you need to speak to someone about your Marriage Allowance application.
+global.page.not.found.error.contact.link.text=contact the Income Tax helpline
+global.page.not.found.error.contact.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees
