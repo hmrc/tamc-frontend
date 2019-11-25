@@ -230,8 +230,9 @@ trait TransferService {
 
   def getEligibleYears(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientRecord] =
     for {
-      cache <- cachingService.getCachedData
-    } yield cache.get.recipient.get
+      cacheData <- cachingService.getCachedData
+      validated <- validateCompleteCache(cacheData)
+    } yield validated.recipient.get
 
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
     val transferor: UserRecord = sessionData.transferor.get
