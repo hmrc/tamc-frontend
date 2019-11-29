@@ -27,7 +27,7 @@
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
 @(title: String,
- pageName:Option[String] = None,
+ manageService:Boolean = false,
  sidebarLinks: Option[Html] = None,
  sidebarClass: Option[String] = None,
  mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
@@ -121,7 +121,11 @@
 
 @titleName = @{
  if(request.authState.permanent) {
-   messages("tamc.yourtaxaccount")
+   if(manageService) {
+     messages("tamc.manage")
+   } else {
+      messages("tamc.apply")
+   }
  } else {
   ""
  }

@@ -567,7 +567,8 @@ pages.noyears.findoutmore=Rhagor o wybodaeth am <a href="https://www.gov.uk/marr
 tamc.breadcrumb.home=Hafan y cyfrif
 tamc.breadcrumb.incometax=Treth Incwm
 tamc.menu=Dewislen
-tamc.yourtaxaccount=Eich cyfrif treth personol
+tamc.apply=Gwneud cais am Lwfans Priodasol
+tamc.manage = Rheoli’ch Lwfans Priodasol
 eligibility.check.do.you.live.in.scotland.h1=A ydych yn byw yn yr Alban?
 #*************************************************************
 # User Research Banner Messages
