@@ -210,29 +210,16 @@ trait TransferService {
         }
     }
 
-  def deleteSelectionAndGetCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Boolean, List[TaxYear], RecipientRecord)] =
+  def deleteSelectionAndGetCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EligiblyPerson] =
     for {
       _ <- cachingService.saveSelectedYears(List[Int]())
       res <- getCurrentAndExtraYearEligibility
     } yield res
 
-  def getCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Boolean, List[TaxYear], RecipientRecord)] =
-    for {
-      recipient <- getEligibleYears
-    } yield (
-      !recipient.availableTaxYears.filter {
-        _.year == timeService.getCurrentTaxYear
-      }.isEmpty,
-      recipient.availableTaxYears.filter {
-        _.year != timeService.getCurrentTaxYear
-      },
-      recipient)
-
-  def getEligibleYears(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientRecord] =
-    for {
-      cacheData <- cachingService.getCachedData
-      validated <- validateCompleteCache(cacheData)
-    } yield validated.recipient.get
+  def getCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EligiblyPerson] =
+    cachingService.getRecipientFromCache.map {
+      _.fold(throw CacheMissingRecipient())(EligiblyPerson(_, timeService.getCurrentTaxYear))
+    }
 
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
     val transferor: UserRecord = sessionData.transferor.get

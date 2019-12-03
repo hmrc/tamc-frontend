@@ -32,8 +32,7 @@ import models.auth.UserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
 import play.api.data.FormError
-import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.mvc.Results.InternalServerError
+import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
@@ -111,9 +110,11 @@ class TransferController @Inject()(
   def eligibleYears: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.deleteSelectionAndGetCurrentAndExtraYearEligibility map {
-        case (false, Nil, _) => throw new NoTaxYearsAvailable
-        case (false, extraYears, recipient) if extraYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, false))
-        case (_, extraYears, recipient) =>
+        case EligiblyPerson(false, Nil, _) =>
+          throw new NoTaxYearsAvailable
+        case EligiblyPerson(false, extraYears, recipient)
+          if extraYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, false))
+        case EligiblyPerson(_, extraYears, recipient) =>
           Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(extraYears.nonEmpty), extraYears.nonEmpty, recipient.data.name,
             Some(recipient.data.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
       } recover handleError
@@ -121,8 +122,8 @@ class TransferController @Inject()(
 
   def eligibleYearsAction: Action[AnyContent] = authenticate.async {
     implicit request =>
-      registrationService.getCurrentAndExtraYearEligibility flatMap {
-        case (currentYearAvailable, extraYears, recipient) =>
+      registrationService.getCurrentAndExtraYearEligibility.flatMap {
+        case EligiblyPerson(currentYearAvailable, extraYears, recipient) =>
           currentYearForm(extraYears.nonEmpty).bindFromRequest.fold(
             hasErrors =>
               Future {
@@ -154,7 +155,7 @@ class TransferController @Inject()(
   def previousYears: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.getCurrentAndExtraYearEligibility.map {
-        case (currentYearAvailable, extraYears, recipient) =>
+        case EligiblyPerson(_, extraYears, recipient) =>
           Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), recipient.data, extraYears))
       } recover handleError
   }
@@ -166,8 +167,8 @@ class TransferController @Inject()(
         years.map(year => TaxYear(year, None))
       }
 
-      registrationService.getCurrentAndExtraYearEligibility flatMap {
-        case (_, extraYears, recipient) =>
+      registrationService.getCurrentAndExtraYearEligibility.flatMap {
+        case EligiblyPerson(_, extraYears, recipient) =>
           earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
             hasErrors =>
               Future {
