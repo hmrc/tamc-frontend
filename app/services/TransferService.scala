@@ -210,14 +210,14 @@ trait TransferService {
         }
     }
 
-  def deleteSelectionAndGetCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
+  def deleteSelectionAndGetCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     for {
       _ <- cachingService.saveSelectedYears(List[Int]())
-      res <- getCurrentAndExtraYearEligibility
+      res <- getCurrentAndPreviousYearsEligibility
     } yield res
 
-  def getCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
-    cachingService.getRecipientRecord.map {
+  def getCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
+    cachingService.getRecipientRecord map {
       _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_, timeService.getCurrentTaxYear))
     }
 

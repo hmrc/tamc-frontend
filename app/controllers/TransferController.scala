@@ -109,27 +109,27 @@ class TransferController @Inject()(
 
   def eligibleYears: Action[AnyContent] = authenticate.async {
     implicit request =>
-      registrationService.deleteSelectionAndGetCurrentAndExtraYearEligibility map {
+      registrationService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {
         case CurrentAndPreviousYearsEligibility(false, Nil, _) =>
           throw new NoTaxYearsAvailable
-        case CurrentAndPreviousYearsEligibility(false, extraYears, recipient)
-          if extraYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, false))
-        case CurrentAndPreviousYearsEligibility(_, extraYears, recipient) =>
-          Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(extraYears.nonEmpty), extraYears.nonEmpty, recipient.data.name,
+        case CurrentAndPreviousYearsEligibility(false, previousYears, recipient)
+          if previousYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(recipient.data, previousYears, false))
+        case CurrentAndPreviousYearsEligibility(_, previousYears, recipient) =>
+          Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(previousYears.nonEmpty), previousYears.nonEmpty, recipient.data.name,
             Some(recipient.data.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
       } recover handleError
   }
 
   def eligibleYearsAction: Action[AnyContent] = authenticate.async {
     implicit request =>
-      registrationService.getCurrentAndExtraYearEligibility.flatMap {
-        case CurrentAndPreviousYearsEligibility(currentYearAvailable, extraYears, recipient) =>
-          currentYearForm(extraYears.nonEmpty).bindFromRequest.fold(
+      registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
+        case CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, recipient) =>
+          currentYearForm(previousYears.nonEmpty).bindFromRequest.fold(
             hasErrors =>
               Future {
                 BadRequest(views.html.multiyear.transfer.eligible_years(
                   hasErrors,
-                  extraYears.nonEmpty,
+                  previousYears.nonEmpty,
                   recipient.data.name,
                   Some(recipient.data.dateOfMarriage),
                   Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
@@ -140,10 +140,10 @@ class TransferController @Inject()(
               } else {
                 List[Int]()
               }) map { _ =>
-                if (extraYears.isEmpty && currentYearAvailable && (!success.applyForCurrentYear.contains(true))) {
+                if (previousYears.isEmpty && currentYearAvailable && (!success.applyForCurrentYear.contains(true))) {
                   throw new NoTaxYearsSelected
-                } else if (extraYears.nonEmpty) {
-                  Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, currentYearAvailable))
+                } else if (previousYears.nonEmpty) {
+                  Ok(views.html.multiyear.transfer.previous_years(recipient.data, previousYears, currentYearAvailable))
                 } else {
                   Redirect(controllers.routes.TransferController.confirmYourEmail())
                 }
@@ -154,9 +154,9 @@ class TransferController @Inject()(
 
   def previousYears: Action[AnyContent] = authenticate.async {
     implicit request =>
-      registrationService.getCurrentAndExtraYearEligibility.map {
-        case CurrentAndPreviousYearsEligibility(_, extraYears, recipient) =>
-          Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), recipient.data, extraYears))
+      registrationService.getCurrentAndPreviousYearsEligibility.map {
+        case CurrentAndPreviousYearsEligibility(_, previousYears, recipient) =>
+          Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), recipient.data, previousYears))
       } recover handleError
   }
 
@@ -167,7 +167,7 @@ class TransferController @Inject()(
         years.map(year => TaxYear(year, None))
       }
 
-      registrationService.getCurrentAndExtraYearEligibility.flatMap {
+      registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
         case CurrentAndPreviousYearsEligibility(_, extraYears, recipient) =>
           earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
             hasErrors =>
