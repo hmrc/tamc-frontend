@@ -16,17 +16,14 @@
 
 package models
 
-object EligiblyPerson {
+case class CurrentAndPreviousYearsEligibility(currentYearAvailable: Boolean, previousYears: List[TaxYear], recipient: RecipientRecord)
 
-  def apply(recipient: RecipientRecord, getCurrentTaxYear: Int): EligiblyPerson = {
-    val currentYearAvailable = recipient.availableTaxYears.exists(_.year == getCurrentTaxYear)
+object CurrentAndPreviousYearsEligibility {
 
-    val extraYears = recipient.availableTaxYears.filter {
-      _.year != getCurrentTaxYear
-    }
+  def apply(recipient: RecipientRecord, currentYear: Int): CurrentAndPreviousYearsEligibility = {
+    val currentYearAvailable = recipient.availableTaxYears.exists(_.year == currentYear)
+    val previousYears = recipient.availableTaxYears.filterNot(_.year == currentYear)
 
-    new EligiblyPerson(currentYearAvailable, extraYears, recipient)
+    new CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, recipient)
   }
 }
-
-case class EligiblyPerson(currentYearAvailable: Boolean, extraYears: List[TaxYear], recipient: RecipientRecord)

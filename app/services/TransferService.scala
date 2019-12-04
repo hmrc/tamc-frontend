@@ -210,15 +210,15 @@ trait TransferService {
         }
     }
 
-  def deleteSelectionAndGetCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EligiblyPerson] =
+  def deleteSelectionAndGetCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     for {
       _ <- cachingService.saveSelectedYears(List[Int]())
       res <- getCurrentAndExtraYearEligibility
     } yield res
 
-  def getCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EligiblyPerson] =
-    cachingService.getRecipientFromCache.map {
-      _.fold(throw CacheMissingRecipient())(EligiblyPerson(_, timeService.getCurrentTaxYear))
+  def getCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
+    cachingService.getRecipientRecord.map {
+      _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_, timeService.getCurrentTaxYear))
     }
 
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {

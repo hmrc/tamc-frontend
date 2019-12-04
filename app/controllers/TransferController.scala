@@ -110,11 +110,11 @@ class TransferController @Inject()(
   def eligibleYears: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.deleteSelectionAndGetCurrentAndExtraYearEligibility map {
-        case EligiblyPerson(false, Nil, _) =>
+        case CurrentAndPreviousYearsEligibility(false, Nil, _) =>
           throw new NoTaxYearsAvailable
-        case EligiblyPerson(false, extraYears, recipient)
+        case CurrentAndPreviousYearsEligibility(false, extraYears, recipient)
           if extraYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(recipient.data, extraYears, false))
-        case EligiblyPerson(_, extraYears, recipient) =>
+        case CurrentAndPreviousYearsEligibility(_, extraYears, recipient) =>
           Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(extraYears.nonEmpty), extraYears.nonEmpty, recipient.data.name,
             Some(recipient.data.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
       } recover handleError
@@ -123,7 +123,7 @@ class TransferController @Inject()(
   def eligibleYearsAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.getCurrentAndExtraYearEligibility.flatMap {
-        case EligiblyPerson(currentYearAvailable, extraYears, recipient) =>
+        case CurrentAndPreviousYearsEligibility(currentYearAvailable, extraYears, recipient) =>
           currentYearForm(extraYears.nonEmpty).bindFromRequest.fold(
             hasErrors =>
               Future {
@@ -155,7 +155,7 @@ class TransferController @Inject()(
   def previousYears: Action[AnyContent] = authenticate.async {
     implicit request =>
       registrationService.getCurrentAndExtraYearEligibility.map {
-        case EligiblyPerson(_, extraYears, recipient) =>
+        case CurrentAndPreviousYearsEligibility(_, extraYears, recipient) =>
           Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), recipient.data, extraYears))
       } recover handleError
   }
@@ -168,7 +168,7 @@ class TransferController @Inject()(
       }
 
       registrationService.getCurrentAndExtraYearEligibility.flatMap {
-        case EligiblyPerson(_, extraYears, recipient) =>
+        case CurrentAndPreviousYearsEligibility(_, extraYears, recipient) =>
           earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
             hasErrors =>
               Future {

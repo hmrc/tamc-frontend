@@ -131,7 +131,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
             dateOfMarriage = cacheMap.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE))))
 
-  def getRecipientFromCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientRecord]] =
+  def getRecipientRecord(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientRecord]] =
     fetchAndGetEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD)
 
   def getCachedData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[CacheData]] =
