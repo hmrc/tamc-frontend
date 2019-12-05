@@ -23,9 +23,10 @@ class CurrentAndPreviousYearsEligibilityTest extends UnitSpec with MockitoSugar 
 
   val currentYear = 2019
   val previousTaxYear = TaxYear(2018)
+  val mockData = mock[RegistrationFormInput]
 
   def createRecipientRecord(availableTaxYears: List[TaxYear]): RecipientRecord = {
-    RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], availableTaxYears)
+    RecipientRecord(mock[UserRecord], mockData, availableTaxYears)
   }
 
   "CurrentAndPreviousYearsEligibility" should {
@@ -71,13 +72,22 @@ class CurrentAndPreviousYearsEligibilityTest extends UnitSpec with MockitoSugar 
 
     }
 
-    "contain a recipientRecord" in {
+    "contain recipientRecord data" in {
 
       val availableTaxYears = List(previousTaxYear)
       val recipientRecord = createRecipientRecord(availableTaxYears)
       val result = CurrentAndPreviousYearsEligibility(recipientRecord, currentYear)
 
-      result.recipient shouldBe recipientRecord
+      result.registrationInput shouldBe mockData
+    }
+
+    "contain availableTaxYears data" in {
+
+      val availableTaxYears = List(previousTaxYear)
+      val recipientRecord = createRecipientRecord(availableTaxYears)
+      val result = CurrentAndPreviousYearsEligibility(recipientRecord, currentYear)
+
+      result.availableTaxYears shouldBe availableTaxYears
     }
 
   }

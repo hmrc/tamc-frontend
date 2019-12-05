@@ -252,18 +252,18 @@ trait TransferService {
     }
   }
 
-  def saveSelectedYears(recipient: RecipientRecord, selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def saveSelectedYears(selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cachingService.saveSelectedYears(selectedYears)
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int, yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
-    updateSelectedYears(recipient, List(extraYear).filter(_ > 0), yearAvailableForSelection: Option[Int])
+  def updateSelectedYears(availableTaxYears: List[TaxYear], extraYear: Int, yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
+    updateSelectedYears(availableTaxYears, List(extraYear).filter(_ > 0), yearAvailableForSelection: Option[Int])
   }
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def updateSelectedYears(availableTaxYears: List[TaxYear], extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     for {
       cache <- cachingService.getCachedData
       updatedYears <- updateSelectedYears(cache.get.selectedYears, extraYears)
-      validatedSelectedYears <- validateSelectedYears(recipient.availableTaxYears, updatedYears, yearAvailableForSelection)
+      validatedSelectedYears <- validateSelectedYears(availableTaxYears, updatedYears, yearAvailableForSelection)
       savedYears <- cachingService.saveSelectedYears(validatedSelectedYears)
     } yield savedYears
 

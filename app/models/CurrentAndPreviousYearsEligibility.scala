@@ -16,7 +16,8 @@
 
 package models
 
-case class CurrentAndPreviousYearsEligibility(currentYearAvailable: Boolean, previousYears: List[TaxYear], recipient: RecipientRecord)
+case class CurrentAndPreviousYearsEligibility(currentYearAvailable: Boolean, previousYears: List[TaxYear],
+                                              registrationInput: RegistrationFormInput, availableTaxYears: List[TaxYear])
 
 object CurrentAndPreviousYearsEligibility {
 
@@ -24,6 +25,6 @@ object CurrentAndPreviousYearsEligibility {
     val currentYearAvailable = recipient.availableTaxYears.exists(_.year == currentYear)
     val previousYears = recipient.availableTaxYears.filterNot(_.year == currentYear)
 
-    new CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, recipient)
+    new CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, recipient.data, recipient.availableTaxYears)
   }
 }

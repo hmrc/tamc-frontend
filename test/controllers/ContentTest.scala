@@ -495,8 +495,9 @@ class ContentTest extends ControllerBaseSpec {
     val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
     val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
     "display dynamic message " in {
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(CurrentAndPreviousYearsEligibility(true, recrecord.availableTaxYears, recrecord))
-      when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(recrecord), ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any()))
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+        .thenReturn(CurrentAndPreviousYearsEligibility(true, recrecord.availableTaxYears, recrecord.data, recrecord.availableTaxYears))
+      when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any()))
         .thenReturn(Nil)
       val request = FakeRequest().withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
       val result = transferController.eligibleYearsAction(request)
@@ -511,7 +512,8 @@ class ContentTest extends ControllerBaseSpec {
     }
 
     "display form error message (no year choice made )" in {
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(CurrentAndPreviousYearsEligibility(true, recrecord.availableTaxYears, recrecord))
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+        .thenReturn(CurrentAndPreviousYearsEligibility(true, recrecord.availableTaxYears, recrecord.data, recrecord.availableTaxYears))
       val request = FakeRequest().withFormUrlEncodedBody(data = "year" -> "List(0)")
       val result = transferController.extraYearsAction(request)
 
