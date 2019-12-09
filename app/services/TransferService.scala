@@ -218,7 +218,7 @@ trait TransferService {
 
   def getCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     cachingService.getRecipientRecord map {
-      _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_, timeService.getCurrentTaxYear))
+      _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_))
     }
 
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
@@ -256,7 +256,7 @@ trait TransferService {
     cachingService.saveSelectedYears(selectedYears)
 
   def updateSelectedYears(availableTaxYears: List[TaxYear], extraYear: Int, yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
-    updateSelectedYears(availableTaxYears, List(extraYear).filter(_ > 0), yearAvailableForSelection: Option[Int])
+    updateSelectedYears(availableTaxYears, List(extraYear).filter(_ > 0), yearAvailableForSelection)
   }
 
   def updateSelectedYears(availableTaxYears: List[TaxYear], extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =

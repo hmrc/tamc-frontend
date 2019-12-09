@@ -16,15 +16,23 @@
 
 package models
 
+import services.TimeService
+
+trait YearsEligibility {
+  val timeService: TimeService
+}
+
 case class CurrentAndPreviousYearsEligibility(currentYearAvailable: Boolean, previousYears: List[TaxYear],
                                               registrationInput: RegistrationFormInput, availableTaxYears: List[TaxYear])
 
-object CurrentAndPreviousYearsEligibility {
+object CurrentAndPreviousYearsEligibility extends YearsEligibility {
 
-  def apply(recipient: RecipientRecord, currentYear: Int): CurrentAndPreviousYearsEligibility = {
-    val currentYearAvailable = recipient.availableTaxYears.exists(_.year == currentYear)
-    val previousYears = recipient.availableTaxYears.filterNot(_.year == currentYear)
+  val timeService = TimeService
 
-    new CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, recipient.data, recipient.availableTaxYears)
+  def apply(recipient: RecipientRecord): CurrentAndPreviousYearsEligibility = {
+    val currentYearAvailable = recipient.availableTaxYears.exists(_.year == timeService.getCurrentTaxYear)
+    val previousYears = recipient.availableTaxYears.filterNot(_.year == timeService.getCurrentTaxYear)
+
+    CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, recipient.data, recipient.availableTaxYears)
   }
 }
