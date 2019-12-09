@@ -30,8 +30,9 @@ object CurrentAndPreviousYearsEligibility extends YearsEligibility {
   val timeService = TimeService
 
   def apply(recipient: RecipientRecord): CurrentAndPreviousYearsEligibility = {
-    val currentYearAvailable = recipient.availableTaxYears.exists(_.year == timeService.getCurrentTaxYear)
-    val previousYears = recipient.availableTaxYears.filterNot(_.year == timeService.getCurrentTaxYear)
+    val currentTaxYear = timeService.getCurrentTaxYear
+    val currentYearAvailable = recipient.availableTaxYears.exists(_.year == currentTaxYear)
+    val previousYears = recipient.availableTaxYears.filterNot(_.year == currentTaxYear)
 
     CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, recipient.data, recipient.availableTaxYears)
   }
