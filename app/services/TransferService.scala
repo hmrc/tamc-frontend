@@ -210,28 +210,16 @@ trait TransferService {
         }
     }
 
-  def deleteSelectionAndGetCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Boolean, List[TaxYear], RecipientRecord)] =
+  def deleteSelectionAndGetCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     for {
       _ <- cachingService.saveSelectedYears(List[Int]())
-      res <- getCurrentAndExtraYearEligibility
+      res <- getCurrentAndPreviousYearsEligibility
     } yield res
 
-  def getCurrentAndExtraYearEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Boolean, List[TaxYear], RecipientRecord)] =
-    for {
-      recipient <- getEligibleYears
-    } yield (
-      !recipient.availableTaxYears.filter {
-        _.year == timeService.getCurrentTaxYear
-      }.isEmpty,
-      recipient.availableTaxYears.filter {
-        _.year != timeService.getCurrentTaxYear
-      },
-      recipient)
-
-  def getEligibleYears(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientRecord] =
-    for {
-      cache <- cachingService.getCachedData
-    } yield cache.get.recipient.get
+  def getCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
+    cachingService.getRecipientRecord map {
+      _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_))
+    }
 
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
     val transferor: UserRecord = sessionData.transferor.get
@@ -264,18 +252,18 @@ trait TransferService {
     }
   }
 
-  def saveSelectedYears(recipient: RecipientRecord, selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def saveSelectedYears(selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cachingService.saveSelectedYears(selectedYears)
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYear: Int, yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
-    updateSelectedYears(recipient, List(extraYear).filter(_ > 0), yearAvailableForSelection: Option[Int])
+  def updateSelectedYears(availableTaxYears: List[TaxYear], extraYear: Int, yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
+    updateSelectedYears(availableTaxYears, List(extraYear).filter(_ > 0), yearAvailableForSelection)
   }
 
-  def updateSelectedYears(recipient: RecipientRecord, extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def updateSelectedYears(availableTaxYears: List[TaxYear], extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     for {
       cache <- cachingService.getCachedData
       updatedYears <- updateSelectedYears(cache.get.selectedYears, extraYears)
-      validatedSelectedYears <- validateSelectedYears(recipient.availableTaxYears, updatedYears, yearAvailableForSelection)
+      validatedSelectedYears <- validateSelectedYears(availableTaxYears, updatedYears, yearAvailableForSelection)
       savedYears <- cachingService.saveSelectedYears(validatedSelectedYears)
     } yield savedYears
 
