@@ -23,7 +23,7 @@
 
 
 @contentHeader = {
-    <h1>@Messages("global.page.not.found.error.title")</h1>
+    <h1>@messages("global.page.not.found.error.title")</h1>
 }
 
 @isWelsh = @{
@@ -41,15 +41,15 @@
 }
 
 @mainContent = {
-    <p>@Messages("global.page.not.found.error.check.web.address.correct")</p>
-    <p>@Messages("global.page.not.found.error.check.web.address.full")</p>
-    <p>@Html(Messages("global.page.not.found.error.contact", anchor(Messages("global.page.not.found.error.contact.link.text"), Messages("global.page.not.found.error.contact.link"))))</p>
+    <p>@messages("global.page.not.found.error.check.web.address.correct")</p>
+    <p>@messages("global.page.not.found.error.check.web.address.full")</p>
+    <p>@Html(messages("global.page.not.found.error.contact", anchor(messages("global.page.not.found.error.contact.link.text"), messages("global.page.not.found.error.contact.link"))))</p>
 }
 
 
 @{
     templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
-    "pageTitle" -> Messages("title.pattern", Messages("global.page.not.found.error.title")),
+    "pageTitle" -> messages("title.pattern", messages("global.page.not.found.error.title")),
     "navTitle" -> messages("tamc.yourtaxaccount"),
     "isWelsh" -> isWelsh,
     "getHelpForm" -> getHelpForm,

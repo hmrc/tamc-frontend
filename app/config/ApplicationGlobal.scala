@@ -39,7 +39,7 @@ object ApplicationGlobal extends DefaultFrontendGlobal {
   implicit val formPartialRetriever = TamcFormPartialRetriever
 
   private def lang(implicit request: Request[_]): Lang =
-    Lang(request.cookies.get("PLAY_LANG").map(_.value).getOrElse("en"))
+    Lang(request.cookies.get("PLAY_LANG").fold("en")(_.value))
 
   override def onStart(app: Application) {
     super.onStart(app)
