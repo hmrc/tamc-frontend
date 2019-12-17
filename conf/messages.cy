@@ -541,7 +541,6 @@ pages.coc.finish.header=Lwfans Priodasol wedi’i ganslo
 pages.coc.finish.acknowledgement=Anfonir e-bost atoch yn <strong>{0}</strong> i gydnabod y canslo, a hynny o <strong>noreply&#64;tax.service.gov.uk</strong> cyn pen 24 awr.
 pages.coc.finish.junk=Os nad yw’n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
 pages.coc.finish.whn=Yr hyn sy’n digwydd nesaf
-pages.coc.finish.para1=Bydd y canslo’n cael ei brosesu gan CThEM. Am fanylion llawn, edrychwch ar yr e-bost yr ydym wedi’i anfon atoch.
 pages.coc.finish.para2=Nid oes angen i chi gysylltu &#226; ni. Gallwch <a href="history">wirio statws</a> eich Lwfans Priodasol ar-lein.
 date.fields.day=Diwrnod
 date.fields.month=Mis

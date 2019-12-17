@@ -18,24 +18,21 @@
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
+@import uk.gov.hmrc.urls.Link
 
-@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(emailAddress: uk.gov.hmrc.emailaddress.EmailAddress)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.change.complete")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))
+title = messages("title.pattern", messages("title.change.complete")), mainConfig = views.helpers.MainConfig(maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))
 ) {
-<div class="govuk-box-highlight">
-    <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="">
-        @Html(Messages("pages.coc.finish.header"))</h1>
-</div>
-<p>@Html(Messages("pages.coc.finish.acknowledgement", transferorEmail))</p>
-<p>@Html(Messages("pages.coc.finish.junk"))</p>
-<h2 class="heading-medium">@Html(Messages("pages.coc.finish.whn"))</h2>
-<p>@Html(Messages("pages.coc.finish.para1"))</p>
-<p>@Html(Messages("pages.coc.finish.para2"))</p>
+  <div class="govuk-box-highlight">
+      <h1 class="heading-xlarge">@messages("pages.coc.finish.header")</h1>
+  </div>
+
+  <p>@messages("pages.coc.finish.acknowledgement", emailAddress)</p>
+  <p>@messages("pages.coc.finish.junk")</p>
+  <h2 class="heading-medium">@messages("pages.coc.finish.whn")</h2>
+  <p>@Html(messages("pages.coc.finish.para1", Link.toInternalPage(url=routes.UpdateRelationshipController.history.url,
+    value=Some(messages("pages.coc.finish.check.status.link"))).toHtml))</p>
 }

@@ -302,7 +302,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       updateRelationshipService.getupdateRelationshipFinishedData(request.nino) map {
         case (NotificationRecord(email), _) =>
-          Ok(views.html.coc.finished(transferorEmail = email))
+          Ok(views.html.coc.finished(emailAddress = email))
       } recover handleError
   }
 
