@@ -29,7 +29,7 @@ class FinishedTest extends TamcViewTest {
   "finished page " should {
 
     behave like pageWithTitle(messagesApi("title.change.complete"))
-
+    behave like pageWithHeader(messagesApi("pages.coc.finish.header"))
 
   }
 

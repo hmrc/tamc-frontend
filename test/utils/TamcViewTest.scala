@@ -19,7 +19,6 @@ package utils
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.matchers.MatchResult
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{AnyContent, Request}
@@ -29,8 +28,9 @@ import test_utils.{MockFormPartialRetriever, MockTemplateRenderer, TestData}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.test.UnitSpec
+import utils.viewHelpers.JSoupMatchers
 
-trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite {
+trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with JSoupMatchers {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val templateRenderer = MockTemplateRenderer
@@ -56,17 +56,10 @@ trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite {
   }
 
   def pageWithHeader(headerText: String): Unit = {
+
     "have a static h1 header" in {
-      val elements = doc.getElementsByTag("h1")
-
-
-
-
-      //List(elements).map(_.)
-
-//      lazy val elementContents = elements.mkString("\t", "\n\t", "")
+      doc should haveHeadingWithText(headerText)
     }
   }
-
 
 }
