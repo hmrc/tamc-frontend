@@ -24,8 +24,8 @@
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = messages("title.pattern", messages("title.change.complete")), mainConfig = views.helpers.MainConfig(maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))
-) {
+title = messages("title.pattern", messages("title.change.complete")), mainConfig = views.helpers.MainConfig(maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))) {
+
   <div class="govuk-box-highlight">
       <h1 class="heading-xlarge">@messages("pages.coc.finish.header")</h1>
   </div>
