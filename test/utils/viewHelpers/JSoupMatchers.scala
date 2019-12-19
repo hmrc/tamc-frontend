@@ -16,8 +16,9 @@
 
 package utils.viewHelpers
 
-import org.jsoup.nodes.Document
+import org.jsoup.nodes.{Document, Element}
 import org.scalatest.matchers.{MatchResult, Matcher}
+
 import scala.collection.JavaConversions._
 
 trait JSoupMatchers {
@@ -36,7 +37,26 @@ trait JSoupMatchers {
     }
   }
 
+  class ElementWithAttributeValueMatcher(expectedContent: String, attribute: String) extends Matcher[Element] {
+    def apply(left: Element): MatchResult = {
+      val attribVal = left.attr(attribute)
+      val attributes = left.attributes().asList().mkString("\t", "\n\t", "")
+
+      MatchResult(
+        attribVal == expectedContent,
+        s"""[$attribute="$expectedContent"] is not a member of the element's attributes:[\n$attributes]""",
+        s"""[$attribute="$expectedContent"] is a member of the element's attributes:[\n$attributes]"""
+      )
+    }
+
+  }
+
   def haveHeadingWithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h1")
 
+  def haveHeadingH2WithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h2")
+
+  def haveParagraphWithText(expectedText: String) = new TagWithTextMatcher(expectedText, "p")
+
+  def haveLinkURL(expectedUrl: String) = new ElementWithAttributeValueMatcher(expectedUrl, "href")
 
 }

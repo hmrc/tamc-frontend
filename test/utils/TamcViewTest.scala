@@ -16,6 +16,7 @@
 
 package utils
 
+import controllers.routes
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -59,6 +60,28 @@ trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite wi
 
     "have a static h1 header" in {
       doc should haveHeadingWithText(headerText)
+    }
+  }
+
+  def pageWithH2Header(headerText: String): Unit = {
+
+    "have a static h2 header" in {
+      doc should haveHeadingH2WithText(headerText)
+    }
+  }
+
+  def pageWithParagraph(headerText: String): Unit = {
+
+    "have a paragraph" in {
+
+      doc should haveParagraphWithText(headerText)
+
+      doc should haveParagraphWithText(messagesApi("pages.coc.finish.junk"))
+
+      doc should haveParagraphWithText(
+        messagesApi("pages.coc.finish.para1", messagesApi("pages.coc.finish.check.status.link")))
+
+//      doc should haveLinkURL(routes.UpdateRelationshipController.history.url)
     }
   }
 

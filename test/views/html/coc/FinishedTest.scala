@@ -30,9 +30,8 @@ class FinishedTest extends TamcViewTest {
 
     behave like pageWithTitle(messagesApi("title.change.complete"))
     behave like pageWithHeader(messagesApi("pages.coc.finish.header"))
-
+    behave like pageWithH2Header(messagesApi("pages.coc.finish.whn"))
+    behave like pageWithParagraph(messagesApi("pages.coc.finish.acknowledgement",emailAddress))
   }
-
-
 
 }
