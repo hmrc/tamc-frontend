@@ -627,8 +627,8 @@ class ContentTest extends ControllerBaseSpec {
       form shouldNot be(null)
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+      labelName.getElementsByClass("error-message").first().text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
+      document.getElementById("transferor-email-error").text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
     }
 
     "display form error message (transferor email does not include TLD)" in {

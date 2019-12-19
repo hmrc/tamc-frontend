@@ -32,9 +32,11 @@ object PlayFormFormatter {
       def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
 
       def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
-        data.get(key).map {
-          _.trim
-        }.filterNot(_.isEmpty()).toRight(Seq(FormError(key, error)))
+        data.get(key)
+          .filterNot(_ == null)
+          .map(_.trim)
+          .filterNot(_.isEmpty())
+          .toRight(Seq(FormError(key, error)))
       }
     })
 
