@@ -16,8 +16,11 @@
 
 package views.html.coc
 
+import controllers.routes
+import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.urls.Link
 import utils.TamcViewTest
 
 class FinishedTest extends TamcViewTest {
@@ -31,7 +34,26 @@ class FinishedTest extends TamcViewTest {
     behave like pageWithTitle(messagesApi("title.change.complete"))
     behave like pageWithHeader(messagesApi("pages.coc.finish.header"))
     behave like pageWithH2Header(messagesApi("pages.coc.finish.whn"))
-    behave like pageWithParagraph(messagesApi("pages.coc.finish.acknowledgement",emailAddress))
+
+    "have a paragraph" in {
+
+      doc should haveParagraphWithText(messagesApi("pages.coc.finish.acknowledgement",emailAddress))
+
+      doc should haveParagraphWithText(messagesApi("pages.coc.finish.junk"))
+    }
+
+    "have a paragraph with embedded link" in {
+
+      doc should haveParagraphWithText(
+        messagesApi("pages.coc.finish.para1", messagesApi("pages.coc.finish.check.status.link")))
+
+      val linkElement = doc.getElementById("marriage-allowance-history").getElementsByTag("a").get(0)
+
+      linkElement should haveLinkURL(routes.UpdateRelationshipController.history.url)
+
+    }
   }
+
+
 
 }

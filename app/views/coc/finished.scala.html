@@ -33,6 +33,6 @@ title = messages("title.pattern", messages("title.change.complete")), mainConfig
   <p>@messages("pages.coc.finish.acknowledgement", emailAddress)</p>
   <p>@messages("pages.coc.finish.junk")</p>
   <h2 class="heading-medium">@messages("pages.coc.finish.whn")</h2>
-  <p>@Html(messages("pages.coc.finish.para1", Link.toInternalPage(url=routes.UpdateRelationshipController.history.url,
+  <p id="marriage-allowance-history">@Html(messages("pages.coc.finish.para1", Link.toInternalPage(url=routes.UpdateRelationshipController.history.url,
     value=Some(messages("pages.coc.finish.check.status.link"))).toHtml))</p>
 }

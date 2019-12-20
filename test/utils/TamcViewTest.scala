@@ -70,19 +70,5 @@ trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite wi
     }
   }
 
-  def pageWithParagraph(headerText: String): Unit = {
-
-    "have a paragraph" in {
-
-      doc should haveParagraphWithText(headerText)
-
-      doc should haveParagraphWithText(messagesApi("pages.coc.finish.junk"))
-
-      doc should haveParagraphWithText(
-        messagesApi("pages.coc.finish.para1", messagesApi("pages.coc.finish.check.status.link")))
-
-//      doc should haveLinkURL(routes.UpdateRelationshipController.history.url)
-    }
-  }
 
 }
