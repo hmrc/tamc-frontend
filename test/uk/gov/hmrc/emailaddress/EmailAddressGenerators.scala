@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.emailaddress
 
-import scala.collection.mutable.ListBuffer
 import scala.util.Random
 
 object EmailAddressGenerators {
@@ -24,29 +23,22 @@ object EmailAddressGenerators {
   lazy val random: Random = new Random()
 
   def randomEmailAddresses(): List[String] = {
-    var res = ListBuffer[String]()
     val index = newIndex
-    for (_ <- 1 to index) {
+    for (_ <- List.range(1, index)) yield {
       val mailbox = randomString(1)
       val domain = randomString(2)
-      res += s"$mailbox@$domain"
+      s"$mailbox@$domain"
     }
-    res.toList
   }
 
   private def randomString(dotsNumber: Int): String = {
-    var result = ""
-    for (i <- 1 to dotsNumber) {
+    val result = for (_ <- List.range(0, dotsNumber)) yield {
       val index = newIndex
       val res = random.alphanumeric.take(index).filter(!_.isDigit).mkString.toLowerCase
-      if (i >= dotsNumber) {
-        result += res
-      } else {
-        result += res + "."
-      }
+      res
     }
 
-    result
+    result.mkString(".")
   }
 
   private def newIndex: Int = random.nextInt(10) + 5
