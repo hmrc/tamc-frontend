@@ -29,7 +29,7 @@ object EmailAddressGenerators {
     for (_ <- 1 to index) {
       val mailbox = randomString(1)
       val domain = randomString(2)
-      res += s"$mailbox@$domain".mkString
+      res += s"$mailbox@$domain"
     }
     res.toList
   }
