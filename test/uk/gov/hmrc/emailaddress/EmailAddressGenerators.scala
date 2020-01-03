@@ -16,21 +16,30 @@
 
 package uk.gov.hmrc.emailaddress
 
-import org.scalacheck.Gen._
+import scala.util.Random
 
-trait EmailAddressGenerators {
+object EmailAddressGenerators {
 
-  val nonEmptyString = nonEmptyListOf(alphaChar).map(_.mkString)
+  lazy val random: Random = new Random()
 
-  val validMailbox = nonEmptyString
+  def randomEmailAddresses(): List[String] = {
+    val index = newIndex
+    for (_ <- List.range(1, index)) yield {
+      val mailbox = randomString(1)
+      val domain = randomString(2)
+      s"$mailbox@$domain"
+    }
+  }
 
-  val validDomain = for {
-    topLevelDomain <- nonEmptyString
-    otherParts <- listOf(nonEmptyString)
-  } yield (otherParts :+ topLevelDomain).mkString
+  private def randomString(dotsNumber: Int): String = {
+    val result = for (_ <- List.range(0, dotsNumber)) yield {
+      val index = newIndex
+      val res = random.alphanumeric.take(index).filter(!_.isDigit).mkString.toLowerCase
+      res
+    }
 
-  val validEmailAddresses = for {
-    mailbox <- validMailbox
-    domain <- validDomain
-  } yield s"$mailbox@$domain"
+    result.mkString(".")
+  }
+
+  private def newIndex: Int = random.nextInt(10) + 5
 }
