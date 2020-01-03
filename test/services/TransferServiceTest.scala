@@ -18,7 +18,7 @@ package services
 
 import connectors.MarriageAllowanceConnector
 import controllers.ControllerBaseSpec
-import errors.{CacheMissingTransferor, NoTaxYearsForTransferor, RecipientNotFound}
+import errors.{CacheMissingRecipient, CacheMissingTransferor, NoTaxYearsForTransferor, RecipientNotFound}
 import models._
 import org.joda.time.LocalDate
 import org.mockito.Mockito.when
@@ -31,6 +31,7 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class TransferServiceTest extends ControllerBaseSpec {
 
@@ -98,6 +99,31 @@ class TransferServiceTest extends ControllerBaseSpec {
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
+
+    }
+  }
+
+  "getCurrentAndPreviousYearsEligibility" should {
+
+    "return a CurrentAndPreviousYearsEligibility" in {
+      val currentYear = 2019
+      val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(currentYear)))
+      when(service.cachingService.getRecipientRecord).thenReturn(Future.successful(Some(recipientRecord)))
+      when(service.timeService.getCurrentTaxYear).thenReturn(currentYear)
+
+      val result = await(service.getCurrentAndPreviousYearsEligibility)
+      result shouldBe a[CurrentAndPreviousYearsEligibility]
+
+
+    }
+
+    "throw an error" when {
+
+      "no CurrentAndPreviousYearsEligibility is returned" in {
+        when(service.cachingService.getRecipientRecord).thenReturn(Future.successful(None))
+        intercept[CacheMissingRecipient](await(service.getCurrentAndPreviousYearsEligibility))
+      }
+
     }
   }
 
