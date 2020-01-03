@@ -21,14 +21,15 @@ import java.util.Locale
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.test.UnitSpec
 
 class EmailFormTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
 
   implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val messages = messagesApi.preferred(Seq(Lang(Locale.ENGLISH)))
+
+  val messages: Messages = messagesApi.preferred(Seq(Lang(Locale.ENGLISH)))
 
   ".email" should {
     "bind a valid email address" in {
@@ -37,6 +38,22 @@ class EmailFormTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite w
       )
       val res = EmailForm.emailForm.mapping.bind(formInput)
       res shouldBe Right(new EmailAddress("example@email.com"))
+    }
+
+    "bind a valid email address2" in {
+      val formInput = Map[String, String](
+        "transferor-email" -> "example@c.email.com"
+      )
+      val res = EmailForm.emailForm.mapping.bind(formInput)
+      res shouldBe Right(new EmailAddress("example@c.email.com"))
+    }
+
+    "bind a valid email address3" in {
+      val formInput = Map[String, String](
+        "transferor-email" -> "example.c@email.com"
+      )
+      val res = EmailForm.emailForm.mapping.bind(formInput)
+      res shouldBe Right(new EmailAddress("example.c@email.com"))
     }
 
     "fail to bind, with a specific valid character failure for am email address containing invalid characters" in {
