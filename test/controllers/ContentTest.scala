@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import controllers.actions.AuthenticatedActionRefiner
 import models._
-import org.joda.time.LocalDate
+import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
@@ -450,7 +450,7 @@ class ContentTest extends ControllerBaseSpec {
       val request = FakeRequest().withFormUrlEncodedBody(
         "dateOfMarriage.day" -> "1",
         "dateOfMarriage.month" -> "1",
-        "dateOfMarriage.year" -> "2020"
+        "dateOfMarriage.year" -> s"${DateTime.now().plusYears(1).getYear}"
       )
       val result = transferController.dateOfMarriageAction(request)
 
