@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.EligibilityController.howItWorks())
             }
           } else {
-            Ok(views.html.coc.your_status(
+            Ok(views.html.coc.history_summary(
               changeRelationshipForm = changeRelationshipForm,
               activeRelationship = activeRelationship,
               historicRelationships = historicRelationships,

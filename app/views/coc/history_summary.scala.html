@@ -1,0 +1,57 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.time.DateConverter
+@import config.ApplicationConfig._
+@import utils.LanguageUtils
+@import java.text.NumberFormat
+@import models.auth.AuthenticatedUserRequest
+@import models.RelationshipEndReason
+
+@(changeRelationshipForm: Form[ChangeRelationship],
+activeRelationship: Option[RelationshipRecord],
+historicRelationships: Option[Seq[RelationshipRecord]],
+loggedInUserInfo: Option[LoggedInUserInfo],
+activeRecord: Boolean,
+historicRecord: Boolean,
+historicActiveRecord: Boolean,
+canApplyPreviousYears: Boolean,
+endOfYear: Option[org.joda.time.LocalDate]
+)(implicit messages: Messages,
+request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@templates.tamc_main(
+title = Messages("title.pattern", Messages("title.history")),
+mainConfig = views.helpers.MainConfig(Some("history-page"))
+) {
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+
+        <header class="page-heading">
+            <p class="heading-secondary">@loggedInUserInfo.get.name.get.firstName
+                @loggedInUserInfo.get.name.get.lastName</p>
+            <h1 class="heading-xlarge">@Html(Messages("generic.ma"))</h1>
+        </header>
+
+    </div>
+</div>
+}
