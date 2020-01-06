@@ -450,9 +450,9 @@ class ContentTest extends ControllerBaseSpec {
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withFormUrlEncodedBody(
 
-        "dateOfMarriage.day" -> "1",
-        "dateOfMarriage.month" -> "1",
-        "dateOfMarriage.year" -> s"${DateTime.now().plusYears(1).getYear}"
+        "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.month" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.year" -> s"${localDate.getYear}"
 
       )
       val result = transferController.dateOfMarriageAction(request)
