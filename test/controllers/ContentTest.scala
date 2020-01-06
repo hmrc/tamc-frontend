@@ -22,7 +22,7 @@ import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import controllers.actions.AuthenticatedActionRefiner
 import models._
-import org.joda.time.{DateTimeFieldType, LocalDate}
+import org.joda.time.{DateTime, LocalDate}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
@@ -449,9 +449,11 @@ class ContentTest extends ControllerBaseSpec {
     "display form error message (date of marriage is after today’s date)" in {
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withFormUrlEncodedBody(
-        "dateOfMarriage.day" -> localDate.getDayOfMonth.toString,
-        "dateOfMarriage.month" -> localDate.getMonthOfYear.toString,
-        "dateOfMarriage.year" -> localDate.getYear.toString
+
+        "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.month" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.year" -> s"${localDate.getYear}"
+
       )
       val result = transferController.dateOfMarriageAction(request)
 
