@@ -48,8 +48,6 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
 
-  private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
-
   def updateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
     doUpdateRelationship(transferorNino, LanguageUtils.isWelsh(messages)) recover {
       case error =>
@@ -122,11 +120,11 @@ trait UpdateRelationshipService {
         if (time.TaxYear.current.contains(endRelationshipReason.dateOfDivorce.get)) getCurrentDate
         else time.TaxYear.taxYearFor(endRelationshipReason.dateOfDivorce.get).finishes
       case EndRelationshipReason(EndReasonCode.CANCEL, _, _) => getCurrentDate
-      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => time.TaxYear.taxYearFor(parseDate(selectedRelationship.participant1StartDate)).starts
+      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => time.TaxYear.taxYearFor(parseDateWithFormat(selectedRelationship.participant1StartDate)).starts
     }
 
   def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
-    LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd"))
+    parseDateWithFormat(selectedRelationship.participant1EndDate.get)
 
 
   private def doUpdateRelationship(transferorNino: Nino, isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
