@@ -18,7 +18,6 @@ package services
 
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
-import details.PersonDetails
 import errors.TransferorNotFound
 import models._
 import play.api.Mode.Mode
@@ -104,15 +103,8 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     cache[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE, false) map
       (_.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE).get)
 
-  def getPersonDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[PersonDetails]] =
-    fetchAndGetEntry[PersonDetails](ApplicationConfig.CACHE_PERSON_DETAILS)
-
   def getRecipientDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientDetailsFormInput]] =
     fetchAndGetEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS)
-
-  def savePersonDetails(personDetails: PersonDetails)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[PersonDetails] =
-    cache[PersonDetails](ApplicationConfig.CACHE_PERSON_DETAILS, personDetails) map
-      (_.getEntry[PersonDetails](ApplicationConfig.CACHE_PERSON_DETAILS).get)
 
   def saveSelectedYears(selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cache[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS, selectedYears) map
