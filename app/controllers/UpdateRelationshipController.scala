@@ -16,7 +16,10 @@
 
 package controllers
 
+import java.text.NumberFormat
+
 import com.google.inject.Inject
+import config.ApplicationConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT}
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, updateRelationshipDivorceForm, updateRelationshipForm}
@@ -34,6 +37,8 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
+import uk.gov.hmrc.time.TaxYear
+import viewModels.HistorySummaryViewModel
 
 import scala.concurrent.Future
 
@@ -59,16 +64,15 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.EligibilityController.howItWorks())
             }
           } else {
-            Ok(views.html.coc.history_summary(
-              changeRelationshipForm = changeRelationshipForm,
-              activeRelationship = activeRelationship,
-              historicRelationships = historicRelationships,
-              loggedInUserInfo = loggedInUserInfo,
-              activeRecord = activeRecord,
-              historicRecord = historicRecord,
-              historicActiveRecord = historicActiveRecord,
-              canApplyPreviousYears = canApplyPreviousYears,
-              endOfYear = Some(time.TaxYear.current.finishes)))
+
+            val currentTaxYear = TaxYear.current.currentYear
+            val maxPATransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentTaxYear)
+            val maxBenefit = MAX_BENEFIT(currentTaxYear)
+
+            val viewModel = HistorySummaryViewModel(activeRecord, historicRecord, activeRelationship, historicRelationships,
+              maxPATransfer, maxBenefit, TaxYear.current.finishes)
+
+            Ok(views.html.coc.history_summary(loggedInUserInfo, viewModel))
           }
         }
       } recover handleError

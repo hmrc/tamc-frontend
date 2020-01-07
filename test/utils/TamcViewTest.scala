@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package utils
 
-import controllers.routes
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -53,6 +52,17 @@ trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite wi
   def pageWithTitle(titleText: String): Unit = {
     "have a static title" in {
       doc.title should include(titleText)
+    }
+  }
+
+  def pageWithCombinedHeader(
+                              preHeaderText: String,
+                              mainHeaderText: String): Unit = {
+    "have an accessible pre heading" in {
+      doc should havePreHeadingWithText(preHeaderText)
+    }
+    "have an h1 header consisting of the main heading text" in {
+      doc should haveHeadingWithText(mainHeaderText)
     }
   }
 

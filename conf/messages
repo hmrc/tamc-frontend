@@ -122,7 +122,6 @@ income-between-scots= {0} income was between {1} and {2} (or {3} if you live in 
 # General
 #********************************************************************************
 #General messages
-generic.ma=Marriage Allowance
 generic.ma.apply=Apply for Marriage Allowance
 generic.back=Back
 generic.next=Next
@@ -408,8 +407,7 @@ change.status.history.reason=Status
 change.status.active=Active
 change.status.active.present.year=to Present
 change.status.active.to=to
-change.status.transferor.amount=You will stop transferring Marriage Allowance to your partner at end of the tax year ({0}).
-change.status.receiving.amount=You will stop receiving Marriage Allowance from your partner at end of the tax year ({0}).
+
 change.status.transferor.stop-sooner=You can end your Marriage Allowance transfer sooner.
 change.status.recipient.stop-sooner=You can stop receiving Marriage Allowance sooner.
 change.status.finish.divorce=Divorce successful
@@ -503,13 +501,17 @@ technical.transferor-dead-p2=if you need to discuss your Marriage Allowance appl
 #********************************************************************************
 # history page
 #********************************************************************************
-pages.history.help.partner=You are currently helping your partner benefit from Marriage Allowance.
-pages.history.helped.by.partner=Your partner is currently helping you benefit from Marriage Allowance.
+pages.history.active.transferor=You are currently helping your partner benefit from Marriage Allowance.
 pages.history.cancellation=You can cancel Marriage Allowance online
 pages.history.cancellation1=If you have divorced or ended your civil partnership, you can cancel Marriage Allowance online. If you are currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
 pages.history.cancellation2=You can also cancel to stop payments if you are still married or in a civil partnership, but no longer want to benefit from Marriage Allowance.
 
-pages.history.partner.help=Your partner is currently helping you benefit from Marriage Allowance.
+pages.history.historic.ended=Your Marriage Allowance claim has ended.
+pages.history.historic.recipient=You will keep the tax-free allowances transferred to you until {0}.
+pages.history.historic.transferor=You will keep the tax-free allowances transferred by you until {0}.
+
+pages.history.active.recipient.paragraph1=Your partner is currently using Marriage Allowance to transfer £{0} of their Personal Allowance to you.
+pages.history.active.recipient.paragraph2=This can reduce the tax you pay by up to £{0} a year.
 pages.history.cancel=You can cancel Marriage Allowance if you:
 pages.history.cancel1=have divorced or ended your civil partnership
 pages.history.cancel2=have had a change in your income

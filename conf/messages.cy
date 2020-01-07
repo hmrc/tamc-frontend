@@ -121,7 +121,6 @@ income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw 
 # General
 #********************************************************************************
 #General messages
-generic.ma=Lwfans Priodasol
 generic.ma.apply=Gwneud cais am Lwfans Priodasol
 generic.back=Yn &#244;l
 generic.next=Nesaf
@@ -395,8 +394,6 @@ change.status.history.reason=Statws
 change.status.active=Gweithredol
 change.status.active.present.year=i Presennol
 change.status.active.to=–
-change.status.transferor.amount=Byddwch yn rhoi’r gorau i drosglwyddo Lwfans Priodasol i’ch partner ddiwedd blwyddyn dreth ({0}).
-change.status.receiving.amount=Byddwch yn rhoi’r gorau i gael Lwfans Priodasol gan eich partner ddiwedd blwyddyn dreth ({0}).
 change.status.transferor.stop-sooner=Gallwch ddod &#226;’ch trosglwyddiad Lwfans Priodasol i ben yn gynharach.
 change.status.recipient.stop-sooner=Gallwch beidio &#226; chael Lwfans Priodasol yn gynharach.
 change.status.finish.divorce=Ysgariad yn llwyddiannus
@@ -483,12 +480,18 @@ technical.transferor-dead-p2=os bydd angen i chi drafod eich cais am Lwfans Prio
 #********************************************************************************
 # history page
 #********************************************************************************
-pages.history.help.partner=Ar hyn o bryd, rydych yn helpu’ch partner i elwa o Lwfans Priodasol.
-pages.history.helped.by.partner=Ar hyn o bryd, mae’ch partner yn eich helpu i elwa o Lwfans Priodasol.
+pages.history.active.transferor=Ar hyn o bryd rydych yn helpu’ch partner i elwa o Lwfans Priodasol.
 pages.history.cancellation=Gallwch ganslo Lwfans Priodasol ar-lein
 pages.history.cancellation1=Os ydych wedi ysgaru neu wedi dod &#226;’ch partneriaeth sifil i ben, gallwch ganslo’ch Lwfans Priodasol ar-lein. Os ydych wedi ymwahanu &#226;’ch priod neu bartner sifil ar hyn o bryd, gallwch barhau i gael Lwfans Priodasol hyd nes eich bod yn dod &#226;’ch priodas neu bartneriaeth sifil i ben yn gyfreithlon.
 pages.history.cancellation2=Gallwch hefyd ganslo er mwyn dod &#226; thaliadau i ben os ydych yn dal i fod yn briod neu mewn partneriaeth sifil, ond nad ydych bellach am elwa o Lwfans Priodasol.
-pages.history.partner.help=Ar hyn o bryd, mae’ch partner yn eich helpu i elwa o Lwfans Priodasol.
+
+pages.history.historic.ended=Your Marriage Allowance claim has ended.
+pages.history.historic.recipient=You will keep the tax-free allowances transferred by you until {0}.
+
+pages.history.active.recipient.paragraph1=Mae’ch partner ar hyn o bryd yn defnyddio Lwfans Priodasol i drosglwyddo £{0} o’i Lwfans Personol i chi.
+pages.history.active.recipient.paragraph2=Gall hyn leihau’r dreth yr ydych yn ei thalu hyd at £{0} y flwyddyn.
+
+
 pages.history.cancel=Gallwch ganslo Lwfans Priodasol:
 pages.history.cancel1=os ydych wedi ysgaru neu ddod &#226;’ch partneriaeth sifil i ben
 pages.history.cancel2=os yw’ch incwm wedi newid

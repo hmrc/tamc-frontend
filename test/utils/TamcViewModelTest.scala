@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.emailaddress
+package utils
 
-import org.scalacheck.Gen._
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{I18nSupport, MessagesApi}
+import uk.gov.hmrc.play.test.UnitSpec
 
-trait EmailAddressGenerators {
+trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite {
 
-  val nonEmptyString = nonEmptyListOf(alphaChar).map(_.mkString)
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
-  val validMailbox = nonEmptyString
-
-  val validDomain = for {
-    topLevelDomain <- nonEmptyString
-    otherParts <- listOf(nonEmptyString)
-  } yield (otherParts :+ topLevelDomain).mkString
-
-  val validEmailAddresses = for {
-    mailbox <- validMailbox
-    domain <- validDomain
-  } yield s"$mailbox@$domain"
 }

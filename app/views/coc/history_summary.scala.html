@@ -16,42 +16,40 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import views.helpers.TextGenerators
-@import uk.gov.hmrc.time.DateConverter
 @import config.ApplicationConfig._
-@import utils.LanguageUtils
-@import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
-@import models.RelationshipEndReason
+@import viewModels.HistorySummaryViewModel
 
-@(changeRelationshipForm: Form[ChangeRelationship],
-activeRelationship: Option[RelationshipRecord],
-historicRelationships: Option[Seq[RelationshipRecord]],
-loggedInUserInfo: Option[LoggedInUserInfo],
-activeRecord: Boolean,
-historicRecord: Boolean,
-historicActiveRecord: Boolean,
-canApplyPreviousYears: Boolean,
-endOfYear: Option[org.joda.time.LocalDate]
-)(implicit messages: Messages,
+
+@(loggedInUserInfo: Option[LoggedInUserInfo], viewModel: HistorySummaryViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.history")),
+title = messages("title.pattern", messages("title.history")),
 mainConfig = views.helpers.MainConfig(Some("history-page"))
 ) {
 
-<div class="grid-row">
-    <div class="column-two-thirds">
+    <div class="grid-row">
+        <div class="column-two-thirds">
 
-        <header class="page-heading">
-            <p class="heading-secondary">@loggedInUserInfo.get.name.get.firstName
-                @loggedInUserInfo.get.name.get.lastName</p>
-            <h1 class="heading-xlarge">@Html(Messages("generic.ma"))</h1>
-        </header>
+            <header class="page-heading">
+                <p class="heading-secondary">@loggedInUserInfo.get.name.get.firstName
+                    @loggedInUserInfo.get.name.get.lastName</p>
+                <h1 class="heading-xlarge">@messages("title.history")</h1>
+            </header>
 
+        </div>
     </div>
-</div>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+           @viewModel.mainContent
+        </div>
+    </div>
+
+
+
+
+
 }

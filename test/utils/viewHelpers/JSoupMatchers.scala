@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,25 @@ trait JSoupMatchers {
 
   }
 
+
+  class CssSelectorWithTextMatcher(expectedContent: String, selector: String) extends Matcher[Document] {
+    def apply(left: Document): MatchResult = {
+      val elements: List[String] =
+        left
+          .select(selector)
+          .toList
+          .map(_.text)
+
+      lazy val elementContents = elements.mkString("\t", "\n\t", "")
+
+      MatchResult(
+        elements.contains(expectedContent),
+        s"[$expectedContent] not found in elements with '$selector' selector:[\n$elementContents]",
+        s"[$expectedContent] element found with '$selector' selector and text [$expectedContent]"
+      )
+    }
+  }
+
   def haveHeadingWithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h1")
 
   def haveHeadingH2WithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h2")
@@ -58,5 +77,7 @@ trait JSoupMatchers {
   def haveParagraphWithText(expectedText: String) = new TagWithTextMatcher(expectedText, "p")
 
   def haveLinkURL(expectedUrl: String) = new ElementWithAttributeValueMatcher(expectedUrl, "href")
+
+  def havePreHeadingWithText(expectedText: String) = new CssSelectorWithTextMatcher(expectedText, "header>p")
 
 }
