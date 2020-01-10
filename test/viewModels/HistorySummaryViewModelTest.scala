@@ -33,6 +33,15 @@ class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
   val maxPATransfer = 12500
   val endOfTaxYear = TaxYear.current.finishes
 
+  def createButton(accountStatus: String): HistorySummaryButton = {
+    accountStatus match {
+      case("active") => HistorySummaryButton("checkOrUpdateMarriageAllowance", messagesApi("pages.history.active.button"),
+        controllers.routes.UpdateRelationshipController.decision().url)
+      case("historic") => HistorySummaryButton("checkMarriageAllowance", messagesApi("pages.history.historic.button"),
+        controllers.routes.UpdateRelationshipController.claims().url)
+    }
+  }
+
   "HistorySummaryViewModel" should {
 
     "create a view model with the correct content" when {
@@ -56,7 +65,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
           val expectedContent = Html(s"<p>${messagesApi("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>" +
             s"<p>${messagesApi("pages.history.active.recipient.paragraph2", maxBenefit)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent)
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("active"))
 
         }
 
@@ -75,7 +84,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.active.transferor")}</p>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent)
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("active"))
 
         }
 
@@ -101,7 +110,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
           val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
             s"<p>${messagesApi("pages.history.historic.recipient", formatedEndOfTaxYear)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent)
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("historic"))
 
         }
 
@@ -123,7 +132,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
           val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
             s"<p>${messagesApi("pages.history.historic.transferor", formatedEndOfTaxYear)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent)
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("historic"))
 
         }
       }

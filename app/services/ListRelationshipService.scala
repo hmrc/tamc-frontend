@@ -31,6 +31,8 @@ import uk.gov.hmrc.play.audit.model.DataEvent
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
+
+//TODO this class could be removed
 object ListRelationshipService extends ListRelationshipService {
   override val marriageAllowanceConnector = MarriageAllowanceConnector
   override val customAuditConnector = ApplicationAuditConnector
@@ -53,23 +55,41 @@ trait ListRelationshipService {
       customAuditConnector.sendEvent(event)
     }
 
-  def listRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordList, Boolean)] =
-    for {
-      relationshipRecordWrapper <- marriageAllowanceConnector.listRelationship(transferorNino)
-      activeRelationship <- cacheActiveRelationship(relationshipRecordWrapper.activeRelationship)
-      historicRelationships <- cachingService.saveHistoricRelationships(relationshipRecordWrapper.historicRelationships)
-      transformedHistoricRelationships <- transformHistoricRelationships(historicRelationships)
-      loggedInUserInfo = relationshipRecordWrapper.userRecord
-      savedLoggedInUserInfo <- cachingService.saveLoggedInUserInfo(loggedInUserInfo.get)
-      transferorRec = UserRecord(relationshipRecordWrapper.userRecord)
-      checkedRecord <- checkCreateActionLock(transferorRec)
-      savedTransferorRecord <- cachingService.saveTransferorRecord(transferorRec)
-    } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo),
-      applicationService.canApplyForPreviousYears(historicRelationships, activeRelationship))
+  //TODO separate the cache and the result
+//  def listRelationshipTemp(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(RelationshipRecordGroup, Boolean)] =
+//    for {
+//      relationshipRecordWrapper <- marriageAllowanceConnector.listRelationship(transferorNino)
+//
+//      activeRelationship <- cacheActiveRelationship(relationshipRecordWrapper.activeRelationship)
+//      historicRelationships <- cachingService.saveHistoricRelationships(relationshipRecordWrapper.historicRelationships)
+//
+//      transformedHistoricRelationships <- transformHistoricRelationships(historicRelationships)
+//
+//      loggedInUserInfo = relationshipRecordWrapper.userRecord
+//
+//      savedLoggedInUserInfo <- cachingService.saveLoggedInUserInfo(loggedInUserInfo.get)
+//
+//      transferorRec = UserRecord(relationshipRecordWrapper.userRecord)
+//      checkedRecord <- checkCreateActionLock(transferorRec)
+//      savedTransferorRecord <- cachingService.saveTransferorRecord(transferorRec)
+//    } yield (new RelationshipRecordList(activeRelationship, transformedHistoricRelationships, loggedInUserInfo),
+//      applicationService.canApplyForPreviousYears(historicRelationships, activeRelationship))
 
-  private def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
-    cachingService.unlockCreateRelationship().map { _ => trrecord }
 
+
+
+//  def retrieveRelationshipRecordGroup(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = {
+//    marriageAllowanceConnector.listRelationship(transferorNino) map { relationshipRecordWrapper =>
+//      RelationshipRecordGroup(relationshipRecordWrapper.activeRelationship, relationshipRecordWrapper.historicRelationships,
+//        relationshipRecordWrapper.userRecord)
+//    }
+//  }
+
+
+
+
+
+  // TODO this needs moving to a viewmodel
   def transformHistoricRelationships(historicRelationships: Option[Seq[RelationshipRecord]]): Future[Option[List[RelationshipRecord]]] =
     Future {
       var list = List[RelationshipRecord]()
@@ -107,14 +127,5 @@ trait ListRelationshipService {
     }
   }
 
-  private def cacheActiveRelationship(activeRelationship: Option[RelationshipRecord]
-                                     )(implicit hc: HeaderCarrier,
-                                       ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
-    activeRelationship match{
-      case None =>  Future(None)
-      case Some(active) =>
-        cachingService.saveActiveRelationshipRecord(active)
-        Future {Some(active)}
-    }
-  }
+
 }

@@ -44,7 +44,7 @@ case class RelationshipRecord(
                                relationshipEndReason: Option[RelationshipEndReason] = None,
                                participant1EndDate: Option[String] = None,
                                otherParticipantInstanceIdentifier: String,
-                               otherParticipantUpdateTimestamp: String){
+                               otherParticipantUpdateTimestamp: String) {
 
   def isActive:Boolean = participant1EndDate match{
     case None => true
@@ -73,23 +73,23 @@ case class RelationshipRecord(
   }
 }
 
-case class RelationshipRecordList(
-                                   activeRelationship: Option[RelationshipRecord] = None,
+case class RelationshipRecordGroup(activeRelationship: Option[RelationshipRecord] = None,
                                    historicRelationships: Option[Seq[RelationshipRecord]] = None,
-                                   LoggedInUserInfo: Option[LoggedInUserInfo] = None,
-                                   activeRecord: Boolean,
-                                   historicRecord: Boolean,
-                                   historicActiveRecord: Boolean) {
+                                   loggedInUserInfo: Option[LoggedInUserInfo] = None){
 
-  def this(
-            activeRelationship: Option[RelationshipRecord],
-            historicRelationships: Option[Seq[RelationshipRecord]],
-            loggedInUserInfo: Option[LoggedInUserInfo]) = this(activeRelationship,
-    historicRelationships, loggedInUserInfo,
-    activeRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isEmpty,
-    historicRecord = historicRelationships.isDefined,
-    historicActiveRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isDefined
-  )
+  val isActiveRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isEmpty
+  val isHistoricRecord = historicRelationships.isDefined
+  val isHistoricActiveRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isDefined
+
+}
+
+object RelationshipRecordList {
+
+  def apply(relationshipRecordWrapper :RelationshipRecordWrapper): RelationshipRecordGroup = {
+    RelationshipRecordGroup(relationshipRecordWrapper.activeRelationship, relationshipRecordWrapper.historicRelationships,
+      relationshipRecordWrapper.userRecord)
+  }
+
 }
 
 object RelationshipRecord {

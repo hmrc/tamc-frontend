@@ -53,7 +53,4 @@ class FinishedTest extends TamcViewTest {
 
     }
   }
-
-
-
 }

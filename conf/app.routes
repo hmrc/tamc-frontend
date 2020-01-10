@@ -35,6 +35,8 @@ GET    /you-cannot-use-this-service                @controllers.TransferControll
 GET    /history                                    @controllers.UpdateRelationshipController.history
 GET    /history-en                                 @controllers.UpdateRelationshipController.historyWithEn
 GET    /history-cy                                 @controllers.UpdateRelationshipController.historyWithCy
+GET    /choose                                     @controllers.UpdateRelationshipController.decision
+GET    /claims                                     @controllers.UpdateRelationshipController.claims
 POST   /make-changes                               @controllers.UpdateRelationshipController.makeChange
 GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement

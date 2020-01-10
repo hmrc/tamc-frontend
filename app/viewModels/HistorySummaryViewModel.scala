@@ -17,6 +17,7 @@
 package viewModels
 
 import java.text.NumberFormat
+
 import models.RelationshipRecord
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
@@ -24,11 +25,13 @@ import play.twirl.api.Html
 import utils.LanguageUtils
 import views.helpers.TextGenerators
 
-case class HistorySummaryViewModel(mainContent: Html)
+case class HistorySummaryButton(id: String, content: String, href: String)
+
+case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummaryButton)
 
 object HistorySummaryViewModel {
 
-  def apply(isActiveRecord: Boolean, isHistoricRecord: Boolean, activeRelationship: Option[RelationshipRecord],
+  def apply(isActiveRecord: Boolean, isHistoricActiveRecord: Boolean, activeRelationship: Option[RelationshipRecord],
             historicRelationship: Option[Seq[RelationshipRecord]], maxPATransfer: Int, maxBenefit: Int, endOfYear: LocalDate)
            (implicit messages: Messages): HistorySummaryViewModel = {
 
@@ -37,7 +40,6 @@ object HistorySummaryViewModel {
     } else {
       createHistoricBasedViewModel(historicRelationship, endOfYear)
     }
-
   }
 
   private def createActiveRecordBasedViewModel(activeRelationShip: Option[RelationshipRecord], maxPATransfer: Int, maxBenefit: Int)
@@ -45,7 +47,7 @@ object HistorySummaryViewModel {
     //TODO no active records
     activeRelationShip.fold(handleError("active")){ activeRelationShip =>
 
-      val content = if(activeRelationShip.participant == "Transferor"){
+      val paragraphContent = if(activeRelationShip.participant == "Transferor"){
 
         Html(s"<p>${messages("pages.history.active.transferor")}</p>")
 
@@ -57,7 +59,9 @@ object HistorySummaryViewModel {
           s"<p>${messages("pages.history.active.recipient.paragraph2", formattedMaxBenefit)}</P>")
       }
 
-      HistorySummaryViewModel(content)
+      val button = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
+        controllers.routes.UpdateRelationshipController.decision().url)
+      HistorySummaryViewModel(paragraphContent, button)
     }
   }
 
@@ -70,7 +74,7 @@ object HistorySummaryViewModel {
 
         val formattedEndOfYear = TextGenerators.ukDateTransformer(Some(endOfYear), LanguageUtils.isWelsh(messages))
 
-        val content = if(relationshipRecord.participant == "Transferor"){
+        val paragraphContent = if(relationshipRecord.participant == "Transferor"){
 
           //TODO welsh
           Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
@@ -82,7 +86,9 @@ object HistorySummaryViewModel {
             s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</P>")
         }
 
-        HistorySummaryViewModel(content)
+        val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
+          controllers.routes.UpdateRelationshipController.claims().url)
+        HistorySummaryViewModel(paragraphContent, button)
 
       }
       case _ => handleError("historic")

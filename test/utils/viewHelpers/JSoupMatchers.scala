@@ -70,6 +70,20 @@ trait JSoupMatchers {
     }
   }
 
+  class IdSelectorWithUrlAndTextMatcher(id: String, url: String, text: String) extends Matcher[Document] {
+    def apply(left: Document): MatchResult = {
+      val element = left.getElementById(id)
+      val hrefFound: String = element.attr("href")
+      val textFound: String = element.text
+
+      MatchResult(
+        hrefFound.contains(url) && textFound.contains(text),
+        s"[url:$url][text:$text] not found in element with id:'$id' \nInstead found:[url:$hrefFound][text:$textFound]",
+        s"Element found with id '$id' and url [$url] and text [$text]"
+      )
+    }
+  }
+
   def haveHeadingWithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h1")
 
   def haveHeadingH2WithText(expectedText: String) = new TagWithTextMatcher(expectedText, "h2")
@@ -79,5 +93,7 @@ trait JSoupMatchers {
   def haveLinkURL(expectedUrl: String) = new ElementWithAttributeValueMatcher(expectedUrl, "href")
 
   def havePreHeadingWithText(expectedText: String) = new CssSelectorWithTextMatcher(expectedText, "header>p")
+
+  def haveLinkElement(id: String, href: String, text: String) = new IdSelectorWithUrlAndTextMatcher(id, href, text)
 
 }

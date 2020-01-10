@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.text.NumberFormat
-
 import com.google.inject.Inject
 import config.ApplicationConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT}
 import controllers.actions.AuthenticatedActionRefiner
@@ -36,7 +34,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time
 import uk.gov.hmrc.time.TaxYear
 import viewModels.HistorySummaryViewModel
 
@@ -46,7 +43,6 @@ class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
                                               updateRelationshipService: UpdateRelationshipService,
-                                              listRelationshipService: ListRelationshipService,
                                               registrationService: TransferService,
                                               cachingService: CachingService,
                                               timeService: TimeService
@@ -55,27 +51,52 @@ class UpdateRelationshipController @Inject()(
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
-      listRelationshipService.listRelationship(request.nino) map {
-        case (RelationshipRecordList(activeRelationship, historicRelationships, loggedInUserInfo, activeRecord, historicRecord, historicActiveRecord), canApplyPreviousYears) => {
-          if (!activeRecord && !historicRecord) {
-            if (!request.authState.permanent) {
-              Redirect(controllers.routes.TransferController.transfer())
-            } else {
-              Redirect(controllers.routes.EligibilityController.howItWorks())
-            }
+      updateRelationshipService.retrieveRelationshipRecordGroup(request.nino) flatMap { relationshipRecordGroup =>
+        if (!relationshipRecordGroup.isActiveRecord && !relationshipRecordGroup.isHistoricActiveRecord) {
+          if (!request.authState.permanent) {
+            Future.successful(Redirect(controllers.routes.TransferController.transfer()))
           } else {
-
+            Future.successful(Redirect(controllers.routes.EligibilityController.howItWorks()))
+          }
+        } else {
+//TODO cache the actual object
+          updateRelationshipService.saveRelationshipRecordGroup(relationshipRecordGroup) map { _ =>
             val currentTaxYear = TaxYear.current.currentYear
             val maxPATransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentTaxYear)
             val maxBenefit = MAX_BENEFIT(currentTaxYear)
 
-            val viewModel = HistorySummaryViewModel(activeRecord, historicRecord, activeRelationship, historicRelationships,
+            //TODO pass object to apply
+            val viewModel = HistorySummaryViewModel(relationshipRecordGroup.isActiveRecord, relationshipRecordGroup.isHistoricActiveRecord,
+              relationshipRecordGroup.activeRelationship, relationshipRecordGroup.historicRelationships,
               maxPATransfer, maxBenefit, TaxYear.current.finishes)
 
-            Ok(views.html.coc.history_summary(loggedInUserInfo, viewModel))
+            Ok(views.html.coc.history_summary(relationshipRecordGroup.loggedInUserInfo, viewModel))
           }
         }
       } recover handleError
+  }
+
+  def decision(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+      //TODO referer check
+     ???
+  }
+
+  def decisionSubmit(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+      //TODO referer check
+     ???
+  }
+
+  def claims(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+//      updateRelationshipService.getRelationshipRecords map { relationshipRecordList =>
+//        val viewModel = ClaimsViewModel(relationshipRecordList.activeRecord, relationshipRecordList.historicActiveRecord,
+//          relationshipRecordList.activeRelationship, relationshipRecordList.historicRelationships)
+//
+//        Ok(views.html.coc.claims("Holding claims page"))
+//      }
+      ???
   }
 
   def historyWithCy: Action[AnyContent] = authenticate {

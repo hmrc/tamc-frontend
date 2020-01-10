@@ -510,6 +510,9 @@ pages.history.historic.ended=Your Marriage Allowance claim has ended.
 pages.history.historic.recipient=You will keep the tax-free allowances transferred to you until {0}.
 pages.history.historic.transferor=You will keep the tax-free allowances transferred by you until {0}.
 
+pages.history.active.button=Check or update your Marriage Allowance
+pages.history.historic.button=Check your Marriage Allowance claims
+
 pages.history.active.recipient.paragraph1=Your partner is currently using Marriage Allowance to transfer £{0} of their Personal Allowance to you.
 pages.history.active.recipient.paragraph2=This can reduce the tax you pay by up to £{0} a year.
 pages.history.cancel=You can cancel Marriage Allowance if you:

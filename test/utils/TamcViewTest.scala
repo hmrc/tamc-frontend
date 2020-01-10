@@ -49,6 +49,8 @@ trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite wi
 
   def doc: Document = Jsoup.parse(view.toString())
 
+  def doc(view: Html): Document = Jsoup.parse(view.toString())
+
   def pageWithTitle(titleText: String): Unit = {
     "have a static title" in {
       doc.title should include(titleText)

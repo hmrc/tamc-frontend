@@ -32,6 +32,7 @@ import uk.gov.hmrc.time
 
 import scala.concurrent.Future
 
+//TODO remove this class
 class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
   "list relationship page" should {

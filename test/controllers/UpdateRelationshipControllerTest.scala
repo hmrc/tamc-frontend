@@ -65,7 +65,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   "History" should {
     "redirect to transfer" when {
-      "has no active record, no historic and temporary authentication" in {
+      "has no active record, no active historic and temporary authentication" in {
         when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
@@ -79,7 +79,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
 
     "redirect to how-it-works" when {
-      "has no active record, no historic and permanent authentication" in {
+      "has no active record, no active historic and permanent authentication" in {
         when(mockListRelationshipService.listRelationship(any())(any(), any()))
           .thenReturn(
             Future.successful(
@@ -103,15 +103,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         status(result) shouldBe OK
       }
 
-      "has some historic record" in {
-        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-          .thenReturn(
-            Future.successful((RelationshipRecordData.historicRelationshipRecordList, true))
-          )
-
-        val result: Future[Result] = controller().history()(request)
-        status(result) shouldBe OK
-      }
     }
   }
 

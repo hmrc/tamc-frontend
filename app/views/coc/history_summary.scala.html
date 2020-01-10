@@ -44,12 +44,10 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
     </div>
     <div class="grid-row">
         <div class="column-two-thirds">
-           @viewModel.mainContent
+           @viewModel.paragraphContent
+            <a id="@viewModel.button.id" href="@viewModel.button.href" class="button" role="button">
+                @viewModel.button.content
+            </a>
         </div>
     </div>
-
-
-
-
-
 }
