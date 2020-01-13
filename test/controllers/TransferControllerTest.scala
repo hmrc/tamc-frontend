@@ -25,7 +25,6 @@ import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
-import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
@@ -40,7 +39,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -390,11 +389,37 @@ class TransferControllerTest extends ControllerBaseSpec {
 
   "finished" should {
     "return success" when {
-      "A notification record is returned" in {
+      "make sure method remove never was called before" in {
+        verify(mockCachingService, times(0)).remove()(any(), any())
+      }
+
+      "A notification record is returned and cache is called" in {
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(RelationshipRecordData.notificationRecord)
+
         val result = controller().finished()(request)
         status(result) shouldBe OK
+      }
+
+      "make sure method remove was called only once" in {
+        verify(mockCachingService, times(1)).remove()(any(), any())
+      }
+    }
+
+    "return error" when {
+      "make sure method remove never was called once before" in {
+        verify(mockCachingService, times(1)).remove()(any(), any())
+      }
+
+      "error is thrown" in {
+        when(mockTransferService.getFinishedData(any())(any(), any()))
+          .thenThrow(new IllegalArgumentException("123"))
+
+        controller().finished()(request)
+      }
+
+      "make sure method remove was called only once, because it fail" in {
+        verify(mockCachingService, times(1)).remove()(any(), any())
       }
     }
   }
