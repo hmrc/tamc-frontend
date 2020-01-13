@@ -93,7 +93,7 @@ class TimeServiceTest extends ControllerBaseSpec {
   }
 
   "parseDateWithFormat" should {
-    "parse date with format of -yyyyMMdd" in {
+    "parse date with custom format of -yyyyMMdd" in {
       val year = 2017
       val month = 10
       val day = 22
@@ -104,10 +104,8 @@ class TimeServiceTest extends ControllerBaseSpec {
 
       service.parseDateWithFormat(date, format) shouldBe expcted
     }
-  }
 
-  "parseDateWithDefaultFormat" should {
-    "parse date with format of yyyyMMdd" in {
+    "parse date with default format of yyyyMMdd" in {
       val year = 2017
       val month = 10
       val day = 22
