@@ -16,28 +16,75 @@
 
 package viewModels
 
-import models.{RelationshipRecord, RelationshipRecordList}
+import models.RelationshipRecord
 import play.api.i18n.Messages
+import play.twirl.api.Html
 import utils.LanguageUtils
 import views.helpers.TextGenerators
 
-//case class ClaimsViewModel(activeRecord: Boolean, historicActiveRecord: Boolean, activeRelationship: Option[RelationshipRecord],
-//                           historicRelationships: Option[Seq[RelationshipRecord]]) {
-//
-//  def activeDateInterval(implicit messages: Messages): String = {
-//    activeRelationship.fold(???){ activeRelationRecord =>
-//      TextGenerators.taxDateIntervalString(activeRelationRecord.participant1StartDate, isWelsh = LanguageUtils.isWelsh(messages))
-//    }
-//  }
-//
-//  def historicRelationshipsSeqence = historicRelationships.getOrElse(???)
-//}
-//
-//object ClaimsViewModel {
-//
-//  def apply(activeRecord: Boolean, historicActiveRecord: Boolean, activeRelationship: Option[RelationshipRecord],
-//            historicRelationships: Option[Seq[RelationshipRecord]]): ClaimsViewModel = {
-//
-//    ClaimsViewModel(activeRecord, historicActiveRecord, activeRelationship: Option[RelationshipRecord], historicRelationships)
-//  }
-//}
+
+case class ActiveRow(activeDateInterval: String, activeStatus: String)
+
+object ActiveRow {
+
+  def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): ActiveRow = {
+
+    val activeDateInterval = TextGenerators.taxDateIntervalString(relationshipRecord.participant1StartDate, isWelsh = LanguageUtils.isWelsh(messages))
+    val activeStatus = messages("change.status.active")
+
+    ActiveRow(activeDateInterval, activeStatus)
+
+  }
+}
+
+
+case class HistoricRow(historicDateInterval: String, historicStatus: String)
+
+object HistoricRow {
+
+  def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): HistoricRow = {
+
+    val historicDateInterval = TextGenerators.taxDateIntervalString(relationshipRecord.participant1StartDate,
+      relationshipRecord.participant1EndDate,LanguageUtils.isWelsh(messages))
+
+    val historicStatus = messages(s"coc.end-reason.${relationshipRecord.relationshipEndReason.map(_.value).getOrElse("")}")
+
+    HistoricRow(historicDateInterval, historicStatus)
+
+  }
+
+}
+
+case class ClaimsViewModel(activeRow: Option[ActiveRow], historicRows: Option[Seq[HistoricRow]], isActiveRecord: Boolean,
+                           taxFreeAllowanceLink: Html, backLinkUrl: String)
+
+object ClaimsViewModel {
+
+  def apply(activeRelationship: Option[RelationshipRecord], historicRelationships: Option[Seq[RelationshipRecord]], isActiveRecord: Boolean,
+            taxFreeAllowanceUrl: String)
+           (implicit messages: Messages): ClaimsViewModel = {
+
+    val activeRow = activeRelationship map(ActiveRow(_))
+    val historicRows = historicRelationships map { historicRelationships =>
+      historicRelationships map(HistoricRow(_))
+    }
+
+
+
+    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink(taxFreeAllowanceUrl), backLinkUrl(isActiveRecord))
+  }
+
+  private def taxFreeAllowanceLink(taxFreeAllowanceUrl: String)(implicit messages: Messages): Html = {
+    Html(
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="$taxFreeAllowanceUrl">
+         |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
+  }
+
+  private def backLinkUrl(isActiveRecord: Boolean): String = {
+    if(isActiveRecord){
+      controllers.routes.UpdateRelationshipController.decision().url
+    }else {
+      controllers.routes.UpdateRelationshipController.history().url
+    }
+  }
+}

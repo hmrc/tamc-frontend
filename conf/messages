@@ -397,13 +397,10 @@ change.status.divorce-cy-content=This will be removed at the end of the current 
 change.status.cancel-your.h1=Cancelling Marriage Allowance
 change.status.cancel-your.p=Why do you want to cancel your Marriage Allowance?
 change.status.confirm.email=Enter your email to confirm
-change.status.history.h4=Your Marriage Allowance claims
-change.status.start-date=Tax year
+
 change.status.end-date=End date
 change.status.history.allowance-status=Allowance status
-change.status.history.status=Status
 change.status.history.role=Allowance role
-change.status.history.reason=Status
 change.status.active=Active
 change.status.active.present.year=to Present
 change.status.active.to=to
@@ -521,6 +518,18 @@ pages.history.cancel2=have had a change in your income
 pages.history.cancel3=want to reject the allowance
 pages.history.cancel4=have suffered a bereavement
 pages.history.button.remove=Remove allowance
+
+#********************************************************************************
+# claims page
+#********************************************************************************
+pages.claims.title=Your Marriage Allowance claims
+pages.claims.table.heading.tax-year=Tax year
+pages.claims.table.heading.status=Status
+pages.claims.back.link=Back to your Marriage Allowance claim summary
+pages.claims.link.tax.free.allowance.part1=You can
+pages.claims.link.tax.free.allowance.link.text=see the transferred allowance in your tax-free amount.
+
+
 
 #********************************************************************************
 # eligible year page

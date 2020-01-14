@@ -16,6 +16,9 @@
 
 package utils
 
+import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
+
 object DateUtils {
 
   val DatePattern: String = "yyyyMMdd"
@@ -24,5 +27,11 @@ object DateUtils {
     val format = new java.text.SimpleDateFormat(DatePattern)
     val time = format.parse(date).getTime
     time > System.currentTimeMillis()
+  }
+
+  //TODO handle exceptions
+  def transformDate(date: String, inputDateFormat:String, outputPattern: String): String = {
+    val parsedDate = LocalDate.parse(date, DateTimeFormat.forPattern(inputDateFormat))
+    parsedDate.toString(DateTimeFormat.forPattern(outputPattern))
   }
 }

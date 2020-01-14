@@ -40,6 +40,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
+
   override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version") + '/'
 
   override lazy val analyticsToken: Option[String] = runModeConfiguration.getString("google-analytics.token")
@@ -52,6 +53,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
+  override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
+  lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
   lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
@@ -131,6 +134,7 @@ trait ApplicationConfig {
   def ivUpliftUrl = createUrl(action = "uplift")
 
   val marriageAllowanceUrl: String
+  val taiFrontendUrl: String
 
   val TAMC_JOURNEY = "TAMC_JOURNEY"
   val TAMC_JOURNEY_PTA = "PTA"

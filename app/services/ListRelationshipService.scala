@@ -89,37 +89,6 @@ trait ListRelationshipService {
 
 
 
-  // TODO this needs moving to a viewmodel
-  def transformHistoricRelationships(historicRelationships: Option[Seq[RelationshipRecord]]): Future[Option[List[RelationshipRecord]]] =
-    Future {
-      var list = List[RelationshipRecord]()
-      if (historicRelationships.isDefined) {
-        for (record <- historicRelationships.get) {
-          var relationshipRecord = RelationshipRecord(
-            record.participant,
-            record.creationTimestamp,
-            transformDate(record.participant1StartDate).get,
-            record.relationshipEndReason,
-            transformDate(record.participant1EndDate.getOrElse("")),
-            record.otherParticipantInstanceIdentifier,
-            record.otherParticipantUpdateTimestamp)
-          list = relationshipRecord :: list
-        }
-      }
-      if (list.nonEmpty) Some(list.reverse) else None
-    }
-
-  def transformDate(date: String): Option[String] = {
-    date match {
-      case "" => None
-      case d =>
-        val formatIncomming = new SimpleDateFormat("yyyyMMdd")
-        val formatOutgoing = new SimpleDateFormat("dd-MM-yyyy")
-        val dateFormated = formatOutgoing.format(formatIncomming.parse(d))
-        Some(dateFormated.toString)
-    }
-  }
-
   def transformDateAgain(date: String): Option[LocalDate] = {
     date match {
       case "" => None

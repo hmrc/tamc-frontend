@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
-import config.ApplicationConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT}
+import config.ApplicationConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT, taxFreeAllowanceUrl}
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, updateRelationshipDivorceForm, updateRelationshipForm}
@@ -35,7 +35,7 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
-import viewModels.HistorySummaryViewModel
+import viewModels.{ClaimsViewModel, HistorySummaryViewModel}
 
 import scala.concurrent.Future
 
@@ -61,6 +61,7 @@ class UpdateRelationshipController @Inject()(
         } else {
 //TODO cache the actual object
           updateRelationshipService.saveRelationshipRecordGroup(relationshipRecordGroup) map { _ =>
+            //TODO should these be passed in or config passed in
             val currentTaxYear = TaxYear.current.currentYear
             val maxPATransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentTaxYear)
             val maxBenefit = MAX_BENEFIT(currentTaxYear)
@@ -90,13 +91,14 @@ class UpdateRelationshipController @Inject()(
 
   def claims(): Action[AnyContent] = authenticate.async {
     implicit request =>
-//      updateRelationshipService.getRelationshipRecords map { relationshipRecordList =>
-//        val viewModel = ClaimsViewModel(relationshipRecordList.activeRecord, relationshipRecordList.historicActiveRecord,
-//          relationshipRecordList.activeRelationship, relationshipRecordList.historicRelationships)
-//
-//        Ok(views.html.coc.claims("Holding claims page"))
-//      }
-      ???
+      updateRelationshipService.getRelationshipRecordGroup map { relationshipRecordGroup =>
+
+        //TODO should config be passed in here?
+        val viewModel = ClaimsViewModel(relationshipRecordGroup.activeRelationship, relationshipRecordGroup.historicRelationships,
+          relationshipRecordGroup.isActiveRecord, taxFreeAllowanceUrl)
+
+        Ok(views.html.coc.claims(viewModel))
+      }
   }
 
   def historyWithCy: Action[AnyContent] = authenticate {

@@ -67,10 +67,12 @@ trait UpdateRelationshipService {
       }
     }
 
+    //TODO could potentially be made val
     def cacheActiveRelationship(activeRelationship: Option[RelationshipRecord])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
       cacheOptionalData(activeRelationship, cachingService.saveActiveRelationshipRecord(_: RelationshipRecord))
     }
 
+    //TODO could potentially be made val
     def cacheLoggedInUserInfo(loggedInUserInfo: Option[LoggedInUserInfo])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LoggedInUserInfo]] = {
       cacheOptionalData(loggedInUserInfo, cachingService.saveLoggedInUserInfo(_: LoggedInUserInfo))
     }
@@ -157,14 +159,14 @@ trait UpdateRelationshipService {
       cacheData <- cachingService.getUpdateRelationshipCachedData
     } yield isValidDivorceDate(dod, cacheData)
 
-  //TODO may need to remove this
-//  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordList] = {
-//    cachingService.getUpdateRelationshipCachedData map {
-//      case(Some(updateRelationshipCacheData)) => new RelationshipRecordList(updateRelationshipCacheData.activeRelationshipRecord,
-//        updateRelationshipCacheData.historicRelationships, None)
-//      case(_) => ???
-//    }
-//  }
+  def getRelationshipRecordGroup(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = {
+    cachingService.getUpdateRelationshipCachedData map {
+      case(Some(updateRelationshipCacheData)) => RelationshipRecordGroup(updateRelationshipCacheData.activeRelationshipRecord,
+        updateRelationshipCacheData.historicRelationships, None)
+        // TODO error scenario
+      case(_) => ???
+    }
+  }
 
   def getEndDate(endRelationshipReason: EndRelationshipReason,
                  selectedRelationship: RelationshipRecord): LocalDate =

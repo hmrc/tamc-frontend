@@ -37,10 +37,6 @@ object TextGenerators {
   def dateTransformer(date: LocalDate): String = date.toString("dd/MM/yyyy")
 
   def dateTransformer(date: String): LocalDate = {
-    LocalDate.parse(date, DateTimeFormat.forPattern("dd-MM-yyyy"))
-  }
-
-  def dateTransformerActive(date: String): LocalDate = {
     LocalDate.parse(date, DateTimeFormat.forPattern("yyyyMMdd"))
   }
 
@@ -71,7 +67,7 @@ object TextGenerators {
   def taxDateIntervalString(taxYear: String, taxAnotherYear: Option[String] = None, isWelsh: Boolean = false): String = {
     val presentText = if (isWelsh) " i’r Presennol" else " to Present"
     taxAnotherYear.fold(
-      TaxYear.taxYearFor(dateTransformerActive(taxYear)).startYear + presentText
+      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + presentText
     )(syear =>
       TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + separator(isWelsh) + TaxYear.taxYearFor(dateTransformer(syear)).finishYear
     )

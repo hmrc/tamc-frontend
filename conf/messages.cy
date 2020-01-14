@@ -384,7 +384,6 @@ change.status.divorce-cy-content=Bydd hyn yn cael ei ddileu ar ddiwedd y flwyddy
 change.status.cancel-your.h1=Canslo Lwfans Priodasol
 change.status.cancel-your.p=Pam yr ydych am ganslo’ch Lwfans Priodasol?
 change.status.confirm.email=Nodwch eich cyfeiriad e-bost i gadarnhau
-change.status.history.h4=Eich ceisiadau am Lwfans Priodasol
 change.status.start-date=Blwyddyn dreth
 change.status.end-date=Dyddiad dod i ben
 change.status.history.allowance-status=Statws y lwfans
