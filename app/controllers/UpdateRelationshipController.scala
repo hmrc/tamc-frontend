@@ -23,6 +23,7 @@ import errors._
 import forms.ChangeRelationshipForm.{changeRelationshipForm, divorceForm, updateRelationshipDivorceForm, updateRelationshipForm}
 import forms.EmailForm.emailForm
 import forms.EmptyForm
+import forms.coc.CheckClaimOrCancelDecisionForm
 import models._
 import models.auth.UserRequest
 import org.joda.time.LocalDate
@@ -79,8 +80,7 @@ class UpdateRelationshipController @Inject()(
 
   def decision(): Action[AnyContent] = authenticate.async {
     implicit request =>
-      //TODO referer check
-     ???
+      Future.successful(Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form)))
   }
 
   def decisionSubmit(): Action[AnyContent] = authenticate.async {
