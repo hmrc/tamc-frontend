@@ -22,6 +22,7 @@ import details.PersonDetails
 import errors.TransferorNotFound
 import models._
 import play.api.Mode.Mode
+import play.api.libs.json.{Reads, Writes}
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
@@ -47,6 +48,10 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   override protected def appNameConfiguration: Configuration = runModeConfiguration
 
   def marriageAllowanceConnector: MarriageAllowanceConnector
+
+  def cacheValue[T](key: String, value:T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
+    cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException("mandatory value missing from cache")))
+  }
 
   def saveTransferorRecord(transferorRecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cache[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD, transferorRecord) map
@@ -83,7 +88,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def saveHistoricRelationships(historic: Option[Seq[RelationshipRecord]])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Seq[RelationshipRecord]]] =
     cache[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD, historic.getOrElse(Seq[RelationshipRecord]())) map
       (_.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD))
-
 
   def savRelationshipEndReasonRecord(relationshipEndReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
     cache[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD, relationshipEndReason) map
@@ -135,6 +139,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def getRecipientRecord(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientRecord]] =
     fetchAndGetEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD)
 
+
   def getCachedData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[CacheData]] =
     getCacheData(nino).map {
       _.map {
@@ -150,7 +155,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       }
     }
 
-
   def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     fetch() map (
       _ map (
@@ -165,6 +169,18 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
 
 
+  def getRelationshipRecordGroup(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = {
+
+    fetch() map {
+      case(Some(cacheMap)) => {
+        val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
+        val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
+        RelationshipRecordGroup(activeRelationshipRecord, historicRelationships)
+      }
+        //TODO error scenario
+      case _ => ???
+    }
+  }
 
   private def getCacheData(nino: Nino)(implicit hc: HeaderCarrier, executionContext: ExecutionContext): Future[Option[CacheMap]] = {
     fetch().flatMap {

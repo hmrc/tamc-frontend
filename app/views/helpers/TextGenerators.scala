@@ -40,10 +40,11 @@ object TextGenerators {
     LocalDate.parse(date, DateTimeFormat.forPattern("yyyyMMdd"))
   }
 
-  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean): String =
+  //TODO check welsh conversion is still working
+  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean, transformPattern: String = "d MMMM yyyy"): String =
     isWelsh match {
-      case false => date.fold("")(_.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK)))
-      case true => welshConverted(date)
+      case false => date.fold("")(_.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK)))
+      case true => welshConverted(date, transformPattern)
     }
 
   def formPossessive(noun: String, isWelsh: Boolean): String =

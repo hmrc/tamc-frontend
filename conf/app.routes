@@ -36,8 +36,12 @@ GET    /history                                    @controllers.UpdateRelationsh
 GET    /history-en                                 @controllers.UpdateRelationshipController.historyWithEn
 GET    /history-cy                                 @controllers.UpdateRelationshipController.historyWithCy
 GET    /choose                                     @controllers.UpdateRelationshipController.decision
+POST   /choose                                     @controllers.UpdateRelationshipController.submitDecision
 GET    /claims                                     @controllers.UpdateRelationshipController.claims
-POST   /make-changes                               @controllers.UpdateRelationshipController.makeChange
+GET    /make-changes                               @controllers.UpdateRelationshipController.makeChange
+POST   /make-changes                               @controllers.UpdateRelationshipController.submitMakeChange
+GET    /stop-allowance                             @controllers.UpdateRelationshipController.stopAllowance
+GET    /cancel                                     @controllers.UpdateRelationshipController.cancel
 GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
 POST   /reason-for-change                          @controllers.UpdateRelationshipController.updateRelationshipAction
@@ -48,7 +52,6 @@ GET    /confirm-email                              @controllers.UpdateRelationsh
 GET    /confirm-change                             @controllers.UpdateRelationshipController.confirmUpdate
 #TO be post to edit
 GET    /confirm-change-action                      @controllers.UpdateRelationshipController.confirmUpdateAction
-GET    /cancel                                     @controllers.UpdateRelationshipController.confirmCancel
 GET    /reject                                     @controllers.UpdateRelationshipController.confirmReject
 GET    /finished-change                            @controllers.UpdateRelationshipController.finishUpdate
 POST   /confirm-email-update                       @controllers.UpdateRelationshipController.confirmYourEmailActionUpdate

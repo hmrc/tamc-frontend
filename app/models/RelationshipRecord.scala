@@ -18,7 +18,6 @@ package models
 
 import play.api.libs.json.Json
 import services.TimeService
-import services.TimeService.parseDateWithFormat
 import utils.DateUtils
 
 case class RelationshipRecordWrapper(
@@ -77,10 +76,24 @@ case class RelationshipRecordGroup(activeRelationship: Option[RelationshipRecord
                                    historicRelationships: Option[Seq[RelationshipRecord]] = None,
                                    loggedInUserInfo: Option[LoggedInUserInfo] = None){
 
-  val isActiveRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isEmpty
-  val isHistoricRecord = historicRelationships.isDefined
-  val isHistoricActiveRecord = activeRelationship.isDefined && activeRelationship.get.participant1EndDate.isDefined
+  val recordStatus: RecordStatus = {
 
+    (activeRelationship, historicRelationships) match {
+      case(Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isEmpty => Active
+      case(Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isDefined => ActiveHistoric
+      case(_, _) => Historic
+    }
+
+  }
+
+  val role: Role = {
+    (activeRelationship, historicRelationships) match {
+      case(Some(RelationshipRecord("Transferor", _, _, _, _, _, _)), _) => Transferor
+      case(Some(RelationshipRecord("Recipient", _, _, _, _, _, _)), _) => Recipient
+      case(_, Some(Seq(RelationshipRecord("Transferor", _, _, _, _, _, _), _*))) => Transferor
+      case(_, Some(Seq(RelationshipRecord("Recipient", _, _, _, _, _, _), _*))) => Recipient
+    }
+  }
 }
 
 object RelationshipRecordList {
@@ -96,7 +109,16 @@ object RelationshipRecord {
   implicit val formats = Json.format[RelationshipRecord]
 }
 
-object Role {
+sealed trait Role
+case object Transferor extends Role
+case object Recipient extends Role
+
+sealed trait RecordStatus
+case object Active extends RecordStatus
+case object ActiveHistoric extends RecordStatus
+case object Historic extends RecordStatus
+
+object RoleOld {
   val TRANSFEROR = "Transferor"
   val RECIPIENT = "Recipient"
 }

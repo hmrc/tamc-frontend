@@ -18,10 +18,11 @@ package viewModels
 
 import java.text.NumberFormat
 
-import models.RelationshipRecord
-import org.joda.time.LocalDate
+import config.ApplicationConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT}
+import models._
 import play.api.i18n.Messages
 import play.twirl.api.Html
+import uk.gov.hmrc.time.TaxYear
 import utils.LanguageUtils
 import views.helpers.TextGenerators
 
@@ -31,29 +32,30 @@ case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummar
 
 object HistorySummaryViewModel {
 
-  def apply(isActiveRecord: Boolean, isHistoricActiveRecord: Boolean, activeRelationship: Option[RelationshipRecord],
-            historicRelationship: Option[Seq[RelationshipRecord]], maxPATransfer: Int, maxBenefit: Int, endOfYear: LocalDate)
-           (implicit messages: Messages): HistorySummaryViewModel = {
+  //TODO is the taxyear being handled correctly here?
+  def apply(relationshipRecordGroup: RelationshipRecordGroup)(implicit messages: Messages): HistorySummaryViewModel = {
 
-    if(isActiveRecord){
-      createActiveRecordBasedViewModel(activeRelationship, maxPATransfer, maxBenefit)
+    if(relationshipRecordGroup.recordStatus == Active){
+      createActiveRecordBasedViewModel(relationshipRecordGroup.role)
     } else {
-      createHistoricBasedViewModel(historicRelationship, endOfYear)
+      createHistoricBasedViewModel(relationshipRecordGroup.role)
     }
   }
 
-  private def createActiveRecordBasedViewModel(activeRelationShip: Option[RelationshipRecord], maxPATransfer: Int, maxBenefit: Int)
-                                              (implicit messages: Messages): HistorySummaryViewModel = {
-    //TODO no active records
-    activeRelationShip.fold(handleError("active")){ activeRelationShip =>
+  private def createActiveRecordBasedViewModel(role: Role)(implicit messages: Messages): HistorySummaryViewModel = {
 
-      val paragraphContent = if(activeRelationShip.participant == "Transferor"){
+
+      val maxPersonalAllowanceTransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(TaxYear.current.currentYear)
+      val maxPersonalBenefit = MAX_BENEFIT(TaxYear.current.currentYear)
+
+      val paragraphContent = if(role == Transferor){
 
         Html(s"<p>${messages("pages.history.active.transferor")}</p>")
 
       } else {
-        val formattedMaxPATransfer = NumberFormat.getIntegerInstance().format(maxPATransfer)
-        val formattedMaxBenefit = NumberFormat.getIntegerInstance().format(maxBenefit)
+
+        lazy val formattedMaxPATransfer = NumberFormat.getIntegerInstance().format(maxPersonalAllowanceTransfer)
+        lazy val formattedMaxBenefit = NumberFormat.getIntegerInstance().format(maxPersonalBenefit)
 
         Html(s"<p>${messages("pages.history.active.recipient.paragraph1", formattedMaxPATransfer)}</p>" +
           s"<p>${messages("pages.history.active.recipient.paragraph2", formattedMaxBenefit)}</P>")
@@ -63,49 +65,28 @@ object HistorySummaryViewModel {
         controllers.routes.UpdateRelationshipController.decision().url)
       HistorySummaryViewModel(paragraphContent, button)
     }
-  }
 
 
-  private def createHistoricBasedViewModel(historicRelationships: Option[Seq[RelationshipRecord]], endOfYear: LocalDate)
-                                          (implicit messages: Messages): HistorySummaryViewModel = {
 
-    historicRelationships match {
-      case(Some(Seq(relationshipRecord, _*))) => {
+  private def createHistoricBasedViewModel(role: Role)(implicit messages: Messages): HistorySummaryViewModel = {
+      val formattedEndOfYear = TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))
 
-        val formattedEndOfYear = TextGenerators.ukDateTransformer(Some(endOfYear), LanguageUtils.isWelsh(messages))
+      val paragraphContent = if(role == Transferor){
 
-        val paragraphContent = if(relationshipRecord.participant == "Transferor"){
+        //TODO welsh
+        Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
+          s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</P>")
 
-          //TODO welsh
-          Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-            s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</P>")
-
-        }else{
-          //TODO welsh
-          Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-            s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</P>")
-        }
-
-        val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
-          controllers.routes.UpdateRelationshipController.claims().url)
-        HistorySummaryViewModel(paragraphContent, button)
-
+      }else{
+        //TODO welsh
+        Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
+          s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</P>")
       }
-      case _ => handleError("historic")
-    }
 
-  }
+      val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
+        controllers.routes.UpdateRelationshipController.claims().url)
+      HistorySummaryViewModel(paragraphContent, button)
 
-  private def handleError(accountStatus: String) = {
-
-    val errorMessage = accountStatus match {
-      case("active") => "No active relationship record found"
-      case("historic") => "No historic relationship record found"
-    }
-
-    //TODO logging level
-
-    throw new RuntimeException(errorMessage)
   }
 
 }

@@ -53,10 +53,10 @@ object WelshDateConverter {
   val fetchMonthName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
   val fetchDayName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("EEEE").withLocale(Locale.UK))
 
-  def welshConverted(date: Option[LocalDate]): String =
+  def welshConverted(date: Option[LocalDate], transformPattern: String = "d MMMM yyyy"): String =
     date.fold("") { localDate =>
       val month = fetchMonthName(localDate)
-      val enDate = localDate.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
+      val enDate = localDate.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
       enDate.replaceAll(month, welshMonths.get(month).get)
     }
 

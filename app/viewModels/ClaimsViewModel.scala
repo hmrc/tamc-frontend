@@ -16,7 +16,8 @@
 
 package viewModels
 
-import models.RelationshipRecord
+import config.{ApplicationConfig, ApplicationGlobal}
+import models.{Active, RecordStatus, RelationshipRecord}
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.LanguageUtils
@@ -60,8 +61,7 @@ case class ClaimsViewModel(activeRow: Option[ActiveRow], historicRows: Option[Se
 
 object ClaimsViewModel {
 
-  def apply(activeRelationship: Option[RelationshipRecord], historicRelationships: Option[Seq[RelationshipRecord]], isActiveRecord: Boolean,
-            taxFreeAllowanceUrl: String)
+  def apply(activeRelationship: Option[RelationshipRecord], historicRelationships: Option[Seq[RelationshipRecord]], recordStatus: RecordStatus)
            (implicit messages: Messages): ClaimsViewModel = {
 
     val activeRow = activeRelationship map(ActiveRow(_))
@@ -69,14 +69,14 @@ object ClaimsViewModel {
       historicRelationships map(HistoricRow(_))
     }
 
+    val isActiveRecord = recordStatus == Active
 
-
-    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink(taxFreeAllowanceUrl), backLinkUrl(isActiveRecord))
+    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink, backLinkUrl(isActiveRecord))
   }
 
-  private def taxFreeAllowanceLink(taxFreeAllowanceUrl: String)(implicit messages: Messages): Html = {
+  private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="$taxFreeAllowanceUrl">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 

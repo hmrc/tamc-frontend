@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package forms.coc
+package utils.Constants.forms.coc
 
-import play.api.data.Form
-import play.api.data.Forms.{optional, single, text}
-import play.api.i18n.Messages
-import utils.Constants.forms.coc.CheckClaimOrCancelDecisionFormConstants
-
-//TODO constants
-object CheckClaimOrCancelDecisionForm extends CheckClaimOrCancelDecisionFormConstants {
-  def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
-    //TODO error message
-    single(DecisionChoice -> optional(text).verifying(messages("cxcxcxcx"), { _.isDefined }))
-
-  )
+trait MakeChangesDecisionFormConstants {
+  val StopMAChoice = "stopMAChoice"
+  val Divorce = "divorce"
+  val IncomeChanges = "incomeChanges"
+  val NoLongerRequired = "noLongerRequired"
+  val Bereavement = "bereavement"
 }

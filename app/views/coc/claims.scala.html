@@ -26,68 +26,55 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: u
 
 @templates.tamc_main(
 title = messages("title.pattern", messages("pages.claims.title")),
-mainConfig = views.helpers.MainConfig(Some("history-page"))
-) {
+mainConfig = views.helpers.MainConfig(None)
+){
 
-<a href="@viewModel.backLinkUrl" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@viewModel.backLinkUrl" class="link-back">@messages("generic.back")</a>
 
-<div class="grid-row">
-    <div class="column-two-thirds">
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@messages("pages.claims.title")</h1>
+    </header>
 
-        <header class="page-heading">
-            <h1 class="heading-xlarge">@messages("pages.claims.title")</h1>
-        </header>
-
-    </div>
-</div>
-
-<div class="grid-row">
-    <div class="column-two-thirds">
-
-        <section>
-            <table>
-                <thead>
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th class="">@messages("pages.claims.table.heading.tax-year")</th>
+                    <th colspan="2">@messages("pages.claims.table.heading.status")</th>
+                </tr>
+            </thead>
+            <tbody>
+                @viewModel.activeRow.fold(Html("")){ row =>
                     <tr>
-                        <th class="">@messages("pages.claims.table.heading.tax-year")</th>
-                        <th colspan="2">@messages("pages.claims.table.heading.status")</th>
+                        <td class="bold" id="active">
+                            @row.activeDateInterval
+                        </td>
+                        <td id="active-reason" colspan="2">@row.activeStatus</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @viewModel.activeRow.fold(Html("")){ row =>
+                }
+
+                @viewModel.historicRows.fold(Html("")){ rows =>
+                    @for((row, index) <- rows.zipWithIndex) {
                         <tr>
-                            <td class="bold" id="active">
-                                @row.activeDateInterval
+                            <td class="bold" id="line${index}-start">
+                                @row.historicDateInterval
                             </td>
-                            <td id="active-reason" colspan="2">@row.activeStatus</td>
+                            <td id="line${index}-reason">
+                                @row.historicStatus
+                            </td>
                         </tr>
                     }
+                }
+            </tbody>
+        </table>
+    </section>
 
-                    @viewModel.historicRows.fold(Html("")){ rows =>
-                        @for((row, index) <- rows.zipWithIndex) {
-                            <tr>
-                                <td class="bold" id="line${index}-start">
-                                    @row.historicDateInterval
-                                </td>
-                                <td id="line${index}-reason">
-                                    @row.historicStatus
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </section>
+    <p class="panel-indent panel-indent--gutter">@viewModel.taxFreeAllowanceLink</p>
 
-        <p class="panel-indent panel-indent--gutter">@viewModel.taxFreeAllowanceLink</p>
-
-        @if(viewModel.isActiveRecord){
-            <a id="backToSummary" href="@controllers.routes.UpdateRelationshipController.history()">
-                @messages("pages.claims.back.link")
-            </a>
-        }
-
-    </div>
-
-</div>
+    @if(viewModel.isActiveRecord){
+        <a id="backToSummary" href="@controllers.routes.UpdateRelationshipController.history()">
+            @messages("claim.summary.link")
+        </a>
+    }
 
 }

@@ -15,29 +15,42 @@
  *@
 
 @import models.auth.AuthenticatedUserRequest
+@import uk.gov.hmrc.play.views.html.helpers._
+@import forms.coc.CheckClaimOrCancelDecisionForm
 
-@(checkRelationshipForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_],
+
+@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = messages("title.pattern", messages("pages.claims.title")),
-mainConfig = views.helpers.MainConfig(Some("history-page"))) {
+title = messages("title.pattern", messages("pages.decision.title")),
+mainConfig = views.helpers.MainConfig()) {
 
-    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">messages("generic.back")</a>
+    <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@messages("generic.back")</a>
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@messages("pages.coc.choose.h1")</h1>
+        <h1 class="heading-xlarge">@messages("pages.decision.title")</h1>
     </header>
 
-    <div class="form-group inline">
+    @form(action = routes.UpdateRelationshipController.submitDecision, args = ('id -> "check-relationship-form")) {
 
-        @templates.input_radio_group(
-        checkRelationshipForm("update-marriage-criteria"),
-        Seq(("true", messages("change.status.radio.1")), ("false", messages("change.status.radio.2"))),
-        '_labelClass -> "block-label",
-        '_labelAfter -> true,
-        '_fieldsetAttributes -> "data-inline-error=update-marriage-criteria-js-error",
-        '_groupClass -> "inline spacingBottom"
-        )
-    </div>
+        <div class="form-group inline">
+
+            @templates.input_radio_group(
+            decisionForm(CheckClaimOrCancelDecisionForm.DecisionChoice),
+            Seq((CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim, messages("pages.decision.radio.check")),
+            (CheckClaimOrCancelDecisionForm.StopMarriageAllowance, messages("pages.decision.radio.stop"))),
+            '_labelClass -> "block-label",
+            '_labelAfter -> true,
+            '_fieldsetAttributes -> "data-inline-error=update-marriage-criteria-js-error",
+            '_groupClass -> "inline spacingBottom"
+            )
+
+        </div>
+
+        <button class="button" type="submit" data-journey-click="">
+            @messages("generic.continue")
+        </button>
+
+    }
 }

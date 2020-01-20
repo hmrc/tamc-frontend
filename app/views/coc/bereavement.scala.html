@@ -15,30 +15,35 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig._
 @import models.auth.AuthenticatedUserRequest
-@import viewModels.HistorySummaryViewModel
+@import viewModels.BereavementViewModel
 
-
-@(loggedInUserInfo: Option[LoggedInUserInfo], viewModel: HistorySummaryViewModel)(implicit messages: Messages,
+@(viewModel: BereavementViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = messages("title.pattern", messages("title.history")),
-mainConfig = views.helpers.MainConfig(None)
-){
-    <header class="page-heading">
-        <p class="heading-secondary">@loggedInUserInfo.get.name.get.firstName
-            @loggedInUserInfo.get.name.get.lastName</p>
-        <h1 class="heading-xlarge">@messages("title.history")</h1>
-    </header>
+title = messages("title.pattern", messages("pages.bereavement.title")),
+mainConfig = views.helpers.MainConfig()) {
 
-   @viewModel.paragraphContent
-    <a id="@viewModel.button.id" href="@viewModel.button.href" class="button" role="button">
-        @viewModel.button.content
-    </a>
+<a href="@controllers.routes.UpdateRelationshipController.makeChange().url" class="link-back">@messages("generic.back")</a>
+
+<header class="page-heading">
+    <h1 class="heading-xlarge" id="bereavement">@messages("pages.bereavement.title")</h1>
+</header>
+
+@viewModel.bereavementParagraphWithLink
+
+@if(viewModel.role == Recipient){
+<p>@messages("pages.bereavement.recipient.paragraph")</p>
+}else{
+<p>@messages("pages.bereavement.transferor.paragraph")</p>
+
+<ul class="bullets">
+ <li>@messages("pages.bereavement.transferor.point1")</li>
+ <li>@messages("pages.bereavement.transferor.point2", viewModel.endOfYear)</li>
+</ul>
+}
 
 }

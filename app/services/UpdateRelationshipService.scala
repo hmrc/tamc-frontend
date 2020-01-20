@@ -16,6 +16,7 @@
 
 package services
 
+import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
@@ -96,6 +97,17 @@ trait UpdateRelationshipService {
     } yield relationshipRecordGroup
   }
 
+  def getCheckClaimOrCancelDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
+    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
+  }
+
+  def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
+    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+  }
+
+  def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
+    cachingService.cacheValue[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
+
   def updateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
     doUpdateRelationship(transferorNino, LanguageUtils.isWelsh(messages)) recover {
       case error =>
@@ -106,7 +118,7 @@ trait UpdateRelationshipService {
   def getRelationship(sessionData: UpdateRelationshipCacheData): RelationshipRecord = {
     sessionData match {
       case UpdateRelationshipCacheData(_, _, _, historic, _, Some(EndRelationshipReason(EndReasonCode.REJECT, _, Some(timestamp))), _) => {
-        historic.get.filter { relation => relation.creationTimestamp == timestamp && relation.participant == Role.RECIPIENT }.head
+        historic.get.filter { relation => relation.creationTimestamp == timestamp && relation.participant == RoleOld.RECIPIENT }.head
       }
       case _ => {
         sessionData.activeRelationshipRecord.get
@@ -154,19 +166,16 @@ trait UpdateRelationshipService {
   def saveEndRelationshipReason(endRealtionshipReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
     cachingService.savRelationshipEndReasonRecord(endRealtionshipReason)
 
+  def saveMakeChangeReason(makeChangeReason: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeReason)
+  }
+
   def isValidDivorceDate(dod: Option[LocalDate])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     for {
       cacheData <- cachingService.getUpdateRelationshipCachedData
     } yield isValidDivorceDate(dod, cacheData)
 
-  def getRelationshipRecordGroup(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = {
-    cachingService.getUpdateRelationshipCachedData map {
-      case(Some(updateRelationshipCacheData)) => RelationshipRecordGroup(updateRelationshipCacheData.activeRelationshipRecord,
-        updateRelationshipCacheData.historicRelationships, None)
-        // TODO error scenario
-      case(_) => ???
-    }
-  }
+  def getRelationshipRecordGroup(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = cachingService.getRelationshipRecordGroup
 
   def getEndDate(endRelationshipReason: EndRelationshipReason,
                  selectedRelationship: RelationshipRecord): LocalDate =
@@ -222,11 +231,11 @@ trait UpdateRelationshipService {
     }
 
     val participants = role match {
-      case Role.TRANSFEROR =>
+      case RoleOld.TRANSFEROR =>
         (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier,
           updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
           TransferorInformation(updateTimestamp = loggedInUser.timestamp))
-      case Role.RECIPIENT =>
+      case RoleOld.RECIPIENT =>
         (RecipientInformation(instanceIdentifier = loggedInUser.cid.toString(), updateTimestamp = loggedInUser.timestamp),
           TransferorInformation(updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp))
     }

@@ -1,0 +1,50 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.Html
+@import models.auth.AuthenticatedUserRequest
+@import utils.LanguageUtils
+@import views.helpers.TextGenerators
+@import uk.gov.hmrc.time.TaxYear
+
+@()(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@currentEndDate = @{
+ TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))
+}
+
+@nextStartDate = @{
+ TextGenerators.ukDateTransformer(Some(TaxYear.current.next.starts), LanguageUtils.isWelsh(messages))
+}
+
+@templates.tamc_main(
+title = messages("title.pattern", messages("pages.cancel.title")),
+mainConfig = views.helpers.MainConfig()) {
+
+ <a href="@controllers.routes.UpdateRelationshipController.makeChange().url" class="link-back">@messages("generic.back")</a>
+
+ <header class="page-heading">
+  <h1 class="heading-xlarge" id="cancel-heading">@messages("pages.cancel.title")</h1>
+ </header>
+
+ <p>@messages("pages.cancel.paragraph1", currentEndDate)</p>
+ <p>@messages("pages.cancel.paragraph2", nextStartDate)</p>
+
+ <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
+    id="confirmUpdate" class="button" role="button"
+    data-journey-click="">@messages("generic.continue")</a>
+}
