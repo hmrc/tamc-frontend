@@ -21,7 +21,7 @@ import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
 import events.{UpdateRelationshipCacheFailureEvent, UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
-import models.{RelationshipRecordGroup, _}
+import models._
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Messages
@@ -52,14 +52,11 @@ trait UpdateRelationshipService {
   private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
 
 
-  def retrieveRelationshipRecordGroup(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = {
-    marriageAllowanceConnector.listRelationship(transferorNino) map { relationshipRecordWrapper =>
-      RelationshipRecordGroup(relationshipRecordWrapper.activeRelationship, relationshipRecordWrapper.historicRelationships,
-        relationshipRecordWrapper.userRecord)
-    }
+  def retrieveRelationshipRecords(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
+    marriageAllowanceConnector.listRelationship(transferorNino) map(RelationshipRecords(_))
   }
 
-  def saveRelationshipRecordGroup(relationshipRecordGroup: RelationshipRecordGroup)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
 
     def cacheOptionalData[T](data: Option[T], f:T => Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] = {
       data match {
@@ -81,10 +78,10 @@ trait UpdateRelationshipService {
     def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cachingService.unlockCreateRelationship().map { _ => trrecord }
 
-    val transferorRec = UserRecord(relationshipRecordGroup.loggedInUserInfo)
-    val cacheActiveRelationshipFuture = cacheActiveRelationship(relationshipRecordGroup.activeRelationship)
-    val saveHistoricRelationshipFuture = cachingService.saveHistoricRelationships(relationshipRecordGroup.historicRelationships)
-    val cacheLoggedInUserInfoFuture = cacheLoggedInUserInfo(relationshipRecordGroup.loggedInUserInfo)
+    val transferorRec = UserRecord(relationshipRecords.loggedInUserInfo)
+    val cacheActiveRelationshipFuture = cacheActiveRelationship(relationshipRecords.activeRelationship)
+    val saveHistoricRelationshipFuture = cachingService.saveHistoricRelationships(relationshipRecords.historicRelationships)
+    val cacheLoggedInUserInfoFuture = cacheLoggedInUserInfo(relationshipRecords.loggedInUserInfo)
     val checkCreateActionLockFuture = checkCreateActionLock(transferorRec)
     val saveTransferorRecordFuture = cachingService.saveTransferorRecord(transferorRec)
 
@@ -94,7 +91,7 @@ trait UpdateRelationshipService {
       _ <- cacheLoggedInUserInfoFuture
       _ <- checkCreateActionLockFuture
       _ <- saveTransferorRecordFuture
-    } yield relationshipRecordGroup
+    } yield relationshipRecords
   }
 
   def getCheckClaimOrCancelDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
@@ -175,7 +172,7 @@ trait UpdateRelationshipService {
       cacheData <- cachingService.getUpdateRelationshipCachedData
     } yield isValidDivorceDate(dod, cacheData)
 
-  def getRelationshipRecordGroup(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = cachingService.getRelationshipRecordGroup
+  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = cachingService.getRelationshipRecords
 
   def getEndDate(endRelationshipReason: EndRelationshipReason,
                  selectedRelationship: RelationshipRecord): LocalDate =

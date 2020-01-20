@@ -343,7 +343,6 @@ change.status.confirm.more.info=We will not share your email with anyone else.
 change.status.confirm-cancellation.button=Confirm cancellation
 change.status.confirm.field.your-email=We will send you confirmation of your cancellation.
 change.status.confirm.field.your-name=Your name
-change.status.earnings.h2=You need to tell us if your or your partner’s income changes so we can tell you if:
 change.status.earnings.tr.instruction-1=claiming Marriage Allowance will still benefit you as a couple
 change.status.earnings.tr.instruction-2=you need to cancel your Marriage Allowance
 change.status.earnings.rec.instruction-1=you expect your income over the whole tax year to be more than £{0}, because you will no longer be eligible as a couple in this tax year
@@ -514,9 +513,7 @@ pages.history.button.remove=Remove allowance
 # bereavement page
 #********************************************************************************
 pages.bereavement.title=We are sorry for your loss
-
-pages.bereavement.notify-hmrc.link=contact the Income Tax general enquiries helpline
-pages.bereavement.notify-hmrc.part2=to tell us about a bereavement.
+pages.bereavement.enquiries.link.paragraph=to tell us about a bereavement.
 pages.bereavement.recipient.paragraph=You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.
 pages.bereavement.transferor.paragraph=If your partner dies after you have transferred some of your Personal Allowance to them:
 pages.bereavement.transferor.point1=their estate will be treated as having the extra Personal Allowance you transferred to them
@@ -571,6 +568,9 @@ pages.cancel.paragraph2=Your Personal Allowance will not include any Marriage Al
 #********************************************************************************
 pages.changeOfIncome.title=Change of income
 pages.changeOfIncome.enquiries.link.paragraph=to tell us about a change of income.
+pages.changeOfIncome.paragraph2=You need to tell us if your or your partner’s income changes so we can tell you if:
+pages.changeOfIncome.bullet1=claiming Marriage Allowance will still benefit you as a couple
+pages.changeOfIncome.bullet2=you need to cancel your Marriage Allowance
 
 
 #********************************************************************************

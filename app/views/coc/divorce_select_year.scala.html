@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
 
-@(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
+@()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -32,40 +32,5 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     ),
     mainConfig = views.helpers.MainConfig()) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
 
-@templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data")
-
-<header class="page-heading">
-    <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.h1"))</h1>
-</header>
-
-@helpers.form(action = routes.UpdateRelationshipController.divorceSelectYear, args = ('id -> "change-relationship-form")) {
-<div class="form-group">
-    <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
-    <input name="historicActiveRecord" id="historicActiveRecord" type="hidden"
-           value="@changeRelationshipForm.get.historicActiveRecord.get"/>
-    <input name="endReason" id="endReason" type="hidden" value="@changeRelationshipForm.get.endReason.get"/>
-</div>
-
-<p>@Html(Messages("pages.form.field.dod"))</p>
-
-<div class="form-group">
-    @templates.dateFields(
-    changeRelationshipForm,
-    "dateOfDivorce",
-    Html(Messages("pages.form.field.dod.question")),
-    None,
-    '_hintText -> Messages("pages.form.field-helper.dod"),
-    '_label -> Messages("collect_user_data.dod.error"),
-    '_labelTextClass -> "client-error-notification")
-</div>
-
-
-    <button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofdivorce_continue">
-        @Html(Messages("generic.continue"))
-    </button>
-
-
-}
 }

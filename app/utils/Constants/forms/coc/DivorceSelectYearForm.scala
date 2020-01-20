@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package models
+package utils.Constants.forms.coc
 
-import play.api.libs.json.Json
+class DivorceSelectYearForm {
 
-object RelationshipRecordStatusWrapper {
-  implicit val formats = Json.format[RelationshipRecordStatusWrapper]
+
+
 }
-
-case class RelationshipRecordStatusWrapper(relationship_record: RelationshipRecordList = RelationshipRecordList(Seq()), status: ResponseStatus)

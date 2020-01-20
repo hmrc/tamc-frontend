@@ -16,10 +16,7 @@
 
 package models
 
-import play.api.libs.json.Json
-
-object RelationshipRecordStatusWrapper {
-  implicit val formats = Json.format[RelationshipRecordStatusWrapper]
-}
-
-case class RelationshipRecordStatusWrapper(relationship_record: RelationshipRecordList = RelationshipRecordList(Seq()), status: ResponseStatus)
+sealed trait RecordStatus
+case object Active extends RecordStatus
+case object ActiveHistoric extends RecordStatus
+case object Historic extends RecordStatus

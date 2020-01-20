@@ -169,13 +169,13 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
 
 
-  def getRelationshipRecordGroup(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordGroup] = {
+  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
     fetch() map {
       case(Some(cacheMap)) => {
         val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
         val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
-        RelationshipRecordGroup(activeRelationshipRecord, historicRelationships)
+        RelationshipRecords(activeRelationshipRecord, historicRelationships)
       }
         //TODO error scenario
       case _ => ???

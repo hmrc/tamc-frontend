@@ -18,8 +18,8 @@ package models
 
 import play.api.libs.json.Json
 
-object RelationshipRecordStatusWrapper {
-  implicit val formats = Json.format[RelationshipRecordStatusWrapper]
-}
+case class RelationshipRecordList(relationships: Seq[RelationshipRecord], userRecord: Option[LoggedInUserInfo] = None)
 
-case class RelationshipRecordStatusWrapper(relationship_record: RelationshipRecordList = RelationshipRecordList(Seq()), status: ResponseStatus)
+object RelationshipRecordList {
+  implicit val formats = Json.format[RelationshipRecordList]
+}

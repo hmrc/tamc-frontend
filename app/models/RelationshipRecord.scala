@@ -20,22 +20,6 @@ import play.api.libs.json.Json
 import services.TimeService
 import utils.DateUtils
 
-case class RelationshipRecordWrapper(
-                                      relationships: Seq[RelationshipRecord],
-                                      userRecord: Option[LoggedInUserInfo] = None){
-
-  def activeRelationship: Option[RelationshipRecord] = relationships.find(_.isActive)
-
-  def historicRelationships: Option[Seq[RelationshipRecord]] = {
-    if (relationships.size > 1 && relationships.head.participant1EndDate.isEmpty) {
-      Some(relationships.tail)
-    } else if (relationships.nonEmpty && relationships.head.participant1EndDate.isDefined) {
-      Some(relationships)
-    } else None
-  }
-}
-
-
 case class RelationshipRecord(
                                participant: String,
                                creationTimestamp: String,
@@ -45,7 +29,7 @@ case class RelationshipRecord(
                                otherParticipantInstanceIdentifier: String,
                                otherParticipantUpdateTimestamp: String) {
 
-  def isActive:Boolean = participant1EndDate match{
+  def isActive: Boolean = participant1EndDate match{
     case None => true
     case Some(date) => DateUtils.isFutureDate(date)
   }
@@ -72,67 +56,6 @@ case class RelationshipRecord(
   }
 }
 
-case class RelationshipRecordGroup(activeRelationship: Option[RelationshipRecord] = None,
-                                   historicRelationships: Option[Seq[RelationshipRecord]] = None,
-                                   loggedInUserInfo: Option[LoggedInUserInfo] = None){
-
-  val recordStatus: RecordStatus = {
-
-    (activeRelationship, historicRelationships) match {
-      case(Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isEmpty => Active
-      case(Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isDefined => ActiveHistoric
-      case(_, _) => Historic
-    }
-
-  }
-
-  val role: Role = {
-    (activeRelationship, historicRelationships) match {
-      case(Some(RelationshipRecord("Transferor", _, _, _, _, _, _)), _) => Transferor
-      case(Some(RelationshipRecord("Recipient", _, _, _, _, _, _)), _) => Recipient
-      case(_, Some(Seq(RelationshipRecord("Transferor", _, _, _, _, _, _), _*))) => Transferor
-      case(_, Some(Seq(RelationshipRecord("Recipient", _, _, _, _, _, _), _*))) => Recipient
-    }
-  }
-}
-
-object RelationshipRecordList {
-
-  def apply(relationshipRecordWrapper :RelationshipRecordWrapper): RelationshipRecordGroup = {
-    RelationshipRecordGroup(relationshipRecordWrapper.activeRelationship, relationshipRecordWrapper.historicRelationships,
-      relationshipRecordWrapper.userRecord)
-  }
-
-}
-
 object RelationshipRecord {
   implicit val formats = Json.format[RelationshipRecord]
-}
-
-sealed trait Role
-case object Transferor extends Role
-case object Recipient extends Role
-
-sealed trait RecordStatus
-case object Active extends RecordStatus
-case object ActiveHistoric extends RecordStatus
-case object Historic extends RecordStatus
-
-object RoleOld {
-  val TRANSFEROR = "Transferor"
-  val RECIPIENT = "Recipient"
-}
-
-object EndReasonCode {
-  val CANCEL = "CANCEL"
-  val REJECT = "REJECT"
-  val DIVORCE = "DIVORCE"
-  val DIVORCE_CY = "DIVORCE_CY"
-  val DIVORCE_PY = "DIVORCE_PY"
-  val EARNINGS = "EARNINGS"
-  val BEREAVEMENT = "BEREAVEMENT"
-}
-
-object RelationshipRecordWrapper {
-  implicit val formats = Json.format[RelationshipRecordWrapper]
 }

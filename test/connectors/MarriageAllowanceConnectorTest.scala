@@ -54,27 +54,27 @@ class MarriageAllowanceConnectorTest extends ControllerBaseSpec with WireMockHel
 
     "return data" when {
       "success response returned from HOD" in {
-        val response = RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus("OK"))
+        val response = RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus("OK"))
         serverStub(response)
-        val result: Future[RelationshipRecordWrapper] = MarriageAllowanceConnector.listRelationship(nino)
-        await(result) shouldBe RelationshipRecordWrapper(Nil, None)
+        val result: Future[RelationshipRecordList] = MarriageAllowanceConnector.listRelationship(nino)
+        await(result) shouldBe RelationshipRecordList(Nil, None)
       }
     }
 
     "throw an exception" when {
 
       "TRANSFEROR_NOT_FOUND is returned" in {
-        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus(TRANSFEROR_NOT_FOUND)))
+        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(TRANSFEROR_NOT_FOUND)))
         intercept[TransferorNotFound](await(MarriageAllowanceConnector.listRelationship(nino)))
       }
 
       "CITIZEN_NOT_FOUND is returned" in {
-        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus(CITIZEN_NOT_FOUND)))
+        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(CITIZEN_NOT_FOUND)))
         intercept[CitizenNotFound](await(MarriageAllowanceConnector.listRelationship(nino)))
       }
 
       "BAD_REQUEST is returned" in {
-        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus(BAD_REQUEST)))
+        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(BAD_REQUEST)))
         intercept[BadFetchRequest](await(MarriageAllowanceConnector.listRelationship(nino)))
       }
     }

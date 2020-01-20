@@ -16,10 +16,24 @@
 
 package models
 
-import play.api.libs.json.Json
 
-object RelationshipRecordStatusWrapper {
-  implicit val formats = Json.format[RelationshipRecordStatusWrapper]
+
+
+
+
+object RoleOld {
+  val TRANSFEROR = "Transferor"
+  val RECIPIENT = "Recipient"
 }
 
-case class RelationshipRecordStatusWrapper(relationship_record: RelationshipRecordList = RelationshipRecordList(Seq()), status: ResponseStatus)
+object EndReasonCode {
+  val CANCEL = "CANCEL"
+  val REJECT = "REJECT"
+  val DIVORCE = "DIVORCE"
+  val DIVORCE_CY = "DIVORCE_CY"
+  val DIVORCE_PY = "DIVORCE_PY"
+  val EARNINGS = "EARNINGS"
+  val BEREAVEMENT = "BEREAVEMENT"
+}
+
+

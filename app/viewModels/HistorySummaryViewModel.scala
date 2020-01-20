@@ -33,12 +33,12 @@ case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummar
 object HistorySummaryViewModel {
 
   //TODO is the taxyear being handled correctly here?
-  def apply(relationshipRecordGroup: RelationshipRecordGroup)(implicit messages: Messages): HistorySummaryViewModel = {
+  def apply(relationshipRecords: RelationshipRecords)(implicit messages: Messages): HistorySummaryViewModel = {
 
-    if(relationshipRecordGroup.recordStatus == Active){
-      createActiveRecordBasedViewModel(relationshipRecordGroup.role)
+    if(relationshipRecords.recordStatus == Active){
+      createActiveRecordBasedViewModel(relationshipRecords.role)
     } else {
-      createHistoricBasedViewModel(relationshipRecordGroup.role)
+      createHistoricBasedViewModel(relationshipRecords.role)
     }
   }
 

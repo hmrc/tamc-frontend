@@ -16,44 +16,68 @@
 
 package models
 
-import controllers.ControllerBaseSpec
-import test_utils.data.RelationshipRecordData._
+import org.joda.time.DateTime
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import uk.gov.hmrc.play.test.UnitSpec
+import utils.DateUtils
 
-class RelationshipRecordListTest extends ControllerBaseSpec {
+class RelationshipRecordListTest extends UnitSpec with GuiceOneAppPerSuite {
 
-  "RelationshipRecordList" should {
-    "set activeRecord as true" when {
-      "activeRelationship is defined and participant1EndDate is empty" in {
-        val recordList = new RelationshipRecordList(Some(activeRecordWithNoEndDate), None, None)
-        recordList.activeRecord shouldBe true
-        recordList.historicRecord shouldBe false
-        recordList.historicActiveRecord shouldBe false
+  "activeRelationshipRecord" should {
+    "return None" when {
+      "relationships is an empty list" in {
+        val relationshipRecordWrapper =
+          RelationshipRecordList(
+            Seq())
+        relationshipRecordWrapper.activeRelationship shouldBe None
+      }
+      "there is no active relationship records on the list" in{
+
+        val relationshipRecordWrapper =
+          RelationshipRecordList(
+            Seq(
+              inactiveRelationshipRecord1,
+              inactiveRelationshipRecord2,
+              inactiveRelationshipRecord3
+            ))
+        relationshipRecordWrapper.activeRelationship shouldBe None
       }
     }
 
-    "set historicRecord true" when {
-      "historic relationship is defined" in {
-        val recordList = new RelationshipRecordList(None, Some(List(historicRecord)), None)
-        recordList.activeRecord shouldBe false
-        recordList.historicRecord shouldBe true
-        recordList.historicActiveRecord shouldBe false
-      }
-
-      "historic and active relationship is defined" in {
-        val recordList = new RelationshipRecordList(Some(activeRecordWithNoEndDate), Some(List(historicRecord)), None)
-        recordList.activeRecord shouldBe true
-        recordList.historicRecord shouldBe true
-        recordList.historicActiveRecord shouldBe false
-      }
-    }
-
-    "set activeHistoricRecord as true" when {
-      "activeRelationship and participant1EndDate is defined" in {
-        val recordList = new RelationshipRecordList(Some(activeRecord), None, None)
-        recordList.activeRecord shouldBe false
-        recordList.historicRecord shouldBe false
-        recordList.historicActiveRecord shouldBe true
+    "return the head of active relationship list" when {
+      "there are active and inactive relationship records on the list" in {
+        val relationshipRecordWrapper =
+          RelationshipRecordList(
+            Seq(
+              activeRelationshipRecord,
+              activeRelationshipRecord2,
+              inactiveRelationshipRecord1,
+              inactiveRelationshipRecord2,
+              inactiveRelationshipRecord3
+            ))
+        relationshipRecordWrapper.activeRelationship shouldBe Some(activeRelationshipRecord)
       }
     }
   }
+
+  private val activeRelationshipRecord =
+    RelationshipRecord(
+      Role.RECIPIENT,
+      "56787",
+      "20130101",
+      Some(RelationshipEndReason.Default),
+      None,
+      "",
+      "")
+
+  private val activeRelationshipRecord2  = activeRelationshipRecord.copy()
+
+
+  private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(DateUtils.DatePattern)
+  private val inactiveRelationshipEndDate2 = new DateTime().minusDays(10).toString(DateUtils.DatePattern)
+  private val inactiveRelationshipEndDate3 = new DateTime().minusDays(1000).toString(DateUtils.DatePattern)
+
+  private val inactiveRelationshipRecord1 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
+  private val inactiveRelationshipRecord2 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
+  private val inactiveRelationshipRecord3 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
 }
