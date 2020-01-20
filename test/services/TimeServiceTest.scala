@@ -107,27 +107,19 @@ class TimeServiceTest extends ControllerBaseSpec {
   }
 
   "parseDateWithFormat" should {
-    "parse date with custom format of -yyyyMMdd" in {
-      val year = 2017
-      val month = 10
-      val day = 22
-      val expected = new LocalDate(year, month, day)
+    val formats = List[String]("-yyyyMMdd", " yyyyMMdd")
+    for (format <- formats) {
+      s"parse date with custom format of $format" in {
+        val year = 2017
+        val month = 10
+        val day = 22
+        val expected = new LocalDate(year, month, day)
 
-      val format = "-yyyyMMdd"
-      val date = "-" + year + month + day
+        val prefix: String = format.substring(0,1)
+        val date: String = "" + prefix + year + month + day
 
-      service.parseDateWithFormat(date, format) shouldBe expected
-    }
-
-    "parse date with default format of yyyyMMdd" in {
-      val year = 2017
-      val month = 10
-      val day = 22
-      val expected = new LocalDate(year, month, day)
-
-      val date = "" + year + month + day
-
-      service.parseDateWithFormat(date) shouldBe expected
+        service.parseDateWithFormat(date.trim, format.trim) shouldBe expected
+      }
     }
   }
 }
