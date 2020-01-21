@@ -58,7 +58,7 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
   }
   val relationshipRecordWitNoEndDate =
     RelationshipRecord(
-      Role.RECIPIENT,
+      RoleOld.RECIPIENT,
       "56787",
       "20130101",
       Some(RelationshipEndReason.Default),

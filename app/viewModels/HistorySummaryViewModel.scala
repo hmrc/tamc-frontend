@@ -35,7 +35,7 @@ object HistorySummaryViewModel {
   //TODO is the taxyear being handled correctly here?
   def apply(relationshipRecords: RelationshipRecords)(implicit messages: Messages): HistorySummaryViewModel = {
 
-    if(relationshipRecords.recordStatus == Active){
+    if (relationshipRecords.recordStatus == Active) {
       createActiveRecordBasedViewModel(relationshipRecords.role)
     } else {
       createHistoricBasedViewModel(relationshipRecords.role)
@@ -43,49 +43,47 @@ object HistorySummaryViewModel {
   }
 
   private def createActiveRecordBasedViewModel(role: Role)(implicit messages: Messages): HistorySummaryViewModel = {
+    lazy val maxPersonalAllowanceTransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(TaxYear.current.currentYear)
+    lazy val maxPersonalBenefit = MAX_BENEFIT(TaxYear.current.currentYear)
 
+    lazy val formattedMaxPATransfer = NumberFormat.getIntegerInstance().format(maxPersonalAllowanceTransfer)
+    lazy val formattedMaxBenefit = NumberFormat.getIntegerInstance().format(maxPersonalBenefit)
 
-      val maxPersonalAllowanceTransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(TaxYear.current.currentYear)
-      val maxPersonalBenefit = MAX_BENEFIT(TaxYear.current.currentYear)
-
-      val paragraphContent = if(role == Transferor){
-
-        Html(s"<p>${messages("pages.history.active.transferor")}</p>")
-
-      } else {
-
-        lazy val formattedMaxPATransfer = NumberFormat.getIntegerInstance().format(maxPersonalAllowanceTransfer)
-        lazy val formattedMaxBenefit = NumberFormat.getIntegerInstance().format(maxPersonalBenefit)
-
-        Html(s"<p>${messages("pages.history.active.recipient.paragraph1", formattedMaxPATransfer)}</p>" +
-          s"<p>${messages("pages.history.active.recipient.paragraph2", formattedMaxBenefit)}</P>")
-      }
-
-      val button = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
-        controllers.routes.UpdateRelationshipController.decision().url)
-      HistorySummaryViewModel(paragraphContent, button)
+    val paragraphContent = if (role == Transferor) {
+      Html(s"<p>${messages("pages.history.active.transferor")}</p>")
+    } else {
+      Html(s"<p>${messages("pages.history.active.recipient.paragraph1", formattedMaxPATransfer)}</p>" +
+        s"<p>${messages("pages.history.active.recipient.paragraph2", formattedMaxBenefit)}</P>")
     }
 
+    val button = HistorySummaryButton(
+      "checkOrUpdateMarriageAllowance",
+      messages("pages.history.active.button"),
+      controllers.routes.UpdateRelationshipController.decision().url
+    )
+
+    HistorySummaryViewModel(paragraphContent, button)
+  }
 
 
   private def createHistoricBasedViewModel(role: Role)(implicit messages: Messages): HistorySummaryViewModel = {
-      val formattedEndOfYear = TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))
+    val formattedEndOfYear = TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))
 
-      val paragraphContent = if(role == Transferor){
+    val paragraphContent = if (role == Transferor) {
 
-        //TODO welsh
-        Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-          s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</P>")
+      //TODO welsh
+      Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
+        s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</P>")
 
-      }else{
-        //TODO welsh
-        Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-          s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</P>")
-      }
+    } else {
+      //TODO welsh
+      Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
+        s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</P>")
+    }
 
-      val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
-        controllers.routes.UpdateRelationshipController.claims().url)
-      HistorySummaryViewModel(paragraphContent, button)
+    val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
+      controllers.routes.UpdateRelationshipController.claims().url)
+    HistorySummaryViewModel(paragraphContent, button)
 
   }
 

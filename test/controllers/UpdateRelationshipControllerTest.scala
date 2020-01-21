@@ -57,54 +57,54 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       messagesApi,
       auth,
       mockUpdateRelationshipService,
-      mockListRelationshipService,
+//      mockListRelationshipService,
       mockRegistrationService,
       mockCachingService,
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
-  "History" should {
-    "redirect to transfer" when {
-      "has no active record, no active historic and temporary authentication" in {
-        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-          .thenReturn(
-            Future.successful(
-              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
-            )
-          )
-        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
-      }
-    }
-
-    "redirect to how-it-works" when {
-      "has no active record, no active historic and permanent authentication" in {
-        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-          .thenReturn(
-            Future.successful(
-              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
-            )
-          )
-        val result: Future[Result] = controller().history()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
-      }
-    }
-
-    "load change of circumstances page" when {
-      "has some active record" in {
-        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-          .thenReturn(
-            Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-          )
-
-        val result: Future[Result] = controller().history()(request)
-        status(result) shouldBe OK
-      }
-
-    }
-  }
+//  "History" should {
+//    "redirect to transfer" when {
+//      "has no active record, no active historic and temporary authentication" in {
+//        when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//          .thenReturn(
+//            Future.successful(
+//              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
+//            )
+//          )
+//        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
+//        status(result) shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+//      }
+//    }
+//
+//    "redirect to how-it-works" when {
+//      "has no active record, no active historic and permanent authentication" in {
+//        when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//          .thenReturn(
+//            Future.successful(
+//              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
+//            )
+//          )
+//        val result: Future[Result] = controller().history()(request)
+//        status(result) shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
+//      }
+//    }
+//
+//    "load change of circumstances page" when {
+//      "has some active record" in {
+//        when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//          .thenReturn(
+//            Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
+//          )
+//
+//        val result: Future[Result] = controller().history()(request)
+//        status(result) shouldBe OK
+//      }
+//
+//    }
+//  }
 
   "historyWithCy" should {
     "redirect to history, with a welsh language setting" in {
