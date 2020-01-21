@@ -27,7 +27,7 @@
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
 @(title: String,
- manageService:Boolean = false,
+ manageService: Boolean = false,
  sidebarLinks: Option[Html] = None,
  sidebarClass: Option[String] = None,
  mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
@@ -124,7 +124,7 @@
    if(manageService) {
      messages("tamc.manage")
    } else {
-      messages("tamc.apply")
+     messages("tamc.apply")
    }
  } else {
   ""
