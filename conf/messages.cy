@@ -486,7 +486,7 @@ technical.transferor-dead-p2=os bydd angen i chi drafod eich cais am Lwfans Prio
 pages.history.help.partner=Ar hyn o bryd, rydych yn helpu’ch partner i elwa o Lwfans Priodasol.
 pages.history.helped.by.partner=Ar hyn o bryd, mae’ch partner yn eich helpu i elwa o Lwfans Priodasol.
 pages.history.cancellation=Gallwch ganslo Lwfans Priodasol ar-lein
-pages.history.cancellation1=Os ydych wedi ysgaru neu wedi dod &#226;’ch partneriaeth sifil i ben, gallwch ganslo’ch Lwfans Priodasol ar-lein. Os ydych wedi ymwahanu &#226;’ch priod neu bartner sifil ar hyn o bryd, gallwch barhau i gael Lwfans Priodasol hyd nes eich bod yn dod &#226;’ch priodas neu bartneriaeth sifil i ben yn gyfreithlon.
+pages.history.cancellation1=Os ydych wedi ysgaru neu wedi dod &#226;’ch partneriaeth sifil i ben, gallwch ganslo’ch Lwfans Priodasol ar-lein. Os ydych wedi gwahanu &#226;’ch priod neu bartner sifil ar hyn o bryd, gallwch barhau i gael Lwfans Priodasol hyd nes eich bod yn dod &#226;’ch priodas neu bartneriaeth sifil i ben yn gyfreithlon.
 pages.history.cancellation2=Gallwch hefyd ganslo er mwyn dod &#226; thaliadau i ben os ydych yn dal i fod yn briod neu mewn partneriaeth sifil, ond nad ydych bellach am elwa o Lwfans Priodasol.
 pages.history.partner.help=Ar hyn o bryd, mae’ch partner yn eich helpu i elwa o Lwfans Priodasol.
 pages.history.cancel=Gallwch ganslo Lwfans Priodasol:
@@ -575,5 +575,15 @@ eligibility.check.do.you.live.in.scotland.h1=A ydych yn byw yn yr Alban?
 #*************************************************************
 tamc.banner.recruitment.link=Helpwch i wella gwasanaethau digidol drwy ymuno â phanel defnyddwyr CThEM (yn agor ffenestr neu dab newydd)
 tamc.banner.recruitment.reject=Dim diolch
-tamc.banner.recruitment.title=Help gwella gov.uk
+tamc.banner.recruitment.title=Helpwch i wella gov.uk
 tamc.banner.recruitment.linkURL=https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133
+
+#*************************************************************
+# Page not found
+#*************************************************************
+global.page.not.found.error.title=Heb ddod o hyd i’r dudalen
+global.page.not.found.error.check.web.address.correct=Os gwnaethoch deipio’r cyfeiriad gwe, gwiriwch ei fod yn gywir.
+global.page.not.found.error.check.web.address.full=Os gwnaethoch ludo’r cyfeiriad gwe, gwiriwch eich bod wedi copïo’r cyfeiriad yn llawn.
+global.page.not.found.error.contact=Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, {0} os oes angen i chi siarad â rhywun am eich crynodeb treth blynyddol.
+global.page.not.found.error.contact.link.text=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM
+global.page.not.found.error.contact.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines

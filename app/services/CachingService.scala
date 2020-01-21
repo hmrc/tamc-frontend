@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,6 +130,9 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
             dateOfMarriage = cacheMap.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE))))
+
+  def getRecipientRecord(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientRecord]] =
+    fetchAndGetEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD)
 
   def getCachedData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[CacheData]] =
     getCacheData(nino).map {

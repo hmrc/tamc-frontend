@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,11 @@ object PlayFormFormatter {
       def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
 
       def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] = {
-        data.get(key).map {
-          _.trim
-        }.filterNot(_.isEmpty()).toRight(Seq(FormError(key, error)))
+        data.get(key)
+          .filterNot(_ == null)
+          .map(_.trim)
+          .filterNot(_.isEmpty())
+          .toRight(Seq(FormError(key, error)))
       }
     })
 
