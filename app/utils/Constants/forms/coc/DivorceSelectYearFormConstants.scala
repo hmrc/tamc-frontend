@@ -16,8 +16,7 @@
 
 package utils.Constants.forms.coc
 
-class DivorceSelectYearForm {
+trait DivorceSelectYearFormConstants {
 
-
-
+  val DateOfDivorce = "dateOfDivorce"
 }

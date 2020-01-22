@@ -102,6 +102,32 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
   }
 
+  def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {
+    cachingService.fetchAndGetEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
+  }
+
+  //TODO tuple or type
+  def getDivorceExplanationData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {
+
+    val relationshipRecordsFuture = getRelationshipRecords
+    val divorceDateFuture = getDivorceDate
+
+    for {
+     relationshipRecords <- relationshipRecordsFuture
+     divorceDate <- divorceDateFuture
+    } yield {
+
+      //TODO is this OK?
+      divorceDate.fold(throw new RuntimeException("divorce date missing from cache")){
+        (relationshipRecords.role, _)
+      }
+    }
+  }
+
+  def saveDivorceDate(dateOfDivorce: LocalDate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[LocalDate] =
+    cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE, dateOfDivorce)
+
+
   def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
     cachingService.cacheValue[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
 

@@ -285,13 +285,11 @@ pages.form.field-helper.nino-where=Ble y gallaf ddod o hyd i hwn?
 pages.form.field-helper.nino.expand=cliciwch i ehangu
 pages.form.field-helper.nino-found=Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.
 pages.form.field-helper.dom=Er enghraifft, 31 3 1980
-pages.form.field-helper.dod=Er enghraifft, 31 3 1980
 pages.form.field.your-confirmation=E-bost i gadarnhau
 pages.form.field.yourDetails=Byddwn yn e-bostio cadarnhad o’ch cais am Lwfans Priodasol cyn pen 24 awr. Ni fyddwn yn rhannu’ch cyfeiriad e-bost gydag unrhyw un arall.
 pages.form.field.transferor-email=Eich cyfeiriad e-bost
 pages.form.field.enter-email=Nodwch gyfeiriad e-bost
 pages.form.field.dod=Os ydych wedi ymwahanu &#226;’ch priod neu bartner sifil ar hyn o bryd, gallwch barhau i gael Lwfans Priodasol hyd nes eich bod yn dod &#226;’ch priodas neu bartneriaeth sifil i ben yn gyfreithlon.
-pages.form.field.dod.question=Pryd y gwnaethoch ddod &#226;’ch priodas neu bartneriaeth sifil i ben yn gyfreithlon?
 #********************************************************************************
 # Date of Marriage
 #********************************************************************************

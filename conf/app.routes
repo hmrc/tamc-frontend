@@ -46,8 +46,9 @@ GET    /change-of-income                           @controllers.UpdateRelationsh
 GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
 POST   /reason-for-change                          @controllers.UpdateRelationshipController.updateRelationshipAction
 POST   /divorce                                    @controllers.UpdateRelationshipController.divorceAction
-GET    /divorce-select-year                        @controllers.UpdateRelationshipController.divorceYear
-POST   /divorce-select-year                        @controllers.UpdateRelationshipController.divorceSelectYear
+GET    /divorce-enter-year                         @controllers.UpdateRelationshipController.divorceEnterYear
+POST   /divorce-enter-year                         @controllers.UpdateRelationshipController.submitDivorceEnterYear
+GET    /divorce-end-explanation                    @controllers.UpdateRelationshipController.divorceEndExplanation
 GET    /confirm-email                              @controllers.UpdateRelationshipController.confirmEmail
 GET    /confirm-change                             @controllers.UpdateRelationshipController.confirmUpdate
 #TO be post to edit

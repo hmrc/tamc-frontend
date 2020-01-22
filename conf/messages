@@ -291,13 +291,11 @@ pages.form.field-helper.nino-where=Where do I find this?
 pages.form.field-helper.nino.expand=click to expand
 pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits.
 pages.form.field-helper.dom=For example, 31 3 1980
-pages.form.field-helper.dod=For example, 31 3 1980
 pages.form.field.your-confirmation=Confirmation email
 pages.form.field.yourDetails=We will email confirmation of your Marriage Allowance application within 24 hours. We will not share your email with anyone else.
 pages.form.field.transferor-email=Your email address
 pages.form.field.enter-email=Enter email address
 pages.form.field.dod=If you are currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
-pages.form.field.dod.question=When did you legally end your marriage or civil partnership?
 
 
 #********************************************************************************
@@ -376,7 +374,6 @@ change.status.divorce.recipient.directions=You should tell us if you have divorc
 change.status.historic-active.result=Removing Marriage Allowance from the start of the tax year could result in your partner underpaying tax. We will notify them at the end of the tax year. Any underpayment will usually be collected through an adjustment to their tax code.
 change.status.historic-active.directions=You can remove Marriage Allowance from the start of the tax year ({2}) if you have divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.cancel.h1=Cancelling Marriage Allowance
-
 change.status.continue=Continue
 change.status.reject.h1=Remove a previous Marriage Allowance claim
 change.status.reject.content=You can only cancel your Marriage Allowance from the start of the claim, {0}, the start of the tax year you first received it.
@@ -571,6 +568,28 @@ pages.changeOfIncome.enquiries.link.paragraph=to tell us about a change of incom
 pages.changeOfIncome.paragraph2=You need to tell us if your or your partner’s income changes so we can tell you if:
 pages.changeOfIncome.bullet1=claiming Marriage Allowance will still benefit you as a couple
 pages.changeOfIncome.bullet2=you need to cancel your Marriage Allowance
+
+
+#********************************************************************************
+# Divorce page
+#********************************************************************************
+pages.divorce.title=Date of divorce, end of civil partnership or legal separation
+pages.divorce.paragraph1=You need to go to court to be legally separated. You can still get Marriage Allowance if you are separated, but not legally separated.
+pages.divorce.date.hint=For example, 30 6 2019
+
+
+#********************************************************************************
+# Divorce Explanation page
+#********************************************************************************
+pages.divorce.explanation.title=Cancelling Marriage Allowance
+pages.divorce.explanation.paragraph1=You have told us you divorced, ended your civil partnership or were legally separated on {0}
+pages.divorce.explanation.paragraph2=As this date falls within {0}
+pages.divorce.explanation.current.taxYear=the current tax year
+pages.divorce.explanation.previous.taxYear=a previous tax year
+pages.divorce.explanation.recipient.current.bullet1=your Marriage Allowance will be cancelled from {0}, the end of the current tax year
+pages.divorce.explanation.recipient.current.bullet2=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
+pages.divorce.explanation.previous.bullet1=your Marriage Allowance will be cancelled from {0}
+pages.divorce.explanation.previous.bullet2=if you have not paid enough tax, we will usually collect it by adjusting your tax code
 
 
 #********************************************************************************

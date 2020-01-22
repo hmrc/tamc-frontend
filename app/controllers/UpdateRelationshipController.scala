@@ -21,7 +21,7 @@ import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.EmailForm.emailForm
 import forms.EmptyForm
-import forms.coc.{CheckClaimOrCancelDecisionForm, MakeChangesDecisionForm}
+import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
 import models.auth.UserRequest
 import org.joda.time.LocalDate
@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import viewModels.{ClaimsViewModel, HistorySummaryViewModel}
+import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, HistorySummaryViewModel}
 
 import scala.concurrent.Future
 
@@ -122,7 +122,7 @@ class UpdateRelationshipController @Inject()(
         }, {
           case Some(MakeChangesDecisionForm.Divorce) => {
             updateRelationshipService.saveCheckClaimOrCancelDecision(MakeChangesDecisionForm.Divorce) map { _ =>
-              Redirect(controllers.routes.UpdateRelationshipController.divorceSelectYear())
+              Redirect(controllers.routes.UpdateRelationshipController.divorceEnterYear())
             }
           }
           case Some(MakeChangesDecisionForm.IncomeChanges) => {
@@ -190,11 +190,45 @@ class UpdateRelationshipController @Inject()(
       }
   }
 
-  def divorceSelectYear(): Action[AnyContent] = authenticate.async {
+  def divorceEnterYear(): Action[AnyContent] = authenticate.async {
     implicit request =>
-     // Future.successful(Ok(views.html.coc.divorce_select_year()))
-???
+      updateRelationshipService.getDivorceDate map { divorceDate =>
+        Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
+      }
+
   }
+
+  def submitDivorceEnterYear(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+      DivorceSelectYearForm.form.bindFromRequest.fold(
+        formWithErrors => {
+          Future.successful(BadRequest(views.html.coc.divorce_select_year(formWithErrors)))
+        }, {
+          case Some(divorceDate) => {
+            updateRelationshipService.saveDivorceDate(divorceDate) map { _ =>
+              Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation())
+            }
+          }
+        }
+      )
+  }
+
+  def divorceEndExplanation(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+
+      updateRelationshipService.getDivorceExplanationData map {
+
+        case(role, divorceDate) => {
+          val viewModel = DivorceEndExplanationViewModel(role, divorceDate)
+          Ok(views.html.coc.divorce_end_explanation(viewModel))
+        }
+          //TODO error scenario
+        case _ => ???
+      }
+  }
+
+
+
 
 
 

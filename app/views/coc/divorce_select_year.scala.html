@@ -17,14 +17,16 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
+@import org.joda.time.LocalDate
+@import forms.coc.DivorceSelectYearForm
 
-@()(implicit messages: Messages,
+@(divorceSelectYearForm: Form[Option[LocalDate]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.divorce")),
+    title = messages("title.pattern", messages("pages.divorce.title")),
     langSelectorOverride = Some(
         Map("enUrl" -> controllers.routes.UpdateRelationshipController.historyWithEn(),
             "cyUrl" -> controllers.routes.UpdateRelationshipController.historyWithCy()
@@ -32,5 +34,33 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     ),
     mainConfig = views.helpers.MainConfig()) {
 
+    <a href="@controllers.routes.UpdateRelationshipController.makeChange().url" class="link-back">@messages("generic.back")</a>
+
+    @templates.form_error_notification(divorceSelectYearForm, formErrorMessage = "pages.form.error.mandatory.data")
+
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@messages("pages.divorce.title")</h1>
+    </header>
+
+    <p>@messages("pages.divorce.paragraph1")</p>
+
+    @helpers.form(action = routes.UpdateRelationshipController.submitDivorceEnterYear, args = ('id -> "")) {
+
+        <div class="form-group">
+            @templates.dateFields(
+            divorceSelectYearForm,
+            DivorceSelectYearForm.DateOfDivorce,
+            Html(""),
+            None,
+            '_hintText -> Messages("pages.divorce.date.hint"),
+            '_label -> Messages("collect_user_data.dod.error"),
+            '_labelTextClass -> "client-error-notification")
+        </div>
+
+
+        <button class="button" type="submit" data-journey-click="">
+            @messages("generic.continue")
+        </button>
+    }
 
 }
