@@ -75,8 +75,7 @@ class UpdateRelationshipController @Inject()(
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
         //TODO test form itself
         Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
-      }
-      //TODO to recover with cache return failed future???
+      } recover handleError
   }
 
   def submitDecision(): Action[AnyContent] = authenticate.async {

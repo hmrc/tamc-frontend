@@ -563,11 +563,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   "decision" should {
     "not found data in cache" when {
-      "failed to get data from cache should return OK" in {
-        //TODO see TODO from .decision() method
-        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.failed(new RuntimeException("Alalal")))
+      "failed to get data from cache should return INTERNAL_SERVER_ERROR" in {
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.failed(new RuntimeException("dooby wooby")))
         val result = controller().decision()(request)
-        status(result) shouldBe OK
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
 
       "get None from cache should return OK" in {
