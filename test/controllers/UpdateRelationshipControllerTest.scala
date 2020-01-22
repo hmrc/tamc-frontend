@@ -26,7 +26,7 @@ import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api.mvc.{AnyContent, Request, Result}
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
@@ -40,7 +40,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -57,7 +57,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       messagesApi,
       auth,
       mockUpdateRelationshipService,
-//      mockListRelationshipService,
       mockRegistrationService,
       mockCachingService,
       mockTimeService
@@ -558,6 +557,31 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         val result = controller().handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
+      }
+    }
+  }
+
+  "decision" should {
+    "not found data in cache" when {
+      "failed to get data from cache should return OK" in {
+        //TODO see TODO from .decision() method
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.failed(new RuntimeException("Alalal")))
+        val result = controller().decision()(request)
+        status(result) shouldBe OK
+      }
+
+      "get None from cache should return OK" in {
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.successful(None))
+        val result = controller().decision()(request)
+        status(result) shouldBe OK
+      }
+    }
+
+    "found data in cache" when {
+      "get data from cache should return OK" in {
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.successful(Some("wooby dooby")))
+        val result = controller().decision()(request)
+        status(result) shouldBe OK
       }
     }
   }

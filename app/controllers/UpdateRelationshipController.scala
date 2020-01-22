@@ -50,6 +50,7 @@ class UpdateRelationshipController @Inject()(
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
+        //TODO change to == Historic???
         if (relationshipRecords.recordStatus != Active && relationshipRecords.recordStatus != ActiveHistoric) {
           if (!request.authState.permanent) {
             Future.successful(Redirect(controllers.routes.TransferController.transfer()))
@@ -74,6 +75,7 @@ class UpdateRelationshipController @Inject()(
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
         Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
       }
+      //TODO to recover with cache return failed future???
   }
 
   def submitDecision(): Action[AnyContent] = authenticate.async {

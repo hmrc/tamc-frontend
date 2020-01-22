@@ -378,7 +378,6 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       messagesApi,
       instanceOf[AuthenticatedActionRefiner],
       mockUpdateRelationshipService,
-//      mockListRelationshipService,
       mockRegistrationService,
       mockCachingService,
       mockTimeService
