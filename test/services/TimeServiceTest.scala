@@ -86,11 +86,40 @@ class TimeServiceTest extends ControllerBaseSpec {
     }
   }
 
-  "parseDateWtihFormat" should {
-    "parse date with format of yyyyMMdd" in {
-      val format = "yyyyMMdd"
-      val date = "20170822"
-      service.parseDateWithFormat(date, format) shouldBe new LocalDate(2017, 8, 22)
+  "getTaxYearForDate" should {
+    "return current year before 6th April" in {
+      val expectedYear = 2016
+      val year = 2017
+      val month = 4
+      val day = 5
+      val expected = new LocalDate(year, month, day)
+      service.getTaxYearForDate(expected) shouldBe expectedYear
+    }
+
+    "return current year after 6th April" in {
+      val expectedYear = 2017
+      val year = 2017
+      val month = 4
+      val day = 6
+      val expected = new LocalDate(year, month, day)
+      service.getTaxYearForDate(expected) shouldBe expectedYear
+    }
+  }
+
+  "parseDateWithFormat" should {
+    val formats = List[String]("-yyyyMMdd", " yyyyMMdd")
+    for (format <- formats) {
+      s"parse date with custom format of $format" in {
+        val year = 2017
+        val month = 10
+        val day = 22
+        val expected = new LocalDate(year, month, day)
+
+        val prefix: String = format.substring(0,1)
+        val date: String = "" + prefix + year + month + day
+
+        service.parseDateWithFormat(date.trim, format.trim) shouldBe expected
+      }
     }
   }
 }

@@ -23,33 +23,35 @@ import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, emailPattern,
 
 object EmailForm {
 
-  private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
+  val emailForm = Form("transferor-email" -> email)
   private val initialCharCheckRegexStr = """^[a-zA-Z0-9\-\_\.\@]+"""
+
+  private def email: Mapping[EmailAddress] =
+    valueIsPresent(errorRequired = messageCustomizer("error.required"))
+      .verifying {
+        emailIsValidFormat(formatError = messageCustomizer("error.email"), charError = messageCustomizer("error.character"))
+      }
+      .transform[EmailAddress](EmailAddress(_), _.value)
+      .verifying {
+        emailPattern(regex = """^([a-zA-Z0-9\-\_]+[\.]*)+@[a-zA-Z0-9-\.]{2,}$""".r, error = messageCustomizer("error.email"))
+      }
+      .verifying {
+        emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))
+      }
+
+  private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
 
   private def emailIsValidFormat(name: String = "constraint.emailFormat",
                                  formatError: String,
                                  charError: String): Constraint[String] =
     Constraint[String](name) {
       email =>
-        if (EmailAddress.isValid(email)) Valid else {
-          if(!email.matches(initialCharCheckRegexStr)){
-            Invalid(ValidationError(charError))
-          } else {
-            Invalid(ValidationError(formatError))
-          }
+        if (EmailAddress.isValid(email) && email.matches(initialCharCheckRegexStr)) {
+          Valid
+        } else if (!email.matches(initialCharCheckRegexStr)) {
+          Invalid(ValidationError(charError))
+        } else {
+          Invalid(ValidationError(formatError))
         }
     }
-
-  private def email: Mapping[EmailAddress] =
-    valueIsPresent(errorRequired = messageCustomizer("error.required"))
-    .verifying(emailIsValidFormat(formatError = messageCustomizer("error.email"), charError = messageCustomizer("error.character")))
-    .transform[EmailAddress](EmailAddress(_), _.value)
-    .verifying {
-      emailPattern(regex = """^([a-zA-Z0-9\-\_]+[.])*[a-zA-Z0-9\-\_]+@([a-zA-Z0-9-]{2,}[.])+[a-zA-Z0-9-]+$""".r, error = messageCustomizer("error.email"))
-    }
-    .verifying {
-      emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))
-    }
-
-  val emailForm = Form("transferor-email" -> email)
 }
