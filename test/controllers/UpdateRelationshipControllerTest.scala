@@ -270,7 +270,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "return bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody("role" -> "")
-        val result = controller().divorceSelectYear()(request)
+        val result = controller().divorceEnterYear()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -290,7 +290,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(true)
         when(mockTimeService.getEffectiveUntilDate(any())).thenReturn(Some(LocalDate.now()))
         when(mockTimeService.getEffectiveDate(any())).thenReturn(LocalDate.now())
-        val result = controller().divorceSelectYear()(request)
+        val result = controller().divorceEnterYear()(request)
         lazy val document: Document = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe OK
@@ -299,7 +299,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
       "divorce date is invalid" in {
         when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(false)
-        val result = controller().divorceSelectYear()(request)
+        val result = controller().divorceEnterYear()(request)
         lazy val document: Document = Jsoup.parse(contentAsString(result))
 
         status(result) shouldBe OK

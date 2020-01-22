@@ -457,28 +457,4 @@ class UpdateRelationshipController @Inject()(
       case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y.toInt, m.toInt, d.toInt))
       case _ => None
     }
-
-  private[controllers] def getConfirmationInfoFromReason(reason: EndRelationshipReason,
-                                                         cacheData: UpdateRelationshipCacheData): (Boolean, Option[LocalDate], Option[LocalDate]) = {
-    reason.endReason match {
-      case EndReasonCode.DIVORCE_PY =>
-        (false, None, Some(timeService.getEffectiveDate(reason)))
-
-      case EndReasonCode.DIVORCE_CY =>
-        (false, None, timeService.getEffectiveUntilDate(reason))
-
-      case EndReasonCode.CANCEL =>
-        (false, None, timeService.getEffectiveUntilDate(reason))
-
-      case EndReasonCode.REJECT =>
-        val selectedRelationship = updateRelationshipService.getRelationship(cacheData)
-        val isEnded = selectedRelationship.participant1EndDate.exists(_ != "")
-
-        val relationshipEndDate = if (isEnded) {
-          Some(updateRelationshipService.getRelationEndDate(selectedRelationship))
-        } else None
-
-        (isEnded, relationshipEndDate, Some(updateRelationshipService.getEndDate(reason, selectedRelationship)))
-    }
-  }
 }
