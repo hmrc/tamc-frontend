@@ -73,6 +73,7 @@ class UpdateRelationshipController @Inject()(
   def decision(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
+        //TODO test form itself
         Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
       }
       //TODO to recover with cache return failed future???
@@ -103,7 +104,9 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
 
-        val viewModel = ClaimsViewModel(relationshipRecords.activeRelationship, relationshipRecords.historicRelationships,
+        val viewModel = ClaimsViewModel(
+          relationshipRecords.activeRelationship,
+          relationshipRecords.historicRelationships,
           relationshipRecords.recordStatus)
 
         Ok(views.html.coc.claims(viewModel))

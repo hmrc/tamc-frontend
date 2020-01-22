@@ -18,37 +18,69 @@ package views.helpers
 
 import org.scalatest.{Matchers, WordSpec}
 
+import scala.collection.immutable
+
 class TextGeneratorsSpec extends WordSpec with Matchers {
+
+  private val years: immutable.Seq[Int] = List(2015, 2016, 2017, 2018, 2019, 2020)
 
   "TaxGenerators" when {
 
-    "taxDateInterval is called" must {
-      "return the beginning and end dates of a tax year, e.g. 6 April 2018 to 5 April 2019" in {
-        TextGenerators.taxDateInterval(2018, isWelsh = false) shouldBe "6 April 2018 to 5 April 2019"
+    "taxDateInterval" must {
+      for (year <- years) {
+        val start = year
+        val finish = year + 1
+        //e.g. 6 April 2018 to 5 April 2019
+        s"return the beginning and end dates of $year tax year(UK)" in {
+          TextGenerators.taxDateInterval(year, isWelsh = false) shouldBe s"6 April $start to 5 April $finish"
+        }
+        s"return the beginning and end dates of $year tax year(CY)" in {
+          TextGenerators.taxDateInterval(year, isWelsh = true) shouldBe s"6 April $start to 5 April $finish"
+        }
       }
     }
 
-    "taxDateIntervalMultiYear is called" must {
-      "return the years that two tax years span from and to, e.g. 2017 to 2019" in {
-        TextGenerators.taxDateIntervalMultiYear(2017, 2018, isWelsh = false) shouldBe "2017 to 2019"
-        TextGenerators.taxDateIntervalMultiYear(2016, 2018, isWelsh = false) shouldBe "2016 to 2019"
+    "taxDateIntervalMultiYear" must {
+      for (year <- years) {
+        val start = year
+        val finish = year + 1
+        //e.g. 2017 to 2019
+        s"return the years that two tax years span from $start to $finish (UK)" in {
+          TextGenerators.taxDateIntervalMultiYear(start, finish, isWelsh = false) shouldBe s"$start to $finish"
+        }
+        s"return the years that two tax years span from $start to $finish (UK)" in {
+          TextGenerators.taxDateIntervalMultiYear(start, finish, isWelsh = true) shouldBe s"$start to $finish"
+        }
       }
     }
 
     "taxDateIntervalShort" must {
-      "return the years that a single tax year spans across" in {
-        TextGenerators.taxDateIntervalShort(2018) shouldBe "2018 to 2019"
-        TextGenerators.taxDateIntervalShort(2017) shouldBe "2017 to 2018"
+      for (year <- years) {
+        val start = year
+        val finish = year + 1
+        s"return the years that a single($start) tax year spans across(UK)" in {
+          TextGenerators.taxDateIntervalShort(start, isWelsh = false) shouldBe s"$start to $finish"
+        }
+        s"return the years that a single($start) tax year spans across(CY)" in {
+          TextGenerators.taxDateIntervalShort(start, isWelsh = true) shouldBe s"$start to $finish"
+        }
       }
     }
 
     "taxDateIntervalString" must {
-      "return dates for one tax year to present" in {
+      "return dates for one tax year to present(UK)" in {
+        //TODO John delete prev format why???!!
         TextGenerators.taxDateIntervalString("05-05-2016", Some("05-05-2017"), isWelsh = false) shouldBe "2016 to 2018"
       }
-      "return dates for one tax year to another" in {
+      "return dates for one tax year to another(UK)" in {
         TextGenerators.taxDateIntervalString("20160505", None, isWelsh = false) shouldBe "2016 to Present"
+      }
 
+      "return dates for one tax year to present(CY)" in {
+        TextGenerators.taxDateIntervalString("05-05-2016", Some("05-05-2017"), isWelsh = true) shouldBe "2016 i 2018"
+      }
+      "return dates for one tax year to another(CY)" in {
+        TextGenerators.taxDateIntervalString("20160505", None, isWelsh = true) shouldBe "2016 i’r Presennol"
       }
     }
 

@@ -46,7 +46,7 @@ object HistoricRow {
   def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): HistoricRow = {
 
     val historicDateInterval = TextGenerators.taxDateIntervalString(relationshipRecord.participant1StartDate,
-      relationshipRecord.participant1EndDate,LanguageUtils.isWelsh(messages))
+      relationshipRecord.participant1EndDate, LanguageUtils.isWelsh(messages))
 
     val historicStatus = messages(s"coc.end-reason.${relationshipRecord.relationshipEndReason.map(_.value).getOrElse("")}")
 
@@ -61,12 +61,13 @@ case class ClaimsViewModel(activeRow: Option[ActiveRow], historicRows: Option[Se
 
 object ClaimsViewModel {
 
-  def apply(activeRelationship: Option[RelationshipRecord], historicRelationships: Option[Seq[RelationshipRecord]], recordStatus: RecordStatus)
-           (implicit messages: Messages): ClaimsViewModel = {
+  def apply(activeRelationship: Option[RelationshipRecord],
+            historicRelationships: Option[Seq[RelationshipRecord]],
+            recordStatus: RecordStatus)(implicit messages: Messages): ClaimsViewModel = {
 
-    val activeRow = activeRelationship map(ActiveRow(_))
+    val activeRow = activeRelationship map (ActiveRow(_))
     val historicRows = historicRelationships map { historicRelationships =>
-      historicRelationships map(HistoricRow(_))
+      historicRelationships map (HistoricRow(_))
     }
 
     val isActiveRecord = recordStatus == Active
@@ -81,9 +82,9 @@ object ClaimsViewModel {
   }
 
   private def backLinkUrl(isActiveRecord: Boolean): String = {
-    if(isActiveRecord){
+    if (isActiveRecord) {
       controllers.routes.UpdateRelationshipController.decision().url
-    }else {
+    } else {
       controllers.routes.UpdateRelationshipController.history().url
     }
   }
