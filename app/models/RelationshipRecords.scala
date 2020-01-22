@@ -16,7 +16,8 @@
 
 package models
 
-case class RelationshipRecords(activeRelationship: Option[RelationshipRecord], historicRelationships: Option[Seq[RelationshipRecord]],
+case class RelationshipRecords(activeRelationship: Option[RelationshipRecord],
+                               historicRelationships: Option[Seq[RelationshipRecord]],
                                loggedInUserInfo: Option[LoggedInUserInfo] = None){
 
   val recordStatus: RecordStatus = {

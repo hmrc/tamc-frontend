@@ -18,9 +18,10 @@ package viewModels
 
 import java.util.Locale
 
-import models.RelationshipRecord
+import config.ApplicationConfig._
+import models._
+import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
@@ -29,18 +30,12 @@ import utils.TamcViewModelTest
 
 class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
 
-  val maxBenefit = 200
-  val maxPATransfer = 12500
-  val endOfTaxYear = TaxYear.current.finishes
-
-  def createButton(accountStatus: String): HistorySummaryButton = {
-    accountStatus match {
-      case("active") => HistorySummaryButton("checkOrUpdateMarriageAllowance", messagesApi("pages.history.active.button"),
-        controllers.routes.UpdateRelationshipController.decision().url)
-      case("historic") => HistorySummaryButton("checkMarriageAllowance", messagesApi("pages.history.historic.button"),
-        controllers.routes.UpdateRelationshipController.claims().url)
-    }
-  }
+  lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
+  lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
+  lazy val maxPATransfer: Int = PERSONAL_ALLOWANCE(currentOfTaxYear)
+  lazy val maxBenefit: Int = MAX_BENEFIT(currentOfTaxYear)
+  lazy val maxPaTransferFormatted: Int = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
+  lazy val formattedEndOfTaxYear: String = endOfTaxYear.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
 
   "HistorySummaryViewModel" should {
 
@@ -49,43 +44,20 @@ class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
       "the record is active " when {
 
         "the person is a recipient " in {
-
-          val isRecordActive = true
-          val isRecordHistoric = false
-          val activeRelationshipMock = mock[RelationshipRecord]
-          val historicRelationShipMock = None
-          val maxPaTransferFormatted = "12,500"
-
-          //TODO constant
-          when(activeRelationshipMock.participant).thenReturn("Recipient")
-
-          val viewModel = HistorySummaryViewModel(isRecordActive, isRecordHistoric, Some(activeRelationshipMock),
-            historicRelationShipMock, maxPATransfer, maxBenefit, endOfTaxYear)
+          val viewModel = buildHistorySummaryViewModel(Recipient, Active)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>" +
             s"<p>${messagesApi("pages.history.active.recipient.paragraph2", maxBenefit)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("active"))
-
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Active))
         }
 
         "The person is a transferor" in {
-
-          val isRecordActive = true
-          val isRecordHistoric = false
-          val activeRelationshipMock = mock[RelationshipRecord]
-          val historicRelationShipMock = None
-
-          //TODO constant
-          when(activeRelationshipMock.participant).thenReturn("Transferor")
-
-          val viewModel = HistorySummaryViewModel(isRecordActive, isRecordHistoric, Some(activeRelationshipMock),
-            historicRelationShipMock, maxPATransfer, maxBenefit, endOfTaxYear)
+          val viewModel = buildHistorySummaryViewModel(Transferor, Active)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.active.transferor")}</p>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("active"))
-
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Active))
         }
 
       }
@@ -93,81 +65,24 @@ class HistorySummaryViewModelTest extends TamcViewModelTest with MockitoSugar {
       "The record is historic" when {
 
         "the person is a recipient" in {
-
-          val isRecordActive = false
-          val isRecordHistoric = true
-          val activeRelationshipMock = None
-          val historicRelationShipMock = mock[RelationshipRecord]
-
-          //TODO constant
-          when(historicRelationShipMock.participant).thenReturn("Recipient")
-
-          val viewModel = HistorySummaryViewModel(isRecordActive, isRecordHistoric, activeRelationshipMock,
-            Some(Seq(historicRelationShipMock)), maxPATransfer, maxBenefit, endOfTaxYear)
-
-          val formatedEndOfTaxYear = endOfTaxYear.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
+          val viewModel = buildHistorySummaryViewModel(Recipient, Historic)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
-            s"<p>${messagesApi("pages.history.historic.recipient", formatedEndOfTaxYear)}</P>")
+            s"<p>${messagesApi("pages.history.historic.recipient", formattedEndOfTaxYear)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("historic"))
-
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Historic))
         }
 
         "the person is a transferor" in {
-
-          val isRecordActive = false
-          val isRecordHistoric = true
-          val activeRelationshipMock = None
-          val historicRelationShipMock = mock[RelationshipRecord]
-
-          //TODO constant
-          when(historicRelationShipMock.participant).thenReturn("Transferor")
-
-          val viewModel = HistorySummaryViewModel(isRecordActive, isRecordHistoric, activeRelationshipMock,
-            Some(Seq(historicRelationShipMock)), maxPATransfer, maxBenefit, endOfTaxYear)
-
-          val formatedEndOfTaxYear = endOfTaxYear.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
+          val viewModel = buildHistorySummaryViewModel(Transferor, Historic)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
-            s"<p>${messagesApi("pages.history.historic.transferor", formatedEndOfTaxYear)}</P>")
+            s"<p>${messagesApi("pages.history.historic.transferor", formattedEndOfTaxYear)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButton("historic"))
-
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Historic))
         }
       }
     }
 
-    "throw an exception " when {
-
-      "no active records are found" in {
-
-        val isRecordActive = true
-        val isRecordHistoric = false
-        val activeRelationshipMock = None
-        val historicRelationShipMock = None
-
-        lazy val viewModel = HistorySummaryViewModel(isRecordActive, isRecordHistoric, activeRelationshipMock,
-          historicRelationShipMock, maxPATransfer, maxBenefit, endOfTaxYear)
-
-        val thrown = the[RuntimeException] thrownBy viewModel
-        thrown.getMessage shouldBe "No active relationship record found"
-      }
-
-      "no historic records are found" in {
-
-        val isRecordActive = false
-        val isRecordHistoric = true
-        val activeRelationshipMock = None
-        val historicRelationShipMock = None
-
-        lazy val viewModel = HistorySummaryViewModel(isRecordActive, isRecordHistoric, activeRelationshipMock,
-          historicRelationShipMock, maxPATransfer, maxBenefit, endOfTaxYear)
-
-        val thrown = the[RuntimeException] thrownBy viewModel
-        thrown.getMessage shouldBe "No historic relationship record found"
-
-      }
-    }
   }
 }

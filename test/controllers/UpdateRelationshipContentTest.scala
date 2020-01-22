@@ -35,190 +35,191 @@ import scala.concurrent.Future
 //TODO remove this class
 class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
-  "list relationship page" should {
-
-    "display 'Cancel Marriage Allowance' button" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
-    }
-
-    "display only active relationship details" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      val activeRecord = document.getElementById("activeRecord")
-      activeRecord shouldNot be(null)
-
-      val historicRecord = document.getElementById("historicRecord")
-      historicRecord should be(null)
-    }
-
-    "display only historic relationship details and link to how-it-works" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.historicRelationshipRecordList, false))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-
-      val document = Jsoup.parse(contentAsString(result))
-      val activeRecord = document.getElementById("activeRecord")
-      activeRecord should be(null)
-
-      val start = document.getElementById("start-now")
-      start shouldNot be(null)
-      start.attr("href") shouldBe controllers.routes.EligibilityController.howItWorks().url
-
-      val historicRecord = document.getElementById("historicRecords")
-      historicRecord shouldNot be(null)
-
-      document.getElementById("line0-start").text shouldBe "2011 to 2013"
-      document.getElementById("line0-reason").text shouldBe "Bereavement"
-      document.getElementById("line0-remove") shouldBe null
-    }
-
-    "display reject button when it should be displayed" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.multiHistoricRelRecordList, false))
-        )
-
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-
-      val document = Jsoup.parse(contentAsString(result))
-      val activeRecord = document.getElementById("activeRecord")
-      activeRecord should be(null)
-
-      val start = document.getElementById("start-now")
-      start shouldNot be(null)
-      start.attr("href") shouldBe controllers.routes.EligibilityController.howItWorks().url
-
-      val historicRecord = document.getElementById("historicRecords")
-      historicRecord shouldNot be(null)
-
-      document.getElementById("line0-start").text shouldBe "2011 to 2013"
-      document.getElementById("line0-reason").text shouldBe "Divorce or end of civil partnership"
-      document.getElementById("line0-remove") shouldBe null
-
-      document.getElementById("line1-start").text shouldBe "2001 to 2013"
-      document.getElementById("line1-reason").text shouldBe "Divorce or end of civil partnership"
-      document.getElementById("line1-remove") shouldNot be(null)
-    }
-
-    "display ’apply for previous years’ button if historic year is available" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.activeRelationshipRecordList, true))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-
-      val document = Jsoup.parse(contentAsString(result))
-      val prevYearsButton = document.getElementById("previousYearsApply")
-      prevYearsButton shouldNot be(null)
-    }
-
-    "don't display apply for previous years button when previous years are available" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      val prevYearsButton = document.getElementById("previousYearsApply")
-      prevYearsButton should be(null)
-    }
-
-    "display active and historic relationship details " in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      val activeRecord = document.getElementById("activeRecord")
-      activeRecord shouldNot be(null)
-
-      val historicRecord = document.getElementById("historicRecords")
-      historicRecord shouldNot be(null)
-
-      document.getElementById("active").text shouldBe "2012 to Present"
-      historicRecord.toString should include("2011 to 2013")
-    }
-
-    "display historical active relationship details" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.activeHistoricRelRecordList, false))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-      val contentAsStringFromResult = contentAsString(result)
-      val document = Jsoup.parse(contentAsString(result))
-      val historicActiveMessage = document.getElementById("historicActiveMessage").text()
-      val nextTaxYear = time.TaxYear.current.startYear + 1
-      historicActiveMessage should be(s"You will stop receiving Marriage Allowance from your partner at end of the tax year (5 April $nextTaxYear).")
-
-      val historicRecord = document.getElementById("historicRecords")
-      historicRecord shouldNot be(null)
-    }
-
-    "display bereavement and change of income related details" in {
-      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-        .thenReturn(
-          Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
-        )
-      val result = controller.history()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      val activeRecord = document.getElementById("activeRecord")
-      activeRecord shouldNot be(null)
-
-      val historicRecord = document.getElementById("historicRecords")
-      historicRecord shouldNot be(null)
-
-      historicRecord.toString should include("2011 to 2013")
-
-      val incomeMessage = document.getElementById("incomeMessage")
-      val bereavementMessage = document.getElementById("bereavementMessage")
-      val incomeLink = document.getElementById("incomeLink")
-      val bereavementLink = document.getElementById("bereavementLink")
-      incomeMessage.text() shouldBe "To let us know about a change in income, contact HMRC"
-      bereavementMessage.text() shouldBe "To let us know about a bereavement, contact HMRC"
-      incomeLink.attr("href") shouldBe "/marriage-allowance-application/change-of-income"
-      bereavementLink.attr("href") shouldBe "/marriage-allowance-application/bereavement"
-    }
-  }
+  //TODO remove??
+//  "list relationship page" should {
+//
+//    "display 'Cancel Marriage Allowance' button" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//      val document = Jsoup.parse(contentAsString(result))
+//      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
+//    }
+//
+//    "display only active relationship details" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//      val document = Jsoup.parse(contentAsString(result))
+//      val activeRecord = document.getElementById("activeRecord")
+//      activeRecord shouldNot be(null)
+//
+//      val historicRecord = document.getElementById("historicRecord")
+//      historicRecord should be(null)
+//    }
+//
+//    "display only historic relationship details and link to how-it-works" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.historicRelationshipRecordList, false))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//
+//      val document = Jsoup.parse(contentAsString(result))
+//      val activeRecord = document.getElementById("activeRecord")
+//      activeRecord should be(null)
+//
+//      val start = document.getElementById("start-now")
+//      start shouldNot be(null)
+//      start.attr("href") shouldBe controllers.routes.EligibilityController.howItWorks().url
+//
+//      val historicRecord = document.getElementById("historicRecords")
+//      historicRecord shouldNot be(null)
+//
+//      document.getElementById("line0-start").text shouldBe "2011 to 2013"
+//      document.getElementById("line0-reason").text shouldBe "Bereavement"
+//      document.getElementById("line0-remove") shouldBe null
+//    }
+//
+//    "display reject button when it should be displayed" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.multiHistoricRelRecordList, false))
+//        )
+//
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//
+//      val document = Jsoup.parse(contentAsString(result))
+//      val activeRecord = document.getElementById("activeRecord")
+//      activeRecord should be(null)
+//
+//      val start = document.getElementById("start-now")
+//      start shouldNot be(null)
+//      start.attr("href") shouldBe controllers.routes.EligibilityController.howItWorks().url
+//
+//      val historicRecord = document.getElementById("historicRecords")
+//      historicRecord shouldNot be(null)
+//
+//      document.getElementById("line0-start").text shouldBe "2011 to 2013"
+//      document.getElementById("line0-reason").text shouldBe "Divorce or end of civil partnership"
+//      document.getElementById("line0-remove") shouldBe null
+//
+//      document.getElementById("line1-start").text shouldBe "2001 to 2013"
+//      document.getElementById("line1-reason").text shouldBe "Divorce or end of civil partnership"
+//      document.getElementById("line1-remove") shouldNot be(null)
+//    }
+//
+//    "display ’apply for previous years’ button if historic year is available" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.activeRelationshipRecordList, true))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//
+//      val document = Jsoup.parse(contentAsString(result))
+//      val prevYearsButton = document.getElementById("previousYearsApply")
+//      prevYearsButton shouldNot be(null)
+//    }
+//
+//    "don't display apply for previous years button when previous years are available" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//      val document = Jsoup.parse(contentAsString(result))
+//
+//      val prevYearsButton = document.getElementById("previousYearsApply")
+//      prevYearsButton should be(null)
+//    }
+//
+//    "display active and historic relationship details " in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//      val document = Jsoup.parse(contentAsString(result))
+//
+//      val activeRecord = document.getElementById("activeRecord")
+//      activeRecord shouldNot be(null)
+//
+//      val historicRecord = document.getElementById("historicRecords")
+//      historicRecord shouldNot be(null)
+//
+//      document.getElementById("active").text shouldBe "2012 to Present"
+//      historicRecord.toString should include("2011 to 2013")
+//    }
+//
+//    "display historical active relationship details" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.activeHistoricRelRecordList, false))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//      val contentAsStringFromResult = contentAsString(result)
+//      val document = Jsoup.parse(contentAsString(result))
+//      val historicActiveMessage = document.getElementById("historicActiveMessage").text()
+//      val nextTaxYear = time.TaxYear.current.startYear + 1
+//      historicActiveMessage should be(s"You will stop receiving Marriage Allowance from your partner at end of the tax year (5 April $nextTaxYear).")
+//
+//      val historicRecord = document.getElementById("historicRecords")
+//      historicRecord shouldNot be(null)
+//    }
+//
+//    "display bereavement and change of income related details" in {
+//      when(mockListRelationshipService.listRelationship(any())(any(), any()))
+//        .thenReturn(
+//          Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
+//        )
+//      val result = controller.history()(request)
+//
+//      status(result) shouldBe OK
+//      val document = Jsoup.parse(contentAsString(result))
+//
+//      val activeRecord = document.getElementById("activeRecord")
+//      activeRecord shouldNot be(null)
+//
+//      val historicRecord = document.getElementById("historicRecords")
+//      historicRecord shouldNot be(null)
+//
+//      historicRecord.toString should include("2011 to 2013")
+//
+//      val incomeMessage = document.getElementById("incomeMessage")
+//      val bereavementMessage = document.getElementById("bereavementMessage")
+//      val incomeLink = document.getElementById("incomeLink")
+//      val bereavementLink = document.getElementById("bereavementLink")
+//      incomeMessage.text() shouldBe "To let us know about a change in income, contact HMRC"
+//      bereavementMessage.text() shouldBe "To let us know about a bereavement, contact HMRC"
+//      incomeLink.attr("href") shouldBe "/marriage-allowance-application/change-of-income"
+//      bereavementLink.attr("href") shouldBe "/marriage-allowance-application/bereavement"
+//    }
+//  }
 
   "Update relationship make changes page" should {
 
     "show transferor data when user is transferor" in {
-      val request = FakeRequest().withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false")
+      val request = FakeRequest().withFormUrlEncodedBody("role" -> RoleOld.TRANSFEROR, "historicActiveRecord" -> "false")
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
 
@@ -241,7 +242,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "show transferor data when user is recipient" in {
-      val request = FakeRequest().withFormUrlEncodedBody("role" -> Role.RECIPIENT, "historicActiveRecord" -> "false")
+      val request = FakeRequest().withFormUrlEncodedBody("role" -> RoleOld.RECIPIENT, "historicActiveRecord" -> "false")
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
 
@@ -289,7 +290,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
   "Update relationship make changes" should {
 
     "return successful on historical active record for transferror" in {
-      val request = FakeRequest().withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "true")
+      val request = FakeRequest().withFormUrlEncodedBody("role" -> RoleOld.TRANSFEROR, "historicActiveRecord" -> "true")
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
 
@@ -307,7 +308,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "return successful on non historically active record for transferror" in {
-      val request = FakeRequest().withFormUrlEncodedBody("role" -> Role.TRANSFEROR, "historicActiveRecord" -> "false")
+      val request = FakeRequest().withFormUrlEncodedBody("role" -> RoleOld.TRANSFEROR, "historicActiveRecord" -> "false")
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
 
@@ -326,7 +327,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "return successful on historical active record for recipient" in {
-      val request = FakeRequest().withFormUrlEncodedBody("role" -> Role.RECIPIENT, "historicActiveRecord" -> "true")
+      val request = FakeRequest().withFormUrlEncodedBody("role" -> RoleOld.RECIPIENT, "historicActiveRecord" -> "true")
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
 
@@ -345,7 +346,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
 
     "return successful on non historical active record for recipient" in {
-      val request = FakeRequest().withFormUrlEncodedBody("role" -> Role.RECIPIENT, "historicActiveRecord" -> "false")
+      val request = FakeRequest().withFormUrlEncodedBody("role" -> RoleOld.RECIPIENT, "historicActiveRecord" -> "false")
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
 
@@ -377,7 +378,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       messagesApi,
       instanceOf[AuthenticatedActionRefiner],
       mockUpdateRelationshipService,
-      mockListRelationshipService,
+//      mockListRelationshipService,
       mockRegistrationService,
       mockCachingService,
       mockTimeService

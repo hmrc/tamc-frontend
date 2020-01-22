@@ -54,6 +54,7 @@ GET    /confirm-change                             @controllers.UpdateRelationsh
 #TO be post to edit
 GET    /confirm-change-action                      @controllers.UpdateRelationshipController.confirmUpdateAction
 GET    /reject                                     @controllers.UpdateRelationshipController.confirmReject
+GET    /cancel                                     @controllers.UpdateRelationshipController.confirmCancel
 GET    /finished-change                            @controllers.UpdateRelationshipController.finishUpdate
 POST   /confirm-email-update                       @controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
 

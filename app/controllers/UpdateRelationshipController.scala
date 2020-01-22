@@ -57,7 +57,7 @@ class UpdateRelationshipController @Inject()(
             Future.successful(Redirect(controllers.routes.EligibilityController.howItWorks()))
           }
         } else {
-//TODO cache the actual object
+          //TODO cache the actual object
           updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
 
             //TODO pass object to apply
@@ -83,16 +83,17 @@ class UpdateRelationshipController @Inject()(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.decision(formWithErrors)))
         }, {
-            case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) => {
-              updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
-                Redirect(controllers.routes.UpdateRelationshipController.claims())
-              }
+          case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) => {
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
+              Redirect(controllers.routes.UpdateRelationshipController.claims())
             }
-            case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) => {
-              updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) map { _ =>
-                Redirect(controllers.routes.UpdateRelationshipController.makeChange())
-              }
+          }
+          case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) => {
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) map { _ =>
+              Redirect(controllers.routes.UpdateRelationshipController.makeChange())
             }
+          }
+          //           TODO It would fail on the following inputs: None, Some((x: String forSome x not in (CheckMarriageAllowanceClaim, StopMarriageAllowance)))
         })
   }
 
@@ -107,7 +108,7 @@ class UpdateRelationshipController @Inject()(
       }
   }
 
-  def makeChange(): Action[AnyContent] = authenticate.async{
+  def makeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getMakeChangesDecision map { makeChangesData =>
         Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(makeChangesData)))
@@ -141,6 +142,7 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.bereavement())
             }
           }
+          //            TODO It would fail on the following inputs: None, Some((x: String forSome x not in (Bereavement, Divorce, IncomeChanges, NoLongerRequired)))
         })
   }
 
@@ -148,7 +150,7 @@ class UpdateRelationshipController @Inject()(
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.role == Recipient){
         Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
-      }else{
+      } else {
         Redirect(controllers.routes.UpdateRelationshipController.cancel())
       }
     }
@@ -159,7 +161,7 @@ class UpdateRelationshipController @Inject()(
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.role == Recipient){
         Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
-      }else{
+      } else {
         Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome())
       }
     }
@@ -315,12 +317,6 @@ class UpdateRelationshipController @Inject()(
       ???
   }
 
-  private def getOptionalLocalDate(day: Option[String], month: Option[String], year: Option[String]): Option[LocalDate] =
-    (day, month, year) match {
-      case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y.toInt, m.toInt, d.toInt))
-      case _ => None
-    }
-
   def divorceAction(): Action[AnyContent] = authenticate.async {
     implicit request =>
 //      divorceForm.bindFromRequest.fold(
@@ -352,6 +348,30 @@ class UpdateRelationshipController @Inject()(
         case None => Ok(views.html.coc.email(emailForm))
       } recover handleError
   }
+
+  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
+    PartialFunction[Throwable, Result] {
+      throwable: Throwable =>
+
+        val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
+
+        def handle(logger: (String, Throwable) => Unit, result: Result): Result = {
+          logger(message, throwable)
+          result
+        }
+
+        throwable match {
+          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
+          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
+          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
+          case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
+        }
+    }
 
   def confirmReject(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -432,27 +452,33 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
-    PartialFunction[Throwable, Result] {
-      throwable: Throwable =>
-
-        val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
-
-        def handle(logger: (String, Throwable) => Unit, result: Result): Result = {
-          logger(message, throwable)
-          result
-        }
-
-        throwable match {
-          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
-          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
-          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
-          case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
-        }
+  private def getOptionalLocalDate(day: Option[String], month: Option[String], year: Option[String]): Option[LocalDate] =
+    (day, month, year) match {
+      case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y.toInt, m.toInt, d.toInt))
+      case _ => None
     }
+
+  private[controllers] def getConfirmationInfoFromReason(reason: EndRelationshipReason,
+                                                         cacheData: UpdateRelationshipCacheData): (Boolean, Option[LocalDate], Option[LocalDate]) = {
+    reason.endReason match {
+      case EndReasonCode.DIVORCE_PY =>
+        (false, None, Some(timeService.getEffectiveDate(reason)))
+
+      case EndReasonCode.DIVORCE_CY =>
+        (false, None, timeService.getEffectiveUntilDate(reason))
+
+      case EndReasonCode.CANCEL =>
+        (false, None, timeService.getEffectiveUntilDate(reason))
+
+      case EndReasonCode.REJECT =>
+        val selectedRelationship = updateRelationshipService.getRelationship(cacheData)
+        val isEnded = selectedRelationship.participant1EndDate.exists(_ != "")
+
+        val relationshipEndDate = if (isEnded) {
+          Some(updateRelationshipService.getRelationEndDate(selectedRelationship))
+        } else None
+
+        (isEnded, relationshipEndDate, Some(updateRelationshipService.getEndDate(reason, selectedRelationship)))
+    }
+  }
 }

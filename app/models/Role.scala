@@ -16,6 +16,18 @@
 
 package models
 
-sealed trait Role
-case object Transferor extends Role
-case object Recipient extends Role
+sealed trait Role {
+  def asString(): String
+}
+
+case object Transferor extends Role {
+  def asString(): String = {
+    "Transferor"
+  }
+}
+
+case object Recipient extends Role {
+  def asString(): String = {
+    "Recipient"
+  }
+}

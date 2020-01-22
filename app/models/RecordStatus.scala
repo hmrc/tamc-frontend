@@ -16,7 +16,24 @@
 
 package models
 
-sealed trait RecordStatus
-case object Active extends RecordStatus
-case object ActiveHistoric extends RecordStatus
-case object Historic extends RecordStatus
+sealed trait RecordStatus {
+  def asString(): String
+}
+
+case object Active extends RecordStatus {
+  def asString(): String = {
+    "Active"
+  }
+}
+
+case object ActiveHistoric extends RecordStatus {
+  def asString(): String = {
+    "ActiveHistoric"
+  }
+}
+
+case object Historic extends RecordStatus {
+  def asString(): String = {
+    "Historic"
+  }
+}
