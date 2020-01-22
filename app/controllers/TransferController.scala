@@ -224,7 +224,7 @@ class TransferController @Inject()(
         if (request.authState.permanent) TAMC_JOURNEY_PTA else TAMC_JOURNEY_GDS
 
       EmptyForm.form.bindFromRequest().fold(
-        formWithErrors =>
+        _ =>
           Logger.error(s"unexpected error in empty form, SID [${utils.getSid(request)}]"),
         success =>
           success)
@@ -240,6 +240,7 @@ class TransferController @Inject()(
     implicit request =>
       registrationService.getFinishedData(request.nino) map {
         case NotificationRecord(email) =>
+          cachingService.remove()
           Ok(views.html.finished(transferorEmail = email))
       } recover handleError
   }

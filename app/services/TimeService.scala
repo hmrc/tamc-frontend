@@ -52,7 +52,5 @@ trait TimeService {
 
   def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
 
-  def parseDateWithFormat(date: String, format: String): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
-
-  parseDateWithFormat(_: String, format = "yyyyMMdd")
+  def parseDateWithFormat(date: String, format: String  = "yyyyMMdd"): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

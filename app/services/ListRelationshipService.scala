@@ -46,8 +46,6 @@ trait ListRelationshipService {
   val cachingService: CachingService
   val applicationService: ApplicationService
 
-  private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
-
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
