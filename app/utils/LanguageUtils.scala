@@ -22,6 +22,8 @@ import play.api.i18n.Messages
 object LanguageUtils {
 
   //TODO add test
+  //TODO pass lang object not message?
+  //TODO pass language not all these objects?? Easier to test and easier to maintain
   def isWelsh(messages: Messages) = {
     if (messages != null && messages.lang != null) {
       ApplicationConfig.LANG_LANG_WELSH == messages.lang.language
