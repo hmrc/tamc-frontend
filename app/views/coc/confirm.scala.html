@@ -32,6 +32,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.confirm-transferor")),
+manageService = true,
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
 ) {
