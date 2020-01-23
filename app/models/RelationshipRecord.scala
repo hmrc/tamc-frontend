@@ -20,8 +20,8 @@ import play.api.libs.json.Json
 import services.TimeService
 import utils.DateUtils
 
-case class RelationshipRecord(
-                               participant: String,
+//TODO replace participant with Role object
+case class RelationshipRecord(participant: String,
                                creationTimestamp: String,
                                participant1StartDate: String,
                                relationshipEndReason: Option[RelationshipEndReason] = None,
