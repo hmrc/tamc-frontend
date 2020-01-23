@@ -32,12 +32,14 @@ case class RelationshipRecord(participant: String,
   def isActive: Boolean = participant1EndDate match{
     case None => true
     case Some(date) => DateUtils.isFutureDate(date)
+      //TODO this code can be reached???
+    case _ => false
   }
 
   def overlappingTaxYears: Set[Int] = {
     val timeService = TimeService
 
-    val parseDate = timeService.parseDateWithFormat(_: String, format = DateUtils.DatePattern)
+    val parseDate = timeService.parseDateWithFormat(_: String)
 
     val taxYearOfRelationshipStart = timeService.getTaxYearForDate(parseDate(participant1StartDate))
     val taxYearOfRelationshipEnd = participant1EndDate.fold(timeService.getCurrentTaxYear)(

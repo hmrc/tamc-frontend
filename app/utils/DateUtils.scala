@@ -16,22 +16,22 @@
 
 package utils
 
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import play.api.Logger
 
 object DateUtils {
 
-  val DatePattern: String = "yyyyMMdd"
+  val datePattern: String = "yyyyMMdd"
 
   def isFutureDate(date: String): Boolean = {
-    val format = new java.text.SimpleDateFormat(DatePattern)
-    val time = format.parse(date).getTime
-    time > System.currentTimeMillis()
-  }
+    var res = false
+    val format = new java.text.SimpleDateFormat(datePattern)
+    try {
+      val time = format.parse(date).getTime
+      res = time > System.currentTimeMillis()
+    } catch {
+      case exp: Throwable => Logger.error(s"Failed to parse date [$date] into format [$datePattern]", exp)
+    }
 
-  //TODO handle exceptions
-  def transformDate(date: String, inputDateFormat:String, outputPattern: String): String = {
-    val parsedDate = LocalDate.parse(date, DateTimeFormat.forPattern(inputDateFormat))
-    parsedDate.toString(DateTimeFormat.forPattern(outputPattern))
+    res
   }
 }

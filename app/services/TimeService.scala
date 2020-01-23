@@ -19,8 +19,8 @@ package services
 import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import services.TimeService.parseDateWithFormat
 import uk.gov.hmrc.time.TaxYear
+import utils.DateUtils
 
 object TimeService extends TimeService
 
@@ -52,5 +52,5 @@ trait TimeService {
 
   def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
 
-  def parseDateWithFormat(date: String, format: String  = "yyyyMMdd"): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
+  def parseDateWithFormat(date: String, format: String  = DateUtils.datePattern): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

@@ -49,7 +49,7 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
 
-  private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
+  private val parseDate = parseDateWithFormat(_: String)
 
 
   def retrieveRelationshipRecords(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
