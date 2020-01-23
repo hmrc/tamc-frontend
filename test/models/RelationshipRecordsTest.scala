@@ -18,8 +18,8 @@ package models
 
 import org.joda.time.DateTime
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import services.TimeService
 import uk.gov.hmrc.play.test.UnitSpec
-import utils.DateUtils
 
 class RelationshipRecordsTest extends UnitSpec with GuiceOneAppPerSuite {
 
@@ -35,9 +35,9 @@ class RelationshipRecordsTest extends UnitSpec with GuiceOneAppPerSuite {
   private val activeTransferorRelationshipRecord2 = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
 
   //inactive
-  private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(DateUtils.datePattern)
-  private val inactiveRelationshipEndDate2 = new DateTime().minusDays(10).toString(DateUtils.datePattern)
-  private val inactiveRelationshipEndDate3 = new DateTime().minusDays(1000).toString(DateUtils.datePattern)
+  private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
+  private val inactiveRelationshipEndDate2 = new DateTime().minusDays(10).toString(TimeService.defaultDateFormat)
+  private val inactiveRelationshipEndDate3 = new DateTime().minusDays(1000).toString(TimeService.defaultDateFormat)
 
   private val inactiveRecipientRelationshipRecord1 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
   private val inactiveRecipientRelationshipRecord2 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))

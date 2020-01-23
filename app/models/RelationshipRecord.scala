@@ -18,7 +18,6 @@ package models
 
 import play.api.libs.json.Json
 import services.TimeService
-import utils.DateUtils
 
 //TODO replace participant with Role object
 case class RelationshipRecord(participant: String,
@@ -31,7 +30,7 @@ case class RelationshipRecord(participant: String,
 
   def isActive: Boolean = participant1EndDate match{
     case None => true
-    case Some(date) => DateUtils.isFutureDate(date)
+    case Some(date) => TimeService.isFutureDate(date)
       //TODO this code can be reached???
     case _ => false
   }

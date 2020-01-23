@@ -19,12 +19,29 @@ package services
 import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
+import play.api.Logger
 import uk.gov.hmrc.time.TaxYear
-import utils.DateUtils
 
-object TimeService extends TimeService
+object TimeService extends TimeService {
+  //TODO can we make other way?
+  override val defaultDateFormat: String = "yyyyMMdd"
+}
 
 trait TimeService {
+  val defaultDateFormat: String = "yyyyMMdd"
+
+  def isFutureDate(date: String): Boolean = {
+    var res = false
+    val format = new java.text.SimpleDateFormat(defaultDateFormat)
+    try {
+      val time = format.parse(date).getTime
+      res = time > System.currentTimeMillis()
+    } catch {
+      case exp: Throwable => Logger.error(s"Failed to parse date [$date] into format [$defaultDateFormat]", exp)
+    }
+
+    res
+  }
 
   def currentTaxYear: TaxYear = TaxYear.current
 
@@ -52,5 +69,5 @@ trait TimeService {
 
   def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
 
-  def parseDateWithFormat(date: String, format: String  = DateUtils.datePattern): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
+  def parseDateWithFormat(date: String, format: String  = TimeService.defaultDateFormat): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

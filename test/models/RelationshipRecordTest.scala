@@ -20,8 +20,8 @@ import java.time.LocalDate
 
 import org.joda.time.DateTime
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import services.TimeService
 import uk.gov.hmrc.play.test.UnitSpec
-import utils.DateUtils
 
 class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
 
@@ -95,7 +95,7 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
       }
 
       "relationship end date is today" in {
-        val relationshipEndDate = new DateTime().toString(DateUtils.datePattern)
+        val relationshipEndDate = new DateTime().toString(TimeService.defaultDateFormat)
         val relationshipRecord = relationshipActiveRecordWitNoEndDate.copy(participant1EndDate = Some(relationshipEndDate))
         relationshipRecord.isActive shouldBe false
       }
