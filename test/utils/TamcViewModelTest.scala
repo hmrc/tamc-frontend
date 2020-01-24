@@ -16,16 +16,45 @@
 
 package utils
 
-import models.{Active, ActiveHistoric, CitizenName, Historic, LoggedInUserInfo, Recipient, RecordStatus, RelationshipRecord, RelationshipRecords, Role}
-import org.joda.time.LocalDate
+import models._
+import org.joda.time.{DateTime, LocalDate}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{I18nSupport, MessagesApi}
+import services.TimeService
 import uk.gov.hmrc.play.test.UnitSpec
 import viewModels.{HistorySummaryButton, HistorySummaryViewModel}
 
 trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
+  def getCurrentYear: Int = LocalDate.now().getYear
+
+  //active
+  val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
+    Recipient.asString(),
+    creationTimestamp = "56787",
+    participant1StartDate = "20130101",
+    relationshipEndReason = Some(RelationshipEndReason.Default),
+    participant1EndDate = None,
+    otherParticipantInstanceIdentifier = "",
+    otherParticipantUpdateTimestamp = "")
+  val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
+  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)
+  val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
+
+  //inactive
+  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
+  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(TimeService.defaultDateFormat)
+  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(TimeService.defaultDateFormat)
+
+  val inactiveRecipientRelationshipRecord1: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
+  val inactiveRecipientRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
+  val inactiveRecipientRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
+
+  val inactiveTransferorRelationshipRecord1: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
+  val inactiveTransferorRelationshipRecord2: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
+  val inactiveTransferorRelationshipRecord3: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
 
   def buildHistorySummaryViewModel(participant: Role, relation: RecordStatus): HistorySummaryViewModel = {
     val activeRelationshipMock = getActiveRelationShip(participant, relation)

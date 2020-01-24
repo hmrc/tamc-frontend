@@ -16,38 +16,9 @@
 
 package models
 
-import org.joda.time.DateTime
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import services.TimeService
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.TamcViewModelTest
 
-class RelationshipRecordsTest extends UnitSpec with GuiceOneAppPerSuite {
-
-  //active
-  private val activeRecipientRelationshipRecord = RelationshipRecord(
-    Recipient.asString(),
-    creationTimestamp = "56787",
-    participant1StartDate = "20130101",
-    relationshipEndReason = Some(RelationshipEndReason.Default),
-    participant1EndDate = None,
-    otherParticipantInstanceIdentifier = "",
-    otherParticipantUpdateTimestamp = "")
-  private val activeTransferorRelationshipRecord2 = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
-  private val activeRelationshipEndDate1 = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)
-  private val activeTransferorRelationshipRecord3 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
-
-  //inactive
-  private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
-  private val inactiveRelationshipEndDate2 = new DateTime().minusDays(10).toString(TimeService.defaultDateFormat)
-  private val inactiveRelationshipEndDate3 = new DateTime().minusDays(1000).toString(TimeService.defaultDateFormat)
-
-  private val inactiveRecipientRelationshipRecord1 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
-  private val inactiveRecipientRelationshipRecord2 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
-  private val inactiveRecipientRelationshipRecord3 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
-
-  private val inactiveTransferorRelationshipRecord1 = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
-  private val inactiveTransferorRelationshipRecord2 = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
-  private val inactiveTransferorRelationshipRecord3 = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
+class RelationshipRecordsTest extends TamcViewModelTest {
 
   "recordStatus" should {
     "be active" in {

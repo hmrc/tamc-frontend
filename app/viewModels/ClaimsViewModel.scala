@@ -23,7 +23,7 @@ import play.twirl.api.Html
 import utils.LanguageUtils
 import views.helpers.TextGenerators
 
-
+//TODO add tests for active row
 case class ActiveRow(activeDateInterval: String, activeStatus: String)
 
 object ActiveRow {
@@ -38,18 +38,28 @@ object ActiveRow {
   }
 }
 
-
+//TODO add tests for historic row
 case class HistoricRow(historicDateInterval: String, historicStatus: String)
 
 object HistoricRow {
 
   def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): HistoricRow = {
 
-    val historicDateInterval = TextGenerators.taxDateIntervalString(relationshipRecord.participant1StartDate,
-      relationshipRecord.participant1EndDate, LanguageUtils.isWelsh(messages))
+    val historicDateInterval = TextGenerators.taxDateIntervalString(
+      relationshipRecord.participant1StartDate,
+      relationshipRecord.participant1EndDate,
+      LanguageUtils.isWelsh(messages))
 
-    val historicStatus = messages(s"coc.end-reason.${relationshipRecord.relationshipEndReason.map(_.value).getOrElse("")}")
+    //TODO get or else should be frm DEFAULT value not empty with will fail with runtime exception!?!?!?
+    val cause = relationshipRecord.relationshipEndReason match {
+      case None => ""
+      case Some(reason) => reason.value.toUpperCase
+    }
+    //TODO get or else should be frm DEFAULT value not empty with will fail with runtime exception!?!?!?
+    val messageKey = s"coc.end-reason.$cause"
+    val historicStatus = messages(messageKey)
 
+    //TODO to set empty message on fail to get message from message file???
     HistoricRow(historicDateInterval, historicStatus)
 
   }
@@ -75,7 +85,7 @@ object ClaimsViewModel {
 
     val isActiveRecord = recordStatus == Active
 
-    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink, backLinkUrl(isActiveRecord))
+    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink, backLinkUrl(recordStatus))
   }
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
@@ -84,11 +94,12 @@ object ClaimsViewModel {
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 
-  private def backLinkUrl(isActiveRecord: Boolean): String = {
-    if (isActiveRecord) {
-      controllers.routes.UpdateRelationshipController.decision().url
-    } else {
-      controllers.routes.UpdateRelationshipController.history().url
+  private def backLinkUrl(recordStatus: RecordStatus): String = {
+    recordStatus match {
+      case Active =>
+        controllers.routes.UpdateRelationshipController.decision().url
+      case _ =>
+        controllers.routes.UpdateRelationshipController.history().url
     }
   }
 }
