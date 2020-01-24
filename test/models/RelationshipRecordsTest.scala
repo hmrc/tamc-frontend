@@ -33,6 +33,8 @@ class RelationshipRecordsTest extends UnitSpec with GuiceOneAppPerSuite {
     otherParticipantInstanceIdentifier = "",
     otherParticipantUpdateTimestamp = "")
   private val activeTransferorRelationshipRecord2 = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
+  private val activeRelationshipEndDate1 = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)
+  private val activeTransferorRelationshipRecord3 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
 
   //inactive
   private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
@@ -48,54 +50,55 @@ class RelationshipRecordsTest extends UnitSpec with GuiceOneAppPerSuite {
   private val inactiveTransferorRelationshipRecord3 = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
 
   "recordStatus" should {
-    "is active" in {
+    "be active" in {
       val relationshipRecordList = RelationshipRecordList(Seq(
         activeRecipientRelationshipRecord,
         activeTransferorRelationshipRecord2
       ))
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship.recordStatus == Active
+      relationship.recordStatus shouldBe Active
     }
 
-    "is active historic" in {
+    "be active historic" in {
       val relationshipRecordList = RelationshipRecordList(Seq(
+        activeTransferorRelationshipRecord3,
         inactiveRecipientRelationshipRecord1,
         inactiveRecipientRelationshipRecord2,
         inactiveRecipientRelationshipRecord3
       ))
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship.recordStatus == ActiveHistoric
+      relationship.recordStatus shouldBe ActiveHistoric
     }
 
-    "is historic" in {
+    "be historic" in {
       val relationshipRecordList = RelationshipRecordList(Seq())
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship.recordStatus == Historic
+      relationship.recordStatus shouldBe Historic
     }
   }
 
   "role" should {
-    "is active Recipient" in {
+    "be active Recipient" in {
       val relationshipRecordList = RelationshipRecordList(Seq(
         activeRecipientRelationshipRecord
       ))
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship.role == Recipient
+      relationship.role shouldBe Recipient
     }
-    "is active Transferor" in {
+    "be active Transferor" in {
       val relationshipRecordList = RelationshipRecordList(Seq(
         activeTransferorRelationshipRecord2
       ))
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship.role == Transferor
+      relationship.role shouldBe Transferor
     }
 
-    "is historic Recipient" in {
+    "be historic Recipient" in {
       val relationshipRecordList = RelationshipRecordList(Seq(
         inactiveRecipientRelationshipRecord1,
         inactiveRecipientRelationshipRecord2,
@@ -103,10 +106,10 @@ class RelationshipRecordsTest extends UnitSpec with GuiceOneAppPerSuite {
       ))
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship.role == Recipient
+      relationship.role shouldBe Recipient
     }
 
-    "is historic Transferor" in {
+    "be historic Transferor" in {
       val relationshipRecordList = RelationshipRecordList(Seq(
         inactiveTransferorRelationshipRecord1,
         inactiveTransferorRelationshipRecord2,
@@ -114,14 +117,14 @@ class RelationshipRecordsTest extends UnitSpec with GuiceOneAppPerSuite {
       ))
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship.role == Transferor
+      relationship.role shouldBe Transferor
     }
 
     //TODO to test properly
     "failed to get role no active and no historic records and no user info" in {
       intercept[Exception] {
         new RelationshipRecords(None, None, None).role
-      }.getMessage == "IDK?!"
+      }.getMessage shouldBe "IDK?!"
     }
 
   }

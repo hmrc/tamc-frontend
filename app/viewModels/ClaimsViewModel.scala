@@ -56,8 +56,11 @@ object HistoricRow {
 
 }
 
-case class ClaimsViewModel(activeRow: Option[ActiveRow], historicRows: Option[Seq[HistoricRow]], isActiveRecord: Boolean,
-                           taxFreeAllowanceLink: Html, backLinkUrl: String)
+case class ClaimsViewModel(activeRow: Option[ActiveRow],
+                           historicRows: Option[Seq[HistoricRow]],
+                           isActiveRecord: Boolean,
+                           taxFreeAllowanceLink: Html,
+                           backLinkUrl: String)
 
 object ClaimsViewModel {
 
