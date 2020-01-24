@@ -30,7 +30,9 @@ object ActiveRow {
 
   def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): ActiveRow = {
 
-    val activeDateInterval = TextGenerators.taxDateIntervalString(relationshipRecord.participant1StartDate, isWelsh = LanguageUtils.isWelsh(messages))
+    val activeDateInterval = TextGenerators.taxDateIntervalString(
+      relationshipRecord.participant1StartDate,
+      isWelsh = LanguageUtils.isWelsh(messages))
     val activeStatus = messages("change.status.active")
 
     ActiveRow(activeDateInterval, activeStatus)
@@ -50,18 +52,21 @@ object HistoricRow {
       relationshipRecord.participant1EndDate,
       LanguageUtils.isWelsh(messages))
 
-    //TODO get or else should be frm DEFAULT value not empty with will fail with runtime exception!?!?!?
     val cause = relationshipRecord.relationshipEndReason match {
       case None => ""
       case Some(reason) => reason.value.toUpperCase
     }
+
     //TODO get or else should be frm DEFAULT value not empty with will fail with runtime exception!?!?!?
-    val messageKey = s"coc.end-reason.$cause"
-    val historicStatus = messages(messageKey)
+    val status = if (cause == "") {
+      //TODO to test this thing?
+      ""
+    } else {
+      val messageKey = s"coc.end-reason.$cause"
+      messages(messageKey)
+    }
 
-    //TODO to set empty message on fail to get message from message file???
-    HistoricRow(historicDateInterval, historicStatus)
-
+    HistoricRow(historicDateInterval, status)
   }
 
 }

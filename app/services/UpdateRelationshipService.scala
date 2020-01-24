@@ -198,7 +198,8 @@ trait UpdateRelationshipService {
       cacheData <- cachingService.getUpdateRelationshipCachedData
     } yield isValidDivorceDate(dod, cacheData)
 
-  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = cachingService.getRelationshipRecords
+  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
+    cachingService.getRelationshipRecords
 
   def getEndDate(endRelationshipReason: EndRelationshipReason,
                  selectedRelationship: RelationshipRecord): LocalDate =
