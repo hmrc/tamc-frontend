@@ -124,7 +124,7 @@ class UpdateRelationshipController @Inject()(
   def submitMakeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       MakeChangesDecisionForm.form.bindFromRequest.fold(
-        //TODO how to reach this code?
+        //TODO Need to test this code???
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.reason_for_change(formWithErrors)))
         }, {
@@ -161,11 +161,9 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.bereavement())
             }
           }
-            //TODO need this?
+          //TODO need to fix this logic and add test for this case as well?
           case _ =>
-            println("Can reach this code?!")
             Future.successful(BadRequest)
-          //TODO It would fail on the following inputs: None, Some((x: String forSome x not in (Bereavement, Divorce, IncomeChanges, NoLongerRequired)))
         })
   }
 
@@ -296,30 +294,6 @@ class UpdateRelationshipController @Inject()(
       ) recover handleError
   }
 
-  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
-    PartialFunction[Throwable, Result] {
-      throwable: Throwable =>
-
-        val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
-
-        def handle(logger: (String, Throwable) => Unit, result: Result): Result = {
-          logger(message, throwable)
-          result
-        }
-
-        throwable match {
-          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
-          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
-          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
-          case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
-        }
-    }
-
   def divorceYear: Action[AnyContent] = authenticate.async {
     implicit request =>
       //      updateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce map {
@@ -363,6 +337,30 @@ class UpdateRelationshipController @Inject()(
         case None => Ok(views.html.coc.email(emailForm))
       } recover handleError
   }
+
+  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
+    PartialFunction[Throwable, Result] {
+      throwable: Throwable =>
+
+        val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
+
+        def handle(logger: (String, Throwable) => Unit, result: Result): Result = {
+          logger(message, throwable)
+          result
+        }
+
+        throwable match {
+          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
+          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
+          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
+          case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
+          case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
+        }
+    }
 
   def confirmReject(): Action[AnyContent] = authenticate.async {
     implicit request =>
