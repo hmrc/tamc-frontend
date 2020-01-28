@@ -21,6 +21,7 @@ import play.api.data.Forms.{optional, single, text}
 import play.api.i18n.Messages
 import utils.Constants.forms.coc.CheckClaimOrCancelDecisionFormConstants
 
+//TODO add tests
 //TODO constants
 object CheckClaimOrCancelDecisionForm extends CheckClaimOrCancelDecisionFormConstants {
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](

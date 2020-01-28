@@ -93,7 +93,7 @@ class TransferControllerTest extends ControllerBaseSpec {
       val result = controller().dateOfMarriageWithCy()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      val resolved = Await.result(result, 5 seconds)
+      val resolved = awaitResult(result)
       resolved.header.headers.keys should contain("Set-Cookie")
       resolved.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
     }
@@ -104,7 +104,7 @@ class TransferControllerTest extends ControllerBaseSpec {
       val result = controller().dateOfMarriageWithEn()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      val resolved = Await.result(result, 5 seconds)
+      val resolved = awaitResult(result)
       resolved.header.headers.keys should contain("Set-Cookie")
       resolved.header.headers("Set-Cookie") should include("PLAY_LANG=en")
     }

@@ -16,14 +16,17 @@
 
 package controllers
 
+import java.util.concurrent.TimeUnit
+
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import org.scalatest.mockito.MockitoSugar
+import org.scalatest.words.MustVerb
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{AnyContent, Request}
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import test_utils._
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,7 +34,14 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-trait ControllerBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
+
+trait ControllerBaseSpec extends UnitSpec
+  with MustVerb
+  with I18nSupport
+  with GuiceOneAppPerSuite
+  with MockitoSugar {
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
@@ -50,4 +60,24 @@ trait ControllerBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSu
   implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
+
+  def awaitResult(result: Future[Result]): Future[Result] = {
+    Future.successful(Await.result(result, Duration(5, TimeUnit.SECONDS)))
+  }
+
+  def getContactHMRCText(testCase: String): String = {
+    testCase match  {
+      case "changeOfIncome" =>
+        (messagesApi("general.helpline.enquiries.link.pretext") + " "
+          + messagesApi("general.helpline.enquiries.link") + " "
+          + messagesApi("pages.changeOfIncome.enquiries.link.paragraph"))
+      case "bereavement" =>
+        (messagesApi("general.helpline.enquiries.link.pretext") + " "
+          + messagesApi("general.helpline.enquiries.link") + " "
+          + messagesApi("pages.bereavement.enquiries.link.paragraph"))
+      case _ => throw new RuntimeException("asd")
+    }
+
+  }
+
 }

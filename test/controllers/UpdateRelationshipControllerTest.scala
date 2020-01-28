@@ -26,7 +26,7 @@ import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
@@ -39,9 +39,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
+import utils.Constants.forms.coc.MakeChangesDecisionFormConstants
 
-import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 class UpdateRelationshipControllerTest extends ControllerBaseSpec {
@@ -62,55 +63,72 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
-//  "History" should {
-//    "redirect to transfer" when {
-//      "has no active record, no active historic and temporary authentication" in {
-//        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-//          .thenReturn(
-//            Future.successful(
-//              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
-//            )
-//          )
-//        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
-//        status(result) shouldBe SEE_OTHER
-//        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
-//      }
-//    }
-//
-//    "redirect to how-it-works" when {
-//      "has no active record, no active historic and permanent authentication" in {
-//        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-//          .thenReturn(
-//            Future.successful(
-//              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
-//            )
-//          )
-//        val result: Future[Result] = controller().history()(request)
-//        status(result) shouldBe SEE_OTHER
-//        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
-//      }
-//    }
-//
-//    "load change of circumstances page" when {
-//      "has some active record" in {
-//        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-//          .thenReturn(
-//            Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-//          )
-//
-//        val result: Future[Result] = controller().history()(request)
-//        status(result) shouldBe OK
-//      }
-//
-//    }
-//  }
+
+  class UpdateRelationshipActionTest(endReason: String) {
+    lazy val document: Document = Jsoup.parse(contentAsString(result))
+    when(mockCachingService.saveRoleRecord(any())(any(), any())).thenReturn(Future.successful("OK"))
+    when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
+      .thenReturn(Future.successful(EndRelationshipReason("")))
+    val request: Request[AnyContent] = FakeRequest().withFormUrlEncodedBody(
+      "role" -> "some role",
+      "endReason" -> endReason,
+      "historicActiveRecord" -> "true",
+      "creationTimestamp" -> "timestamp",
+      "dateOfDivorce" -> new LocalDate(time.TaxYear.current.startYear, 6, 12).toString()
+    )
+    val result: Future[Result] = controller().updateRelationshipAction()(request)
+  }
+
+  //TODO remove?!
+  //  "History" should {
+  //    "redirect to transfer" when {
+  //      "has no active record, no active historic and temporary authentication" in {
+  //        when(mockListRelationshipService.listRelationship(any())(any(), any()))
+  //          .thenReturn(
+  //            Future.successful(
+  //              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
+  //            )
+  //          )
+  //        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
+  //        status(result) shouldBe SEE_OTHER
+  //        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+  //      }
+  //    }
+  //
+  //    "redirect to how-it-works" when {
+  //      "has no active record, no active historic and permanent authentication" in {
+  //        when(mockListRelationshipService.listRelationship(any())(any(), any()))
+  //          .thenReturn(
+  //            Future.successful(
+  //              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
+  //            )
+  //          )
+  //        val result: Future[Result] = controller().history()(request)
+  //        status(result) shouldBe SEE_OTHER
+  //        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
+  //      }
+  //    }
+  //
+  //    "load change of circumstances page" when {
+  //      "has some active record" in {
+  //        when(mockListRelationshipService.listRelationship(any())(any(), any()))
+  //          .thenReturn(
+  //            Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
+  //          )
+  //
+  //        val result: Future[Result] = controller().history()(request)
+  //        status(result) shouldBe OK
+  //      }
+  //
+  //    }
+  //  }
 
   "historyWithCy" should {
     "redirect to history, with a welsh language setting" in {
       val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).historyWithCy()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
-      val resolved = Await.result(result, 5 seconds)
+      val resolved = awaitResult(result)
       resolved.header.headers.keys should contain("Set-Cookie")
       resolved.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
     }
@@ -121,48 +139,143 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).historyWithEn()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
-      val resolved = Await.result(result, 5 seconds)
+      val resolved = awaitResult(result)
       resolved.header.headers.keys should contain("Set-Cookie")
       resolved.header.headers("Set-Cookie") should include("PLAY_LANG=en")
     }
   }
 
   "makeChange" should {
-    "return successful response" when {
-      "a valid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
-          "role" -> "some role",
-          "endReason" -> "some end reason",
-          "historicActiveRecord" -> "true"
-        )
-        val result = controller().makeChange()(request)
-        status(result) shouldBe OK
-      }
+    "there are no data in cache" in {
+      val request = FakeRequest()
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any()))
+        .thenReturn(Future.successful(None))
+
+      val result = controller().makeChange()(request)
+      status(result) shouldBe OK
     }
 
-    "redirect the user" when {
-      "an invalid form with errors is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("historicActiveRecord" -> "string")
-        val result = controller().makeChange()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(routes.UpdateRelationshipController.history().url)
-      }
+    "there are data in cache but is wrong one" in {
+      val request = FakeRequest()
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any()))
+        .thenReturn(Future.successful(Some("")))
+
+      val result = controller().makeChange()(request)
+      status(result) shouldBe OK
+    }
+
+    "there are data in cache and is valid" in {
+      val request = FakeRequest()
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any()))
+        .thenReturn(Future.successful(Some(MakeChangesDecisionFormConstants.Divorce)))
+
+      val result = controller().makeChange()(request)
+      status(result) shouldBe OK
     }
   }
 
-  class UpdateRelationshipActionTest(endReason: String) {
-    val request: Request[AnyContent] = FakeRequest().withFormUrlEncodedBody(
-      "role" -> "some role",
-      "endReason" -> endReason,
-      "historicActiveRecord" -> "true",
-      "creationTimestamp" -> "timestamp",
-      "dateOfDivorce" -> new LocalDate(time.TaxYear.current.startYear, 6, 12).toString()
-    )
-    when(mockCachingService.saveRoleRecord(any())(any(), any())).thenReturn("OK")
-    when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
-      .thenReturn(Future.successful(EndRelationshipReason("")))
-    val result: Future[Result] = controller().updateRelationshipAction()(request)
-    lazy val document: Document = Jsoup.parse(contentAsString(result))
+  "submitMakeChange" should {
+
+    "divorce" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.Divorce
+      )
+      when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.Divorce))
+
+      val result = controller().submitMakeChange()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url)
+    }
+
+    "income change(recipient)" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.IncomeChanges
+      )
+
+      when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.IncomeChanges))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(Some(RelationshipRecord(Recipient.asString(), "", "", None, None, "", "")), None, None)
+          )
+        )
+
+      val result = controller().submitMakeChange()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance().url)
+    }
+
+    "income change(transferor)" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.IncomeChanges
+      )
+
+      when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.IncomeChanges))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(Some(RelationshipRecord(Transferor.asString(), "", "", None, None, "", "")), None, None)
+          )
+        )
+
+      val result = controller().submitMakeChange()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.changeOfIncome().url)
+    }
+
+    "no longer required(recipient)" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.NoLongerRequired
+      )
+
+      when(mockUpdateRelationshipService.saveMakeChangeReason(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.NoLongerRequired))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(Some(RelationshipRecord(Recipient.asString(), "", "", None, None, "", "")), None, None)
+          )
+        )
+
+      val result = controller().submitMakeChange()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance().url)
+    }
+
+    "no longer required(transferor)" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.NoLongerRequired
+      )
+
+      when(mockUpdateRelationshipService.saveMakeChangeReason(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.NoLongerRequired))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(Some(RelationshipRecord(Transferor.asString(), "", "", None, None, "", "")), None, None)
+          )
+        )
+
+      val result = controller().submitMakeChange()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.cancel().url)
+    }
+
+    "bereavement" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.Bereavement
+      )
+
+      when(mockUpdateRelationshipService.saveMakeChangeReason(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.Bereavement))
+
+      val result = controller().submitMakeChange()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.bereavement().url)
+    }
   }
 
   "updateRelationshipAction" should {
@@ -234,7 +347,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         val email = "example@example.com"
         val record = NotificationRecord(EmailAddress(email))
         when(mockRegistrationService.upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any()))
-          .thenReturn(record)
+          .thenReturn(Future.successful(record))
         val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> email)
         val result = controller().confirmYourEmailActionUpdate()(request)
         status(result) shouldBe SEE_OTHER
@@ -249,7 +362,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "return a success" when {
       "there is cache data returned" in {
         when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any())).thenReturn(
-          Some(UpdateRelationshipCacheData(None, Some(""), relationshipEndReasonRecord = Some(EndRelationshipReason("")), notification = None))
+          Future.successful(Some(UpdateRelationshipCacheData(None, Some(""), relationshipEndReasonRecord = Some(EndRelationshipReason("")), notification = None)))
         )
         val result = controller().divorceYear()(request)
 
@@ -259,7 +372,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "return InternalServerError" when {
       "there is no cache data" in {
-        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any())).thenReturn(None)
+        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any()))
+          .thenReturn(Future.successful(None))
         status(controller().divorceYear()(request)) shouldBe INTERNAL_SERVER_ERROR
       }
     }
@@ -286,7 +400,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       )
 
       "divorce date is valid" in {
-        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(true)
+        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(Future.successful(true))
         when(mockTimeService.getEffectiveUntilDate(any())).thenReturn(Some(LocalDate.now()))
         when(mockTimeService.getEffectiveDate(any())).thenReturn(LocalDate.now())
         val result = controller().divorceEnterYear()(request)
@@ -297,7 +411,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       }
 
       "divorce date is invalid" in {
-        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(false)
+        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(Future.successful(false))
         val result = controller().divorceEnterYear()(request)
         lazy val document: Document = Jsoup.parse(contentAsString(result))
 
@@ -336,7 +450,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           "dateOfDivorce.year" -> "2000"
         )
         when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
-          .thenReturn(EndRelationshipReason("DIVORCE_CY"))
+          .thenReturn(Future.successful(EndRelationshipReason("DIVORCE_CY")))
         val result = controller().divorceAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmEmail().url)
@@ -349,7 +463,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "an email is recovered from the cache" in {
         val email = "test@test.com"
         when(mockUpdateRelationshipService.getUpdateNotification(any(), any()))
-          .thenReturn(Some(NotificationRecord(EmailAddress(email))))
+          .thenReturn(Future.successful(Some(NotificationRecord(EmailAddress(email)))))
         val result = controller().confirmEmail()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
@@ -358,7 +472,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
       "no email is recovered from the cache" in {
         when(mockUpdateRelationshipService.getUpdateNotification(any(), any()))
-          .thenReturn(None)
+          .thenReturn(Future.successful(None))
         val result = controller().confirmEmail()(request)
         status(result) shouldBe OK
       }
@@ -370,7 +484,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "data is returned from the cache" in {
         val relationshipCacheData = Some(RelationshipRecordData.updateRelationshipCacheData)
         when(mockUpdateRelationshipService.getUpdateRelationshipCacheForReject(any(), any()))
-          .thenReturn(relationshipCacheData)
+          .thenReturn(Future.successful(relationshipCacheData))
         when(mockUpdateRelationshipService.getRelationship(ArgumentMatchers.eq(relationshipCacheData.get)))
           .thenReturn(RelationshipRecordData.activeRecord)
         when(mockUpdateRelationshipService.getEndDate(ArgumentMatchers.eq(relationshipCacheData.get.relationshipEndReasonRecord.get),
@@ -387,7 +501,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "end reason is successfully cached" in {
         val endReason = EndRelationshipReason(EndReasonCode.CANCEL)
         when(mockUpdateRelationshipService.saveEndRelationshipReason(ArgumentMatchers.eq(endReason))(any(), any()))
-          .thenReturn(endReason)
+          .thenReturn(Future.successful(endReason))
         val result = controller().confirmCancel()(request)
         status(result) shouldBe OK
       }
@@ -464,7 +578,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "return a success" when {
       "the relationship service successfully returns cache data and end relationship reason" in {
         when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
-          .thenReturn((ConfirmationModelData.updateRelationshipConfirmationModel, Some(RelationshipRecordData.updateRelationshipCacheData)))
+          .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, Some(RelationshipRecordData.updateRelationshipCacheData))))
         when(mockTimeService.getEffectiveDate(any()))
           .thenReturn(LocalDate.now())
         val result = controller().confirmUpdate()(request)
@@ -475,7 +589,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "return InternalServerError" when {
       "there is no cache data returned" in {
         when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
-          .thenReturn((ConfirmationModelData.updateRelationshipConfirmationModel, None))
+          .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, None)))
         val result = controller().confirmUpdate()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
@@ -486,7 +600,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "redirct the user" when {
       "update relationship returns a future successful" in {
         when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any()))
-          .thenReturn(RelationshipRecordData.notificationRecord)
+          .thenReturn(Future.successful(RelationshipRecordData.notificationRecord))
         val result = controller().confirmUpdateAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
@@ -498,7 +612,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "return a success" when {
       "an email is available" in {
         when(mockUpdateRelationshipService.getupdateRelationshipFinishedData(any())(any(), any()))
-          .thenReturn((RelationshipRecordData.notificationRecord, EndRelationshipReason(EndReasonCode.REJECT)))
+          .thenReturn(Future.successful((RelationshipRecordData.notificationRecord, EndRelationshipReason(EndReasonCode.REJECT))))
 
         val result = controller().finishUpdate()(request)
         status(result) shouldBe OK
@@ -528,7 +642,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
       for ((error, message) <- errors) {
         s"a $error has been thrown" in {
-          val result = controller().handleError(HeaderCarrier(), auhtRequest)(error)
+          val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(error))
           status(result) shouldBe INTERNAL_SERVER_ERROR
           val doc = Jsoup.parse(contentAsString(result))
           doc.getElementById("error").text() shouldBe messagesApi(message)
@@ -544,7 +658,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
       for ((error, message) <- errors) {
         s"a $error has been thrown" in {
-          val result = controller().handleError(HeaderCarrier(), auhtRequest)(error)
+          val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(error))
           status(result) shouldBe OK
           val doc = Jsoup.parse(contentAsString(result))
           doc.getElementById("error").text() shouldBe messagesApi(message)
@@ -554,7 +668,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "redirect" when {
       "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
-        val result = controller().handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated)
+        val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated))
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
       }
