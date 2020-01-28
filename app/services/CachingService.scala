@@ -169,6 +169,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
         val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
         RelationshipRecords(activeRelationshipRecord, historicRelationships)
       }
+        //TODO add test for this case
         //TODO error scenario
       case _ => ???
     }

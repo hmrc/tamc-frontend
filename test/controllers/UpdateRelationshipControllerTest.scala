@@ -41,8 +41,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 import utils.Constants.forms.coc.MakeChangesDecisionFormConstants
 
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.language.postfixOps
 
 class UpdateRelationshipControllerTest extends ControllerBaseSpec {
@@ -278,6 +277,69 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
+  "stopAllowance" should {
+    "return success" in {
+      val result: Future[Result] = controller().stopAllowance(request)
+      status(result) shouldBe OK
+    }
+  }
+
+  "cancel" should {
+    "return success" in {
+      val result: Future[Result] = controller().cancel(request)
+      status(result) shouldBe OK
+    }
+  }
+
+  "changeOfIncome" should {
+    "return success" in {
+      val result: Future[Result] = controller().changeOfIncome(request)
+      status(result) shouldBe OK
+    }
+  }
+
+  "bereavement" should {
+    "return success is data in cache" in {
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(Some(RelationshipRecord(Recipient.asString(), "", "", None, None, "", "")), None, None)
+          )
+        )
+      status(controller().bereavement()(request)) shouldBe OK
+    }
+
+    //TODO finish this test case as per implmenetation from models.RelationshipRecords.role case not found
+    "return success is no data in cache" in {
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(None, None, None)
+          )
+        )
+
+      status(controller().bereavement()(request)) shouldBe OK
+    }
+  }
+
+  "divorceEnterYear" should {
+    "return success is data in cache" in {
+      when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
+        .thenReturn(Future.successful(Some(LocalDate.now().minusDays(1))))
+
+      status(controller().divorceEnterYear()(request)) shouldBe OK
+    }
+
+    "return success is no data in cache" in {
+      when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
+        .thenReturn(Future.successful(None))
+
+      status(controller().divorceEnterYear()(request)) shouldBe OK
+    }
+  }
+
+  //TODO remove this test or rewrite them
+
   "updateRelationshipAction" should {
     "return a success" when {
       "the end reason code is DIVORCE" in new UpdateRelationshipActionTest("DIVORCE") {
@@ -318,18 +380,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "an unrecognised end reason is submitted" in new UpdateRelationshipActionTest("DIVORCE_PY") {
         status(result) shouldBe BAD_REQUEST
       }
-    }
-  }
-
-  "changeOfIncome" should {
-    "return success" in {
-      status(controller().changeOfIncome()(request)) shouldBe OK
-    }
-  }
-
-  "bereavement" should {
-    "return success" in {
-      status(controller().bereavement()(request)) shouldBe OK
     }
   }
 

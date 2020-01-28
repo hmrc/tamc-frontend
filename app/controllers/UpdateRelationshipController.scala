@@ -211,6 +211,8 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation())
             }
           }
+
+            //TODO fail for
         }
       )
   }
@@ -242,6 +244,7 @@ class UpdateRelationshipController @Inject()(
         .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
+  //TODO add test after John will implement
   def updateRelationshipAction(): Action[AnyContent] = authenticate.async {
     implicit request =>
       //      updateRelationshipForm.bindFromRequest.fold(
@@ -306,6 +309,7 @@ class UpdateRelationshipController @Inject()(
       ???
   }
 
+  //TODO add test after John will implement
   def divorceAction(): Action[AnyContent] = authenticate.async {
     implicit request =>
       //      divorceForm.bindFromRequest.fold(
