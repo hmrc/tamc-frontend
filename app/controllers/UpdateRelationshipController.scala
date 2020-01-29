@@ -200,7 +200,7 @@ class UpdateRelationshipController @Inject()(
 
   }
 
-  def submitDivorceEnterYear(): Action[AnyContent] = authenticate.async {
+  def submitDivorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
       DivorceSelectYearForm.form.bindFromRequest.fold(
         formWithErrors => {
@@ -211,8 +211,10 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation())
             }
           }
+          case None =>
+              ???
 
-            //TODO fail for
+            //TODO fail for else case
         }
       )
   }

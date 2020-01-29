@@ -18,6 +18,7 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
+import forms.coc.DivorceSelectYearForm
 import models._
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.joda.time.LocalDate
@@ -26,6 +27,8 @@ import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import play.api
+import play.api.data.Form
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -39,9 +42,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.Constants.forms.coc.MakeChangesDecisionFormConstants
+import utils.Constants.forms.coc.{DivorceSelectYearFormConstants, MakeChangesDecisionFormConstants}
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 
 class UpdateRelationshipControllerTest extends ControllerBaseSpec {
@@ -335,6 +338,29 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         .thenReturn(Future.successful(None))
 
       status(controller().divorceEnterYear()(request)) shouldBe OK
+    }
+  }
+
+  "submitDivorceEnterYear" should {
+    "an invalid form is submitted" in {
+      val request = FakeRequest().withFormUrlEncodedBody("role" -> "ROLE", "historicActiveRecord" -> "string")
+      val result: Future[Result] = controller().submitDivorceEnterYear(request)
+      status(result) shouldBe BAD_REQUEST
+    }
+
+    "return success and save data in cache" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "dateOfDivorce.day" -> "1",
+        "dateOfDivorce.month" -> "1",
+        "dateOfDivorce.year" -> "2000"
+      )
+
+      when(mockUpdateRelationshipService.saveDivorceDate(any())(any(), any()))
+        .thenReturn(Future.successful(LocalDate.now().minusDays(1)))
+
+      val result = controller().submitDivorceEnterYear()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEndExplanation().url)
     }
   }
 
