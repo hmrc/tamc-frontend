@@ -197,7 +197,6 @@ class UpdateRelationshipController @Inject()(
       updateRelationshipService.getDivorceDate map { divorceDate =>
         Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
       }
-
   }
 
   def submitDivorceEnterYear: Action[AnyContent] = authenticate.async {
@@ -206,30 +205,27 @@ class UpdateRelationshipController @Inject()(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.divorce_select_year(formWithErrors)))
         }, {
-          case Some(divorceDate) => {
+          case Some(divorceDate) =>
             updateRelationshipService.saveDivorceDate(divorceDate) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation())
             }
-          }
-          case None =>
+          //TODO fail for else case
+          case _ =>
               ???
-
-            //TODO fail for else case
         }
       )
   }
 
-  def divorceEndExplanation(): Action[AnyContent] = authenticate.async {
+  def divorceEndExplanation: Action[AnyContent] = authenticate.async {
     implicit request =>
 
       updateRelationshipService.getDivorceExplanationData map {
-
-        case (role, divorceDate) => {
+        case (role, divorceDate) =>
           val viewModel = DivorceEndExplanationViewModel(role, divorceDate)
           Ok(views.html.coc.divorce_end_explanation(viewModel))
-        }
         //TODO error scenario
-        case _ => ???
+        case _ =>
+          ???
       }
   }
 

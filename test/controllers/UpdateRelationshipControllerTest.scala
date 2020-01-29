@@ -364,6 +364,22 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
+  "divorceEndExplanation" should {
+    "return success there is data in cache" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "dateOfDivorce.day" -> "1",
+        "dateOfDivorce.month" -> "1",
+        "dateOfDivorce.year" -> "2000"
+      )
+
+      when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
+        .thenReturn(Future.successful((Transferor, LocalDate.now().minusDays(1))))
+
+      val result = controller().divorceEndExplanation()(request)
+      status(result) shouldBe OK
+    }
+  }
+
   //TODO remove this test or rewrite them
 
   "updateRelationshipAction" should {
