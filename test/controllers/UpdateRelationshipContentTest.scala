@@ -527,51 +527,6 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       }
 
     }
-    //    "recipient" when {
-    //
-    //      "current year divorce page(Recipient, current year)(text)" in {
-    //        val targetYear = LocalDate.now().getYear
-    //        val date = new LocalDate(targetYear, 1, 15)
-    //        val divorceDateFormatted = transformDate(date)
-    //        val taxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
-    //
-    //        when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
-    //          .thenReturn(Future.successful((Recipient, date)))
-    //
-    //        val result: Future[Result] = controller().divorceEndExplanation(request)
-    //
-    //        val expected = Seq(
-    //          messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
-    //          messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
-    //        ).toArray
-    //        val parsed = Jsoup.parse(contentAsString(result))
-    //        val current = parsed.getElementsByTag("p").eachText().toArray()
-    //
-    //        current shouldBe expected
-    //      }
-    //
-    //      "prev year divorce page(Recipient, prev year)(text)" in {
-    //        val targetYear = LocalDate.now().minusYears(3).getYear
-    //        val date = new LocalDate(targetYear, 1, 15)
-    //        val divorceDateFormatted = transformDate(date)
-    //        val taxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
-    //
-    //        when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
-    //          .thenReturn(Future.successful((Recipient, date)))
-    //
-    //        val result: Future[Result] = controller().divorceEndExplanation(request)
-    //
-    //        val expected = Seq(
-    //          messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
-    //          messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
-    //        ).toArray
-    //        val parsed = Jsoup.parse(contentAsString(result))
-    //        val current = parsed.getElementsByTag("p").eachText().toArray()
-    //
-    //        current shouldBe expected
-    //      }
-    //
-    //    }
   }
 
   //TODO remove with updateRelationshipAction()???
