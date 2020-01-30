@@ -75,7 +75,8 @@ class UpdateRelationshipController @Inject()(
         Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
       } recover {
         //open empty view even with there are cache problem or fail to map data to view
-        case NonFatal(_) => Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form))
+        case NonFatal(_) =>
+          Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form))
       }
   }
 
@@ -341,9 +342,15 @@ class UpdateRelationshipController @Inject()(
   def confirmEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getUpdateNotification map {
-        case Some(NotificationRecord(transferorEmail)) => Ok(views.html.coc.email(emailForm.fill(transferorEmail)))
-        case None => Ok(views.html.coc.email(emailForm))
-      } recover handleError
+        case Some(NotificationRecord(transferorEmail)) =>
+          Ok(views.html.coc.email(emailForm.fill(transferorEmail)))
+        case None =>
+          Ok(views.html.coc.email(emailForm))
+      } recover {
+        //open empty view even with there are cache problem or fail to map data to view
+        case NonFatal(_) =>
+          Ok(views.html.coc.email(emailForm))
+      }
   }
 
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =

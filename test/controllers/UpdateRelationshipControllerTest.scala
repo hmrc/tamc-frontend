@@ -53,6 +53,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
 
+  private val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
+
   def controller(auth: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): UpdateRelationshipController =
     new UpdateRelationshipController(
       messagesApi,
@@ -393,6 +395,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
+
   "divorceEnterYear" should {
     "return success is data in cache" in {
       when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
@@ -410,7 +413,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "return success fail to get from cache" in {
       when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
-        .thenReturn(Future.failed(new RuntimeException("test")))
+        .thenReturn(failedFuture)
 
       status(controller().divorceEnterYear(request)) shouldBe OK
     }
@@ -480,6 +483,34 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
+  "confirmEmail" should {
+    "return a success" when {
+      "fail to get data from cache" in {
+        when(mockUpdateRelationshipService.getUpdateNotification(any(), any()))
+          .thenReturn(failedFuture)
+        val result = controller().confirmEmail(request)
+        status(result) shouldBe OK
+      }
+
+      "an email is recovered from the cache" in {
+        val email = "test@test.com"
+        when(mockUpdateRelationshipService.getUpdateNotification(any(), any()))
+          .thenReturn(Future.successful(Some(NotificationRecord(EmailAddress(email)))))
+        val result = controller().confirmEmail(request)
+        status(result) shouldBe OK
+        val document = Jsoup.parse(contentAsString(result))
+        document.getElementById("transferor-email").attr("value") shouldBe email
+      }
+
+      "no email is recovered from the cache" in {
+        when(mockUpdateRelationshipService.getUpdateNotification(any(), any()))
+          .thenReturn(Future.successful(None))
+        val result = controller().confirmEmail(request)
+        status(result) shouldBe OK
+      }
+    }
+  }
+
   //TODO fix rewrite after John implementation
   "updateRelationshipAction" should {
     "return a success" when {
@@ -524,7 +555,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
-  //TODO remove this test or rewrite them
   "divorceYear" should {
     "return a success" when {
       "there is cache data returned" in {
@@ -583,26 +613,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
-  "confirmEmail" should {
-    "return a success" when {
-      "an email is recovered from the cache" in {
-        val email = "test@test.com"
-        when(mockUpdateRelationshipService.getUpdateNotification(any(), any()))
-          .thenReturn(Future.successful(Some(NotificationRecord(EmailAddress(email)))))
-        val result = controller().confirmEmail()(request)
-        status(result) shouldBe OK
-        val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("transferor-email").attr("value") shouldBe email
-      }
-
-      "no email is recovered from the cache" in {
-        when(mockUpdateRelationshipService.getUpdateNotification(any(), any()))
-          .thenReturn(Future.successful(None))
-        val result = controller().confirmEmail()(request)
-        status(result) shouldBe OK
-      }
-    }
-  }
+  //TODO remove this test or rewrite them
 
   "confirmReject" should {
     "return a success" when {
@@ -805,7 +816,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
       "failed to get data from cache should return INTERNAL_SERVER_ERROR" in {
         when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any()))
-          .thenReturn(Future.failed(new RuntimeException("test")))
+          .thenReturn(failedFuture)
         val result = controller().decision(request)
         status(result) shouldBe OK
       }
