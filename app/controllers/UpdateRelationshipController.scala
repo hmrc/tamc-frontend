@@ -111,6 +111,7 @@ class UpdateRelationshipController @Inject()(
 
         Ok(views.html.coc.claims(viewModel))
       }
+      //TODO add recover or something here?
   }
 
   def makeChange(): Action[AnyContent] = authenticate.async {
@@ -163,7 +164,7 @@ class UpdateRelationshipController @Inject()(
           }
           //TODO need to fix this logic and add test for this case as well?
           case _ =>
-            Future.successful(BadRequest)
+            Future.successful(InternalServerError)
         })
   }
 

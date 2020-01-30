@@ -178,6 +178,15 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   "submitMakeChange" should {
 
+    "bad request" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "tralalal" -> Transferor.asString()
+      )
+
+      val result = controller().submitMakeChange()(request)
+      status(result) shouldBe BAD_REQUEST
+    }
+
     "divorce" in {
       val request = FakeRequest().withFormUrlEncodedBody(
         MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.Divorce
