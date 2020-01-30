@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.Constants.forms.coc.MakeChangesDecisionFormConstants
+import utils.Constants.forms.coc.{CheckClaimOrCancelDecisionFormConstants, MakeChangesDecisionFormConstants}
 import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, HistorySummaryViewModel}
 
 import scala.concurrent.Future
@@ -74,29 +74,29 @@ class UpdateRelationshipController @Inject()(
   def decision(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
-        //TODO test form itself
         Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
-      } recover handleError
+      }
+      //TODO If there are no data in cache should be OK with uncheked radio button
   }
 
-  def submitDecision(): Action[AnyContent] = authenticate.async {
+  def submitDecision: Action[AnyContent] = authenticate.async {
     implicit request =>
 
       CheckClaimOrCancelDecisionForm.form.bindFromRequest.fold(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.decision(formWithErrors)))
         }, {
-          case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
+          case Some(CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim) => {
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.claims())
             }
           }
-          case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) map { _ =>
+          case Some(CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance) => {
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.makeChange())
             }
           }
-          //           TODO It would fail on the following inputs: None, Some((x: String forSome x not in (CheckMarriageAllowanceClaim, StopMarriageAllowance)))
+          //TODO It would fail on the following inputs: None, Some((x: String forSome x not in (CheckMarriageAllowanceClaim, StopMarriageAllowance)))
         })
   }
 

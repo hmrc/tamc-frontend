@@ -17,6 +17,7 @@
 @import models.auth.AuthenticatedUserRequest
 @import uk.gov.hmrc.play.views.html.helpers._
 @import forms.coc.CheckClaimOrCancelDecisionForm
+@import utils.Constants.forms.coc.CheckClaimOrCancelDecisionFormConstants
 
 
 @(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_],
@@ -37,9 +38,9 @@ mainConfig = views.helpers.MainConfig()) {
         <div class="form-group inline">
 
             @templates.input_radio_group(
-            decisionForm(CheckClaimOrCancelDecisionForm.DecisionChoice),
-            Seq((CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim, messages("pages.decision.radio.check")),
-            (CheckClaimOrCancelDecisionForm.StopMarriageAllowance, messages("pages.decision.radio.stop"))),
+            decisionForm(CheckClaimOrCancelDecisionFormConstants.DecisionChoice),
+            Seq((CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim, messages("pages.decision.radio.check")),
+            (CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance, messages("pages.decision.radio.stop"))),
             '_labelClass -> "block-label",
             '_labelAfter -> true,
             '_fieldsetAttributes -> "data-inline-error=update-marriage-criteria-js-error",

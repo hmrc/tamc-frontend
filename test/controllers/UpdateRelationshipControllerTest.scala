@@ -42,7 +42,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.Constants.forms.coc.{DivorceSelectYearFormConstants, MakeChangesDecisionFormConstants}
+import utils.Constants.forms.coc.{CheckClaimOrCancelDecisionFormConstants, DivorceSelectYearFormConstants, MakeChangesDecisionFormConstants}
 
 import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
@@ -173,6 +173,44 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
       val result = controller().makeChange()(request)
       status(result) shouldBe OK
+    }
+  }
+
+  "submitDecision" should {
+
+    "bad request" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        "tralalal" -> Transferor.asString()
+      )
+
+      val result = controller().submitDecision(request)
+      status(result) shouldBe BAD_REQUEST
+    }
+
+    "checkMarriageAllowanceClaim" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        CheckClaimOrCancelDecisionFormConstants.DecisionChoice -> CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim
+      )
+
+      when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
+        .thenReturn(Future.successful(CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim))
+
+      val result = controller().submitDecision(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.claims().url)
+    }
+
+    "stopMarriageAllowance" in {
+      val request = FakeRequest().withFormUrlEncodedBody(
+        CheckClaimOrCancelDecisionFormConstants.DecisionChoice -> CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance
+      )
+
+      when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
+        .thenReturn(Future.successful(CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance))
+
+      val result = controller().submitDecision(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.makeChange().url)
     }
   }
 
