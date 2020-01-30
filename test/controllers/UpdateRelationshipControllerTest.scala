@@ -176,6 +176,20 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
+  "claims" should {
+    "return success" in {
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(Some(RelationshipRecord(Transferor.asString(), "", "20130101", None, None, "", "")), None, None)
+          )
+        )
+
+      val result: Future[Result] = controller().claims(request)
+      status(result) shouldBe OK
+    }
+  }
+
   "submitMakeChange" should {
 
     "bad request" in {

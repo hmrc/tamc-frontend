@@ -100,7 +100,7 @@ class UpdateRelationshipController @Inject()(
         })
   }
 
-  def claims(): Action[AnyContent] = authenticate.async {
+  def claims: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
 
