@@ -20,18 +20,16 @@ import controllers.actions.AuthenticatedActionRefiner
 import models._
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.i18n.Messages
+import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.twirl.api.Html
 import services._
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time
-import utils.Constants.forms.coc._
+import uk.gov.hmrc.time.TaxYear
 import views.helpers.TextGenerators
 
 import scala.concurrent.Future
@@ -54,6 +52,37 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       mockCachingService,
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+
+  private def bulletStatements(role: Role, currentTaxYear: TaxYear, isCurrentYearDivorced: Boolean)(implicit messages: Messages): Seq[String] = {
+    lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
+    lazy val nextTaxYearStart: String = transformDate(currentTaxYear.next.starts)
+    lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)
+    lazy val taxYearEndForGivenYear: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).finishes)
+
+    //TODO remove duplicate case into case _ =>
+    (role, isCurrentYearDivorced) match {
+      case (Recipient, true) => {
+        Seq(messages("pages.divorce.explanation.recipient.current.bullet1", currentTaxYearEnd),
+          messages("pages.divorce.explanation.recipient.current.bullet2", nextTaxYearStart))
+      }
+      case (Recipient, false) => {
+        Seq(messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
+          messages("pages.divorce.explanation.previous.bullet2"))
+      }
+      case (Transferor, true) => {
+        Seq(messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
+          messages("pages.divorce.explanation.previous.bullet2"))
+      }
+      case (Transferor, false) => {
+        Seq(messages("pages.divorce.explanation.previous.bullet1", taxYearEndForGivenYear),
+          messages("pages.divorce.explanation.previous.bullet2"))
+      }
+    }
+  }
+
+  private def transformDate(date: LocalDate, isWelsh: Boolean = false): String = {
+    TextGenerators.ukDateTransformer(Some(date), isWelsh)
+  }
 
   //TODO remove??
   //  "list relationship page" should {
@@ -412,28 +441,161 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
   }
 
+  "After enter divorce date" when {
+    val roles: Seq[Role] = Seq(Recipient, Transferor)
+
+    for (role <- roles) {
+      val className = role.getClass.getSimpleName
+      s"$className" when {
+
+        s"current year divorce page($className, current year)(text)" in {
+          val targetYear = LocalDate.now().getYear
+          val date = new LocalDate(targetYear, 1, 15)
+          val divorceDateFormatted = transformDate(date)
+          val taxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
+
+          when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
+            .thenReturn(Future.successful((role, date)))
+
+          val result: Future[Result] = controller().divorceEndExplanation(request)
+
+          val expected = Seq(
+            messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
+            messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
+          ).toArray
+          val parsed = Jsoup.parse(contentAsString(result))
+          val current = parsed.getElementsByTag("p").eachText().toArray()
+
+          current shouldBe expected
+        }
+
+        s"prev year divorce page($className, prev year)(text)" in {
+          val targetYear = LocalDate.now().minusYears(3).getYear
+          val date = new LocalDate(targetYear, 1, 15)
+          val divorceDateFormatted = transformDate(date)
+          val taxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
+
+          when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
+            .thenReturn(Future.successful((role, date)))
+
+          val result: Future[Result] = controller().divorceEndExplanation(request)
+
+          val expected = Seq(
+            messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
+            messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
+          ).toArray
+          val parsed = Jsoup.parse(contentAsString(result))
+          val current = parsed.getElementsByTag("p").eachText().toArray()
+
+          current shouldBe expected
+        }
+
+        s"current year divorce page($className, current year)(bullet points)" in {
+          val targetYear = LocalDate.now().getYear
+          val date = new LocalDate(targetYear, 1, 15)
+          val currentTaxYear = TaxYear.current
+
+          when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
+            .thenReturn(Future.successful((role, date)))
+
+          val result: Future[Result] = controller().divorceEndExplanation(request)
+
+          val expected = bulletStatements(role, currentTaxYear, isCurrentYearDivorced = true).toArray
+          val parsed = Jsoup.parse(contentAsString(result))
+          val current = parsed.getElementsByTag("li").eachText().toArray()
+
+          current shouldBe expected
+        }
+
+        s"prev year divorce page($className, prev year)(bullet points)" in {
+          val targetYear = LocalDate.now().minusYears(3).getYear
+          val date = new LocalDate(targetYear, 1, 15)
+          val currentTaxYear = TaxYear.current
+
+          when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
+            .thenReturn(Future.successful((role, date)))
+
+          val result: Future[Result] = controller().divorceEndExplanation(request)
+
+          val expected = bulletStatements(role, currentTaxYear, isCurrentYearDivorced = false).toArray
+          val parsed = Jsoup.parse(contentAsString(result))
+          val current = parsed.getElementsByTag("li").eachText().toArray()
+
+          current shouldBe expected
+        }
+
+      }
+
+    }
+    //    "recipient" when {
+    //
+    //      "current year divorce page(Recipient, current year)(text)" in {
+    //        val targetYear = LocalDate.now().getYear
+    //        val date = new LocalDate(targetYear, 1, 15)
+    //        val divorceDateFormatted = transformDate(date)
+    //        val taxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
+    //
+    //        when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
+    //          .thenReturn(Future.successful((Recipient, date)))
+    //
+    //        val result: Future[Result] = controller().divorceEndExplanation(request)
+    //
+    //        val expected = Seq(
+    //          messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
+    //          messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
+    //        ).toArray
+    //        val parsed = Jsoup.parse(contentAsString(result))
+    //        val current = parsed.getElementsByTag("p").eachText().toArray()
+    //
+    //        current shouldBe expected
+    //      }
+    //
+    //      "prev year divorce page(Recipient, prev year)(text)" in {
+    //        val targetYear = LocalDate.now().minusYears(3).getYear
+    //        val date = new LocalDate(targetYear, 1, 15)
+    //        val divorceDateFormatted = transformDate(date)
+    //        val taxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
+    //
+    //        when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
+    //          .thenReturn(Future.successful((Recipient, date)))
+    //
+    //        val result: Future[Result] = controller().divorceEndExplanation(request)
+    //
+    //        val expected = Seq(
+    //          messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
+    //          messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
+    //        ).toArray
+    //        val parsed = Jsoup.parse(contentAsString(result))
+    //        val current = parsed.getElementsByTag("p").eachText().toArray()
+    //
+    //        current shouldBe expected
+    //      }
+    //
+    //    }
+  }
+
   //TODO remove with updateRelationshipAction()???
-//  "Update relationship confirmation page" should {
-//
-//    "confirm cancellation " in {
-//      when(mockUpdateRelationshipService.saveEndRelationshipReason(ArgumentMatchers.eq(EndRelationshipReason(EndReasonCode.CANCEL)))(any(), any()))
-//        .thenReturn(EndRelationshipReason(EndReasonCode.CANCEL))
-//      when(mockTimeService.getEffectiveUntilDate(EndRelationshipReason(EndReasonCode.CANCEL)))
-//        .thenReturn(Some(time.TaxYear.current.finishes))
-//      when(mockTimeService.getEffectiveDate(EndRelationshipReason(EndReasonCode.CANCEL)))
-//        .thenReturn(time.TaxYear.current.next.starts)
-//      val result = controller().confirmCancel()(request)
-//      status(result) shouldBe OK
-//
-//      val document = Jsoup.parse(contentAsString(result))
-//      val cancelHeading = document.getElementById("cancel-heading")
-//      val cancelContent = document.getElementById("cancel-content")
-//
-//      cancelHeading shouldNot be(null)
-//      cancelContent shouldNot be(null)
-//      val taxYear = time.TaxYear.current.startYear + 1
-//      cancelHeading.toString should include("Cancelling Marriage Allowance")
-//      cancelContent.text() shouldBe s"We will cancel your Marriage Allowance, but it will remain in place until 5 April $taxYear, the end of the current tax year."
-//    }
-//  }
+  //  "Update relationship confirmation page" should {
+  //
+  //    "confirm cancellation " in {
+  //      when(mockUpdateRelationshipService.saveEndRelationshipReason(ArgumentMatchers.eq(EndRelationshipReason(EndReasonCode.CANCEL)))(any(), any()))
+  //        .thenReturn(EndRelationshipReason(EndReasonCode.CANCEL))
+  //      when(mockTimeService.getEffectiveUntilDate(EndRelationshipReason(EndReasonCode.CANCEL)))
+  //        .thenReturn(Some(time.TaxYear.current.finishes))
+  //      when(mockTimeService.getEffectiveDate(EndRelationshipReason(EndReasonCode.CANCEL)))
+  //        .thenReturn(time.TaxYear.current.next.starts)
+  //      val result = controller().confirmCancel()(request)
+  //      status(result) shouldBe OK
+  //
+  //      val document = Jsoup.parse(contentAsString(result))
+  //      val cancelHeading = document.getElementById("cancel-heading")
+  //      val cancelContent = document.getElementById("cancel-content")
+  //
+  //      cancelHeading shouldNot be(null)
+  //      cancelContent shouldNot be(null)
+  //      val taxYear = time.TaxYear.current.startYear + 1
+  //      cancelHeading.toString should include("Cancelling Marriage Allowance")
+  //      cancelContent.text() shouldBe s"We will cancel your Marriage Allowance, but it will remain in place until 5 April $taxYear, the end of the current tax year."
+  //    }
+  //  }
 }
