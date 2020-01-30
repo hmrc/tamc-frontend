@@ -96,7 +96,8 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.makeChange())
             }
           }
-          //TODO It would fail on the following inputs: None, Some((x: String forSome x not in (CheckMarriageAllowanceClaim, StopMarriageAllowance)))
+          //TODO It would fail on the following inputs:
+          //None, Some((x: String forSome x not in (CheckMarriageAllowanceClaim, StopMarriageAllowance)))
         })
   }
 
@@ -197,6 +198,10 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       updateRelationshipService.getDivorceDate map { divorceDate =>
         Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
+      } recover {
+        //open empty view even with there are cache problem or fail to map data to view
+        case NonFatal(_) =>
+          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))
       }
   }
 

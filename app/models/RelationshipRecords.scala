@@ -23,7 +23,7 @@ case class RelationshipRecords(activeRelationship: Option[RelationshipRecord],
   lazy val recordStatus: RecordStatus = {
     (activeRelationship, historicRelationships) match {
       case (Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isEmpty => Active
-        //TODO add is definition for active historic because when I pass active relationship and end n
+        //TODO add is definition for active historic because when I pass active relationship and end in future is fail with historic
       case (Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isDefined => ActiveHistoric
       case _ => Historic
     }

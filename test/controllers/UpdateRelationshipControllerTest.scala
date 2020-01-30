@@ -377,7 +377,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
             RelationshipRecords(Some(RelationshipRecord(Recipient.asString(), "", "", None, None, "", "")), None, None)
           )
         )
-      status(controller().bereavement()(request)) shouldBe OK
+      status(controller().bereavement(request)) shouldBe OK
     }
 
     //TODO finish this test case as per implmenetation from models.RelationshipRecords.role case not found
@@ -389,7 +389,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
           )
         )
 
-      status(controller().bereavement()(request)) shouldBe OK
+      status(controller().bereavement(request)) shouldBe OK
     }
   }
 
@@ -398,14 +398,21 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
         .thenReturn(Future.successful(Some(LocalDate.now().minusDays(1))))
 
-      status(controller().divorceEnterYear()(request)) shouldBe OK
+      status(controller().divorceEnterYear(request)) shouldBe OK
     }
 
     "return success is no data in cache" in {
       when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
         .thenReturn(Future.successful(None))
 
-      status(controller().divorceEnterYear()(request)) shouldBe OK
+      status(controller().divorceEnterYear(request)) shouldBe OK
+    }
+
+    "return success fail to get from cache" in {
+      when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
+        .thenReturn(Future.failed(new RuntimeException("test")))
+
+      status(controller().divorceEnterYear(request)) shouldBe OK
     }
   }
 
@@ -448,8 +455,32 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
-  //TODO remove this test or rewrite them
+  "confirmYourEmailActionUpdate" should {
+    "return a bad request" when {
+      "an invalid form is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "not a real email")
+        val result = controller().confirmYourEmailActionUpdate()(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
 
+    "redirect" when {
+      "a successful form is submitted" in {
+        val email = "example@example.com"
+        val record = NotificationRecord(EmailAddress(email))
+        when(mockRegistrationService.upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any()))
+          .thenReturn(Future.successful(record))
+        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> email)
+        val result = controller().confirmYourEmailActionUpdate()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate().url)
+        verify(mockRegistrationService, times(1))
+          .upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any())
+      }
+    }
+  }
+
+  //TODO fix rewrite after John implementation
   "updateRelationshipAction" should {
     "return a success" when {
       "the end reason code is DIVORCE" in new UpdateRelationshipActionTest("DIVORCE") {
@@ -493,38 +524,14 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
-  "confirmYourEmailActionUpdate" should {
-    "return a bad request" when {
-      "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "not a real email")
-        val result = controller().confirmYourEmailActionUpdate()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "redirect" when {
-      "a successful form is submitted" in {
-        val email = "example@example.com"
-        val record = NotificationRecord(EmailAddress(email))
-        when(mockRegistrationService.upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any()))
-          .thenReturn(Future.successful(record))
-        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> email)
-        val result = controller().confirmYourEmailActionUpdate()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate().url)
-        verify(mockRegistrationService, times(1))
-          .upsertTransferorNotification(ArgumentMatchers.eq(record))(any(), any())
-      }
-    }
-  }
-
+  //TODO remove this test or rewrite them
   "divorceYear" should {
     "return a success" when {
       "there is cache data returned" in {
         when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any())).thenReturn(
           Future.successful(Some(UpdateRelationshipCacheData(None, Some(""), relationshipEndReasonRecord = Some(EndRelationshipReason("")), notification = None)))
         )
-        val result = controller().divorceYear()(request)
+        val result = controller().divorceYear(request)
 
         status(result) shouldBe OK
       }
@@ -534,49 +541,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "there is no cache data" in {
         when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any()))
           .thenReturn(Future.successful(None))
-        status(controller().divorceYear()(request)) shouldBe INTERNAL_SERVER_ERROR
-      }
-    }
-  }
-
-  "divorceSelectYear" should {
-    "return bad request" when {
-      "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("role" -> "")
-        val result = controller().divorceEnterYear()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "return a success" when {
-      def request = FakeRequest().withFormUrlEncodedBody(
-        "role" -> "some role",
-        "endReason" -> "DIVORCE",
-        "historicActiveRecord" -> "true",
-        "creationTimeStamp" -> "timestamp",
-        "dateOfDivorce.day" -> "1",
-        "dateOfDivorce.month" -> "1",
-        "dateOfDivorce.year" -> "2000"
-      )
-
-      "divorce date is valid" in {
-        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(Future.successful(true))
-        when(mockTimeService.getEffectiveUntilDate(any())).thenReturn(Some(LocalDate.now()))
-        when(mockTimeService.getEffectiveDate(any())).thenReturn(LocalDate.now())
-        val result = controller().divorceEnterYear()(request)
-        lazy val document: Document = Jsoup.parse(contentAsString(result))
-
-        status(result) shouldBe OK
-        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.divorce.transferor.h1")
-      }
-
-      "divorce date is invalid" in {
-        when(mockUpdateRelationshipService.isValidDivorceDate(any())(any(), any())).thenReturn(Future.successful(false))
-        val result = controller().divorceEnterYear()(request)
-        lazy val document: Document = Jsoup.parse(contentAsString(result))
-
-        status(result) shouldBe OK
-        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.divorce.date.invalid.h1")
+        status(controller().divorceYear(request)) shouldBe INTERNAL_SERVER_ERROR
       }
     }
   }
@@ -839,7 +804,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "not found data in cache" when {
 
       "failed to get data from cache should return INTERNAL_SERVER_ERROR" in {
-        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.failed(new RuntimeException("dooby wooby")))
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any()))
+          .thenReturn(Future.failed(new RuntimeException("test")))
         val result = controller().decision(request)
         status(result) shouldBe OK
       }
