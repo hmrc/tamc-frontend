@@ -39,8 +39,11 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
  <p>@messages("pages.divorce.explanation.paragraph1", viewModel.divorceDate)</p>
  <p>@messages("pages.divorce.explanation.paragraph2", viewModel.taxYearStatus)</p>
+
  <ul class="bullets">
-  <li>@{viewModel.bulletStatement._1}</li>
-  <li>@{viewModel.bulletStatement._2}</li>
+   <li>@{viewModel.bulletStatement._1}</li>
+   <li>@{viewModel.bulletStatement._2}</li>
  </ul>
+
+ <a id="continue" href="@controllers.routes.UpdateRelationshipController.confirmEmail().url" class="button" role="button">@messages("generic.continue")</a>
 }

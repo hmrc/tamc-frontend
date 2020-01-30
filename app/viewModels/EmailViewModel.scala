@@ -14,31 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package viewModels
 
-//constructor
-sealed trait Role {
-  def asString(): String
-}
+import play.api.mvc.Request
+import utils.Referral
 
-case object Transferor extends Role {
-  def asString(): String = "Transferor"
-}
+case class EmailViewModel(backLinkHref: String)
 
-case object Recipient extends Role {
-  def asString(): String = "Recipient"
-}
+object EmailViewModel {
 
-case object Unknown extends Role {
-  def asString(): String = "Unknown"
-}
+  def apply[A](referral: Referral)(implicit request: Request[A]): EmailViewModel = {
 
-object Role {
-  def stringToRole(role: String): Role = {
-    role match {
-      case "Transferor" => Transferor
-      case "Recipient" => Recipient
-      case _ => Unknown
-    }
+    EmailViewModel(s"@controllers.routes.UpdateRelationshipController.${referral.resourceName}")
   }
+
 }

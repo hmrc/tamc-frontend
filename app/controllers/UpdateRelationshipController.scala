@@ -29,11 +29,13 @@ import play.Logger
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc.{Action, AnyContent, Result}
 import services._
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, HistorySummaryViewModel}
+import utils.Referral
+import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, EmailViewModel, HistorySummaryViewModel}
 
 import scala.concurrent.Future
 
@@ -45,7 +47,7 @@ class UpdateRelationshipController @Inject()(
                                               cachingService: CachingService,
                                               timeService: TimeService
                                             )(implicit templateRenderer: TemplateRenderer,
-                                              formPartialRetriever: FormPartialRetriever) extends BaseController {
+                                              formPartialRetriever: FormPartialRetriever) extends BaseController with Referral {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -122,23 +124,23 @@ class UpdateRelationshipController @Inject()(
           Future.successful(BadRequest(views.html.coc.reason_for_change(formWithErrors)))
         }, {
           case Some(MakeChangesDecisionForm.Divorce) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(MakeChangesDecisionForm.Divorce) map { _ =>
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Divorce) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.divorceEnterYear())
             }
           }
           case Some(MakeChangesDecisionForm.IncomeChanges) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(MakeChangesDecisionForm.IncomeChanges) flatMap { _ =>
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.IncomeChanges) flatMap { _ =>
              changeOfIncomeRedirect
             }
 
           }
           case Some(MakeChangesDecisionForm.NoLongerRequired) => {
-            updateRelationshipService.saveMakeChangeReason(MakeChangesDecisionForm.NoLongerRequired) flatMap { _ =>
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.NoLongerRequired) flatMap { _ =>
               noLongerWantMarriageAllowanceRedirect
             }
           }
           case Some(MakeChangesDecisionForm.Bereavement) => {
-            updateRelationshipService.saveMakeChangeReason(MakeChangesDecisionForm.Bereavement) map { _ =>
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Bereavement) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.bereavement())
             }
           }
@@ -219,26 +221,76 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
 
       updateRelationshipService.getDivorceExplanationData map {
-
         case(role, divorceDate) => {
           val viewModel = DivorceEndExplanationViewModel(role, divorceDate)
           Ok(views.html.coc.divorce_end_explanation(viewModel))
         }
-          //TODO error scenario
-        case _ => ???
       }
   }
 
+  //TODO is this the way to fill the views to remove optional in forms?
+  def confirmEmail: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      lazy val viewModel = EmailViewModel(referer)
+      updateRelationshipService.getEmailAddress map {
+        case Some(email) => Ok(views.html.coc.email(emailForm.fill(EmailAddress(email)), viewModel))
+        case None => Ok(views.html.coc.email(emailForm, viewModel))
+      } recover handleError
+  }
+
+  //TODO why was registration service used. rename
+  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      emailForm.bindFromRequest.fold(
+        formWithErrors => {
+          val viewModel = EmailViewModel(referer)
+          Future.successful(BadRequest(views.html.coc.email(formWithErrors, viewModel)))
+        },
+        email =>
+          updateRelationshipService.saveEmailAddress(email) map {
+            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
+          }
+        //TODO is this required
+      ) recover handleError
+  }
 
 
+  def confirmUpdate: Action[AnyContent] = authenticate.async {
+    implicit request =>
 
+//      updateRelationshipService.getConfirmationAnswers map {
+//
+//        //
+//
+//
+//      }
 
+                          ???
+//        updateRelationshipService.getConfirmationUpdateData map {
+//          case (data, Some(updateCache)) =>
+//
+//            val reason = data.endRelationshipReason
+//            val (isEnded, relationEndDate, relevantDate) = getConfirmationInfoFromReason(reason, updateCache)
+//            Ok(views.html.coc.confirm(data, relevantDate, isEnded = isEnded, relationEndDate = relationEndDate))
+//
+//          case (_, None) =>
+//            throw new Exception("No UpdateRelationshipCacheData found")
+//        } recover handleError
 
+  }
 
+  def confirmUpdateAction: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      EmptyForm.form.bindFromRequest().fold(
+        formWithErrors =>
+          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
+        success =>
+          success)
 
-
-
-
+      updateRelationshipService.updateRelationship(request.nino) map {
+        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
+      } recover handleError
+  }
 
 
   def historyWithCy: Action[AnyContent] = authenticate {
@@ -293,17 +345,6 @@ class UpdateRelationshipController @Inject()(
       ???
   }
 
-  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      emailForm.bindFromRequest.fold(
-        formWithErrors =>
-          Future.successful(BadRequest(views.html.coc.email(formWithErrors))),
-        transferorEmail =>
-          registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
-            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
-          }
-      ) recover handleError
-  }
 
   def divorceYear: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -341,13 +382,6 @@ class UpdateRelationshipController @Inject()(
       ???
   }
 
-  def confirmEmail: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      updateRelationshipService.getUpdateNotification map {
-        case Some(NotificationRecord(transferorEmail)) => Ok(views.html.coc.email(emailForm.fill(transferorEmail)))
-        case None => Ok(views.html.coc.email(emailForm))
-      } recover handleError
-  }
 
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
@@ -416,33 +450,9 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-  def confirmUpdate: Action[AnyContent] = authenticate.async {
-    implicit request =>
-//      updateRelationshipService.getConfirmationUpdateData map {
-//        case (data, Some(updateCache)) =>
-//
-//          val reason = data.endRelationshipReason
-//          val (isEnded, relationEndDate, relevantDate) = getConfirmationInfoFromReason(reason, updateCache)
-//          Ok(views.html.coc.confirm(data, relevantDate, isEnded = isEnded, relationEndDate = relationEndDate))
-//
-//        case (_, None) =>
-//          throw new Exception("No UpdateRelationshipCacheData found")
-//      } recover handleError
-      ???
-  }
 
-  def confirmUpdateAction: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      EmptyForm.form.bindFromRequest().fold(
-        formWithErrors =>
-          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
-        success =>
-          success)
 
-      updateRelationshipService.updateRelationship(request.nino) map {
-        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
-      } recover handleError
-  }
+
 
   def finishUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>

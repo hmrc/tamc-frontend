@@ -19,9 +19,9 @@
 @import views.helpers.TextGenerators
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
+@import viewModels.EmailViewModel
 
-@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None
-)(implicit messages: Messages,
+@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], viewModel: EmailViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -32,29 +32,29 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
 ) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@viewModel.backLinkHref" class="link-back">@messages("generic.back")</a>
 
 @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
+        <h1 class="heading-xlarge">@messages("pages.form.field.your-confirmation")</h1>
     </header>
 
-    <p>@Html(Messages("change.status.confirm.info"))</p>
-    <p>@Html(Messages("change.status.confirm.more.info"))</p>
+    <p>@messages("change.status.confirm.info")</p>
+    <p>@messages("change.status.confirm.more.info")</p>
 
     <div class="form-group">
-    @templates.input(recipientForm("transferor-email"),
-    '_label -> Html(Messages("pages.form.field.transferor-email")),
-    '_labelClass -> "form-label",
-    '_inputClass -> "form-control",
-    '_dataAttributes -> "autocomplete=on"
-    )
+        @templates.input(recipientForm("transferor-email"),
+        '_label -> Html(messages("pages.form.field.transferor-email")),
+        '_labelClass -> "form-label",
+        '_inputClass -> "form-control",
+        '_dataAttributes -> "autocomplete=on"
+        )
     </div>
 
 
     <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">
-        @Html(Messages("generic.continue"))
+        @messages("generic.continue")
     </button>
 
 }

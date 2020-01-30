@@ -14,31 +14,15 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-//constructor
-sealed trait Role {
-  def asString(): String
-}
+import play.api.mvc.Request
 
-case object Transferor extends Role {
-  def asString(): String = "Transferor"
-}
+trait Referral {
 
-case object Recipient extends Role {
-  def asString(): String = "Recipient"
-}
+  def referer[A](implicit request: Request[A]): String =
+    request.headers.toMap("Referer").mkString
 
-case object Unknown extends Role {
-  def asString(): String = "Unknown"
-}
-
-object Role {
-  def stringToRole(role: String): Role = {
-    role match {
-      case "Transferor" => Transferor
-      case "Recipient" => Recipient
-      case _ => Unknown
-    }
-  }
+  def resourceName[A](implicit request: Request[A]): String =
+    request.headers.toMap("Referer").mkString.split("/").last
 }

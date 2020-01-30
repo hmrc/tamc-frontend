@@ -16,29 +16,6 @@
 
 package models
 
-//constructor
-sealed trait Role {
-  def asString(): String
-}
+trait ConfirmationUpdateAnswers {
 
-case object Transferor extends Role {
-  def asString(): String = "Transferor"
-}
-
-case object Recipient extends Role {
-  def asString(): String = "Recipient"
-}
-
-case object Unknown extends Role {
-  def asString(): String = "Unknown"
-}
-
-object Role {
-  def stringToRole(role: String): Role = {
-    role match {
-      case "Transferor" => Transferor
-      case "Recipient" => Recipient
-      case _ => Unknown
-    }
-  }
 }

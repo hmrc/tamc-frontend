@@ -28,6 +28,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import services.TimeService._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -51,16 +52,15 @@ trait UpdateRelationshipService {
 
   private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
 
-
   def retrieveRelationshipRecords(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
-    marriageAllowanceConnector.listRelationship(transferorNino) map(RelationshipRecords(_))
+    marriageAllowanceConnector.listRelationship(transferorNino) map (RelationshipRecords(_))
   }
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
 
-    def cacheOptionalData[T](data: Option[T], f:T => Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] = {
+    def cacheOptionalData[T](data: Option[T], f: T => Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] = {
       data match {
-        case Some(dataToCache) => f(dataToCache)map(Some(_))
+        case Some(dataToCache) => f(dataToCache) map (Some(_))
         case _ => Future.successful(None)
       }
     }
@@ -76,7 +76,7 @@ trait UpdateRelationshipService {
     }
 
     def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
-    cachingService.unlockCreateRelationship().map { _ => trrecord }
+      cachingService.unlockCreateRelationship().map { _ => trrecord }
 
     val transferorRec = UserRecord(relationshipRecords.loggedInUserInfo)
     val cacheActiveRelationshipFuture = cacheActiveRelationship(relationshipRecords.activeRelationship)
@@ -102,8 +102,20 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
   }
 
+  def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
+  }
+
   def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {
     cachingService.fetchAndGetEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
+  }
+
+  def getEmailAddress(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
+    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+  }
+
+  def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.cacheValue[String](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress.value)
   }
 
   //TODO tuple or type
@@ -113,12 +125,12 @@ trait UpdateRelationshipService {
     val divorceDateFuture = getDivorceDate
 
     for {
-     relationshipRecords <- relationshipRecordsFuture
-     divorceDate <- divorceDateFuture
+      relationshipRecords <- relationshipRecordsFuture
+      divorceDate <- divorceDateFuture
     } yield {
 
       //TODO is this OK?
-      divorceDate.fold(throw new RuntimeException("divorce date missing from cache")){
+      divorceDate.fold(throw new RuntimeException("divorce date missing from cache")) {
         (relationshipRecords.role, _)
       }
     }
@@ -161,13 +173,24 @@ trait UpdateRelationshipService {
       case _ => throw CacheMissingUpdateRecord()
     }
 
-  def getConfirmationUpdateData(implicit hc: HeaderCarrier,
-                                ec: ExecutionContext): Future[(UpdateRelationshipConfirmationModel, Option[UpdateRelationshipCacheData])] =
+  def getConfirmationUpdateDataTemp(implicit hc: HeaderCarrier,
+                                    ec: ExecutionContext): Future[(UpdateRelationshipConfirmationModel, Option[UpdateRelationshipCacheData])] =
     for {
       updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
       validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
       requiredData <- transformUpdateRelationshipCache(validatedUpdateRelationship)
     } yield (requiredData, updateRelationshipCache)
+
+
+  //TODO service layer should know what to pass back
+  def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
+
+//    cachingService.getConfirmationAnswers map {
+//
+//    }
+    ???
+  }
+
 
   def getUpdateRelationshipCacheDataForDateOfDivorce(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     for {
@@ -188,10 +211,6 @@ trait UpdateRelationshipService {
 
   def saveEndRelationshipReason(endRealtionshipReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
     cachingService.savRelationshipEndReasonRecord(endRealtionshipReason)
-
-  def saveMakeChangeReason(makeChangeReason: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
-    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeReason)
-  }
 
   def isValidDivorceDate(dod: Option[LocalDate])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     for {

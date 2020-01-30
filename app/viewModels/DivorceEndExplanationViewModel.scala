@@ -49,11 +49,14 @@ object DivorceEndExplanationViewModel {
       TextGenerators.ukDateTransformer(Some(date), LanguageUtils.isWelsh(messages))
     }
 
+
     lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
     lazy val nextTaxYearStart: String = transformDate(currentTaxYear.next.starts)
     lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)
     lazy val taxYearEndForGivenYear: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).finishes)
 
+
+    //TODO should this live here or with the object
     (role, currentTaxYear.contains(divorceDate)) match  {
       case(Recipient, true) => {
         (messages("pages.divorce.explanation.recipient.current.bullet1", currentTaxYearEnd),
@@ -68,7 +71,7 @@ object DivorceEndExplanationViewModel {
         messages("pages.divorce.explanation.previous.bullet2"))
       }
       case(Transferor, false) => {
-        (messages("pages.divorce.explanation.previous.bullet1", taxYearEndForGivenYear),
+        (messages("pages.divorce.explanation.previous.bullet1", taxYearEndForGivenYear(divorceDate)),
          messages("pages.divorce.explanation.previous.bullet2"))
       }
     }
