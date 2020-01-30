@@ -51,20 +51,17 @@ class UpdateRelationshipController @Inject()(
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
-        //TODO change to == Historic???
-        if (relationshipRecords.recordStatus != Active && relationshipRecords.recordStatus != ActiveHistoric) {
-          if (!request.authState.permanent) {
-            Future.successful(Redirect(controllers.routes.TransferController.transfer()))
-          } else {
+        if (relationshipRecords.recordStatus == Historic) {
+          if (request.authState.permanent) {
             Future.successful(Redirect(controllers.routes.EligibilityController.howItWorks()))
+          } else {
+            Future.successful(Redirect(controllers.routes.TransferController.transfer()))
           }
         } else {
           //TODO cache the actual object
           updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
-
-            //TODO pass object to apply
             val viewModel = HistorySummaryViewModel(relationshipRecords)
-
+            //TODO fail when loggedInUSerInfo is None
             Ok(views.html.coc.history_summary(relationshipRecords.loggedInUserInfo, viewModel))
           }
         }

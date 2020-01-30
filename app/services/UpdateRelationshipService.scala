@@ -56,7 +56,7 @@ trait UpdateRelationshipService {
     marriageAllowanceConnector.listRelationship(transferorNino) map(RelationshipRecords(_))
   }
 
-  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
     def cacheOptionalData[T](data: Option[T], f:T => Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] = {
       data match {

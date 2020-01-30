@@ -18,7 +18,6 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
-import forms.coc.DivorceSelectYearForm
 import models._
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.joda.time.LocalDate
@@ -27,8 +26,6 @@ import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api
-import play.api.data.Form
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -42,9 +39,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.Constants.forms.coc.{CheckClaimOrCancelDecisionFormConstants, DivorceSelectYearFormConstants, MakeChangesDecisionFormConstants}
+import utils.Constants.forms.coc.{CheckClaimOrCancelDecisionFormConstants, MakeChangesDecisionFormConstants}
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.language.postfixOps
 
 class UpdateRelationshipControllerTest extends ControllerBaseSpec {
@@ -82,48 +79,57 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   }
 
   //TODO remove?!
-  //  "History" should {
-  //    "redirect to transfer" when {
-  //      "has no active record, no active historic and temporary authentication" in {
-  //        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //          .thenReturn(
-  //            Future.successful(
-  //              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
-  //            )
-  //          )
-  //        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
-  //        status(result) shouldBe SEE_OTHER
-  //        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
-  //      }
-  //    }
-  //
-  //    "redirect to how-it-works" when {
-  //      "has no active record, no active historic and permanent authentication" in {
-  //        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //          .thenReturn(
-  //            Future.successful(
-  //              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
-  //            )
-  //          )
-  //        val result: Future[Result] = controller().history()(request)
-  //        status(result) shouldBe SEE_OTHER
-  //        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
-  //      }
-  //    }
-  //
-  //    "load change of circumstances page" when {
-  //      "has some active record" in {
-  //        when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //          .thenReturn(
-  //            Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-  //          )
-  //
-  //        val result: Future[Result] = controller().history()(request)
-  //        status(result) shouldBe OK
-  //      }
-  //
-  //    }
-  //  }
+  "history" should {
+    "redirect to transfer" when {
+      "has no active record, no active historic and temporary authentication" in {
+        val relationship = RelationshipRecords(None, None, None)
+
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.successful(relationship))
+
+        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+      }
+    }
+
+    "redirect to how-it-works" when {
+      "has no active record, no active historic and permanent authentication" in {
+        val relationship = RelationshipRecords(None, None, None)
+
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.successful(relationship))
+
+        val result: Future[Result] = controller().history()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
+      }
+    }
+
+    "load change of circumstances page" when {
+      "active record" in {
+        val cid = 1122L
+        val timeStamp = new LocalDate().toString
+        val hasAllowance = None
+        val citizenName = CitizenName(Some("Test"), Some("User"))
+        val loggedInUserInfo = Some(LoggedInUserInfo(cid, timeStamp, hasAllowance, Some(citizenName)))
+
+        val relationship = RelationshipRecords(
+          Some(activeRecipientRelationshipRecord),
+          Some(Seq(inactiveRecipientRelationshipRecord1)),
+          loggedInUserInfo)
+
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.successful(relationship))
+        when(mockUpdateRelationshipService.saveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.successful(relationship))
+
+        val result: Future[Result] = controller().history()(request)
+        status(result) shouldBe OK
+      }
+
+    }
+  }
 
   "historyWithCy" should {
     "redirect to history, with a welsh language setting" in {
