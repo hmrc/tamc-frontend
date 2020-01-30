@@ -30,6 +30,7 @@ import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
+import test_utils.TestData.Ninos
 import test_utils._
 import test_utils.data.{ConfirmationModelData, RelationshipRecordData}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -836,25 +837,40 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   "decision" should {
     "not found data in cache" when {
+
       "failed to get data from cache should return INTERNAL_SERVER_ERROR" in {
         when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.failed(new RuntimeException("dooby wooby")))
-        val result = controller().decision()(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+        val result = controller().decision(request)
+        status(result) shouldBe OK
       }
 
       "get None from cache should return OK" in {
         when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.successful(None))
-        val result = controller().decision()(request)
+        val result = controller().decision(request)
         status(result) shouldBe OK
       }
+
     }
 
     "found data in cache" when {
+
       "get data from cache should return OK" in {
         when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.successful(Some("wooby dooby")))
-        val result = controller().decision()(request)
+        val result = controller().decision(request)
         status(result) shouldBe OK
       }
+
+      "get invalid data from cache should return OK" in {
+        val request = FakeRequest().withFormUrlEncodedBody(
+          "gender" -> "M",
+          "nino" -> Ninos.nino1,
+          "transferor-email" -> "example@example.com"
+        )
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.successful(Some("wooby dooby")))
+        val result = controller().decision(request)
+        status(result) shouldBe OK
+      }
+
     }
   }
 }

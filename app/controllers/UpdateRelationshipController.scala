@@ -37,6 +37,7 @@ import utils.Constants.forms.coc.{CheckClaimOrCancelDecisionFormConstants, MakeC
 import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, HistorySummaryViewModel}
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
@@ -68,12 +69,14 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def decision(): Action[AnyContent] = authenticate.async {
+  def decision: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
         Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
+      } recover {
+        //open empty view even with there are cache problem or fail to map data to view
+        case NonFatal(_) => Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form))
       }
-      //TODO If there are no data in cache should be OK with uncheked radio button
   }
 
   def submitDecision: Action[AnyContent] = authenticate.async {
