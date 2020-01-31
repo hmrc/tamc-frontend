@@ -113,7 +113,7 @@ class UpdateRelationshipController @Inject()(
 
         Ok(views.html.coc.claims(viewModel))
       }
-      //TODO add recover or something here?
+    //TODO add recover or something here?
   }
 
   def makeChange(): Action[AnyContent] = authenticate.async {
@@ -218,7 +218,7 @@ class UpdateRelationshipController @Inject()(
             }
           //TODO fail for else case
           case _ =>
-              ???
+            ???
         }
       )
   }
@@ -353,6 +353,65 @@ class UpdateRelationshipController @Inject()(
       }
   }
 
+  def confirmReject(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+      updateRelationshipService.getUpdateRelationshipCacheForReject map {
+        cache =>
+          val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
+          val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
+          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate, isEnded = Some(selectedRelationship.participant1EndDate.isDefined
+            && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
+      }
+  }
+
+  def confirmCancel: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(EndReasonCode.CANCEL)) map {
+        endReason =>
+          Ok(views.html.coc.confirm_updates(
+            endReason.endReason,
+            effectiveUntilDate = timeService.getEffectiveUntilDate(endReason),
+            effectiveDate = Some(timeService.getEffectiveDate(endReason)))
+          )
+      }
+  }
+
+  def confirmUpdate: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      //      updateRelationshipService.getConfirmationUpdateData map {
+      //        case (data, Some(updateCache)) =>
+      //
+      //          val reason = data.endRelationshipReason
+      //          val (isEnded, relationEndDate, relevantDate) = getConfirmationInfoFromReason(reason, updateCache)
+      //          Ok(views.html.coc.confirm(data, relevantDate, isEnded = isEnded, relationEndDate = relationEndDate))
+      //
+      //        case (_, None) =>
+      //          throw new Exception("No UpdateRelationshipCacheData found")
+      //      } recover handleError
+      ???
+  }
+
+  def confirmUpdateAction: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      EmptyForm.form.bindFromRequest().fold(
+        _ =>
+          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
+        success =>
+          success)
+
+      updateRelationshipService.updateRelationship(request.nino) map {
+        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
+      } recover handleError
+  }
+
+  def finishUpdate: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      updateRelationshipService.getupdateRelationshipFinishedData(request.nino) map {
+        case (NotificationRecord(email), _) =>
+          Ok(views.html.coc.finished(emailAddress = email))
+      } recover handleError
+  }
+
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
@@ -376,61 +435,6 @@ class UpdateRelationshipController @Inject()(
           case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }
     }
-
-  def confirmReject(): Action[AnyContent] = authenticate.async {
-    implicit request =>
-      updateRelationshipService.getUpdateRelationshipCacheForReject map {
-        cache =>
-          val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
-          val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
-          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate, isEnded = Some(selectedRelationship.participant1EndDate.isDefined
-            && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
-      }
-  }
-
-  def confirmCancel(): Action[AnyContent] = authenticate.async {
-    implicit request =>
-      updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(EndReasonCode.CANCEL)) map {
-        endReason =>
-          Ok(views.html.coc.confirm_updates(endReason.endReason, effectiveUntilDate = timeService.getEffectiveUntilDate(endReason), effectiveDate = Some(timeService.getEffectiveDate(endReason))))
-      }
-  }
-
-  def confirmUpdate: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      //      updateRelationshipService.getConfirmationUpdateData map {
-      //        case (data, Some(updateCache)) =>
-      //
-      //          val reason = data.endRelationshipReason
-      //          val (isEnded, relationEndDate, relevantDate) = getConfirmationInfoFromReason(reason, updateCache)
-      //          Ok(views.html.coc.confirm(data, relevantDate, isEnded = isEnded, relationEndDate = relationEndDate))
-      //
-      //        case (_, None) =>
-      //          throw new Exception("No UpdateRelationshipCacheData found")
-      //      } recover handleError
-      ???
-  }
-
-  def confirmUpdateAction: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      EmptyForm.form.bindFromRequest().fold(
-        formWithErrors =>
-          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
-        success =>
-          success)
-
-      updateRelationshipService.updateRelationship(request.nino) map {
-        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
-      } recover handleError
-  }
-
-  def finishUpdate: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      updateRelationshipService.getupdateRelationshipFinishedData(request.nino) map {
-        case (NotificationRecord(email), _) =>
-          Ok(views.html.coc.finished(emailAddress = email))
-      } recover handleError
-  }
 
   private[controllers] def getConfirmationInfoFromReason(reason: EndRelationshipReason,
                                                          cacheData: UpdateRelationshipCacheData): (Boolean, Option[LocalDate], Option[LocalDate]) = {

@@ -29,7 +29,7 @@ import org.mockito.Mockito._
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services._
+import services.{TimeService, _}
 import test_utils.TestData.Ninos
 import test_utils._
 import test_utils.data.{ConfirmationModelData, RelationshipRecordData}
@@ -55,14 +55,15 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   private val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
-  def controller(auth: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): UpdateRelationshipController =
+  def controller(auth: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner],
+                 timeService: TimeService = mockTimeService): UpdateRelationshipController =
     new UpdateRelationshipController(
       messagesApi,
       auth,
       mockUpdateRelationshipService,
       mockRegistrationService,
       mockCachingService,
-      mockTimeService
+      timeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
 
@@ -511,110 +512,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     }
   }
 
-  //TODO fix rewrite after John implementation
-  "updateRelationshipAction" should {
-    "return a success" when {
-      "the end reason code is DIVORCE" in new UpdateRelationshipActionTest("DIVORCE") {
-        status(result) shouldBe OK
-        document.getElementsByTag("h1").first().text() shouldBe messagesApi("title.divorce")
-      }
-
-      "the end reason code is EARNINGS" in new UpdateRelationshipActionTest("EARNINGS") {
-        status(result) shouldBe OK
-        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.earnings.h1")
-      }
-
-      "the end reason code is BEREAVEMENT" in new UpdateRelationshipActionTest("BEREAVEMENT") {
-        status(result) shouldBe OK
-        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.bereavement.sorry")
-      }
-    }
-
-    "redirect the user" when {
-      "the end reason code is CANCEL" in new UpdateRelationshipActionTest("CANCEL") {
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmCancel().url)
-      }
-
-      "the end reason code is REJECT" in new UpdateRelationshipActionTest("REJECT") {
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmReject().url)
-      }
-    }
-
-    "return a bad request" when {
-      "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("role" -> "ROLE", "historicActiveRecord" -> "string")
-        val result: Future[Result] = controller().updateRelationshipAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-
-      "an unrecognised end reason is submitted" in new UpdateRelationshipActionTest("DIVORCE_PY") {
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-  }
-
-  "divorceYear" should {
-    "return a success" when {
-      "there is cache data returned" in {
-        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any())).thenReturn(
-          Future.successful(Some(UpdateRelationshipCacheData(None, Some(""), relationshipEndReasonRecord = Some(EndRelationshipReason("")), notification = None)))
-        )
-        val result = controller().divorceYear(request)
-
-        status(result) shouldBe OK
-      }
-    }
-
-    "return InternalServerError" when {
-      "there is no cache data" in {
-        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any()))
-          .thenReturn(Future.successful(None))
-        status(controller().divorceYear(request)) shouldBe INTERNAL_SERVER_ERROR
-      }
-    }
-  }
-
-  "divorceAction" should {
-    "return a bad request" when {
-      "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
-          "role" -> "some role",
-          "endReason" -> "invalid end reason",
-          "historicActiveRecord" -> "true",
-          "creationTimeStamp" -> "timestamp",
-          "dateOfDivorce.day" -> "1",
-          "dateOfDivorce.month" -> "1",
-          "dateOfDivorce.year" -> "2000"
-        )
-        val result = controller().divorceAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "redirect the user" when {
-      "EndRelationshipReason is pulled from the cache" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
-          "role" -> "some role",
-          "endReason" -> "DIVORCE_CY",
-          "historicActiveRecord" -> "true",
-          "creationTimeStamp" -> "timestamp",
-          "dateOfDivorce.day" -> "1",
-          "dateOfDivorce.month" -> "1",
-          "dateOfDivorce.year" -> "2000"
-        )
-        when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
-          .thenReturn(Future.successful(EndRelationshipReason("DIVORCE_CY")))
-        val result = controller().divorceAction()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmEmail().url)
-      }
-    }
-  }
-
-  //TODO remove this test or rewrite them
-
   "confirmReject" should {
     "return a success" when {
       "data is returned from the cache" in {
@@ -638,7 +535,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         val endReason = EndRelationshipReason(EndReasonCode.CANCEL)
         when(mockUpdateRelationshipService.saveEndRelationshipReason(ArgumentMatchers.eq(endReason))(any(), any()))
           .thenReturn(Future.successful(endReason))
-        val result = controller().confirmCancel()(request)
+
+        val result = controller(timeService = TimeService).confirmCancel(request)
         status(result) shouldBe OK
       }
     }
@@ -690,8 +588,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "the end reason code is DIVORCE_CY" in {
         val endRelationshipReason = EndRelationshipReason(EndReasonCode.DIVORCE_CY)
         val date = LocalDate.now()
-        when(mockTimeService.getEffectiveDate(ArgumentMatchers.eq(endRelationshipReason)))
-          .thenReturn(date)
+        when(mockTimeService.getEffectiveUntilDate(ArgumentMatchers.eq(endRelationshipReason)))
+          .thenReturn(Some(date))
 
         val result = controller().getConfirmationInfoFromReason(endRelationshipReason, RelationshipRecordData.updateRelationshipCacheData)
         result shouldBe(false, None, Some(date))
@@ -700,8 +598,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
       "the end reason code is CANCEL" in {
         val endRelationshipReason = EndRelationshipReason(EndReasonCode.CANCEL)
         val date = LocalDate.now()
-        when(mockTimeService.getEffectiveDate(ArgumentMatchers.eq(endRelationshipReason)))
-          .thenReturn(date)
+        when(mockTimeService.getEffectiveUntilDate(ArgumentMatchers.eq(endRelationshipReason)))
+          .thenReturn(Some(date))
 
         val result = controller().getConfirmationInfoFromReason(endRelationshipReason, RelationshipRecordData.updateRelationshipCacheData)
         result shouldBe(false, None, Some(date))
@@ -710,34 +608,14 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
   }
 
-  "confirmUpdate" should {
-    "return a success" when {
-      "the relationship service successfully returns cache data and end relationship reason" in {
-        when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
-          .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, Some(RelationshipRecordData.updateRelationshipCacheData))))
-        when(mockTimeService.getEffectiveDate(any()))
-          .thenReturn(LocalDate.now())
-        val result = controller().confirmUpdate()(request)
-        status(result) shouldBe OK
-      }
-    }
-
-    "return InternalServerError" when {
-      "there is no cache data returned" in {
-        when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
-          .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, None)))
-        val result = controller().confirmUpdate()(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-    }
-  }
-
   "confirmUpdateAction" should {
-    "redirct the user" when {
+    "redirect the user" when {
       "update relationship returns a future successful" in {
         when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any()))
           .thenReturn(Future.successful(RelationshipRecordData.notificationRecord))
-        val result = controller().confirmUpdateAction()(request)
+
+        val result = controller().confirmUpdateAction(request)
+
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
       }
@@ -850,4 +728,129 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     }
   }
+
+  //TODO fix/rewrite after John implementation
+  "updateRelationshipAction" should {
+    "return a success" when {
+      "the end reason code is DIVORCE" in new UpdateRelationshipActionTest("DIVORCE") {
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("title.divorce")
+      }
+
+      "the end reason code is EARNINGS" in new UpdateRelationshipActionTest("EARNINGS") {
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.earnings.h1")
+      }
+
+      "the end reason code is BEREAVEMENT" in new UpdateRelationshipActionTest("BEREAVEMENT") {
+        status(result) shouldBe OK
+        document.getElementsByTag("h1").first().text() shouldBe messagesApi("change.status.bereavement.sorry")
+      }
+    }
+
+    "redirect the user" when {
+      "the end reason code is CANCEL" in new UpdateRelationshipActionTest("CANCEL") {
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmCancel().url)
+      }
+
+      "the end reason code is REJECT" in new UpdateRelationshipActionTest("REJECT") {
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmReject().url)
+      }
+    }
+
+    "return a bad request" when {
+      "an invalid form is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody("role" -> "ROLE", "historicActiveRecord" -> "string")
+        val result: Future[Result] = controller().updateRelationshipAction()(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      "an unrecognised end reason is submitted" in new UpdateRelationshipActionTest("DIVORCE_PY") {
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+  }
+
+  "divorceYear" should {
+    "return a success" when {
+      "there is cache data returned" in {
+        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any())).thenReturn(
+          Future.successful(Some(UpdateRelationshipCacheData(None, Some(""), relationshipEndReasonRecord = Some(EndRelationshipReason("")), notification = None)))
+        )
+        val result = controller().divorceYear(request)
+
+        status(result) shouldBe OK
+      }
+    }
+
+    "return InternalServerError" when {
+      "there is no cache data" in {
+        when(mockUpdateRelationshipService.getUpdateRelationshipCacheDataForDateOfDivorce(any(), any()))
+          .thenReturn(Future.successful(None))
+        status(controller().divorceYear(request)) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+  }
+
+  "divorceAction" should {
+    "return a bad request" when {
+      "an invalid form is submitted" in {
+        val request = FakeRequest().withFormUrlEncodedBody(
+          "role" -> "some role",
+          "endReason" -> "invalid end reason",
+          "historicActiveRecord" -> "true",
+          "creationTimeStamp" -> "timestamp",
+          "dateOfDivorce.day" -> "1",
+          "dateOfDivorce.month" -> "1",
+          "dateOfDivorce.year" -> "2000"
+        )
+        val result = controller().divorceAction()(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+
+    "redirect the user" when {
+      "EndRelationshipReason is pulled from the cache" in {
+        val request = FakeRequest().withFormUrlEncodedBody(
+          "role" -> "some role",
+          "endReason" -> "DIVORCE_CY",
+          "historicActiveRecord" -> "true",
+          "creationTimeStamp" -> "timestamp",
+          "dateOfDivorce.day" -> "1",
+          "dateOfDivorce.month" -> "1",
+          "dateOfDivorce.year" -> "2000"
+        )
+        when(mockUpdateRelationshipService.saveEndRelationshipReason(any())(any(), any()))
+          .thenReturn(Future.successful(EndRelationshipReason("DIVORCE_CY")))
+        val result = controller().divorceAction()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmEmail().url)
+      }
+    }
+  }
+
+  "confirmUpdate" should {
+    "return a success" when {
+      "the relationship service successfully returns cache data and end relationship reason" in {
+        when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
+          .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, Some(RelationshipRecordData.updateRelationshipCacheData))))
+        when(mockTimeService.getEffectiveDate(any()))
+          .thenReturn(LocalDate.now())
+        val result = controller().confirmUpdate()(request)
+        status(result) shouldBe OK
+      }
+    }
+
+    "return InternalServerError" when {
+      "there is no cache data returned" in {
+        when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
+          .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, None)))
+        val result = controller().confirmUpdate()(request)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+  }
+
 }
