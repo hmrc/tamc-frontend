@@ -24,7 +24,6 @@ import forms.CurrentYearForm.currentYearForm
 import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
-import forms.EmptyForm
 import forms.RecipientDetailsForm.recipientDetailsForm
 import javax.inject.Inject
 import models._
@@ -213,7 +212,7 @@ class TransferController @Inject()(
     implicit request =>
       registrationService.getConfirmationData(request.nino) map {
         data =>
-          Ok(views.html.confirm(data = data, emptyForm = EmptyForm.form))
+          Ok(views.html.confirm(data = data))
       } recover handleError
   }
 
@@ -222,12 +221,6 @@ class TransferController @Inject()(
 
       val getJourneyName: String =
         if (request.authState.permanent) TAMC_JOURNEY_PTA else TAMC_JOURNEY_GDS
-
-      EmptyForm.form.bindFromRequest().fold(
-        _ =>
-          Logger.error(s"unexpected error in empty form, SID [${utils.getSid(request)}]"),
-        success =>
-          success)
 
       Logger.info("registration service.createRelationship - confirm action.")
 

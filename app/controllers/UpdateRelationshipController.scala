@@ -20,7 +20,6 @@ import com.google.inject.Inject
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.EmailForm.emailForm
-import forms.EmptyForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
 import models.auth.UserRequest
@@ -393,12 +392,6 @@ class UpdateRelationshipController @Inject()(
 
   def confirmUpdateAction: Action[AnyContent] = authenticate.async {
     implicit request =>
-      EmptyForm.form.bindFromRequest().fold(
-        _ =>
-          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
-        success =>
-          success)
-
       updateRelationshipService.updateRelationship(request.nino) map {
         _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
       } recover handleError
@@ -460,9 +453,9 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-  private def getOptionalLocalDate(day: Option[String], month: Option[String], year: Option[String]): Option[LocalDate] =
-    (day, month, year) match {
-      case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y.toInt, m.toInt, d.toInt))
-      case _ => None
-    }
+//  private def getOptionalLocalDate(day: Option[String], month: Option[String], year: Option[String]): Option[LocalDate] =
+//    (day, month, year) match {
+//      case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y.toInt, m.toInt, d.toInt))
+//      case _ => None
+//    }
 }
