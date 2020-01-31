@@ -45,6 +45,23 @@ import scala.language.postfixOps
 
 class TransferControllerTest extends ControllerBaseSpec {
 
+  val currentTaxYear: Int = time.TaxYear.current.startYear
+
+  val mockTransferService: TransferService = mock[TransferService]
+  val mockCachingService: CachingService = mock[CachingService]
+  val mockTimeService: TimeService = mock[TimeService]
+
+  def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): TransferController = new TransferController(
+    messagesApi,
+    authAction,
+    mockTransferService,
+    mockCachingService,
+    mockTimeService
+  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+
+  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+
   "transfer" should {
     "return success" in {
       val result = controller().transfer()(request)
@@ -418,6 +435,13 @@ class TransferControllerTest extends ControllerBaseSpec {
     }
   }
 
+  "cannotUseService" should {
+    "return success when call cannotUseService" in {
+      val result = controller().cannotUseService(request)
+      status(result) shouldBe OK
+    }
+  }
+
   "handleError" should {
     val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
       request,
@@ -470,20 +494,4 @@ class TransferControllerTest extends ControllerBaseSpec {
     }
   }
 
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-
-  val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
-
-  def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]) = new TransferController(
-    messagesApi,
-    authAction,
-    mockTransferService,
-    mockCachingService,
-    mockTimeService
-  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
-
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
 }
