@@ -21,17 +21,17 @@ import services.TimeService
 
 //TODO replace participant with Role object
 case class RelationshipRecord(participant: String,
-                               creationTimestamp: String,
-                               participant1StartDate: String,
-                               relationshipEndReason: Option[RelationshipEndReason] = None,
-                               participant1EndDate: Option[String] = None,
-                               otherParticipantInstanceIdentifier: String,
-                               otherParticipantUpdateTimestamp: String) {
+                              creationTimestamp: String,
+                              participant1StartDate: String,
+                              relationshipEndReason: Option[RelationshipEndReason] = None,
+                              participant1EndDate: Option[String] = None,
+                              otherParticipantInstanceIdentifier: String,
+                              otherParticipantUpdateTimestamp: String) {
 
-  def isActive: Boolean = participant1EndDate match{
+  def isActive: Boolean = participant1EndDate match {
     case None => true
-    case Some(date) => TimeService.isFutureDate(date)
-      //TODO this code can be reached???
+    case Some(date) => TimeService.isFutureDate(TimeService.parseDateWithFormat(date))
+    //TODO this code can be reached???
     case _ => false
   }
 

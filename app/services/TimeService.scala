@@ -19,7 +19,6 @@ package services
 import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import play.api.Logger
 import uk.gov.hmrc.time.TaxYear
 
 object TimeService extends TimeService {
@@ -30,20 +29,11 @@ object TimeService extends TimeService {
 trait TimeService {
   val defaultDateFormat: String = "yyyyMMdd"
 
-  def isFutureDate(date: String): Boolean = {
-    var res = false
-    val format = new java.text.SimpleDateFormat(defaultDateFormat)
-    try {
-      val time = format.parse(date).getTime
-      res = time > System.currentTimeMillis()
-    } catch {
-      case exp: Throwable => Logger.error(s"Failed to parse date [$date] into format [$defaultDateFormat]", exp)
-    }
+  def isFutureDate(date: LocalDate): Boolean =
+    date.isAfter(getCurrentDate)
 
-    res
-  }
-
-  def currentTaxYear: TaxYear = TaxYear.current
+  def getCurrentDate: LocalDate =
+    LocalDate.now()
 
   def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] =
     endReason.endReason match {
@@ -59,15 +49,21 @@ trait TimeService {
       case EndReasonCode.DIVORCE_PY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).starts
     }
 
-  def getCurrentDate: LocalDate = LocalDate.now()
+  def getCurrentTaxYear: Int =
+    currentTaxYear.startYear
 
-  def getCurrentTaxYear: Int = currentTaxYear.startYear
+  def currentTaxYear: TaxYear =
+    TaxYear.current
 
-  def getTaxYearForDate(date: LocalDate): Int = TaxYear.taxYearFor(date).startYear
+  def getTaxYearForDate(date: LocalDate): Int =
+    TaxYear.taxYearFor(date).startYear
 
-  def getStartDateForTaxYear(year: Int): LocalDate = TaxYear.firstDayOfTaxYear(year)
+  def getStartDateForTaxYear(year: Int): LocalDate =
+    TaxYear.firstDayOfTaxYear(year)
 
-  def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
+  def getPreviousYearDate: LocalDate =
+    LocalDate.now().minusYears(1)
 
-  def parseDateWithFormat(date: String, format: String  = TimeService.defaultDateFormat): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
+  def parseDateWithFormat(date: String, format: String = TimeService.defaultDateFormat): LocalDate =
+    LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

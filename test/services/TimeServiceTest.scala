@@ -21,7 +21,12 @@ import models.EndRelationshipReason
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 
+import scala.collection.immutable
+
 class TimeServiceTest extends ControllerBaseSpec {
+
+  private val currentYear = service.getCurrentDate.getYear
+  private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
 
   def service: TimeService = TimeService
 
@@ -29,7 +34,8 @@ class TimeServiceTest extends ControllerBaseSpec {
     "return end of current tax year" when {
       "End reason code is CANCEL" in {
         val timeService = service
-        val result = timeService.getEffectiveUntilDate(EndRelationshipReason("CANCEL"))
+        val data = EndRelationshipReason("CANCEL")
+        val result = timeService.getEffectiveUntilDate(data)
         result shouldBe Some(TaxYear.current.finishes)
       }
     }
@@ -107,19 +113,76 @@ class TimeServiceTest extends ControllerBaseSpec {
   }
 
   "parseDateWithFormat" should {
+
+    "parse date with default format" in {
+      val year = 2017
+      val month = 10
+      val day = 22
+      val expected = new LocalDate(year, month, day)
+
+      val date: String = "" + year + month + day
+
+      service.parseDateWithFormat(date.trim) shouldBe expected
+    }
+
     val formats = List[String]("-yyyyMMdd", " yyyyMMdd")
     for (format <- formats) {
-      s"parse date with custom format of $format" in {
+      s"parse date with custom format of '$format'" in {
         val year = 2017
         val month = 10
         val day = 22
         val expected = new LocalDate(year, month, day)
 
-        val prefix: String = format.substring(0,1)
+        val prefix: String = format.substring(0, 1)
         val date: String = "" + prefix + year + month + day
 
         service.parseDateWithFormat(date.trim, format.trim) shouldBe expected
       }
     }
   }
+
+  "isFutureDate" should {
+
+    "future date is today" in {
+      val timeService = service
+      val data = LocalDate.now()
+      timeService.isFutureDate(data) shouldBe false
+    }
+
+    "future date is yesterday" in {
+      val timeService = service
+      val data = LocalDate.now().minusDays(1)
+      timeService.isFutureDate(data) shouldBe false
+    }
+
+    "future date is tomorrow" in {
+      val timeService = service
+      val data = LocalDate.now().plusDays(1)
+      timeService.isFutureDate(data) shouldBe true
+    }
+
+  }
+
+  "getCurrentTaxYear" should {
+
+    "get current tax year" in {
+      val timeService = service
+      val data = TaxYear.current.startYear
+      timeService.getCurrentTaxYear shouldBe data
+    }
+
+  }
+
+  "getStartDateForTaxYear" should {
+
+    for (year <- years) {
+      s"start date of tax year is $year April 6th" in {
+        val timeService = service
+        val expected = new LocalDate(year, 4, 6)
+        timeService.getStartDateForTaxYear(year) shouldBe expected
+      }
+    }
+  }
+
+
 }
