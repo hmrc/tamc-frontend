@@ -30,7 +30,7 @@ import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
 
 
-class ClaimsViewModelTest extends TamcViewModelTest with MockitoSugar {
+class ClaimsViewModelTest extends ViewModelBaseSpec {
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
