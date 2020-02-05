@@ -3,7 +3,7 @@ import sbt._
 
 object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
-   "uk.gov.hmrc" %% "emailaddress" % "3.2.0",
+   "uk.gov.hmrc" %% "emailaddress" % "3.4.0",
     "uk.gov.hmrc" %% "frontend-bootstrap" % "12.9.0",
     "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % "8.4.0-play-25",

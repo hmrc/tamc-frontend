@@ -29,35 +29,33 @@ object DivorceEndExplanationViewModel {
 
   def apply(role: Role, divorceDate: LocalDate)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
-    val divorceDateFormatted = TextGenerators.ukDateTransformer(Some(divorceDate), LanguageUtils.isWelsh(messages))
+    val divorceDateFormatted = transformDate(divorceDate)
     val currentTaxYear = TaxYear.current
+    val isCurrentYearDivorced: Boolean = currentTaxYear.contains(divorceDate)
 
-    val taxYearStatus = if(currentTaxYear.contains(divorceDate)) {
+    val taxYearStatus = if(isCurrentYearDivorced) {
         messages("pages.divorce.explanation.current.taxYear")
      } else {
         messages("pages.divorce.explanation.previous.taxYear")
      }
 
-     val bullets = bulletStatements(role, currentTaxYear: TaxYear, divorceDate: LocalDate)
+     val bullets = bulletStatements(role, currentTaxYear, isCurrentYearDivorced)
 
     DivorceEndExplanationViewModel(divorceDateFormatted, taxYearStatus, bullets)
   }
 
-  private def bulletStatements(role: Role, currentTaxYear: TaxYear, divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
+  private def transformDate(date: LocalDate)(implicit messages: Messages): String = {
+    TextGenerators.ukDateTransformer(Some(date), LanguageUtils.isWelsh(messages))
+  }
 
-    def transformDate(date: LocalDate): String = {
-      TextGenerators.ukDateTransformer(Some(date), LanguageUtils.isWelsh(messages))
-    }
-
-
+  private def bulletStatements(role: Role, currentTaxYear: TaxYear, isCurrentYearDivorced: Boolean)(implicit messages: Messages): (String, String) = {
     lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
     lazy val nextTaxYearStart: String = transformDate(currentTaxYear.next.starts)
     lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)
     lazy val taxYearEndForGivenYear: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).finishes)
 
-
-    //TODO should this live here or with the object
-    (role, currentTaxYear.contains(divorceDate)) match  {
+    //TODO remove duplicate case into case _ =>
+    (role, isCurrentYearDivorced) match  {
       case(Recipient, true) => {
         (messages("pages.divorce.explanation.recipient.current.bullet1", currentTaxYearEnd),
          messages("pages.divorce.explanation.recipient.current.bullet2", nextTaxYearStart))

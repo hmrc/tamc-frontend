@@ -19,6 +19,7 @@
 @import models.auth.AuthenticatedUserRequest
 @import org.joda.time.LocalDate
 @import forms.coc.DivorceSelectYearForm
+@import utils.Constants.forms.coc.DivorceSelectYearFormConstants
 
 @(divorceSelectYearForm: Form[Option[LocalDate]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -49,7 +50,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         <div class="form-group">
             @templates.dateFields(
             divorceSelectYearForm,
-            DivorceSelectYearForm.DateOfDivorce,
+            DivorceSelectYearFormConstants.DateOfDivorce,
             Html(""),
             None,
             '_hintText -> Messages("pages.divorce.date.hint"),

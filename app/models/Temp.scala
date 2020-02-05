@@ -20,12 +20,13 @@ package models
 
 
 
-
+//TODO remove everywhere
 object RoleOld {
   val TRANSFEROR = "Transferor"
   val RECIPIENT = "Recipient"
 }
 
+//TODO remove everywhere
 object EndReasonCode {
   val CANCEL = "CANCEL"
   val REJECT = "REJECT"

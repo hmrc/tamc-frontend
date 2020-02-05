@@ -16,7 +16,7 @@
 
 package utils.Constants.forms.coc
 
-trait MakeChangesDecisionFormConstants {
+object MakeChangesDecisionFormConstants {
   val StopMAChoice = "stopMAChoice"
   val Divorce = "divorce"
   val IncomeChanges = "incomeChanges"

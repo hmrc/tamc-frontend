@@ -23,14 +23,16 @@ import play.twirl.api.Html
 import utils.LanguageUtils
 import views.helpers.TextGenerators
 
-
+//TODO add tests for active row
 case class ActiveRow(activeDateInterval: String, activeStatus: String)
 
 object ActiveRow {
 
   def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): ActiveRow = {
 
-    val activeDateInterval = TextGenerators.taxDateIntervalString(relationshipRecord.participant1StartDate, isWelsh = LanguageUtils.isWelsh(messages))
+    val activeDateInterval = TextGenerators.taxDateIntervalString(
+      relationshipRecord.participant1StartDate,
+      isWelsh = LanguageUtils.isWelsh(messages))
     val activeStatus = messages("change.status.active")
 
     ActiveRow(activeDateInterval, activeStatus)
@@ -38,40 +40,57 @@ object ActiveRow {
   }
 }
 
-
+//TODO add tests for historic row
 case class HistoricRow(historicDateInterval: String, historicStatus: String)
 
 object HistoricRow {
 
   def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): HistoricRow = {
 
-    val historicDateInterval = TextGenerators.taxDateIntervalString(relationshipRecord.participant1StartDate,
-      relationshipRecord.participant1EndDate,LanguageUtils.isWelsh(messages))
+    val historicDateInterval = TextGenerators.taxDateIntervalString(
+      relationshipRecord.participant1StartDate,
+      relationshipRecord.participant1EndDate,
+      LanguageUtils.isWelsh(messages))
 
-    val historicStatus = messages(s"coc.end-reason.${relationshipRecord.relationshipEndReason.map(_.value).getOrElse("")}")
+    val cause = relationshipRecord.relationshipEndReason match {
+      case None => ""
+      case Some(reason) => reason.value.toUpperCase
+    }
 
-    HistoricRow(historicDateInterval, historicStatus)
+    //TODO get or else should be frm DEFAULT value not empty with will fail with runtime exception!?!?!?
+    val status = if (cause == "") {
+      //TODO to test this thing?
+      ""
+    } else {
+      val messageKey = s"coc.end-reason.$cause"
+      messages(messageKey)
+    }
 
+    HistoricRow(historicDateInterval, status)
   }
 
 }
 
-case class ClaimsViewModel(activeRow: Option[ActiveRow], historicRows: Option[Seq[HistoricRow]], isActiveRecord: Boolean,
-                           taxFreeAllowanceLink: Html, backLinkUrl: String)
+case class ClaimsViewModel(activeRow: Option[ActiveRow],
+                           historicRows: Option[Seq[HistoricRow]],
+                           isActiveRecord: Boolean,
+                           taxFreeAllowanceLink: Html,
+                           backLinkUrl: String)
 
 object ClaimsViewModel {
 
-  def apply(activeRelationship: Option[RelationshipRecord], historicRelationships: Option[Seq[RelationshipRecord]], recordStatus: RecordStatus)
-           (implicit messages: Messages): ClaimsViewModel = {
+  def apply(activeRelationship: Option[RelationshipRecord],
+            historicRelationships: Option[Seq[RelationshipRecord]],
+            recordStatus: RecordStatus)(implicit messages: Messages): ClaimsViewModel = {
 
-    val activeRow = activeRelationship map(ActiveRow(_))
+    val activeRow = activeRelationship map (ActiveRow(_))
     val historicRows = historicRelationships map { historicRelationships =>
-      historicRelationships map(HistoricRow(_))
+      historicRelationships map (HistoricRow(_))
     }
 
     val isActiveRecord = recordStatus == Active
 
-    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink, backLinkUrl(isActiveRecord))
+    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink, backLinkUrl(recordStatus))
   }
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
@@ -80,11 +99,12 @@ object ClaimsViewModel {
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 
-  private def backLinkUrl(isActiveRecord: Boolean): String = {
-    if(isActiveRecord){
-      controllers.routes.UpdateRelationshipController.decision().url
-    }else {
-      controllers.routes.UpdateRelationshipController.history().url
+  private def backLinkUrl(recordStatus: RecordStatus): String = {
+    recordStatus match {
+      case Active =>
+        controllers.routes.UpdateRelationshipController.decision().url
+      case _ =>
+        controllers.routes.UpdateRelationshipController.history().url
     }
   }
 }

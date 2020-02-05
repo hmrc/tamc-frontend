@@ -18,24 +18,26 @@ package models
 
 case class RelationshipRecords(activeRelationship: Option[RelationshipRecord],
                                historicRelationships: Option[Seq[RelationshipRecord]],
-                               loggedInUserInfo: Option[LoggedInUserInfo] = None){
+                               loggedInUserInfo: Option[LoggedInUserInfo] = None) {
 
-  val recordStatus: RecordStatus = {
-
+  lazy val recordStatus: RecordStatus = {
     (activeRelationship, historicRelationships) match {
-      case(Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isEmpty => Active
-      case(Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isDefined => ActiveHistoric
-      case(_, _) => Historic
+      case (Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isEmpty => Active
+        //TODO add is definition for active historic because when I pass active relationship and end in future is fail with historic
+      case (Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isDefined => ActiveHistoric
+      case _ => Historic
     }
 
   }
 
-  val role: Role = {
+  lazy val role: Role = {
     (activeRelationship, historicRelationships) match {
-      case(Some(RelationshipRecord("Transferor", _, _, _, _, _, _)), _) => Transferor
-      case(Some(RelationshipRecord("Recipient", _, _, _, _, _, _)), _) => Recipient
-      case(_, Some(Seq(RelationshipRecord("Transferor", _, _, _, _, _, _), _*))) => Transferor
-      case(_, Some(Seq(RelationshipRecord("Recipient", _, _, _, _, _, _), _*))) => Recipient
+      case (Some(RelationshipRecord("Transferor", _, _, _, _, _, _)), _) => Transferor
+      case (Some(RelationshipRecord("Recipient", _, _, _, _, _, _)), _) => Recipient
+      case (_, Some(Seq(RelationshipRecord("Transferor", _, _, _, _, _, _), _*))) => Transferor
+      case (_, Some(Seq(RelationshipRecord("Recipient", _, _, _, _, _, _), _*))) => Recipient
+      //TODO to test properly??
+      case _ => throw new RuntimeException("IDK?!")
     }
   }
 }

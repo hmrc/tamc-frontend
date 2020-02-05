@@ -25,7 +25,6 @@ import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
-import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
@@ -40,11 +39,28 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 class TransferControllerTest extends ControllerBaseSpec {
+
+  val currentTaxYear: Int = time.TaxYear.current.startYear
+
+  val mockTransferService: TransferService = mock[TransferService]
+  val mockCachingService: CachingService = mock[CachingService]
+  val mockTimeService: TimeService = mock[TimeService]
+
+  def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): TransferController = new TransferController(
+    messagesApi,
+    authAction,
+    mockTransferService,
+    mockCachingService,
+    mockTimeService
+  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+
+  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
 
   "transfer" should {
     "return success" in {
@@ -94,7 +110,7 @@ class TransferControllerTest extends ControllerBaseSpec {
       val result = controller().dateOfMarriageWithCy()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      val resolved = Await.result(result, 5 seconds)
+      val resolved = awaitResult(result)
       resolved.header.headers.keys should contain("Set-Cookie")
       resolved.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
     }
@@ -105,7 +121,7 @@ class TransferControllerTest extends ControllerBaseSpec {
       val result = controller().dateOfMarriageWithEn()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      val resolved = Await.result(result, 5 seconds)
+      val resolved = awaitResult(result)
       resolved.header.headers.keys should contain("Set-Cookie")
       resolved.header.headers("Set-Cookie") should include("PLAY_LANG=en")
     }
@@ -390,12 +406,39 @@ class TransferControllerTest extends ControllerBaseSpec {
 
   "finished" should {
     "return success" when {
-      "A notification record is returned" in {
+      "A notification record is returned and cache is called" in {
+        reset(mockCachingService)
+        verify(mockCachingService, times(0)).remove()(any(), any())
+
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(RelationshipRecordData.notificationRecord)
+
         val result = controller().finished()(request)
         status(result) shouldBe OK
+
+        verify(mockCachingService, times(1)).remove()(any(), any())
       }
+    }
+
+    "return error" when {
+      "error is thrown" in {
+        reset(mockCachingService)
+        verify(mockCachingService, times(0)).remove()(any(), any())
+
+        when(mockTransferService.getFinishedData(any())(any(), any()))
+          .thenThrow(new IllegalArgumentException("123"))
+
+        controller().finished()(request)
+
+        verify(mockCachingService, times(0)).remove()(any(), any())
+      }
+    }
+  }
+
+  "cannotUseService" should {
+    "return success when call cannotUseService" in {
+      val result = controller().cannotUseService(request)
+      status(result) shouldBe OK
     }
   }
 
@@ -451,20 +494,4 @@ class TransferControllerTest extends ControllerBaseSpec {
     }
   }
 
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-
-  val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
-
-  def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]) = new TransferController(
-    messagesApi,
-    authAction,
-    mockTransferService,
-    mockCachingService,
-    mockTimeService
-  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
-
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
 }

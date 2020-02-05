@@ -26,20 +26,23 @@ import services.TimeService
 import uk.gov.hmrc.play.mappers.DateTuple.dateTuple
 import utils.Constants.forms.coc.DivorceSelectYearFormConstants
 
-
-object DivorceSelectYearForm extends DivorceSelectYearFormConstants {
-
-  //TODO does this need tidying
-  private def checkDateRange(): Constraint[Option[LocalDate]] = Constraint[Option[LocalDate]]("date.range") { dod =>
-    dod match {
-      case None => Invalid(ValidationError("pages.form.field.dod.error.required"))
-      case Some(date) if date.isAfter(TimeService.getCurrentDate) => Invalid(ValidationError("pages.form.field.dom.error.max-date", date.toString("dd/MM/yyyy")))
-      case Some(date) if date.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)) => Invalid(ValidationError("pages.form.field.dom.error.min-date"))
-      case _ => Valid
-    }
-  }
+//TODO add tests
+object DivorceSelectYearForm {
 
   def form(implicit messages: Messages): Form[Option[LocalDate]] = Form[Option[LocalDate]](
     //TODO error message
-    single(DateOfDivorce -> dateTuple().verifying(checkDateRange())))
+    single(DivorceSelectYearFormConstants.DateOfDivorce -> dateTuple().verifying(checkDateRange()))
+  )
+
+  //TODO does this need tidying
+  private def checkDateRange(): Constraint[Option[LocalDate]] = Constraint[Option[LocalDate]]("date.range") {
+    case None =>
+      Invalid(ValidationError("pages.form.field.dod.error.required"))
+    case Some(date) if date.isAfter(TimeService.getCurrentDate) =>
+      Invalid(ValidationError("pages.form.field.dom.error.max-date", date.toString("dd/MM/yyyy")))
+    case Some(date) if date.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1)) =>
+      Invalid(ValidationError("pages.form.field.dom.error.min-date"))
+    case _ =>
+      Valid
+  }
 }

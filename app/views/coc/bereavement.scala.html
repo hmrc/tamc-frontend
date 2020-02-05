@@ -28,20 +28,22 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @contactHMRCLink = @{
- Html(
- s"""<p>${messages("general.helpline.enquiries.link.pretext")} <a href="${generalEnquiriesLink}">
-   |${messages("general.helpline.enquiries.link")}</a> ${messages("pages.bereavement.enquiries.link.paragraph")}</p>""".stripMargin)
+Html(
+s"""<p>${messages("general.helpline.enquiries.link.pretext")} <a href="${generalEnquiriesLink}">
+    |${messages("general.helpline.enquiries.link")}</a> ${messages("pages.bereavement.enquiries.link.paragraph")}
+</p>""".stripMargin)
 }
 
 @endOfYear = @{
- TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages), transformPattern = "d MMMM")
+TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages), transformPattern = "d MMMM")
 }
 
 @templates.tamc_main(
 title = messages("title.pattern", messages("pages.bereavement.title")),
 mainConfig = views.helpers.MainConfig()) {
 
-<a href="@controllers.routes.UpdateRelationshipController.makeChange().url" class="link-back">@messages("generic.back")</a>
+<a href="@controllers.routes.UpdateRelationshipController.makeChange().url"
+   class="link-back">@messages("generic.back")</a>
 
 <header class="page-heading">
     <h1 class="heading-xlarge" id="bereavement">@messages("pages.bereavement.title")</h1>
@@ -55,8 +57,8 @@ mainConfig = views.helpers.MainConfig()) {
 <p>@messages("pages.bereavement.transferor.paragraph")</p>
 
 <ul class="bullets">
- <li>@messages("pages.bereavement.transferor.point1")</li>
- <li>@messages("pages.bereavement.transferor.point2", endOfYear)</li>
+    <li>@messages("pages.bereavement.transferor.point1")</li>
+    <li>@messages("pages.bereavement.transferor.point2", endOfYear)</li>
 </ul>
 }
 

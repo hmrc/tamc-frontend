@@ -21,6 +21,16 @@ sealed trait Role {
   def asString(): String
 }
 
+object Role {
+  def asString(role: Role): String = {
+    role match {
+      case Transferor => "Transferor"
+      case Recipient => "Transferor"
+    }
+  }
+
+}
+
 case object Transferor extends Role {
   def asString(): String = "Transferor"
 }

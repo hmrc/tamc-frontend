@@ -50,13 +50,13 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
 
-  private val parseDate = parseDateWithFormat(_: String, format = "yyyyMMdd")
+  private val parseDate = parseDateWithFormat(_: String)
 
   def retrieveRelationshipRecords(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
     marriageAllowanceConnector.listRelationship(transferorNino) map (RelationshipRecords(_))
   }
 
-  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext) = {
+  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
     def cacheOptionalData[T](data: Option[T], f: T => Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] = {
       data match {
@@ -217,7 +217,8 @@ trait UpdateRelationshipService {
       cacheData <- cachingService.getUpdateRelationshipCachedData
     } yield isValidDivorceDate(dod, cacheData)
 
-  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = cachingService.getRelationshipRecords
+  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
+    cachingService.getRelationshipRecords
 
   def getEndDate(endRelationshipReason: EndRelationshipReason,
                  selectedRelationship: RelationshipRecord): LocalDate =

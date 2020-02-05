@@ -19,14 +19,21 @@ package services
 import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import services.TimeService.parseDateWithFormat
 import uk.gov.hmrc.time.TaxYear
 
-object TimeService extends TimeService
+object TimeService extends TimeService {
+  //TODO can we make other way?
+  override val defaultDateFormat: String = "yyyyMMdd"
+}
 
 trait TimeService {
+  val defaultDateFormat: String = "yyyyMMdd"
 
-  def currentTaxYear: TaxYear = TaxYear.current
+  def isFutureDate(date: LocalDate): Boolean =
+    date.isAfter(getCurrentDate)
+
+  def getCurrentDate: LocalDate =
+    LocalDate.now()
 
   def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] =
     endReason.endReason match {
@@ -42,17 +49,21 @@ trait TimeService {
       case EndReasonCode.DIVORCE_PY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).starts
     }
 
-  def getCurrentDate: LocalDate = LocalDate.now()
+  def getCurrentTaxYear: Int =
+    currentTaxYear.startYear
 
-  def getCurrentTaxYear: Int = currentTaxYear.startYear
+  def currentTaxYear: TaxYear =
+    TaxYear.current
 
-  def getTaxYearForDate(date: LocalDate): Int = TaxYear.taxYearFor(date).startYear
+  def getTaxYearForDate(date: LocalDate): Int =
+    TaxYear.taxYearFor(date).startYear
 
-  def getStartDateForTaxYear(year: Int): LocalDate = TaxYear.firstDayOfTaxYear(year)
+  def getStartDateForTaxYear(year: Int): LocalDate =
+    TaxYear.firstDayOfTaxYear(year)
 
-  def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
+  def getPreviousYearDate: LocalDate =
+    LocalDate.now().minusYears(1)
 
-  def parseDateWithFormat(date: String, format: String): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
-
-  parseDateWithFormat(_: String, format = "yyyyMMdd")
+  def parseDateWithFormat(date: String, format: String = TimeService.defaultDateFormat): LocalDate =
+    LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

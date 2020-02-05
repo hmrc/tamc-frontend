@@ -24,7 +24,7 @@
 @import org.joda.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 
-@(data: models.ConfirmationModel, emptyForm: Form[Option[String]])(
+@(data: models.ConfirmationModel)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
