@@ -22,11 +22,10 @@ import play.api.i18n.Messages
 import utils.Constants.forms.coc.CheckClaimOrCancelDecisionFormConstants
 
 //TODO add tests
-//TODO constants
-object CheckClaimOrCancelDecisionForm {
+object CheckClaimOrCancelDecisionForm extends CheckClaimOrCancelDecisionFormConstants {
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
     //TODO error message
-    single(CheckClaimOrCancelDecisionFormConstants.DecisionChoice -> optional(text).verifying(messages("cxcxcxcx"), { _.isDefined }))
+    single(DecisionChoice -> optional(text).verifying(messages("cxcxcxcx"), { _.isDefined }))
 
   )
 }

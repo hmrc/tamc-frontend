@@ -33,15 +33,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.Constants.forms.coc.MakeChangesDecisionFormConstants
-import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, HistorySummaryViewModel}
+import utils.Referral
+import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, EmailViewModel, HistorySummaryViewModel}
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
-import utils.Referral
-import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, EmailViewModel, HistorySummaryViewModel}
-import utils.Constants.forms.coc.{CheckClaimOrCancelDecisionFormConstants, MakeChangesDecisionFormConstants}
-import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, HistorySummaryViewModel}
 
 class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
@@ -91,13 +87,13 @@ class UpdateRelationshipController @Inject()(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.decision(formWithErrors)))
         }, {
-          case Some(CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim) map { _ =>
+          case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) => {
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.claims())
             }
           }
-          case Some(CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance) map { _ =>
+          case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) => {
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.makeChange())
             }
           }
@@ -135,43 +131,50 @@ class UpdateRelationshipController @Inject()(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.reason_for_change(formWithErrors)))
         }, {
-          case Some(MakeChangesDecisionFormConstants.Divorce) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(MakeChangesDecisionFormConstants.Divorce) map { _ =>
+          case Some(MakeChangesDecisionForm.Divorce) => {
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Divorce) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.divorceEnterYear())
             }
           }
-          case Some(MakeChangesDecisionFormConstants.IncomeChanges) => {
-            updateRelationshipService.saveCheckClaimOrCancelDecision(MakeChangesDecisionFormConstants.IncomeChanges) flatMap { _ =>
-              updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-                if (relationshipRecords.role == Recipient) {
-                  Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
-                } else {
-                  Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome())
-                }
-              }
+          case Some(MakeChangesDecisionForm.IncomeChanges) => {
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.IncomeChanges) flatMap { _ =>
+             changeOfIncomeRedirect
             }
 
           }
-          case Some(MakeChangesDecisionFormConstants.NoLongerRequired) => {
-            updateRelationshipService.saveMakeChangeReason(MakeChangesDecisionFormConstants.NoLongerRequired) flatMap { _ =>
-              updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-                if (relationshipRecords.role == Recipient) {
-                  Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
-                } else {
-                  Redirect(controllers.routes.UpdateRelationshipController.cancel())
-                }
-              }
+          case Some(MakeChangesDecisionForm.NoLongerRequired) => {
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.NoLongerRequired) flatMap { _ =>
+              noLongerWantMarriageAllowanceRedirect
             }
           }
-          case Some(MakeChangesDecisionFormConstants.Bereavement) => {
-            updateRelationshipService.saveMakeChangeReason(MakeChangesDecisionFormConstants.Bereavement) map { _ =>
+          case Some(MakeChangesDecisionForm.Bereavement) => {
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Bereavement) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.bereavement())
             }
           }
-          //TODO need to fix this logic and add test for this case as well?
-          case _ =>
-            Future.successful(InternalServerError)
+          //            TODO It would fail on the following inputs: None, Some((x: String forSome x not in (Bereavement, Divorce, IncomeChanges, NoLongerRequired)))
         })
+  }
+
+  private def noLongerWantMarriageAllowanceRedirect(implicit hc: HeaderCarrier): Future[Result] = {
+    updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
+      if(relationshipRecords.role == Recipient){
+        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
+      } else {
+        Redirect(controllers.routes.UpdateRelationshipController.cancel())
+      }
+    }
+  }
+
+
+  private def changeOfIncomeRedirect(implicit hc: HeaderCarrier): Future[Result] = {
+    updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
+      if(relationshipRecords.role == Recipient){
+        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
+      } else {
+        Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome())
+      }
+    }
   }
 
   //TODO referor
@@ -293,15 +296,16 @@ class UpdateRelationshipController @Inject()(
 
   def confirmUpdateAction: Action[AnyContent] = authenticate.async {
     implicit request =>
-      EmptyForm.form.bindFromRequest().fold(
-        formWithErrors =>
-          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
-        success =>
-          success)
-
-      updateRelationshipService.updateRelationship(request.nino) map {
-        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
-      } recover handleError
+//      EmptyForm.form.bindFromRequest().fold(
+//        formWithErrors =>
+//          Logger.warn(s"unexpected error in empty form while confirmUpdateAction, SID [${utils.getSid(request)}]"),
+//        success =>
+//          success)
+//
+//      updateRelationshipService.updateRelationship(request.nino) map {
+//        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
+//      } recover handleError
+      ???
   }
 
 

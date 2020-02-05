@@ -16,7 +16,7 @@
 
 package utils.Constants.forms.coc
 
-object CheckClaimOrCancelDecisionFormConstants {
+trait CheckClaimOrCancelDecisionFormConstants {
 
   val DecisionChoice = "decisionChoice"
   val CheckMarriageAllowanceClaim = "checkMarriageAllowanceClaim"

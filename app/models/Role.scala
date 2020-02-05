@@ -28,7 +28,6 @@ object Role {
       case Recipient => "Transferor"
     }
   }
-
 }
 
 case object Transferor extends Role {
@@ -41,14 +40,4 @@ case object Recipient extends Role {
 
 case object Unknown extends Role {
   def asString(): String = "Unknown"
-}
-
-object Role {
-  def stringToRole(role: String): Role = {
-    role match {
-      case "Transferor" => Transferor
-      case "Recipient" => Recipient
-      case _ => Unknown
-    }
-  }
 }

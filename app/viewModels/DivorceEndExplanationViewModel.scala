@@ -39,16 +39,17 @@ object DivorceEndExplanationViewModel {
         messages("pages.divorce.explanation.previous.taxYear")
      }
 
-     val bullets = bulletStatements(role, currentTaxYear, isCurrentYearDivorced)
+     val bullets = bulletStatements(role, currentTaxYear, isCurrentYearDivorced,  divorceDate)
 
     DivorceEndExplanationViewModel(divorceDateFormatted, taxYearStatus, bullets)
   }
 
+  //TODO should be in a util
   private def transformDate(date: LocalDate)(implicit messages: Messages): String = {
     TextGenerators.ukDateTransformer(Some(date), LanguageUtils.isWelsh(messages))
   }
 
-  private def bulletStatements(role: Role, currentTaxYear: TaxYear, isCurrentYearDivorced: Boolean)(implicit messages: Messages): (String, String) = {
+  private def bulletStatements(role: Role, currentTaxYear: TaxYear, isCurrentYearDivorced: Boolean, divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
     lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
     lazy val nextTaxYearStart: String = transformDate(currentTaxYear.next.starts)
     lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)

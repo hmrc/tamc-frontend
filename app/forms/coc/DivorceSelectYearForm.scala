@@ -27,11 +27,11 @@ import uk.gov.hmrc.play.mappers.DateTuple.dateTuple
 import utils.Constants.forms.coc.DivorceSelectYearFormConstants
 
 //TODO add tests
-object DivorceSelectYearForm {
+object DivorceSelectYearForm extends DivorceSelectYearFormConstants {
 
   def form(implicit messages: Messages): Form[Option[LocalDate]] = Form[Option[LocalDate]](
     //TODO error message
-    single(DivorceSelectYearFormConstants.DateOfDivorce -> dateTuple().verifying(checkDateRange()))
+    single(DateOfDivorce -> dateTuple().verifying(checkDateRange()))
   )
 
   //TODO does this need tidying
