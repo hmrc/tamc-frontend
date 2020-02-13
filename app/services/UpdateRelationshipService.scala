@@ -183,13 +183,22 @@ trait UpdateRelationshipService {
 
 
   //TODO service layer should know what to pass back
-  def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
+  def getConfirmationUpdateAnswers(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
+    for {
+      email <- getEmailAddress
+      divorceDate <- getDivorceDate
+      relationshipRecord <- retrieveRelationshipRecords(nino)
+    } yield {
 
-//    cachingService.getConfirmationAnswers map {
-//
-//    }
-    ???
+      val name: Option[String] = relationshipRecord.loggedInUserInfo.flatMap(_.name.flatMap(_.fullName))
+      val role: Role = relationshipRecord.role
+
+      ConfirmationUpdateAnswers(name, divorceDate, email.getOrElse(""), role)
+      }
+
   }
+
+
 
 
   def getUpdateRelationshipCacheDataForDateOfDivorce(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
@@ -243,6 +252,10 @@ trait UpdateRelationshipService {
       _ <- auditUpdateRelationship(postUpdateData)
     } yield validated.notification.get
 
+  private def updateRelationship(nino: Nino, isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
+???
+  }
+
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
@@ -255,7 +268,7 @@ trait UpdateRelationshipService {
     }
   }
 
-  private def transformUpdateData(sessionData: UpdateRelationshipCacheData, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
+  private def transformUpdateData(sessionData: UpdateRelationshipCacheData, isWelsh: Boolean)(implicit hc:HeaderCarrier, ec: ExecutionContext): UpdateRelationshipRequestHolder = {
     val loggedInUser = sessionData.loggedInUserInfo.get
     val relationshipRecord = sessionData.relationshipEndReasonRecord.get
     val endReason = getEndReasonCode(relationshipRecord)
@@ -286,7 +299,7 @@ trait UpdateRelationshipService {
     val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
     val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participants._1, participant2 = participants._2, relationship = relationship)
     val sendNotificationData = UpdateRelationshipNotificationRequest(
-      full_name = "UNKNOWN",
+      fullName = "UNKNOWN",
       email = sessionData.notification.get.transferor_email,
       role = role,
       welsh = isWelsh,
@@ -300,6 +313,7 @@ trait UpdateRelationshipService {
                                      isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
     marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, isWelsh)) map {
       httpResponse =>
+        println("DO WE GET THIS FAR")
         Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
           case UpdateRelationshipResponse(ResponseStatus("OK")) => data
           case UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)) => throw CannotUpdateRelationship()
@@ -338,8 +352,8 @@ trait UpdateRelationshipService {
       active,
       historic,
       Some(notification: NotificationRecord),
-      Some(_), _)) if active.isDefined || historic.isDefined => Future.successful(cacheData.get)
-      case _ => throw CacheMissingUpdateRecord()
+      Some(_), _)) => println(s"\n\n\n\ncache = $cacheData\n\n\n\n"); Future.successful(cacheData.get)
+      case _ => println(s"\n\n\n\ncache = $cacheData\nactive = ${cacheData.map(_.activeRelationshipRecord.isDefined)}\nhistoric = ${cacheData.map(_.historicRelationships.isDefined)}\n\n"); throw CacheMissingUpdateRecord()
     }
 
 

@@ -52,7 +52,7 @@ GET    /divorce-end-explanation                    @controllers.UpdateRelationsh
 GET    /confirm-email                              @controllers.UpdateRelationshipController.confirmEmail
 GET    /confirm-change                             @controllers.UpdateRelationshipController.confirmUpdate
 #TO be post to edit
-GET    /confirm-change-action                      @controllers.UpdateRelationshipController.confirmUpdateAction
+GET    /confirm-change-action                      @controllers.UpdateRelationshipController.submitConfirmUpdate
 GET    /reject                                     @controllers.UpdateRelationshipController.confirmReject
 GET    /cancel                                     @controllers.UpdateRelationshipController.confirmCancel
 GET    /finished-change                            @controllers.UpdateRelationshipController.finishUpdate

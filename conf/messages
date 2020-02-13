@@ -338,9 +338,7 @@ change.status.reason-for=Reason for change
 change.status.reason-for-divorce=Do you want to keep your Marriage Allowance in place until {0}?
 change.status.confirm.info=We will email confirmation that you have cancelled your Marriage Allowance within 24 hours.
 change.status.confirm.more.info=We will not share your email with anyone else.
-change.status.confirm-cancellation.button=Confirm cancellation
 change.status.confirm.field.your-email=We will send you confirmation of your cancellation.
-change.status.confirm.field.your-name=Your name
 change.status.earnings.tr.instruction-1=claiming Marriage Allowance will still benefit you as a couple
 change.status.earnings.tr.instruction-2=you need to cancel your Marriage Allowance
 change.status.earnings.rec.instruction-1=you expect your income over the whole tax year to be more than £{0}, because you will no longer be eligible as a couple in this tax year
@@ -408,14 +406,11 @@ change.status.have-not-applied=You are not currently benefiting from Marriage Al
 change.status.ask-to-check=If you are married or in a civil partnership you may be able to transfer some of your tax-free Personal Allowance to your partner. Check if you are eligible to apply for Marriage Allowance.
 change.status.confirm-change=Confirm you want to change this Marriage Allowance transfer.
 change.status.previous-years=We have noticed you might be able to claim Marriage Allowance for previous tax years. If you are eligible we will backdate it and send your partner a cheque in the post.
-confirm.transferor.heading=Confirm cancellation of Marriage Allowance
+
 confirm.recipient.ended.reject.heading=Confirm removal of a previous Marriage Allowance claim
 pages.ended.reject.message=You have asked us to remove your Marriage Allowance from tax year {0}. This means:
 pages.ended.reject.message1=your Marriage Allowance will be removed from {0}, the start of the tax year you first received it
 pages.ended.reject.message2=if you have not paid enough tax, we will usually collect it by adjusting your tax code
-pages.confirm.message=You have asked us to cancel your Marriage Allowance. This means:
-pages.confirm.message1=your Marriage Allowance will remain in place until {0}, the end of the current tax year
-pages.confirm.message2=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
 pages.reject.message1=your Marriage Allowance will be cancelled from {0}, the start of the tax year you first received it
 pages.reject.message2=we will let you know if you have paid the right amount of tax at the end of tax year
 pages.reject.message3=if you have not paid enough tax, we will usually collect it by adjusting your tax code
@@ -590,6 +585,18 @@ pages.divorce.explanation.recipient.current.bullet1=your Marriage Allowance will
 pages.divorce.explanation.recipient.current.bullet2=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
 pages.divorce.explanation.previous.bullet1=your Marriage Allowance will be cancelled from {0}
 pages.divorce.explanation.previous.bullet2=if you have not paid enough tax, we will usually collect it by adjusting your tax code
+
+
+#********************************************************************************
+# confirm cancellation page
+#********************************************************************************
+pages.confirm.cancel.heading=Confirm cancellation of Marriage Allowance
+pages.confirm.cancel.message=You have asked us to cancel your Marriage Allowance. This means:
+pages.confirm.cancel.message1=your Marriage Allowance will remain in place until {0}
+pages.confirm.cancel.message2=your Personal Allowance will go back to the normal amount from {0}
+pages.confirm.cancel.your-name=Your name
+pages.confirm.cancel.email=Email
+pages.confirm.cancel.continue.button=Confirm cancellation
 
 
 #********************************************************************************

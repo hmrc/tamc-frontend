@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package models
+package services
 
+import models.{Recipient, Role, Transferor}
 import org.joda.time.LocalDate
-import play.api.mvc.Result
+import uk.gov.hmrc.time.TaxYear
+//TODO TESTS UP IN HERE
+object EndDateDivorceCalculator {
 
 
-case class ConfirmationUpdateAnswers(fullName: Option[String], divorceDate: Option[LocalDate], email: String, role: Role, endReason: String)
+  def calculateEndDate(role: Role, divorceDate: LocalDate): LocalDate = {
+
+    val isDivorceDateInTaxYear: Boolean = TaxYear.current.contains(divorceDate)
+
+    (role, isDivorceDateInTaxYear) match {
+      case(Recipient, true) => TaxYear.current.finishes
+      case(Recipient, false) => TaxYear.current.previous.finishes
+      case(Transferor, true) => TaxYear.current.previous.finishes
+      case(Transferor, false) => TaxYear.taxYearFor(divorceDate).finishes
+    }
+  }
+}

@@ -43,33 +43,33 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
 
   lazy val relationshipActiveRecordWitFutureInvalidDate: RelationshipRecord =
     RelationshipRecord(
-      participant = Recipient.asString(),
-      creationTimestamp = "56787",
-      participant1StartDate = "20130101",
-      relationshipEndReason = Some(RelationshipEndReason.Default),
-      participant1EndDate = Some(currentYear.toString),
-      otherParticipantInstanceIdentifier = "",
-      otherParticipantUpdateTimestamp = "")
+      Recipient.asString(),
+      "56787",
+      "20130101",
+      Some(RelationshipEndReason.Default),
+      Some(currentYear.toString),
+      "",
+      "")
 
   lazy val relationshipActiveRecordWitFutureValidDate: RelationshipRecord =
     RelationshipRecord(
-      participant = Recipient.asString(),
-      creationTimestamp = "56787",
-      participant1StartDate = "20130101",
-      relationshipEndReason = Some(RelationshipEndReason.Default),
-      participant1EndDate = Some(futureDateTime),
-      otherParticipantInstanceIdentifier = "",
-      otherParticipantUpdateTimestamp = "")
+      Recipient.asString(),
+      "56787",
+      "20130101",
+      Some(RelationshipEndReason.Default),
+      Some(futureDateTime),
+      "",
+      "")
 
   lazy val relationshipActiveRecordWitPastValidDate: RelationshipRecord =
     RelationshipRecord(
-      participant = Recipient.asString(),
-      creationTimestamp = "56787",
-      participant1StartDate = "20130101",
-      relationshipEndReason = Some(RelationshipEndReason.Default),
-      participant1EndDate = Some(pastDateTime),
-      otherParticipantInstanceIdentifier = "",
-      otherParticipantUpdateTimestamp = "")
+      Recipient.asString(),
+      "56787",
+      "20130101",
+      Some(RelationshipEndReason.Default),
+      Some(pastDateTime),
+      "",
+      "")
 
   "isActive" should {
     "return true" when {

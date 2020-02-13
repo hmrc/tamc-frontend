@@ -18,6 +18,7 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
+import forms.coc.{CheckClaimOrCancelDecisionForm, MakeChangesDecisionForm}
 import models._
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.joda.time.LocalDate
@@ -40,7 +41,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.Constants.forms.coc.{CheckClaimOrCancelDecisionFormConstants, MakeChangesDecisionFormConstants}
 
 import scala.concurrent.Future
 import scala.language.postfixOps
@@ -179,7 +179,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
     "there are data in cache and is valid" in {
       val request = FakeRequest()
       when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any()))
-        .thenReturn(Future.successful(Some(MakeChangesDecisionFormConstants.Divorce)))
+        .thenReturn(Future.successful(Some(MakeChangesDecisionForm.Divorce)))
 
       val result = controller().makeChange()(request)
       status(result) shouldBe OK
@@ -199,11 +199,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "checkMarriageAllowanceClaim" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        CheckClaimOrCancelDecisionFormConstants.DecisionChoice -> CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim
+        CheckClaimOrCancelDecisionForm.DecisionChoice -> CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim
       )
 
       when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
-        .thenReturn(Future.successful(CheckClaimOrCancelDecisionFormConstants.CheckMarriageAllowanceClaim))
+        .thenReturn(Future.successful(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim))
 
       val result = controller().submitDecision(request)
       status(result) shouldBe SEE_OTHER
@@ -212,11 +212,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "stopMarriageAllowance" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        CheckClaimOrCancelDecisionFormConstants.DecisionChoice -> CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance
+        CheckClaimOrCancelDecisionForm.DecisionChoice -> CheckClaimOrCancelDecisionForm.StopMarriageAllowance
       )
 
       when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
-        .thenReturn(Future.successful(CheckClaimOrCancelDecisionFormConstants.StopMarriageAllowance))
+        .thenReturn(Future.successful(CheckClaimOrCancelDecisionForm.StopMarriageAllowance))
 
       val result = controller().submitDecision(request)
       status(result) shouldBe SEE_OTHER
@@ -251,10 +251,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "divorce" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.Divorce
+        MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.Divorce
       )
       when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
-        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.Divorce))
+        .thenReturn(Future.successful(MakeChangesDecisionForm.Divorce))
 
       val result = controller().submitMakeChange()(request)
       status(result) shouldBe SEE_OTHER
@@ -263,11 +263,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "income change(recipient)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.IncomeChanges
+        MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.IncomeChanges
       )
 
       when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
-        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.IncomeChanges))
+        .thenReturn(Future.successful(MakeChangesDecisionForm.IncomeChanges))
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
@@ -282,11 +282,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "income change(transferor)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.IncomeChanges
+        MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.IncomeChanges
       )
 
       when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(any())(any(), any()))
-        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.IncomeChanges))
+        .thenReturn(Future.successful(MakeChangesDecisionForm.IncomeChanges))
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
@@ -301,11 +301,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "no longer required(recipient)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.NoLongerRequired
+        MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.NoLongerRequired
       )
 
-      when(mockUpdateRelationshipService.saveMakeChangeReason(any())(any(), any()))
-        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.NoLongerRequired))
+      when(mockUpdateRelationshipService.saveMakeChangeDecision(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionForm.NoLongerRequired))
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
@@ -320,11 +320,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "no longer required(transferor)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.NoLongerRequired
+        MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.NoLongerRequired
       )
 
-      when(mockUpdateRelationshipService.saveMakeChangeReason(any())(any(), any()))
-        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.NoLongerRequired))
+      when(mockUpdateRelationshipService.saveMakeChangeDecision(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionForm.NoLongerRequired))
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
@@ -339,11 +339,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "bereavement" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        MakeChangesDecisionFormConstants.StopMAChoice -> MakeChangesDecisionFormConstants.Bereavement
+        MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.Bereavement
       )
 
-      when(mockUpdateRelationshipService.saveMakeChangeReason(any())(any(), any()))
-        .thenReturn(Future.successful(MakeChangesDecisionFormConstants.Bereavement))
+      when(mockUpdateRelationshipService.saveMakeChangeDecision(any())(any(), any()))
+        .thenReturn(Future.successful(MakeChangesDecisionForm.Bereavement))
 
       val result = controller().submitMakeChange()(request)
       status(result) shouldBe SEE_OTHER
@@ -536,8 +536,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
         when(mockUpdateRelationshipService.saveEndRelationshipReason(ArgumentMatchers.eq(endReason))(any(), any()))
           .thenReturn(Future.successful(endReason))
 
-        val result = controller(timeService = TimeService).confirmCancel(request)
-        status(result) shouldBe OK
+        val result = controller(timeService = TimeService).confirmCancel
+        result shouldBe OK
       }
     }
   }
@@ -834,7 +834,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
   "confirmUpdate" should {
     "return a success" when {
       "the relationship service successfully returns cache data and end relationship reason" in {
-        when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
+        when(mockUpdateRelationshipService.getConfirmationUpdateDataTemp(any(), any()))
           .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, Some(RelationshipRecordData.updateRelationshipCacheData))))
         when(mockTimeService.getEffectiveDate(any()))
           .thenReturn(LocalDate.now())
@@ -845,7 +845,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec {
 
     "return InternalServerError" when {
       "there is no cache data returned" in {
-        when(mockUpdateRelationshipService.getConfirmationUpdateData(any(), any()))
+        when(mockUpdateRelationshipService.getConfirmationUpdateDataTemp(any(), any()))
           .thenReturn(Future.successful((ConfirmationModelData.updateRelationshipConfirmationModel, None)))
         val result = controller().confirmUpdate()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR

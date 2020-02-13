@@ -19,18 +19,18 @@ package viewModels
 import models.{Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
-import uk.gov.hmrc.time.TaxYear
-import utils.LanguageUtils
+import utils.{EndDateHelper, LanguageUtils}
 import views.helpers.TextGenerators
+
+//TODO TESTS UP IN HERE
 
 case class DivorceEndExplanationViewModel(divorceDate: String, taxYearStatus: String, bulletStatement: (String, String))
 
-object DivorceEndExplanationViewModel {
+object DivorceEndExplanationViewModel extends EndDateHelper {
 
   def apply(role: Role, divorceDate: LocalDate)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
     val divorceDateFormatted = transformDate(divorceDate)
-    val currentTaxYear = TaxYear.current
     val isCurrentYearDivorced: Boolean = currentTaxYear.contains(divorceDate)
 
     val taxYearStatus = if(isCurrentYearDivorced) {
@@ -39,39 +39,25 @@ object DivorceEndExplanationViewModel {
         messages("pages.divorce.explanation.previous.taxYear")
      }
 
-     val bullets = bulletStatements(role, currentTaxYear, isCurrentYearDivorced,  divorceDate)
+     val bullets = bulletStatements(role, isCurrentYearDivorced,  divorceDate)
 
     DivorceEndExplanationViewModel(divorceDateFormatted, taxYearStatus, bullets)
   }
 
-  //TODO should be in a util
-  private def transformDate(date: LocalDate)(implicit messages: Messages): String = {
-    TextGenerators.ukDateTransformer(Some(date), LanguageUtils.isWelsh(messages))
-  }
+  def bulletStatements(role: Role,
+                       isCurrentYearDivorced: Boolean,
+                       divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
 
-  private def bulletStatements(role: Role, currentTaxYear: TaxYear, isCurrentYearDivorced: Boolean, divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
-    lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
-    lazy val nextTaxYearStart: String = transformDate(currentTaxYear.next.starts)
-    lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)
-    lazy val taxYearEndForGivenYear: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).finishes)
 
-    //TODO remove duplicate case into case _ =>
+
     (role, isCurrentYearDivorced) match  {
       case(Recipient, true) => {
-        (messages("pages.divorce.explanation.recipient.current.bullet1", currentTaxYearEnd),
-         messages("pages.divorce.explanation.recipient.current.bullet2", nextTaxYearStart))
+        (messages("pages.divorce.explanation.recipient.current.bullet1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
+          messages("pages.divorce.explanation.recipient.current.bullet2", transformDate(nextTaxYearStart)))
       }
-      case(Recipient, false) => {
-        (messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
-         messages("pages.divorce.explanation.previous.bullet2"))
-      }
-      case(Transferor, true) => {
-        (messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
-        messages("pages.divorce.explanation.previous.bullet2"))
-      }
-      case(Transferor, false) => {
-        (messages("pages.divorce.explanation.previous.bullet1", taxYearEndForGivenYear(divorceDate)),
-         messages("pages.divorce.explanation.previous.bullet2"))
+      case _ => {
+        (messages("pages.divorce.explanation.previous.bullet1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
+          messages("pages.divorce.explanation.previous.bullet2"))
       }
     }
   }

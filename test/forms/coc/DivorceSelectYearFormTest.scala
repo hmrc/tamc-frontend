@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package forms.coc
 
 import config.ApplicationConfig
@@ -5,7 +21,6 @@ import forms.FormsBaseSpec
 import org.joda.time.LocalDate
 import play.api.data.FormError
 import play.api.test.FakeRequest
-import utils.Constants.forms.coc.{DivorceSelectYearFormConstants, MakeChangesDecisionFormConstants}
 
 import scala.collection.mutable
 
@@ -13,10 +28,10 @@ class DivorceSelectYearFormTest extends FormsBaseSpec {
 
   "DivorceSelectYearForm" should {
     val decisions = Seq(
-      MakeChangesDecisionFormConstants.Divorce,
-      MakeChangesDecisionFormConstants.IncomeChanges,
-      MakeChangesDecisionFormConstants.NoLongerRequired,
-      MakeChangesDecisionFormConstants.Bereavement
+      MakeChangesDecisionForm.Divorce,
+      MakeChangesDecisionForm.IncomeChanges,
+      MakeChangesDecisionForm.NoLongerRequired,
+      MakeChangesDecisionForm.Bereavement
     )
 
     "bind date in future" in {
@@ -34,7 +49,7 @@ class DivorceSelectYearFormTest extends FormsBaseSpec {
 
       errors shouldBe Seq(
         FormError(
-          DivorceSelectYearFormConstants.DateOfDivorce,
+          DivorceSelectYearForm.DateOfDivorce,
           Seq("pages.form.field.dom.error.max-date"),
           Seq(input.get.toString("dd/MM/yyyy")).toArray
         )
@@ -74,7 +89,7 @@ class DivorceSelectYearFormTest extends FormsBaseSpec {
 
       errors shouldBe Seq(
         FormError(
-          DivorceSelectYearFormConstants.DateOfDivorce,
+          DivorceSelectYearForm.DateOfDivorce,
           Seq("pages.form.field.dom.error.min-date"),
           mutable.WrappedArray.empty
         )
@@ -89,7 +104,7 @@ class DivorceSelectYearFormTest extends FormsBaseSpec {
     for (decision <- invalidDecisions) {
       s"bind a invalid decision <- '$decision'" in {
         val formInput = Map[String, String](
-          DivorceSelectYearFormConstants.DateOfDivorce -> decision
+          DivorceSelectYearForm.DateOfDivorce -> decision
         )
 
         val form = DivorceSelectYearForm.form.bind(formInput)
@@ -98,7 +113,7 @@ class DivorceSelectYearFormTest extends FormsBaseSpec {
 
         errors shouldBe Seq(
           FormError(
-            DivorceSelectYearFormConstants.DateOfDivorce,
+            DivorceSelectYearForm.DateOfDivorce,
             //TODO update after John will fix
             Seq("pages.form.field.dod.error.required"),
             mutable.WrappedArray.empty

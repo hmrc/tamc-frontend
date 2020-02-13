@@ -19,13 +19,18 @@ package forms.coc
 import play.api.data.Form
 import play.api.data.Forms.{optional, single, text}
 import play.api.i18n.Messages
-import utils.Constants.forms.coc.MakeChangesDecisionFormConstants
 
 //TODO add tests
-object MakeChangesDecisionForm extends MakeChangesDecisionFormConstants{
+object MakeChangesDecisionForm {
+
+  val StopMAChoice = "stopMAChoice"
+  val Divorce = "divorce"
+  val IncomeChanges = "incomeChanges"
+  val NoLongerRequired = "noLongerRequired"
+  val Bereavement = "bereavement"
+
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
     //TODO error message
-    single(StopMAChoice -> optional(text).verifying(messages("cxcxcxcx"), { _.isDefined }))
-
+    single(StopMAChoice -> optional(text).verifying(messages("ErrorMessage"), { _.isDefined }))
   )
 }

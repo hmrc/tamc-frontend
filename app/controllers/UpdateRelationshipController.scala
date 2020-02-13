@@ -19,6 +19,7 @@ package controllers
 import com.google.inject.Inject
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
+import forms.ChangeRelationshipForm
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
@@ -34,7 +35,7 @@ import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.Referral
-import viewModels.{ClaimsViewModel, DivorceEndExplanationViewModel, EmailViewModel, HistorySummaryViewModel}
+import viewModels.{ClaimsViewModel, ConfirmCancelViewModel, DivorceEndExplanationViewModel, EmailViewModel, HistorySummaryViewModel}
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
@@ -253,6 +254,25 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
+  def confirmReject(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+      updateRelationshipService.getUpdateRelationshipCacheForReject map {
+        cache =>
+          val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
+          val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
+          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate, isEnded = Some(selectedRelationship.participant1EndDate.isDefined
+            && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
+      }
+  }
+
+  def confirmCancel(): Action[AnyContent] = authenticate.async {
+    implicit request =>
+      updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(EndReasonCode.CANCEL)) map {
+        endReason =>
+          Ok(views.html.coc.confirm_updates(endReason.endReason, effectiveUntilDate = timeService.getEffectiveUntilDate(endReason), effectiveDate = Some(timeService.getEffectiveDate(endReason))))
+      }
+  }
+
   //TODO why was registration service used. rename
   def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -272,26 +292,10 @@ class UpdateRelationshipController @Inject()(
 
   def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
-
-//      updateRelationshipService.getConfirmationAnswers map {
-//
-//        //
-//
-//
-//      }
-
-                          ???
-//        updateRelationshipService.getConfirmationUpdateData map {
-//          case (data, Some(updateCache)) =>
-//
-//            val reason = data.endRelationshipReason
-//            val (isEnded, relationEndDate, relevantDate) = getConfirmationInfoFromReason(reason, updateCache)
-//            Ok(views.html.coc.confirm(data, relevantDate, isEnded = isEnded, relationEndDate = relationEndDate))
-//
-//          case (_, None) =>
-//            throw new Exception("No UpdateRelationshipCacheData found")
-//        } recover handleError
-
+      UpdateRelationshipService.getConfirmationUpdateAnswers(request.nino) map {
+        x =>
+        Ok(views.html.coc.confirm(ConfirmCancelViewModel(x)))
+      }
   }
 
   def confirmUpdateAction: Action[AnyContent] = authenticate.async {
@@ -306,6 +310,13 @@ class UpdateRelationshipController @Inject()(
 //        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
 //      } recover handleError
       ???
+  }
+
+  def submitConfirmUpdate: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      updateRelationshipService.updateRelationship(request.nino) map {
+       _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
+      }
   }
 
 

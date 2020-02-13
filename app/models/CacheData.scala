@@ -16,6 +16,9 @@
 
 package models
 
+import org.joda.time.LocalDate
+import uk.gov.hmrc.emailaddress.EmailAddress
+
 
 case class CacheData(
                       transferor: Option[UserRecord],
@@ -33,3 +36,9 @@ case class UpdateRelationshipCacheData(loggedInUserInfo: Option[LoggedInUserInfo
                                        notification: Option[NotificationRecord],
                                        relationshipEndReasonRecord: Option[EndRelationshipReason] = None,
                                        relationshipUpdated: Option[Boolean] = None)
+
+case class UpdateRelationshipCacheDataTemp(relationshipRecords: RelationshipRecords,
+                                           email: Option[EmailAddress],
+                                           relationshipEndReasonRecord: Option[String],
+                                           marriageEndDate: Option[LocalDate],
+                                           relationshipUpdated: Option[Boolean] = None)

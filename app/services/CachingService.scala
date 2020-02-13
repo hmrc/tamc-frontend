@@ -20,10 +20,12 @@ import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors.TransferorNotFound
 import models._
+import org.joda.time.LocalDate
 import play.api.Mode.Mode
 import play.api.libs.json.{Reads, Writes}
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
@@ -122,7 +124,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
           CacheData(
             transferor = cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD),
             recipient = cacheMap.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD),
-            notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
+            notification = Some(NotificationRecord(EmailAddress(cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).getOrElse("")))),
             relationshipCreated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE),
             selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
@@ -139,7 +141,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
           CacheData(
             transferor = cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD),
             recipient = cacheMap.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD),
-            notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
+            notification = Some(NotificationRecord(EmailAddress(cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).getOrElse("")))),
             relationshipCreated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE),
             selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
@@ -163,6 +165,21 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD),
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
 
+  def getUpdateRelationshipCachedDataTemp(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] = {
+    fetch() map {
+      _ map {
+        cacheMap =>
+
+          val relationshipRecords = getRelationshipRecords
+
+          UpdateRelationshipCacheDataTemp(relationshipRecords,
+            UpdateRelationshipService.getEmailAddress,
+            cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION),
+            ca
+          )
+      }
+    }
+  }
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 

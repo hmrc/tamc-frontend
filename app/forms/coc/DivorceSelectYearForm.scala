@@ -24,10 +24,11 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.i18n.Messages
 import services.TimeService
 import uk.gov.hmrc.play.mappers.DateTuple.dateTuple
-import utils.Constants.forms.coc.DivorceSelectYearFormConstants
 
 //TODO add tests
-object DivorceSelectYearForm extends DivorceSelectYearFormConstants {
+object DivorceSelectYearForm {
+
+  val DateOfDivorce = "dateOfDivorce"
 
   def form(implicit messages: Messages): Form[Option[LocalDate]] = Form[Option[LocalDate]](
     //TODO error message

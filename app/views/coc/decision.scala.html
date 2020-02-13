@@ -37,9 +37,9 @@ mainConfig = views.helpers.MainConfig()) {
         <div class="form-group inline">
 
             @templates.input_radio_group(
-            decisionForm(decisionForm.DecisionChoice),
-            Seq((decisionForm.CheckMarriageAllowanceClaim, messages("pages.decision.radio.check")),
-            (decisionForm.StopMarriageAllowance, messages("pages.decision.radio.stop"))),
+            decisionForm(CheckClaimOrCancelDecisionForm.DecisionChoice),
+            Seq((CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim, messages("pages.decision.radio.check")),
+            (CheckClaimOrCancelDecisionForm.StopMarriageAllowance, messages("pages.decision.radio.stop"))),
             '_labelClass -> "block-label",
             '_labelAfter -> true,
             '_fieldsetAttributes -> "data-inline-error=update-marriage-criteria-js-error",

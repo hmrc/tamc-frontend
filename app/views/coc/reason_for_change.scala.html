@@ -18,7 +18,6 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
 @import forms.coc.MakeChangesDecisionForm
-@import utils.Constants.forms.coc.MakeChangesDecisionFormConstants
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
@@ -44,11 +43,11 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
       <div class="form-group">
         @templates.input_radio_group(
-          makeChangesDecisionForm(MakeChangesDecisionFormConstants.StopMAChoice),
-          Seq((MakeChangesDecisionFormConstants.Divorce, messages("pages.makeChanges.radio.divorce")),
-               (MakeChangesDecisionFormConstants.IncomeChanges, messages("pages.makeChanges.radio.incomeChanges")),
-               (MakeChangesDecisionFormConstants.NoLongerRequired, messages("pages.makeChanges.radio.noLongerRequired")),
-               (MakeChangesDecisionFormConstants.Bereavement, messages("pages.makeChanges.radio.bereavement"))
+          makeChangesDecisionForm(MakeChangesDecisionForm.StopMAChoice),
+          Seq((MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
+               (MakeChangesDecisionForm.IncomeChanges, messages("pages.makeChanges.radio.incomeChanges")),
+               (MakeChangesDecisionForm.NoLongerRequired, messages("pages.makeChanges.radio.noLongerRequired")),
+               (MakeChangesDecisionForm.Bereavement, messages("pages.makeChanges.radio.bereavement"))
           ),
           '_legend -> Html(messages("title.change.reason")),
           '_legendClass -> "visuallyhidden",

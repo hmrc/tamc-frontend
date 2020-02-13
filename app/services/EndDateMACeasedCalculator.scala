@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package utils.Constants.forms.coc
+package services
 
-trait DivorceSelectYearFormConstants {
+import org.joda.time.LocalDate
+import uk.gov.hmrc.time.TaxYear
+//TODO TESTS UP IN HERE
+object EndDateMACeasedCalculator {
 
-  val DateOfDivorce = "dateOfDivorce"
+  def calculateEndDate(): LocalDate = TaxYear.current.finishes
+
 }

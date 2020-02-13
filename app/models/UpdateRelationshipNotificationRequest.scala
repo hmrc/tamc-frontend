@@ -25,4 +25,4 @@ object UpdateRelationshipNotificationRequest {
   implicit val formats = Json.format[UpdateRelationshipNotificationRequest]
 }
 
-case class UpdateRelationshipNotificationRequest(full_name: String, email: EmailAddress, role: String, welsh: Boolean = false, isRetrospective: Boolean = false)
+case class UpdateRelationshipNotificationRequest(fullName: String, email: EmailAddress, role: String, welsh: Boolean = false, isRetrospective: Boolean = false)
