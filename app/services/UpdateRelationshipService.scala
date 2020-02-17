@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
-import utils.LanguageUtils
+import utils.{EndDateHelper, LanguageUtils}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +44,7 @@ object UpdateRelationshipService extends UpdateRelationshipService {
   override val cachingService = CachingService
 }
 
-trait UpdateRelationshipService {
+trait UpdateRelationshipService extends EndDateHelper {
 
   val marriageAllowanceConnector: MarriageAllowanceConnector
   val customAuditConnector: AuditConnector
@@ -193,13 +193,21 @@ trait UpdateRelationshipService {
       val name: Option[String] = relationshipRecord.loggedInUserInfo.flatMap(_.name.flatMap(_.fullName))
       val role: Role = relationshipRecord.role
 
+      // TODO need to cater for a missing email
       ConfirmationUpdateAnswers(name, divorceDate, email.getOrElse(""), role)
-      }
+    }
 
   }
 
+    def getCancelDates: (LocalDate, LocalDate) = (EndDateMACeasedCalculator.calculateEndDate, EndDateMACeasedCalculator.calculatePaEffectiveDate)
 
+    def getDatesForDivorce(role: Role, divorceDate: LocalDate): (LocalDate, LocalDate) = {
+      val marriageAllowanceEndDate = EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
+      val personalAllowanceEffectiveDate = EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
 
+      (marriageAllowanceEndDate, personalAllowanceEffectiveDate)
+
+    }
 
   def getUpdateRelationshipCacheDataForDateOfDivorce(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     for {

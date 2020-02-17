@@ -19,68 +19,43 @@ package viewModels
 import models.{ConfirmationUpdateAnswers, Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
-import play.twirl.api.Html
+import play.api.mvc.Call
+import services.EndDateDivorceCalculator
 import uk.gov.hmrc.time.TaxYear
 import utils.EndDateHelper
 
 //TODO TESTS UP IN HERE
-case class ConfirmCancelViewModel(table: Html, taxYearEndDate: (String, String))
+case class ConfirmCancelViewModel(taxYearEndDate: (String, String), rows: Seq[SummaryRow])
 
+case class SummaryRow(title: String, userAnswer: String, changeLink: Option[String] = None)
 
 object ConfirmCancelViewModel extends EndDateHelper {
 
   def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmCancelViewModel = {
 
+
+    //TODO Make sure that these populate as expected types
+    val nameRow: Option[SummaryRow] = model.fullName.map(SummaryRow(messages("pages.confirm.cancel.your-name"), _))
+    val divorceDate: Option[SummaryRow] = model.divorceDate.map { date =>
+      val formattedDate = transformDate(date)
+      SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url))
+    }
+    val email: Option[SummaryRow] = Some(SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url)))
+
+    val rows = List(nameRow, divorceDate, email).flatten
+
+
     val date = model.divorceDate
 
-    val bullets = bulletStatement(model.role, date)
 
-    ConfirmCancelViewModel(createTable(model.fullName.getOrElse(""), model.divorceDate, model.email), bullets)
+
+    val bullets = bulletStatement(model.role, date.getOrElse(LocalDate.now()))
+
+    ConfirmCancelViewModel(bullets, rows)
   }
 
-    def createTable(name: String, divorceDate: Option[LocalDate], email: String)(implicit messages: Messages): Html = {
-
-    if (divorceDate.isDefined) {
-
-      val date = transformDate(divorceDate.get)
-      //TODO move HTML into partial. Construct and place rows individually
-      Html(
-        s"""<table>
-           |  <tbody>
-           |    <tr>
-           |      <th scope="row" class="bold">${messages("pages.confirm.cancel.your-name")}</th>
-           |      <td>$name</td>
-           |    </tr>
-           |    <tr>
-           |      <th scope="row" class="bold">${messages("pages.divorce.title")}</th>
-           |      <td>$date</td>
-           |      <td><a href="divorce-enter-year" id="edit-divorcee" data-journey-click="marriage-allowance:button:edit_divorce">${messages("generic.change")}</a>
-           |    </tr>
-           |      <th scope="row" class="bold">${messages("pages.confirm.cancel.email")}</th>
-           |      <td>$email</td>
-           |      <td><a href="confirm-email" id="edit-email" data-journey-click="marriage-allowance:button:edit_email">${messages("generic.change")}</a>
-           |    </tr>
-           |  </tbody>
-           |</table>""".stripMargin)
-    } else {
-      Html(
-        s"""<table>
-           |  <tbody>
-           |    <tr>
-           |      <th scope="row" class="bold">${messages("pages.confirm.cancel.your-name")}</th>
-           |      <td>$name</td>
-           |    </tr>
-           |      <th scope="row" class="bold">${messages("pages.confirm.cancel.email")}</th>
-           |      <td>$email</td>
-           |      <td><a href="confirm-email" id="edit-email" data-journey-click="marriage-allowance:button:edit_email">${messages("generic.change")}</a>
-           |    </tr>
-           |  </tbody>
-           |</table>""".stripMargin)
-    }
-  }
-
-  def bulletStatement(role: Role,
-                       divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
+  //TODO CLEAN THIS UP!!!
+  def bulletStatement(role: Role, divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
 
     lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
     lazy val currentTaxYearStart: String =transformDate(currentTaxYear.starts)
@@ -92,19 +67,19 @@ object ConfirmCancelViewModel extends EndDateHelper {
 
     (role, isCurrentYearDivorced) match {
       case(Transferor, true) => {
-        (messages("pages.confirm.cancel.message1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
+        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role, divorceDate))),
           messages("pages.confirm.cancel.message2", currentTaxYearStart))
       }
       case(Transferor, false) => {
-        (messages("pages.confirm.cancel.message1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
+        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role, divorceDate))),
           messages("pages.confirm.cancel.message2", taxYearStart(divorceDate)))
       }
       case(Recipient, true) => {
-        (messages("pages.confirm.cancel.message1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
+        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role,  divorceDate))),
           messages("pages.confirm.cancel.message2", nextTaxYearStart))
       }
       case(Recipient, false) => {
-        (messages("pages.confirm.cancel.message1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
+        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role, divorceDate))),
           messages("pages.confirm.cancel.message2", currentTaxYearStart))
       }
     }

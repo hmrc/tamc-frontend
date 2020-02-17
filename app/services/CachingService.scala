@@ -165,21 +165,21 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD),
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
 
-  def getUpdateRelationshipCachedDataTemp(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] = {
-    fetch() map {
-      _ map {
-        cacheMap =>
-
-          val relationshipRecords = getRelationshipRecords
-
-          UpdateRelationshipCacheDataTemp(relationshipRecords,
-            UpdateRelationshipService.getEmailAddress,
-            cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION),
-            ca
-          )
-      }
-    }
-  }
+//  def getUpdateRelationshipCachedDataTemp(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] = {
+//    fetch() map {
+//      _ map {
+//        cacheMap =>
+//
+//          val relationshipRecords = getRelationshipRecords
+//
+//          UpdateRelationshipCacheDataTemp(relationshipRecords,
+//            UpdateRelationshipService.getEmailAddress,
+//            cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION),
+//            ca
+//          )
+//      }
+//    }
+//  }
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 

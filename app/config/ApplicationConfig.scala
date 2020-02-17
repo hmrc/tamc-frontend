@@ -85,6 +85,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
   val CACHE_EMAIL_ADDRESS = "EMAIL_ADDRESS"
+  val CACHE_MA_END_DATE = "MA_END_DATE"
+  val CACHE_PA_EFFECTIVE_DATE = "PA_EFFECTIVE_DATE"
 
   def actualTaxYear(taxYear: Int = 0): Int = if (taxYear == 0) currentTaxYear else taxYear
   def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)

@@ -20,4 +20,4 @@ import org.joda.time.LocalDate
 import play.api.mvc.Result
 
 
-case class ConfirmationUpdateAnswers(fullName: Option[String], divorceDate: Option[LocalDate], email: String, role: Role, endReason: String)
+case class ConfirmationUpdateAnswers(fullName: Option[String], divorceDate: Option[LocalDate], email: String, role: Role)

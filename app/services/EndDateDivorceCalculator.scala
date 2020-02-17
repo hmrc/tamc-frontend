@@ -34,4 +34,6 @@ object EndDateDivorceCalculator {
       case(Transferor, false) => TaxYear.taxYearFor(divorceDate).finishes
     }
   }
+
+  def calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate: LocalDate): LocalDate = TaxYear.taxYearFor(marriageAllowanceEndDate).next.starts
 }

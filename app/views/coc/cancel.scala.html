@@ -15,20 +15,21 @@
  *@
 
 @import play.twirl.api.Html
+@import org.joda.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 @import utils.LanguageUtils
 @import views.helpers.TextGenerators
 @import uk.gov.hmrc.time.TaxYear
 
-@()(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+@(marriageAllowanceEndDate: LocalDate, personalAllowanceEffectiveDate: LocalDate)(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@currentEndDate = @{
- TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))
+@maDate = @{
+ TextGenerators.ukDateTransformer(Some(marriageAllowanceEndDate), LanguageUtils.isWelsh(messages))
 }
 
-@nextStartDate = @{
- TextGenerators.ukDateTransformer(Some(TaxYear.current.next.starts), LanguageUtils.isWelsh(messages))
+@paDate = @{
+ TextGenerators.ukDateTransformer(Some(personalAllowanceEffectiveDate), LanguageUtils.isWelsh(messages))
 }
 
 @templates.tamc_main(
@@ -41,8 +42,8 @@ mainConfig = views.helpers.MainConfig()) {
   <h1 class="heading-xlarge" id="cancel-heading">@messages("pages.cancel.title")</h1>
  </header>
 
- <p>@messages("pages.cancel.paragraph1", currentEndDate)</p>
- <p>@messages("pages.cancel.paragraph2", nextStartDate)</p>
+ <p>@messages("pages.cancel.paragraph1", maDate)</p>
+ <p>@messages("pages.cancel.paragraph2", paDate)</p>
 
  <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
     id="confirmUpdate" class="button" role="button"

@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
+import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.ChangeRelationshipForm
@@ -187,7 +188,12 @@ class UpdateRelationshipController @Inject()(
   //TODO referor
   def cancel: Action[AnyContent] = authenticate.async {
     implicit request =>
-      Future.successful(Ok(views.html.coc.cancel()))
+
+      val (maEndDate, paEffectiveDate) = updateRelationshipService.getCancelDates
+      cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_MA_END_DATE, maEndDate).map {
+        _ =>
+        Ok(views.html.coc.cancel(maEndDate, paEffectiveDate))
+      }
   }
 
   //TODO referor
@@ -233,14 +239,15 @@ class UpdateRelationshipController @Inject()(
 
   def divorceEndExplanation: Action[AnyContent] = authenticate.async {
     implicit request =>
+      for {
+        (role, divorceDate) <- updateRelationshipService.getDivorceExplanationData
+        (marriageAllowanceEndDate, personalAllowanceEffectiveDate) = updateRelationshipService.getDatesForDivorce(role, divorceDate)
+        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_MA_END_DATE, marriageAllowanceEndDate)
+        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE, personalAllowanceEffectiveDate)
+      } yield {
+       val viewModel = DivorceEndExplanationViewModel(role, divorceDate, marriageAllowanceEndDate, personalAllowanceEffectiveDate)
 
-      updateRelationshipService.getDivorceExplanationData map {
-        case (role, divorceDate) =>
-          val viewModel = DivorceEndExplanationViewModel(role, divorceDate)
-          Ok(views.html.coc.divorce_end_explanation(viewModel))
-        //TODO error scenario, not sure if required
-        case _ =>
-          ???
+        Ok(views.html.coc.divorce_end_explanation(viewModel))
       }
   }
 
@@ -293,8 +300,8 @@ class UpdateRelationshipController @Inject()(
   def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       UpdateRelationshipService.getConfirmationUpdateAnswers(request.nino) map {
-        x =>
-        Ok(views.html.coc.confirm(ConfirmCancelViewModel(x)))
+        confirmationUpdateAnswers =>
+        Ok(views.html.coc.confirm(ConfirmCancelViewModel(confirmationUpdateAnswers)))
       }
   }
 

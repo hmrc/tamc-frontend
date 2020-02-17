@@ -16,11 +16,10 @@
 
 package viewModels
 
-import models.{Recipient, Role, Transferor}
+import models.{Recipient, Role}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
-import utils.{EndDateHelper, LanguageUtils}
-import views.helpers.TextGenerators
+import utils.EndDateHelper
 
 //TODO TESTS UP IN HERE
 
@@ -28,7 +27,7 @@ case class DivorceEndExplanationViewModel(divorceDate: String, taxYearStatus: St
 
 object DivorceEndExplanationViewModel extends EndDateHelper {
 
-  def apply(role: Role, divorceDate: LocalDate)(implicit messages: Messages): DivorceEndExplanationViewModel = {
+  def apply(role: Role, divorceDate: LocalDate, maEndDate: LocalDate, paEffectiveDate: LocalDate)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
     val divorceDateFormatted = transformDate(divorceDate)
     val isCurrentYearDivorced: Boolean = currentTaxYear.contains(divorceDate)
@@ -39,24 +38,25 @@ object DivorceEndExplanationViewModel extends EndDateHelper {
         messages("pages.divorce.explanation.previous.taxYear")
      }
 
-     val bullets = bulletStatements(role, isCurrentYearDivorced,  divorceDate)
+     val bullets = bulletStatements(role, isCurrentYearDivorced, maEndDate, paEffectiveDate)
 
     DivorceEndExplanationViewModel(divorceDateFormatted, taxYearStatus, bullets)
   }
 
   def bulletStatements(role: Role,
                        isCurrentYearDivorced: Boolean,
-                       divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
+                       maEndDate: LocalDate,
+                       paEffectiveDate: LocalDate)(implicit messages: Messages): (String, String) = {
 
 
 
     (role, isCurrentYearDivorced) match  {
       case(Recipient, true) => {
-        (messages("pages.divorce.explanation.recipient.current.bullet1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
-          messages("pages.divorce.explanation.recipient.current.bullet2", transformDate(nextTaxYearStart)))
+        (messages("pages.divorce.explanation.recipient.current.bullet1", transformDate(maEndDate)),
+          messages("pages.divorce.explanation.recipient.current.bullet2", transformDate(paEffectiveDate)))
       }
       case _ => {
-        (messages("pages.divorce.explanation.previous.bullet1", transformDate(calculateEndDate(role, "divorce", divorceDate))),
+        (messages("pages.divorce.explanation.previous.bullet1", transformDate(maEndDate)),
           messages("pages.divorce.explanation.previous.bullet2"))
       }
     }

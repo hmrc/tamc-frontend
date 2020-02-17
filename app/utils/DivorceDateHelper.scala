@@ -37,10 +37,12 @@ trait EndDateHelper {
   lazy val taxYearEndForGivenYear: LocalDate => LocalDate = divorceDate => TaxYear.taxYearFor(divorceDate).finishes
   lazy val taxYearStart: LocalDate => LocalDate= divorceDate => TaxYear.taxYearFor(divorceDate).next.starts
 
-  def calculateEndDate(role: Role, endReason: String, divorceDate: LocalDate): LocalDate = {
+  def calculateMaEndDate(role: Role, endReason: String, divorceDate: LocalDate): LocalDate = {
     if (endReason == "divorce") EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
-    else EndDateMACeasedCalculator.calculateEndDate()
+    else EndDateMACeasedCalculator.calculateEndDate
   }
+
+  def calculatePaEffectiveDate: LocalDate = ???
 
   def transformDate(date: LocalDate)(implicit messages: Messages): String = {
     TextGenerators.ukDateTransformer(Some(date), LanguageUtils.isWelsh(messages))

@@ -14,58 +14,20 @@
  * limitations under the License.
  *@
 
-@(data: models.UpdateRelationshipConfirmationModel, retroRejection: Boolean)(implicit messages: Messages)
+@import viewModels.SummaryRow
 
-@import models.EndReasonCode._
-@import play.twirl.api.Html
-@import views.helpers.TextGenerators
-@import utils.LanguageUtils
+@(rows: Seq[SummaryRow])(implicit messages: Messages)
 
 <table>
-    @retroRejection match {
-    case true => {
-    <tr>
-        @data.fullName.map[Option[String]](_.fullName).flatten.map {name =>
-        <td>@Html(Messages("change.status.confirm.field.your-name"))</td>
-        <td id="transferor-name">@name</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        }.getOrElse("")
-        <td>@Html(Messages("generic.email"))
-        <td id="email">@data.email</td>
-        <td><a href="confirm-email" id="edit-email">@Html(Messages("generic.change"))</a></td>
-    </tr>
-    }
-    case _ => {
-    <tr>
-        @data.fullName.map[Option[String]](_.fullName).flatten.map {name =>
-        <td>@Html(Messages("change.status.confirm.field.your-name"))</td>
-        <td id="transferor-name">@name</td>
-        <td>&nbsp;</td>
-    </tr>
-    <tr>
-        }.getOrElse("")
-        <td>@Html(Messages("generic.email"))
-        <td id="email">@data.email</td>
-        <td><a href="confirm-email" id="edit-email" data-journey-click="marriage-allowance:button:edit_email">@Html(Messages("generic.change"))</a>
-        </td>
-    </tr>
-    <tr>
-        <td>@Html(Messages("change.status.realtionship-end"))</td>
-        <td id="end-reason">@Html(Messages(s"change.status.reason-${data.endRelationshipReason.endReason}"))</td>
-        <td>&nbsp;</td>
-    </tr>
-    @if(data.endRelationshipReason.endReason == DIVORCE_CY || data.endRelationshipReason.endReason == DIVORCE_PY) {
-    <tr>
-        <td>@Html(Messages("change.status.divorce.h1"))</td>
-        <td id="divorce-date">@TextGenerators.ukDateTransformer(data.endRelationshipReason.dateOfDivorce,
-            LanguageUtils.isWelsh(messages))
-        </td>
-        <td><a href="divorce-select-year" id="edit-divorce" data-journey-click="marriage-allowance:button:edit_divorce">@Html(Messages("generic.change"))</a>
-        </td>
-    </tr>
-    }
-    }
-    }
+      <tbody>
+
+        @for(row <- rows) {
+            <tr>
+                <th scope="row" class="bold">@row.title</th>
+                <td>@row.userAnswer</td>
+                @row.changeLink.fold(Html("<td></td>"))(changeLink => Html(s"""<td><a href="$changeLink" id="edit-field">${messages("generic.change")}</a></td>"""))
+            </tr>
+        }
+
+      </tbody>
 </table>

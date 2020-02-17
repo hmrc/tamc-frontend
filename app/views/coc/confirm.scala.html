@@ -23,6 +23,7 @@
 @import utils.LanguageUtils
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.ConfirmCancelViewModel
+@import templates.coc._
 
 @(viewModel: ConfirmCancelViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -41,8 +42,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confi
     <h1 class="heading-xlarge">@messages("pages.confirm.cancel.heading")</h1>
 </header>
 
-@viewModel.table
-
+@confirmSummary(viewModel.rows)
 
 <p>@messages("pages.confirm.cancel.message")</p>
 
