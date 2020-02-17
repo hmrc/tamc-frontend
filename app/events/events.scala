@@ -16,7 +16,7 @@
 
 package events
 
-import models.{CacheData, UpdateRelationshipCacheData}
+import models.{CacheData, UpdateRelationshipCacheData, UpdateRelationshipCacheDataTemp}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -31,7 +31,7 @@ object CreateRelationshipSuccessEvent {
 }
 
 object UpdateRelationshipSuccessEvent {
-  def apply(cacheData: UpdateRelationshipCacheData)(implicit hc: HeaderCarrier) =
+  def apply(cacheData: UpdateRelationshipCacheDataTemp)(implicit hc: HeaderCarrier) =
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(

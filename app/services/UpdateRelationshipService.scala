@@ -143,12 +143,27 @@ trait UpdateRelationshipService extends EndDateHelper {
   def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
     cachingService.cacheValue[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
 
-  def updateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
-    doUpdateRelationship(transferorNino, LanguageUtils.isWelsh(messages)) recover {
-      case error =>
+  def updateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[Unit] = {
+
+
+
+
+
+    (for {
+      updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedDataTemp
+      updateRelationshipData = UpdateRelationshipRequestHolder(updateRelationshipCacheData)
+
+      postUpdateData <- sendUpdateRelationship(transferorNino, updateRelationshipCacheData, LanguageUtils.isWelsh(messages))
+      _ <- auditUpdateRelationship(postUpdateData)
+    } yield EmailAddress(postUpdateData.email)) recover {
+        case error =>
         handleAudit(UpdateRelationshipCacheFailureEvent(error))
         throw error
     }
+
+  }
+
+
 
   def getRelationship(sessionData: UpdateRelationshipCacheData): RelationshipRecord = {
     sessionData match {
@@ -187,7 +202,7 @@ trait UpdateRelationshipService extends EndDateHelper {
     for {
       email <- getEmailAddress
       divorceDate <- getDivorceDate
-      relationshipRecord <- retrieveRelationshipRecords(nino)
+      relationshipRecord <- getRelationshipRecords
     } yield {
 
       val name: Option[String] = relationshipRecord.loggedInUserInfo.flatMap(_.name.flatMap(_.fullName))
@@ -317,8 +332,8 @@ trait UpdateRelationshipService extends EndDateHelper {
 
 
   private def sendUpdateRelationship(transferorNino: Nino,
-                                     data: UpdateRelationshipCacheData,
-                                     isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
+                                     data: UpdateRelationshipCacheDataTemp,
+                                     isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheDataTemp] =
     marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, isWelsh)) map {
       httpResponse =>
         println("DO WE GET THIS FAR")
@@ -343,7 +358,7 @@ trait UpdateRelationshipService extends EndDateHelper {
       }
     }
 
-  private def auditUpdateRelationship(cacheData: UpdateRelationshipCacheData
+  private def auditUpdateRelationship(cacheData: UpdateRelationshipCacheDataTemp
                                      )(implicit hc: HeaderCarrier,
                                        ec: ExecutionContext): Future[Unit] = {
     handleAudit(UpdateRelationshipSuccessEvent(cacheData))
@@ -360,8 +375,8 @@ trait UpdateRelationshipService extends EndDateHelper {
       active,
       historic,
       Some(notification: NotificationRecord),
-      Some(_), _)) => println(s"\n\n\n\ncache = $cacheData\n\n\n\n"); Future.successful(cacheData.get)
-      case _ => println(s"\n\n\n\ncache = $cacheData\nactive = ${cacheData.map(_.activeRelationshipRecord.isDefined)}\nhistoric = ${cacheData.map(_.historicRelationships.isDefined)}\n\n"); throw CacheMissingUpdateRecord()
+      Some(_), _)) if active.isDefined || historic.isDefined => Future.successful(cacheData.get)
+      case _ => throw CacheMissingUpdateRecord()
     }
 
 

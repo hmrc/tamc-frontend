@@ -17,7 +17,6 @@
 package models
 
 import org.joda.time.LocalDate
-import uk.gov.hmrc.emailaddress.EmailAddress
 
 
 case class CacheData(
@@ -38,7 +37,29 @@ case class UpdateRelationshipCacheData(loggedInUserInfo: Option[LoggedInUserInfo
                                        relationshipUpdated: Option[Boolean] = None)
 
 case class UpdateRelationshipCacheDataTemp(relationshipRecords: RelationshipRecords,
-                                           email: Option[EmailAddress],
-                                           relationshipEndReasonRecord: Option[String],
-                                           marriageEndDate: Option[LocalDate],
-                                           relationshipUpdated: Option[Boolean] = None)
+                                          email: String,
+                                          endMaReason: String,
+                                          marriageEndDate: LocalDate,
+                                          relationshipUpdated: Boolean){
+
+}
+
+//TODO should this live in the cache service ???
+object UpdateRelationshipCacheDataTemp {
+
+  def apply(relationshipRecords: RelationshipRecords,
+            email: Option[String],
+            relationshipEndReasonRecord: Option[String],
+            marriageEndDate: Option[LocalDate],
+            relationshipUpdated: Option[Boolean]): UpdateRelationshipCacheDataTemp = {
+
+    (email, relationshipEndReasonRecord, marriageEndDate, relationshipUpdated) match {
+
+      case(Some(email), Some(endReason), Some(endDate), Some(updated)) => {
+        UpdateRelationshipCacheDataTemp(relationshipRecords, email, endReason, endDate, updated)
+      }
+      case(_) => ???
+    }
+  }
+
+}

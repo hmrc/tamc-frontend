@@ -19,7 +19,6 @@ package viewModels
 import models.{ConfirmationUpdateAnswers, Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
-import play.api.mvc.Call
 import services.EndDateDivorceCalculator
 import uk.gov.hmrc.time.TaxYear
 import utils.EndDateHelper

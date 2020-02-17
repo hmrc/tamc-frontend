@@ -156,7 +156,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     fetch() map (
       _ map (
         cacheMap =>
-          UpdateRelationshipCacheData(
+            UpdateRelationshipCacheData(
             loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD),
             roleRecord = cacheMap.getEntry[String](ApplicationConfig.CACHE_ROLE_RECORD),
             activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD),
@@ -165,21 +165,30 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD),
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
 
-//  def getUpdateRelationshipCachedDataTemp(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] = {
-//    fetch() map {
-//      _ map {
-//        cacheMap =>
-//
-//          val relationshipRecords = getRelationshipRecords
-//
-//          UpdateRelationshipCacheDataTemp(relationshipRecords,
-//            UpdateRelationshipService.getEmailAddress,
-//            cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION),
-//            ca
-//          )
-//      }
-//    }
-//  }
+
+    //TODO make this the main method
+    def getUpdateRelationshipCachedDataTemp(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheDataTemp] = {
+    fetch() map { optionalCacheMap =>
+
+      optionalCacheMap.fold(???){ cacheMap =>
+
+
+
+          val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
+          val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
+          val loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD)
+          val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+          val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
+          val endReason = cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+          val relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE)
+
+          val relationshipRecord = RelationshipRecords(activeRelationshipRecord, historicRelationships, loggedInUserInfo)
+
+          UpdateRelationshipCacheDataTemp(relationshipRecord, emailAddress, endReason, endDate, relationshipUpdated)
+
+      }
+    }
+  }
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
@@ -187,7 +196,8 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       case(Some(cacheMap)) => {
         val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
         val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
-        RelationshipRecords(activeRelationshipRecord, historicRelationships)
+        val loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD)
+        RelationshipRecords(activeRelationshipRecord, historicRelationships, loggedInUserInfo)
       }
         //TODO add test for this case
         //TODO error scenario

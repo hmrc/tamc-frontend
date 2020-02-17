@@ -41,11 +41,16 @@ object TextGenerators {
   }
 
   //TODO check welsh conversion is still working
-  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean, transformPattern: String = "d MMMM yyyy"): String =
-    isWelsh match {
+  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean, transformPattern: String = "d MMMM yyyy"): String = {
+    val formattedDate = isWelsh match {
       case false => date.fold("")(_.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK)))
       case true => welshConverted(date, transformPattern)
     }
+
+    nonBreakingSpace(formattedDate)
+  }
+
+  def nonBreakingSpace(text: String): String = text.replace(" ", "\u00A0")
 
   def formPossessive(noun: String, isWelsh: Boolean): String =
     isWelsh match {

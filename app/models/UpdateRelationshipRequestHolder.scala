@@ -17,9 +17,21 @@
 package models
 
 import play.api.libs.json.Json
+import services.TimeService
 
 object UpdateRelationshipRequestHolder {
   implicit val formats = Json.format[UpdateRelationshipRequestHolder]
 }
 
 case class UpdateRelationshipRequestHolder(request: UpdateRelationshipRequest, notification: UpdateRelationshipNotificationRequest)
+
+object UpdateRelationshipRequestHolder {
+
+  def apply(cacheData: UpdateRelationshipCacheDataTemp): UpdateRelationshipRequestHolder = {
+
+    //TODO Check that the date format is what is expected. i.e is it right to stringify a LocalDate and set it down?
+    val relationshipInformation = RelationshipInformation(???, cacheData.endMaReason, cacheData.marriageEndDate.toString())
+    val updateRelationshipRequest = UpdateRelationshipRequest(???, ???, relationshipInformation)
+
+  }
+}
