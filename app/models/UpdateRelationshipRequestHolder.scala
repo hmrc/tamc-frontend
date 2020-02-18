@@ -19,19 +19,31 @@ package models
 import play.api.libs.json.Json
 import services.TimeService
 
-object UpdateRelationshipRequestHolder {
-  implicit val formats = Json.format[UpdateRelationshipRequestHolder]
-}
-
 case class UpdateRelationshipRequestHolder(request: UpdateRelationshipRequest, notification: UpdateRelationshipNotificationRequest)
 
 object UpdateRelationshipRequestHolder {
 
-  def apply(cacheData: UpdateRelationshipCacheDataTemp): UpdateRelationshipRequestHolder = {
+  implicit val formats = Json.format[UpdateRelationshipRequestHolder]
+
+  def apply(cacheData: UpdateRelationshipCacheDataTemp, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
 
     //TODO Check that the date format is what is expected. i.e is it right to stringify a LocalDate and set it down?
     val relationshipInformation = RelationshipInformation(???, cacheData.endMaReason, cacheData.marriageEndDate.toString())
-    val updateRelationshipRequest = UpdateRelationshipRequest(???, ???, relationshipInformation)
+
+    //TODO the timestamp may always be None. The logic does not look correct inside either
+    val participant1 = cacheData.relationshipRecords.recipientInformation(cacheData.endMaReason, ???)
+
+    //TODO object to calculate
+    val participate2 = cacheData.relationshipRecords.transferorInformation(cacheData.endMaReason, ???)
+
+
+    val updateRelationshipRequest = UpdateRelationshipRequest(participant1, participate2, relationshipInformation)
+
+
+    //TODO is the unknown correctm is isWelsh required???
+    val emailNotificationData = UpdateRelationshipNotificationRequest(cacheData.email, cacheData.relationshipRecords, isWelsh)
+
+    UpdateRelationshipRequestHolder(updateRelationshipRequest, emailNotificationData)
 
   }
 }

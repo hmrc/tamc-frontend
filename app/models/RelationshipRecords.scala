@@ -16,6 +16,7 @@
 
 package models
 
+//TODO need to update this domain model
 case class RelationshipRecords(activeRelationship: Option[RelationshipRecord],
                                historicRelationships: Option[Seq[RelationshipRecord]],
                                loggedInUserInfo: Option[LoggedInUserInfo] = None) {
@@ -40,6 +41,45 @@ case class RelationshipRecords(activeRelationship: Option[RelationshipRecord],
       case _ => throw new RuntimeException("IDK?!")
     }
   }
+
+  private def getRelationship(currentMAEndReason: String, timeStamp: String): RelationshipRecord = {
+
+    //TODO lazy val or curried approach
+
+    if(currentMAEndReason != "noLongerRequired"){
+      activeRelationship.get
+    } else {
+
+      //TODO .get needs to be removed and a better domain model put in place
+      historicRelationships.fold(activeRelationship.get){ seqHistoricRelationships =>
+
+        val retrospectiveRelationships = seqHistoricRelationships.filter { relationRecord =>
+          relationRecord.creationTimestamp == timeStamp && relationRecord.participant == Recipient.asString()
+        }
+
+        if(retrospectiveRelationships.nonEmpty) retrospectiveRelationships.head else activeRelationship.get
+      }
+    }
+  }
+
+  def recipientInformation(currentMAEndReason: String, timeStamp: String) = {
+    role match {
+      case Transferor => RecipientInformation(getRelationship(currentMAEndReason, timeStamp).otherParticipantInstanceIdentifier, getRelationship(currentMAEndReason, timeStamp).otherParticipantUpdateTimestamp)
+      case Recipient => RecipientInformation(loggedInUserInfo.get.cid.toString(), loggedInUserInfo.get.timestamp)
+    }
+  }
+
+  //TODO update domain to remove .get
+  def transferorInformation(currentMAEndReason: String, timeStamp: String) = {
+    role match {
+      case Transferor => TransferorInformation(loggedInUserInfo.get.timestamp)
+      case Recipient => TransferorInformation(getRelationship(currentMAEndReason, timeStamp).otherParticipantUpdateTimestamp)
+    }
+  }
+
+
+  //TODO end reason needs to change
+
 }
 
 object RelationshipRecords {

@@ -143,27 +143,16 @@ trait UpdateRelationshipService extends EndDateHelper {
   def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
     cachingService.cacheValue[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
 
-  def updateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[Unit] = {
+  def updateRelationship(nino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[Unit] = {
 
-
-
-
-
-    (for {
+    for {
+      //TODO would be nice to get a better cache method
       updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedDataTemp
-      updateRelationshipData = UpdateRelationshipRequestHolder(updateRelationshipCacheData)
-
-      postUpdateData <- sendUpdateRelationship(transferorNino, updateRelationshipCacheData, LanguageUtils.isWelsh(messages))
+      updateRelationshipData = UpdateRelationshipRequestHolder(updateRelationshipCacheData, LanguageUtils.isWelsh(messages))
+      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipCacheData, LanguageUtils.isWelsh(messages))
       _ <- auditUpdateRelationship(postUpdateData)
-    } yield EmailAddress(postUpdateData.email)) recover {
-        case error =>
-        handleAudit(UpdateRelationshipCacheFailureEvent(error))
-        throw error
-    }
-
+    } yield Future.successful(Unit)
   }
-
-
 
   def getRelationship(sessionData: UpdateRelationshipCacheData): RelationshipRecord = {
     sessionData match {
@@ -198,7 +187,7 @@ trait UpdateRelationshipService extends EndDateHelper {
 
 
   //TODO service layer should know what to pass back
-  def getConfirmationUpdateAnswers(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
+  def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
     for {
       email <- getEmailAddress
       divorceDate <- getDivorceDate
@@ -267,18 +256,6 @@ trait UpdateRelationshipService extends EndDateHelper {
     LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd"))
 
 
-  private def doUpdateRelationship(transferorNino: Nino, isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
-    for {
-      updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
-      validated <- validateupdateRelationshipCompleteCache(updateRelationshipCacheData)
-      postUpdateData <- sendUpdateRelationship(transferorNino, validated, isWelsh)
-      _ <- auditUpdateRelationship(postUpdateData)
-    } yield validated.notification.get
-
-  private def updateRelationship(nino: Nino, isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
-???
-  }
-
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
@@ -292,61 +269,64 @@ trait UpdateRelationshipService extends EndDateHelper {
   }
 
   private def transformUpdateData(sessionData: UpdateRelationshipCacheData, isWelsh: Boolean)(implicit hc:HeaderCarrier, ec: ExecutionContext): UpdateRelationshipRequestHolder = {
-    val loggedInUser = sessionData.loggedInUserInfo.get
-    val relationshipRecord = sessionData.relationshipEndReasonRecord.get
-    val endReason = getEndReasonCode(relationshipRecord)
+//    val loggedInUser = sessionData.loggedInUserInfo.get
+//    val relationshipRecord = sessionData.relationshipEndReasonRecord.get
+//    val endReason = getEndReasonCode(relationshipRecord)
+//
+//    val selectedRelationship = getRelationship(sessionData)
+//    val role = selectedRelationship.participant
+//    val relationCreationTimestamp = selectedRelationship.creationTimestamp
+//    val effectiveDate = getEndDate(relationshipRecord, selectedRelationship)
+//    val endDate = effectiveDate.toString("yyyyMMdd")
 
-    val selectedRelationship = getRelationship(sessionData)
-    val role = selectedRelationship.participant
-    val relationCreationTimestamp = selectedRelationship.creationTimestamp
-    val effectiveDate = getEndDate(relationshipRecord, selectedRelationship)
-    val endDate = effectiveDate.toString("yyyyMMdd")
+//    val isRetrospective = relationshipRecord.endReason match {
+//      case EndReasonCode.REJECT =>
+//        selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty &&
+//          !selectedRelationship.participant1EndDate.get.equals("") && (effectiveDate.getYear != TimeService.getCurrentTaxYear)
+//      case _ => false
+//    }
 
-    val isRetrospective = relationshipRecord.endReason match {
-      case EndReasonCode.REJECT =>
-        selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty &&
-          !selectedRelationship.participant1EndDate.get.equals("") && (effectiveDate.getYear != TimeService.getCurrentTaxYear)
-      case _ => false
-    }
+//    val participants = role match {
+//      case RoleOld.TRANSFEROR =>
+//        (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier,
+//          updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
+//          TransferorInformation(updateTimestamp = loggedInUser.timestamp))
+//      case RoleOld.RECIPIENT =>
+//        (RecipientInformation(instanceIdentifier = loggedInUser.cid.toString(), updateTimestamp = loggedInUser.timestamp),
+//          TransferorInformation(updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp))
+//    }
 
-    val participants = role match {
-      case RoleOld.TRANSFEROR =>
-        (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier,
-          updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
-          TransferorInformation(updateTimestamp = loggedInUser.timestamp))
-      case RoleOld.RECIPIENT =>
-        (RecipientInformation(instanceIdentifier = loggedInUser.cid.toString(), updateTimestamp = loggedInUser.timestamp),
-          TransferorInformation(updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp))
-    }
+//    val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
+//    val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participants._1, participant2 = participants._2, relationship = relationship)
+////    val sendNotificationData = UpdateRelationshipNotificationRequest(
+////      fullName = "UNKNOWN",
+////      email = sessionData.notification.get.transferor_email,
+////      role = role,
+////      welsh = isWelsh,
+////      isRetrospective = isRetrospective)
+//    UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
 
-    val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
-    val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participants._1, participant2 = participants._2, relationship = relationship)
-    val sendNotificationData = UpdateRelationshipNotificationRequest(
-      fullName = "UNKNOWN",
-      email = sessionData.notification.get.transferor_email,
-      role = role,
-      welsh = isWelsh,
-      isRetrospective = isRetrospective)
-    UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
+  ???
   }
 
 
   private def sendUpdateRelationship(transferorNino: Nino,
                                      data: UpdateRelationshipCacheDataTemp,
                                      isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheDataTemp] =
-    marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, isWelsh)) map {
-      httpResponse =>
-        println("DO WE GET THIS FAR")
-        Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
-          case UpdateRelationshipResponse(ResponseStatus("OK")) => data
-          case UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)) => throw CannotUpdateRelationship()
-          case UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)) => throw RecipientNotFound()
-        }
-    } recover {
-      case error =>
-        handleAudit(UpdateRelationshipFailureEvent(data, error))
-        throw error
-    }
+//    marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, isWelsh)) map {
+//      httpResponse =>
+//        println("DO WE GET THIS FAR")
+//        Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
+//          case UpdateRelationshipResponse(ResponseStatus("OK")) => data
+//          case UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)) => throw CannotUpdateRelationship()
+//          case UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)) => throw RecipientNotFound()
+//        }
+//    } recover {
+//      case error =>
+//        handleAudit(UpdateRelationshipFailureEvent(data, error))
+//        throw error
+//    }
+  ???
 
   private def validateUpdateRelationshipFinishedData(cacheData: Option[UpdateRelationshipCacheData]
                                                     )(implicit hc: HeaderCarrier,

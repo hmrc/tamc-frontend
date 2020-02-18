@@ -35,6 +35,7 @@ case class RelationshipRecord(participant: String,
     case _ => false
   }
 
+
   def overlappingTaxYears: Set[Int] = {
     val timeService = TimeService
 

@@ -50,8 +50,26 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
 
   def marriageAllowanceConnector: MarriageAllowanceConnector
 
+  //TODO could this return Unit
   def cacheValue[T](key: String, value:T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
     cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException("mandatory value missing from cache")))
+  }
+
+  //TODO types for the left hand side
+  def mandatoryValues[T](keys: Seq[String])(implicit reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[Either[String , Seq[T]]] = {
+    for {
+      cache <- fetch()
+    } yield {
+      val cacheValues = cache.fold(???){ cacheMap =>
+        keys.map(cacheMap.getEntry[T](_))
+      }.flatten
+
+      if(cacheValues.size == keys.size){
+        Right(cacheValues)
+      } else {
+        Left(s"manadatory key values missing from the cache ${keys.intersect(cacheValues).mkString(",")}")
+      }
+    }
   }
 
   def saveTransferorRecord(transferorRecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
@@ -149,9 +167,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       }
     }
 
-
-
-
   def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     fetch() map (
       _ map (
@@ -171,8 +186,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     fetch() map { optionalCacheMap =>
 
       optionalCacheMap.fold(???){ cacheMap =>
-
-
 
           val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
           val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)

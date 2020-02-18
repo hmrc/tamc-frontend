@@ -299,7 +299,7 @@ class UpdateRelationshipController @Inject()(
 
   def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
-      UpdateRelationshipService.getConfirmationUpdateAnswers(request.nino) map {
+      UpdateRelationshipService.getConfirmationUpdateAnswers map {
         confirmationUpdateAnswers =>
         Ok(views.html.coc.confirm(ConfirmCancelViewModel(confirmationUpdateAnswers)))
       }
