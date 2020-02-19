@@ -18,10 +18,8 @@ package utils
 
 import models.Role
 import org.joda.time.LocalDate
-import play.api.i18n.Messages
 import services.{EndDateDivorceCalculator, EndDateMACeasedCalculator}
 import uk.gov.hmrc.time.TaxYear
-import views.helpers.TextGenerators
 
 
 //TODO TESTS UP IN HERE
@@ -37,15 +35,13 @@ trait EndDateHelper {
   lazy val taxYearEndForGivenYear: LocalDate => LocalDate = divorceDate => TaxYear.taxYearFor(divorceDate).finishes
   lazy val taxYearStart: LocalDate => LocalDate= divorceDate => TaxYear.taxYearFor(divorceDate).next.starts
 
-  def calculateMaEndDate(role: Role, endReason: String, divorceDate: LocalDate): LocalDate = {
-    if (endReason == "divorce") EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
-    else EndDateMACeasedCalculator.calculateEndDate
+  def calculateMaEndDate(role: Role, endReason: String, divorceDate: Option[LocalDate] = None): LocalDate = {
+    (endReason, divorceDate) match {
+      case ("divorce", Some(date)) => EndDateDivorceCalculator.calculateEndDate(role, date)
+      case _ => EndDateMACeasedCalculator.calculateEndDate
+    }
   }
 
-  def calculatePaEffectiveDate: LocalDate = ???
-
-  def transformDate(date: LocalDate)(implicit messages: Messages): String = {
-    TextGenerators.ukDateTransformer(Some(date), LanguageUtils.isWelsh(messages))
-  }
+  def calculatePaEffectiveDate: LocalDate
 
 }

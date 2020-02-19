@@ -47,8 +47,8 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confi
 <p>@messages("pages.confirm.cancel.message")</p>
 
 <ul class="bullets">
- <li>@{viewModel.taxYearEndDate._1}</li>
- <li>@{viewModel.taxYearEndDate._2}</li>
+ <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
+ <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
 </ul>
 
 

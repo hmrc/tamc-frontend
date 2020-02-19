@@ -37,48 +37,27 @@ case class RelationshipRecords(activeRelationship: Option[RelationshipRecord],
       case (Some(RelationshipRecord("Recipient", _, _, _, _, _, _)), _) => Recipient
       case (_, Some(Seq(RelationshipRecord("Transferor", _, _, _, _, _, _), _*))) => Transferor
       case (_, Some(Seq(RelationshipRecord("Recipient", _, _, _, _, _, _), _*))) => Recipient
-      //TODO to test properly??
+      //TODO to test properly?? And sort this exception out
       case _ => throw new RuntimeException("IDK?!")
     }
   }
 
-  private def getRelationship(currentMAEndReason: String, timeStamp: String): RelationshipRecord = {
 
-    //TODO lazy val or curried approach
-
-    if(currentMAEndReason != "noLongerRequired"){
-      activeRelationship.get
-    } else {
-
-      //TODO .get needs to be removed and a better domain model put in place
-      historicRelationships.fold(activeRelationship.get){ seqHistoricRelationships =>
-
-        val retrospectiveRelationships = seqHistoricRelationships.filter { relationRecord =>
-          relationRecord.creationTimestamp == timeStamp && relationRecord.participant == Recipient.asString()
-        }
-
-        if(retrospectiveRelationships.nonEmpty) retrospectiveRelationships.head else activeRelationship.get
-      }
-    }
-  }
-
-  def recipientInformation(currentMAEndReason: String, timeStamp: String) = {
+  //TODO Get rid of the .get... ActiveRelationship should NOT be optional
+  def recipientInformation: RecipientInformation = {
     role match {
-      case Transferor => RecipientInformation(getRelationship(currentMAEndReason, timeStamp).otherParticipantInstanceIdentifier, getRelationship(currentMAEndReason, timeStamp).otherParticipantUpdateTimestamp)
+      case Transferor => RecipientInformation(activeRelationship.get.otherParticipantInstanceIdentifier, activeRelationship.get.otherParticipantUpdateTimestamp)
       case Recipient => RecipientInformation(loggedInUserInfo.get.cid.toString(), loggedInUserInfo.get.timestamp)
     }
   }
 
   //TODO update domain to remove .get
-  def transferorInformation(currentMAEndReason: String, timeStamp: String) = {
+  def transferorInformation: TransferorInformation = {
     role match {
       case Transferor => TransferorInformation(loggedInUserInfo.get.timestamp)
-      case Recipient => TransferorInformation(getRelationship(currentMAEndReason, timeStamp).otherParticipantUpdateTimestamp)
+      case Recipient => TransferorInformation(activeRelationship.get.otherParticipantUpdateTimestamp)
     }
   }
-
-
-  //TODO end reason needs to change
 
 }
 

@@ -22,68 +22,34 @@ import play.api.i18n.Messages
 import services.EndDateDivorceCalculator
 import uk.gov.hmrc.time.TaxYear
 import utils.EndDateHelper
+import views.helpers.TextGenerator
 
 //TODO TESTS UP IN HERE
-case class ConfirmCancelViewModel(taxYearEndDate: (String, String), rows: Seq[SummaryRow])
+case class ConfirmCancelViewModel(endDate: String, effectiveDate: String, rows: Seq[SummaryRow])
 
 case class SummaryRow(title: String, userAnswer: String, changeLink: Option[String] = None)
 
-object ConfirmCancelViewModel extends EndDateHelper {
+object ConfirmCancelViewModel  {
 
   def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmCancelViewModel = {
 
 
     //TODO Make sure that these populate as expected types
-    val nameRow: Option[SummaryRow] = model.fullName.map(SummaryRow(messages("pages.confirm.cancel.your-name"), _))
+    val nameRow: SummaryRow = model.fullName.map(SummaryRow(messages("pages.confirm.cancel.your-name"), _))
     val divorceDate: Option[SummaryRow] = model.divorceDate.map { date =>
-      val formattedDate = transformDate(date)
+      val formattedDate = TextGenerator(messages).ukDateTransformer(date)
       SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url))
     }
-    val email: Option[SummaryRow] = Some(SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url)))
+    val email: SummaryRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url))
 
-    val rows = List(nameRow, divorceDate, email).flatten
+    val rows = List(nameRow, email)
+
+    val endDate = TextGenerator(messages).ukDateTransformer(model.maEndDate)
+    val effectiveDate = TextGenerator(messages).ukDateTransformer(model.paEffectiveDate)
 
 
-    val date = model.divorceDate
-
-
-
-    val bullets = bulletStatement(model.role, date.getOrElse(LocalDate.now()))
-
-    ConfirmCancelViewModel(bullets, rows)
+    ConfirmCancelViewModel(endDate, effectiveDate, rows)
   }
-
-  //TODO CLEAN THIS UP!!!
-  def bulletStatement(role: Role, divorceDate: LocalDate)(implicit messages: Messages): (String, String) = {
-
-    lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
-    lazy val currentTaxYearStart: String =transformDate(currentTaxYear.starts)
-    lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)
-    lazy val taxYearEndForGivenYear: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).finishes)
-    lazy val taxYearStart: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).next.starts)
-    val isCurrentYearDivorced = currentTaxYear.contains(divorceDate)
-
-
-    (role, isCurrentYearDivorced) match {
-      case(Transferor, true) => {
-        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role, divorceDate))),
-          messages("pages.confirm.cancel.message2", currentTaxYearStart))
-      }
-      case(Transferor, false) => {
-        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role, divorceDate))),
-          messages("pages.confirm.cancel.message2", taxYearStart(divorceDate)))
-      }
-      case(Recipient, true) => {
-        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role,  divorceDate))),
-          messages("pages.confirm.cancel.message2", nextTaxYearStart))
-      }
-      case(Recipient, false) => {
-        (messages("pages.confirm.cancel.message1", transformDate(EndDateDivorceCalculator.calculateEndDate(role, divorceDate))),
-          messages("pages.confirm.cancel.message2", currentTaxYearStart))
-      }
-    }
-
-    }
 
 }
 

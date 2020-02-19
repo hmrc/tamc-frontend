@@ -17,7 +17,6 @@
 package models
 
 import play.api.libs.json.Json
-import services.TimeService
 
 case class UpdateRelationshipRequestHolder(request: UpdateRelationshipRequest, notification: UpdateRelationshipNotificationRequest)
 
@@ -31,16 +30,14 @@ object UpdateRelationshipRequestHolder {
     val relationshipInformation = RelationshipInformation(cacheData.relationshipRecords.activeRelationship, cacheData.endMaReason, cacheData.marriageEndDate)
 
     //TODO the timestamp may always be None. The logic does not look correct inside either
-    val participant1 = cacheData.relationshipRecords.recipientInformation(cacheData.endMaReason, ???)
+    val recipient = cacheData.relationshipRecords.recipientInformation
 
-    //TODO object to calculate
-    val participate2 = cacheData.relationshipRecords.transferorInformation(cacheData.endMaReason, ???)
-
-
-    val updateRelationshipRequest = UpdateRelationshipRequest(participant1, participate2, relationshipInformation)
+    val transferor = cacheData.relationshipRecords.transferorInformation
 
 
-    //TODO is the unknown correctm is isWelsh required???
+    val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInformation)
+
+
     val emailNotificationData = UpdateRelationshipNotificationRequest(cacheData.email, cacheData.relationshipRecords, isWelsh)
 
     UpdateRelationshipRequestHolder(updateRelationshipRequest, emailNotificationData)

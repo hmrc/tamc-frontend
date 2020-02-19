@@ -203,6 +203,22 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     }
   }
 
+  def getConfirmationAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswersCacheData] = {
+    fetch () map {
+      optionalCacheMap =>
+        optionalCacheMap.fold(???) {
+          cacheMap =>
+
+            val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+            val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
+            val loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD)
+            val effectiveDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE)
+
+            ConfirmationUpdateAnswers()
+      }
+    }
+  }
+
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
     fetch() map {

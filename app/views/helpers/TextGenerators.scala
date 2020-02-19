@@ -21,12 +21,22 @@ import java.util.Locale
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.data.Form
+import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
-import views.helpers.WelshDateConverter._
+import utils.LanguageUtils.isWelsh
 
-object TextGenerators {
+object TextGenerator {
 
-  def separator(isWelsh: Boolean): String = if (!isWelsh) " to " else " i "
+  def apply(implicit messages: Messages): TextGenerators = {
+    if(isWelsh(messages)) WelshTextGenerator else EnglishTextGenerator
+  }
+}
+
+sealed trait TextGenerators {
+
+
+  def separator: String
+  def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String
 
   def formPageDataJourney(prefix: String, form: Form[_]): String =
     form.hasErrors match {
@@ -40,42 +50,73 @@ object TextGenerators {
     LocalDate.parse(date, DateTimeFormat.forPattern("yyyyMMdd"))
   }
 
-  //TODO check welsh conversion is still working
-  def ukDateTransformer(date: Option[LocalDate], isWelsh: Boolean, transformPattern: String = "d MMMM yyyy"): String = {
-    val formattedDate = isWelsh match {
-      case false => date.fold("")(_.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK)))
-      case true => welshConverted(date, transformPattern)
-    }
+  def nonBreakingSpace(text: String): String = text.replace(" ", "\u00A0")
+
+  def taxDateInterval(taxYear: Int)(implicit messages: Messages): String = {
+    ukDateTransformer(TaxYear(taxYear).starts) + separator + ukDateTransformer(TaxYear(taxYear).finishes)
+  }
+
+  def taxDateIntervalMultiYear(taxYear: Int, taxEndYear: Int): String = {
+    taxYear + separator + (taxEndYear + 1)
+  }
+
+  def taxDateIntervalShort(taxYear: Int): String = {
+    taxYear + separator + (taxYear + 1)
+  }
+
+  def taxDateIntervalGenerator(taxYear: String, taxAnotherYear: Option[String] = None, presentText: String): String = {
+    taxAnotherYear.fold(
+      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + presentText
+    )(syear =>
+      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + separator + TaxYear.taxYearFor(dateTransformer(syear)).finishYear
+    )
+  }
+}
+
+object EnglishTextGenerator extends TextGenerators {
+
+  override def separator: String = " to "
+
+  override def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
+   val formattedDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
 
     nonBreakingSpace(formattedDate)
   }
 
-  def nonBreakingSpace(text: String): String = text.replace(" ", "\u00A0")
+  val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " to Present")
+}
 
-  def formPossessive(noun: String, isWelsh: Boolean): String =
-    isWelsh match {
-      case false => s"${noun}’s"
-      case true => noun
-    }
+object WelshTextGenerator extends TextGenerators {
 
-  def taxDateInterval(taxYear: Int, isWelsh: Boolean): String = {
-    ukDateTransformer(Some(TaxYear(taxYear).starts), isWelsh) + separator(isWelsh) + ukDateTransformer(Some(TaxYear(taxYear).finishes), isWelsh)
+  override def separator: String = " i "
+
+  override def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
+    nonBreakingSpace(welshConverted(date, transformPattern))
   }
 
-  def taxDateIntervalMultiYear(taxYear: Int, taxEndYear: Int, isWelsh: Boolean = false): String = {
-    taxYear + separator(isWelsh) + (taxEndYear + 1)
+  val welshMonths = Map(
+    "January" -> "Ionawr",
+    "February" -> "Chwefror",
+    "March" -> "Mawrth",
+    "April" -> "Ebrill",
+    "May" -> "Mai",
+    "June" -> "Mehefin",
+    "July" -> "Gorffennaf",
+    "August" -> "Awst",
+    "September" -> "Medi",
+    "October" -> "Hydref",
+    "November" -> "Tachwedd",
+    "December" -> "Rhagfyr"
+  )
+
+  def welshConverted(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
+    val fetchMonthName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
+    val month = fetchMonthName(date)
+    val enDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
+
+    date.toString.replace(month, welshMonths.get(month).get)
   }
 
-  def taxDateIntervalShort(taxYear: Int, isWelsh: Boolean = false): String = {
-    taxYear + separator(isWelsh) + (taxYear + 1)
-  }
+  val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " i’r Presennol")
 
-  def taxDateIntervalString(taxYear: String, taxAnotherYear: Option[String] = None, isWelsh: Boolean = false): String = {
-    val presentText = if (isWelsh) " i’r Presennol" else " to Present"
-    taxAnotherYear.fold(
-      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + presentText
-    )(syear =>
-      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + separator(isWelsh) + TaxYear.taxYearFor(dateTransformer(syear)).finishYear
-    )
-  }
 }
