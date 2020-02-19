@@ -16,10 +16,20 @@
 
 package models
 
+import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
 object RelationshipInformation {
   implicit val formats = Json.format[RelationshipInformation]
+
+  def apply(activeRelationship: Option[RelationshipRecord], relationshipEndReason: String, endDate: LocalDate):  RelationshipInformation = {
+
+    //TODO remove the need for an optional active record
+    val creationTimeStamp = activeRelationship.fold(throw new RuntimeException("No active record"))(_.creationTimestamp)
+    val endDateFormatted = endDate.toString("yyyyMMdd")
+    RelationshipInformation(creationTimeStamp, relationshipEndReason, endDateFormatted)
+
+  }
 }
 
 case class RelationshipInformation(creationTimestamp: String, relationshipEndReason: String, actualEndDate: String)

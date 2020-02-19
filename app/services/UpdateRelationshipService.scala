@@ -269,42 +269,42 @@ trait UpdateRelationshipService extends EndDateHelper {
   }
 
   private def transformUpdateData(sessionData: UpdateRelationshipCacheData, isWelsh: Boolean)(implicit hc:HeaderCarrier, ec: ExecutionContext): UpdateRelationshipRequestHolder = {
-//    val loggedInUser = sessionData.loggedInUserInfo.get
-//    val relationshipRecord = sessionData.relationshipEndReasonRecord.get
-//    val endReason = getEndReasonCode(relationshipRecord)
-//
-//    val selectedRelationship = getRelationship(sessionData)
-//    val role = selectedRelationship.participant
-//    val relationCreationTimestamp = selectedRelationship.creationTimestamp
-//    val effectiveDate = getEndDate(relationshipRecord, selectedRelationship)
-//    val endDate = effectiveDate.toString("yyyyMMdd")
+    val loggedInUser = sessionData.loggedInUserInfo.get
+    val relationshipRecord = sessionData.relationshipEndReasonRecord.get
+    val endReason = getEndReasonCode(relationshipRecord)
 
-//    val isRetrospective = relationshipRecord.endReason match {
-//      case EndReasonCode.REJECT =>
-//        selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty &&
-//          !selectedRelationship.participant1EndDate.get.equals("") && (effectiveDate.getYear != TimeService.getCurrentTaxYear)
-//      case _ => false
-//    }
+    val selectedRelationship = getRelationship(sessionData)
+    val role = selectedRelationship.participant
+    val relationCreationTimestamp = selectedRelationship.creationTimestamp
+    val effectiveDate = getEndDate(relationshipRecord, selectedRelationship)
+    val endDate = effectiveDate.toString("yyyyMMdd")
 
-//    val participants = role match {
-//      case RoleOld.TRANSFEROR =>
-//        (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier,
-//          updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
-//          TransferorInformation(updateTimestamp = loggedInUser.timestamp))
-//      case RoleOld.RECIPIENT =>
-//        (RecipientInformation(instanceIdentifier = loggedInUser.cid.toString(), updateTimestamp = loggedInUser.timestamp),
-//          TransferorInformation(updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp))
-//    }
+    val isRetrospective = relationshipRecord.endReason match {
+      case EndReasonCode.REJECT =>
+        selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty &&
+          !selectedRelationship.participant1EndDate.get.equals("") && (effectiveDate.getYear != TimeService.getCurrentTaxYear)
+      case _ => false
+    }
 
-//    val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
-//    val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participants._1, participant2 = participants._2, relationship = relationship)
-////    val sendNotificationData = UpdateRelationshipNotificationRequest(
-////      fullName = "UNKNOWN",
-////      email = sessionData.notification.get.transferor_email,
-////      role = role,
-////      welsh = isWelsh,
-////      isRetrospective = isRetrospective)
-//    UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
+    val participants = role match {
+      case RoleOld.TRANSFEROR =>
+        (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier,
+          updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
+          TransferorInformation(updateTimestamp = loggedInUser.timestamp))
+      case RoleOld.RECIPIENT =>
+        (RecipientInformation(instanceIdentifier = loggedInUser.cid.toString(), updateTimestamp = loggedInUser.timestamp),
+          TransferorInformation(updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp))
+    }
+
+    val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
+    val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participants._1, participant2 = participants._2, relationship = relationship)
+//    val sendNotificationData = UpdateRelationshipNotificationRequest(
+//      fullName = "UNKNOWN",
+//      email = sessionData.notification.get.transferor_email,
+//      role = role,
+//      welsh = isWelsh,
+//      isRetrospective = isRetrospective)
+    UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
 
   ???
   }
