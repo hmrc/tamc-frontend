@@ -19,7 +19,7 @@
 @import models.auth.AuthenticatedUserRequest
 @import models.Role
 @import utils.LanguageUtils
-@import views.helpers.TextGenerators
+@import views.helpers.TextGenerator
 @import uk.gov.hmrc.time.TaxYear
 
 @(role: Role)(implicit messages: Messages,
@@ -35,7 +35,7 @@ s"""<p>${messages("general.helpline.enquiries.link.pretext")} <a href="${general
 }
 
 @endOfYear = @{
-TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages), transformPattern = "d MMMM")
+TextGenerator().ukDateTransformer(TaxYear.current.finishes, transformPattern = "d MMMM")
 }
 
 @templates.tamc_main(

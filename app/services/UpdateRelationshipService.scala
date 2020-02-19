@@ -154,16 +154,16 @@ trait UpdateRelationshipService extends EndDateHelper {
     } yield Future.successful(Unit)
   }
 
-  def getRelationship(sessionData: UpdateRelationshipCacheData): RelationshipRecord = {
-    sessionData match {
-      case UpdateRelationshipCacheData(_, _, _, historic, _, Some(EndRelationshipReason(EndReasonCode.REJECT, _, Some(timestamp))), _) => {
-        historic.get.filter { relation => relation.creationTimestamp == timestamp && relation.participant == RoleOld.RECIPIENT }.head
-      }
-      case _ => {
-        sessionData.activeRelationshipRecord.get
-      }
-    }
-  }
+//  def getRelationship(sessionData: UpdateRelationshipCacheData): RelationshipRecord = {
+//    sessionData match {
+//      case UpdateRelationshipCacheData(_, _, _, historic, _, Some(EndRelationshipReason(EndReasonCode.REJECT, _, Some(timestamp))), _) => {
+//        historic.get.filter { relation => relation.creationTimestamp == timestamp && relation.participant == RoleOld.RECIPIENT }.head
+//      }
+//      case _ => {
+//        sessionData.activeRelationshipRecord.get
+//      }
+//    }
+//  }
 
   def getUpdateNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] =
     cachingService.getUpdateRelationshipCachedData map {
@@ -188,18 +188,7 @@ trait UpdateRelationshipService extends EndDateHelper {
 
   //TODO service layer should know what to pass back
   def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
-    for {
-      email <- getEmailAddress
-      divorceDate <- getDivorceDate
-      relationshipRecord <- getRelationshipRecords
-    } yield {
-
-      val name: Option[String] = relationshipRecord.loggedInUserInfo.flatMap(_.name.flatMap(_.fullName))
-
-      // TODO need to cater for a missing email
-      ConfirmationUpdateAnswers(name, divorceDate, email, )
-    }
-
+    cachingService.getConfirmationAnswers.map(ConfirmationUpdateAnswers(_))
   }
 
     def getCancelDates: (LocalDate, LocalDate) = (EndDateMACeasedCalculator.calculateEndDate, EndDateMACeasedCalculator.calculatePaEffectiveDate)

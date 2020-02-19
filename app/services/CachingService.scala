@@ -208,13 +208,14 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       optionalCacheMap =>
         optionalCacheMap.fold(???) {
           cacheMap =>
-
             val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
             val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
             val loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD)
             val effectiveDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE)
+            val divorceDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
+            val name = loggedInUserInfo.flatMap(_.name.flatMap(_.fullName))
 
-            ConfirmationUpdateAnswers()
+            ConfirmationUpdateAnswersCacheData(name, divorceDate, emailAddress, endDate, effectiveDate)
       }
     }
   }

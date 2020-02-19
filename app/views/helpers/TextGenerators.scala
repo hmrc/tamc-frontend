@@ -27,12 +27,12 @@ import utils.LanguageUtils.isWelsh
 
 object TextGenerator {
 
-  def apply(implicit messages: Messages): TextGenerators = {
+  def apply()(implicit messages: Messages): TextGenerator = {
     if(isWelsh(messages)) WelshTextGenerator else EnglishTextGenerator
   }
 }
 
-sealed trait TextGenerators {
+sealed trait TextGenerator {
 
 
   def separator: String
@@ -73,7 +73,7 @@ sealed trait TextGenerators {
   }
 }
 
-object EnglishTextGenerator extends TextGenerators {
+object EnglishTextGenerator extends TextGenerator {
 
   override def separator: String = " to "
 
@@ -86,7 +86,7 @@ object EnglishTextGenerator extends TextGenerators {
   val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " to Present")
 }
 
-object WelshTextGenerator extends TextGenerators {
+object WelshTextGenerator extends TextGenerator {
 
   override def separator: String = " i "
 

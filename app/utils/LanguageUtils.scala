@@ -18,7 +18,6 @@ package utils
 
 import config.ApplicationConfig
 import play.api.i18n.Messages
-import views.helpers.{EnglishTextGenerator, TextGenerators, WelshTextGenerator}
 
 object LanguageUtils {
 

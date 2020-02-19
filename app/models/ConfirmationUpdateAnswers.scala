@@ -20,7 +20,9 @@ import org.joda.time.LocalDate
 import play.api.mvc.Result
 
 
-case class ConfirmationUpdateAnswers(fullName: String, divorceDate: Option[LocalDate], email: String, maEndDate: LocalDate, paEffectiveDate: LocalDate) {
+case class ConfirmationUpdateAnswers(fullName: String, divorceDate: Option[LocalDate], email: String, maEndDate: LocalDate, paEffectiveDate: LocalDate)
+
+object ConfirmationUpdateAnswers {
 
   def apply(cacheData: ConfirmationUpdateAnswersCacheData): ConfirmationUpdateAnswers = {
 
@@ -35,3 +37,4 @@ case class ConfirmationUpdateAnswers(fullName: String, divorceDate: Option[Local
 }
 
 case class ConfirmationUpdateAnswersCacheData(fullName: Option[String], divorceDate: Option[LocalDate], email: Option[String], maEndDate: Option[LocalDate], paEffectiveDate: Option[LocalDate])
+

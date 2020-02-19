@@ -18,18 +18,18 @@
 @import org.joda.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 @import utils.LanguageUtils
-@import views.helpers.TextGenerators
+@import views.helpers.TextGenerator
 @import uk.gov.hmrc.time.TaxYear
 
 @(marriageAllowanceEndDate: LocalDate, personalAllowanceEffectiveDate: LocalDate)(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @maDate = @{
- TextGenerators.ukDateTransformer(Some(marriageAllowanceEndDate), LanguageUtils.isWelsh(messages))
+ TextGenerator().ukDateTransformer(marriageAllowanceEndDate)
 }
 
 @paDate = @{
- TextGenerators.ukDateTransformer(Some(personalAllowanceEffectiveDate), LanguageUtils.isWelsh(messages))
+ TextGenerator().ukDateTransformer(personalAllowanceEffectiveDate)
 }
 
 @templates.tamc_main(

@@ -33,22 +33,20 @@ object ConfirmCancelViewModel  {
 
   def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmCancelViewModel = {
 
+    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.fullName, None)
+    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url))
+    val defaultRows = List(nameRow, emailRow)
+    val endDate = TextGenerator().ukDateTransformer(model.maEndDate)
+    val effectiveDate = TextGenerator().ukDateTransformer(model.paEffectiveDate)
 
-    //TODO Make sure that these populate as expected types
-    val nameRow: SummaryRow = model.fullName.map(SummaryRow(messages("pages.confirm.cancel.your-name"), _))
-    val divorceDate: Option[SummaryRow] = model.divorceDate.map { date =>
-      val formattedDate = TextGenerator(messages).ukDateTransformer(date)
-      SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url))
+    def createRows(defaultRows: List[SummaryRow])(implicit messages: Messages): List[SummaryRow] = {
+      model.divorceDate.fold(defaultRows){ divorceDate =>
+        val formattedDate = TextGenerator().ukDateTransformer(divorceDate)
+        SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url)) :: defaultRows
+      }
     }
-    val email: SummaryRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url))
 
-    val rows = List(nameRow, email)
-
-    val endDate = TextGenerator(messages).ukDateTransformer(model.maEndDate)
-    val effectiveDate = TextGenerator(messages).ukDateTransformer(model.paEffectiveDate)
-
-
-    ConfirmCancelViewModel(endDate, effectiveDate, rows)
+    ConfirmCancelViewModel(endDate, effectiveDate, createRows(defaultRows))
   }
 
 }
