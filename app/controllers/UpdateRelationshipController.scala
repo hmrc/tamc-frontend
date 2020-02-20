@@ -190,10 +190,12 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
 
       val (maEndDate, paEffectiveDate) = updateRelationshipService.getCancelDates
-      cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_MA_END_DATE, maEndDate).map {
-        _ =>
-        Ok(views.html.coc.cancel(maEndDate, paEffectiveDate))
-      }
+
+      for{
+        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_MA_END_DATE, maEndDate)
+        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE, paEffectiveDate)
+      } yield  Ok(views.html.coc.cancel(maEndDate, paEffectiveDate))
+
   }
 
   //TODO referor
@@ -263,20 +265,21 @@ class UpdateRelationshipController @Inject()(
 
   def confirmReject(): Action[AnyContent] = authenticate.async {
     implicit request =>
-      updateRelationshipService.getUpdateRelationshipCacheForReject map {
-        cache =>
-          val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
-          val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
-          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate, isEnded = Some(selectedRelationship.participant1EndDate.isDefined
-            && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
-      }
+//      updateRelationshipService.getUpdateRelationshipCacheForReject map {
+//        cache =>
+//          val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
+//          val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
+//          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate, isEnded = Some(selectedRelationship.participant1EndDate.isDefined
+//            && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
+//      }
+    ???
   }
 
   def confirmCancel(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.saveEndRelationshipReason(EndRelationshipReason(EndReasonCode.CANCEL)) map {
         endReason =>
-          Ok(views.html.coc.confirm_updates(endReason.endReason, effectiveUntilDate = timeService.getEffectiveUntilDate(endReason), effectiveDate = Some(timeService.getEffectiveDate(endReason))))
+          Ok(views.html.coc.confirm_updates(endReason.endReason, effectiveUntilDate = timeService.getEffectiveUntilDate(endReason), effectiveDate = timeService.getEffectiveDate(endReason)))
       }
   }
 
@@ -443,26 +446,27 @@ class UpdateRelationshipController @Inject()(
 
   private[controllers] def getConfirmationInfoFromReason(reason: EndRelationshipReason,
                                                          cacheData: UpdateRelationshipCacheData): (Boolean, Option[LocalDate], Option[LocalDate]) = {
-    reason.endReason match {
-      case EndReasonCode.DIVORCE_PY =>
-        (false, None, Some(timeService.getEffectiveDate(reason)))
-
-      case EndReasonCode.DIVORCE_CY =>
-        (false, None, timeService.getEffectiveUntilDate(reason))
-
-      case EndReasonCode.CANCEL =>
-        (false, None, timeService.getEffectiveUntilDate(reason))
-
-      case EndReasonCode.REJECT =>
-        val selectedRelationship = updateRelationshipService.getRelationship(cacheData)
-        val isEnded = selectedRelationship.participant1EndDate.exists(_ != "")
-
-        val relationshipEndDate = if (isEnded) {
-          Some(updateRelationshipService.getRelationEndDate(selectedRelationship))
-        } else None
-
-        (isEnded, relationshipEndDate, Some(updateRelationshipService.getEndDate(reason, selectedRelationship)))
-    }
+//    reason.endReason match {
+//      case EndReasonCode.DIVORCE_PY =>
+//        (false, None, Some(timeService.getEffectiveDate(reason)))
+//
+//      case EndReasonCode.DIVORCE_CY =>
+//        (false, None, timeService.getEffectiveUntilDate(reason))
+//
+//      case EndReasonCode.CANCEL =>
+//        (false, None, timeService.getEffectiveUntilDate(reason))
+//
+//      case EndReasonCode.REJECT =>
+//        val selectedRelationship = updateRelationshipService.getRelationship(cacheData)
+//        val isEnded = selectedRelationship.participant1EndDate.exists(_ != "")
+//
+//        val relationshipEndDate = if (isEnded) {
+//          Some(updateRelationshipService.getRelationEndDate(selectedRelationship))
+//        } else None
+//
+//        (isEnded, relationshipEndDate, Some(updateRelationshipService.getEndDate(reason, selectedRelationship)))
+//    }
+    ???
   }
 
 

@@ -19,18 +19,19 @@ package viewModels
 import models.{Recipient, Role}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
-import utils.EndDateHelper
+import uk.gov.hmrc.time.TaxYear
+import views.helpers.TextGenerator
 
 //TODO TESTS UP IN HERE
 
 case class DivorceEndExplanationViewModel(divorceDate: String, taxYearStatus: String, bulletStatement: (String, String))
 
-object DivorceEndExplanationViewModel extends EndDateHelper {
+object DivorceEndExplanationViewModel {
 
   def apply(role: Role, divorceDate: LocalDate, maEndDate: LocalDate, paEffectiveDate: LocalDate)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
-    val divorceDateFormatted = transformDate(divorceDate)
-    val isCurrentYearDivorced: Boolean = currentTaxYear.contains(divorceDate)
+    val divorceDateFormatted = TextGenerator().ukDateTransformer(divorceDate)
+    val isCurrentYearDivorced: Boolean =  TaxYear.current.contains(divorceDate)
 
     val taxYearStatus = if(isCurrentYearDivorced) {
         messages("pages.divorce.explanation.current.taxYear")
@@ -52,11 +53,11 @@ object DivorceEndExplanationViewModel extends EndDateHelper {
 
     (role, isCurrentYearDivorced) match  {
       case(Recipient, true) => {
-        (messages("pages.divorce.explanation.recipient.current.bullet1", transformDate(maEndDate)),
-          messages("pages.divorce.explanation.recipient.current.bullet2", transformDate(paEffectiveDate)))
+        (messages("pages.divorce.explanation.recipient.current.bullet1", TextGenerator().ukDateTransformer(maEndDate)),
+          messages("pages.divorce.explanation.recipient.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate)))
       }
       case _ => {
-        (messages("pages.divorce.explanation.previous.bullet1", transformDate(maEndDate)),
+        (messages("pages.divorce.explanation.previous.bullet1", TextGenerator().ukDateTransformer(maEndDate)),
           messages("pages.divorce.explanation.previous.bullet2"))
       }
     }

@@ -16,7 +16,7 @@
 
 @import models.Gender
 @import play.twirl.api.Html
-@import views.helpers.TextGenerators
+@import views.helpers.TextGenerator
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
@@ -31,7 +31,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.transfer")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
+maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerator().formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
 ) {
 
     <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>

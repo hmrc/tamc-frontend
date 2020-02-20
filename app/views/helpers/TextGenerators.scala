@@ -34,6 +34,7 @@ object TextGenerator {
 
 sealed trait TextGenerator {
 
+  val taxDateIntervalString: (String, Option[String]) => String
 
   def separator: String
   def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String
@@ -51,6 +52,8 @@ sealed trait TextGenerator {
   }
 
   def nonBreakingSpace(text: String): String = text.replace(" ", "\u00A0")
+
+  def formPossessive(noun: String): String
 
   def taxDateInterval(taxYear: Int)(implicit messages: Messages): String = {
     ukDateTransformer(TaxYear(taxYear).starts) + separator + ukDateTransformer(TaxYear(taxYear).finishes)
@@ -83,7 +86,9 @@ object EnglishTextGenerator extends TextGenerator {
     nonBreakingSpace(formattedDate)
   }
 
-  val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " to Present")
+  override def formPossessive(noun: String): String = s"${noun}’s"
+
+  override val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " to Present")
 }
 
 object WelshTextGenerator extends TextGenerator {
@@ -93,6 +98,8 @@ object WelshTextGenerator extends TextGenerator {
   override def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
     nonBreakingSpace(welshConverted(date, transformPattern))
   }
+
+  override def formPossessive(noun: String): String = noun
 
   val welshMonths = Map(
     "January" -> "Ionawr",
@@ -117,6 +124,6 @@ object WelshTextGenerator extends TextGenerator {
     date.toString.replace(month, welshMonths.get(month).get)
   }
 
-  val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " i’r Presennol")
+  override val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " i’r Presennol")
 
 }

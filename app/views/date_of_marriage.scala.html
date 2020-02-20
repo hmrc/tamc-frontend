@@ -16,7 +16,7 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import views.helpers.TextGenerators
+@import views.helpers.TextGenerator
 @import models.auth.AuthenticatedUserRequest
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
@@ -28,7 +28,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
+maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerator().formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
 ){
 
 <a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>

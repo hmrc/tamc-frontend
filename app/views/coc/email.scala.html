@@ -16,7 +16,7 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import views.helpers.TextGenerators
+@import views.helpers.TextGenerator
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.EmailViewModel
@@ -29,7 +29,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.confirm-email")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerators.formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
+maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerator().formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
 ) {
 
 <a href="@viewModel.backLinkHref" class="link-back">@messages("generic.back")</a>

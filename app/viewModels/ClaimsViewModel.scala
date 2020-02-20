@@ -21,7 +21,7 @@ import models.{Active, RecordStatus, RelationshipRecord}
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import utils.LanguageUtils
-import views.helpers.TextGenerators
+import views.helpers.TextGenerator
 
 //TODO add tests for active row
 case class ActiveRow(activeDateInterval: String, activeStatus: String)
@@ -30,9 +30,9 @@ object ActiveRow {
 
   def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): ActiveRow = {
 
-    val activeDateInterval = TextGenerators.taxDateIntervalString(
+    val activeDateInterval = TextGenerator().taxDateIntervalString(
       relationshipRecord.participant1StartDate,
-      isWelsh = LanguageUtils.isWelsh(messages))
+      None)
     val activeStatus = messages("change.status.active")
 
     ActiveRow(activeDateInterval, activeStatus)
@@ -47,10 +47,9 @@ object HistoricRow {
 
   def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): HistoricRow = {
 
-    val historicDateInterval = TextGenerators.taxDateIntervalString(
+    val historicDateInterval = TextGenerator().taxDateIntervalString(
       relationshipRecord.participant1StartDate,
-      relationshipRecord.participant1EndDate,
-      LanguageUtils.isWelsh(messages))
+      relationshipRecord.participant1EndDate)
 
     val cause = relationshipRecord.relationshipEndReason match {
       case None => ""

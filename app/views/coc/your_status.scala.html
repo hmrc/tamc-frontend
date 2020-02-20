@@ -16,7 +16,7 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import views.helpers.TextGenerators
+@import views.helpers.TextGenerator
 @import uk.gov.hmrc.time.DateConverter
 @import config.ApplicationConfig._
 @import utils.LanguageUtils
@@ -32,7 +32,7 @@ activeRecord: Boolean,
 historicRecord: Boolean,
 historicActiveRecord: Boolean,
 canApplyPreviousYears: Boolean,
-endOfYear: Option[org.joda.time.LocalDate]
+endOfYear: org.joda.time.LocalDate
 )(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
@@ -84,14 +84,14 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
             @if(historicActiveRecord) {
                 @if(historicRelationships.get(0).participant == "Transferor") {
                     <p id="historicActiveMessage">@Html(Messages("change.status.transferor.amount",
-                        TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
+                        TextGenerator().ukDateTransformer(endOfYear)))</p>
                     <p>@Html(Messages("change.status.transferor.stop-sooner"))</p>
                     <p>
                         <button class="button" type="submit">@Html(Messages("change.status.transferor.ha.button"))</button>
                     </p>
                 } else {
                     <p id="historicActiveMessage">@Html(Messages("change.status.receiving.amount",
-                        TextGenerators.ukDateTransformer(endOfYear, LanguageUtils.isWelsh(messages))))</p>
+                        TextGenerator().ukDateTransformer(endOfYear)))</p>
                     <p>@Html(Messages("change.status.recipient.stop-sooner"))</p>
                     <p>
                         <button class="button" type="submit">@Html(Messages("change.status.recipient.ha.button"))</button>
@@ -129,8 +129,7 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
                     @if(activeRecord) {
                         <tr>
                             <td id="active">
-                                @TextGenerators.taxDateIntervalString(activeRelationship.get.participant1StartDate, isWelsh
-                                =LanguageUtils.isWelsh(messages))
+                                @TextGenerator().taxDateIntervalString(activeRelationship.get.participant1StartDate, None)
                             </td>
                             <td id="active-reason" colspan="2">@Html(Messages("change.status.active"))</td>
                         </tr>
@@ -139,8 +138,8 @@ mainConfig = views.helpers.MainConfig(Some("history-page"))
                         @for((historicRelationship, index) <- historicRelationships.get.zipWithIndex) {
                             <tr>
                                 <td id="line@index-start">
-                                    @TextGenerators.taxDateIntervalString(historicRelationship.participant1StartDate,
-                                    Some(historicRelationship.participant1EndDate.get),LanguageUtils.isWelsh(messages))
+                                    @TextGenerator().taxDateIntervalString(historicRelationship.participant1StartDate,
+                                    Some(historicRelationship.participant1EndDate.get))
                                 </td>
                                 <td id="line@index-reason">
                                     @Html(Messages(s"coc.end-reason.${historicRelationship.relationshipEndReason.map(_.value).getOrElse("")}"))

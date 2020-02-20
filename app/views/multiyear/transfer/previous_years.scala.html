@@ -15,9 +15,8 @@
  *@
 
 @import play.twirl.api.Html
-@import views.helpers.TextGenerators
 @import uk.gov.hmrc.play.views.html._
-@import views.helpers.TextGenerators
+@import views.helpers.TextGenerator
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
@@ -52,8 +51,7 @@ Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
 
     <p>@Html(Messages("pages.previousyear.lede"))</p>
 
-    <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage),
-        LanguageUtils.isWelsh(messages))))</p>
+    <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerator().ukDateTransformer(input.dateOfMarriage)))</p>
 
     <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" role="button"
        data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>

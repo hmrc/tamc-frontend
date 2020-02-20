@@ -21,7 +21,7 @@
 @import views.helpers.TextGenerator
 @import models.auth.AuthenticatedUserRequest
 
-@(reason: String, effectiveUntilDate: Option[org.joda.time.LocalDate] = None, effectiveDate: Option[org.joda.time.LocalDate] = None,isEnded : Option[Boolean] = None)(implicit messages: Messages,
+@(reason: String, effectiveUntilDate: org.joda.time.LocalDate, effectiveDate: org.joda.time.LocalDate,isEnded : Option[Boolean] = None)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -40,8 +40,8 @@ mainConfig = views.helpers.MainConfig()
     </header>
 
     <p id="cancel-content">
-        @Html(Messages("change.status.cancel.content",TextGenerator.ukDateTransformer(effectiveUntilDate)))</p>
-    <p> @Html(Messages("change.status.cancel.content1",TextGenerator.ukDateTransformer(effectiveDate)))</p>
+        @Html(Messages("change.status.cancel.content",TextGenerator().ukDateTransformer(effectiveUntilDate)))</p>
+    <p> @Html(Messages("change.status.cancel.content1",TextGenerator().ukDateTransformer(effectiveDate)))</p>
 
     <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
        id="confirmUpdate" class="button" role="button"
@@ -50,7 +50,7 @@ mainConfig = views.helpers.MainConfig()
     }
 
     @if(reason == EndReasonCode.REJECT) {
-        @if(isEnded.getOrElse(false) && effectiveDate.get.getYear!= TimeService.getCurrentTaxYear){
+        @if(isEnded.getOrElse(false) && effectiveDate.getYear!= TimeService.getCurrentTaxYear){
 
             <header class="page-heading">
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.reject.h1"))</h1>
@@ -80,14 +80,14 @@ mainConfig = views.helpers.MainConfig()
             <header class="page-heading">
                 <h1 class="heading-xlarge" id="reject-heading">@Html(Messages("change.status.cancel-your.h1"))</h1>
             </header>
-            <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerator.ukDateTransformer(effectiveDate)))</p>
-            <p id="reject-partner">@Html(Messages("change.status.reject.partner", TextGenerator.ukDateTransformer(TaxYear.current.finishes)))</p>
+            <p id="reject-content">@Html(Messages("change.status.reject.content", TextGenerator().ukDateTransformer(effectiveDate)))</p>
+            <p id="reject-partner">@Html(Messages("change.status.reject.partner", TextGenerator().ukDateTransformer(TaxYear.current.finishes)))</p>
 
             <p>&nbsp;</p>
             <div class="notice form-group">
                 <div class="icon icon-important"></div>
                 <strong class="bold-small">@Html(Messages("change.status.reject.warning",
-                    TextGenerators.ukDateTransformer(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear))))</strong>
+                    TextGenerator().ukDateTransformer(TimeService.getStartDateForTaxYear(TimeService.getCurrentTaxYear))))</strong>
             </div>
             <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
                id="confirmUpdate" class="button" role="button"

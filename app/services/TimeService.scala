@@ -35,11 +35,10 @@ trait TimeService {
   def getCurrentDate: LocalDate =
     LocalDate.now()
 
-  def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] =
+  def getEffectiveUntilDate(endReason: EndRelationshipReason): LocalDate =
     endReason.endReason match {
-      case EndReasonCode.CANCEL => Some(currentTaxYear.finishes)
-      case EndReasonCode.DIVORCE_CY => Some(TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes)
-      case EndReasonCode.DIVORCE_PY => None
+      case EndReasonCode.CANCEL => currentTaxYear.finishes
+      case EndReasonCode.DIVORCE_CY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes
     }
 
   def getEffectiveDate(endReason: EndRelationshipReason): LocalDate =

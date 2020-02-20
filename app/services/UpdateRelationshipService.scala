@@ -33,7 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
-import utils.{EndDateHelper, LanguageUtils}
+import utils.LanguageUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +44,7 @@ object UpdateRelationshipService extends UpdateRelationshipService {
   override val cachingService = CachingService
 }
 
-trait UpdateRelationshipService extends EndDateHelper {
+trait UpdateRelationshipService {
 
   val marriageAllowanceConnector: MarriageAllowanceConnector
   val customAuditConnector: AuditConnector

@@ -23,8 +23,7 @@ import models._
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
-import utils.LanguageUtils
-import views.helpers.TextGenerators
+import views.helpers.TextGenerator
 
 case class HistorySummaryButton(id: String, content: String, href: String)
 
@@ -67,7 +66,7 @@ object HistorySummaryViewModel {
 
 
   private def createHistoricBasedViewModel(role: Role)(implicit messages: Messages): HistorySummaryViewModel = {
-    val formattedEndOfYear = TextGenerators.ukDateTransformer(Some(TaxYear.current.finishes), LanguageUtils.isWelsh(messages))
+    val formattedEndOfYear = TextGenerator().ukDateTransformer(TaxYear.current.finishes)
 
     val paragraphContent = if (role == Transferor) {
 

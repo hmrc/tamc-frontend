@@ -16,25 +16,21 @@
 
 package viewModels
 
-import models.{ConfirmationUpdateAnswers, Recipient, Role, Transferor}
-import org.joda.time.LocalDate
+import models.ConfirmationUpdateAnswers
 import play.api.i18n.Messages
-import services.EndDateDivorceCalculator
-import uk.gov.hmrc.time.TaxYear
-import utils.EndDateHelper
 import views.helpers.TextGenerator
 
 //TODO TESTS UP IN HERE
 case class ConfirmCancelViewModel(endDate: String, effectiveDate: String, rows: Seq[SummaryRow])
 
-case class SummaryRow(title: String, userAnswer: String, changeLink: Option[String] = None)
+case class SummaryRow(title: String, userAnswer: String, changeLink: Option[String] = None, index: Int)
 
 object ConfirmCancelViewModel  {
 
   def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmCancelViewModel = {
 
-    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.fullName, None)
-    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url))
+    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.fullName, None, 1)
+    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
     val endDate = TextGenerator().ukDateTransformer(model.maEndDate)
     val effectiveDate = TextGenerator().ukDateTransformer(model.paEffectiveDate)
@@ -42,11 +38,11 @@ object ConfirmCancelViewModel  {
     def createRows(defaultRows: List[SummaryRow])(implicit messages: Messages): List[SummaryRow] = {
       model.divorceDate.fold(defaultRows){ divorceDate =>
         val formattedDate = TextGenerator().ukDateTransformer(divorceDate)
-        SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url)) :: defaultRows
+        SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2) :: defaultRows
       }
     }
 
-    ConfirmCancelViewModel(endDate, effectiveDate, createRows(defaultRows))
+    ConfirmCancelViewModel(endDate, effectiveDate, createRows(defaultRows).sortBy(_.index))
   }
 
 }
