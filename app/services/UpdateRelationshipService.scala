@@ -78,6 +78,7 @@ trait UpdateRelationshipService {
     def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
       cachingService.unlockCreateRelationship().map { _ => trrecord }
 
+    // TODO tidy this
     val transferorRec = UserRecord(relationshipRecords.loggedInUserInfo)
     val cacheActiveRelationshipFuture = cacheActiveRelationship(relationshipRecords.activeRelationship)
     val saveHistoricRelationshipFuture = cachingService.saveHistoricRelationships(relationshipRecords.historicRelationships)
@@ -112,6 +113,10 @@ trait UpdateRelationshipService {
 
   def getEmailAddress(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+  }
+
+  def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw new RuntimeException("Email not found in cache")))
   }
 
   def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {

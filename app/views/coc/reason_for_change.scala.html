@@ -45,8 +45,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         @templates.input_radio_group(
           makeChangesDecisionForm(MakeChangesDecisionForm.StopMAChoice),
           Seq((MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
-               (MakeChangesDecisionForm.IncomeChanges, messages("pages.makeChanges.radio.incomeChanges")),
-               (MakeChangesDecisionForm.NoLongerRequired, messages("pages.makeChanges.radio.noLongerRequired")),
+               (MakeChangesDecisionForm.Earnings, messages("pages.makeChanges.radio.incomeChanges")),
+               (MakeChangesDecisionForm.Cancel, messages("pages.makeChanges.radio.noLongerRequired")),
                (MakeChangesDecisionForm.Bereavement, messages("pages.makeChanges.radio.bereavement"))
           ),
           '_legend -> Html(messages("title.change.reason")),

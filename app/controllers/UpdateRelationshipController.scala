@@ -138,14 +138,14 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.divorceEnterYear())
             }
           }
-          case Some(MakeChangesDecisionForm.IncomeChanges) => {
-            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.IncomeChanges) flatMap { _ =>
+          case Some(MakeChangesDecisionForm.Earnings) => {
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Earnings) flatMap { _ =>
              changeOfIncomeRedirect
             }
 
           }
-          case Some(MakeChangesDecisionForm.NoLongerRequired) => {
-            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.NoLongerRequired) flatMap { _ =>
+          case Some(MakeChangesDecisionForm.Cancel) => {
+            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Cancel) flatMap { _ =>
               noLongerWantMarriageAllowanceRedirect
             }
           }
@@ -475,10 +475,12 @@ class UpdateRelationshipController @Inject()(
 
   def finishUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
-      updateRelationshipService.getupdateRelationshipFinishedData(request.nino) map {
-        case (NotificationRecord(email), _) =>
-          Ok(views.html.coc.finished(emailAddress = email))
-      } recover handleError
+
+      (for {
+        email <- updateRelationshipService.getEmailAddressForConfirmation
+        _ <- updateRelationshipService.cachingService.remove()
+      } yield Ok(views.html.coc.finished(EmailAddress(email)))) recover handleError
+
   }
 
   private def getOptionalLocalDate(day: Option[String], month: Option[String], year: Option[String]): Option[LocalDate] =

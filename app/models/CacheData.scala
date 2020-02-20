@@ -39,8 +39,7 @@ case class UpdateRelationshipCacheData(loggedInUserInfo: Option[LoggedInUserInfo
 case class UpdateRelationshipCacheDataTemp(relationshipRecords: RelationshipRecords,
                                           email: String,
                                           endMaReason: String,
-                                          marriageEndDate: LocalDate,
-                                          relationshipUpdated: Boolean){
+                                          marriageEndDate: LocalDate){
 
 }
 
@@ -50,14 +49,14 @@ object UpdateRelationshipCacheDataTemp {
   def apply(relationshipRecords: RelationshipRecords,
             email: Option[String],
             relationshipEndReasonRecord: Option[String],
-            marriageEndDate: Option[LocalDate],
-            relationshipUpdated: Option[Boolean]): UpdateRelationshipCacheDataTemp = {
+            marriageEndDate: Option[LocalDate]): UpdateRelationshipCacheDataTemp = {
 
-    (email, relationshipEndReasonRecord, marriageEndDate, relationshipUpdated) match {
+    (email, relationshipEndReasonRecord, marriageEndDate) match {
 
-      case(Some(email), Some(endReason), Some(endDate), Some(updated)) => {
-        UpdateRelationshipCacheDataTemp(relationshipRecords, email, endReason, endDate, updated)
+      case(Some(email), Some(endReason), Some(endDate)) => {
+        UpdateRelationshipCacheDataTemp(relationshipRecords, email, endReason, endDate)
       }
+      //TODO throw exception for actual missing value
       case(_) => ???
     }
   }

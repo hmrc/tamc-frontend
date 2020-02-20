@@ -185,7 +185,8 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     def getUpdateRelationshipCachedDataTemp(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheDataTemp] = {
     fetch() map { optionalCacheMap =>
 
-      optionalCacheMap.fold(???){ cacheMap =>
+      //TODO create a type
+      optionalCacheMap.fold(throw new RuntimeException("Failed to retrieve cacheMap")){ cacheMap =>
 
           val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
           val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
@@ -193,20 +194,19 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
           val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
           val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
           val endReason = cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
-          val relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE)
-
           val relationshipRecord = RelationshipRecords(activeRelationshipRecord, historicRelationships, loggedInUserInfo)
 
-          UpdateRelationshipCacheDataTemp(relationshipRecord, emailAddress, endReason, endDate, relationshipUpdated)
+          UpdateRelationshipCacheDataTemp(relationshipRecord, emailAddress, endReason, endDate)
 
       }
     }
   }
 
+  //TODO make this the main method
   def getConfirmationAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswersCacheData] = {
     fetch () map {
       optionalCacheMap =>
-        optionalCacheMap.fold(???) {
+        optionalCacheMap.fold(throw new RuntimeException("Failed to retrieve cacheMap")) {
           cacheMap =>
             val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
             val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)

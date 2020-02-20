@@ -24,6 +24,7 @@
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.ConfirmCancelViewModel
 @import templates.coc._
+@import uk.gov.hmrc.play.views.html._
 
 @(viewModel: ConfirmCancelViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -36,24 +37,26 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
 ) {
 
-<a href="@controllers.routes.UpdateRelationshipController.confirmEmail" class="link-back">@Html(messages("generic.back"))</a>
+ <a href="@controllers.routes.UpdateRelationshipController.confirmEmail" class="link-back">@Html(messages("generic.back"))</a>
 
-<header class="page-heading">
-    <h1 class="heading-xlarge">@messages("pages.confirm.cancel.heading")</h1>
-</header>
+ <header class="page-heading">
+     <h1 class="heading-xlarge">@messages("pages.confirm.cancel.heading")</h1>
+ </header>
 
-@confirmSummary(viewModel.rows)
+ @confirmSummary(viewModel.rows)
 
-<p>@messages("pages.confirm.cancel.message")</p>
+ <p>@messages("pages.confirm.cancel.message")</p>
 
-<ul class="bullets">
- <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
- <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
-</ul>
+ <ul class="bullets">
+  <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
+  <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
+ </ul>
 
+ @helpers.form(action = routes.UpdateRelationshipController.submitConfirmUpdate, args = ('id -> "")) {
 
-<a href="@{controllers.routes.UpdateRelationshipController.submitConfirmUpdate}" id="confirmRemoval"
-   class="button" role="button" data-journey-click="marriage-allowance:link:confirm_cancellation">@messages("pages.confirm.cancel.continue.button")</a>
-
+   <button class="button" type="submit" data-journey-click="marriage-allowance:link:confirm_cancellation">
+    @messages("pages.confirm.cancel.continue.button")
+   </button>
+ }
 
 }

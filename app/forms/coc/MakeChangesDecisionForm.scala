@@ -24,10 +24,10 @@ import play.api.i18n.Messages
 object MakeChangesDecisionForm {
 
   val StopMAChoice = "stopMAChoice"
-  val Divorce = "divorce"
-  val IncomeChanges = "incomeChanges"
-  val NoLongerRequired = "noLongerRequired"
-  val Bereavement = "bereavement"
+  val Divorce = "DIVORCE"
+  val Earnings = "EARNINGS"
+  val Cancel = "CANCEL"
+  val Bereavement = "BEREAVEMENT"
 
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
     //TODO error message
