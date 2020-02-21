@@ -121,7 +121,7 @@ class UpdateRelationshipController @Inject()(
   def makeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getMakeChangesDecision map { makeChangesData =>
-        Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(makeChangesData)))
+        Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(makeChangesData.map(_.toString))))
       }
   }
 
@@ -468,6 +468,8 @@ class UpdateRelationshipController @Inject()(
 //    }
     ???
   }
+
+
 
 
 

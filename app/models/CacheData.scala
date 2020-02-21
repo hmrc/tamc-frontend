@@ -48,13 +48,15 @@ object UpdateRelationshipCacheDataTemp {
 
   def apply(relationshipRecords: RelationshipRecords,
             email: Option[String],
-            relationshipEndReasonRecord: Option[String],
+            endReason: Option[EndMarriageAllowanceReason],
             marriageEndDate: Option[LocalDate]): UpdateRelationshipCacheDataTemp = {
 
-    (email, relationshipEndReasonRecord, marriageEndDate) match {
+    (email, endReason, marriageEndDate) match {
 
       case(Some(email), Some(endReason), Some(endDate)) => {
-        UpdateRelationshipCacheDataTemp(relationshipRecords, email, endReason, endDate)
+        //TODO log error instead?
+        UpdateRelationshipCacheDataTemp(relationshipRecords, email,
+          endReason.desEnumerationValue.getOrElse(throw new RuntimeException(s"No DES enumerated value found for Marriage Allowance EndReason: $endReason")), endDate)
       }
       //TODO throw exception for actual missing value
       case(_) => ???

@@ -99,12 +99,16 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
   }
 
-  def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
-    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+  def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EndMarriageAllowanceReason]] = {
+    cachingService.fetchAndGetEntry[EndMarriageAllowanceReason](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
   }
 
-  def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
-    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
+  def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndMarriageAllowanceReason] = {
+    val endReason = EndMarriageAllowanceReason.toCaseObject(makeChangeDecision)
+    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, endReason) map { x =>
+      println(s"*********** In map $x")
+      x
+    }
   }
 
   def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {
