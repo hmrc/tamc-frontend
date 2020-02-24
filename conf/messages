@@ -547,7 +547,7 @@ pages.makeChanges.radio.divorce=Divorce, end of civil partnership or legally sep
 pages.makeChanges.radio.incomeChanges=Household income changes
 pages.makeChanges.radio.noLongerRequired=Do not want Marriage Allowance anymore
 pages.makeChanges.radio.bereavement=Bereavement
-pages.decision.error.mandatory.value=Select the reason you want to stop your marriage allowance
+pages.makeChanges.error.mandatory.value=Select the reason you want to stop your marriage allowance
 
 
 #********************************************************************************
@@ -574,9 +574,11 @@ pages.changeOfIncome.bullet2=you need to cancel your Marriage Allowance
 pages.divorce.title=Date of divorce, end of civil partnership or legal separation
 pages.divorce.paragraph1=You need to go to court to be legally separated. You can still get Marriage Allowance if you are separated, but not legally separated.
 pages.divorce.date.hint=For example, 30 6 2019
-pages.divorce.date.mandatory=Enter your date of divorce, end of civil partnership or legal separation
-pages.divorce.date.invalid=Enter a real date
-pages.divorce.date.non.numeric=Date of your divorce, end of civil partnership or legal separation most only include numbers 0 to 9
+pages.divorce.date.error.mandatory=Enter your date of divorce, end of civil partnership or legal separation
+pages.divorce.date.error.invalid=Enter a real date
+pages.divorce.date.error.non.numeric=Date of your divorce, end of civil partnership or legal separation most only include numbers 0 to 9
+pages.divorce.date.error.min.date=Date of your divorce, end of your civil partnership or legal separation must be after {0}
+pages.divorce.date.error.max.date=Date of your divorce, end of your civil partnership or legal separation must be before {0}
 
 
 #********************************************************************************

@@ -122,7 +122,7 @@ income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw 
 #********************************************************************************
 #General messages
 generic.ma.apply=Gwneud cais am Lwfans Priodasol
-generic.back=Yn &#244;l
+generic.back=Yn ôl
 generic.next=Nesaf
 generic.previous=Blaenorol
 generic.finish=Gorffen
@@ -534,6 +534,59 @@ pages.confirm.warning=Gwiriwch y manylion yr ydych wedi’u nodi a gwnewch yn si
 pages.confirm.button=Cadarnhau’ch cais
 pages.confirm.marriage.details=Manylion eich Lwfans Priodasol
 pages.confirm.date.of.marriage=Dyddiad y briodas neu’r dyddiad y ffurfiwyd y bartneriaeth sifil
+
+#********************************************************************************
+# claims page
+#********************************************************************************
+pages.claims.title=Your Marriage Allowance claims
+pages.claims.table.heading.tax-year=Tax year
+pages.claims.table.heading.status=Status
+pages.claims.link.tax.free.allowance.part1=You can
+pages.claims.link.tax.free.allowance.link.text=see the transferred allowance in your tax-free amount.
+
+#********************************************************************************
+# Decision page
+#********************************************************************************
+pages.decision.title=Beth ydych am ei wneud?
+pages.decision.radio.check=Gwirio hawliadau presennol neu flaenorol am Lwfans Priodasol
+pages.decision.radio.stop=Stopio’r hawliad presennol am Lwfans Priodasol
+pages.decision.error.mandatory.value=Dewiswch os ydych am wirio’ch hawliad am Lwfans Priodasol neu ddod ag ef i ben
+
+#********************************************************************************
+# Make Changes page
+#********************************************************************************
+pages.makeChanges.title=Why do you need to stop your Marriage Allowance?
+pages.makeChanges.radio.divorce=Ysgaru, dod â phartneriaeth sifil i ben neu wahanu’n gyfreithiol
+pages.makeChanges.radio.incomeChanges=Newidiadau yn incwm yr aelwyd
+pages.makeChanges.radio.noLongerRequired=Ddim eisiau Lwfans Priodasol mwyach
+pages.makeChanges.radio.bereavement=Bereavement
+pages.makeChanges.error.mandatory.value=Dewiswch y rheswm yr ydych am ddod â’ch Lwfans Priodasol i ben
+
+#********************************************************************************
+# Divorce page
+#********************************************************************************
+pages.divorce.title=Dyddiad ysgaru, dod â’r bartneriaeth sifil i ben neu wahanu’n gyfreithiol
+pages.divorce.paragraph1=Mae angen i chi fynd i’r llys i gael eich gwahanu’n gyfreithiol. Mae’n dal yn bosibl i chi gael Lwfans Priodasol os ydych wedi gwahanu, ond heb eich gwahanu’n gyfreithiol.
+pages.divorce.date.hint=For example, 30 6 2019
+pages.divorce.date.error.mandatory=Nodwch eich dyddiad ysgaru, dod â’r bartneriaeth sifil i ben neu wahanu’n gyfreithiol
+pages.divorce.date.error.invalid=Nodwch ddyddiad go iawn
+pages.divorce.date.error.non.numeric=Mae’n rhaid i’ch dyddiad ysgaru, dod â’r bartneriaeth sifil i ben neu wahanu’n gyfreithiol gynnwys y rhifau 0 i 9 yn unig
+pages.divorce.date.error.min.date=Mae’n rhaid i’ch dyddiad ysgaru, dod â’r bartneriaeth sifil i ben neu wahanu’n gyfreithiol fod ar ôl {0}
+pages.divorce.date.error.max.date=Mae’n rhaid i’ch dyddiad ysgaru, dod â’r bartneriaeth sifil i ben neu wahanu’n gyfreithiol fod cyn {0}
+
+#********************************************************************************
+# Divorce Explanation page
+#********************************************************************************
+pages.divorce.explanation.title=Canslo Lwfans Priodasol
+pages.divorce.explanation.paragraph1=Rydych wedi rhoi gwybod i ni eich bod wedi ysgaru, wedi dod â’ch partneriaeth sifil i ben neu’ch bod wedi gwahanu’n gyfreithiol ar {0}
+pages.divorce.explanation.paragraph2=Gan fod y dyddiad hwn yn ystod {0}
+pages.divorce.explanation.current.taxYear=y flwyddyn dreth bresennol:
+pages.divorce.explanation.previous.taxYear=blwyddyn dreth flaenorol:
+pages.divorce.explanation.current.bullet1=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
+pages.divorce.explanation.current.bullet2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol o {0} ymlaen
+pages.divorce.explanation.previous.bullet1=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
+pages.divorce.explanation.previous.bullet2=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
+
 #********************************************************************************
 # change-of-circs-finish-page
 #********************************************************************************

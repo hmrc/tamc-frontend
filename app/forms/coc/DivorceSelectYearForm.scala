@@ -33,7 +33,7 @@ object DivorceSelectYearForm {
 
   val DateOfDivorce = "dateOfDivorce"
   val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
-  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1))
+  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE)
 
   def isNonNumericDate(date: String): Boolean = !date.forall(_.isDigit)
   def isNonValidDate(date: (String, String, String)): Boolean = Try(new LocalDate(date._1.trim.toInt, date._2.trim.toInt, date._3.trim.toInt)).isFailure
@@ -55,14 +55,14 @@ object DivorceSelectYearForm {
       val nonNumericDate = s"$year$month$day"
 
       if(isNonNumericDate(nonNumericDate)){
-        Invalid(ValidationError("pages.divorce.date.non.numeric"))
+        Invalid(ValidationError("pages.divorce.date.error.non.numeric"))
       } else if(isNonValidDate(completeDate)){
-        Invalid(ValidationError("pages.divorce.date.invalid"))
+        Invalid(ValidationError("pages.divorce.date.error.invalid"))
       } else {
         Valid
       }
     }
-    case _ => Invalid(ValidationError("pages.divorce.date.mandatory"))
+    case _ => Invalid(ValidationError("pages.divorce.date.error.mandatory"))
 
   }
 
@@ -82,9 +82,9 @@ object DivorceSelectYearForm {
   }
 
   private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
-    case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.form.field.dom.error.min-date", TextGenerator().ukDateTransformer(date)))
+    case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date", TextGenerator().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
-      Invalid(ValidationError("pages.form.field.dom.error.max-date",TextGenerator().ukDateTransformer(TimeService.getCurrentDate)))
+      Invalid(ValidationError("pages.divorce.date.error.max.date",TextGenerator().ukDateTransformer(TimeService.getCurrentDate)))
     case _ => Valid
   }
 
