@@ -28,6 +28,8 @@ mainConfig = views.helpers.MainConfig()) {
 
     <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@messages("generic.back")</a>
 
+    @templates.form_error_notification(decisionForm, formErrorMessage = "pages.form.error.mandatory.data")
+
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.decision.title")</h1>
     </header>

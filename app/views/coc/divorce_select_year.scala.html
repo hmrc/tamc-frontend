@@ -20,7 +20,7 @@
 @import org.joda.time.LocalDate
 @import forms.coc.DivorceSelectYearForm
 
-@(divorceSelectYearForm: Form[Option[LocalDate]])(implicit messages: Messages,
+@(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)

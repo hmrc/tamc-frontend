@@ -213,8 +213,11 @@ class UpdateRelationshipController @Inject()(
 
   def divorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
-      updateRelationshipService.getDivorceDate map { divorceDate =>
-        Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
+      updateRelationshipService.getDivorceDate map { optionalDivorceDate =>
+        optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))){ divorceDate =>
+          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
+        }
+
       } recover {
         //open empty view even with there are cache problem or fail to map data to view
         case NonFatal(_) =>
@@ -228,7 +231,7 @@ class UpdateRelationshipController @Inject()(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.divorce_select_year(formWithErrors)))
         }, {
-          case Some(divorceDate) =>
+          case divorceDate =>
             updateRelationshipService.saveDivorceDate(divorceDate) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation())
             }

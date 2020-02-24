@@ -105,10 +105,7 @@ trait UpdateRelationshipService {
 
   def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndMarriageAllowanceReason] = {
     val endReason = EndMarriageAllowanceReason.toCaseObject(makeChangeDecision)
-    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, endReason) map { x =>
-      println(s"*********** In map $x")
-      x
-    }
+    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, endReason)
   }
 
   def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {

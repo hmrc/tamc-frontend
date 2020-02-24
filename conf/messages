@@ -535,6 +535,8 @@ pages.claims.link.tax.free.allowance.link.text=see the transferred allowance in 
 pages.decision.title=What do you want to do?
 pages.decision.radio.check=Check current or earlier Marriage Allowance claims
 pages.decision.radio.stop=Stop current Marriage Allowance claim
+pages.decision.error.mandatory.value=Select if you want to check or stop your marriage allowance claim
+
 
 
 #********************************************************************************
@@ -545,6 +547,7 @@ pages.makeChanges.radio.divorce=Divorce, end of civil partnership or legally sep
 pages.makeChanges.radio.incomeChanges=Household income changes
 pages.makeChanges.radio.noLongerRequired=Do not want Marriage Allowance anymore
 pages.makeChanges.radio.bereavement=Bereavement
+pages.decision.error.mandatory.value=Select the reason you want to stop your marriage allowance
 
 
 #********************************************************************************
@@ -571,6 +574,9 @@ pages.changeOfIncome.bullet2=you need to cancel your Marriage Allowance
 pages.divorce.title=Date of divorce, end of civil partnership or legal separation
 pages.divorce.paragraph1=You need to go to court to be legally separated. You can still get Marriage Allowance if you are separated, but not legally separated.
 pages.divorce.date.hint=For example, 30 6 2019
+pages.divorce.date.mandatory=Enter your date of divorce, end of civil partnership or legal separation
+pages.divorce.date.invalid=Enter a real date
+pages.divorce.date.non.numeric=Date of your divorce, end of civil partnership or legal separation most only include numbers 0 to 9
 
 
 #********************************************************************************

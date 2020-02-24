@@ -31,6 +31,6 @@ object MakeChangesDecisionForm {
 
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
     //TODO error message
-    single(StopMAChoice -> optional(text).verifying(messages("ErrorMessage"), { _.isDefined }))
+    single(StopMAChoice -> optional(text).verifying(messages("pages.decision.error.mandatory.value"), { _.isDefined }))
   )
 }
