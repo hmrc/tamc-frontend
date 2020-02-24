@@ -18,13 +18,13 @@ package forms.coc
 
 import config.ApplicationConfig
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
 import play.api.data.Forms.{optional, single, text, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, Mapping}
 import play.api.i18n.Messages
 import services.TimeService
 import uk.gov.hmrc.play.mappers.DateFields.{day, month, year}
+import views.helpers.TextGenerator
 
 import scala.util.Try
 
@@ -36,9 +36,9 @@ object DivorceSelectYearForm {
   val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE.plusDays(-1))
 
   def isNonNumericDate(date: String): Boolean = !date.forall(_.isDigit)
-  def isNonValidDate(date: String, datePattern: String): Boolean = Try(LocalDate.parse(date, DateTimeFormat.forPattern(datePattern))).isFailure
+  def isNonValidDate(date: (String, String, String)): Boolean = Try(new LocalDate(date._1.trim.toInt, date._2.trim.toInt, date._3.trim.toInt)).isFailure
 
-  private def divorceDateMapping: Mapping[LocalDate] = {
+  private def divorceDateMapping(implicit messages: Messages): Mapping[LocalDate] = {
     tuple(
         year -> optional(text),
         month -> optional(text),
@@ -49,13 +49,14 @@ object DivorceSelectYearForm {
     .verifying(checkDateRange)
   }
 
-  private def isValidDate = Constraint[(Option[String], Option[String], Option[String])]("valid date"){
+  private def isValidDate = Constraint[(Option[String], Option[String], Option[String])]("valid.date"){
     case (Some(year), Some(month), Some(day)) => {
-      val completeDate = s"$year$month$day"
+      val completeDate = (year, month, day)
+      val nonNumericDate = s"$year$month$day"
 
-      if(isNonNumericDate(completeDate)){
+      if(isNonNumericDate(nonNumericDate)){
         Invalid(ValidationError("pages.divorce.date.non.numeric"))
-      } else if(isNonValidDate(completeDate, "yyyyMMdd")){
+      } else if(isNonValidDate(completeDate)){
         Invalid(ValidationError("pages.divorce.date.invalid"))
       } else {
         Valid
@@ -80,9 +81,10 @@ object DivorceSelectYearForm {
     (year, month, day)
   }
 
-  private def checkDateRange: Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
-    case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.form.field.dom.error.min-date"))
-    case(date) if divorceDateInTheFutureError(date) => Invalid(ValidationError("pages.form.field.dom.error.max-date", date.toString("dd/MM/yyyy")))
+  private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
+    case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.form.field.dom.error.min-date", TextGenerator().ukDateTransformer(date)))
+    case(date) if divorceDateInTheFutureError(date) =>
+      Invalid(ValidationError("pages.form.field.dom.error.max-date",TextGenerator().ukDateTransformer(TimeService.getCurrentDate)))
     case _ => Valid
   }
 
