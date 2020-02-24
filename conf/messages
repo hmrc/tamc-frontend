@@ -587,8 +587,8 @@ pages.divorce.explanation.paragraph1=You have told us you divorced, ended your c
 pages.divorce.explanation.paragraph2=As this date falls within {0}
 pages.divorce.explanation.current.taxYear=the current tax year
 pages.divorce.explanation.previous.taxYear=a previous tax year
-pages.divorce.explanation.recipient.current.bullet1=your Marriage Allowance will be cancelled from {0}, the end of the current tax year
-pages.divorce.explanation.recipient.current.bullet2=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
+pages.divorce.explanation.current.bullet1=your Marriage Allowance will be cancelled from {0}, the end of the current tax year
+pages.divorce.explanation.current.bullet2=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
 pages.divorce.explanation.previous.bullet1=your Marriage Allowance will be cancelled from {0}
 pages.divorce.explanation.previous.bullet2=if you have not paid enough tax, we will usually collect it by adjusting your tax code
 

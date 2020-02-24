@@ -49,12 +49,10 @@ object DivorceEndExplanationViewModel {
                        maEndDate: LocalDate,
                        paEffectiveDate: LocalDate)(implicit messages: Messages): (String, String) = {
 
-
-
     (role, isCurrentYearDivorced) match  {
-      case(Recipient, true) => {
-        (messages("pages.divorce.explanation.recipient.current.bullet1", TextGenerator().ukDateTransformer(maEndDate)),
-          messages("pages.divorce.explanation.recipient.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate)))
+      case(_, true) => {
+        (messages("pages.divorce.explanation.current.bullet1", TextGenerator().ukDateTransformer(maEndDate)),
+          messages("pages.divorce.explanation.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate)))
       }
       case _ => {
         (messages("pages.divorce.explanation.previous.bullet1", TextGenerator().ukDateTransformer(maEndDate)),
