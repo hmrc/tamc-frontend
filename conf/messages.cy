@@ -485,6 +485,16 @@ pages.history.cancellation2=Gallwch hefyd ganslo er mwyn dod &#226; thaliadau i 
 pages.history.historic.ended=Your Marriage Allowance claim has ended.
 pages.history.historic.recipient=You will keep the tax-free allowances transferred by you until {0}.
 
+pages.history.historic.ended=Your Marriage Allowance claim has ended.
+pages.history.historic.recipient=You will keep the tax-free allowances transferred to you until {0}.
+pages.history.historic.transferor=You will keep the tax-free allowances transferred by you until {0}.
+
+pages.history.active.button=Check or update your Marriage Allowance
+pages.history.historic.button=Check your Marriage Allowance claims
+
+pages.history.active.recipient.paragraph1=Mae’ch partner ar hyn o bryd yn defnyddio Lwfans Priodasol i drosglwyddo £{0} o’i Lwfans Personol i chi.
+pages.history.active.recipient.paragraph2=Gall hyn leihau’r dreth yr ydych yn ei thalu hyd at £{0} y flwyddyn.
+
 pages.history.active.recipient.paragraph1=Mae’ch partner ar hyn o bryd yn defnyddio Lwfans Priodasol i drosglwyddo £{0} o’i Lwfans Personol i chi.
 pages.history.active.recipient.paragraph2=Gall hyn leihau’r dreth yr ydych yn ei thalu hyd at £{0} y flwyddyn.
 
@@ -541,8 +551,32 @@ pages.confirm.date.of.marriage=Dyddiad y briodas neu’r dyddiad y ffurfiwyd y b
 pages.claims.title=Your Marriage Allowance claims
 pages.claims.table.heading.tax-year=Tax year
 pages.claims.table.heading.status=Status
-pages.claims.link.tax.free.allowance.part1=You can
-pages.claims.link.tax.free.allowance.link.text=see the transferred allowance in your tax-free amount.
+pages.claims.link.tax.free.allowance.part1=Gallwch weld
+pages.claims.link.tax.free.allowance.link.text=y lwfans a drosglwyddwyd yn eich swm rhydd o dreth.
+
+#********************************************************************************
+# stop allowance page
+#********************************************************************************
+pages.stopAllowance.title=Mae angen i’ch partner ddod â’r hawliad am Lwfans Priodasol i ben
+pages.stopAllowance.paragraph1=Gan fod eich partner yn trosglwyddo’i lwfansau i chi, bydd angen iddo ddod â’r hawliad i ben.
+pages.stopAllowance.paragraph2=Gall eich partner wneud hyn yn adran Lwfans Priodasol ei Gyfrif Treth Personol.
+
+#********************************************************************************
+# bereavement page
+#********************************************************************************
+pages.bereavement.title=Mae’n ddrwg gennym am eich colled
+pages.bereavement.enquiries.link.paragraph=i roi gwybod i ni am brofedigaeth.
+pages.bereavement.recipient.paragraph=You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.
+pages.bereavement.transferor.paragraph=Os bydd eich partner yn marw ar ôl i chi drosglwyddo rhywfaint o’ch Lwfans Personol iddo:
+pages.bereavement.transferor.point1=ystyrir bod ei ystâd yn cynnwys y Lwfans Personol ychwanegol y gwnaethoch drosglwyddo iddo
+pages.bereavement.transferor.point2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol ar ddiwedd y flwyddyn dreth (5 Ebrill)
+
+#********************************************************************************
+# Cancel Journey
+#********************************************************************************
+claim.summary.link=Back to your Marriage Allowance claim summary
+general.helpline.enquiries.link.pretext=Gallwch gysylltu
+general.helpline.enquiries.link=â Gwasanaeth Cwsmeriaid Cymraeg CThEM
 
 #********************************************************************************
 # Decision page
@@ -561,6 +595,22 @@ pages.makeChanges.radio.incomeChanges=Newidiadau yn incwm yr aelwyd
 pages.makeChanges.radio.noLongerRequired=Ddim eisiau Lwfans Priodasol mwyach
 pages.makeChanges.radio.bereavement=Bereavement
 pages.makeChanges.error.mandatory.value=Dewiswch y rheswm yr ydych am ddod â’ch Lwfans Priodasol i ben
+
+#********************************************************************************
+# Cancel page
+#********************************************************************************
+pages.cancel.title=Canslo Lwfans Priodasol
+pages.cancel.paragraph1=Byddwn yn canslo’ch Lwfans Priodasol, ond bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol.
+pages.cancel.paragraph2=Ni fydd eich Lwfans Personol yn cynnwys Lwfans Priodasol o {0} ymlaen, sef dechrau’r flwyddyn dreth newydd. Ni fydd yn rhaid i’ch partner ad-dalu unrhyw dreth.
+
+#********************************************************************************
+# Change of Income page
+#********************************************************************************
+pages.changeOfIncome.title=Newid mewn incwm
+pages.changeOfIncome.enquiries.link.paragraph=i roi gwybod i ni am newid mewn incwm.
+pages.changeOfIncome.paragraph2=Mae angen i chi roi gwybod i ni os yw’ch incwm chi neu’ch partner yn newid er mwyn i ni allu rhoi gwybod i chi:
+pages.changeOfIncome.bullet1=p’un a fydd hawlio Lwfans Priodasol o fudd i chi fel pâr o hyd
+pages.changeOfIncome.bullet2=p’un a oes angen i chi ganslo’ch Lwfans Priodasol
 
 #********************************************************************************
 # Divorce page
@@ -586,6 +636,17 @@ pages.divorce.explanation.current.bullet1=bydd eich Lwfans Priodasol yn cael ei 
 pages.divorce.explanation.current.bullet2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol o {0} ymlaen
 pages.divorce.explanation.previous.bullet1=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
 pages.divorce.explanation.previous.bullet2=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
+
+#********************************************************************************
+# confirm cancellation page
+#********************************************************************************
+pages.confirm.cancel.heading=Cadarnhau canslo Lwfans Priodasol
+pages.confirm.cancel.message=Rydych wedi gofyn i ni ganslo’ch Lwfans Priodasol. Mae hyn yn golygu:
+pages.confirm.cancel.message1=bydd eich Lwfans Priodasol yn aros yn ei le tan {0}
+pages.confirm.cancel.message2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol o {0} ymlaen
+pages.confirm.cancel.your-name=Eich enw
+pages.confirm.cancel.email=E-bost
+pages.confirm.cancel.continue.button=Cadarnhau canslo
 
 #********************************************************************************
 # change-of-circs-finish-page
