@@ -58,6 +58,9 @@ case class CitizenNotFound() extends ServiceError
 
 case class BadFetchRequest() extends ServiceError
 
+case class NoPrimaryRecordError() extends ServiceError
+case class MultipleActiveRecordError() extends ServiceError
+
 case class RelationshipMightBeCreated() extends ServiceError
 
 sealed abstract class ServiceError extends RuntimeException

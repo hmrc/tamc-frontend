@@ -16,58 +16,52 @@
 
 package models
 
-//TODO need to update this domain model
-case class RelationshipRecords(activeRelationship: Option[RelationshipRecord],
-                               historicRelationships: Option[Seq[RelationshipRecord]],
-                               loggedInUserInfo: Option[LoggedInUserInfo] = None) {
+import errors._
+import play.api.Logger
 
-  lazy val recordStatus: RecordStatus = {
-    (activeRelationship, historicRelationships) match {
-      case (Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isEmpty => Active
-        //TODO add is definition for active historic because when I pass active relationship and end in future is fail with historic
-      case (Some(RelationshipRecord(_, _, _, _, endDate, _, _)), _) if endDate.isDefined => ActiveHistoric
-      case _ => Historic
-    }
+//TODO need to update this domain model once TAMC passes primary record through
+case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Option[Seq[RelationshipRecord]],
+                               loggedInUserInfo: LoggedInUserInfo) {
 
-  }
-
-  lazy val role: Role = {
-    (activeRelationship, historicRelationships) match {
-      case (Some(RelationshipRecord("Transferor", _, _, _, _, _, _)), _) => Transferor
-      case (Some(RelationshipRecord("Recipient", _, _, _, _, _, _)), _) => Recipient
-      case (_, Some(Seq(RelationshipRecord("Transferor", _, _, _, _, _, _), _*))) => Transferor
-      case (_, Some(Seq(RelationshipRecord("Recipient", _, _, _, _, _, _), _*))) => Recipient
-      //TODO to test properly?? And sort this exception out
-      case _ => throw new RuntimeException("IDK?!")
-    }
-  }
-
-
-  //TODO Get rid of the .get... ActiveRelationship should NOT be optional
   def recipientInformation: RecipientInformation = {
-    role match {
-      case Transferor => RecipientInformation(activeRelationship.get.otherParticipantInstanceIdentifier, activeRelationship.get.otherParticipantUpdateTimestamp)
-      case Recipient => RecipientInformation(loggedInUserInfo.get.cid.toString(), loggedInUserInfo.get.timestamp)
+    primaryRecord.role match {
+      case Transferor => RecipientInformation(primaryRecord.otherParticipantInstanceIdentifier, primaryRecord.otherParticipantUpdateTimestamp)
+      case Recipient => RecipientInformation(loggedInUserInfo.cid.toString(), loggedInUserInfo.timestamp)
     }
   }
 
-  //TODO update domain to remove .get
   def transferorInformation: TransferorInformation = {
-    role match {
-      case Transferor => TransferorInformation(loggedInUserInfo.get.timestamp)
-      case Recipient => TransferorInformation(activeRelationship.get.otherParticipantUpdateTimestamp)
+    primaryRecord.role match {
+      case Transferor => TransferorInformation(loggedInUserInfo.timestamp)
+      case Recipient => TransferorInformation(primaryRecord.otherParticipantUpdateTimestamp)
     }
   }
 
 }
 
+//TODO this logic should live in TAMC
 object RelationshipRecords {
+
+  val logger = Logger(this.getClass)
 
   def apply(relationshipRecordList: RelationshipRecordList): RelationshipRecords = {
 
     val relationships = relationshipRecordList.relationships
-    val activeRelationship = relationships.find(_.isActive)
-    val historicRelationships = {
+    val activeRecordCount = relationships.count(_.isActive)
+
+    val primaryRecord: RelationshipRecord  = activeRecordCount match {
+      case(0) => {
+        logger.error("No active record found")
+        throw NoPrimaryRecordError()
+      }
+      case(1) => relationships.find(_.isActive).head
+      case multiple => {
+        logger.error(s"$multiple active records found")
+        throw MultipleActiveRecordError()
+      }
+    }
+
+    val nonPrimaryRelationships = {
       if (relationships.size > 1 && relationships.head.participant1EndDate.isEmpty) {
         Some(relationships.tail)
       } else if (relationships.nonEmpty && relationships.head.participant1EndDate.isDefined) {
@@ -75,6 +69,8 @@ object RelationshipRecords {
       } else None
     }
 
-    RelationshipRecords(activeRelationship, historicRelationships, relationshipRecordList.userRecord)
+    val userRecord = relationshipRecordList.userRecord.getOrElse(throw CitizenNotFound())
+
+    RelationshipRecords(primaryRecord, nonPrimaryRelationships, userRecord)
   }
 }

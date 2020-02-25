@@ -30,10 +30,5 @@ case object ActiveHistoric extends RecordStatus {
   def asString(): String = {
     "ActiveHistoric"
   }
-}
 
-case object Historic extends RecordStatus {
-  def asString(): String = {
-    "Historic"
-  }
 }

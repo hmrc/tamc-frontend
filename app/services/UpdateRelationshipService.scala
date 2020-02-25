@@ -52,8 +52,8 @@ trait UpdateRelationshipService {
 
   private val parseDate = parseDateWithFormat(_: String)
 
-  def retrieveRelationshipRecords(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
-    marriageAllowanceConnector.listRelationship(transferorNino) map (RelationshipRecords(_))
+  def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
+    marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_))
   }
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {

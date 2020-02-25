@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.Json
 import services.TimeService
 
-//TODO replace participant with Role object
+//TODO TAMC could provide the Role
 case class RelationshipRecord(participant: String,
                               creationTimestamp: String,
                               participant1StartDate: String,
@@ -35,6 +35,7 @@ case class RelationshipRecord(participant: String,
     case _ => false
   }
 
+  val role: Role = Role(participant)
 
   def overlappingTaxYears: Set[Int] = {
     val timeService = TimeService
