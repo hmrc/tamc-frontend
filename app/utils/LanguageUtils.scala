@@ -24,13 +24,7 @@ object LanguageUtils {
   //TODO add test
   //TODO pass lang object not message?
   //TODO pass language not all these objects?? Easier to test and easier to maintain
-  def isWelsh(messages: Messages) = {
-    if (messages != null && messages.lang != null) {
-      ApplicationConfig.LANG_LANG_WELSH == messages.lang.language
-    } else {
-      false
-    }
-  }
+  def isWelsh(messages: Messages): Boolean = messages.lang.language == ApplicationConfig.LANG_LANG_WELSH
 }
 
 

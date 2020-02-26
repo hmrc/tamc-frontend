@@ -38,6 +38,7 @@ sealed trait TextGenerator {
 
   def separator: String
   def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String
+  def formPossessive(noun: String): String
 
   def formPageDataJourney(prefix: String, form: Form[_]): String =
     form.hasErrors match {
@@ -52,8 +53,6 @@ sealed trait TextGenerator {
   }
 
   def nonBreakingSpace(text: String): String = text.replace(" ", "\u00A0")
-
-  def formPossessive(noun: String): String
 
   def taxDateInterval(taxYear: Int)(implicit messages: Messages): String = {
     ukDateTransformer(TaxYear(taxYear).starts) + separator + ukDateTransformer(TaxYear(taxYear).finishes)

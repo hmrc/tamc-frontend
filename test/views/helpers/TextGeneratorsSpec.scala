@@ -16,30 +16,92 @@
 
 package views.helpers
 
-import java.time.LocalDate
-
+import forms.EmailForm
+import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito.when
+import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
+import play.api.i18n.Messages
+import uk.gov.hmrc.emailaddress.EmailAddress
 
 import scala.collection.immutable
 
-class TextGeneratorsSpec extends WordSpec with Matchers {
+class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar  {
 
   private val currentYear = LocalDate.now().getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
 
-  "TaxGenerators" when {
+
+  trait EnglishSetup {
+    implicit val englishMessages = mock[Messages]
+    when(englishMessages.lang.language).thenReturn("en")
+  }
+
+  trait WelshSetup {
+    implicit val welshMessage = mock[Messages]
+    when(welshMessage.lang.language).thenReturn("cy")
+  }
+
+
+
+  "TextGenerators" when {
+
+    "seperator" must {
+      "return English separator" in new EnglishSetup {
+        TextGenerator().separator shouldBe " to "
+      }
+
+      "return Welsh separator" in new WelshSetup {
+        TextGenerator().separator shouldBe " i "
+      }
+    }
+
+    "ukDateTransformer" must {
+
+      val englishList = List(
+        (new LocalDate(2016, 5, 6), "May"),
+        (new LocalDate(1993, 11, 11), "November"),
+        (new LocalDate(2020, 1, 1), "January")
+      )
+
+      englishList.foreach { dateMonthTuple =>
+        s"return month as English ${dateMonthTuple._2}" in new EnglishSetup {
+          TextGenerator().ukDateTransformer(dateMonthTuple._1) should include(dateMonthTuple._2)
+        }
+      }
+
+      val welshList = List(
+        (new LocalDate(2016, 5, 6), "Mai"),
+        (new LocalDate(1993, 11, 11), "Tachwedd"),
+        (new LocalDate(2020, 1, 1), "Ionawr")
+      )
+
+      welshList.foreach { dateMonthTuple =>
+        s"return month as Welsh ${dateMonthTuple._2}" in new WelshSetup {
+          TextGenerator().ukDateTransformer(dateMonthTuple._1) should include(dateMonthTuple._2)
+        }
+      }
+    }
+
+    "formPossessive" must {
+      "append an 's in English" in new EnglishSetup {
+        TextGenerator().formPossessive("Dick") shouldBe "Dick's"
+      }
+
+      "remain the same in Welsh" in new WelshSetup {
+        TextGenerator().formPossessive("Taffy") shouldBe "Taffy"
+      }
+    }
 
     "taxDateInterval" must {
       for (year <- years) {
         val start = year
         val finish = year + 1
-        //e.g. 6 April 2018 to 5 April 2019
-        s"return the beginning and end dates of $year tax year(UK)" in {
-          TextGenerators.taxDateInterval(year, isWelsh = false) shouldBe s"6 April $start to 5 April $finish"
+        s"return the beginning and end dates of $year tax year(UK)" in new EnglishSetup {
+          TextGenerator().taxDateInterval(year) shouldBe s"6 April $start to 5 April $finish"
         }
-        s"return the beginning and end dates of $year tax year(CY)" in {
-          //6 Ebrill 2020 i 5 Ebrill 2021
-          TextGenerators.taxDateInterval(year, isWelsh = true) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
+        s"return the beginning and end dates of $year tax year(CY)" in new WelshSetup {
+          TextGenerator().taxDateInterval(year) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
         }
       }
     }
@@ -49,12 +111,11 @@ class TextGeneratorsSpec extends WordSpec with Matchers {
         val start = year
         val finish = year + 1
         val expected = finish + 1
-        //e.g. 2017 to 2019
-        s"return the years that two tax years span from $start to $finish (UK)" in {
-          TextGenerators.taxDateIntervalMultiYear(start, finish, isWelsh = false) shouldBe s"$start to $expected"
+        s"return the years that two tax years span from $start to $finish (UK)" in  new EnglishSetup {
+          TextGenerator().taxDateIntervalMultiYear(start, finish) shouldBe s"$start to $expected"
         }
-        s"return the years that two tax years span from $start to $finish (CY)" in {
-          TextGenerators.taxDateIntervalMultiYear(start, finish, isWelsh = true) shouldBe s"$start i $expected"
+        s"return the years that two tax years span from $start to $finish (CY)" in new WelshSetup {
+          TextGenerator().taxDateIntervalMultiYear(start, finish) shouldBe s"$start i $expected"
         }
       }
     }
@@ -63,32 +124,67 @@ class TextGeneratorsSpec extends WordSpec with Matchers {
       for (year <- years) {
         val start = year
         val finish = year + 1
-        s"return the years that a single($start) tax year spans across(UK)" in {
-          TextGenerators.taxDateIntervalShort(start, isWelsh = false) shouldBe s"$start to $finish"
+        s"return the years that a single($start) tax year spans across(UK)" in new EnglishSetup {
+          TextGenerator().taxDateIntervalShort(start) shouldBe s"$start to $finish"
         }
-        s"return the years that a single($start) tax year spans across(CY)" in {
-          TextGenerators.taxDateIntervalShort(start, isWelsh = true) shouldBe s"$start i $finish"
+        s"return the years that a single($start) tax year spans across(CY)" in new WelshSetup {
+          TextGenerator().taxDateIntervalShort(start) shouldBe s"$start i $finish"
         }
       }
     }
 
     "taxDateIntervalString" must {
-      //      "return dates for one tax year to present(UK)" in {
-      //        //TODO John delete prev format why???!!
-      //        TextGenerators.taxDateIntervalString("05-05-2016", Some("05-05-2017"), isWelsh = false) shouldBe "2016 to 2018"
-      //      }
-      "return dates for one tax year to another(UK)" in {
-        TextGenerators.taxDateIntervalString("20160505", None, isWelsh = false) shouldBe "2016 to Present"
+      "return dates for one tax year to present(UK)" in new EnglishSetup {
+        TextGenerator().taxDateIntervalString("20160505", Some("20170505")) shouldBe "2016 to 2018"
       }
 
-      //      "return dates for one tax year to present(CY)" in {
-      //        TextGenerators.taxDateIntervalString("05-05-2016", Some("05-05-2017"), isWelsh = true) shouldBe "2016 i 2018"
-      //      }
-      "return dates for one tax year to another(CY)" in {
-        TextGenerators.taxDateIntervalString("20160505", None, isWelsh = true) shouldBe "2016 i’r Presennol"
+      "return dates for one tax year to another(UK)" in new EnglishSetup {
+        TextGenerator().taxDateIntervalString("20160505", None) shouldBe "2016 to Present"
+      }
+
+      "return dates for one tax year to present(CY)" in new WelshSetup  {
+        TextGenerator().taxDateIntervalString("20160505", Some("20170505")) shouldBe "2016 i 2018"
+      }
+
+      "return dates for one tax year to another(CY)" in new WelshSetup {
+        TextGenerator().taxDateIntervalString("20160505", None) shouldBe "2016 i’r Presennol"
+      }
+    }
+
+    "formPageDateJourney" must {
+      "return list of keys string" in new EnglishSetup {
+        val formWithErrors = EmailForm.emailForm.fill(EmailAddress("exampleemail.com"))
+
+        TextGenerator().formPageDataJourney("prefix", formWithErrors) shouldBe
+          s"prefix-erroneous(transferor-email)"
+      }
+
+      "return prefix" in new EnglishSetup {
+        val form = EmailForm.emailForm.fill(EmailAddress("example@email.com"))
+
+        TextGenerator().formPageDataJourney("prefix", form) shouldBe
+          "prefix"
+      }
+    }
+
+    "dateTransformer" must {
+      "return String from LocalDate" in new EnglishSetup {
+        TextGenerator().dateTransformer(new LocalDate(2020, 2, 2)) shouldBe
+          "2/2/2020"
+      }
+
+      "return LocalDate from String" in new EnglishSetup {
+        TextGenerator().dateTransformer("202022") shouldBe
+          new LocalDate(2020, 2, 2)
+      }
+    }
+
+    "nonBreakingSpace" must {
+      "replace spaces in String" in new EnglishSetup {
+        TextGenerator().nonBreakingSpace("Break space") shouldBe
+          "Break\u00A0space"
       }
     }
 
   }
-
 }
