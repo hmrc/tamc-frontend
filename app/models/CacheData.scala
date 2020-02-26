@@ -46,14 +46,12 @@ case class UpdateRelationshipCacheDataTemp(relationshipRecords: RelationshipReco
 //TODO should this live in the cache service ???
 object UpdateRelationshipCacheDataTemp {
 
-  def apply(relationshipRecords: RelationshipRecords,
-            email: Option[String],
-            endReason: Option[EndMarriageAllowanceReason],
+  def apply(relationshipRecords: Option[RelationshipRecords], email: Option[String], endReason: Option[EndMarriageAllowanceReason],
             marriageEndDate: Option[LocalDate]): UpdateRelationshipCacheDataTemp = {
 
-    (email, endReason, marriageEndDate) match {
+    (relationshipRecords, email, endReason, marriageEndDate) match {
 
-      case(Some(email), Some(endReason), Some(endDate)) => {
+      case(Some(relationshipRecords), Some(email), Some(endReason), Some(endDate)) => {
         //TODO log error instead?
         UpdateRelationshipCacheDataTemp(relationshipRecords, email,
           endReason.desEnumerationValue.getOrElse(throw new RuntimeException(s"No DES enumerated value found for Marriage Allowance EndReason: $endReason")), endDate)

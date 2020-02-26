@@ -70,26 +70,23 @@ object HistoricRow {
 
 }
 
-case class ClaimsViewModel(activeRow: Option[ActiveRow],
+case class ClaimsViewModel(activeRow: ActiveRow,
                            historicRows: Option[Seq[HistoricRow]],
-                           isActiveRecord: Boolean,
                            taxFreeAllowanceLink: Html,
                            backLinkUrl: String)
 
 object ClaimsViewModel {
 
-  def apply(activeRelationship: Option[RelationshipRecord],
-            historicRelationships: Option[Seq[RelationshipRecord]],
-            recordStatus: RecordStatus)(implicit messages: Messages): ClaimsViewModel = {
+  def apply(activeRelationship: RelationshipRecord,
+            historicRelationships: Option[Seq[RelationshipRecord]])(implicit messages: Messages): ClaimsViewModel = {
 
-    val activeRow = activeRelationship map (ActiveRow(_))
+    val activeRow = ActiveRow(activeRelationship)
     val historicRows = historicRelationships map { historicRelationships =>
       historicRelationships map (HistoricRow(_))
     }
 
-    val isActiveRecord = recordStatus == Active
 
-    ClaimsViewModel(activeRow, historicRows, isActiveRecord, taxFreeAllowanceLink, backLinkUrl(recordStatus))
+    ClaimsViewModel(activeRow, historicRows, taxFreeAllowanceLink, backLinkUrl)
   }
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
@@ -98,12 +95,6 @@ object ClaimsViewModel {
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 
-  private def backLinkUrl(recordStatus: RecordStatus): String = {
-    recordStatus match {
-      case Active =>
-        controllers.routes.UpdateRelationshipController.decision().url
-      case _ =>
-        controllers.routes.UpdateRelationshipController.history().url
-    }
-  }
+  //TODO implement browser back functionality so we can remove this
+  private def backLinkUrl: String = controllers.routes.UpdateRelationshipController.history().url
 }

@@ -27,21 +27,26 @@ import views.helpers.TextGenerator
 
 case class HistorySummaryButton(id: String, content: String, href: String)
 
-case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummaryButton)
+case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummaryButton, displayName: String)
 
 object HistorySummaryViewModel {
 
-  //TODO is the taxyear being handled correctly here?
   def apply(relationshipRecords: RelationshipRecords)(implicit messages: Messages): HistorySummaryViewModel = {
 
-    if (relationshipRecords.recordStatus == Active) {
-      createActiveRecordBasedViewModel(relationshipRecords.role)
+    val role = relationshipRecords.primaryRecord.role
+
+    val (paragraphContent, button) = if (relationshipRecords.hasMarriageAllowanceBeenCancelled) {
+      marriageAllowanceCancelledContent(role)
     } else {
-      createHistoricBasedViewModel(relationshipRecords.role)
+      activeRecordContent(role)
     }
+
+    val displayName = relationshipRecords.loggedInUserInfo.name.flatMap(_.fullName).getOrElse("")
+
+    HistorySummaryViewModel(paragraphContent, button, displayName)
   }
 
-  private def createActiveRecordBasedViewModel(role: Role)(implicit messages: Messages): HistorySummaryViewModel = {
+  private def activeRecordContent(role: Role)(implicit messages: Messages): (Html, HistorySummaryButton) = {
     lazy val maxPersonalAllowanceTransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(TaxYear.current.currentYear)
     lazy val maxPersonalBenefit = MAX_BENEFIT(TaxYear.current.currentYear)
 
@@ -61,29 +66,26 @@ object HistorySummaryViewModel {
       controllers.routes.UpdateRelationshipController.decision().url
     )
 
-    HistorySummaryViewModel(paragraphContent, button)
+    (paragraphContent, button)
   }
 
 
-  private def createHistoricBasedViewModel(role: Role)(implicit messages: Messages): HistorySummaryViewModel = {
+  private def marriageAllowanceCancelledContent(role: Role)(implicit messages: Messages): (Html, HistorySummaryButton) = {
     val formattedEndOfYear = TextGenerator().ukDateTransformer(TaxYear.current.finishes)
 
     val paragraphContent = if (role == Transferor) {
-
-      //TODO welsh
       Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
         s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</P>")
 
     } else {
-      //TODO welsh
       Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
         s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</P>")
     }
 
     val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
       controllers.routes.UpdateRelationshipController.claims().url)
-    HistorySummaryViewModel(paragraphContent, button)
 
+    (paragraphContent, button)
   }
 
 }

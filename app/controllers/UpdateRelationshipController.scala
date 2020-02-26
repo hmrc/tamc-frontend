@@ -54,21 +54,19 @@ class UpdateRelationshipController @Inject()(
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
-        if (relationshipRecords.recordStatus != Active && relationshipRecords.recordStatus != ActiveHistoric) {
-          if (!request.authState.permanent) {
-            Future.successful(Redirect(controllers.routes.TransferController.transfer()))
-          } else {
-            Future.successful(Redirect(controllers.routes.EligibilityController.howItWorks()))
-          }
-        } else {
-          //TODO cache the actual object
-          updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
+        updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
             val viewModel = HistorySummaryViewModel(relationshipRecords)
-            //TODO fail when loggedInUSerInfo is None
-            Ok(views.html.coc.history_summary(relationshipRecords.loggedInUserInfo, viewModel))
-          }
+            Ok(views.html.coc.history_summary(viewModel))
         }
       } recover handleError
+  }
+
+  private def noPrimaryRecordRedirect(request: UserRequest[_]): Result = {
+    if (!request.authState.permanent) {
+      Redirect(controllers.routes.TransferController.transfer())
+    } else {
+     Redirect(controllers.routes.EligibilityController.howItWorks())
+    }
   }
 
   def decision: Action[AnyContent] = authenticate.async {
@@ -109,9 +107,8 @@ class UpdateRelationshipController @Inject()(
       updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
 
         val viewModel = ClaimsViewModel(
-          relationshipRecords.activeRelationship,
-          relationshipRecords.historicRelationships,
-          relationshipRecords.recordStatus)
+          relationshipRecords.primaryRecord,
+          relationshipRecords.nonPrimaryRecords)
 
         Ok(views.html.coc.claims(viewModel))
       }
@@ -160,7 +157,7 @@ class UpdateRelationshipController @Inject()(
 
   private def noLongerWantMarriageAllowanceRedirect(implicit hc: HeaderCarrier): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-      if(relationshipRecords.role == Recipient){
+      if(relationshipRecords.primaryRecord.role == Recipient){
         Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
       } else {
         Redirect(controllers.routes.UpdateRelationshipController.cancel())
@@ -171,7 +168,7 @@ class UpdateRelationshipController @Inject()(
 
   private def changeOfIncomeRedirect(implicit hc: HeaderCarrier): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-      if(relationshipRecords.role == Recipient){
+      if(relationshipRecords.primaryRecord.role == Recipient){
         Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
       } else {
         Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome())
@@ -207,7 +204,7 @@ class UpdateRelationshipController @Inject()(
   def bereavement: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-        Ok(views.html.coc.bereavement(relationshipRecords.role))
+        Ok(views.html.coc.bereavement(relationshipRecords.primaryRecord.role))
       }
   }
 
@@ -435,6 +432,7 @@ class UpdateRelationshipController @Inject()(
         }
 
         throwable match {
+          case _: NoPrimaryRecordError => noPrimaryRecordRedirect(request)
           case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
           case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))

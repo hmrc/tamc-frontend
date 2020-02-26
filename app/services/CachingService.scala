@@ -18,7 +18,7 @@ package services
 
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
-import errors.TransferorNotFound
+import errors.{CacheMissingRelationshipRecords, TransferorNotFound}
 import models._
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
@@ -188,13 +188,10 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       //TODO create a type
       optionalCacheMap.fold(throw new RuntimeException("Failed to retrieve cacheMap")){ cacheMap =>
 
-          val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
-          val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
-          val loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD)
           val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
           val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
           val endReason = cacheMap.getEntry[EndMarriageAllowanceReason](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
-          val relationshipRecord = RelationshipRecords(activeRelationshipRecord, historicRelationships, loggedInUserInfo)
+          val relationshipRecord = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
           UpdateRelationshipCacheDataTemp(relationshipRecord, emailAddress, endReason, endDate)
 
@@ -210,9 +207,12 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
           cacheMap =>
             val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
             val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
-            val loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD)
+            val loggedInUserInfo = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
             val effectiveDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE)
             val divorceDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
+
+
+
             val name = loggedInUserInfo.flatMap(_.name.flatMap(_.fullName))
 
             ConfirmationUpdateAnswersCacheData(name, divorceDate, emailAddress, endDate, effectiveDate)
@@ -221,17 +221,8 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   }
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
-
-    fetch() map {
-      case(Some(cacheMap)) => {
-        val activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD)
-        val historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](ApplicationConfig.CACHE_HISTORIC_RELATION_RECORD)
-        val loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD)
-        RelationshipRecords(activeRelationshipRecord, historicRelationships, loggedInUserInfo)
-      }
-        //TODO add test for this case
-        //TODO error scenario
-      case _ => ???
+    fetchAndGetEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS).map {
+      _.getOrElse(throw CacheMissingRelationshipRecords())
     }
   }
 

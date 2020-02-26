@@ -21,6 +21,7 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
 
+//TODO isRetrospective can be removed once TAMC domain is updated
 case class UpdateRelationshipNotificationRequest(full_name: String, email: EmailAddress, role: String, welsh: Boolean = false, isRetrospective: Boolean = false)
 
 object UpdateRelationshipNotificationRequest {
@@ -28,8 +29,8 @@ object UpdateRelationshipNotificationRequest {
 
   def apply(email: String, relationshipRecords: RelationshipRecords, isWelsh: Boolean): UpdateRelationshipNotificationRequest = {
 
-    val role = relationshipRecords.role.asString()
-    val name = relationshipRecords.loggedInUserInfo.flatMap(_.name.flatMap(_.fullName)).getOrElse("Unknown")
+    val role = relationshipRecords.primaryRecord.role.asString()
+    val name = relationshipRecords.loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
     val emailAddress = EmailAddress(email)
 
     UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)

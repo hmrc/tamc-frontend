@@ -20,7 +20,6 @@
 @import viewModels.ClaimsViewModel
 @import uk.gov.hmrc.urls.Link
 
-
 @(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -44,14 +43,14 @@ mainConfig = views.helpers.MainConfig(None)
                 </tr>
             </thead>
             <tbody>
-                @viewModel.activeRow.fold(Html("")){ row =>
-                    <tr>
-                        <td class="bold" id="active">
-                            @row.activeDateInterval
-                        </td>
-                        <td id="active-reason" colspan="2">@row.activeStatus</td>
-                    </tr>
-                }
+
+                <tr>
+                    <td class="bold" id="active">
+                        @viewModel.activeRow.activeDateInterval
+                    </td>
+                    <td id="active-reason" colspan="2">@viewModel.activeRow.activeStatus</td>
+                </tr>
+
 
                 @viewModel.historicRows.fold(Html("")){ rows =>
                     @for((row, index) <- rows.zipWithIndex) {
@@ -71,10 +70,9 @@ mainConfig = views.helpers.MainConfig(None)
 
     <p class="panel-indent panel-indent--gutter">@viewModel.taxFreeAllowanceLink</p>
 
-    @if(viewModel.isActiveRecord){
-        <a id="backToSummary" href="@controllers.routes.UpdateRelationshipController.history()">
-            @messages("claim.summary.link")
-        </a>
-    }
+    <a id="backToSummary" href="@controllers.routes.UpdateRelationshipController.history()">
+        @messages("claim.summary.link")
+    </a>
+
 
 }

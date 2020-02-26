@@ -30,6 +30,8 @@ case class CacheTransferorInRelationship() extends ServiceError
 
 case class CacheMissingRecipient() extends ServiceError
 
+case class CacheMissingRelationshipRecords() extends ServiceError
+
 case class CacheRecipientInRelationship() extends ServiceError
 
 case class CacheMissingEmail() extends ServiceError

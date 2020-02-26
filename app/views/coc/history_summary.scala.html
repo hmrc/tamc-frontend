@@ -21,7 +21,7 @@
 @import viewModels.HistorySummaryViewModel
 
 
-@(loggedInUserInfo: Option[LoggedInUserInfo], viewModel: HistorySummaryViewModel)(implicit messages: Messages,
+@(viewModel: HistorySummaryViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -31,8 +31,7 @@ title = messages("title.pattern", messages("title.history")),
 mainConfig = views.helpers.MainConfig(None)
 ){
     <header class="page-heading">
-        <p class="heading-secondary">@loggedInUserInfo.get.name.get.firstName
-            @loggedInUserInfo.get.name.get.lastName</p>
+        <p class="heading-secondary">@viewModel.displayName</p>
         <h1 class="heading-xlarge">@messages("title.history")</h1>
     </header>
 

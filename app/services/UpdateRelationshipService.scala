@@ -58,38 +58,19 @@ trait UpdateRelationshipService {
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
-    def cacheOptionalData[T](data: Option[T], f: T => Future[T])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] = {
-      data match {
-        case Some(dataToCache) => f(dataToCache) map (Some(_))
-        case _ => Future.successful(None)
-      }
-    }
-
-    //TODO could potentially be made val
-    def cacheActiveRelationship(activeRelationship: Option[RelationshipRecord])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecord]] = {
-      cacheOptionalData(activeRelationship, cachingService.saveActiveRelationshipRecord(_: RelationshipRecord))
-    }
-
-    //TODO could potentially be made val
-    def cacheLoggedInUserInfo(loggedInUserInfo: Option[LoggedInUserInfo])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LoggedInUserInfo]] = {
-      cacheOptionalData(loggedInUserInfo, cachingService.saveLoggedInUserInfo(_: LoggedInUserInfo))
-    }
-
     def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
       cachingService.unlockCreateRelationship().map { _ => trrecord }
 
-    // TODO tidy this
-    val transferorRec = UserRecord(relationshipRecords.loggedInUserInfo)
-    val cacheActiveRelationshipFuture = cacheActiveRelationship(relationshipRecords.activeRelationship)
-    val saveHistoricRelationshipFuture = cachingService.saveHistoricRelationships(relationshipRecords.historicRelationships)
-    val cacheLoggedInUserInfoFuture = cacheLoggedInUserInfo(relationshipRecords.loggedInUserInfo)
+    // TODO is this really required
+    val transferorRec = UserRecord(Some(relationshipRecords.loggedInUserInfo))
     val checkCreateActionLockFuture = checkCreateActionLock(transferorRec)
     val saveTransferorRecordFuture = cachingService.saveTransferorRecord(transferorRec)
 
+    val cacheRelationshipRecordFuture = cachingService.cacheValue(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
+
+
     for {
-      _ <- cacheActiveRelationshipFuture
-      _ <- saveHistoricRelationshipFuture
-      _ <- cacheLoggedInUserInfoFuture
+      _ <-cacheRelationshipRecordFuture
       _ <- checkCreateActionLockFuture
       _ <- saveTransferorRecordFuture
     } yield relationshipRecords
@@ -137,7 +118,7 @@ trait UpdateRelationshipService {
 
       //TODO is this OK?
       divorceDate.fold(throw new RuntimeException("divorce date missing from cache")) {
-        (relationshipRecords.role, _)
+        (relationshipRecords.primaryRecord.role, _)
       }
     }
   }

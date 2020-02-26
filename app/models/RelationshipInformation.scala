@@ -22,13 +22,12 @@ import play.api.libs.json.Json
 object RelationshipInformation {
   implicit val formats = Json.format[RelationshipInformation]
 
-  def apply(activeRelationship: Option[RelationshipRecord], relationshipEndReason: String, endDate: LocalDate):  RelationshipInformation = {
+  def apply(activeRelationship: RelationshipRecord, relationshipEndReason: String, endDate: LocalDate):  RelationshipInformation = {
 
     //TODO remove the need for an optional active record
-    val creationTimeStamp = activeRelationship.fold(throw new RuntimeException("No active record"))(_.creationTimestamp)
+    val creationTimeStamp = activeRelationship.creationTimestamp
     val endDateFormatted = endDate.toString("yyyyMMdd")
     RelationshipInformation(creationTimeStamp, relationshipEndReason, endDateFormatted)
-
   }
 }
 
