@@ -115,13 +115,13 @@ object WelshTextGenerator extends TextGenerator {
     "November" -> "Tachwedd",
     "December" -> "Rhagfyr"
   )
-
+  
   def welshConverted(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
     val fetchMonthName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
     val month = fetchMonthName(date)
-    val enDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
+    val endDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
 
-    date.toString.replace(month, welshMonths.get(month).get)
+    endDate.toString.replace(month, welshMonths(month))
   }
 
   override val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " i’r Presennol")
