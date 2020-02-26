@@ -16,9 +16,8 @@
 
 package models
 
+import errors.{CacheMissingEffectiveDate, CacheMissingEmail, CacheMissingEndDate, CacheMissingRelationshipRecords}
 import org.joda.time.LocalDate
-import play.api.mvc.Result
-
 
 case class ConfirmationUpdateAnswers(fullName: String, divorceDate: Option[LocalDate], email: String, maEndDate: LocalDate, paEffectiveDate: LocalDate)
 
@@ -26,15 +25,18 @@ object ConfirmationUpdateAnswers {
 
   def apply(cacheData: ConfirmationUpdateAnswersCacheData): ConfirmationUpdateAnswers = {
 
-    val name = cacheData.fullName.getOrElse(throw new RuntimeException("fullName value not returned from cache"))
+
+    val relationshipRecords = cacheData.relationshipRecords.getOrElse(throw CacheMissingRelationshipRecords())
+    val name = relationshipRecords.loggedInUserInfo.name.flatMap(_.fullName).getOrElse("")
     val divorceDate = cacheData.divorceDate
-    val emailAddress = cacheData.email.getOrElse(throw new RuntimeException("email value not returned from cache"))
-    val endDate = cacheData.maEndDate.getOrElse(throw new RuntimeException("maEndDate value not returned from cache"))
-    val effectiveDate = cacheData.paEffectiveDate.getOrElse(throw new RuntimeException("paEffectiveDate value not returned from cache"))
+    val emailAddress = cacheData.email.getOrElse(throw CacheMissingEmail())
+    val endDate = cacheData.maEndDate.getOrElse(throw CacheMissingEndDate())
+    val effectiveDate = cacheData.paEffectiveDate.getOrElse(throw CacheMissingEffectiveDate())
 
     ConfirmationUpdateAnswers(name, divorceDate, emailAddress, endDate, effectiveDate)
   }
 }
 
-case class ConfirmationUpdateAnswersCacheData(fullName: Option[String], divorceDate: Option[LocalDate], email: Option[String], maEndDate: Option[LocalDate], paEffectiveDate: Option[LocalDate])
+case class ConfirmationUpdateAnswersCacheData(relationshipRecords: Option[RelationshipRecords], divorceDate: Option[LocalDate],
+                                              email: Option[String], maEndDate: Option[LocalDate], paEffectiveDate: Option[LocalDate])
 

@@ -36,6 +36,10 @@ case class CacheRecipientInRelationship() extends ServiceError
 
 case class CacheMissingEmail() extends ServiceError
 
+case class CacheMissingEndDate() extends ServiceError
+
+case class CacheMissingEffectiveDate() extends ServiceError
+
 case class CacheCreateRequestNotSent() extends ServiceError
 
 case class TransferorDeceased() extends ServiceError
