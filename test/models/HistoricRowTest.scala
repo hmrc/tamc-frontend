@@ -16,18 +16,19 @@
 
 package models
 
-import models.RelationshipEndReason._
+import models.DesRelationshipEndReason._
+import models.DesRelationshipEndReason.{Divorce => Separation}
 import play.api.i18n.Messages
 import utils.TamcViewModelTest
 import viewModels.HistoricRow
-import views.helpers.TextGenerators
+import views.helpers.TextGenerator
 
 class HistoricRowTest extends TamcViewModelTest {
 
   val noneEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = None)
 
   val deathEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(Death))
-  val divorceEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(Divorce))
+  val divorceEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(Separation))
   val invPartEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(InvalidParticipant))
   val cancelledEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(Cancelled))
   val rejectedEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(Rejected))
@@ -39,16 +40,8 @@ class HistoricRowTest extends TamcViewModelTest {
 
   "historic row" should {
     val rows = Seq(
-      //none
       noneEndReason,
-      //valid end reason
       activeRecipientRelationshipRecord,
-      activeTransferorRelationshipRecord2,
-      activeTransferorRelationshipRecord3,
-      inactiveRecipientRelationshipRecord1,
-      inactiveRecipientRelationshipRecord2,
-      inactiveRecipientRelationshipRecord3,
-      //all end relationship statuses
       deathEndReason,
       divorceEndReason,
       invPartEndReason,
@@ -59,27 +52,25 @@ class HistoricRowTest extends TamcViewModelTest {
       mergerEndReason,
       retroEndReason,
       systemEndReason
-    )
-    var i = 0
-
-    for (row <- rows) {
-      i = i + 1
-      s"be historic row[$i] from rows" in {
-        val expectedDate = TextGenerators.taxDateIntervalString(
-          row.participant1StartDate,
-          row.participant1EndDate)
-        val expectedStatus = getStatus(row)
-        val activeRow = HistoricRow(row)
-        activeRow.historicDateInterval shouldBe expectedDate
-        activeRow.historicStatus shouldBe expectedStatus
-      }
+    ).foreach {
+        row => {
+          s"be historic row[$row] from rows" in {
+            val expectedDate = TextGenerator().taxDateIntervalString(
+              row.participant1StartDate,
+              row.participant1EndDate)
+            val expectedReason = getReason(row)
+            val nonPrimaryRow = HistoricRow(row)
+            nonPrimaryRow.historicDateInterval shouldBe expectedDate
+            nonPrimaryRow.historicStatus shouldBe expectedReason
+          }
+        }
     }
   }
 
-  private def getStatus(record: RelationshipRecord)(implicit messages: Messages): String = {
-    val endDate = record.relationshipEndReason
+  private def getReason(record: RelationshipRecord)(implicit messages: Messages): String = {
+    val endReason = record.relationshipEndReason
 
-    endDate match {
+    endReason match {
       case Some(x) =>
         val cause = x.value
         val messageKey = s"coc.end-reason.$cause"

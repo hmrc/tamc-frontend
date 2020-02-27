@@ -36,7 +36,7 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
       Recipient.asString(),
       "56787",
       "20130101",
-      Some(RelationshipEndReason.Default),
+      Some(DesRelationshipEndReason.Default),
       None,
       "",
       "")
@@ -46,7 +46,7 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
       Recipient.asString(),
       "56787",
       "20130101",
-      Some(RelationshipEndReason.Default),
+      Some(DesRelationshipEndReason.Default),
       Some(currentYear.toString),
       "",
       "")
@@ -56,7 +56,7 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
       Recipient.asString(),
       "56787",
       "20130101",
-      Some(RelationshipEndReason.Default),
+      Some(DesRelationshipEndReason.Default),
       Some(futureDateTime),
       "",
       "")
@@ -66,7 +66,7 @@ class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
       Recipient.asString(),
       "56787",
       "20130101",
-      Some(RelationshipEndReason.Default),
+      Some(DesRelationshipEndReason.Default),
       Some(pastDateTime),
       "",
       "")

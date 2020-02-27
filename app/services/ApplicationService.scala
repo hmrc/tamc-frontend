@@ -17,7 +17,7 @@
 package services
 
 import config.ApplicationConfig
-import models.{RelationshipEndReason, RelationshipRecord}
+import models.{DesRelationshipEndReason, RelationshipRecord}
 
 object ApplicationService extends ApplicationService {
   override val timeService = TimeService
@@ -54,10 +54,10 @@ trait ApplicationService {
     val historicYears: Set[Set[Int]] = historicRelationships.getOrElse(Seq[RelationshipRecord]()).toSet.filter {
       relationship =>
         val unavailableReasonCodes = List(
-          Some(RelationshipEndReason.Divorce),
-          Some(RelationshipEndReason.Cancelled),
-          Some(RelationshipEndReason.Merger),
-          Some(RelationshipEndReason.Retrospective)
+          Some(DesRelationshipEndReason.Divorce),
+          Some(DesRelationshipEndReason.Cancelled),
+          Some(DesRelationshipEndReason.Merger),
+          Some(DesRelationshipEndReason.Retrospective)
         )
         unavailableReasonCodes contains relationship.relationshipEndReason
     }.map {

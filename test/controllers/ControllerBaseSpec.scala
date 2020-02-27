@@ -19,7 +19,7 @@ package controllers
 import java.util.concurrent.TimeUnit
 
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
-import models.{Recipient, RelationshipEndReason, RelationshipRecord, Transferor}
+import models.{Recipient, DesRelationshipEndReason, RelationshipRecord, Transferor}
 import org.joda.time.DateTime
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.words.MustVerb
@@ -88,7 +88,7 @@ trait ControllerBaseSpec extends UnitSpec
     Recipient.asString(),
     creationTimestamp = "56787",
     participant1StartDate = "20130101",
-    relationshipEndReason = Some(RelationshipEndReason.Default),
+    relationshipEndReason = Some(DesRelationshipEndReason.Default),
     participant1EndDate = None,
     otherParticipantInstanceIdentifier = "",
     otherParticipantUpdateTimestamp = "")

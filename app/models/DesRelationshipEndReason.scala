@@ -19,73 +19,75 @@ package models
 import play.api.Logger
 import play.api.libs.json._
 
-sealed trait RelationshipEndReason {
+
+//TODO eventually merge this in to the EndMarriageAllowanceReason object
+sealed trait DesRelationshipEndReason {
   def value: String
 }
 
-object RelationshipEndReason {
+object DesRelationshipEndReason {
 
-  case object Death extends RelationshipEndReason {
+  case object Death extends DesRelationshipEndReason {
     val value = "DEATH"
   }
 
-  case object Divorce extends RelationshipEndReason {
+  case object Divorce extends DesRelationshipEndReason {
     val value = "DIVORCE"
   }
 
-  case object InvalidParticipant extends RelationshipEndReason {
+  case object InvalidParticipant extends DesRelationshipEndReason {
     val value = "INVALID_PARTICIPANT"
   }
 
-  case object Cancelled extends RelationshipEndReason {
+  case object Cancelled extends DesRelationshipEndReason {
     val value = "CANCELLED"
   }
 
-  case object Rejected extends RelationshipEndReason {
+  case object Rejected extends DesRelationshipEndReason {
     val value = "REJECTED"
   }
 
-  case object Hmrc extends RelationshipEndReason {
+  case object Hmrc extends DesRelationshipEndReason {
     val value = "HMRC"
   }
 
-  case object Closed extends RelationshipEndReason {
+  case object Closed extends DesRelationshipEndReason {
     val value = "CLOSED"
   }
 
-  case object Merger extends RelationshipEndReason {
+  case object Merger extends DesRelationshipEndReason {
     val value = "MERGER"
   }
 
-  case object Retrospective extends RelationshipEndReason {
+  case object Retrospective extends DesRelationshipEndReason {
     val value = "RETROSPECTIVE"
   }
 
-  case object System extends RelationshipEndReason {
+  case object System extends DesRelationshipEndReason {
     val value = "SYSTEM"
   }
 
-  case object Active extends RelationshipEndReason {
+  case object Active extends DesRelationshipEndReason {
     val value = "Active"
   }
 
-  case object Default extends RelationshipEndReason {
+  case object Default extends DesRelationshipEndReason {
     val value = "DEFAULT"
   }
 
   object Enumeration{
 
-    def withValue(v: String): Option[RelationshipEndReason] = values.find(_.value == v)
+    def withValue(v: String): Option[DesRelationshipEndReason] = values.find(_.value == v)
 
     val values = Set(
       Death, Divorce, InvalidParticipant, Cancelled, Rejected, Hmrc, Closed, Merger, Retrospective, System, Active, Default
     )
   }
 
-  implicit val formats: Format[RelationshipEndReason] = new Format[RelationshipEndReason] {
-    override def writes(o: RelationshipEndReason): JsValue = JsString(o.value)
+  implicit val formats: Format[DesRelationshipEndReason] = new Format[DesRelationshipEndReason] {
+    override def writes(o: DesRelationshipEndReason): JsValue = JsString(o.value)
 
-    override def reads(json: JsValue): JsResult[RelationshipEndReason] = {
+    override def reads(json: JsValue): JsResult[DesRelationshipEndReason] = {
       val reason = json.as[String]
       Enumeration.withValue(reason) match {
         case Some(r) => JsSuccess(r)

@@ -25,12 +25,12 @@ object RelationshipRecordData {
   val loggedInUserInfo = LoggedInUserInfo(Cids.cid1, "", Some(true), Some(citizenName))
   val notificationRecord = NotificationRecord(EmailAddress("test@test.com"))
 
-  val activeRecord = RelationshipRecord(RoleOld.RECIPIENT, "56787", "20130101", Some(RelationshipEndReason.Default), Some("20130110"), "", "")
+  val activeRecord = RelationshipRecord(RoleOld.RECIPIENT, "56787", "20130101", Some(DesRelationshipEndReason.Default), Some("20130110"), "", "")
   val activeRecordWithNoEndDate: RelationshipRecord = activeRecord.copy(relationshipEndReason = None, participant1EndDate = None)
 
-  val historicRecord = RelationshipRecord(RoleOld.TRANSFEROR, "56789", "01-01-2012", Some(RelationshipEndReason.Death), Some("1-01-2013"), "", "")
-  val historicRecordDivorce: RelationshipRecord = historicRecord.copy(relationshipEndReason = Some(RelationshipEndReason.Divorce))
-  val historicRecordDivorcePY = RelationshipRecord(RoleOld.RECIPIENT, "12345", "01-01-2002", Some(RelationshipEndReason.Divorce), Some("1-01-2013"), "", "")
+  val historicRecord = RelationshipRecord(RoleOld.TRANSFEROR, "56789", "01-01-2012", Some(DesRelationshipEndReason.Death), Some("1-01-2013"), "", "")
+  val historicRecordDivorce: RelationshipRecord = historicRecord.copy(relationshipEndReason = Some(DesRelationshipEndReason.Divorce))
+  val historicRecordDivorcePY = RelationshipRecord(RoleOld.RECIPIENT, "12345", "01-01-2002", Some(DesRelationshipEndReason.Divorce), Some("1-01-2013"), "", "")
 
   val activeRelationshipRecordList = RelationshipRecordList(Seq(activeRecord), Some(loggedInUserInfo))
   //  val activeRelationshipRecordList = RelationshipRecordList(Some(activeRecord), None, Some(loggedInUserInfo), true, false, false)

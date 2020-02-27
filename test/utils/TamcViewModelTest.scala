@@ -35,7 +35,7 @@ trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSui
     Recipient.asString(),
     creationTimestamp = "56787",
     participant1StartDate = "20130101",
-    relationshipEndReason = Some(RelationshipEndReason.Default),
+    relationshipEndReason = Some(DesRelationshipEndReason.Default),
     participant1EndDate = None,
     otherParticipantInstanceIdentifier = "",
     otherParticipantUpdateTimestamp = "")

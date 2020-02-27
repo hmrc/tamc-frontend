@@ -70,7 +70,7 @@ class RelationshipRecordListTest extends UnitSpec with GuiceOneAppPerSuite {
       RoleOld.RECIPIENT,
       "56787",
       "20130101",
-      Some(RelationshipEndReason.Default),
+      Some(DesRelationshipEndReason.Default),
       None,
       "",
       "")

@@ -23,7 +23,7 @@ import services.TimeService
 case class RelationshipRecord(participant: String,
                               creationTimestamp: String,
                               participant1StartDate: String,
-                              relationshipEndReason: Option[RelationshipEndReason] = None,
+                              relationshipEndReason: Option[DesRelationshipEndReason] = None,
                               participant1EndDate: Option[String] = None,
                               otherParticipantInstanceIdentifier: String,
                               otherParticipantUpdateTimestamp: String) {
@@ -50,7 +50,7 @@ case class RelationshipRecord(participant: String,
         val isParticipant1EndDateOnTheFirstDayOfTaxYear: Boolean = participant1EndDate == timeService.getStartDateForTaxYear(taxYearOfParticipant1EndDate)
 
         relationshipEndReason match {
-          case Some(RelationshipEndReason.Divorce) if isParticipant1EndDateOnTheFirstDayOfTaxYear => taxYearOfParticipant1EndDate - 1
+          case Some(DesRelationshipEndReason.Divorce) if isParticipant1EndDateOnTheFirstDayOfTaxYear => taxYearOfParticipant1EndDate - 1
           case _ => taxYearOfParticipant1EndDate
         }
       })
