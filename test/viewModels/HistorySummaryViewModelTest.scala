@@ -36,50 +36,51 @@ class HistorySummaryViewModelTest extends ViewModelBaseSpec {
   lazy val maxBenefit: Int = MAX_BENEFIT(currentOfTaxYear)
   lazy val maxPaTransferFormatted: Int = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
   lazy val formattedEndOfTaxYear: String = endOfTaxYear.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
+  lazy val name = "Test User"
 
   "HistorySummaryViewModel" should {
 
     "create a view model with the correct content" when {
 
-      "the record is active " when {
+      "the record is has not cancelled marriage allowance " when {
 
         "the person is a recipient " in {
-          val viewModel = buildHistorySummaryViewModel(Recipient, Active)
+          val viewModel = buildHistorySummaryViewModel(Recipient)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>" +
             s"<p>${messagesApi("pages.history.active.recipient.paragraph2", maxBenefit)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Active))
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView, name)
         }
 
         "The person is a transferor" in {
-          val viewModel = buildHistorySummaryViewModel(Transferor, Active)
+          val viewModel = buildHistorySummaryViewModel(Transferor)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.active.transferor")}</p>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Active))
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView, name)
         }
 
       }
 
-      "The record is historic" when {
+      "The record has cancelled marriage allowance" when {
 
         "the person is a recipient" in {
-          val viewModel = buildHistorySummaryViewModel(Recipient, Historic)
+          val viewModel = buildHistorySummaryViewModel(Recipient)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
             s"<p>${messagesApi("pages.history.historic.recipient", formattedEndOfTaxYear)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Historic))
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView, name)
         }
 
         "the person is a transferor" in {
-          val viewModel = buildHistorySummaryViewModel(Transferor, Historic)
+          val viewModel = buildHistorySummaryViewModel(Transferor)
 
           val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
             s"<p>${messagesApi("pages.history.historic.transferor", formattedEndOfTaxYear)}</P>")
 
-          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView(Historic))
+          viewModel shouldBe HistorySummaryViewModel(expectedContent, createButtonForHistorySummaryView, name)
         }
       }
     }

@@ -56,42 +56,24 @@ trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSui
   val inactiveTransferorRelationshipRecord2: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
   val inactiveTransferorRelationshipRecord3: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
 
-  def buildHistorySummaryViewModel(participant: Role, relation: RecordStatus): HistorySummaryViewModel = {
-    val activeRelationshipMock = getActiveRelationShip(participant, relation)
-    val historicRelationShipMock = getHistoricRelationShip(participant, relation)
+  def buildHistorySummaryViewModel(participant: Role): HistorySummaryViewModel = {
+    val activeRelationshipMock = getActiveRelationShip(participant)
     val cid = 1122L
     val timeStamp = new LocalDate().toString
     val hasAllowance = None
     val citizenName = CitizenName(Some("Test"), Some("User"))
-    val loggedInUserInfo = Some(LoggedInUserInfo(cid, timeStamp, hasAllowance, Some(citizenName)))
-    val relationshipRecords = new RelationshipRecords(activeRelationshipMock, historicRelationShipMock, loggedInUserInfo)
+    val loggedInUserInfo = LoggedInUserInfo(cid, timeStamp, hasAllowance, Some(citizenName))
+    val relationshipRecords = new RelationshipRecords(activeRelationshipMock, None, loggedInUserInfo)
 
     HistorySummaryViewModel(relationshipRecords)
   }
 
-  private def getActiveRelationShip(participant: Role, relation: RecordStatus): Option[RelationshipRecord] = {
-    if (relation == Active)
-      Some(RelationshipRecord(participant.asString(), "", "19960327", None, None, "", ""))
-    else
-      None
+  private def getActiveRelationShip(participant: Role): RelationshipRecord = {
+      RelationshipRecord(participant.asString(), "", "19960327", None, None, "", "")
   }
 
-  private def getHistoricRelationShip(participant: Role, relation: RecordStatus): Option[Seq[RelationshipRecord]] = {
-    if (relation == Historic)
-      Some(Seq(RelationshipRecord(participant.asString(), "", "19960327", None, None, "", "")))
-    else
-      None
-  }
-
-  def createButtonForHistorySummaryView(relation: RecordStatus): HistorySummaryButton = {
-    relation match {
-      case Active => HistorySummaryButton("checkOrUpdateMarriageAllowance", messagesApi("pages.history.active.button"),
+  def createButtonForHistorySummaryView: HistorySummaryButton = {
+   HistorySummaryButton("checkOrUpdateMarriageAllowance", messagesApi("pages.history.active.button"),
         controllers.routes.UpdateRelationshipController.decision().url)
-      case Historic => HistorySummaryButton("checkMarriageAllowance", messagesApi("pages.history.historic.button"),
-        controllers.routes.UpdateRelationshipController.claims().url)
-      case ActiveHistoric =>
-        //TODO
-        ???
-    }
   }
 }

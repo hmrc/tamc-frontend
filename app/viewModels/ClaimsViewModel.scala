@@ -16,11 +16,10 @@
 
 package viewModels
 
-import config.{ApplicationConfig, ApplicationGlobal}
-import models.{Active, RecordStatus, RelationshipRecord}
+import config.ApplicationConfig
+import models.RelationshipRecord
 import play.api.i18n.Messages
 import play.twirl.api.Html
-import utils.LanguageUtils
 import views.helpers.TextGenerator
 
 //TODO add tests for active row
