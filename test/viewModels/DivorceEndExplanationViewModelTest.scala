@@ -16,7 +16,7 @@
 
 package viewModels
 
-import models.{Recipient, Role, Transferor}
+import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 import views.helpers.TextGenerator
@@ -38,7 +38,7 @@ class DivorceEndExplanationViewModelTest extends ViewModelBaseSpec {
 
         s"current year divorce page($className, current year)" in {
           val targetYear = TaxYear.current.startYear
-          val actual = DivorceEndExplanationViewModel(role, date(targetYear), maEndDate, paEffectiveDate)
+          val actual = DivorceEndExplanationViewModel(role, date(targetYear), MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
 
           val string1 = messages("pages.divorce.explanation.current.bullet1", TextGenerator().ukDateTransformer(maEndDate))
           val string2 = messages("pages.divorce.explanation.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate))
@@ -51,7 +51,7 @@ class DivorceEndExplanationViewModelTest extends ViewModelBaseSpec {
 
         s"prev year divorce page($className, prev year)" in {
           val targetYear = LocalDate.now().minusYears(2).getYear
-          val actual = DivorceEndExplanationViewModel(role, date(targetYear), maEndDate, paEffectiveDate)
+          val actual = DivorceEndExplanationViewModel(role, date(targetYear), MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
 
           val string1 = messages("pages.divorce.explanation.previous.bullet1", TextGenerator().ukDateTransformer(maEndDate))
           val string2 = messages("pages.divorce.explanation.previous.bullet2")

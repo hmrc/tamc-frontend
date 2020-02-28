@@ -16,27 +16,25 @@
 
 package models
 
-import errors.{CacheMissingEffectiveDate, CacheMissingEmail, CacheMissingEndDate, CacheMissingRelationshipRecords}
+import errors.{CacheMissingEmail, CacheMissingMAEndingDates, CacheMissingRelationshipRecords}
 import org.joda.time.LocalDate
 
-case class ConfirmationUpdateAnswers(fullName: String, divorceDate: Option[LocalDate], email: String, maEndDate: LocalDate, paEffectiveDate: LocalDate)
+case class ConfirmationUpdateAnswers(fullName: String, divorceDate: Option[LocalDate], email: String, maEndingDates: MarriageAllowanceEndingDates)
 
 object ConfirmationUpdateAnswers {
 
   def apply(cacheData: ConfirmationUpdateAnswersCacheData): ConfirmationUpdateAnswers = {
 
-
     val relationshipRecords = cacheData.relationshipRecords.getOrElse(throw CacheMissingRelationshipRecords())
     val name = relationshipRecords.loggedInUserInfo.name.flatMap(_.fullName).getOrElse("")
     val divorceDate = cacheData.divorceDate
     val emailAddress = cacheData.email.getOrElse(throw CacheMissingEmail())
-    val endDate = cacheData.maEndDate.getOrElse(throw CacheMissingEndDate())
-    val effectiveDate = cacheData.paEffectiveDate.getOrElse(throw CacheMissingEffectiveDate())
+    val maEndingDates = cacheData.maEndingDates.getOrElse(throw CacheMissingMAEndingDates())
 
-    ConfirmationUpdateAnswers(name, divorceDate, emailAddress, endDate, effectiveDate)
+    ConfirmationUpdateAnswers(name, divorceDate, emailAddress, maEndingDates)
   }
 }
 
 case class ConfirmationUpdateAnswersCacheData(relationshipRecords: Option[RelationshipRecords], divorceDate: Option[LocalDate],
-                                              email: Option[String], maEndDate: Option[LocalDate], paEffectiveDate: Option[LocalDate])
+                                              email: Option[String], maEndingDates: Option[MarriageAllowanceEndingDates])
 

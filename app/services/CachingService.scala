@@ -52,24 +52,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
 
   //TODO could this return Unit
   def cacheValue[T](key: String, value:T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
-    cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException("mandatory value missing from cache")))
-  }
-
-  //TODO types for the left hand side
-  def mandatoryValues[T](keys: Seq[String])(implicit reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[Either[String , Seq[T]]] = {
-    for {
-      cache <- fetch()
-    } yield {
-      val cacheValues = cache.fold(???){ cacheMap =>
-        keys.map(cacheMap.getEntry[T](_))
-      }.flatten
-
-      if(cacheValues.size == keys.size){
-        Right(cacheValues)
-      } else {
-        Left(s"manadatory key values missing from the cache ${keys.intersect(cacheValues).mkString(",")}")
-      }
-    }
+    cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException(s"Failed to retrieve $key from cache after saving")))
   }
 
   def saveTransferorRecord(transferorRecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
@@ -189,11 +172,11 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       optionalCacheMap.fold(throw new RuntimeException("Failed to retrieve cacheMap")){ cacheMap =>
 
           val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
-          val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
+          val marriageAllowanceEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
           val endReason = cacheMap.getEntry[EndMarriageAllowanceReason](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
           val relationshipRecord = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
-          UpdateRelationshipCacheDataTemp(relationshipRecord, emailAddress, endReason, endDate)
+          UpdateRelationshipCacheDataTemp(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDates)
 
       }
     }
@@ -206,20 +189,17 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
         optionalCacheMap.fold(throw new RuntimeException("Failed to retrieve cacheMap")) {
           cacheMap =>
             val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
-            val endDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_MA_END_DATE)
-            val effectiveDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE)
+            val marriageAllowanceEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
             val divorceDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
             val relationshipRecords = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
-            ConfirmationUpdateAnswersCacheData(relationshipRecords, divorceDate, emailAddress, endDate, effectiveDate)
+            ConfirmationUpdateAnswersCacheData(relationshipRecords, divorceDate, emailAddress, marriageAllowanceEndingDates)
       }
     }
   }
 
-  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
-    fetchAndGetEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS).map {
-      _.getOrElse(throw CacheMissingRelationshipRecords())
-    }
+  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecords]] = {
+    fetchAndGetEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
   }
 
   private def getCacheData(nino: Nino)(implicit hc: HeaderCarrier, executionContext: ExecutionContext): Future[Option[CacheMap]] = {

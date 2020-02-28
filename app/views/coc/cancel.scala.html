@@ -20,16 +20,17 @@
 @import utils.LanguageUtils
 @import views.helpers.TextGenerator
 @import uk.gov.hmrc.time.TaxYear
+@import models.MarriageAllowanceEndingDates
 
-@(marriageAllowanceEndDate: LocalDate, personalAllowanceEffectiveDate: LocalDate)(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+@(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @maDate = @{
- TextGenerator().ukDateTransformer(marriageAllowanceEndDate)
+ TextGenerator().ukDateTransformer(cancelDates.marriageAllowanceEndDate)
 }
 
 @paDate = @{
- TextGenerator().ukDateTransformer(personalAllowanceEffectiveDate)
+ TextGenerator().ukDateTransformer(cancelDates.personalAllowanceEffectiveDate)
 }
 
 @templates.tamc_main(

@@ -45,8 +45,6 @@ class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
                                               updateRelationshipService: UpdateRelationshipService,
-                                              registrationService: TransferService,
-                                              cachingService: CachingService,
                                               timeService: TimeService
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController with Referral {
@@ -74,9 +72,7 @@ class UpdateRelationshipController @Inject()(
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
         Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
       } recover {
-        //open empty view even with there are cache problem or fail to map data to view
-        case NonFatal(_) =>
-          Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form))
+        case NonFatal(_) => Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form))
       }
   }
 
@@ -97,36 +93,30 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.makeChange())
             }
           }
-          //TODO It would fail on the following inputs:
-          //None, Some((x: String forSome x not in (CheckMarriageAllowanceClaim, StopMarriageAllowance)))
         })
   }
 
   def claims: Action[AnyContent] = authenticate.async {
     implicit request =>
-      updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-
-        val viewModel = ClaimsViewModel(
-          relationshipRecords.primaryRecord,
-          relationshipRecords.nonPrimaryRecords)
-
+      (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
+        val viewModel = ClaimsViewModel(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
         Ok(views.html.coc.claims(viewModel))
-      }
-    //TODO add recover or something here?
+      }) recover handleError
   }
+
 
   def makeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getMakeChangesDecision map { makeChangesData =>
         Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(makeChangesData.map(_.toString))))
+      } recover {
+        case NonFatal(_) => Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form))
       }
   }
 
-  //TODO add tests!!!
   def submitMakeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       MakeChangesDecisionForm.form.bindFromRequest.fold(
-        //TODO Need to test this code???
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.reason_for_change(formWithErrors)))
         }, {
@@ -151,7 +141,6 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.bereavement())
             }
           }
-          //            TODO It would fail on the following inputs: None, Some((x: String forSome x not in (Bereavement, Divorce, IncomeChanges, NoLongerRequired)))
         })
   }
 
@@ -176,26 +165,20 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-  //TODO referor
   def stopAllowance: Action[AnyContent] = authenticate.async {
     implicit request =>
       Future.successful(Ok(views.html.coc.stopAllowance()))
   }
 
-  //TODO referor
+
   def cancel: Action[AnyContent] = authenticate.async {
     implicit request =>
-
-      val (maEndDate, paEffectiveDate) = updateRelationshipService.getCancelDates
-
-      for{
-        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_MA_END_DATE, maEndDate)
-        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE, paEffectiveDate)
-      } yield  Ok(views.html.coc.cancel(maEndDate, paEffectiveDate))
-
+      val cancelDates = updateRelationshipService.getMAEndingDatesForCancelation
+      updateRelationshipService.saveMarriageAllowanceEndingDates(cancelDates) map { _ =>
+        Ok(views.html.coc.cancel(cancelDates))
+      } recover handleError
   }
 
-  //TODO referor
   def changeOfIncome: Action[AnyContent] = authenticate.async {
     implicit request =>
       Future.successful(Ok(views.html.coc.change_in_earnings()))
@@ -203,9 +186,9 @@ class UpdateRelationshipController @Inject()(
 
   def bereavement: Action[AnyContent] = authenticate.async {
     implicit request =>
-      updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
+      (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
         Ok(views.html.coc.bereavement(relationshipRecords.primaryRecord.role))
-      }
+      }) recover handleError
   }
 
   def divorceEnterYear: Action[AnyContent] = authenticate.async {
@@ -214,9 +197,7 @@ class UpdateRelationshipController @Inject()(
         optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))){ divorceDate =>
           Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
         }
-
       } recover {
-        //open empty view even with there are cache problem or fail to map data to view
         case NonFatal(_) =>
           Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))
       }
@@ -231,48 +212,68 @@ class UpdateRelationshipController @Inject()(
           case divorceDate =>
             updateRelationshipService.saveDivorceDate(divorceDate) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation())
-            }
-          //TODO fail for else case. Not sure if this is required
-          case _ =>
-            ???
+          }
         }
-      )
+      ) recover handleError
   }
 
   def divorceEndExplanation: Action[AnyContent] = authenticate.async {
     implicit request =>
-      for {
-        (role, divorceDate) <- updateRelationshipService.getDivorceExplanationData
-        (marriageAllowanceEndDate, personalAllowanceEffectiveDate) = updateRelationshipService.getDatesForDivorce(role, divorceDate)
-        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_MA_END_DATE, marriageAllowanceEndDate)
-        _ <- cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_PA_EFFECTIVE_DATE, personalAllowanceEffectiveDate)
+      (for {
+        (role, divorceDate) <- updateRelationshipService.getDataForDivorceExplanation
+        datesForDivorce = updateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate)
+        _ <- updateRelationshipService.saveMarriageAllowanceEndingDates(datesForDivorce)
       } yield {
-       val viewModel = DivorceEndExplanationViewModel(role, divorceDate, marriageAllowanceEndDate, personalAllowanceEffectiveDate)
-
+       val viewModel = DivorceEndExplanationViewModel(role, divorceDate, datesForDivorce)
         Ok(views.html.coc.divorce_end_explanation(viewModel))
+      }) recover handleError
+  }
+
+
+  def confirmEmail: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      //TODO browser back in place of referer
+
+      lazy val viewModel = EmailViewModel(referer)
+      lazy val emptyEmailView = views.html.coc.email(emailForm, viewModel)
+
+      updateRelationshipService.getEmailAddress map {
+        case Some(email) => Ok(views.html.coc.email(emailForm.fill(EmailAddress(email)), viewModel))
+        case None => Ok(emptyEmailView)
+      } recover {
+        case NonFatal(_) => Ok(emptyEmailView)
       }
   }
 
-  //TODO is this the way to fill the views to remove optional in forms?
-  def confirmEmail: Action[AnyContent] = authenticate.async {
+
+  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
-      lazy val viewModel = EmailViewModel(referer)
-      updateRelationshipService.getEmailAddress map {
-        case Some(email) => Ok(views.html.coc.email(emailForm.fill(EmailAddress(email)), viewModel))
-        case None => Ok(views.html.coc.email(emailForm, viewModel))
-      } recover handleError
+      emailForm.bindFromRequest.fold(
+        formWithErrors => {
+          lazy val viewModel = EmailViewModel(referer)
+          Future.successful(BadRequest(views.html.coc.email(formWithErrors, viewModel)))
+        },
+        email =>
+          updateRelationshipService.saveEmailAddress(email) map {
+            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
+          }
+      ) recover handleError
   }
 
-  def confirmReject(): Action[AnyContent] = authenticate.async {
+  def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
-//      updateRelationshipService.getUpdateRelationshipCacheForReject map {
-//        cache =>
-//          val selectedRelationship = updateRelationshipService.getRelationship(cache.get)
-//          val effectiveDate = Some(updateRelationshipService.getEndDate(cache.get.relationshipEndReasonRecord.get, selectedRelationship))
-//          Ok(views.html.coc.confirm_updates(EndReasonCode.REJECT, effectiveDate = effectiveDate, isEnded = Some(selectedRelationship.participant1EndDate.isDefined
-//            && selectedRelationship.participant1EndDate.nonEmpty && !selectedRelationship.participant1EndDate.get.equals(""))))
-//      }
-    ???
+      UpdateRelationshipService.getConfirmationUpdateAnswers map {
+        confirmationUpdateAnswers =>
+          //TODO rename method and viewmodel
+          Ok(views.html.coc.confirm(ConfirmCancelViewModel(confirmationUpdateAnswers)))
+      }
+  } //TODO nonfatal
+
+  def submitConfirmUpdate: Action[AnyContent] = authenticate.async {
+    implicit request =>
+      updateRelationshipService.updateRelationship(request.nino) map {
+        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
+      }
   }
 
   def confirmCancel(): Action[AnyContent] = authenticate.async {
@@ -283,30 +284,6 @@ class UpdateRelationshipController @Inject()(
       }
   }
 
-  //TODO why was registration service used. rename
-  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      emailForm.bindFromRequest.fold(
-        formWithErrors => {
-          val viewModel = EmailViewModel(referer)
-          Future.successful(BadRequest(views.html.coc.email(formWithErrors, viewModel)))
-        },
-        email =>
-          updateRelationshipService.saveEmailAddress(email) map {
-            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
-          }
-        //TODO is this required
-      ) recover handleError
-  }
-
-
-  def confirmUpdate: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      UpdateRelationshipService.getConfirmationUpdateAnswers map {
-        confirmationUpdateAnswers =>
-        Ok(views.html.coc.confirm(ConfirmCancelViewModel(confirmationUpdateAnswers)))
-      }
-  }
 
   def confirmUpdateAction: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -322,12 +299,7 @@ class UpdateRelationshipController @Inject()(
       ???
   }
 
-  def submitConfirmUpdate: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      updateRelationshipService.updateRelationship(request.nino) map {
-       _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
-      }
-  }
+
 
 
   def historyWithCy: Action[AnyContent] = authenticate {
@@ -433,6 +405,7 @@ class UpdateRelationshipController @Inject()(
 
         throwable match {
           case _: NoPrimaryRecordError => noPrimaryRecordRedirect(request)
+          //TODO should we be logging at a warn level
           case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
           case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))

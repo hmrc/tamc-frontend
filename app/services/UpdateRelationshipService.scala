@@ -20,7 +20,7 @@ import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
-import events.{UpdateRelationshipCacheFailureEvent, UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
+import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
@@ -101,12 +101,11 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw new RuntimeException("Email not found in cache")))
   }
 
-  def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
-    cachingService.cacheValue[String](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress.value)
+  def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
+    cachingService.cacheValue[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress)
   }
 
-  //TODO tuple or type
-  def getDivorceExplanationData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {
+  def getDataForDivorceExplanation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {
 
     val relationshipRecordsFuture = getRelationshipRecords
     val divorceDateFuture = getDivorceDate
@@ -115,9 +114,7 @@ trait UpdateRelationshipService {
       relationshipRecords <- relationshipRecordsFuture
       divorceDate <- divorceDateFuture
     } yield {
-
-      //TODO is this OK?
-      divorceDate.fold(throw new RuntimeException("divorce date missing from cache")) {
+      divorceDate.fold(throw CacheMissingDivorceDate()) {
         (relationshipRecords.primaryRecord.role, _)
       }
     }
@@ -140,17 +137,6 @@ trait UpdateRelationshipService {
       _ <- auditUpdateRelationship(postUpdateData)
     } yield Future.successful(Unit)
   }
-
-//  def getRelationship(sessionData: UpdateRelationshipCacheData): RelationshipRecord = {
-//    sessionData match {
-//      case UpdateRelationshipCacheData(_, _, _, historic, _, Some(EndRelationshipReason(EndReasonCode.REJECT, _, Some(timestamp))), _) => {
-//        historic.get.filter { relation => relation.creationTimestamp == timestamp && relation.participant == RoleOld.RECIPIENT }.head
-//      }
-//      case _ => {
-//        sessionData.activeRelationshipRecord.get
-//      }
-//    }
-//  }
 
   def getUpdateNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] =
     cachingService.getUpdateRelationshipCachedData map {
@@ -178,15 +164,25 @@ trait UpdateRelationshipService {
     cachingService.getConfirmationAnswers.map(ConfirmationUpdateAnswers(_))
   }
 
-    def getCancelDates: (LocalDate, LocalDate) = (EndDateMACeasedCalculator.calculateEndDate, EndDateMACeasedCalculator.calculatePaEffectiveDate)
+  def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
+    val marriageAllowanceEndDate = EndDateMACeasedCalculator.calculateEndDate
+    val personalAllowanceEffectiveDate = EndDateMACeasedCalculator.calculatePaEffectiveDate
 
-    def getDatesForDivorce(role: Role, divorceDate: LocalDate): (LocalDate, LocalDate) = {
-      val marriageAllowanceEndDate = EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
-      val personalAllowanceEffectiveDate = EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
+    MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
+  }
 
-      (marriageAllowanceEndDate, personalAllowanceEffectiveDate)
+  def getMAEndingDatesForDivorce(role: Role, divorceDate: LocalDate): MarriageAllowanceEndingDates = {
 
-    }
+    val marriageAllowanceEndDate = EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
+    val personalAllowanceEffectiveDate = EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
+
+    MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
+
+  }
+
+  def saveMarriageAllowanceEndingDates(maEndingDates: MarriageAllowanceEndingDates)(implicit hc: HeaderCarrier): Future[MarriageAllowanceEndingDates] = {
+    cachingService.cacheValue[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES, maEndingDates)
+  }
 
   def getUpdateRelationshipCacheDataForDateOfDivorce(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
     for {
@@ -214,7 +210,7 @@ trait UpdateRelationshipService {
     } yield isValidDivorceDate(dod, cacheData)
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
-    cachingService.getRelationshipRecords
+    cachingService.getRelationshipRecords.map(_.getOrElse(throw CacheMissingRelationshipRecords()))
 
   def getEndDate(endRelationshipReason: EndRelationshipReason,
                  selectedRelationship: RelationshipRecord): LocalDate =

@@ -32,8 +32,8 @@ object ConfirmCancelViewModel  {
     val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.fullName, None, 1)
     val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
-    val endDate = TextGenerator().ukDateTransformer(model.maEndDate)
-    val effectiveDate = TextGenerator().ukDateTransformer(model.paEffectiveDate)
+    val endDate = TextGenerator().ukDateTransformer(model.maEndingDates.marriageAllowanceEndDate)
+    val effectiveDate = TextGenerator().ukDateTransformer(model.maEndingDates.personalAllowanceEffectiveDate)
 
     def createRows(defaultRows: List[SummaryRow])(implicit messages: Messages): List[SummaryRow] = {
       model.divorceDate.fold(defaultRows){ divorceDate =>

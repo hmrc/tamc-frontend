@@ -44,7 +44,8 @@ trait ControllerBaseSpec extends UnitSpec
   with MustVerb
   with I18nSupport
   with GuiceOneAppPerSuite
-  with MockitoSugar {
+  with MockitoSugar
+  with ControllerViewTestHelper {
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])

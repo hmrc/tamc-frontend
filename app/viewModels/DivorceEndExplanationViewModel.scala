@@ -16,7 +16,7 @@
 
 package viewModels
 
-import models.{Recipient, Role}
+import models.{MarriageAllowanceEndingDates, Recipient, Role}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
@@ -28,7 +28,7 @@ case class DivorceEndExplanationViewModel(divorceDate: String, taxYearStatus: St
 
 object DivorceEndExplanationViewModel {
 
-  def apply(role: Role, divorceDate: LocalDate, maEndDate: LocalDate, paEffectiveDate: LocalDate)(implicit messages: Messages): DivorceEndExplanationViewModel = {
+  def apply(role: Role, divorceDate: LocalDate, datesForDivorce: MarriageAllowanceEndingDates)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
     val divorceDateFormatted = TextGenerator().ukDateTransformer(divorceDate)
     val isCurrentYearDivorced: Boolean =  TaxYear.current.contains(divorceDate)
@@ -39,7 +39,7 @@ object DivorceEndExplanationViewModel {
         messages("pages.divorce.explanation.previous.taxYear")
      }
 
-     val bullets = bulletStatements(role, isCurrentYearDivorced, maEndDate, paEffectiveDate)
+     val bullets = bulletStatements(role, isCurrentYearDivorced, datesForDivorce.marriageAllowanceEndDate, datesForDivorce.personalAllowanceEffectiveDate)
 
     DivorceEndExplanationViewModel(divorceDateFormatted, taxYearStatus, bullets)
   }

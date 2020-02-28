@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.Json
 import services.TimeService
 
-//TODO TAMC could provide the Role
+//TODO TAMC could provide the Role instead of providing a String
 case class RelationshipRecord(participant: String,
                               creationTimestamp: String,
                               participant1StartDate: String,
@@ -35,6 +35,7 @@ case class RelationshipRecord(participant: String,
     case _ => false
   }
 
+  //TODO this can be removed once TAMC domain has been updated to provide a TYPE
   val role: Role = Role(participant)
 
   def overlappingTaxYears: Set[Int] = {
