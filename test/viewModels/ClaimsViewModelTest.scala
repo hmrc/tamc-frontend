@@ -46,7 +46,7 @@ class ClaimsViewModelTest extends ViewModelBaseSpec {
 
     "should not display historic rows" when {
       "recipient has primary (without end date) and does not have non-primary records" in {
-        val claimsView = ClaimsViewModel(activeRecipientRelationshipRecord, None)
+        val claimsView = ClaimsViewModel(activeRecipientRelationshipRecord, Seq())
 
         claimsView.activeRow shouldBe ActiveRow(activeRecipientRelationshipRecord)
         claimsView.historicRows shouldBe None
@@ -55,7 +55,7 @@ class ClaimsViewModelTest extends ViewModelBaseSpec {
       }
 
       "transferor has primary (without end date) and does not have non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord2, None)
+        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord2, Seq())
 
         claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord2)
         claimsView.historicRows shouldBe None
@@ -64,29 +64,20 @@ class ClaimsViewModelTest extends ViewModelBaseSpec {
       }
 
       "transferor has primary (with end date) and has non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord3, Some(Seq(inactiveRecipientRelationshipRecord1)))
+        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord3, Seq(inactiveRecipientRelationshipRecord1))
 
         claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord3)
-        claimsView.historicRows shouldBe Some(Seq(HistoricRow(inactiveRecipientRelationshipRecord1)))
+        claimsView.historicRows shouldBe Seq(HistoricRow(inactiveRecipientRelationshipRecord1))
         claimsView.backLinkUrl shouldBe backURL
         claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
       }
 
       "recipient has primary (with end Date) and does not have non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord3, None)
+        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord3, Seq())
 
         claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord3)
         claimsView.historicRows shouldBe None
         claimsView shouldBe backURL
-        claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
-      }
-
-      "an empty Sequence is returned for the non-primary records" in {
-        val claimsView = ClaimsViewModel(activeRecipientRelationshipRecord, Some(Seq()))
-
-        claimsView.activeRow shouldBe ActiveRow(activeRecipientRelationshipRecord)
-        claimsView.historicRows shouldBe None
-        claimsView.backLinkUrl shouldBe backURL
         claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
       }
     }
@@ -94,19 +85,19 @@ class ClaimsViewModelTest extends ViewModelBaseSpec {
 
     "should display historic rows when non-primary records are present" when {
       "recipient has non-primary records" in {
-        val claimsView = ClaimsViewModel(activeRecipientRelationshipRecord, Some(Seq(inactiveRecipientRelationshipRecord1)))
+        val claimsView = ClaimsViewModel(activeRecipientRelationshipRecord, Seq(inactiveRecipientRelationshipRecord1))
 
         claimsView.activeRow shouldBe ActiveRow(activeRecipientRelationshipRecord)
-        claimsView.historicRows shouldBe Some(Seq(HistoricRow(inactiveRecipientRelationshipRecord1)))
+        claimsView.historicRows shouldBe Seq(HistoricRow(inactiveRecipientRelationshipRecord1))
         claimsView.backLinkUrl shouldBe backURL
         claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
       }
 
       "transferor has non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord2, Some(Seq(inactiveTransferorRelationshipRecord1)))
+        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord2, Seq(inactiveTransferorRelationshipRecord1))
 
         claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord2)
-        claimsView.historicRows shouldBe Some(Seq(HistoricRow(inactiveTransferorRelationshipRecord1)))
+        claimsView.historicRows shouldBe Seq(HistoricRow(inactiveTransferorRelationshipRecord1))
         claimsView.backLinkUrl shouldBe backURL
         claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
       }

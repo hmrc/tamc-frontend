@@ -82,9 +82,11 @@ object DivorceSelectYearForm {
   }
 
   private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
-    case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date", TextGenerator().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
+    case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date",
+      TextGenerator().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
-      Invalid(ValidationError("pages.divorce.date.error.max.date",TextGenerator().ukDateTransformer(TimeService.getCurrentDate)))
+      Invalid(ValidationError("pages.divorce.date.error.max.date",
+        TextGenerator().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))
     case _ => Valid
   }
 

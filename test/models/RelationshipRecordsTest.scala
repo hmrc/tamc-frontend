@@ -16,89 +16,127 @@
 
 package models
 
+import errors.{CitizenNotFound, MultipleActiveRecordError, NoPrimaryRecordError}
 import utils.TamcViewModelTest
 
 class RelationshipRecordsTest extends TamcViewModelTest {
 
-  "recordStatus" should {
-    "be active" in {
-      val relationshipRecordList = RelationshipRecordList(Seq(
-        activeRecipientRelationshipRecord,
-        activeTransferorRelationshipRecord2
-      ))
-      val relationship = RelationshipRecords(relationshipRecordList)
+  val loggedInUserInfo = LoggedInUserInfo(1, "Two Freckles past a hair", name = Some(CitizenName(Some("Test"), Some("User"))))
+  val nonPrimaryRelationships = Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord1)
+  val primaryRelationship = activeRecipientRelationshipRecord
 
-      relationship.recordStatus shouldBe Active
+  "hasMarriageAllowanceBeenCancelled" should {
+    "return true if endDate is present in primary record" in {
+      val relationship = RelationshipRecords(primaryRelationship,
+        nonPrimaryRelationships,
+        loggedInUserInfo)
+
+      relationship.hasMarriageAllowanceBeenCancelled shouldBe true
     }
 
-    "be active historic" in {
-      val relationshipRecordList = RelationshipRecordList(Seq(
-        activeTransferorRelationshipRecord3,
-        inactiveRecipientRelationshipRecord1,
-        inactiveRecipientRelationshipRecord2,
-        inactiveRecipientRelationshipRecord3
-      ))
-      val relationship = RelationshipRecords(relationshipRecordList)
+    "return false if endDate is not present in primary record" in {
+      val relationship = RelationshipRecords(primaryRelationship,
+        nonPrimaryRelationships,
+        loggedInUserInfo)
 
-      relationship.recordStatus shouldBe ActiveHistoric
-    }
-
-    "be historic" in {
-      val relationshipRecordList = RelationshipRecordList(Seq())
-      val relationship = RelationshipRecords(relationshipRecordList)
-
-      relationship.recordStatus shouldBe Historic
+      relationship.hasMarriageAllowanceBeenCancelled shouldBe false
     }
   }
 
-  "role" should {
-    "be active Recipient" in {
-      val relationshipRecordList = RelationshipRecordList(Seq(
-        activeRecipientRelationshipRecord
-      ))
-      val relationship = RelationshipRecords(relationshipRecordList)
+  "recipientInformation" should {
+    "return Recipient Information from primaryRecord if role is Transferor" in {
+      val expectedInstanceIdentifier = activeTransferorRelationshipRecord3.otherParticipantInstanceIdentifier
+      val expectedTimestamp = activeTransferorRelationshipRecord3.otherParticipantUpdateTimestamp
+      val expectedRecipientInformation = RecipientInformation(expectedInstanceIdentifier, expectedTimestamp)
 
-      relationship.role shouldBe Recipient
-    }
-    "be active Transferor" in {
-      val relationshipRecordList = RelationshipRecordList(Seq(
-        activeTransferorRelationshipRecord2
-      ))
-      val relationship = RelationshipRecords(relationshipRecordList)
+      val relationship = RelationshipRecords(primaryRelationship,
+        nonPrimaryRelationships,
+        loggedInUserInfo)
 
-      relationship.role shouldBe Transferor
+      relationship.recipientInformation shouldBe expectedRecipientInformation
     }
 
-    "be historic Recipient" in {
-      val relationshipRecordList = RelationshipRecordList(Seq(
-        inactiveRecipientRelationshipRecord1,
-        inactiveRecipientRelationshipRecord2,
-        inactiveRecipientRelationshipRecord3
-      ))
-      val relationship = RelationshipRecords(relationshipRecordList)
+    "return Recipient Information from loggedInUser if role is Recipient" in {
+      val expectedInstanceIdentifier = loggedInUserInfo.cid.toString
+      val expectedTimestamp = loggedInUserInfo.timestamp
+      val expectedRecipientInformation = RecipientInformation(expectedInstanceIdentifier, expectedTimestamp)
 
-      relationship.role shouldBe Recipient
+      val relationship = RelationshipRecords(primaryRelationship,
+        nonPrimaryRelationships,
+        loggedInUserInfo)
+
+      relationship.recipientInformation shouldBe expectedRecipientInformation
     }
-
-    "be historic Transferor" in {
-      val relationshipRecordList = RelationshipRecordList(Seq(
-        inactiveTransferorRelationshipRecord1,
-        inactiveTransferorRelationshipRecord2,
-        inactiveTransferorRelationshipRecord3
-      ))
-      val relationship = RelationshipRecords(relationshipRecordList)
-
-      relationship.role shouldBe Transferor
-    }
-
-    //TODO to test properly
-    "failed to get role no active and no historic records and no user info" in {
-      intercept[Exception] {
-        new RelationshipRecords(None, None, None).role
-      }.getMessage shouldBe "IDK?!"
-    }
-
   }
 
+  "transferorInformation" should {
+    "return Transferor Information from primaryRecord if role is Recipient" in {
+      val expectedTimestamp = activeRecipientRelationshipRecord.otherParticipantUpdateTimestamp
+      val expectedTransferorInformation = TransferorInformation(expectedTimestamp)
 
+      val relationship = RelationshipRecords(primaryRelationship,
+        nonPrimaryRelationships,
+        loggedInUserInfo)
+
+      relationship.transferorInformation shouldBe expectedTransferorInformation
+    }
+
+    "return Transferor Information from loggedInUser if role is Transferor" in {
+      val expectedTimestamp = loggedInUserInfo.timestamp
+      val expectedTransferorInformation = TransferorInformation(expectedTimestamp)
+      val relationship = RelationshipRecords(primaryRelationship,
+        nonPrimaryRelationships,
+        loggedInUserInfo)
+
+      relationship.transferorInformation shouldBe expectedTransferorInformation
+    }
+  }
+
+  "apply" should {
+    "populate RelationshipRecord" in {
+      val relationshipRecordList = RelationshipRecordList(
+        Seq(activeTransferorRelationshipRecord2, inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord2),
+        Some(loggedInUserInfo))
+
+      val relationship = RelationshipRecords(relationshipRecordList)
+
+      relationship shouldBe RelationshipRecords(primaryRelationship, nonPrimaryRelationships, loggedInUserInfo)
+    }
+
+    "populate RelationshipRecord when non-primary records aren't present" in {
+      val relationshipRecordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord),
+        Some(loggedInUserInfo))
+      val nonPrimaryRelationship = Seq()
+
+      val relationship = RelationshipRecords(relationshipRecordList)
+
+      relationship shouldBe RelationshipRecords(primaryRelationship, nonPrimaryRelationship, loggedInUserInfo)
+    }
+
+    "return a NoPrimaryError when no primary Record is found" in {
+      val relationshipRecordList = RelationshipRecordList(Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord2),
+        Some(loggedInUserInfo))
+
+      val relationship = RelationshipRecords(relationshipRecordList)
+
+      relationship shouldBe NoPrimaryRecordError()
+    }
+
+    "return a MultipleActiveRecordError when multiple primary Records are found" in {
+      val relationshipRecordList = RelationshipRecordList(Seq(activeTransferorRelationshipRecord2, activeRecipientRelationshipRecord),
+        Some(loggedInUserInfo))
+
+      val relationship = RelationshipRecords(relationshipRecordList)
+
+      relationship shouldBe MultipleActiveRecordError()
+    }
+
+    "return a CitizenNotFound error when non logged in user found" in {
+      val relationshipRecordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord))
+
+      val relationship = RelationshipRecords(relationshipRecordList)
+
+      relationship shouldBe CitizenNotFound()
+    }
+  }
 }

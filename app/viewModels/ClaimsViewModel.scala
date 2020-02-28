@@ -31,7 +31,7 @@ object ActiveRow {
 
     val activeDateInterval = TextGenerator().taxDateIntervalString(
       relationshipRecord.participant1StartDate,
-      None)
+      relationshipRecord.participant1EndDate)
     val activeStatus = messages("change.status.active")
 
     ActiveRow(activeDateInterval, activeStatus)

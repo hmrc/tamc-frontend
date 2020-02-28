@@ -38,7 +38,7 @@ trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSui
     relationshipEndReason = Some(DesRelationshipEndReason.Default),
     participant1EndDate = None,
     otherParticipantInstanceIdentifier = "",
-    otherParticipantUpdateTimestamp = "")
+    otherParticipantUpdateTimestamp = "TimeStamp")
   val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
   val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)
   val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
@@ -63,7 +63,7 @@ trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSui
     val hasAllowance = None
     val citizenName = CitizenName(Some("Test"), Some("User"))
     val loggedInUserInfo = LoggedInUserInfo(cid, timeStamp, hasAllowance, Some(citizenName))
-    val relationshipRecords = new RelationshipRecords(activeRelationshipMock, None, loggedInUserInfo)
+    val relationshipRecords = new RelationshipRecords(activeRelationshipMock, Seq(), loggedInUserInfo)
 
     HistorySummaryViewModel(relationshipRecords)
   }
