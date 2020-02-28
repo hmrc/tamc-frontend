@@ -38,28 +38,28 @@ class HistoricRowTest extends TamcViewModelTest {
   val retroEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(Retrospective))
   val systemEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(System))
 
+  val recordInterval = "2013 to present"
+
   "historic row" should {
     val rows = Seq(
-      noneEndReason,
-      activeRecipientRelationshipRecord,
-      deathEndReason,
-      divorceEndReason,
-      invPartEndReason,
-      cancelledEndReason,
-      rejectedEndReason,
-      hmrcEndReason,
-      closedEndReason,
-      mergerEndReason,
-      retroEndReason,
-      systemEndReason
+      (noneEndReason, recordInterval),
+      (activeRecipientRelationshipRecord, recordInterval),
+      (deathEndReason, recordInterval),
+      (divorceEndReason, recordInterval),
+      (invPartEndReason, recordInterval),
+      (cancelledEndReason, recordInterval),
+      (rejectedEndReason,recordInterval),
+      (hmrcEndReason, recordInterval),
+      (closedEndReason, recordInterval),
+      (mergerEndReason, recordInterval),
+      (retroEndReason, recordInterval),
+      (systemEndReason, recordInterval)
     ).foreach {
         row => {
           s"be historic row[$row] from rows" in {
-            val expectedDate = TextGenerator().taxDateIntervalString(
-              row.participant1StartDate,
-              row.participant1EndDate)
-            val expectedReason = getReason(row)
-            val nonPrimaryRow = HistoricRow(row)
+            val expectedDate = row._2
+            val expectedReason = getReason(row._1)
+            val nonPrimaryRow = HistoricRow(row._1)
             nonPrimaryRow.historicDateInterval shouldBe expectedDate
             nonPrimaryRow.historicStatus shouldBe expectedReason
           }

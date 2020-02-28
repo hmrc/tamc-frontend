@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.Json
 
 //TODO need a domain from the TAMC indicating which record is primary. Back end concern.
-case class RelationshipRecordList(relationships: Seq[RelationshipRecord], userRecord: Option[LoggedInUserInfo] = None)
+case class RelationshipRecordList(relationships: Seq[RelationshipRecord], loggedInUser: Option[LoggedInUserInfo] = None)
 
 object RelationshipRecordList {
   implicit val formats = Json.format[RelationshipRecordList]

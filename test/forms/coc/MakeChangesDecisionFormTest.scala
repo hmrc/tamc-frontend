@@ -26,76 +26,44 @@ class MakeChangesDecisionFormTest extends FormsBaseSpec {
   "MakeChangesDecisionForm" should {
     val decisions = Seq(
       MakeChangesDecisionForm.Divorce,
-      MakeChangesDecisionForm.IncomeChanges,
-      MakeChangesDecisionForm.NoLongerRequired,
-      MakeChangesDecisionForm.Bereavement
+      MakeChangesDecisionForm.Earnings,
+      MakeChangesDecisionForm.Bereavement,
+      MakeChangesDecisionForm.Cancel
     )
-    for (decision <- decisions) {
-      s"bind a valid decision <- '$decision'" in {
-        val formInput = Map[String, String](
-          MakeChangesDecisionForm.StopMAChoice -> decision
-        )
 
-        val form = MakeChangesDecisionForm.form.bind(formInput)
-        val errors = form.errors
-        val value = form.data
-
-        errors shouldBe Seq()
-        value shouldBe formInput
-      }
-    }
-
-    //TODO add more
-    val invalidDecisions = Seq(
-      ""
-    )
-    for (decision <- invalidDecisions) {
-      s"bind a invalid decision <- '$decision'" in {
-        val formInput = Map[String, String](
-          MakeChangesDecisionForm.StopMAChoice -> decision
-        )
-
-        val form = MakeChangesDecisionForm.form.bind(formInput)
-        val errors = form.errors
-        val value = form.data
-
-        errors shouldBe Seq(
-          FormError(
-            MakeChangesDecisionForm.StopMAChoice,
-            //TODO update after John will fix
-            Seq("ErrorMessage"),
-            mutable.WrappedArray.empty
+    decisions.foreach {
+      decision =>
+        s"bind a valid decision <- '$decision'" in {
+          val formInput = Map[String, String](
+            MakeChangesDecisionForm.StopMAChoice -> decision
           )
-        )
-        value shouldBe formInput
-      }
+
+          val form = MakeChangesDecisionForm.form.bind(formInput)
+          val errors = form.errors
+          val value = form.data
+
+          errors shouldBe Seq()
+          value shouldBe formInput
+        }
     }
 
-    //TODO add more
-    for (decision <- decisions) {
-      s"bind a invalid key decision <- '$decision'" in {
-        val formInput = Map[String, String](
-          "tralala" -> decision
+    "not bind and display error message when no decision value is given" in {
+      val formInput = Map[String, String](
+        MakeChangesDecisionForm.StopMAChoice -> ""
+      )
+
+      val form = MakeChangesDecisionForm.form.bind(formInput)
+      val errors = form.errors
+      val value = form.data
+
+      errors shouldBe Seq(
+        FormError(
+          MakeChangesDecisionForm.StopMAChoice,
+          Seq("pages.makeChanges.error.mandatory.value"),
+          mutable.WrappedArray.empty
         )
-
-        val form = MakeChangesDecisionForm.form.bind(formInput)
-        val errors = form.errors
-        val value = form.data
-
-        errors shouldBe Seq(
-          FormError(
-            MakeChangesDecisionForm.StopMAChoice,
-            //TODO update after John will fix
-            Seq("ErrorMessage"),
-            mutable.WrappedArray.empty
-          )
-        )
-
-        value shouldBe formInput
-        form.value shouldBe None
-      }
+      )
+      value shouldBe formInput
     }
-
   }
-
 }

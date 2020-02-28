@@ -210,7 +210,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             .map(_ => Future.successful(Some(cacheMap)))
             .getOrElse {
               marriageAllowanceConnector.listRelationship(nino) flatMap {
-                data => data.userRecord.map {
+                data => data.loggedInUser.map {
                   loggedInUser =>
                     val userRecord: UserRecord = UserRecord(
                       cid = loggedInUser.cid,

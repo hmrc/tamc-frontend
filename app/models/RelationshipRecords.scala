@@ -21,7 +21,7 @@ import play.api.Logger
 import play.api.libs.json.Json
 
 //TODO need to update this domain model once TAMC passes primary record through
-case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Option[Seq[RelationshipRecord]],
+case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Seq[RelationshipRecord],
                                loggedInUserInfo: LoggedInUserInfo) {
 
   def hasMarriageAllowanceBeenCancelled = primaryRecord.participant1EndDate.isDefined
@@ -66,16 +66,10 @@ object RelationshipRecords {
       }
     }
 
-    val nonPrimaryRelationships = {
-      if (relationships.size > 1 && relationships.head.participant1EndDate.isEmpty) {
-        Some(relationships.tail)
-      } else if (relationships.nonEmpty && relationships.head.participant1EndDate.isDefined) {
-        Some(relationships)
-      } else None
-    }
+    val nonPrimaryRelationships = relationships.filterNot(_ == primaryRecord)
 
-    val userRecord = relationshipRecordList.userRecord.getOrElse(throw CitizenNotFound())
+    val loggedInUser = relationshipRecordList.loggedInUser.getOrElse(throw CitizenNotFound())
 
-    RelationshipRecords(primaryRecord, nonPrimaryRelationships, userRecord)
+    RelationshipRecords(primaryRecord, nonPrimaryRelationships, loggedInUser)
   }
 }

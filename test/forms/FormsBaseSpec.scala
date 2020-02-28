@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
-import views.helpers.TextGenerators
+import views.helpers.TextGenerator
 
 class FormsBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
 
@@ -77,7 +77,7 @@ class FormsBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSuite w
     }
   }
 
-  def transformDate(date: LocalDate, isWelsh: Boolean = false): String = {
-    TextGenerators.ukDateTransformer(Some(date), isWelsh)
+  def transformDate(date: LocalDate): String = {
+    TextGenerator().ukDateTransformer(date)
   }
 }

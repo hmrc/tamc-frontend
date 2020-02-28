@@ -31,7 +31,7 @@ object ActiveRow {
 
     val activeDateInterval = TextGenerator().taxDateIntervalString(
       relationshipRecord.participant1StartDate,
-      None)
+      relationshipRecord.participant1EndDate)
     val activeStatus = messages("change.status.active")
 
     ActiveRow(activeDateInterval, activeStatus)
@@ -70,19 +70,17 @@ object HistoricRow {
 }
 
 case class ClaimsViewModel(activeRow: ActiveRow,
-                           historicRows: Option[Seq[HistoricRow]],
+                           historicRows: Seq[HistoricRow],
                            taxFreeAllowanceLink: Html,
                            backLinkUrl: String)
 
 object ClaimsViewModel {
 
   def apply(activeRelationship: RelationshipRecord,
-            historicRelationships: Option[Seq[RelationshipRecord]])(implicit messages: Messages): ClaimsViewModel = {
+            historicRelationships: Seq[RelationshipRecord])(implicit messages: Messages): ClaimsViewModel = {
 
     val activeRow = ActiveRow(activeRelationship)
-    val historicRows = historicRelationships map { historicRelationships =>
-      historicRelationships map (HistoricRow(_))
-    }
+    val historicRows = historicRelationships.map(HistoricRow(_))
 
 
     ClaimsViewModel(activeRow, historicRows, taxFreeAllowanceLink, backLinkUrl)

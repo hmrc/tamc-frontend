@@ -16,27 +16,21 @@
 
 package models
 
-import utils.{LanguageUtils, TamcViewModelTest}
+import utils.TamcViewModelTest
 import viewModels.ActiveRow
-import views.helpers.TextGenerators
 
 class ActiveRowTest extends TamcViewModelTest {
 
   "active row" should {
-    val rows = Seq(
-      activeRecipientRelationshipRecord,
-      activeTransferorRelationshipRecord2,
-      activeTransferorRelationshipRecord3
-    )
-    var i = 0
-
-    for (row <- rows) {
-      i = i + 1
-      s"be active row[$i] from rows" in {
-        val expectedDate = TextGenerators.taxDateIntervalString(row.participant1StartDate)
-        val activeRow = ActiveRow(row)
+    Seq(
+      (activeRecipientRelationshipRecord, "2013 to Present"),
+      (activeTransferorRelationshipRecord3, "2013 to 2020")
+    ).foreach { row =>
+      s"be active ${row._2}" in {
+        val expectedDate = row._2
+        val activeRow = ActiveRow(row._1)
         activeRow.activeDateInterval shouldBe expectedDate
-        activeRow.activeStatus shouldBe Active.asString()
+        activeRow.activeStatus shouldBe "Active"
       }
     }
   }

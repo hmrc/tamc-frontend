@@ -20,17 +20,16 @@ import play.api.data.Form
 import play.api.data.Forms.{optional, single, text}
 import play.api.i18n.Messages
 
-//TODO add tests
 object MakeChangesDecisionForm {
 
   val StopMAChoice = "stopMAChoice"
+
   val Divorce = "Divorce"
   val Earnings = "Earnings"
   val Cancel = "Cancel"
   val Bereavement = "Bereavement"
 
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
-    //TODO error message
     single(StopMAChoice -> optional(text).verifying(messages("pages.makeChanges.error.mandatory.value"), { _.isDefined }))
   )
 }

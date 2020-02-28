@@ -31,8 +31,6 @@ case class RelationshipRecord(participant: String,
   def isActive: Boolean = participant1EndDate match {
     case None => true
     case Some(date) => TimeService.isFutureDate(TimeService.parseDateWithFormat(date))
-    //TODO this code can be reached???
-    case _ => false
   }
 
   //TODO this can be removed once TAMC domain has been updated to provide a TYPE
