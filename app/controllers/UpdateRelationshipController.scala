@@ -254,7 +254,7 @@ class UpdateRelationshipController @Inject()(
           Future.successful(BadRequest(views.html.coc.email(formWithErrors, viewModel)))
         },
         email =>
-          updateRelationshipService.saveEmailAddress(email) map {
+          updateRelationshipService.saveEmailAddress(email.value) map {
             _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
           }
       ) recover handleError

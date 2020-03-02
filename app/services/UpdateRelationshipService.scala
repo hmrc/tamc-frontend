@@ -101,8 +101,8 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw new RuntimeException("Email not found in cache")))
   }
 
-  def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
-    cachingService.cacheValue[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress)
+  def saveEmailAddress(emailAddress: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.cacheValue[String](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress)
   }
 
   def getDataForDivorceExplanation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {
