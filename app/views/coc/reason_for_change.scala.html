@@ -25,9 +25,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
     title = Messages("title.pattern", messages("title.make-a-change")),
-    langSelectorOverride = Some(
-    Map("enUrl" -> controllers.routes.UpdateRelationshipController.historyWithEn(),
-    "cyUrl" -> controllers.routes.UpdateRelationshipController.historyWithCy())),
     mainConfig = views.helpers.MainConfig()
 ){
 

@@ -33,8 +33,6 @@ GET    /you-cannot-use-this-service                @controllers.TransferControll
 
 #Change of Circumstances
 GET    /history                                    @controllers.UpdateRelationshipController.history
-GET    /history-en                                 @controllers.UpdateRelationshipController.historyWithEn
-GET    /history-cy                                 @controllers.UpdateRelationshipController.historyWithCy
 GET    /choose                                     @controllers.UpdateRelationshipController.decision
 POST   /choose                                     @controllers.UpdateRelationshipController.submitDecision
 GET    /claims                                     @controllers.UpdateRelationshipController.claims
@@ -44,8 +42,6 @@ GET    /stop-allowance                             @controllers.UpdateRelationsh
 GET    /cancel                                     @controllers.UpdateRelationshipController.cancel
 GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
-POST   /reason-for-change                          @controllers.UpdateRelationshipController.updateRelationshipAction
-POST   /divorce                                    @controllers.UpdateRelationshipController.divorceAction
 GET    /divorce-enter-year                         @controllers.UpdateRelationshipController.divorceEnterYear
 POST   /divorce-enter-year                         @controllers.UpdateRelationshipController.submitDivorceEnterYear
 GET    /divorce-end-explanation                    @controllers.UpdateRelationshipController.divorceEndExplanation
@@ -53,7 +49,6 @@ GET    /confirm-email                              @controllers.UpdateRelationsh
 GET    /confirm-change                             @controllers.UpdateRelationshipController.confirmUpdate
 #TO be post to edit
 GET    /confirm-change-action                      @controllers.UpdateRelationshipController.submitConfirmUpdate
-GET    /cancel                                     @controllers.UpdateRelationshipController.confirmCancel
 GET    /finished-change                            @controllers.UpdateRelationshipController.finishUpdate
 POST   /confirm-email-update                       @controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
 

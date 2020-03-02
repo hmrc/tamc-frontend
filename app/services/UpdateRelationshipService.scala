@@ -204,10 +204,6 @@ trait UpdateRelationshipService {
   def saveEndRelationshipReason(endRealtionshipReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
     cachingService.savRelationshipEndReasonRecord(endRealtionshipReason)
 
-  def isValidDivorceDate(dod: Option[LocalDate])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
-    for {
-      cacheData <- cachingService.getUpdateRelationshipCachedData
-    } yield isValidDivorceDate(dod, cacheData)
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     cachingService.getRelationshipRecords.map(_.getOrElse(throw CacheMissingRelationshipRecords()))
@@ -226,19 +222,14 @@ trait UpdateRelationshipService {
   def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
     LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd"))
 
+  def removeCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+    cachingService.remove().map(_ => Unit)
+  }
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }
-
-  private def transformDateAgain(date: String): Option[LocalDate] = {
-//    date match {
-//      case "" => None
-//      case date => Some(DateTimeFormat.forPattern("yyyyMMdd").parseLocalDate(date));
-//    }
-    ???
-  }
 
   private def sendUpdateRelationship(transferorNino: Nino,
                                      data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] =
@@ -286,18 +277,6 @@ trait UpdateRelationshipService {
       case _ => throw CacheMissingUpdateRecord()
     }
 
-
-  private def isValidDivorceDate(dod: Option[LocalDate], cacheData: Option[UpdateRelationshipCacheData]): Boolean =
-    (dod, cacheData) match {
-      case (Some(dayOfDivorce), Some(UpdateRelationshipCacheData(_, _, Some(RelationshipRecord(_, _, startDate, _, _, _, _)), _, _, _, _))) =>
-        transformDateAgain(startDate).exists {
-          !_.isAfter(dayOfDivorce)
-        }
-      case _ =>
-        false
-    }
-
-
   private def transformUpdateRelationshipCache(updateRelationshipCacheData: UpdateRelationshipCacheData
                                               )(implicit hc: HeaderCarrier,
                                                 ec: ExecutionContext): Future[UpdateRelationshipConfirmationModel] =
@@ -309,9 +288,6 @@ trait UpdateRelationshipService {
         historicRelationships = updateRelationshipCacheData.historicRelationships,
         role = updateRelationshipCacheData.roleRecord)
     }
-
-
-
 
   private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {
     endReasonCode.endReason match {

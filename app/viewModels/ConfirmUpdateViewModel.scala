@@ -20,14 +20,13 @@ import models.ConfirmationUpdateAnswers
 import play.api.i18n.Messages
 import views.helpers.TextGenerator
 
-//TODO TESTS UP IN HERE
-case class ConfirmCancelViewModel(endDate: String, effectiveDate: String, rows: Seq[SummaryRow])
+case class ConfirmUpdateViewModel(endDate: String, effectiveDate: String, rows: Seq[SummaryRow])
 
 case class SummaryRow(title: String, userAnswer: String, changeLink: Option[String] = None, index: Int)
 
-object ConfirmCancelViewModel  {
+object ConfirmUpdateViewModel  {
 
-  def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmCancelViewModel = {
+  def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmUpdateViewModel = {
 
     val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.fullName, None, 1)
     val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
@@ -42,7 +41,7 @@ object ConfirmCancelViewModel  {
       }
     }
 
-    ConfirmCancelViewModel(endDate, effectiveDate, createRows(defaultRows).sortBy(_.index))
+    ConfirmUpdateViewModel(endDate, effectiveDate, createRows(defaultRows).sortBy(_.index))
   }
 
 }
