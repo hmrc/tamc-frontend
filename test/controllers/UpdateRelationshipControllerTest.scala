@@ -18,9 +18,8 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
-import forms.EmailForm.emailForm
-import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
-import models.{MarriageAllowanceEndingDates, _}
+import forms.coc.{CheckClaimOrCancelDecisionForm, MakeChangesDecisionForm}
+import models._
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
@@ -31,9 +30,9 @@ import play.api.test.Helpers._
 import services.{TimeService, _}
 import test_utils._
 import uk.gov.hmrc.domain.Generator
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.RequestBuilder._
 import viewModels._
 
 import scala.concurrent.Future
@@ -76,10 +75,9 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     "display the history summary page with a status of OK" in {
 
       val relationshipRecords = createRelationshipRecords()
-
       val historySummaryViewModel = HistorySummaryViewModel(relationshipRecords)
 
-      when(mockUpdateRelationshipService.retrieveRelationshipRecords(ArgumentMatchers.eq(generatedNino))(any(), any()))
+      when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
         .thenReturn(Future.successful(relationshipRecords))
 
       when(mockUpdateRelationshipService.saveRelationshipRecords(ArgumentMatchers.eq(relationshipRecords))(any(), any()))
@@ -88,16 +86,16 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       val result = controller().history()(request)
       status(result) shouldBe OK
 
-      //result rendersTheSameViewAs views.html.coc.history_summary(historySummaryViewModel)
+      result rendersTheSameViewAs views.html.coc.history_summary(historySummaryViewModel)
 
     }
 
     "redirect to the transfer controller" when {
       "there is no active (primary) record and non permanent authentication" in {
-        when(mockUpdateRelationshipService.retrieveRelationshipRecords(ArgumentMatchers.eq(generatedNino))(any(), any()))
-            .thenReturn(Future.failed(throw NoPrimaryRecordError()))
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+            .thenReturn(Future.failed(NoPrimaryRecordError()))
 
-        val result: Future[Result] = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
+        val result = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
       }
@@ -106,7 +104,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     "redirect to how-it-works" when {
       "here is no active (primary) record and permanent authentication" in {
         when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
-          .thenReturn(Future.failed(throw NoPrimaryRecordError()))
+          .thenReturn(Future.failed(NoPrimaryRecordError()))
 
         val result: Future[Result] = controller().history()(request)
         status(result) shouldBe SEE_OTHER
@@ -127,7 +125,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
       val result = controller().decision(request)
       status(result) shouldBe OK
-      //result rendersTheSameViewAs views.html.coc.decision(validFormWithData)
+      result rendersTheSameViewAs views.html.coc.decision(validFormWithData)
 
     }
 
@@ -139,7 +137,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
         val result = controller().decision(request)
         status(result) shouldBe OK
 
-        //result rendersTheSameViewAs views.html.coc.decision(validForm)
+        result rendersTheSameViewAs views.html.coc.decision(validForm)
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -150,7 +148,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
         val validForm = CheckClaimOrCancelDecisionForm.form
         status(result) shouldBe OK
 
-        //result rendersTheSameViewAs views.html.coc.decision(validForm)
+        result rendersTheSameViewAs views.html.coc.decision(validForm)
       }
 
     }
@@ -212,17 +210,17 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       val result = controller().claims(request)
       status(result) shouldBe OK
 
-      //result rendersTheSameViewAs views.html.coc.claims(claimsViewModel)
+      result rendersTheSameViewAs views.html.coc.claims(claimsViewModel)
     }
 
     "display an error page" when {
       "there is no cached data found" in {
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.failed(throw CacheMissingRelationshipRecords()))
+        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.failed(CacheMissingRelationshipRecords()))
 
         val result = controller().claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        //result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs views.html.errors.try_later()
       }
     }
 
@@ -237,7 +235,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
         val result = controller().makeChange()(request)
         status(result) shouldBe OK
-        //result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(userAnswer.map(_.toString)))
+        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(userAnswer.map(_.toString)))
       }
 
       "there is no data in the cache" in {
@@ -245,7 +243,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
         val result = controller().makeChange()(request)
         status(result) shouldBe OK
-        //result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
+        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -253,7 +251,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
         val result = controller().makeChange()(request)
         status(result) shouldBe OK
-        //result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
+        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
       }
     }
   }
@@ -263,13 +261,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       "a user selects the Divorce option" in {
 
         val userAnswer = MakeChangesDecisionForm.Divorce
+        val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-        val request = FakeRequest().withFormUrlEncodedBody(
-          MakeChangesDecisionForm.StopMAChoice -> userAnswer
-        )
-
-        when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-          .thenReturn(Future.successful(userAnswer))
+        when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
+          .thenReturn(Future.successful(Divorce))
 
         val result = controller().submitMakeChange()(request)
         status(result) shouldBe SEE_OTHER
@@ -286,19 +281,17 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
           s"a recipient selects $userAnswer" in {
 
-            val request = FakeRequest().withFormUrlEncodedBody(
-              MakeChangesDecisionForm.StopMAChoice -> userAnswer
-            )
+            val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-            when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-              .thenReturn(Future.successful(userAnswer))
+            when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
+              .thenReturn(Future.successful(EndMarriageAllowanceReason.toCaseObject(userAnswer)))
 
             when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
               .thenReturn(Future.successful(relationshipRecords))
 
             val result = controller().submitMakeChange()(request)
             status(result) shouldBe SEE_OTHER
-            redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance())
+            redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance().url)
 
           }
 
@@ -310,20 +303,17 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
           val userAnswer = MakeChangesDecisionForm.Earnings
           val relationshipRecords = createRelationshipRecords()
+          val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-          val request = FakeRequest().withFormUrlEncodedBody(
-            MakeChangesDecisionForm.StopMAChoice -> userAnswer
-          )
-
-          when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-            .thenReturn(Future.successful(userAnswer))
+          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
+            .thenReturn(Future.successful(Earnings))
 
           when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
             .thenReturn(Future.successful(relationshipRecords))
 
           val result = controller().submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.changeOfIncome())
+          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.changeOfIncome().url)
 
         }
       }
@@ -334,20 +324,17 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
           val userAnswer = MakeChangesDecisionForm.Cancel
           val relationshipRecords = createRelationshipRecords()
+          val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-          val request = FakeRequest().withFormUrlEncodedBody(
-            MakeChangesDecisionForm.StopMAChoice -> userAnswer
-          )
-
-          when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-            .thenReturn(Future.successful(userAnswer))
+          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
+            .thenReturn(Future.successful(Cancel))
 
           when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
             .thenReturn(Future.successful(relationshipRecords))
 
           val result = controller().submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.cancel())
+          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.cancel().url)
 
         }
       }
@@ -357,24 +344,21 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
         "a user selects the bereavement option" in {
 
           val userAnswer = MakeChangesDecisionForm.Bereavement
+          val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-          val request = FakeRequest().withFormUrlEncodedBody(
-            MakeChangesDecisionForm.StopMAChoice -> userAnswer
-          )
-
-          when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-            .thenReturn(Future.successful(userAnswer))
+          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
+            .thenReturn(Future.successful(Bereavement))
 
           val result = controller().submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.bereavement())
+          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.bereavement().url)
 
         }
       }
 
       "return a bad request" when {
         "the form submission has a blank value" in {
-          val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> "")
+          val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> "")
           val result = controller().submitDecision(request)
           status(result) shouldBe BAD_REQUEST
         }
@@ -388,370 +372,370 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       val result = controller().stopAllowance(request)
       status(result) shouldBe OK
 
-      //result rendersTheSameViewAs views.html.coc.stopAllowance()
+      result rendersTheSameViewAs views.html.coc.stopAllowance()
     }
   }
 
-  "cancel" should {
-    "display the cancel page" in {
-
-      val nowDate = new LocalDate()
-      val marriageAllowanceEndingDates = MarriageAllowanceEndingDates(nowDate, nowDate)
-
-      when(mockUpdateRelationshipService.getMAEndingDatesForCancelation).thenReturn(Future.successful(marriageAllowanceEndingDates))
-
-      val result = controller().cancel(request)
-      status(result) shouldBe OK
-
-      //result rendersTheSameViewAs views.html.coc.cancel(marriageAllowanceEndingDates)
-    }
-
-    "display an error page" when {
-      "there are issues saving data to the cache" in {
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(failedFuture)
-
-        val result = controller().claims(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-
-        //result rendersTheSameViewAs views.html.errors.try_later()
-      }
-    }
-
-  }
-
-  "changeOfIncome" should {
-    "display the changeOfIncome page" in {
-      val result  = controller().changeOfIncome(request)
-      status(result) shouldBe OK
-
-      //result rendersTheSameViewAs views.html.coc.change_in_earnings()
-    }
-  }
-
-  "bereavement" should {
-    "display the bereavement page" when {
-      "there is data returned from the cache" in {
-
-        val relationshipRecords = createRelationshipRecords()
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
-        val result = controller().bereavement(request)
-
-        status(result) shouldBe OK
-        //result rendersTheSameViewAs views.html.coc.bereavement(relationshipRecords.primaryRecord.role)
-
-      }
-
-      "display an error page" when {
-        "there is no cached data found" in {
-          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.failed(throw CacheMissingRelationshipRecords()))
-
-          val result = controller().bereavement(request)
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-
-          //result rendersTheSameViewAs views.html.errors.try_later()
-        }
-      }
-    }
-  }
-
-
-  "divorceEnterYear" should {
-    "display the enter a divorce year page" when {
-      "there is data in the cache" in {
-
-        val divorceDateInThePast = LocalDate.now().minusDays(1)
-        when(mockUpdateRelationshipService.getDivorceDate(any(), any())).thenReturn(Future.successful(Some(divorceDateInThePast)))
-
-        val result = controller().divorceEnterYear(request)
-        status(result) shouldBe OK
-
-        //result rendersTheSameViewAs views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDateInThePast))
-      }
-
-      "there is no data in the cache" in {
-        when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
-          .thenReturn(Future.successful(None))
-
-        val result = controller().divorceEnterYear(request)
-        status(result) shouldBe OK
-
-        //result rendersTheSameViewAs views.html.coc.divorce_select_year(DivorceSelectYearForm.form)
-      }
-
-    }
-
-    "a non fatal error has occurred when trying to get cached data" in {
-      when(mockUpdateRelationshipService.getDivorceDate(any(), any())).thenReturn(failedFuture)
-
-      val result = controller().makeChange()(request)
-      status(result) shouldBe OK
-      //result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
-    }
-  }
-
-  "submitDivorceEnterYear" should {
-    "redirect to the divorce end explanation page" when {
-      "the user enters a valid divorce date in the past" in {
-
-        val divorceDateInThePast = LocalDate.now().minusDays(1)
-
-        val request = FakeRequest().withFormUrlEncodedBody(
-          "dateOfDivorce.day" -> divorceDateInThePast.dayOfMonth().toString,
-          "dateOfDivorce.month" -> divorceDateInThePast.monthOfYear().toString,
-          "dateOfDivorce.year" -> divorceDateInThePast.year().toString
-        )
-
-        when(mockUpdateRelationshipService.saveDivorceDate(any())(any(), any()))
-          .thenReturn(Future.successful(divorceDateInThePast))
-
-        val result = controller().submitDivorceEnterYear()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEndExplanation().url)
-
-      }
-
-    }
-
-    "return a bad request" when {
-      "an invalid date is submitted" in {
-
-        val invalidRequest = FakeRequest().withFormUrlEncodedBody(
-          "dateOfDivorce.day" -> "day",
-          "dateOfDivorce.month" -> "month",
-          "dateOfDivorce.year" -> "year"
-        )
-
-        val result = controller().submitDivorceEnterYear(invalidRequest)
-        status(result) shouldBe BAD_REQUEST
-
-      }
-    }
-
-    "display an error page" when {
-      "there is an issue saving to the cache" in {
-        when(mockUpdateRelationshipService.saveDivorceDate(any())(any(), any())).thenReturn(failedFuture)
-
-        val divorceDateInThePast = LocalDate.now().minusDays(1)
-
-        val request = FakeRequest().withFormUrlEncodedBody(
-          "dateOfDivorce.day" -> divorceDateInThePast.dayOfMonth().toString,
-          "dateOfDivorce.month" -> divorceDateInThePast.monthOfYear().toString,
-          "dateOfDivorce.year" -> divorceDateInThePast.year().toString
-        )
-
-        val result = controller().submitDivorceEnterYear(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-        //result rendersTheSameViewAs views.html.errors.try_later()
-      }
-    }
-  }
-
-  "divorceEndExplanation" should {
-    "display the divorceEndExplanation page" in {
-
-      val role = Transferor
-      val divorceDate = LocalDate.now().minusDays(1)
-      val maEndingDate = LocalDate.now().plusDays(1)
-      val paEffectiveDate = LocalDate.now().plusDays(2)
-
-      val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
-
-      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
-        .thenReturn(Future.successful((role, divorceDate)))
-
-      when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
-        .thenReturn(Future.successful(maEndingDates))
-
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(maEndingDates))
-        .thenReturn(Future.successful(maEndingDates))
-
-      val viewModel = DivorceEndExplanationViewModel(role, divorceDate, maEndingDates)
-
-      val result = controller().divorceEndExplanation()(request)
-      status(result) shouldBe OK
-
-      //result rendersTheSameViewAs views.html.coc.divorce_end_explanation(viewModel)
-
-    }
-
-    "display an error page" when {
-      "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any())).thenReturn(failedFuture)
-
-        val result = controller().claims(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-
-        //result rendersTheSameViewAs views.html.errors.try_later()
-      }
-    }
-  }
-
-  "confirmEmail" should {
-    "display the confirm email page" when {
-      "an email is recovered from the cache" in {
-        val email = "test@test.com"
-
-        when(mockUpdateRelationshipService.getEmailAddress(any(), any()))
-          .thenReturn(Future.successful(Some(email)))
-
-        val viewModel = EmailViewModel("backlink")
-        val result = controller().confirmEmail(request)
-        status(result) shouldBe OK
-
-        //result rendersTheSameViewAs views.html.coc.email(emailForm.fill(EmailAddress(email)), viewModel)
-
-      }
-
-      "no email is recovered from the cache" in {
-        when(mockUpdateRelationshipService.getEmailAddress(any(), any())).thenReturn(Future.successful(None))
-
-        val viewModel = EmailViewModel("backlink")
-        val result = controller().confirmEmail(request)
-        status(result) shouldBe OK
-
-        //result rendersTheSameViewAs views.html.coc.email(emailForm, viewModel)
-      }
-
-      "fail to get data from cache" in {
-        when(mockUpdateRelationshipService.getEmailAddress(any(), any())).thenReturn(failedFuture)
-
-        val viewModel = EmailViewModel("backlink")
-        val result = controller().confirmEmail(request)
-        status(result) shouldBe OK
-
-        //result rendersTheSameViewAs views.html.coc.email(emailForm, viewModel)
-
-      }
-    }
-  }
-
-  "confirmYourEmailActionUpdate" should {
-    "redirect to the confirmUpdate page" in {
-
-      val emailAddress = "example@example.com"
-      when(mockUpdateRelationshipService.saveEmailAddress(emailAddress)(any(), any())).thenReturn(Future.successful(emailAddress))
-
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> emailAddress)
-      val result = controller().confirmYourEmailActionUpdate()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate().url)
-
-    }
-
-    "return a bad request" when {
-      "a form error has occurred" in {
-        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "")
-        val result = controller().confirmYourEmailActionUpdate()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "display an error page" when {
-      "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.saveEmailAddress(any())(any(), any())).thenReturn(failedFuture)
-
-        val result = controller().claims(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-
-        //result rendersTheSameViewAs views.html.errors.try_later()
-      }
-    }
-  }
-
-
-  "confirmUpdate" should {
-    "display the confirmUpdate page" in {
-
-      val fullName = "testName"
-      val divorceDate = LocalDate.now().minusDays(1)
-      val emailAddress = "email@email.com"
-      val maEndingDate = LocalDate.now().plusDays(1)
-      val paEffectiveDate = LocalDate.now().plusDays(2)
-
-      val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
-
-      val confirmUpdateAnswers = ConfirmationUpdateAnswers(fullName, Some(divorceDate), emailAddress, maEndingDates)
-
-      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
-          .thenReturn(Future.successful((confirmUpdateAnswers)))
-
-      val result = controller().confirmUpdate()(request)
-      status(result) shouldBe OK
-
-      //result rendersTheSameViewAs views.html.coc.confirmUpdate(ConfirmUpdateViewModel(confirmUpdateAnswers))
-
-    }
-
-    "return InternalServerError" when {
-      "there is no cache data returned" in {
-
-        when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
-          .thenReturn(Future.successful((failedFuture)))
-
-        val result = controller().confirmUpdate()(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-    }
-  }
-
-
-  "submitConfirmUpdate" should {
-    "redirect to the finish update page" in {
-      when(mockUpdateRelationshipService.updateRelationship(generatedNino)(any(), any(), any()))
-        .thenReturn(Future.successful())
-
-      val result = controller().submitConfirmUpdate(request)
-
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe controllers.routes.UpdateRelationshipController.finishUpdate().url
-
-    }
-
-    //TODO other errors
-
-    "display an error page" when {
-      "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.updateRelationship(generatedNino)(any(), any(), any()))
-          .thenReturn(failedFuture)
-
-        val result = controller().submitConfirmUpdate(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-
-        result rendersTheSameViewAs views.html.errors.try_later()
-      }
-    }
-  }
-
-  "finishUpdate" should {
-    "return a success" in {
-
-      val email = "email@email.com"
-
-      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
-        .thenReturn(Future.successful(email))
-
-      when(mockUpdateRelationshipService.removeCache(any(), any()))
-        .thenReturn(Future.successful())
-
-      val result = controller().finishUpdate()(request)
-      status(result) shouldBe OK
-
-      //result rendersTheSameViewAs views.html.coc.finished(EmailAddress(email))
-
-    }
-
-    "display an error page" when {
-      "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
-          .thenReturn(failedFuture)
-
-        val result = controller().submitConfirmUpdate(request)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-
-        //result rendersTheSameViewAs views.html.errors.try_later()
-      }
-    }
-  }
+//  "cancel" should {
+//    "display the cancel page" in {
+//
+//      val nowDate = new LocalDate()
+//      val marriageAllowanceEndingDates = MarriageAllowanceEndingDates(nowDate, nowDate)
+//
+//      when(mockUpdateRelationshipService.getMAEndingDatesForCancelation).thenReturn(Future.successful(marriageAllowanceEndingDates))
+//
+//      val result = controller().cancel(request)
+//      status(result) shouldBe OK
+//
+//      result rendersTheSameViewAs views.html.coc.cancel(marriageAllowanceEndingDates)
+//    }
+//
+//    "display an error page" when {
+//      "there are issues saving data to the cache" in {
+//        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(failedFuture)
+//
+//        val result = controller().claims(request)
+//        status(result) shouldBe INTERNAL_SERVER_ERROR
+//
+//        //result rendersTheSameViewAs views.html.errors.try_later()
+//      }
+//    }
+//
+//  }
+//
+//  "changeOfIncome" should {
+//    "display the changeOfIncome page" in {
+//      val result  = controller().changeOfIncome(request)
+//      status(result) shouldBe OK
+//
+//      //result rendersTheSameViewAs views.html.coc.change_in_earnings()
+//    }
+//  }
+//
+//  "bereavement" should {
+//    "display the bereavement page" when {
+//      "there is data returned from the cache" in {
+//
+//        val relationshipRecords = createRelationshipRecords()
+//        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
+//        val result = controller().bereavement(request)
+//
+//        status(result) shouldBe OK
+//        //result rendersTheSameViewAs views.html.coc.bereavement(relationshipRecords.primaryRecord.role)
+//
+//      }
+//
+//      "display an error page" when {
+//        "there is no cached data found" in {
+//          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.failed(throw CacheMissingRelationshipRecords()))
+//
+//          val result = controller().bereavement(request)
+//          status(result) shouldBe INTERNAL_SERVER_ERROR
+//
+//          //result rendersTheSameViewAs views.html.errors.try_later()
+//        }
+//      }
+//    }
+//  }
+//
+//
+//  "divorceEnterYear" should {
+//    "display the enter a divorce year page" when {
+//      "there is data in the cache" in {
+//
+//        val divorceDateInThePast = LocalDate.now().minusDays(1)
+//        when(mockUpdateRelationshipService.getDivorceDate(any(), any())).thenReturn(Future.successful(Some(divorceDateInThePast)))
+//
+//        val result = controller().divorceEnterYear(request)
+//        status(result) shouldBe OK
+//
+//        //result rendersTheSameViewAs views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDateInThePast))
+//      }
+//
+//      "there is no data in the cache" in {
+//        when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
+//          .thenReturn(Future.successful(None))
+//
+//        val result = controller().divorceEnterYear(request)
+//        status(result) shouldBe OK
+//
+//        //result rendersTheSameViewAs views.html.coc.divorce_select_year(DivorceSelectYearForm.form)
+//      }
+//
+//    }
+//
+//    "a non fatal error has occurred when trying to get cached data" in {
+//      when(mockUpdateRelationshipService.getDivorceDate(any(), any())).thenReturn(failedFuture)
+//
+//      val result = controller().makeChange()(request)
+//      status(result) shouldBe OK
+//      //result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
+//    }
+//  }
+//
+//  "submitDivorceEnterYear" should {
+//    "redirect to the divorce end explanation page" when {
+//      "the user enters a valid divorce date in the past" in {
+//
+//        val divorceDateInThePast = LocalDate.now().minusDays(1)
+//
+//        val request = FakeRequest().withFormUrlEncodedBody(
+//          "dateOfDivorce.day" -> divorceDateInThePast.dayOfMonth().toString,
+//          "dateOfDivorce.month" -> divorceDateInThePast.monthOfYear().toString,
+//          "dateOfDivorce.year" -> divorceDateInThePast.year().toString
+//        )
+//
+//        when(mockUpdateRelationshipService.saveDivorceDate(any())(any(), any()))
+//          .thenReturn(Future.successful(divorceDateInThePast))
+//
+//        val result = controller().submitDivorceEnterYear()(request)
+//        status(result) shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEndExplanation().url)
+//
+//      }
+//
+//    }
+//
+//    "return a bad request" when {
+//      "an invalid date is submitted" in {
+//
+//        val invalidRequest = FakeRequest().withFormUrlEncodedBody(
+//          "dateOfDivorce.day" -> "day",
+//          "dateOfDivorce.month" -> "month",
+//          "dateOfDivorce.year" -> "year"
+//        )
+//
+//        val result = controller().submitDivorceEnterYear(invalidRequest)
+//        status(result) shouldBe BAD_REQUEST
+//
+//      }
+//    }
+//
+//    "display an error page" when {
+//      "there is an issue saving to the cache" in {
+//        when(mockUpdateRelationshipService.saveDivorceDate(any())(any(), any())).thenReturn(failedFuture)
+//
+//        val divorceDateInThePast = LocalDate.now().minusDays(1)
+//
+//        val request = FakeRequest().withFormUrlEncodedBody(
+//          "dateOfDivorce.day" -> divorceDateInThePast.dayOfMonth().toString,
+//          "dateOfDivorce.month" -> divorceDateInThePast.monthOfYear().toString,
+//          "dateOfDivorce.year" -> divorceDateInThePast.year().toString
+//        )
+//
+//        val result = controller().submitDivorceEnterYear(request)
+//        status(result) shouldBe INTERNAL_SERVER_ERROR
+//        //result rendersTheSameViewAs views.html.errors.try_later()
+//      }
+//    }
+//  }
+//
+//  "divorceEndExplanation" should {
+//    "display the divorceEndExplanation page" in {
+//
+//      val role = Transferor
+//      val divorceDate = LocalDate.now().minusDays(1)
+//      val maEndingDate = LocalDate.now().plusDays(1)
+//      val paEffectiveDate = LocalDate.now().plusDays(2)
+//
+//      val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
+//
+//      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
+//        .thenReturn(Future.successful((role, divorceDate)))
+//
+//      when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
+//        .thenReturn(Future.successful(maEndingDates))
+//
+//      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(maEndingDates))
+//        .thenReturn(Future.successful(maEndingDates))
+//
+//      val viewModel = DivorceEndExplanationViewModel(role, divorceDate, maEndingDates)
+//
+//      val result = controller().divorceEndExplanation()(request)
+//      status(result) shouldBe OK
+//
+//      //result rendersTheSameViewAs views.html.coc.divorce_end_explanation(viewModel)
+//
+//    }
+//
+//    "display an error page" when {
+//      "an error has occurred whilst accessing the cache" in {
+//        when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any())).thenReturn(failedFuture)
+//
+//        val result = controller().claims(request)
+//        status(result) shouldBe INTERNAL_SERVER_ERROR
+//
+//        //result rendersTheSameViewAs views.html.errors.try_later()
+//      }
+//    }
+//  }
+//
+//  "confirmEmail" should {
+//    "display the confirm email page" when {
+//      "an email is recovered from the cache" in {
+//        val email = "test@test.com"
+//
+//        when(mockUpdateRelationshipService.getEmailAddress(any(), any()))
+//          .thenReturn(Future.successful(Some(email)))
+//
+//        val viewModel = EmailViewModel("backlink")
+//        val result = controller().confirmEmail(request)
+//        status(result) shouldBe OK
+//
+//        //result rendersTheSameViewAs views.html.coc.email(emailForm.fill(EmailAddress(email)), viewModel)
+//
+//      }
+//
+//      "no email is recovered from the cache" in {
+//        when(mockUpdateRelationshipService.getEmailAddress(any(), any())).thenReturn(Future.successful(None))
+//
+//        val viewModel = EmailViewModel("backlink")
+//        val result = controller().confirmEmail(request)
+//        status(result) shouldBe OK
+//
+//        //result rendersTheSameViewAs views.html.coc.email(emailForm, viewModel)
+//      }
+//
+//      "fail to get data from cache" in {
+//        when(mockUpdateRelationshipService.getEmailAddress(any(), any())).thenReturn(failedFuture)
+//
+//        val viewModel = EmailViewModel("backlink")
+//        val result = controller().confirmEmail(request)
+//        status(result) shouldBe OK
+//
+//        //result rendersTheSameViewAs views.html.coc.email(emailForm, viewModel)
+//
+//      }
+//    }
+//  }
+//
+//  "confirmYourEmailActionUpdate" should {
+//    "redirect to the confirmUpdate page" in {
+//
+//      val emailAddress = "example@example.com"
+//      when(mockUpdateRelationshipService.saveEmailAddress(emailAddress)(any(), any())).thenReturn(Future.successful(emailAddress))
+//
+//      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> emailAddress)
+//      val result = controller().confirmYourEmailActionUpdate()(request)
+//      status(result) shouldBe SEE_OTHER
+//      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate().url)
+//
+//    }
+//
+//    "return a bad request" when {
+//      "a form error has occurred" in {
+//        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "")
+//        val result = controller().confirmYourEmailActionUpdate()(request)
+//        status(result) shouldBe BAD_REQUEST
+//      }
+//    }
+//
+//    "display an error page" when {
+//      "an error has occurred whilst accessing the cache" in {
+//        when(mockUpdateRelationshipService.saveEmailAddress(any())(any(), any())).thenReturn(failedFuture)
+//
+//        val result = controller().claims(request)
+//        status(result) shouldBe INTERNAL_SERVER_ERROR
+//
+//        //result rendersTheSameViewAs views.html.errors.try_later()
+//      }
+//    }
+//  }
+//
+//
+//  "confirmUpdate" should {
+//    "display the confirmUpdate page" in {
+//
+//      val fullName = "testName"
+//      val divorceDate = LocalDate.now().minusDays(1)
+//      val emailAddress = "email@email.com"
+//      val maEndingDate = LocalDate.now().plusDays(1)
+//      val paEffectiveDate = LocalDate.now().plusDays(2)
+//
+//      val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
+//
+//      val confirmUpdateAnswers = ConfirmationUpdateAnswers(fullName, Some(divorceDate), emailAddress, maEndingDates)
+//
+//      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
+//          .thenReturn(Future.successful((confirmUpdateAnswers)))
+//
+//      val result = controller().confirmUpdate()(request)
+//      status(result) shouldBe OK
+//
+//      //result rendersTheSameViewAs views.html.coc.confirmUpdate(ConfirmUpdateViewModel(confirmUpdateAnswers))
+//
+//    }
+//
+//    "return InternalServerError" when {
+//      "there is no cache data returned" in {
+//
+//        when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
+//          .thenReturn(Future.successful((failedFuture)))
+//
+//        val result = controller().confirmUpdate()(request)
+//        status(result) shouldBe INTERNAL_SERVER_ERROR
+//      }
+//    }
+//  }
+//
+//
+//  "submitConfirmUpdate" should {
+//    "redirect to the finish update page" in {
+//      when(mockUpdateRelationshipService.updateRelationship(generatedNino)(any(), any(), any()))
+//        .thenReturn(Future.successful())
+//
+//      val result = controller().submitConfirmUpdate(request)
+//
+//      status(result) shouldBe SEE_OTHER
+//      redirectLocation(result) shouldBe controllers.routes.UpdateRelationshipController.finishUpdate().url
+//
+//    }
+//
+//    //TODO other errors
+//
+//    "display an error page" when {
+//      "an error has occurred whilst accessing the cache" in {
+//        when(mockUpdateRelationshipService.updateRelationship(generatedNino)(any(), any(), any()))
+//          .thenReturn(failedFuture)
+//
+//        val result = controller().submitConfirmUpdate(request)
+//        status(result) shouldBe INTERNAL_SERVER_ERROR
+//
+//        result rendersTheSameViewAs views.html.errors.try_later()
+//      }
+//    }
+//  }
+//
+//  "finishUpdate" should {
+//    "return a success" in {
+//
+//      val email = "email@email.com"
+//
+//      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
+//        .thenReturn(Future.successful(email))
+//
+//      when(mockUpdateRelationshipService.removeCache(any(), any()))
+//        .thenReturn(Future.successful())
+//
+//      val result = controller().finishUpdate()(request)
+//      status(result) shouldBe OK
+//
+//      //result rendersTheSameViewAs views.html.coc.finished(EmailAddress(email))
+//
+//    }
+//
+//    "display an error page" when {
+//      "an error has occurred whilst accessing the cache" in {
+//        when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
+//          .thenReturn(failedFuture)
+//
+//        val result = controller().submitConfirmUpdate(request)
+//        status(result) shouldBe INTERNAL_SERVER_ERROR
+//
+//        //result rendersTheSameViewAs views.html.errors.try_later()
+//      }
+//    }
+//  }
 
 //  "handleError" should {
 //    val auhtRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(

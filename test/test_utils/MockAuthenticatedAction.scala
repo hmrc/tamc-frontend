@@ -29,6 +29,9 @@ import scala.concurrent.Future
 class MockAuthenticatedAction @Inject()(override val authConnector: AuthConnector) extends AuthenticatedActionRefiner(authConnector) {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
+
+    val nino = request.body
+
     Future.successful(
       Right(
         AuthenticatedUserRequest(
