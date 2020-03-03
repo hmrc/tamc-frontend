@@ -30,6 +30,6 @@ object MakeChangesDecisionForm {
   val Bereavement = "Bereavement"
 
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
-    single(StopMAChoice -> optional(text).verifying(messages("pages.makeChanges.error.mandatory.value"), { _.isDefined }))
+    single(StopMAChoice -> optional(text).verifying("pages.makeChanges.error.mandatory.value", { _.isDefined }))
   )
 }
