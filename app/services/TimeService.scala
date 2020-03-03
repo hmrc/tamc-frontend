@@ -16,7 +16,6 @@
 
 package services
 
-import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import uk.gov.hmrc.time.TaxYear
@@ -35,23 +34,10 @@ trait TimeService {
   def getCurrentDate: LocalDate =
     LocalDate.now()
 
-  def getEffectiveUntilDate(endReason: EndRelationshipReason): LocalDate =
-    endReason.endReason match {
-      case EndReasonCode.CANCEL => currentTaxYear.finishes
-      case EndReasonCode.DIVORCE_CY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes
-    }
-
-  def getEffectiveDate(endReason: EndRelationshipReason): LocalDate =
-    endReason.endReason match {
-      case EndReasonCode.CANCEL => currentTaxYear.next.starts
-      case EndReasonCode.DIVORCE_CY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes.plusDays(1)
-      case EndReasonCode.DIVORCE_PY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).starts
-    }
-
   def getCurrentTaxYear: Int =
     currentTaxYear.startYear
 
-  def currentTaxYear: TaxYear =
+  private def currentTaxYear: TaxYear =
     TaxYear.current
 
   def getTaxYearForDate(date: LocalDate): Int =

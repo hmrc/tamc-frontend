@@ -30,68 +30,6 @@ class TimeServiceTest extends ControllerBaseSpec {
 
   def service: TimeService = TimeService
 
-  "getEffectiveUntilDate" should {
-    "return end of current tax year" when {
-      "End reason code is CANCEL" in {
-        val timeService = service
-        val data = EndRelationshipReason("CANCEL")
-        val result = timeService.getEffectiveUntilDate(data)
-        result shouldBe Some(TaxYear.current.finishes)
-      }
-    }
-
-    "return end tax year for divorce date" when {
-      "End reason code is DIVORCE_CY" in {
-        val timeService = service
-        val data = EndRelationshipReason("DIVORCE_CY", Some(LocalDate.now()))
-        val result = timeService.getEffectiveUntilDate(data)
-        result shouldBe Some(TaxYear.taxYearFor(data.dateOfDivorce.get).finishes)
-      }
-    }
-
-    "return None" when {
-      "End reason code is DIVORCE_PY" in {
-        val timeService = service
-        val data = EndRelationshipReason("DIVORCE_PY")
-        val result = timeService.getEffectiveUntilDate(data)
-        result shouldBe None
-      }
-    }
-  }
-
-  "getEffectiveDate" should {
-    "return startOfNextTaxYear" when {
-      "End reason code is CANCEL" in {
-        val timeService = service
-        val data = EndRelationshipReason("CANCEL")
-        timeService.getEffectiveDate(data) shouldBe TaxYear.current.next.starts
-      }
-    }
-
-    "return end of tax year of divorce date" when {
-      "End reason code is DIVORCE_CY" in {
-        val timeService = service
-        val date = new LocalDate(2018, 9, 1)
-        val data = EndRelationshipReason("DIVORCE_CY", Some(new LocalDate(2019, 1, 1)))
-        timeService.getEffectiveDate(data) shouldBe TaxYear.taxYearFor(date).finishes.plusDays(1)
-      }
-    }
-
-    "return start of tax year of divorce date" when {
-      "End reason code is DIVORCE_PY" in {
-        val timeService = service
-        val data = EndRelationshipReason("DIVORCE_PY", Some(LocalDate.now().minusDays(1)))
-        timeService.getEffectiveDate(data) shouldBe TaxYear.taxYearFor(data.dateOfDivorce.get).starts
-      }
-    }
-  }
-
-  "getPreviousYearDate" should {
-    "return previous year" in {
-      service.getPreviousYearDate shouldBe LocalDate.now().minusYears(1)
-    }
-  }
-
   "getTaxYearForDate" should {
     "return current year before 6th April" in {
       val expectedYear = 2016
