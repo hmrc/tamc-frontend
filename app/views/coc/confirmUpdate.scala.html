@@ -22,11 +22,11 @@
 @import models.Role._
 @import utils.LanguageUtils
 @import models.auth.AuthenticatedUserRequest
-@import viewModels.ConfirmCancelViewModel
+@import viewModels.ConfirmUpdateViewModel
 @import templates.coc._
 @import uk.gov.hmrc.play.views.html._
 
-@(viewModel: ConfirmCancelViewModel)(implicit messages: Messages,
+@(viewModel: ConfirmUpdateViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)

@@ -19,7 +19,7 @@ package controllers
 import java.util.concurrent.TimeUnit
 
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
-import models.{Recipient, DesRelationshipEndReason, RelationshipRecord, Transferor}
+import models.{CitizenName, DesRelationshipEndReason, LoggedInUserInfo, Recipient, RelationshipRecord, Transferor}
 import org.joda.time.DateTime
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.words.MustVerb
@@ -38,7 +38,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 trait ControllerBaseSpec extends UnitSpec
   with MustVerb
@@ -59,6 +59,8 @@ trait ControllerBaseSpec extends UnitSpec
   def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]
 
   implicit val request: Request[AnyContent] = FakeRequest()
+
+  implicit val ec = ExecutionContext.Implicits.global
 
   implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
 
@@ -82,6 +84,8 @@ trait ControllerBaseSpec extends UnitSpec
     }
 
   }
+
+  val loggedInUser = LoggedInUserInfo(1, "5PM or something like that",None, Some(CitizenName(Some("Test"), Some("User"))))
 
   //active
   val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(

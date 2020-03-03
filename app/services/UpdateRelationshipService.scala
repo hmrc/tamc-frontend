@@ -58,6 +58,7 @@ trait UpdateRelationshipService {
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
+    //TODO we can probably remove this as regardless of what this is returning we return whatever we pass in
     def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
       cachingService.unlockCreateRelationship().map { _ => trrecord }
 
@@ -138,27 +139,6 @@ trait UpdateRelationshipService {
     } yield Future.successful(Unit)
   }
 
-  def getUpdateNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] =
-    cachingService.getUpdateRelationshipCachedData map {
-      case Some(
-      UpdateRelationshipCacheData(
-      Some(LoggedInUserInfo(_, _, _, _)),
-      _,
-      active,
-      historic,
-      notificationRecord, _, _)) if active.isDefined || historic.isDefined => notificationRecord
-      case _ => throw CacheMissingUpdateRecord()
-    }
-
-  def getConfirmationUpdateDataTemp(implicit hc: HeaderCarrier,
-                                    ec: ExecutionContext): Future[(UpdateRelationshipConfirmationModel, Option[UpdateRelationshipCacheData])] =
-    for {
-      updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
-      validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
-      requiredData <- transformUpdateRelationshipCache(validatedUpdateRelationship)
-    } yield (requiredData, updateRelationshipCache)
-
-
   //TODO service layer should know what to pass back
   def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
     cachingService.getConfirmationAnswers.map(ConfirmationUpdateAnswers(_))
@@ -184,43 +164,8 @@ trait UpdateRelationshipService {
     cachingService.cacheValue[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES, maEndingDates)
   }
 
-  def getUpdateRelationshipCacheDataForDateOfDivorce(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
-    for {
-      updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
-      validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
-    } yield updateRelationshipCache
-
-  def getUpdateRelationshipCacheForReject(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
-    cachingService.getUpdateRelationshipCachedData
-
-  def getupdateRelationshipFinishedData(transferorNino: Nino
-                                       )(implicit hc: HeaderCarrier,
-                                         ec: ExecutionContext): Future[(NotificationRecord, EndRelationshipReason)] =
-    for {
-      cacheData <- cachingService.getUpdateRelationshipCachedData
-      notificationAndEmail <- validateUpdateRelationshipFinishedData(cacheData)
-    } yield notificationAndEmail
-
-  def saveEndRelationshipReason(endRealtionshipReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
-    cachingService.savRelationshipEndReasonRecord(endRealtionshipReason)
-
-
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     cachingService.getRelationshipRecords.map(_.getOrElse(throw CacheMissingRelationshipRecords()))
-
-  def getEndDate(endRelationshipReason: EndRelationshipReason,
-                 selectedRelationship: RelationshipRecord): LocalDate =
-    endRelationshipReason match {
-      case EndRelationshipReason(EndReasonCode.DIVORCE_PY, _, _) => getPreviousYearDate
-      case EndRelationshipReason(EndReasonCode.DIVORCE_CY, _, _) =>
-        if (time.TaxYear.current.contains(endRelationshipReason.dateOfDivorce.get)) getCurrentDate
-        else time.TaxYear.taxYearFor(endRelationshipReason.dateOfDivorce.get).finishes
-      case EndRelationshipReason(EndReasonCode.CANCEL, _, _) => getCurrentDate
-      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => time.TaxYear.taxYearFor(parseDate(selectedRelationship.participant1StartDate)).starts
-    }
-
-  def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
-    LocalDate.parse(selectedRelationship.participant1EndDate.get, DateTimeFormat.forPattern("yyyyMMdd"))
 
   def removeCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
     cachingService.remove().map(_ => Unit)
@@ -260,41 +205,5 @@ trait UpdateRelationshipService {
                                      )(implicit hc: HeaderCarrier,
                                        ec: ExecutionContext): Future[Unit] = {
     handleAudit(UpdateRelationshipSuccessEvent(updateData))
-  }
-
-
-  private def validateupdateRelationshipCompleteCache(cacheData: Option[UpdateRelationshipCacheData]
-                                                     )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
-    cacheData match {
-      case Some(
-      UpdateRelationshipCacheData(
-      Some(LoggedInUserInfo(_, _, _, Some(CitizenName(_, _)))),
-      _,
-      active,
-      historic,
-      Some(notification: NotificationRecord),
-      Some(_), _)) if active.isDefined || historic.isDefined => Future.successful(cacheData.get)
-      case _ => throw CacheMissingUpdateRecord()
-    }
-
-  private def transformUpdateRelationshipCache(updateRelationshipCacheData: UpdateRelationshipCacheData
-                                              )(implicit hc: HeaderCarrier,
-                                                ec: ExecutionContext): Future[UpdateRelationshipConfirmationModel] =
-    Future {
-      UpdateRelationshipConfirmationModel(
-        fullName = updateRelationshipCacheData.loggedInUserInfo.get.name,
-        email = updateRelationshipCacheData.notification.get.transferor_email,
-        endRelationshipReason = updateRelationshipCacheData.relationshipEndReasonRecord.get,
-        historicRelationships = updateRelationshipCacheData.historicRelationships,
-        role = updateRelationshipCacheData.roleRecord)
-    }
-
-  private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {
-    endReasonCode.endReason match {
-      case EndReasonCode.CANCEL => "Cancelled by Transferor"
-      case EndReasonCode.DIVORCE_CY => "Divorce/Separation"
-      case EndReasonCode.DIVORCE_PY => "Divorce/Separation"
-      case EndReasonCode.REJECT => "Rejected by Recipient"
-    }
   }
 }

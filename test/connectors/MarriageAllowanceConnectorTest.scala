@@ -35,7 +35,6 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.WireMockHelper
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class MarriageAllowanceConnectorTest extends ControllerBaseSpec with WireMockHelper {

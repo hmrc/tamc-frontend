@@ -22,6 +22,6 @@ import uk.gov.hmrc.time.TaxYear
 object EndDateMACeasedCalculator {
 
   def calculateEndDate: LocalDate = TaxYear.current.finishes
-  def calculatePaEffectiveDate: LocalDate = TaxYear.current.next.finishes
+  def calculatePaEffectiveDate: LocalDate = TaxYear.current.next.starts
 
 }
