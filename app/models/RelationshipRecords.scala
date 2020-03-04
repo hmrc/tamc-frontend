@@ -68,7 +68,7 @@ object RelationshipRecords {
 
     val nonPrimaryRelationships = relationships.filterNot(_ == primaryRecord)
 
-    val loggedInUser = relationshipRecordList.loggedInUser.getOrElse(throw CitizenNotFound())
+    val loggedInUser = relationshipRecordList.userRecord.getOrElse(throw CitizenNotFound())
 
     RelationshipRecords(primaryRecord, nonPrimaryRelationships, loggedInUser)
   }
