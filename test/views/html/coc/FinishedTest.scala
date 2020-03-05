@@ -33,24 +33,16 @@ class FinishedTest extends TamcViewTest {
 
     behave like pageWithTitle(messagesApi("title.change.complete"))
     behave like pageWithHeader(messagesApi("pages.coc.finish.header"))
-    behave like pageWithH2Header(messagesApi("pages.coc.finish.whn"))
 
     "have a paragraph" in {
 
       doc should haveParagraphWithText(messagesApi("pages.coc.finish.acknowledgement",emailAddress))
 
       doc should haveParagraphWithText(messagesApi("pages.coc.finish.junk"))
+
+      doc should haveParagraphWithText(messagesApi("pages.coc.finish.para1"))
     }
 
-    "have a paragraph with embedded link" in {
-
-      doc should haveParagraphWithText(
-        messagesApi("pages.coc.finish.para1", messagesApi("pages.coc.finish.check.status.link")))
-
-      val linkElement = doc.getElementById("marriage-allowance-history").getElementsByTag("a").get(0)
-
-      linkElement should haveLinkURL(routes.UpdateRelationshipController.history.url)
-
-    }
+    //TODO determine whether this view changes depending on endReason then cater for this in testing
   }
 }

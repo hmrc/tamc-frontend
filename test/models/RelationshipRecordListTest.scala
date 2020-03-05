@@ -25,44 +25,33 @@ import scala.concurrent.ExecutionContext
 
 class RelationshipRecordListTest extends UnitSpec with GuiceOneAppPerSuite {
 
-  "activeRelationshipRecord" should {
-    "return None" when {
+
+
+  "RelationshipRecordList" should {
+
+    "return a RelationshipRecordList with LoggedInUserInfo" in {
+      val recordList = Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      val loggedInUser = LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("First"), Some("Name"))))
+      val relationshipRecordList = RelationshipRecordList(recordList, Some(loggedInUser))
+
+      relationshipRecordList.relationships shouldBe Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      relationshipRecordList.userRecord shouldBe Some(LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("First"), Some("Name")))))
+    }
+
+    "return a RelationshipRecordList without LoggedInUserInfo" in {
+      val recordList = Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      val relationshipRecordList = RelationshipRecordList(recordList)
+
+      relationshipRecordList.relationships shouldBe Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      relationshipRecordList.userRecord shouldBe None
+    }
+
+    "return Empty sequence for relationships" when {
       "relationships is an empty list" in {
         val relationshipRecordList = RelationshipRecordList(Seq())
         relationshipRecordList.relationships shouldBe Seq()
       }
-      "there is no active relationship records on the list" in {
-
-        val relationshipRecordWrapper: RelationshipRecordList = RelationshipRecordList(
-          Seq(
-            inactiveRelationshipRecord1,
-            inactiveRelationshipRecord2,
-            inactiveRelationshipRecord3
-          ))
-
-        relationshipRecordWrapper.relationships.foreach { elem =>
-          elem shouldBe None
-        }
-        //        relationshipRecordWrapper.relationships.head shouldBe None
-        //        relationshipRecordWrapper.relationships(1) shouldBe None
-        //        relationshipRecordWrapper.relationships.tail shouldBe None
-      }
     }
-
-    //    "return the head of active relationship list" when {
-    //      "there are active and inactive relationship records on the list" in {
-    //        val relationshipRecordWrapper =
-    //          RelationshipRecordList(
-    //            Seq(
-    //              activeRelationshipRecord,
-    //              activeRelationshipRecord2,
-    //              inactiveRelationshipRecord1,
-    //              inactiveRelationshipRecord2,
-    //              inactiveRelationshipRecord3
-    //            ))
-    //        relationshipRecordWrapper.activeRelationship shouldBe Some(activeRelationshipRecord)
-    //      }
-    //    }
   }
 
   private val activeRelationshipRecord =

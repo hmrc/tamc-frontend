@@ -37,7 +37,7 @@ trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSui
     participant1StartDate = "20130101",
     relationshipEndReason = Some(DesRelationshipEndReason.Default),
     participant1EndDate = None,
-    otherParticipantInstanceIdentifier = "",
+    otherParticipantInstanceIdentifier = "1",
     otherParticipantUpdateTimestamp = "TimeStamp")
   val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
   val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)

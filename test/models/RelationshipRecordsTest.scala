@@ -21,13 +21,13 @@ import utils.TamcViewModelTest
 
 class RelationshipRecordsTest extends TamcViewModelTest {
 
-  val loggedInUserInfo = LoggedInUserInfo(1, "Two Freckles past a hair", name = Some(CitizenName(Some("Test"), Some("User"))))
+  val loggedInUserInfo = LoggedInUserInfo(1, "TimeStamp", name = Some(CitizenName(Some("Test"), Some("User"))))
   val nonPrimaryRelationships = Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord1)
   val primaryRelationship = activeRecipientRelationshipRecord
 
   "hasMarriageAllowanceBeenCancelled" should {
     "return true if endDate is present in primary record" in {
-      val relationship = RelationshipRecords(primaryRelationship,
+      val relationship = RelationshipRecords(primaryRelationship.copy(participant1EndDate = Some("20200101")),
         nonPrimaryRelationships,
         loggedInUserInfo)
 
@@ -95,7 +95,7 @@ class RelationshipRecordsTest extends TamcViewModelTest {
   "apply" should {
     "populate RelationshipRecord" in {
       val relationshipRecordList = RelationshipRecordList(
-        Seq(activeTransferorRelationshipRecord2, inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord2),
+        Seq(activeRecipientRelationshipRecord, inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord1),
         Some(loggedInUserInfo))
 
       val relationship = RelationshipRecords(relationshipRecordList)
@@ -117,7 +117,7 @@ class RelationshipRecordsTest extends TamcViewModelTest {
       val relationshipRecordList = RelationshipRecordList(Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord2),
         Some(loggedInUserInfo))
 
-      val relationship = RelationshipRecords(relationshipRecordList)
+      val relationship = intercept[NoPrimaryRecordError](RelationshipRecords(relationshipRecordList))
 
       relationship shouldBe NoPrimaryRecordError()
     }
@@ -126,7 +126,7 @@ class RelationshipRecordsTest extends TamcViewModelTest {
       val relationshipRecordList = RelationshipRecordList(Seq(activeTransferorRelationshipRecord2, activeRecipientRelationshipRecord),
         Some(loggedInUserInfo))
 
-      val relationship = RelationshipRecords(relationshipRecordList)
+      val relationship = intercept[MultipleActiveRecordError](RelationshipRecords(relationshipRecordList))
 
       relationship shouldBe MultipleActiveRecordError()
     }
@@ -134,7 +134,7 @@ class RelationshipRecordsTest extends TamcViewModelTest {
     "return a CitizenNotFound error when non logged in user found" in {
       val relationshipRecordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord))
 
-      val relationship = RelationshipRecords(relationshipRecordList)
+      val relationship = intercept[CitizenNotFound](RelationshipRecords(relationshipRecordList))
 
       relationship shouldBe CitizenNotFound()
     }
