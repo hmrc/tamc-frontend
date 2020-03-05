@@ -16,8 +16,8 @@
 
 package config
 
-import config.ApplicationConfig.loadConfig
-import org.joda.time.LocalDate
+import config.ApplicationConfig.{loadConfig, runModeConfiguration}
+import org.joda.time.{DateTimeZone, LocalDate, LocalDateTime}
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -29,7 +29,11 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override protected def runModeConfiguration: Configuration = Play.current.configuration
 
-  val currentTaxYear: Int = TaxYear.current.startYear
+  private lazy val currentDate: LocalDateTime = LocalDateTime.now(DateTimeZone.forID("Europe/London"))
+
+  private lazy val currentTaxYear: TaxYear = TaxYear.current
+  private lazy val currentTaxYearStart: Int = currentTaxYear.startYear
+  private lazy val currentTaxYearEnd: Int = currentTaxYear.finishYear
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -54,10 +58,13 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
-  lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+  lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path")
+    .getOrElse("/template/mustache")
 
-  val TAMC_BEGINNING_YEAR = 2015
-  val TAMC_MIN_DATE = new LocalDate(1900, 1, 1)
+  val TAMC_BEGINNING_YEAR: Int = runModeConfiguration.getInt("tamc-beginning-year")
+    .getOrElse(throw new RuntimeException("Cannot find 'tamc-beginning-year' in 'data/tax-rates.conf'!"))
+
+  val TAMC_MIN_DATE: LocalDate = new LocalDate(1899, 12, 31)
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
 
   val CACHE_TRANSFEROR_RECORD = "TRANSFEROR_RECORD"
@@ -76,8 +83,23 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
 
-  def actualTaxYear(taxYear: Int = 0): Int = if (taxYear == 0) currentTaxYear else taxYear
-  def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)
+  def actualTaxYear(taxYear: Int): Int = {
+    val year = if (taxYear == 0)
+      currentTaxYearStart
+    else
+      taxYear
+
+
+    year
+//    if (year)
+  }
+
+  private def getIntProperty(runModeConfiguration: Configuration, keyPrefix: String, taxYear: Int): Int = {
+    val year = actualTaxYear(taxYear)
+    runModeConfiguration.getInt(keyPrefix + year).getOrElse(0)
+  }
+
+  def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = getIntProperty(runModeConfiguration, "personal-allowance-",taxYear)// runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT_SCOT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-scot-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT_WALES(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-wales-" + actualTaxYear(taxYear)).getOrElse(0)

@@ -67,7 +67,7 @@ class RegistrationFormTest extends UnitSpec with I18nSupport with GuiceOneAppPer
 
     "fail to bind a date which is earlier the minimum configured date" in {
 
-      val earliestDate = ApplicationConfig.TAMC_MIN_DATE.minusDays(1)
+      val earliestDate = ApplicationConfig.TAMC_MIN_DATE
       val checkDate = earliestDate.minusDays(1)
 
       val formInput = Map[String, String](

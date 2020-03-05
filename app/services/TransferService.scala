@@ -16,6 +16,7 @@
 
 package services
 
+import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors._
@@ -69,8 +70,23 @@ trait TransferService {
       cache <- cachingService.getUpdateRelationshipCachedData
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, taxYears.getOrElse(Nil))
+      validYears <- getValidTaxYears(taxYears)
+      _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
+
+  private def getValidTaxYears(years: Option[List[TaxYear]]): Future[List[TaxYear]] = {
+    Future {
+      years.fold(List[TaxYear]()) {
+        actualYears =>
+          val validExtraYears = actualYears
+            .filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
+
+          Logger.info(s"Valid extra year [$validExtraYears]")
+
+          validExtraYears
+      }
+    }
+  }
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])
                                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
