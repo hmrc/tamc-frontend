@@ -139,7 +139,6 @@ trait UpdateRelationshipService {
     } yield Future.successful(Unit)
   }
 
-  //TODO service layer should know what to pass back
   def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
     cachingService.getConfirmationAnswers.map(ConfirmationUpdateAnswers(_))
   }

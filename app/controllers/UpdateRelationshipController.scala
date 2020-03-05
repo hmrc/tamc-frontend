@@ -17,26 +17,21 @@
 package controllers
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
-import forms.ChangeRelationshipForm
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
 import models.auth.UserRequest
-import org.joda.time.LocalDate
 import play.Logger
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Result}
 import services._
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.Referral
-import viewModels.{ClaimsViewModel, ConfirmUpdateViewModel, DivorceEndExplanationViewModel, EmailViewModel, HistorySummaryViewModel}
+import viewModels._
 
 import scala.concurrent.Future
 import scala.util.control.NonFatal
@@ -47,7 +42,7 @@ class UpdateRelationshipController @Inject()(
                                               updateRelationshipService: UpdateRelationshipService,
                                               timeService: TimeService
                                             )(implicit templateRenderer: TemplateRenderer,
-                                              formPartialRetriever: FormPartialRetriever) extends BaseController with Referral {
+                                              formPartialRetriever: FormPartialRetriever) extends BaseController {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -234,11 +229,10 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       //TODO browser back in place of referer
 
-      lazy val viewModel = EmailViewModel(referer)
-      lazy val emptyEmailView = views.html.coc.email(emailForm, viewModel)
+      lazy val emptyEmailView = views.html.coc.email(emailForm)
 
       updateRelationshipService.getEmailAddress map {
-        case Some(email) => Ok(views.html.coc.email(emailForm.fill(EmailAddress(email)), viewModel))
+        case Some(email) => Ok(views.html.coc.email(emailForm.fill(EmailAddress(email))))
         case None => Ok(emptyEmailView)
       } recover {
         case NonFatal(_) => Ok(emptyEmailView)
@@ -250,8 +244,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       emailForm.bindFromRequest.fold(
         formWithErrors => {
-          lazy val viewModel = EmailViewModel(referer)
-          Future.successful(BadRequest(views.html.coc.email(formWithErrors, viewModel)))
+          Future.successful(BadRequest(views.html.coc.email(formWithErrors)))
         },
         email =>
           updateRelationshipService.saveEmailAddress(email.value) map {
@@ -262,8 +255,7 @@ class UpdateRelationshipController @Inject()(
 
   def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
-      UpdateRelationshipService.getConfirmationUpdateAnswers map {
-        confirmationUpdateAnswers =>
+      updateRelationshipService.getConfirmationUpdateAnswers map { confirmationUpdateAnswers =>
           Ok(views.html.coc.confirmUpdate(ConfirmUpdateViewModel(confirmationUpdateAnswers)))
       } recover handleError
   }
@@ -285,7 +277,7 @@ class UpdateRelationshipController @Inject()(
 
   }
 
-  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
+  private def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
 
@@ -298,7 +290,6 @@ class UpdateRelationshipController @Inject()(
 
         throwable match {
           case _: NoPrimaryRecordError => noPrimaryRecordRedirect(request)
-          //TODO should we be logging at a warn level
           case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
           case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
