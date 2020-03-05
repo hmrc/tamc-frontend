@@ -23,8 +23,8 @@ class ActiveRowTest extends TamcViewModelTest {
 
   "active row" should {
     Seq(
-      (activeRecipientRelationshipRecord, "2013 to Present"),
-      (activeTransferorRelationshipRecord3, "2013 to 2020")
+      (activeRecipientRelationshipRecord, "2012 to Present"),
+      (activeTransferorRelationshipRecord3, "2012 to 2020")
     ).foreach { row =>
       s"be active ${row._2}" in {
         val expectedDate = row._2
