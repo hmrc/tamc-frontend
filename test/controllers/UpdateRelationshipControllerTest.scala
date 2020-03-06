@@ -37,7 +37,9 @@ import utils.RequestBuilder._
 import viewModels._
 import forms.EmailForm.emailForm
 import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
+import org.jsoup.Jsoup
 import uk.gov.hmrc.auth.core.ConfidenceLevel
+import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.Future
 import scala.language.postfixOps
@@ -534,9 +536,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     "display the divorceEndExplanation page" in {
 
       val role = Transferor
-      val divorceDate = LocalDate.now().minusDays(1)
-      val maEndingDate = LocalDate.now().plusDays(1)
-      val paEffectiveDate = LocalDate.now().plusDays(2)
+      val now = LocalDate.now()
+      val divorceDate = now.minusDays(1)
+      val maEndingDate = now.plusDays(1)
+      val paEffectiveDate = now.plusDays(2)
 
       val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
 
@@ -755,52 +758,53 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     }
   }
 
-//  "handleError" should {
-//    val auhtRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
-//      request,
-//      PermanentlyAuthenticated,
-//      Some(ConfidenceLevel.L200),
-//      isSA = false,
-//      Some("GovernmentGateway"),
-//      Nino(TestData.Ninos.nino1)
-//    )
-//
-//    "return internal server error" when {
-//      val errors = List(
-//        (new CacheMissingUpdateRecord, "technical.issue.heading"),
-//        (new CacheUpdateRequestNotSent, "technical.issue.heading"),
-//        (new CannotUpdateRelationship, "technical.issue.heading"),
-//        (new CitizenNotFound, "technical.cannot-find-details.para1"),
-//        (new BadFetchRequest, "technical.technical-error.para1"),
-//        (new Exception, "technical.issue.heading")
-//      )
-//
-//      for ((error, message) <- errors) {
-//        s"a $error has been thrown" in {
-//          val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(error))
-//          status(result) shouldBe INTERNAL_SERVER_ERROR
-//          val doc = Jsoup.parse(contentAsString(result))
-//          doc.getElementById("error").text() shouldBe messagesApi(message)
-//        }
-//      }
-//    }
-//
-//    "return OK" when {
-//      val errors = List(
-//        (new TransferorNotFound, "transferor.not.found"),
-//        (new RecipientNotFound, "recipient.not.found.para1")
-//      )
-//
-//      for ((error, message) <- errors) {
-//        s"a $error has been thrown" in {
-//          val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(error))
-//          status(result) shouldBe OK
-//          val doc = Jsoup.parse(contentAsString(result))
-//          doc.getElementById("error").text() shouldBe messagesApi(message)
-//        }
-//      }
-//    }
-//
+  //TODO these tests to be moved to individual methods that can throw them
+  "handleError" should {
+    val auhtRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
+      request,
+      PermanentlyAuthenticated,
+      Some(ConfidenceLevel.L200),
+      isSA = false,
+      Some("GovernmentGateway"),
+      Nino(TestData.Ninos.nino1)
+    )
+
+    "return internal server error" when {
+      val errors = List(
+        //(new CacheMissingUpdateRecord, "technical.issue.heading"),
+        //(new CacheUpdateRequestNotSent, "technical.issue.heading"),
+        (new CannotUpdateRelationship, "technical.issue.heading"),
+        (new CitizenNotFound, "technical.cannot-find-details.para1"),
+        (new BadFetchRequest, "technical.technical-error.para1"),
+        (new Exception, "technical.issue.heading")
+      )
+
+      for ((error, message) <- errors) {
+        s"a $error has been thrown" in {
+          val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(error))
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+          val doc = Jsoup.parse(contentAsString(result))
+          doc.getElementById("error").text() shouldBe messagesApi(message)
+        }
+      }
+    }
+
+    "return OK" when {
+      val errors = List(
+        (new TransferorNotFound, "transferor.not.found"),
+        (new RecipientNotFound, "recipient.not.found.para1")
+      )
+
+      for ((error, message) <- errors) {
+        s"a $error has been thrown" in {
+          val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(error))
+          status(result) shouldBe OK
+          val doc = Jsoup.parse(contentAsString(result))
+          doc.getElementById("error").text() shouldBe messagesApi(message)
+        }
+      }
+    }
+//TODO is this still required
 //    "redirect" when {
 //      "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
 //        val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated))
@@ -808,5 +812,5 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 //        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
 //      }
 //    }
-//  }
+  }
 }

@@ -19,9 +19,10 @@ package viewModels
 import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
+import utils.TamcViewModelTest
 import views.helpers.TextGenerator
 
-class DivorceEndExplanationViewModelTest extends ViewModelBaseSpec {
+class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
 
 
   lazy val date: Int => LocalDate = year => new LocalDate(year, 5, 15)
@@ -40,8 +41,8 @@ class DivorceEndExplanationViewModelTest extends ViewModelBaseSpec {
           val targetYear = TaxYear.current.startYear
           val actual = DivorceEndExplanationViewModel(role, date(targetYear), MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
 
-          val string1 = messages("pages.divorce.explanation.current.bullet1", TextGenerator().ukDateTransformer(maEndDate))
-          val string2 = messages("pages.divorce.explanation.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate))
+          val string1 = messagesApi("pages.divorce.explanation.current.bullet1", TextGenerator().ukDateTransformer(maEndDate))
+          val string2 = messagesApi("pages.divorce.explanation.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate))
           val bullets = (string1, string2)
           val taxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
           val expected = DivorceEndExplanationViewModel(TextGenerator().ukDateTransformer(date(targetYear)), taxYearStatus, bullets)
@@ -53,8 +54,8 @@ class DivorceEndExplanationViewModelTest extends ViewModelBaseSpec {
           val targetYear = LocalDate.now().minusYears(2).getYear
           val actual = DivorceEndExplanationViewModel(role, date(targetYear), MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
 
-          val string1 = messages("pages.divorce.explanation.previous.bullet1", TextGenerator().ukDateTransformer(maEndDate))
-          val string2 = messages("pages.divorce.explanation.previous.bullet2")
+          val string1 = messagesApi("pages.divorce.explanation.previous.bullet1", TextGenerator().ukDateTransformer(maEndDate))
+          val string2 = messagesApi("pages.divorce.explanation.previous.bullet2")
           val bullets = (string1, string2)
           val taxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
           val expected = DivorceEndExplanationViewModel(TextGenerator().ukDateTransformer(date(targetYear)), taxYearStatus, bullets)

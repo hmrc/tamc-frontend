@@ -163,5 +163,5 @@ trait ApplicationConfig {
   val webchatId: String
   /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
   lazy val refreshInterval = 900
-  val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
+  lazy val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
 }

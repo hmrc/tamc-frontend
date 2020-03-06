@@ -190,6 +190,7 @@ trait UpdateRelationshipService {
         throw error
     }
 
+  //TODO is this required
   private def validateUpdateRelationshipFinishedData(cacheData: Option[UpdateRelationshipCacheData]
                                                     )(implicit hc: HeaderCarrier,
                                                       ec: ExecutionContext): Future[(NotificationRecord, EndRelationshipReason)] =

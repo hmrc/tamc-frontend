@@ -18,89 +18,163 @@ package viewModels
 
 import java.util.Locale
 
-import config.ApplicationConfig._
 import _root_.config.ApplicationConfig
+import models.DesRelationshipEndReason.{Active, Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
+import models.{DesRelationshipEndReason, Recipient, RelationshipRecord, RelationshipRecords}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
+import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
+import utils.TamcViewModelTest
+import views.helpers.TextGenerator
 
 
-class ClaimsViewModelTest extends ViewModelBaseSpec {
+class ClaimsViewModelTest extends TamcViewModelTest {
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
-  lazy val maxPATransfer: Int = PERSONAL_ALLOWANCE(currentOfTaxYear)
-  lazy val maxBenefit: Int = MAX_BENEFIT(currentOfTaxYear)
-  lazy val maxPaTransferFormatted: Int = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
+  //TODO are these required
+  //lazy val maxPATransfer: Int = PERSONAL_ALLOWANCE(currentOfTaxYear)
+  //lazy val maxBenefit: Int = MAX_BENEFIT(currentOfTaxYear)
+  //lazy val maxPaTransferFormatted: Int = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
   lazy val formattedEndOfTaxYear: String = endOfTaxYear.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
 
-  val taxFreeHtml: Html =
+  lazy val taxFreeHtml: Html =
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.taxFreeAllowanceUrl}">
-         |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
+      s"""${messagesApi("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.taxFreeAllowanceUrl}">
+         |${messagesApi("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
-  val backURL: String = controllers.routes.UpdateRelationshipController.history().url
+  //TODO Implement back functionality
+  val backURL = ""
+  val now = LocalDate.now()
+  val dateInputPattern = "yyyyMMdd"
+
+  def createRelationshipRecord(creationTimeStamp: LocalDate = now.minusDays(1),
+                               participant1StartDate: LocalDate = now.minusDays(1),
+                               relationshipEndReason: Option[DesRelationshipEndReason] = Some(DesRelationshipEndReason.Default),
+                               participant1EndDate: Option[String] = None,
+                               otherParticipantUpdateTimestamp: LocalDate = now.minusDays(1)): RelationshipRecord = {
+    RelationshipRecord(
+      Recipient.asString(),
+      creationTimeStamp.toString(dateInputPattern),
+      participant1StartDate.toString(dateInputPattern),
+      relationshipEndReason,
+      participant1EndDate,
+      otherParticipantInstanceIdentifier = "1",
+      otherParticipantUpdateTimestamp.toString(dateInputPattern))
+  }
 
   "ClaimsViewModel" should {
 
-    "should not display historic rows" when {
-      "recipient has primary (without end date) and does not have non-primary records" in {
-        val claimsView = ClaimsViewModel(activeRecipientRelationshipRecord, Seq())
+    "create a ClaimsViewModel with active claims rows" in {
 
-        claimsView.activeRow shouldBe ActiveRow(activeRecipientRelationshipRecord)
-        claimsView.historicRows shouldBe None
-        claimsView.backLinkUrl shouldBe backURL
-        claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
-      }
+      val primaryActiveRecord = createRelationshipRecord()
+      val viewModel = ClaimsViewModel(primaryActiveRecord, Seq.empty[RelationshipRecord])
+      val dateInterval = TextGenerator().taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
+      val activeRow = ClaimsRow(dateInterval, messagesApi("change.status.active"))
 
-      "transferor has primary (without end date) and does not have non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord2, Seq())
+      viewModel.activeRow shouldBe activeRow
+      viewModel.historicRows shouldBe Seq.empty[ClaimsRow]
+      viewModel.backLinkUrl shouldBe backURL
+      viewModel.taxFreeAllowanceLink shouldBe taxFreeHtml
 
-        claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord2)
-        claimsView.historicRows shouldBe None
-        claimsView.backLinkUrl shouldBe backURL
-        claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
-      }
+    }
 
-      "transferor has primary (with end date) and has non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord3, Seq(inactiveRecipientRelationshipRecord1))
+    "create a ClaimsViewModel with historic claims rows" when {
 
-        claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord3)
-        claimsView.historicRows shouldBe Seq(HistoricRow(inactiveRecipientRelationshipRecord1))
-        claimsView.backLinkUrl shouldBe backURL
-        claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
-      }
+      val primaryActiveRecord = createRelationshipRecord()
+      val creationTimeStamp = now.minusDays(2)
+      val participant1StartDate = now.minusDays(2)
+      val participant1EndDate = now.minusDays(1)
+      lazy val dateInterval = TextGenerator().taxDateIntervalString(participant1StartDate.toString(dateInputPattern),
+        Some(participant1EndDate.toString(dateInputPattern)))
 
-      "recipient has primary (with end Date) and does not have non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord3, Seq())
+      val endReasons = Set(
+        Death, Divorce, InvalidParticipant, Cancelled, Rejected, Hmrc, Closed, Merger, Retrospective, System, Default
+      )
 
-        claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord3)
-        claimsView.historicRows shouldBe None
-        claimsView shouldBe backURL
-        claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
+      endReasons.foreach { endReason =>
+        s"endRelationship reason is $endReason" in {
+
+          val historicNonPrimaryRecord = createRelationshipRecord(creationTimeStamp, participant1StartDate,
+            Some(endReason), Some(participant1EndDate.toString(dateInputPattern)))
+
+          val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(historicNonPrimaryRecord))
+          val expectedStatus = getReason(historicNonPrimaryRecord)
+          val expectedHistoricClaimsRow = ClaimsRow(dateInterval, expectedStatus)
+
+          viewModel.historicRows shouldBe Seq(expectedHistoricClaimsRow)
+        }
       }
     }
 
+    "create a ClaimsViewModel which has an ordered historic non primary sequence of claims" in {
 
-    "should display historic rows when non-primary records are present" when {
-      "recipient has non-primary records" in {
-        val claimsView = ClaimsViewModel(activeRecipientRelationshipRecord, Seq(inactiveRecipientRelationshipRecord1))
+      val primaryActiveRecord = createRelationshipRecord()
 
-        claimsView.activeRow shouldBe ActiveRow(activeRecipientRelationshipRecord)
-        claimsView.historicRows shouldBe Seq(HistoricRow(inactiveRecipientRelationshipRecord1))
-        claimsView.backLinkUrl shouldBe backURL
-        claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
+      val cyMinusOneStartDate = now.minusYears(1)
+      val cyMinusOneEndDate = now.minusYears(1)
+      val expectedClaimsRowMinusOne = getDateRange(cyMinusOneStartDate, cyMinusOneEndDate)
+
+      val cyMinusTwoStartDate = now.minusYears(2)
+      val cyMinusTwoEndDate = now.minusYears(2)
+      val expectedClaimsRowMinusTwo = getDateRange(cyMinusTwoStartDate, cyMinusTwoEndDate)
+
+      val cyMinusThreeStartDate = now.minusYears(3)
+      val cyMinusThreeEndDate = now.minusYears(3)
+      val expectedClaimsRowMinusThree = getDateRange(cyMinusThreeStartDate, cyMinusThreeEndDate)
+
+      val endReason = Divorce
+
+      val cyMinusOneRecord = createRelationshipRecord(participant1StartDate = cyMinusOneStartDate,
+        participant1EndDate = Some(cyMinusOneEndDate.toString(dateInputPattern)), relationshipEndReason = Some(endReason))
+
+      val cyMinusTwoRecord = createRelationshipRecord(participant1StartDate = cyMinusTwoStartDate,
+        participant1EndDate = Some(cyMinusTwoEndDate.toString(dateInputPattern)), relationshipEndReason = Some(endReason))
+
+      val cyMinusThreeRecord = createRelationshipRecord(participant1StartDate = cyMinusThreeStartDate,
+        participant1EndDate = Some(cyMinusThreeEndDate.toString(dateInputPattern)), relationshipEndReason = Some(endReason))
+
+      val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusTwoRecord, cyMinusThreeRecord, cyMinusOneRecord))
+      val expectedStatus = messagesApi(s"coc.end-reason.${endReason.value}")
+      val orderedClaimRows = Seq(ClaimsRow(expectedClaimsRowMinusThree ,expectedStatus), ClaimsRow(expectedClaimsRowMinusTwo, expectedStatus),
+        ClaimsRow(expectedClaimsRowMinusOne, expectedStatus))
+
+      viewModel.historicRows shouldBe orderedClaimRows
+    }
+
+    "create a ClaimsViewModel" when {
+      "there is no historic end reason set" in {
+
+        val primaryActiveRecord = createRelationshipRecord()
+
+        val cyMinusOneStartDate = now.minusYears(1)
+        val cyMinusOneEndDate = now.minusYears(1)
+        val expectedClaimsRowMinusOne = getDateRange(cyMinusOneStartDate, cyMinusOneEndDate)
+
+        val cyMinusOneRecord = createRelationshipRecord(participant1StartDate = cyMinusOneStartDate,
+          participant1EndDate = Some(cyMinusOneEndDate.toString(dateInputPattern)), relationshipEndReason = None)
+
+        val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusOneRecord))
+        val claimsRows = Seq(ClaimsRow(expectedClaimsRowMinusOne ,""))
+
+        viewModel.historicRows shouldBe claimsRows
+
       }
+    }
 
-      "transferor has non-primary records" in {
-        val claimsView = ClaimsViewModel(activeTransferorRelationshipRecord2, Seq(inactiveTransferorRelationshipRecord1))
+  }
 
-        claimsView.activeRow shouldBe ActiveRow(activeTransferorRelationshipRecord2)
-        claimsView.historicRows shouldBe Seq(HistoricRow(inactiveTransferorRelationshipRecord1))
-        claimsView.backLinkUrl shouldBe backURL
-        claimsView.taxFreeAllowanceLink shouldBe taxFreeHtml
-      }
+  private def getReason(record: RelationshipRecord)(implicit messages: Messages): String = {
+    record.relationshipEndReason match {
+      case Some(endReason) => messages(s"coc.end-reason.${endReason.value}")
+      case _ => ""
     }
   }
+
+  private def getDateRange(startDate: LocalDate, endDate: LocalDate) = {
+    TextGenerator().taxDateIntervalString(startDate.toString(dateInputPattern), Some(endDate.toString(dateInputPattern)))
+  }
+
 }

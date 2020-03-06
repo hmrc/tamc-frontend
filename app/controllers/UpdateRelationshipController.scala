@@ -267,6 +267,7 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
+  //TODO extra content required with master check
   def finishUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
 
@@ -277,7 +278,9 @@ class UpdateRelationshipController @Inject()(
 
   }
 
-  private def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
+
+  //TODO should be provide
+  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
 
@@ -288,11 +291,12 @@ class UpdateRelationshipController @Inject()(
           result
         }
 
+        //TODO check commented out errors
         throwable match {
           case _: NoPrimaryRecordError => noPrimaryRecordRedirect(request)
-          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          //case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+          //case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
+          //case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
           case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))

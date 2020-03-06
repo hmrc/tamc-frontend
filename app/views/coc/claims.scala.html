@@ -46,19 +46,18 @@ mainConfig = views.helpers.MainConfig(None)
 
                 <tr>
                     <td class="bold" id="active">
-                        @viewModel.activeRow.activeDateInterval
+                        @viewModel.activeRow.dateInterval
                     </td>
-                    <td id="active-reason" colspan="2">@viewModel.activeRow.activeStatus</td>
+                    <td id="active-reason" colspan="2">@viewModel.activeRow.status</td>
                 </tr>
-
 
                 @for((row, index) <- viewModel.historicRows.zipWithIndex) {
                     <tr>
                         <td class="bold" id="line${index}-start">
-                            @row.historicDateInterval
+                            @row.dateInterval
                         </td>
                         <td id="line${index}-reason">
-                            @row.historicStatus
+                            @row.status
                         </td>
                     </tr>
                 }
