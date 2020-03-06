@@ -18,7 +18,6 @@ package viewModels
 
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import play.api.Application
-import play.api.i18n.Messages
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import test_utils.{MockAuthenticatedAction, MockFormPartialRetriever, MockTemplateRenderer, MockUnauthenticatedAction}
@@ -26,9 +25,8 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.TamcViewModelTest
 
+//TODO can this be removed
 class ViewModelBaseSpec extends TamcViewModelTest {
-
-  implicit val messages = app.injector.instanceOf[Messages]
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])

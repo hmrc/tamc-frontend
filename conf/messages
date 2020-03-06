@@ -686,7 +686,8 @@ pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.u
 tamc.breadcrumb.home = Account home
 tamc.breadcrumb.incometax = Income Tax
 tamc.menu = Menu
-tamc.yourtaxaccount = Your personal tax account
+tamc.apply = Apply for Marriage Allowance
+tamc.manage = Manage your Marriage Allowance
 
 #*************************************************************
 # User Research Banner Messages

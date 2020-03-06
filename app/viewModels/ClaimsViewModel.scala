@@ -23,67 +23,25 @@ import play.twirl.api.Html
 import views.helpers.TextGenerator
 
 //TODO add tests for active row
-case class ActiveRow(activeDateInterval: String, activeStatus: String)
+case class ClaimsRow(dateInterval: String, status: String)
 
-object ActiveRow {
-
-  def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): ActiveRow = {
-
-    val activeDateInterval = TextGenerator().taxDateIntervalString(
-      relationshipRecord.participant1StartDate,
-      relationshipRecord.participant1EndDate)
-    val activeStatus = messages("change.status.active")
-
-    ActiveRow(activeDateInterval, activeStatus)
-
-  }
-}
-
-//TODO add tests for historic row
-case class HistoricRow(historicDateInterval: String, historicStatus: String)
-
-object HistoricRow {
-
-  def apply(relationshipRecord: RelationshipRecord)(implicit messages: Messages): HistoricRow = {
-
-    val historicDateInterval = TextGenerator().taxDateIntervalString(
-      relationshipRecord.participant1StartDate,
-      relationshipRecord.participant1EndDate)
-
-    val cause = relationshipRecord.relationshipEndReason match {
-      case None => ""
-      case Some(reason) => reason.value.toUpperCase
-    }
-
-    //TODO get or else should be frm DEFAULT value not empty with will fail with runtime exception!?!?!?
-    val status = if (cause == "") {
-      //TODO to test this thing?
-      ""
-    } else {
-      val messageKey = s"coc.end-reason.$cause"
-      messages(messageKey)
-    }
-
-    HistoricRow(historicDateInterval, status)
-  }
-
-}
-
-case class ClaimsViewModel(activeRow: ActiveRow,
-                           historicRows: Seq[HistoricRow],
+case class ClaimsViewModel(activeRow: ClaimsRow,
+                           historicRows: Seq[ClaimsRow],
                            taxFreeAllowanceLink: Html,
                            backLinkUrl: String)
 
 object ClaimsViewModel {
 
-  def apply(activeRelationship: RelationshipRecord,
+  implicit val ordering: Ordering[RelationshipRecord] = Ordering.by(_.participant1StartDate)
+
+  def apply(primaryRelationship: RelationshipRecord,
             historicRelationships: Seq[RelationshipRecord])(implicit messages: Messages): ClaimsViewModel = {
 
-    val activeRow = ActiveRow(activeRelationship)
-    val historicRows = historicRelationships.map(HistoricRow(_))
+    //TODO could push to HOF if ordering could be dictated
+    val activeRow = activeClaimsRow(primaryRelationship)
+    val orderedHistoricRows = historicRelationships.sorted.map(historicClaimsRow(_))
 
-
-    ClaimsViewModel(activeRow, historicRows, taxFreeAllowanceLink, backLinkUrl)
+    ClaimsViewModel(activeRow, orderedHistoricRows, taxFreeAllowanceLink, backLinkUrl)
   }
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
@@ -92,6 +50,41 @@ object ClaimsViewModel {
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 
+  private def activeClaimsRow(primaryRelationshipRecord: RelationshipRecord)(implicit messages: Messages): ClaimsRow = {
+
+    val activeDateInterval = TextGenerator().taxDateIntervalString(
+      primaryRelationshipRecord.participant1StartDate,
+      primaryRelationshipRecord.participant1EndDate)
+
+    val activeStatus = messages("change.status.active")
+
+    ClaimsRow(activeDateInterval, activeStatus)
+
+  }
+
+  private def historicClaimsRow(nonPrimaryRelation: RelationshipRecord)(implicit messages: Messages): ClaimsRow = {
+
+    val historicDateInterval = TextGenerator().taxDateIntervalString(
+      nonPrimaryRelation.participant1StartDate,
+      nonPrimaryRelation.participant1EndDate)
+
+    //TODO shared RelationshipRecord domain across primary and non primary should be changed to cater for this option
+    val cause = nonPrimaryRelation.relationshipEndReason match {
+      case None => ""
+      case Some(reason) => reason.value.toUpperCase
+    }
+
+    val status = if (cause == "") {
+      ""
+    } else {
+      val messageKey = s"coc.end-reason.$cause"
+      messages(messageKey)
+    }
+
+    ClaimsRow(historicDateInterval, status)
+
+  }
+
   //TODO implement browser back functionality so we can remove this
-  private def backLinkUrl: String = controllers.routes.UpdateRelationshipController.history().url
+  private def backLinkUrl: String = ""
 }
