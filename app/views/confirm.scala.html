@@ -94,7 +94,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         <col class="width10">
         <tr>
             <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
-            <td id="marriage-date">@TextGenerator().ukDateTransformer(data.dateOfMarriage.dateOfMarriage))
+            <td id="marriage-date">@TextGenerator().ukDateTransformer(data.dateOfMarriage.dateOfMarriage)
             </td>
             <td>
                 <a href="@controllers.routes.TransferController.dateOfMarriage()"

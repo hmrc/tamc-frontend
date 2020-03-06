@@ -43,56 +43,23 @@ class CheckClaimOrCancelDecisionFormTest extends FormsBaseSpec {
       }
     }
 
-    //TODO add more
-    val invalidDecisions = Seq(
-      ""
-    )
-    for (decision <- invalidDecisions) {
-      s"bind a invalid decision <- '$decision'" in {
-        val formInput = Map[String, String](
-          CheckClaimOrCancelDecisionForm.DecisionChoice -> decision
-        )
+    "not bind on empty input" in {
+      val formInput = Map[String, String](
+        CheckClaimOrCancelDecisionForm.DecisionChoice -> ""
+      )
 
-        val form = CheckClaimOrCancelDecisionForm.form.bind(formInput)
-        val errors = form.errors
-        val value = form.data
+      val form = CheckClaimOrCancelDecisionForm.form.bind(formInput)
+      val errors = form.errors
+      val value = form.data
 
-        errors shouldBe Seq(
-          FormError(
-            CheckClaimOrCancelDecisionForm.DecisionChoice,
-            //TODO update after John will fix
-            Seq("cxcxcxcx"),
-            mutable.WrappedArray.empty
-          )
+      errors shouldBe Seq(
+        FormError(
+          CheckClaimOrCancelDecisionForm.DecisionChoice,
+          Seq("pages.decision.error.mandatory.value"),
+          mutable.WrappedArray.empty
         )
-        value shouldBe formInput
-      }
+      )
+      value shouldBe formInput
     }
-
-    //TODO add more
-    for (decision <- decisions) {
-      s"bind a invalid key decision <- '$decision'" in {
-        val formInput = Map[String, String](
-          "tralala" -> decision
-        )
-
-        val form = CheckClaimOrCancelDecisionForm.form.bind(formInput)
-        val errors = form.errors
-        val value = form.data
-
-        errors shouldBe Seq(
-          FormError(
-            CheckClaimOrCancelDecisionForm.DecisionChoice,
-            //TODO update after John will fix
-            Seq("cxcxcxcx"),
-            mutable.WrappedArray.empty
-          )
-        )
-        value shouldBe formInput
-        form.value shouldBe None
-      }
-    }
-
   }
-
 }

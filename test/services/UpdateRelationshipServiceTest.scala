@@ -348,7 +348,7 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
 
         val result = await(service.getConfirmationUpdateAnswers)
 
-        result shouldBe ConfirmationUpdateAnswers("Test User", Some(new LocalDate(2020, 3, 3)), "email@email.com", endDates)
+        result shouldBe ConfirmationUpdateAnswers("Test User", Some(LocalDate.now()), "email@email.com", endDates)
       }
 
       "return RuntimeException when cacheMap not found and returns RuntimeException" in {

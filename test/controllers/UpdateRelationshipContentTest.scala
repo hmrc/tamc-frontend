@@ -22,12 +22,15 @@ import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import play.api.i18n.Messages
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
+import uk.gov.hmrc.time.TaxYear
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import viewModels.EmailViewModel
 import views.helpers.TextGenerator
 
 import scala.concurrent.Future
@@ -49,217 +52,9 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
-//  private def bulletStatements(role: Role, currentTaxYear: TaxYear, isCurrentYearDivorced: Boolean)(implicit messages: Messages): Seq[String] = {
-//    lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
-//    lazy val nextTaxYearStart: String = transformDate(currentTaxYear.next.starts)
-//    lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)
-//    lazy val taxYearEndForGivenYear: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).finishes)
-//
-//    //TODO remove duplicate case into case _ =>
-//    (role, isCurrentYearDivorced) match {
-//      case (Recipient, true) => {
-//        Seq(messages("pages.divorce.explanation.recipient.current.bullet1", currentTaxYearEnd),
-//          messages("pages.divorce.explanation.recipient.current.bullet2", nextTaxYearStart))
-//      }
-//      case (Recipient, false) => {
-//        Seq(messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
-//          messages("pages.divorce.explanation.previous.bullet2"))
-//      }
-//      case (Transferor, true) => {
-//        Seq(messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
-//          messages("pages.divorce.explanation.previous.bullet2"))
-//      }
-//      case (Transferor, false) => {
-//        Seq(messages("pages.divorce.explanation.previous.bullet1", taxYearEndForGivenYear),
-//          messages("pages.divorce.explanation.previous.bullet2"))
-//      }
-//    }
-//  }
-
   private def transformDate(date: LocalDate, isWelsh: Boolean = false): String = {
     TextGenerator().ukDateTransformer(date)
   }
-
-  //TODO remove??
-  //  "list relationship page" should {
-  //
-  //    "display 'Cancel Marriage Allowance' button" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //      val document = Jsoup.parse(contentAsString(result))
-  //      document.getElementById("cancel-marriage-allowance").text() shouldBe "Cancel Marriage Allowance"
-  //    }
-  //
-  //    "display only active relationship details" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //      val document = Jsoup.parse(contentAsString(result))
-  //      val activeRecord = document.getElementById("activeRecord")
-  //      activeRecord shouldNot be(null)
-  //
-  //      val historicRecord = document.getElementById("historicRecord")
-  //      historicRecord should be(null)
-  //    }
-  //
-  //    "display only historic relationship details and link to how-it-works" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.historicRelationshipRecordList, false))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //
-  //      val document = Jsoup.parse(contentAsString(result))
-  //      val activeRecord = document.getElementById("activeRecord")
-  //      activeRecord should be(null)
-  //
-  //      val start = document.getElementById("start-now")
-  //      start shouldNot be(null)
-  //      start.attr("href") shouldBe controllers.routes.EligibilityController.howItWorks().url
-  //
-  //      val historicRecord = document.getElementById("historicRecords")
-  //      historicRecord shouldNot be(null)
-  //
-  //      document.getElementById("line0-start").text shouldBe "2011 to 2013"
-  //      document.getElementById("line0-reason").text shouldBe "Bereavement"
-  //      document.getElementById("line0-remove") shouldBe null
-  //    }
-  //
-  //    "display reject button when it should be displayed" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.multiHistoricRelRecordList, false))
-  //        )
-  //
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //
-  //      val document = Jsoup.parse(contentAsString(result))
-  //      val activeRecord = document.getElementById("activeRecord")
-  //      activeRecord should be(null)
-  //
-  //      val start = document.getElementById("start-now")
-  //      start shouldNot be(null)
-  //      start.attr("href") shouldBe controllers.routes.EligibilityController.howItWorks().url
-  //
-  //      val historicRecord = document.getElementById("historicRecords")
-  //      historicRecord shouldNot be(null)
-  //
-  //      document.getElementById("line0-start").text shouldBe "2011 to 2013"
-  //      document.getElementById("line0-reason").text shouldBe "Divorce or end of civil partnership"
-  //      document.getElementById("line0-remove") shouldBe null
-  //
-  //      document.getElementById("line1-start").text shouldBe "2001 to 2013"
-  //      document.getElementById("line1-reason").text shouldBe "Divorce or end of civil partnership"
-  //      document.getElementById("line1-remove") shouldNot be(null)
-  //    }
-  //
-  //    "display ’apply for previous years’ button if historic year is available" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.activeRelationshipRecordList, true))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //
-  //      val document = Jsoup.parse(contentAsString(result))
-  //      val prevYearsButton = document.getElementById("previousYearsApply")
-  //      prevYearsButton shouldNot be(null)
-  //    }
-  //
-  //    "don't display apply for previous years button when previous years are available" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.activeRelationshipRecordList, false))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //      val document = Jsoup.parse(contentAsString(result))
-  //
-  //      val prevYearsButton = document.getElementById("previousYearsApply")
-  //      prevYearsButton should be(null)
-  //    }
-  //
-  //    "display active and historic relationship details " in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //      val document = Jsoup.parse(contentAsString(result))
-  //
-  //      val activeRecord = document.getElementById("activeRecord")
-  //      activeRecord shouldNot be(null)
-  //
-  //      val historicRecord = document.getElementById("historicRecords")
-  //      historicRecord shouldNot be(null)
-  //
-  //      document.getElementById("active").text shouldBe "2012 to Present"
-  //      historicRecord.toString should include("2011 to 2013")
-  //    }
-  //
-  //    "display historical active relationship details" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.activeHistoricRelRecordList, false))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //      val contentAsStringFromResult = contentAsString(result)
-  //      val document = Jsoup.parse(contentAsString(result))
-  //      val historicActiveMessage = document.getElementById("historicActiveMessage").text()
-  //      val nextTaxYear = time.TaxYear.current.startYear + 1
-  //      historicActiveMessage should be(s"You will stop receiving Marriage Allowance from your partner at end of the tax year (5 April $nextTaxYear).")
-  //
-  //      val historicRecord = document.getElementById("historicRecords")
-  //      historicRecord shouldNot be(null)
-  //    }
-  //
-  //    "display bereavement and change of income related details" in {
-  //      when(mockListRelationshipService.listRelationship(any())(any(), any()))
-  //        .thenReturn(
-  //          Future.successful((RelationshipRecordData.bothRelationshipRecordList, false))
-  //        )
-  //      val result = controller.history()(request)
-  //
-  //      status(result) shouldBe OK
-  //      val document = Jsoup.parse(contentAsString(result))
-  //
-  //      val activeRecord = document.getElementById("activeRecord")
-  //      activeRecord shouldNot be(null)
-  //
-  //      val historicRecord = document.getElementById("historicRecords")
-  //      historicRecord shouldNot be(null)
-  //
-  //      historicRecord.toString should include("2011 to 2013")
-  //
-  //      val incomeMessage = document.getElementById("incomeMessage")
-  //      val bereavementMessage = document.getElementById("bereavementMessage")
-  //      val incomeLink = document.getElementById("incomeLink")
-  //      val bereavementLink = document.getElementById("bereavementLink")
-  //      incomeMessage.text() shouldBe "To let us know about a change in income, contact HMRC"
-  //      bereavementMessage.text() shouldBe "To let us know about a bereavement, contact HMRC"
-  //      incomeLink.attr("href") shouldBe "/marriage-allowance-application/change-of-income"
-  //      bereavementLink.attr("href") shouldBe "/marriage-allowance-application/bereavement"
-  //    }
-  //  }
 
   "Update relationship cause - get view" should {
     "show all appropriate radio buttons" in {
@@ -284,13 +79,85 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
   }
 
-  "After make changes redirect pages" should {
-    "stopAllowance" in {
-      val result: Future[Result] = controller().stopAllowance(request)
+  "Stop Allowance Page" in {
+    val result: Future[Result] = controller().stopAllowance(request)
+
+    val expected = Seq(
+      messagesApi("pages.stopAllowance.paragraph1"),
+      messagesApi("pages.stopAllowance.paragraph2")
+    ).toArray
+    val parsed = Jsoup.parse(contentAsString(result))
+    val current = parsed.getElementsByTag("p").eachText().toArray()
+
+    current shouldBe expected
+  }
+
+  "Cancel Page" in {
+    val maEndingDates = MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)
+
+    when(mockUpdateRelationshipService.getMAEndingDatesForCancelation)
+      .thenReturn(maEndingDates)
+
+    when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+      .thenReturn(Future.successful(maEndingDates))
+
+    val result: Future[Result] = controller().cancel(request)
+
+    val currentEndDate =
+      TextGenerator().ukDateTransformer(TaxYear.current.finishes)
+    val nextStartDate =
+      TextGenerator().ukDateTransformer(TaxYear.current.next.starts)
+
+    val expected = Seq(
+      s"We will cancel your Marriage Allowance, but it will remain in place until 5 April ${TaxYear.current.finishYear}, the end of the current tax year.",
+      s"Your Personal Allowance will not include any Marriage Allowance from 6 April ${TaxYear.current.next.startYear}" +
+        s", the start of the new tax year. Your partner will not have to pay back any tax."
+    ).toArray
+    val parsed = Jsoup.parse(contentAsString(result))
+    val current = parsed.getElementsByTag("p").eachText().toArray()
+
+    current shouldBe expected
+  }
+
+  "changeOfIncome(text)" in {
+    val result: Future[Result] = controller().changeOfIncome(request)
+
+    val expected = Seq(
+      getContactHMRCText("changeOfIncome"),
+      messagesApi("pages.changeOfIncome.paragraph2")
+    ).toArray
+    val parsed = Jsoup.parse(contentAsString(result))
+    val current = parsed.getElementsByTag("p").eachText().toArray()
+
+    current shouldBe expected
+  }
+
+  "changeOfIncome(bullet list)" in {
+    val result: Future[Result] = controller().changeOfIncome(request)
+
+    val expected = Seq(
+      messagesApi("pages.changeOfIncome.bullet1"),
+      messagesApi("pages.changeOfIncome.bullet2")
+    ).toArray
+    val parsed = Jsoup.parse(contentAsString(result))
+    val current = parsed.getElementsByTag("li").eachText().toArray()
+
+    current shouldBe expected
+  }
+
+  "Bereavement page" when {
+    "recipient text" in {
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(RelationshipRecord(Recipient.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+          )
+        )
+      val result: Future[Result] = controller().bereavement(request)
 
       val expected = Seq(
-        messagesApi("pages.stopAllowance.paragraph1"),
-        messagesApi("pages.stopAllowance.paragraph2")
+        getContactHMRCText("bereavement"),
+        messagesApi("pages.bereavement.recipient.paragraph")
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result))
       val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -298,17 +165,18 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       current shouldBe expected
     }
 
-    "cancel" in {
-      val result: Future[Result] = controller().cancel(request)
-
-      val currentEndDate =
-        TextGenerator().ukDateTransformer(uk.gov.hmrc.time.TaxYear.current.finishes)
-      val nextStartDate =
-        TextGenerator().ukDateTransformer(uk.gov.hmrc.time.TaxYear.current.next.starts)
+    "transferor text" in {
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(RelationshipRecord(Transferor.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+          )
+        )
+      val result: Future[Result] = controller().bereavement(request)
 
       val expected = Seq(
-        messagesApi("pages.cancel.paragraph1", currentEndDate),
-        messagesApi("pages.cancel.paragraph2", nextStartDate)
+        getContactHMRCText("bereavement"),
+        messagesApi("pages.bereavement.transferor.paragraph")
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result))
       val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -316,209 +184,232 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       current shouldBe expected
     }
 
-    "changeOfIncome(text)" in {
-      val result: Future[Result] = controller().changeOfIncome(request)
+    "recipient bullet list" in {
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(RelationshipRecord(Recipient.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+          )
+        )
+      val result: Future[Result] = controller().bereavement(request)
 
-      val expected = Seq(
-        getContactHMRCText("changeOfIncome"),
-        messagesApi("pages.changeOfIncome.paragraph2")
-      ).toArray
-      val parsed = Jsoup.parse(contentAsString(result))
-      val current = parsed.getElementsByTag("p").eachText().toArray()
-
-      current shouldBe expected
-    }
-
-    "changeOfIncome(bullet list)" in {
-      val result: Future[Result] = controller().changeOfIncome(request)
-
-      val expected = Seq(
-        messagesApi("pages.changeOfIncome.bullet1"),
-        messagesApi("pages.changeOfIncome.bullet2")
-      ).toArray
+      val expected = Array()
       val parsed = Jsoup.parse(contentAsString(result))
       val current = parsed.getElementsByTag("li").eachText().toArray()
 
       current shouldBe expected
     }
 
-//    "bereavement(recipient)(text)" in {
-//      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
-//        .thenReturn(
-//          Future.successful(
-//            RelationshipRecords(RelationshipRecord(Recipient.asString(), "", "", None, None, "", ""), None, None)
-//          )
-//        )
-//      val result: Future[Result] = controller().bereavement(request)
-//
-//      val expected = Seq(
-//        getContactHMRCText("bereavement"),
-//        messagesApi("pages.bereavement.recipient.paragraph")
-//      ).toArray
-//      val parsed = Jsoup.parse(contentAsString(result))
-//      val current = parsed.getElementsByTag("p").eachText().toArray()
-//
-//      current shouldBe expected
-//    }
-
-//    "bereavement(transferor)(text)" in {
-//      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
-//        .thenReturn(
-//          Future.successful(
-//            RelationshipRecords(Some(RelationshipRecord(Transferor.asString(), "", "", None, None, "", "")), None, None)
-//          )
-//        )
-//      val result: Future[Result] = controller().bereavement(request)
-//
-//      val expected = Seq(
-//        getContactHMRCText("bereavement"),
-//        messagesApi("pages.bereavement.transferor.paragraph")
-//      ).toArray
-//      val parsed = Jsoup.parse(contentAsString(result))
-//      val current = parsed.getElementsByTag("p").eachText().toArray()
-//
-//      current shouldBe expected
-//    }
-
-//    "bereavement(recipient)(bullet list)" in {
-//      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
-//        .thenReturn(
-//          Future.successful(
-//            RelationshipRecords(Some(RelationshipRecord(Recipient.asString(), "", "", None, None, "", "")), None, None)
-//          )
-//        )
-//      val result: Future[Result] = controller().bereavement(request)
-//
-//      val expected = Array()
-//      val parsed = Jsoup.parse(contentAsString(result))
-//      val current = parsed.getElementsByTag("li").eachText().toArray()
-//
-//      current shouldBe expected
-//    }
-
-//    "bereavement(transferor)(bullet list)" in {
-//      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
-//        .thenReturn(
-//          Future.successful(
-//            RelationshipRecords(Some(RelationshipRecord(Transferor.asString(), "", "", None, None, "", "")), None, None)
-//          )
-//        )
-//      val result: Future[Result] = controller().bereavement(request)
-//      val endOfYear = TextGenerator().ukDateTransformer(uk.gov.hmrc.time.TaxYear.current.finishes)
-//
-//      val expected = Seq(
-//        messagesApi("pages.bereavement.transferor.point1"),
-//        messagesApi("pages.bereavement.transferor.point2", endOfYear)
-//      ).toArray
-//      val parsed = Jsoup.parse(contentAsString(result))
-//      val current = parsed.getElementsByTag("li").eachText().toArray()
-//
-//      current shouldBe expected
-//    }
-
-    "divorceEnterYear" in {
-      when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
-        .thenReturn(Future.successful(Some(LocalDate.now().minusDays(1))))
-
-      val result: Future[Result] = controller().divorceEnterYear(request)
+    "transferor bullet list" in {
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+        .thenReturn(
+          Future.successful(
+            RelationshipRecords(RelationshipRecord(Transferor.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+          )
+        )
+      val result: Future[Result] = controller().bereavement(request)
+      val endOfYear = TextGenerator().ukDateTransformer(uk.gov.hmrc.time.TaxYear.current.finishes)
 
       val expected = Seq(
-        messagesApi("pages.divorce.paragraph1"),
-        messagesApi("pages.divorce.date.hint")
+        messagesApi("pages.bereavement.transferor.point1"),
+        messagesApi("pages.bereavement.transferor.point2", endOfYear)
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result))
-      val current = parsed.getElementsByTag("p").eachText().toArray()
+      val current = parsed.getElementsByTag("li").eachText().toArray()
 
       current shouldBe expected
     }
   }
 
-  "After enter divorce date" when {
-    val roles: Seq[Role] = Seq(Recipient, Transferor)
+ "Divorce Enter Year Page" when {
+   "divorceEnterYear" in {
+     when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
+       .thenReturn(Future.successful(None))
 
-    for (role <- roles) {
-      val className = role.getClass.getSimpleName
-      s"$className" when {
+     val result: Future[Result] = controller().divorceEnterYear(request)
 
-        s"current year divorce page($className, current year)(text)" in {
-          val targetYear = LocalDate.now().getYear
-          val date = new LocalDate(targetYear, 1, 15)
-          val divorceDateFormatted = transformDate(date)
-          val taxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
+     val expected = Seq(
+       messagesApi("pages.divorce.paragraph1"),
+       messagesApi("pages.divorce.date.hint")
+     ).toArray
+     val parsed = Jsoup.parse(contentAsString(result))
+     val current = parsed.getElementsByTag("p").eachText().toArray()
 
-          when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
-            .thenReturn(Future.successful((role, date)))
+     current shouldBe expected
+   }
+ }
 
-          val result: Future[Result] = controller().divorceEndExplanation(request)
+  "Divorce End Explanation Page" when {
 
-          val expected = Seq(
-            messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
-            messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
-          ).toArray
-          val parsed = Jsoup.parse(contentAsString(result))
-          val current = parsed.getElementsByTag("p").eachText().toArray()
+    "Transferor and DivorceDate is in Current Year" in {
 
-          current shouldBe expected
-        }
+      val endingDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
+      val date = TaxYear.current.starts
 
-        s"prev year divorce page($className, prev year)(text)" in {
-          val targetYear = LocalDate.now().minusYears(3).getYear
-          val date = new LocalDate(targetYear, 1, 15)
-          val divorceDateFormatted = transformDate(date)
-          val taxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
+        .thenReturn(Future.successful(Transferor, date))
 
-          when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
-            .thenReturn(Future.successful((role, date)))
+      when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
+        .thenReturn(endingDates)
 
-          val result: Future[Result] = controller().divorceEndExplanation(request)
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+        .thenReturn(endingDates)
 
-          val expected = Seq(
-            messagesApi("pages.divorce.explanation.paragraph1", divorceDateFormatted),
-            messagesApi("pages.divorce.explanation.paragraph2", taxYearStatus)
-          ).toArray
-          val parsed = Jsoup.parse(contentAsString(result))
-          val current = parsed.getElementsByTag("p").eachText().toArray()
+      val result = controller().divorceEndExplanation(request)
+      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val expectedParas = Seq(
+        messagesApi("pages.divorce.explanation.paragraph1", s"6 April ${date.getYear}"),
+        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.current.taxYear"))
+      ).toArray
 
-          current shouldBe expected
-        }
+      val expectedBullets = Seq(
+        messagesApi("pages.divorce.explanation.current.bullet1", s"5 April ${TaxYear.current.previous.finishYear}"),
+        messagesApi("pages.divorce.explanation.current.bullet2", s"6 April ${TaxYear.current.startYear}")
+      )
 
-//        s"current year divorce page($className, current year)(bullet points)" in {
-//          val targetYear = LocalDate.now().getYear
-//          val date = new LocalDate(targetYear, 1, 15)
-//          val currentTaxYear = TaxYear.current
-//
-//          when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
-//            .thenReturn(Future.successful((role, date)))
-//
-//          val result: Future[Result] = controller().divorceEndExplanation(request)
-//
-//          val expected = bulletStatements(role, currentTaxYear, isCurrentYearDivorced = true).toArray
-//          val parsed = Jsoup.parse(contentAsString(result))
-//          val current = parsed.getElementsByTag("li").eachText().toArray()
-//
-//          current shouldBe expected
-//        }
+      val view = Jsoup.parse(contentAsString(result))
 
-//        s"prev year divorce page($className, prev year)(bullet points)" in {
-//          val targetYear = LocalDate.now().minusYears(3).getYear
-//          val date = new LocalDate(targetYear, 1, 15)
-//          val currentTaxYear = TaxYear.current
-//
-//          when(mockUpdateRelationshipService.getDivorceExplanationData(any(), any()))
-//            .thenReturn(Future.successful((role, date)))
-//
-//          val result: Future[Result] = controller().divorceEndExplanation(request)
-//
-//          val expected = bulletStatements(role, currentTaxYear, isCurrentYearDivorced = false).toArray
-//          val parsed = Jsoup.parse(contentAsString(result))
-//          val current = parsed.getElementsByTag("li").eachText().toArray()
-//
-//          current shouldBe expected
-//        }
+      val heading = view.getElementsByTag("h1").text()
+      val paras = view.getElementsByTag("p").eachText().toArray
+      val bullets = view.getElementsByTag("li").eachText().toArray
 
-      }
-
+      heading shouldBe expectedHeading
+      paras shouldBe expectedParas
+      bullets shouldBe expectedBullets
     }
+
+    "Transferor and DivorceDate is in PreviousYear" in {
+      val endingDates = MarriageAllowanceEndingDates(new LocalDate(2017, 4, 5), new LocalDate(2017, 4, 6))
+      val divorceDate  = new LocalDate(2017, 4, 5)
+
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
+        .thenReturn(Future.successful(Transferor, divorceDate))
+
+      when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
+        .thenReturn(endingDates)
+
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+        .thenReturn(endingDates)
+
+      val result =  controller().divorceEndExplanation(request)
+
+      val view = Jsoup.parse(contentAsString(result))
+      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val expectedParas = Seq(
+        messagesApi("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
+        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.previous.taxYear"))
+      ).toArray
+
+      val expectedBullets = Seq(
+        messagesApi("pages.divorce.explanation.previous.bullet1", s"5 April ${new LocalDate(2017, 4, 5).getYear}"),
+        messagesApi("pages.divorce.explanation.previous.bullet2")
+      ).toArray
+
+      val heading = view.getElementsByTag("h1").text
+      val paras = view.getElementsByTag("p").eachText().toArray
+      val bullets = view.getElementsByTag("li").eachText().toArray
+
+      heading shouldBe expectedHeading
+      paras shouldBe expectedParas
+      bullets shouldBe expectedBullets
+    }
+
+    "Recipient and DivorceDate is in current year" in {
+      val endingDates = MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)
+      val divorceDate  = TaxYear.current.starts
+
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
+        .thenReturn(Future.successful(Recipient, divorceDate))
+
+      when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
+        .thenReturn(endingDates)
+
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+        .thenReturn(endingDates)
+
+      val result =  controller().divorceEndExplanation(request)
+
+      val view = Jsoup.parse(contentAsString(result))
+      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val expectedParas = Seq(
+        messagesApi("pages.divorce.explanation.paragraph1", s"6 April ${divorceDate.getYear}"),
+        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.current.taxYear"))
+      ).toArray
+
+      val expectedBullets = Seq(
+        messagesApi("pages.divorce.explanation.current.bullet1", s"5 April ${TaxYear.current.finishYear}"),
+        messagesApi("pages.divorce.explanation.current.bullet2", s"6 April ${TaxYear.current.next.startYear}")
+      ).toArray
+
+      val heading = view.getElementsByTag("h1").text
+      val paras = view.getElementsByTag("p").eachText().toArray
+      val bullets = view.getElementsByTag("li").eachText().toArray
+
+      heading shouldBe expectedHeading
+      paras shouldBe expectedParas
+      bullets shouldBe expectedBullets
+    }
+
+    "Recipient and DivorceDate is in previous year" in{
+      val endingDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
+      val divorceDate = new LocalDate(2017, 4, 5)
+
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
+        .thenReturn(Future.successful(Recipient, divorceDate))
+
+      when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
+        .thenReturn(endingDates)
+
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+        .thenReturn(endingDates)
+
+      val result =  controller().divorceEndExplanation(request)
+
+      val view = Jsoup.parse(contentAsString(result))
+      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val expectedParas = Seq(
+        messagesApi("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
+        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.previous.taxYear"))
+      ).toArray
+
+      val expectedBullets = Seq(
+        messagesApi("pages.divorce.explanation.previous.bullet1", s"5 April ${TaxYear.current.previous.finishYear}"),
+        messagesApi("pages.divorce.explanation.previous.bullet2")
+      ).toArray
+
+      val heading = view.getElementsByTag("h1").text
+      val paras = view.getElementsByTag("p").eachText().toArray
+      val bullets = view.getElementsByTag("li").eachText().toArray
+
+      heading shouldBe expectedHeading
+      paras shouldBe expectedParas
+      bullets shouldBe expectedBullets
+    }
+
+    //TODO Put into Ticket to break these out in to their own view specs
+  }
+
+  "Confirm Email" in {
+
+    when(mockUpdateRelationshipService.getEmailAddress(any(), any()))
+      .thenReturn(Future.successful(None))
+
+    val expectedHeading = messagesApi("pages.form.field.your-confirmation")
+    val expectedParas = Seq(
+      messagesApi("change.status.confirm.info"),
+      messagesApi("change.status.confirm.more.info")
+    ).toArray
+
+    val result = controller( ).confirmEmail(FakeRequest().withHeaders(("Referer", "referer")))
+
+
+    val view = Jsoup.parse(contentAsString(result))
+
+    val heading = view.getElementsByTag("h1").text
+    val paras = view.getElementsByTag("p").eachText().toArray
+
+    heading shouldBe expectedHeading
+    paras shouldBe expectedParas
   }
 
   //TODO remove with updateRelationshipAction()???

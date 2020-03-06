@@ -38,7 +38,7 @@ class HistoricRowTest extends TamcViewModelTest {
   val retroEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(Retrospective))
   val systemEndReason: RelationshipRecord = activeRecipientRelationshipRecord.copy(relationshipEndReason = Some(System))
 
-  val recordInterval = "2013 to present"
+  val recordInterval = "2012 to Present"
 
   "historic row" should {
     val rows = Seq(

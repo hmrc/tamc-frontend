@@ -27,7 +27,7 @@ class DesRelationshipEndReasonTest extends UnitSpec with GuiceOneAppPerSuite{
     "read the HODS value for correct RelationshipEndReason" in{
 
       JsString("DEATH").as[DesRelationshipEndReason] shouldBe Death
-      JsString("DIVORCE").as[DesRelationshipEndReason] shouldBe Divorce
+      JsString("DIVORCE").as[DesRelationshipEndReason] shouldBe DesRelationshipEndReason.Divorce
       JsString("INVALID_PARTICIPANT").as[DesRelationshipEndReason] shouldBe InvalidParticipant
       JsString("CANCELLED").as[DesRelationshipEndReason] shouldBe Cancelled
       JsString("REJECTED").as[DesRelationshipEndReason] shouldBe Rejected
@@ -36,7 +36,7 @@ class DesRelationshipEndReasonTest extends UnitSpec with GuiceOneAppPerSuite{
       JsString("MERGER").as[DesRelationshipEndReason] shouldBe Merger
       JsString("RETROSPECTIVE").as[DesRelationshipEndReason] shouldBe Retrospective
       JsString("SYSTEM").as[DesRelationshipEndReason] shouldBe System
-      JsString("Active").as[DesRelationshipEndReason] shouldBe Active
+      JsString("Active").as[DesRelationshipEndReason] shouldBe DesRelationshipEndReason.Active
       JsString("DEFAULT").as[DesRelationshipEndReason] shouldBe Default
     }
     "read Default if the reason is not recognised" in{
