@@ -19,11 +19,10 @@ package models
 import java.time.LocalDate
 
 import org.joda.time.DateTime
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import services.TimeService
 import uk.gov.hmrc.play.test.UnitSpec
 
-class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
+class RelationshipRecordTest extends UnitSpec {
 
   lazy val currentYear: Int = LocalDate.now().getYear
   lazy val nextYear: Int = currentYear + 1

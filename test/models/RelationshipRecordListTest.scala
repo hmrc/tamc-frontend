@@ -17,15 +17,10 @@
 package models
 
 import org.joda.time.DateTime
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import services.TimeService
 import uk.gov.hmrc.play.test.UnitSpec
 
-import scala.concurrent.ExecutionContext
-
-class RelationshipRecordListTest extends UnitSpec with GuiceOneAppPerSuite {
-
-
+class RelationshipRecordListTest extends UnitSpec {
 
   "RelationshipRecordList" should {
 
