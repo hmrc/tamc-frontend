@@ -16,25 +16,14 @@
 
 package views.helpers
 
-import java.lang.IllegalArgumentException
-
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import forms.EmailForm
-import forms.coc.{DivorceSelectYearForm, MakeChangesDecisionForm}
 import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito.when
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.data.{Form, FormError}
 import play.api.i18n.{Lang, Messages}
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import test_utils.{MockAuthenticatedAction, MockFormPartialRetriever, MockTemplateRenderer, MockUnauthenticatedAction}
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.collection.immutable
 
