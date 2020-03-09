@@ -16,169 +16,143 @@
 
 package forms.coc
 
-import config.ApplicationConfig
 import forms.FormsBaseSpec
 import org.joda.time.LocalDate
 import play.api.data.FormError
-import play.api.data.validation.{Invalid, ValidationError}
-import play.api.test.FakeRequest
-import services.TimeService
-import uk.gov.hmrc.time.TaxYear
-import views.helpers.TextGenerator
-
-import scala.collection.mutable
 
 class DivorceSelectYearFormTest extends FormsBaseSpec {
 
   val today = LocalDate.now()
+  val defaultDate = new LocalDate(2000, 1, 1)
 
   "DivorceSelectYearForm" should {
     "bind" when {
-      "Todays date is input" in {
+      "Todays date is input as the divorce date" in {
         val date = LocalDate.now()
-
-        val formInput = Map[String, String](
-          "dateOfDivorce.day" -> date.getDayOfMonth.toString,
-          "dateOfDivorce.month" -> date.getMonthOfYear.toString,
-          "dateOfDivorce.year" -> date.getYear.toString
-        )
-
+        val formInput = createDivorceDateInput(date)
         val form = DivorceSelectYearForm.form.bind(formInput)
-        val value = form.value
+        val value = form.value.getOrElse(defaultDate)
 
-        value shouldBe LocalDate.now()
+        value shouldBe date
+        form.errors shouldBe empty
       }
 
-      "bind when date is yesterday" in {
+      "the divorce date entered is yesterday" in {
         val yesterday = LocalDate.now().minusDays(1)
-
-
-        val formInput = Map[String,String](
-          "dateOfDivorce.day" -> yesterday.getDayOfMonth.toString,
-          "dateOfDivorce.month" -> yesterday.getMonthOfYear.toString,
-          "dateOfDivorce.year" -> yesterday.getYear.toString
-        )
-
+        val formInput = createDivorceDateInput(yesterday)
         val form = DivorceSelectYearForm.form.bind(formInput)
-        val value = form.value
+        val value = form.value.getOrElse(defaultDate)
 
-        value shouldBe LocalDate.now().minusDays(1)
-
+        value shouldBe yesterday
+        form.errors shouldBe empty
 
       }
 
-      "bind when date is 1st January 1900" in {
-        val minimumLimit = new LocalDate(1900,1,1)
-
-        val formInput = Map[String,String](
-          "dateOfDivorce.day" -> minimumLimit.getDayOfMonth.toString,
-          "dateOfDivorce.month" -> minimumLimit.getMonthOfYear.toString,
-          "dateOfDivorce.year" -> minimumLimit.getYear.toString
-        )
-
+      "the divorce date entered is 1st January 1900" in {
+        val minimumLimit = new LocalDate(1900, 1, 1)
+        val formInput = createDivorceDateInput(minimumLimit)
         val form = DivorceSelectYearForm.form.bind(formInput)
-        val value = form.value
+        val value = form.value.getOrElse(defaultDate)
 
-        value shouldBe LocalDate.now().minusDays(1)
-
+        value shouldBe minimumLimit
+        form.errors shouldBe empty
       }
     }
 
     "not bind" when {
 
-      "Date is in the future" in {
+      "the divorce date entered is in the future" in {
         val tomorrow = LocalDate.now().plusDays(1)
-
-        val formInput = Map[String,String](
-          "dateOfDivorce.day" -> tomorrow.getDayOfMonth.toString,
-          "dateOfDivorce.month" -> tomorrow.getMonthOfYear.toString,
-          "dateOfDivorce.year" -> tomorrow.getYear.toString
-        )
-
+        val formInput = createDivorceDateInput(tomorrow)
         val form = DivorceSelectYearForm.form.bind(formInput)
-        val errors = form.errors
+        val errorMessageKey = extractErrorMessageKey(form.errors)
 
-        errors shouldBe Seq(Invalid(ValidationError("pages.divorce.date.error.max.date",
-          LocalDate.now().plusDays(1))))
+       errorMessageKey shouldBe "pages.divorce.date.error.max.date"
+
       }
 
-      List(("day", None, today.getMonthOfYear, today.getYear),
-        ("month", today.getDayOfMonth, None, today.getYear),
-        ("year", today.getDayOfMonth, today.getMonthOfYear, None)).foreach {
+      "an element of the divorce date has not been provided" when {
+
+        val datesWithLeadingTitle = List(
+          ("day", "", today.getMonthOfYear, today.getYear),
+          ("month", today.getDayOfMonth, "", today.getYear),
+          ("year", today.getDayOfMonth, today.getMonthOfYear, "")
+        )
+
+        datesWithLeadingTitle.foreach {
           date =>
             s"${date._1} is not provided" in {
-              val formInput = Map[String, String](
-                "dateOfDivorce.day" -> date._2.toString,
-                "dateOfDivorce.month" -> date._3.toString,
-                "dateOfDivorce.year" -> date._4.toString
-              )
 
+              val formInput = createDivorceDateInput(date._2.toString, date._3.toString, date._4.toString)
               val form = DivorceSelectYearForm.form.bind(formInput)
-              val errors = form.errors
+              val errorMessageKey = extractErrorMessageKey(form.errors)
 
-              errors shouldBe Seq(Invalid(ValidationError("pages.divorce.date.error.mandatory")))
+              errorMessageKey shouldBe "pages.divorce.date.error.mandatory"
             }
+        }
 
       }
 
       "Invalid characters are input" in {
-        val formInput = Map[String, String](
-          "dateOfDivorce.day" -> "as",
-          "dateOfDivorce.month" -> ".!",
-          "dateOfDivorce.year" -> "Ωå∑π"
-        )
 
+        val formInput = createDivorceDateInput("as", ".!", "Ωå∑π")
         val form = DivorceSelectYearForm.form.bind(formInput)
-        val errors = form.errors
+        val errorMessageKey = extractErrorMessageKey(form.errors)
 
-        errors shouldBe Seq(Invalid(ValidationError("pages.divorce.date.error.non.numeric")))
+        errorMessageKey shouldBe "pages.divorce.date.error.non.numeric"
+
       }
 
-      "date input is before 1st January 1900" in {
+      "divorce date input is before 1st January 1900" in {
         val nineteenthCentury = new LocalDate(1899, 12, 31)
-
-        val formInput = Map[String, String](
-          "dateOfDivorce.day" -> nineteenthCentury.getDayOfMonth.toString,
-          "dateofDivorce.month" -> nineteenthCentury.getMonthOfYear.toString,
-          "dateOfDivorce.year" -> nineteenthCentury.getYear.toString
-        )
-
+        val formInput = createDivorceDateInput(nineteenthCentury)
         val form = DivorceSelectYearForm.form.bind(formInput)
-        val errors = form.errors
+        val errorMessageKey = extractErrorMessageKey(form.errors)
+        errorMessageKey shouldBe "pages.divorce.date.error.min.date"
 
 
-        errors shouldBe Seq(Invalid(ValidationError("pages.divorce.date.error.min.date",
-          TextGenerator().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE))))
       }
 
-      List("0", "32").foreach {
-        day =>
-          "day is not valid value" in {
-            val formInput = Map[String, String](
-              "dateOfDivorce.day" -> day,
-              "dateofDivorce.month" -> today.getMonthOfYear.toString,
-              "dateOfDivorce.year" -> today.getYear.toString
-            )
+      "an invalid day is entered" when {
 
+        List("0", "32").foreach { day =>
+          s"$day is not valid value" in {
+
+            val formInput = createDivorceDateInput(day, today.getMonthOfYear.toString, today.getYear.toString)
             val form = DivorceSelectYearForm.form.bind(formInput)
-            val errors = form.errors
+            val errorMessageKey = extractErrorMessageKey(form.errors)
+            errorMessageKey shouldBe "pages.divorce.date.error.invalid"
 
-            errors shouldBe Seq(Invalid(ValidationError("pages.divorce.date.error.invalid")))
+          }
         }
       }
 
       "month is not a valid value" in {
-        val formInput = Map[String, String](
-          "dateOfDivorce.day" -> today.getDayOfMonth.toString,
-          "dateofDivorce.month" -> "13",
-          "dateOfDivorce.year" -> today.getYear.toString
-        )
 
+        val formInput = createDivorceDateInput(today.getDayOfMonth.toString, "13", today.getYear.toString)
         val form = DivorceSelectYearForm.form.bind(formInput)
-        val errors = form.errors
+        val errorMessageKey = extractErrorMessageKey(form.errors)
+        errorMessageKey shouldBe "pages.divorce.date.error.invalid"
 
-        errors shouldBe Seq(Invalid(ValidationError("pages.divorce.date.error.invalid")))
       }
+    }
+  }
+
+  private def createDivorceDateInput(divorceDate: LocalDate): Map[String, String] = {
+    createDivorceDateInput(divorceDate.getDayOfMonth.toString, divorceDate.getMonthOfYear.toString, divorceDate.getYear.toString)
+  }
+
+  private def createDivorceDateInput(day: String, month: String, year: String): Map[String, String] =
+    Map[String, String](
+      "dateOfDivorce.day" -> day,
+      "dateOfDivorce.month" -> month,
+      "dateOfDivorce.year" -> year
+    )
+
+  private def extractErrorMessageKey(errors: Seq[FormError]): String = {
+    errors match {
+      case List(FormError(_, List(messageKey), _)) => messageKey
+      case _ => throw new RuntimeException("Unable to extract error message key")
     }
   }
 }
