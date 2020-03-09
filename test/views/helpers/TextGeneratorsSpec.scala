@@ -16,17 +16,29 @@
 
 package views.helpers
 
+import java.lang.IllegalArgumentException
+
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import forms.EmailForm
+import forms.coc.{DivorceSelectYearForm, MakeChangesDecisionForm}
 import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito.when
 import org.joda.time.LocalDate
 import org.scalatest.{Matchers, WordSpec}
-import play.api.i18n.Messages
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.data.{Form, FormError}
+import play.api.i18n.{Lang, Messages}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import test_utils.{MockAuthenticatedAction, MockFormPartialRetriever, MockTemplateRenderer, MockUnauthenticatedAction}
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.collection.immutable
 
-class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar  {
+class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with GuiceOneAppPerSuite {
 
   private val currentYear = LocalDate.now().getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
@@ -34,12 +46,12 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar  {
 
   trait EnglishSetup {
     implicit val englishMessages = mock[Messages]
-    when(englishMessages.lang.language).thenReturn("en")
+    when(englishMessages.lang).thenReturn(Lang("en"))
   }
 
   trait WelshSetup {
     implicit val welshMessage = mock[Messages]
-    when(welshMessage.lang.language).thenReturn("cy")
+    when(welshMessage.lang).thenReturn(Lang("cy"))
   }
 
 
@@ -85,11 +97,11 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar  {
 
     "formPossessive" must {
       "append an 's in English" in new EnglishSetup {
-        TextGenerator().formPossessive("Dick") shouldBe "Dick's"
+        TextGenerator().formPossessive("Richard") shouldBe "Richard’s"
       }
 
       "remain the same in Welsh" in new WelshSetup {
-        TextGenerator().formPossessive("Taffy") shouldBe "Taffy"
+        TextGenerator().formPossessive("Gareth") shouldBe "Gareth"
       }
     }
 
@@ -98,10 +110,10 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar  {
         val start = year
         val finish = year + 1
         s"return the beginning and end dates of $year tax year(UK)" in new EnglishSetup {
-          TextGenerator().taxDateInterval(year) shouldBe s"6 April $start to 5 April $finish"
+          TextGenerator().taxDateInterval(year) shouldBe s"6 April $start to 5 April $finish"
         }
         s"return the beginning and end dates of $year tax year(CY)" in new WelshSetup {
-          TextGenerator().taxDateInterval(year) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
+          TextGenerator().taxDateInterval(year) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
         }
       }
     }
@@ -170,11 +182,11 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar  {
     "dateTransformer" must {
       "return String from LocalDate" in new EnglishSetup {
         TextGenerator().dateTransformer(new LocalDate(2020, 2, 2)) shouldBe
-          "2/2/2020"
+          "02/02/2020"
       }
 
       "return LocalDate from String" in new EnglishSetup {
-        TextGenerator().dateTransformer("202022") shouldBe
+        TextGenerator().dateTransformer("20200202") shouldBe
           new LocalDate(2020, 2, 2)
       }
     }

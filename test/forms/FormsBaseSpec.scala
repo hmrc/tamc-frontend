@@ -49,35 +49,4 @@ class FormsBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSuite w
     "metrics.jvm" -> false,
     "metrics.enabled" -> false
   ).build()
-
-  def bulletStatements(role: Role, currentTaxYear: TaxYear, isCurrentYearDivorced: Boolean)(implicit messages: Messages): Seq[String] = {
-    lazy val currentTaxYearEnd: String = transformDate(currentTaxYear.finishes)
-    lazy val nextTaxYearStart: String = transformDate(currentTaxYear.next.starts)
-    lazy val endOfPreviousTaxYear: String = transformDate(currentTaxYear.previous.finishes)
-    lazy val taxYearEndForGivenYear: LocalDate => String = divorceDate => transformDate(TaxYear.taxYearFor(divorceDate).finishes)
-
-    //TODO remove duplicate case into case _ =>
-    (role, isCurrentYearDivorced) match {
-      case (Recipient, true) => {
-        Seq(messages("pages.divorce.explanation.recipient.current.bullet1", currentTaxYearEnd),
-          messages("pages.divorce.explanation.recipient.current.bullet2", nextTaxYearStart))
-      }
-      case (Recipient, false) => {
-        Seq(messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
-          messages("pages.divorce.explanation.previous.bullet2"))
-      }
-      case (Transferor, true) => {
-        Seq(messages("pages.divorce.explanation.previous.bullet1", endOfPreviousTaxYear),
-          messages("pages.divorce.explanation.previous.bullet2"))
-      }
-      case (Transferor, false) => {
-        Seq(messages("pages.divorce.explanation.previous.bullet1", taxYearEndForGivenYear),
-          messages("pages.divorce.explanation.previous.bullet2"))
-      }
-    }
-  }
-
-  def transformDate(date: LocalDate): String = {
-    TextGenerator().ukDateTransformer(date)
-  }
 }
