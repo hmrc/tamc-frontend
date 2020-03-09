@@ -81,7 +81,9 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     "display the history summary page with a status of OK" in {
 
       val relationshipRecords = createRelationshipRecords()
-      val historySummaryViewModel = HistorySummaryViewModel(relationshipRecords)
+      val historySummaryViewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
+                                                            relationshipRecords.hasMarriageAllowanceBeenCancelled,
+                                                            relationshipRecords.loggedInUserInfo)
 
       when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
         .thenReturn(Future.successful(relationshipRecords))

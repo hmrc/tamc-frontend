@@ -26,7 +26,9 @@ import viewModels.{HistorySummaryButton, HistorySummaryViewModel}
 
 trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite {
 
-  implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
+  def getCurrentYear: Int = LocalDate.now().getYear
 
   //active
   val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
@@ -37,7 +39,6 @@ trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSui
     participant1EndDate = None,
     otherParticipantInstanceIdentifier = "1",
     otherParticipantUpdateTimestamp = "TimeStamp")
-
   val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
   val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)
   val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
@@ -64,15 +65,16 @@ trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSui
     val loggedInUserInfo = LoggedInUserInfo(cid, timeStamp, hasAllowance, Some(citizenName))
     val relationshipRecords = new RelationshipRecords(activeRelationshipMock, Seq(), loggedInUserInfo)
 
-    HistorySummaryViewModel(relationshipRecords)
+   // HistorySummaryViewModel(relationshipRecords)
+    ???
   }
 
   private def getActiveRelationShip(participant: Role): RelationshipRecord = {
       RelationshipRecord(participant.asString(), "", "19960327", None, None, "", "")
   }
 
-  def createButtonForHistorySummaryView: HistorySummaryButton = {
-   HistorySummaryButton("checkOrUpdateMarriageAllowance", messagesApi("pages.history.active.button"),
-        controllers.routes.UpdateRelationshipController.decision().url)
-  }
+//  def createButtonForHistorySummaryView: HistorySummaryButton = {
+//   HistorySummaryButton("checkOrUpdateMarriageAllowance", messagesApi("pages.history.active.button"),
+//        controllers.routes.UpdateRelationshipController.decision().url)
+//  }
 }

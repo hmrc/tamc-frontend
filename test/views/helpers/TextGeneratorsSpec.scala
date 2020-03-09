@@ -165,7 +165,7 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
 
     "formPageDateJourney" must {
       "return list of keys string" in new EnglishSetup {
-        val formWithErrors = EmailForm.emailForm.fill(EmailAddress("exampleemail.com"))
+        val formWithErrors = EmailForm.emailForm.bind(Map("transferor-email" -> "exampleemail.com"))
 
         TextGenerator().formPageDataJourney("prefix", formWithErrors) shouldBe
           s"prefix-erroneous(transferor-email)"

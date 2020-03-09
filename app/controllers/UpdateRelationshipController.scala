@@ -48,7 +48,9 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       (updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
         updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
-            val viewModel = HistorySummaryViewModel(relationshipRecords)
+            val viewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
+                                                    relationshipRecords.hasMarriageAllowanceBeenCancelled,
+                                                    relationshipRecords.loggedInUserInfo)
             Ok(views.html.coc.history_summary(viewModel))
         }
       }) recover handleError

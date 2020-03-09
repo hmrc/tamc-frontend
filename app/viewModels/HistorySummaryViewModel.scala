@@ -31,17 +31,15 @@ case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummar
 
 object HistorySummaryViewModel {
 
-  def apply(relationshipRecords: RelationshipRecords)(implicit messages: Messages): HistorySummaryViewModel = {
+  def apply(role: Role, hasMarriageAllowanceBeenCancelled: Boolean, loggedInUserInfo: LoggedInUserInfo)(implicit messages: Messages): HistorySummaryViewModel = {
 
-    val role = relationshipRecords.primaryRecord.role
-
-    val (paragraphContent, button) = if (relationshipRecords.hasMarriageAllowanceBeenCancelled) {
+    val (paragraphContent, button) = if (hasMarriageAllowanceBeenCancelled) {
       marriageAllowanceCancelledContent(role)
     } else {
       activeRecordContent(role)
     }
 
-    val displayName = relationshipRecords.loggedInUserInfo.name.flatMap(_.fullName).getOrElse("")
+    val displayName = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("")
 
     HistorySummaryViewModel(paragraphContent, button, displayName)
   }
