@@ -22,7 +22,6 @@ import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import play.api.i18n.Messages
 import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,12 +29,12 @@ import services._
 import uk.gov.hmrc.time.TaxYear
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import viewModels.EmailViewModel
 import views.helpers.TextGenerator
 
 import scala.concurrent.Future
 
 //TODO remove this class
+//TODO Put into Ticket to break these out in to their own view specs
 class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
   val mockRegistrationService: TransferService = mock[TransferService]
@@ -52,9 +51,6 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
-  private def transformDate(date: LocalDate, isWelsh: Boolean = false): String = {
-    TextGenerator().ukDateTransformer(date)
-  }
 
   "Update relationship cause - get view" should {
     "show all appropriate radio buttons" in {
@@ -228,14 +224,30 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
      val result: Future[Result] = controller().divorceEnterYear(request)
 
-     val expected = Seq(
+     val expectedHeading = messagesApi("pages.divorce.title")
+     val expectedParas = Seq(
        messagesApi("pages.divorce.paragraph1"),
        messagesApi("pages.divorce.date.hint")
      ).toArray
-     val parsed = Jsoup.parse(contentAsString(result))
-     val current = parsed.getElementsByTag("p").eachText().toArray()
 
-     current shouldBe expected
+     val expectedLabel = Seq(
+       "Day",
+       "Month",
+       "Year"
+     ).toArray
+
+     val parsed = Jsoup.parse(contentAsString(result))
+
+     val heading = parsed.getElementsByTag("h1").text
+     val paras = parsed.getElementsByTag("p").eachText().toArray()
+     val formLabel = parsed.getElementsByTag("label").eachText.toArray
+     val formInput = parsed.getElementsByTag("input").eachAttr("type")
+
+     heading shouldBe expectedHeading
+     paras shouldBe expectedParas
+     formLabel shouldBe expectedLabel
+     formInput.size shouldBe 3
+     formInput contains "text"
    }
  }
 
@@ -385,8 +397,6 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       paras shouldBe expectedParas
       bullets shouldBe expectedBullets
     }
-
-    //TODO Put into Ticket to break these out in to their own view specs
   }
 
   "Confirm Email" in {
@@ -399,41 +409,113 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       messagesApi("change.status.confirm.info"),
       messagesApi("change.status.confirm.more.info")
     ).toArray
+    val expectedLabel = messagesApi("pages.form.field.transferor-email")
 
     val result = controller( ).confirmEmail(FakeRequest().withHeaders(("Referer", "referer")))
-
 
     val view = Jsoup.parse(contentAsString(result))
 
     val heading = view.getElementsByTag("h1").text
     val paras = view.getElementsByTag("p").eachText().toArray
+    val formLabel = view.getElementsByTag("label").text()
+    val formInput = view.getElementsByTag("input").eachAttr("type")
+
+    heading shouldBe expectedHeading
+    paras shouldBe expectedParas
+    formLabel shouldBe expectedLabel
+    formInput.size shouldBe 1
+    formInput contains "input"
+  }
+
+  "Confirmation Update Page" when {
+    "End reason divorce display divorce date row" in {
+      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
+        .thenReturn(Future.successful(
+          ConfirmationUpdateAnswers("Test User", Some(LocalDate.now()), "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
+
+      val expectedHeader = messagesApi("pages.confirm.cancel.heading")
+      val expectedPara = messagesApi("pages.confirm.cancel.message")
+      val expectedList = Seq(
+        messagesApi("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
+        messagesApi("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
+      ).toArray
+      val expectedTableHeadings = Seq(
+        messagesApi("pages.confirm.cancel.your-name"),
+        messagesApi("pages.divorce.title"),
+        messagesApi("pages.confirm.cancel.email")
+      ).toArray
+
+      val result = controller().confirmUpdate(request)
+
+      val view = Jsoup.parse(contentAsString(result))
+
+      val header = view.getElementsByTag("h1").text
+      val para = view.getElementsByTag("p").text
+      val list = view.getElementsByTag("li").eachText.toArray
+      val tableHeadings = view.getElementsByTag("th").eachText.toArray
+
+      header shouldBe expectedHeader
+      para shouldBe expectedPara
+      list shouldBe expectedList
+      tableHeadings.size shouldBe 3
+      tableHeadings shouldBe expectedTableHeadings
+    }
+
+    "display two rows when no DivorceDate is present" in {
+      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
+        .thenReturn(Future.successful(
+          ConfirmationUpdateAnswers("Test User", None, "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
+
+      val expectedHeader = messagesApi("pages.confirm.cancel.heading")
+      val expectedPara = messagesApi("pages.confirm.cancel.message")
+      val expectedList = Seq(
+        messagesApi("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
+        messagesApi("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
+      ).toArray
+      val expectedTableHeadings = Seq(
+        messagesApi("pages.confirm.cancel.your-name"),
+        messagesApi("pages.confirm.cancel.email")
+      ).toArray
+
+      val result = controller().confirmUpdate(request)
+
+      val view = Jsoup.parse(contentAsString(result))
+
+      val header = view.getElementsByTag("h1").text
+      val para = view.getElementsByTag("p").text
+      val list = view.getElementsByTag("li").eachText.toArray
+      val tableHeadings = view.getElementsByTag("th").eachText.toArray
+
+      header shouldBe expectedHeader
+      para shouldBe expectedPara
+      list shouldBe expectedList
+      tableHeadings.size shouldBe 2
+      tableHeadings shouldBe expectedTableHeadings
+    }
+  }
+
+  "Finish Update page" in {
+    when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
+      .thenReturn(Future.successful("email@email.com"))
+
+    when(mockUpdateRelationshipService.removeCache(any(), any()))
+      .thenReturn()
+
+    val expectedHeading = messagesApi("pages.coc.finish.header")
+    val expectedParas = Seq(
+      messagesApi("pages.coc.finish.acknowledgement", "email@email.com"),
+      messagesApi("pages.coc.finish.junk"),
+      messagesApi("pages.coc.finish.para1")
+    ).toArray
+
+    val result = controller().finishUpdate(request)
+
+    val view  = Jsoup.parse(contentAsString(result))
+
+    val heading = view.getElementsByTag("h1").text
+    val paras = view.getElementsByTag("p").eachText.toArray
 
     heading shouldBe expectedHeading
     paras shouldBe expectedParas
   }
-
-  //TODO remove with updateRelationshipAction()???
-  //  "Update relationship confirmation page" should {
-  //
-  //    "confirm cancellation " in {
-  //      when(mockUpdateRelationshipService.saveEndRelationshipReason(ArgumentMatchers.eq(EndRelationshipReason(EndReasonCode.CANCEL)))(any(), any()))
-  //        .thenReturn(EndRelationshipReason(EndReasonCode.CANCEL))
-  //      when(mockTimeService.getEffectiveUntilDate(EndRelationshipReason(EndReasonCode.CANCEL)))
-  //        .thenReturn(Some(time.TaxYear.current.finishes))
-  //      when(mockTimeService.getEffectiveDate(EndRelationshipReason(EndReasonCode.CANCEL)))
-  //        .thenReturn(time.TaxYear.current.next.starts)
-  //      val result = controller().confirmCancel()(request)
-  //      status(result) shouldBe OK
-  //
-  //      val document = Jsoup.parse(contentAsString(result))
-  //      val cancelHeading = document.getElementById("cancel-heading")
-  //      val cancelContent = document.getElementById("cancel-content")
-  //
-  //      cancelHeading shouldNot be(null)
-  //      cancelContent shouldNot be(null)
-  //      val taxYear = time.TaxYear.current.startYear + 1
-  //      cancelHeading.toString should include("Cancelling Marriage Allowance")
-  //      cancelContent.text() shouldBe s"We will cancel your Marriage Allowance, but it will remain in place until 5 April $taxYear, the end of the current tax year."
-  //    }
-  //  }
 }
