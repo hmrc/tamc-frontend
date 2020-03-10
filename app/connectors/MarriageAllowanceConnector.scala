@@ -42,20 +42,7 @@ trait MarriageAllowanceConnector {
 
   def listRelationship(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordList] =
     httpGet.GET[RelationshipRecordStatusWrapper](s"$marriageAllowanceUrl/paye/$nino/list-relationship") map {
-      case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK")) => {
-
-
-
-
-
-        // at least one active record
-        // more than one active record
-
-
-
-        relationshipRecordWrapper
-
-      }
+      case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK")) => relationshipRecordWrapper
       case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
       case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND))    => throw CitizenNotFound()
       case RelationshipRecordStatusWrapper(_, ResponseStatus(BAD_REQUEST))          => throw BadFetchRequest()

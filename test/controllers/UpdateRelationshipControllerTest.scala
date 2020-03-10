@@ -114,14 +114,41 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
         when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
           .thenReturn(Future.failed(NoPrimaryRecordError()))
 
-        val result: Future[Result] = controller().history()(request)
+        val result = controller().history()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
       }
     }
 
-    // TODO write tests with regards to error handling in line with TAMC changes
+    "return an Internal Server Error with an error page" when {
+        val errorTypesWithDisplayPages = Seq((BadFetchRequest, views.html.errors.bad_request,
+                                                (CitizenNotFound, views.html.errors.citizen_not_found)))
 
+        errorTypesWithDisplayPages.foreach { errorScenario =>
+
+          s"a ${errorScenario._1} is returned" in {
+            when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+            .thenReturn(Future.failed(errorScenario._1()))
+
+            val result = controller().history()(request)
+            status(result) shouldBe INTERNAL_SERVER_ERROR
+
+            result rendersTheSameViewAs errorScenario._2()
+        }
+      }
+    }
+
+    "display an error page" when {
+      "a TransferorNotFound error is returned " in {
+
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.failed(TransferorNotFound()))
+
+        val result = controller().history()(request)
+        result rendersTheSameViewAs views.html.errors.transferor_not_found()
+
+      }
+    }
   }
 
 
@@ -564,7 +591,19 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     }
 
     "display an error page" when {
-      "an error has occurred whilst accessing the cache" in {
+
+      "an error occurs retrieving divorce data" in {
+
+        when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
+          .thenReturn(Future.failed(CacheMissingRelationshipRecords()))
+
+        val result = controller().divorceEndExplanation()(request)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+
+        result rendersTheSameViewAs views.html.errors.try_later()
+      }
+
+      "an error has occurred whilst saving cache data" in {
 
         val role = Transferor
         val divorceDate = LocalDate.now().minusDays(1)
@@ -589,7 +628,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       }
     }
 
-    //TODO other error based tests
   }
 
   "confirmEmail" should {
@@ -687,18 +725,19 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
     }
 
-    "return InternalServerError" when {
-      "there is a cache data missing" in {
+    "return an InternalServerError" when {
+
+      "there is an issue accessing the cache" in {
 
         when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
-          .thenReturn(Future.failed(CacheMissingEmail()))
+          .thenReturn(failedFuture)
 
         val result = controller().confirmUpdate()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
+
     }
 
-    //TODO further tests
   }
 
 
@@ -713,8 +752,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
 
     }
-
-    //TODO other errors
 
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
