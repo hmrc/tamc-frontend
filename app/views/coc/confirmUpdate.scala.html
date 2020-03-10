@@ -25,6 +25,7 @@
 @import viewModels.ConfirmUpdateViewModel
 @import templates.coc._
 @import uk.gov.hmrc.play.views.html._
+@import includes.backLink
 
 @(viewModel: ConfirmUpdateViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -37,7 +38,7 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
 ) {
 
- <a href="@controllers.routes.UpdateRelationshipController.confirmEmail" class="link-back">@Html(messages("generic.back"))</a>
+ @backLink()
 
  <header class="page-heading">
      <h1 class="heading-xlarge">@messages("pages.confirm.cancel.heading")</h1>

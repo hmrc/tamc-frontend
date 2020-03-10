@@ -19,6 +19,7 @@
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.ClaimsViewModel
 @import uk.gov.hmrc.urls.Link
+@import includes.backLink
 
 @(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -28,7 +29,7 @@ title = messages("title.pattern", messages("pages.claims.title")),
 mainConfig = views.helpers.MainConfig(None)
 ){
 
-    <a href="@viewModel.backLinkUrl" class="link-back">@messages("generic.back")</a>
+    @backLink()
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.claims.title")</h1>

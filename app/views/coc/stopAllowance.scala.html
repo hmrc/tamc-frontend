@@ -16,6 +16,7 @@
 
 @import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
+@import includes.backLink
 
 @()(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -24,7 +25,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = messages("title.pattern", messages("pages.stopAllowance.title")),
 mainConfig = views.helpers.MainConfig()) {
 
-<a href="@controllers.routes.UpdateRelationshipController.makeChange().url" class="link-back">@messages("generic.back")</a>
+@backLink()
 
 <header class="page-heading">
     <h1 class="heading-xlarge">@messages("pages.stopAllowance.title")</h1>
