@@ -732,10 +732,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
   "finishUpdate" should {
     "return a success" in {
 
-      val email = "email@email.com"
+      val email = EmailAddress("email@email.com")
+      val viewModel = FinishedUpdateViewModel(email, Transferor)
 
-      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
-        .thenReturn(Future.successful(email))
+      when(mockUpdateRelationshipService.getInformationForConfirmation(any(), any()))
+        .thenReturn(Future.successful(viewModel))
 
       when(mockUpdateRelationshipService.removeCache(any(), any()))
         .thenReturn(Future.successful())
@@ -743,13 +744,13 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       val result = controller().finishUpdate()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.finished(EmailAddress(email))
+      result rendersTheSameViewAs views.html.coc.finished(viewModel)
 
     }
 
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
+        when(mockUpdateRelationshipService.getInformationForConfirmation(any(), any()))
           .thenReturn(failedFuture)
 
         val result = controller().submitConfirmUpdate(request)

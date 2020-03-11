@@ -55,7 +55,7 @@ object HistorySummaryViewModel {
       Html(s"<p>${messages("pages.history.active.transferor")}</p>")
     } else {
       Html(s"<p>${messages("pages.history.active.recipient.paragraph1", formattedMaxPATransfer)}</p>" +
-        s"<p>${messages("pages.history.active.recipient.paragraph2", formattedMaxBenefit)}</P>")
+        s"<p>${messages("pages.history.active.recipient.paragraph2", formattedMaxBenefit)}</p>")
     }
 
     val button = HistorySummaryButton(
@@ -73,11 +73,11 @@ object HistorySummaryViewModel {
 
     val paragraphContent = if (role == Transferor) {
       Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-        s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</P>")
+        s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</p>")
 
     } else {
       Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-        s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</P>")
+        s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</p>")
     }
 
     val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
