@@ -105,7 +105,6 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
       }
     }
 
-    //TODO could remove after domain clean up
     "There is no citizen name to allow a display name to be created" in new MarriageAllowanceOnGoingTest {
       val role = Transferor
       val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = new LocalDate().toString, has_allowance = None, name = None)

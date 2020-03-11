@@ -20,7 +20,6 @@ import play.api.data.Form
 import play.api.data.Forms.{optional, single, text}
 import play.api.i18n.Messages
 
-//TODO add tests
 object CheckClaimOrCancelDecisionForm {
 
   val DecisionChoice = "decisionChoice"
@@ -28,8 +27,6 @@ object CheckClaimOrCancelDecisionForm {
   val StopMarriageAllowance = "stopMarriageAllowance"
 
   def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
-    //TODO error message
     single(DecisionChoice -> optional(text).verifying("pages.decision.error.mandatory.value", { _.isDefined }))
-
   )
 }

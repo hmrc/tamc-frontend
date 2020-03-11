@@ -28,7 +28,6 @@ import views.helpers.TextGenerator
 
 import scala.util.Try
 
-//TODO add tests
 object DivorceSelectYearForm {
 
   val DateOfDivorce = "dateOfDivorce"

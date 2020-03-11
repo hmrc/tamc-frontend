@@ -42,7 +42,6 @@ case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryReco
 
 }
 
-//TODO this logic should live in TAMC
 object RelationshipRecords {
 
   implicit val formats = Json.format[RelationshipRecords]

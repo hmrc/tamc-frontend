@@ -34,10 +34,6 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
-  //TODO are these required
-  //lazy val maxPATransfer: Int = PERSONAL_ALLOWANCE(currentOfTaxYear)
-  //lazy val maxBenefit: Int = MAX_BENEFIT(currentOfTaxYear)
-  //lazy val maxPaTransferFormatted: Int = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
   lazy val formattedEndOfTaxYear: String = endOfTaxYear.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
 
   lazy val taxFreeHtml: Html =
@@ -45,8 +41,6 @@ class ClaimsViewModelTest extends TamcViewModelTest {
       s"""${messagesApi("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.taxFreeAllowanceUrl}">
          |${messagesApi("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
-  //TODO Implement back functionality
-  val backURL = ""
   val now = LocalDate.now()
   val dateInputPattern = "yyyyMMdd"
 
@@ -76,7 +70,6 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
       viewModel.activeRow shouldBe activeRow
       viewModel.historicRows shouldBe Seq.empty[ClaimsRow]
-      viewModel.backLinkUrl shouldBe backURL
       viewModel.taxFreeAllowanceLink shouldBe taxFreeHtml
 
     }
@@ -144,7 +137,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
       viewModel.historicRows shouldBe orderedClaimRows
     }
 
-    "create a ClaimsViewModel" when {
+    "create a historic claims row" when {
       "there is no historic end reason set" in {
 
         val primaryActiveRecord = createRelationshipRecord()
@@ -157,7 +150,8 @@ class ClaimsViewModelTest extends TamcViewModelTest {
           participant1EndDate = Some(cyMinusOneEndDate.toString(dateInputPattern)), relationshipEndReason = None)
 
         val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusOneRecord))
-        val claimsRows = Seq(ClaimsRow(expectedClaimsRowMinusOne ,""))
+        val expectedStatus = messagesApi("coc.end-reason.DEFAULT")
+        val claimsRows = Seq(ClaimsRow(expectedClaimsRowMinusOne , expectedStatus))
 
         viewModel.historicRows shouldBe claimsRows
 

@@ -16,13 +16,11 @@
 
 package viewModels
 
-import models.{MarriageAllowanceEndingDates, Recipient, Role}
+import models.{MarriageAllowanceEndingDates, Role}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
 import views.helpers.TextGenerator
-
-//TODO TESTS UP IN HERE
 
 case class DivorceEndExplanationViewModel(divorceDate: String, taxYearStatus: String, bulletStatement: (String, String))
 
