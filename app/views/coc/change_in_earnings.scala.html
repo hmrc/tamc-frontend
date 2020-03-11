@@ -17,6 +17,7 @@
 @import play.twirl.api.Html
 @import config.ApplicationConfig._
 @import models.auth.AuthenticatedUserRequest
+@import includes.backLink
 
 @()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -36,7 +37,7 @@ manageService = true,
 mainConfig = views.helpers.MainConfig()
 ) {
 
-    <a href="@controllers.routes.UpdateRelationshipController.makeChange().url" class="link-back">@messages("generic.back")</a>
+    @backLink()
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.changeOfIncome.title")</h1>

@@ -20,6 +20,7 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.EmailViewModel
+@import includes.backLink
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -33,7 +34,7 @@ mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerator().formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
 ) {
 
-<a href="" class="link-back">@messages("generic.back")</a>
+@backLink()
 
 @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)

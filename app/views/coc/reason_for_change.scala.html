@@ -18,6 +18,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
 @import forms.coc.MakeChangesDecisionForm
+@import includes.backLink
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
@@ -29,8 +30,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     mainConfig = views.helpers.MainConfig()
 ){
 
-    <a href="@controllers.routes.UpdateRelationshipController.decision" class="link-back">@messages("generic.back")</a>
-
+    @backLink()
     @templates.form_error_notification(makeChangesDecisionForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
