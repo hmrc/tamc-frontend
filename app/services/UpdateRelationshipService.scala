@@ -34,6 +34,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
 import utils.LanguageUtils
+import viewModels.FinishedUpdateViewModel
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -98,8 +99,15 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
   }
 
-  def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+  private def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw new RuntimeException("Email not found in cache")))
+  }
+
+  def getInformationForConfirmation(implicit messages: Messages, hc: HeaderCarrier): Future[FinishedUpdateViewModel] = {
+    for {
+      role <- getRelationshipRecords.map(_.primaryRecord.role)
+      email <- getEmailAddressForConfirmation.map(EmailAddress(_))
+    } yield FinishedUpdateViewModel(EmailAddress(email), role)
   }
 
   def saveEmailAddress(emailAddress: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {

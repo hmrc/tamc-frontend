@@ -269,10 +269,11 @@ class UpdateRelationshipController @Inject()(
   def finishUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       (for {
-        email <- updateRelationshipService.getEmailAddressForConfirmation
+        viewModel <- updateRelationshipService.getInformationForConfirmation
         _ <- updateRelationshipService.removeCache
-      } yield Ok(views.html.coc.finished(EmailAddress(email)))) recover handleError
-
+      } yield {
+        Ok(views.html.coc.finished(viewModel))
+      }) recover handleError
   }
 
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
