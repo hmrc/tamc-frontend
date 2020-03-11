@@ -91,13 +91,6 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
     }
   }
 
-  //TODO Figure out what the actual point of this is... Then write the rest of the tests!
-  "saveRelationshipStatus" ignore {
-    "return RelationshipRecord" in {
-      ???
-    }
-  }
-
   "getCheckClaimOrCancelDecision" should {
     "return a String when value is found in cache" in {
       when(service.cachingService.fetchAndGetEntry[String](any())(any(), any(), any())).thenReturn(Future.successful(Some("You found a poke ball")))
