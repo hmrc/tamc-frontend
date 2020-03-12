@@ -26,10 +26,7 @@ object UpdateRelationshipRequestHolder {
 
   def apply(cacheData: UpdateRelationshipCacheDataTemp, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
 
-    //TODO Check that the date format is what is expected. i.e is it right to stringify a LocalDate and set it down?
     val relationshipInformation = RelationshipInformation(cacheData.relationshipRecords.primaryRecord, cacheData.endMaReason, cacheData.marriageEndDate)
-
-    //TODO the timestamp may always be None. The logic does not look correct inside either
     val recipient = cacheData.relationshipRecords.recipientInformation
     val transferor = cacheData.relationshipRecords.transferorInformation
     val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInformation)

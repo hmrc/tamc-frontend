@@ -152,8 +152,8 @@ trait UpdateRelationshipService {
   }
 
   def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
-    val marriageAllowanceEndDate = EndDateMACeasedCalculator.calculateEndDate
-    val personalAllowanceEffectiveDate = EndDateMACeasedCalculator.calculatePaEffectiveDate
+    val marriageAllowanceEndDate = EndDateForMACeased.endDate
+    val personalAllowanceEffectiveDate = EndDateForMACeased.personalAllowanceEffectiveDate
 
     MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
   }

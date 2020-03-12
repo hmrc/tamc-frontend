@@ -50,6 +50,7 @@ class TransferControllerTest extends ControllerBaseSpec {
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+  val notificationRecord = NotificationRecord(EmailAddress("test@test.com"))
 
   def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): TransferController = new TransferController(
     messagesApi,
@@ -362,8 +363,8 @@ class TransferControllerTest extends ControllerBaseSpec {
     "redirect" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "test@test.com")
-        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(RelationshipRecordData.notificationRecord))(any(), any()))
-          .thenReturn(RelationshipRecordData.notificationRecord)
+        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any()))
+          .thenReturn(notificationRecord)
         val result = controller().confirmYourEmailAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirm().url)
@@ -386,7 +387,7 @@ class TransferControllerTest extends ControllerBaseSpec {
     "redirect" when {
       "a user is permanently authenticated" in {
         when(mockTransferService.createRelationship(any(), ArgumentMatchers.eq("PTA"))(any(), any(), any()))
-          .thenReturn(RelationshipRecordData.notificationRecord)
+          .thenReturn(notificationRecord)
         val result = controller().confirmAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
@@ -395,7 +396,7 @@ class TransferControllerTest extends ControllerBaseSpec {
 
       "a user is temporarily authenticated" in {
         when(mockTransferService.createRelationship(any(), ArgumentMatchers.eq("GDS"))(any(), any(), any()))
-          .thenReturn(RelationshipRecordData.notificationRecord)
+          .thenReturn(notificationRecord)
         val result = controller(instanceOf[MockTemporaryAuthenticatedAction]).confirmAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
@@ -411,7 +412,7 @@ class TransferControllerTest extends ControllerBaseSpec {
         verify(mockCachingService, times(0)).remove()(any(), any())
 
         when(mockTransferService.getFinishedData(any())(any(), any()))
-          .thenReturn(RelationshipRecordData.notificationRecord)
+          .thenReturn(notificationRecord)
 
         val result = controller().finished()(request)
         status(result) shouldBe OK

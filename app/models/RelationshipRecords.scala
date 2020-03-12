@@ -20,7 +20,6 @@ import errors._
 import play.api.Logger
 import play.api.libs.json.Json
 
-//TODO need to update this domain model once TAMC passes primary record through
 case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Seq[RelationshipRecord],
                                loggedInUserInfo: LoggedInUserInfo) {
 

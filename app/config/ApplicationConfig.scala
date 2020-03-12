@@ -64,8 +64,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
   val generalEnquiriesLink = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
-
-  //TODO separate file
   val CACHE_DIVORCE_DATE = "DIVORCE_DATE"
   val CACHE_MAKE_CHANGES_DECISION = "MAKE_CHANGES_DECISION"
   val CACHE_CHECK_CLAIM_OR_CANCEL = "CHECK_CLAIM_OR_CANCEL"
@@ -85,8 +83,6 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
   val CACHE_EMAIL_ADDRESS = "EMAIL_ADDRESS"
-  //val CACHE_MA_END_DATE = "MA_END_DATE"
-  //val CACHE_PA_EFFECTIVE_DATE = "PA_EFFECTIVE_DATE"
   val CACHE_MA_ENDING_DATES = "MA_ENDING_DATES"
   val CACHE_RELATIONSHIP_RECORDS = "RELATIONSHIP_RECORDS"
 

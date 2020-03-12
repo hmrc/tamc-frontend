@@ -23,8 +23,6 @@ object RelationshipInformation {
   implicit val formats = Json.format[RelationshipInformation]
 
   def apply(activeRelationship: RelationshipRecord, relationshipEndReason: String, endDate: LocalDate):  RelationshipInformation = {
-
-    //TODO remove the need for an optional active record
     val creationTimeStamp = activeRelationship.creationTimestamp
     val endDateFormatted = endDate.toString("yyyyMMdd")
     RelationshipInformation(creationTimeStamp, relationshipEndReason, endDateFormatted)

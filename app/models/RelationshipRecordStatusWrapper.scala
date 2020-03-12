@@ -22,5 +22,4 @@ object RelationshipRecordStatusWrapper {
   implicit val formats = Json.format[RelationshipRecordStatusWrapper]
 }
 
-//TODO tidy this when TAMC gets updated to pass actual HTTP responses and not wrappers. Should not have an empty list
 case class RelationshipRecordStatusWrapper(relationship_record: RelationshipRecordList = RelationshipRecordList(Seq()), status: ResponseStatus)

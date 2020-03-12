@@ -17,11 +17,23 @@
 package services
 
 import org.joda.time.LocalDate
+import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYear
-//TODO TESTS UP IN HERE
-object EndDateMACeasedCalculator {
 
-  def calculateEndDate: LocalDate = TaxYear.current.finishes
-  def calculatePaEffectiveDate: LocalDate = TaxYear.current.next.starts
+class EndDateForMACeasedTest extends UnitSpec {
 
+val currentTaxYear = TaxYear.current
+
+  def startOfNextGivenTaxYear(taxYear: LocalDate) = TaxYear.taxYearFor(taxYear).next.starts
+
+  "EndDateMACeasedCalculatorTest" should {
+
+    "return a marriage allowance end date" in {
+      EndDateForMACeased.endDate shouldBe currentTaxYear.finishes
+    }
+
+    "return a personal allowance effective date" in {
+      EndDateForMACeased.personalAllowanceEffectiveDate shouldBe currentTaxYear.next.starts
+    }
+  }
 }

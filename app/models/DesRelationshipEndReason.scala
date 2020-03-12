@@ -19,8 +19,6 @@ package models
 import play.api.Logger
 import play.api.libs.json._
 
-
-//TODO eventually merge this in to the EndMarriageAllowanceReason object
 sealed trait DesRelationshipEndReason {
   def value: String
 }
