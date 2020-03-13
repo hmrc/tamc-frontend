@@ -115,7 +115,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
                 data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
                 } else {
             <td id="year-@taxYear.year">
-                @Html(Messages("pages.confirm.previous.tax",TextGenerator().ukDateTransformer(TaxYear(taxYear.year).starts), TextGenerator().ukDateTransformer(TaxYear(taxYear.year).finishes))))
+                @Html(Messages("pages.confirm.previous.tax",TextGenerator().ukDateTransformer(TaxYear(taxYear.year).starts), TextGenerator().ukDateTransformer(TaxYear(taxYear.year).finishes)))
             </td>
             <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
                 Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)))))
