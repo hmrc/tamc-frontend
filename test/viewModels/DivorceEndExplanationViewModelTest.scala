@@ -24,48 +24,45 @@ import views.helpers.TextGenerator
 
 class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
 
+  val maEndDate = TaxYear.current.finishes
+  val paEffectiveDate = TaxYear.current.starts
+  val currentTaxYearStart = TaxYear.current.startYear
 
-  lazy val date: Int => LocalDate = year => new LocalDate(year, 5, 15)
-  lazy val maEndDate = TaxYear.current.finishes
-  lazy val paEffectiveDate = TaxYear.current.starts
+  "DivorceEndExplanationViewModel" should {
 
+    "create a view model" when {
 
-  "DivorceEndExplanationViewModel" when {
-    val roles: Seq[Role] = Seq(Recipient, Transferor)
+      "the divorce date is in the current tax year" in {
 
-    for (role <- roles) {
-      val className = role.getClass.getSimpleName
-      s"$className" when {
+        val divorceDateCurrentTaxYear = TaxYear.current.starts
+        val viewModel = DivorceEndExplanationViewModel(divorceDateCurrentTaxYear, MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
 
-        s"current year divorce page($className, current year)" in {
-          val targetYear = TaxYear.current.startYear
-          val actual = DivorceEndExplanationViewModel(role, date(targetYear), MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
+        val bulletStatement1 = messagesApi("pages.divorce.explanation.current.bullet1", TextGenerator().ukDateTransformer(maEndDate))
+        val bulletStatement2 = messagesApi("pages.divorce.explanation.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate))
+        val expectedBulletStatements = (bulletStatement1, bulletStatement2)
+        val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
 
-          val string1 = messagesApi("pages.divorce.explanation.current.bullet1", TextGenerator().ukDateTransformer(maEndDate))
-          val string2 = messagesApi("pages.divorce.explanation.current.bullet2", TextGenerator().ukDateTransformer(paEffectiveDate))
-          val bullets = (string1, string2)
-          val taxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
-          val expected = DivorceEndExplanationViewModel(TextGenerator().ukDateTransformer(date(targetYear)), taxYearStatus, bullets)
-
-          actual shouldBe expected
-        }
-
-        s"prev year divorce page($className, prev year)" in {
-          val targetYear = LocalDate.now().minusYears(2).getYear
-          val actual = DivorceEndExplanationViewModel(role, date(targetYear), MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
-
-          val string1 = messagesApi("pages.divorce.explanation.previous.bullet1", TextGenerator().ukDateTransformer(maEndDate))
-          val string2 = messagesApi("pages.divorce.explanation.previous.bullet2")
-          val bullets = (string1, string2)
-          val taxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
-          val expected = DivorceEndExplanationViewModel(TextGenerator().ukDateTransformer(date(targetYear)), taxYearStatus, bullets)
-
-          actual shouldBe expected
-        }
+        viewModel.divorceDate shouldBe TextGenerator().ukDateTransformer(divorceDateCurrentTaxYear)
+        viewModel.taxYearStatus shouldBe expectedTaxYearStatus
+        viewModel.bulletStatement shouldBe expectedBulletStatements
 
       }
 
+      "the divorce date is in a previous tax year" in {
+
+        val divorceDatePreviousTaxYear = TaxYear.current.previous.finishes
+        val viewModel = DivorceEndExplanationViewModel(divorceDatePreviousTaxYear, MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
+
+        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet1", TextGenerator().ukDateTransformer(maEndDate))
+        val bulletStatement2 = messagesApi("pages.divorce.explanation.previous.bullet2")
+        val expectedBulletStatements = (bulletStatement1, bulletStatement2)
+        val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
+
+        viewModel.divorceDate shouldBe TextGenerator().ukDateTransformer(divorceDatePreviousTaxYear)
+        viewModel.taxYearStatus shouldBe expectedTaxYearStatus
+        viewModel.bulletStatement shouldBe expectedBulletStatements
+
+      }
     }
   }
-
 }

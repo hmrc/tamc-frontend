@@ -17,18 +17,17 @@
 package viewModels
 
 import config.ApplicationConfig
+import models.DesRelationshipEndReason.Default
 import models.RelationshipRecord
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import views.helpers.TextGenerator
 
-//TODO add tests for active row
 case class ClaimsRow(dateInterval: String, status: String)
 
 case class ClaimsViewModel(activeRow: ClaimsRow,
                            historicRows: Seq[ClaimsRow],
-                           taxFreeAllowanceLink: Html,
-                           backLinkUrl: String)
+                           taxFreeAllowanceLink: Html)
 
 object ClaimsViewModel {
 
@@ -37,11 +36,10 @@ object ClaimsViewModel {
   def apply(primaryRelationship: RelationshipRecord,
             historicRelationships: Seq[RelationshipRecord])(implicit messages: Messages): ClaimsViewModel = {
 
-    //TODO could push to HOF if ordering could be dictated
     val activeRow = activeClaimsRow(primaryRelationship)
     val orderedHistoricRows = historicRelationships.sorted.map(historicClaimsRow(_))
 
-    ClaimsViewModel(activeRow, orderedHistoricRows, taxFreeAllowanceLink, backLinkUrl)
+    ClaimsViewModel(activeRow, orderedHistoricRows, taxFreeAllowanceLink)
   }
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
@@ -68,23 +66,14 @@ object ClaimsViewModel {
       nonPrimaryRelation.participant1StartDate,
       nonPrimaryRelation.participant1EndDate)
 
-    //TODO shared RelationshipRecord domain across primary and non primary should be changed to cater for this option
     val cause = nonPrimaryRelation.relationshipEndReason match {
-      case None => ""
-      case Some(reason) => reason.value.toUpperCase
+      case None => Default.value
+      case Some(reason) => reason.value
     }
 
-    val status = if (cause == "") {
-      ""
-    } else {
-      val messageKey = s"coc.end-reason.$cause"
-      messages(messageKey)
-    }
+    val status = messages(s"coc.end-reason.${cause.toUpperCase}")
 
     ClaimsRow(historicDateInterval, status)
-
   }
 
-  //TODO implement browser back functionality so we can remove this
-  private def backLinkUrl: String = ""
 }

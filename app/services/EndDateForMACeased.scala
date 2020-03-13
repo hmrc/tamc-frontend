@@ -14,27 +14,14 @@
  * limitations under the License.
  */
 
-package models
+package services
 
+import org.joda.time.LocalDate
+import uk.gov.hmrc.time.TaxYear
 
+object EndDateForMACeased {
 
+  def endDate: LocalDate = TaxYear.current.finishes
+  def personalAllowanceEffectiveDate: LocalDate = TaxYear.current.next.starts
 
-
-//TODO remove everywhere
-object RoleOld {
-  val TRANSFEROR = "Transferor"
-  val RECIPIENT = "Recipient"
 }
-
-//TODO remove everywhere
-object EndReasonCode {
-  val CANCEL = "CANCEL"
-  val REJECT = "REJECT"
-  val DIVORCE = "DIVORCE"
-  val DIVORCE_CY = "DIVORCE_CY"
-  val DIVORCE_PY = "DIVORCE_PY"
-  val EARNINGS = "EARNINGS"
-  val BEREAVEMENT = "BEREAVEMENT"
-}
-
-

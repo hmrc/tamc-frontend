@@ -51,7 +51,7 @@ class RelationshipRecordListTest extends UnitSpec {
 
   private val activeRelationshipRecord =
     RelationshipRecord(
-      RoleOld.RECIPIENT,
+      Recipient.asString(),
       "56787",
       "20130101",
       Some(DesRelationshipEndReason.Default),

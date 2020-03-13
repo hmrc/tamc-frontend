@@ -18,7 +18,7 @@ package services
 
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
-import errors.{CacheMissingRelationshipRecords, TransferorNotFound}
+import errors.{CacheMapNoFound, CacheMissingRelationshipRecords, TransferorNotFound}
 import models._
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
@@ -170,7 +170,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     fetch() map { optionalCacheMap =>
 
       //TODO create a type
-      optionalCacheMap.fold(throw new RuntimeException("Failed to retrieve cacheMap")){ cacheMap =>
+      optionalCacheMap.fold(throw CacheMapNoFound()){ cacheMap =>
 
           val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
           val marriageAllowanceEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
@@ -187,7 +187,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def getConfirmationAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswersCacheData] = {
     fetch () map {
       optionalCacheMap =>
-        optionalCacheMap.fold(throw new RuntimeException("Failed to retrieve cacheMap")) {
+        optionalCacheMap.fold(throw CacheMapNoFound()) {
           cacheMap =>
             val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
             val marriageAllowanceEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)

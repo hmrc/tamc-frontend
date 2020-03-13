@@ -221,7 +221,7 @@ class UpdateRelationshipController @Inject()(
         datesForDivorce = updateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate)
         _ <- updateRelationshipService.saveMarriageAllowanceEndingDates(datesForDivorce)
       } yield {
-       val viewModel = DivorceEndExplanationViewModel(role, divorceDate, datesForDivorce)
+       val viewModel = DivorceEndExplanationViewModel(divorceDate, datesForDivorce)
         Ok(views.html.coc.divorce_end_explanation(viewModel))
       }) recover handleError
   }
@@ -229,10 +229,7 @@ class UpdateRelationshipController @Inject()(
 
   def confirmEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
-      //TODO browser back in place of referer
-
       lazy val emptyEmailView = views.html.coc.email(emailForm)
-
       updateRelationshipService.getEmailAddress map {
         case Some(email) => Ok(views.html.coc.email(emailForm.fill(EmailAddress(email))))
         case None => Ok(emptyEmailView)
@@ -269,7 +266,6 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  //TODO extra content required with master check
   def finishUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       (for {
@@ -280,8 +276,6 @@ class UpdateRelationshipController @Inject()(
       }) recover handleError
   }
 
-
-  //TODO should be provide
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>

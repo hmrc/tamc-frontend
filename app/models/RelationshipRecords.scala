@@ -20,7 +20,6 @@ import errors._
 import play.api.Logger
 import play.api.libs.json.Json
 
-//TODO need to update this domain model once TAMC passes primary record through
 case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Seq[RelationshipRecord],
                                loggedInUserInfo: LoggedInUserInfo) {
 
@@ -42,7 +41,6 @@ case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryReco
 
 }
 
-//TODO this logic should live in TAMC
 object RelationshipRecords {
 
   implicit val formats = Json.format[RelationshipRecords]

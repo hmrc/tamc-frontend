@@ -24,6 +24,8 @@ case class CannotCreateRelationship() extends ServiceError
 
 case class CacheMissingTransferor() extends ServiceError
 
+case class CacheMapNoFound() extends ServiceError
+
 case class CacheRelationshipAlreadyCreated() extends ServiceError
 
 case class CacheTransferorInRelationship() extends ServiceError

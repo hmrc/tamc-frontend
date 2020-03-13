@@ -19,9 +19,8 @@ package services
 import models.{Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
-//TODO TESTS UP IN HERE
-object EndDateDivorceCalculator {
 
+object EndDateDivorceCalculator {
 
   def calculateEndDate(role: Role, divorceDate: LocalDate): LocalDate = {
 
