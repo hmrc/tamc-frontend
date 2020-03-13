@@ -16,8 +16,6 @@
 
 package models
 
-import org.joda.time.LocalDate
-
 
 case class CacheData(
                       transferor: Option[UserRecord],
@@ -28,38 +26,11 @@ case class CacheData(
                       recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
                       dateOfMarriage: Option[DateOfMarriageFormInput] = None)
 
-case class UpdateRelationshipCacheData(loggedInUserInfo: Option[LoggedInUserInfo] = None,
-                                       roleRecord: Option[String] = None,
-                                       activeRelationshipRecord: Option[RelationshipRecord] = None,
-                                       historicRelationships: Option[Seq[RelationshipRecord]] = None,
-                                       notification: Option[NotificationRecord],
-                                       relationshipEndReasonRecord: Option[EndRelationshipReason] = None,
-                                       relationshipUpdated: Option[Boolean] = None)
+case class EligibilityCheckCacheData(loggedInUserInfo: Option[LoggedInUserInfo] = None,
+                                     roleRecord: Option[String] = None,
+                                     activeRelationshipRecord: Option[RelationshipRecord] = None,
+                                     historicRelationships: Option[Seq[RelationshipRecord]] = None,
+                                     notification: Option[NotificationRecord],
+                                     relationshipEndReasonRecord: Option[EndRelationshipReason] = None,
+                                     relationshipUpdated: Option[Boolean] = None)
 
-case class UpdateRelationshipCacheDataTemp(relationshipRecords: RelationshipRecords,
-                                          email: String,
-                                          endMaReason: String,
-                                          marriageEndDate: LocalDate){
-
-}
-
-//TODO should this live in the cache service ???
-object UpdateRelationshipCacheDataTemp {
-
-  def apply(relationshipRecords: Option[RelationshipRecords], email: Option[String], endReason: Option[EndMarriageAllowanceReason],
-            marriageAllowanceEndingDate: Option[MarriageAllowanceEndingDates]): UpdateRelationshipCacheDataTemp = {
-
-    (relationshipRecords, email, endReason, marriageAllowanceEndingDate) match {
-
-      case(Some(relationshipRecords), Some(email), Some(endReason), Some(endDates)) => {
-        //TODO tidy up validation
-        UpdateRelationshipCacheDataTemp(relationshipRecords, email,
-          endReason.desEnumerationValue.getOrElse(throw new RuntimeException(s"No DES enumerated value found for Marriage Allowance EndReason: $endReason")),
-          endDates.marriageAllowanceEndDate)
-      }
-      //TODO throw exception for actual missing value
-      case(_) => ???
-    }
-  }
-
-}

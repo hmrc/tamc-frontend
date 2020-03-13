@@ -16,6 +16,8 @@
 
 package errors
 
+case class DesEnumerationNotFound() extends ServiceError
+
 case class TransferorNotFound() extends ServiceError
 
 case class RecipientNotFound() extends ServiceError
@@ -39,6 +41,8 @@ case class CacheMissingRelationshipRecords() extends ServiceError
 case class CacheRecipientInRelationship() extends ServiceError
 
 case class CacheMissingEmail() extends ServiceError
+
+case class CacheMissingEndReason() extends ServiceError
 
 case class CacheMissingMAEndingDates() extends ServiceError
 

@@ -85,6 +85,7 @@ trait ControllerBaseSpec extends UnitSpec
 
   }
 
+  val dateFormat = "yyyyMMdd"
   val loggedInUser = LoggedInUserInfo(1, "5PM or something like that",None, Some(CitizenName(Some("Test"), Some("User"))))
 
   //active
@@ -97,13 +98,13 @@ trait ControllerBaseSpec extends UnitSpec
     otherParticipantInstanceIdentifier = "",
     otherParticipantUpdateTimestamp = "")
   val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
-  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)
+  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(dateFormat)
   val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
 
   //inactive
-  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
-  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(TimeService.defaultDateFormat)
-  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(TimeService.defaultDateFormat)
+  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(dateFormat)
+  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(dateFormat)
+  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(dateFormat)
 
   val inactiveRecipientRelationshipRecord1: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
   val inactiveRecipientRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))

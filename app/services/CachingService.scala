@@ -50,7 +50,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
 
   def marriageAllowanceConnector: MarriageAllowanceConnector
 
-  //TODO could this return Unit
   def cacheValue[T](key: String, value:T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
     cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException(s"Failed to retrieve $key from cache after saving")))
   }
@@ -150,11 +149,11 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       }
     }
 
-  def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
+  def getCachedDataForEligibilityCheck(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     fetch() map (
       _ map (
         cacheMap =>
-            UpdateRelationshipCacheData(
+            EligibilityCheckCacheData(
             loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD),
             roleRecord = cacheMap.getEntry[String](ApplicationConfig.CACHE_ROLE_RECORD),
             activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD),
@@ -164,25 +163,20 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
 
 
-    //TODO make this the main method
-    def getUpdateRelationshipCachedDataTemp(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheDataTemp] = {
+
+    def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] = {
     fetch() map { optionalCacheMap =>
-
-      //TODO create a type
       optionalCacheMap.fold(throw CacheMapNoFound()){ cacheMap =>
-
           val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
           val marriageAllowanceEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
-          val endReason = cacheMap.getEntry[EndMarriageAllowanceReason](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+          val endReason = cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
           val relationshipRecord = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
-          UpdateRelationshipCacheDataTemp(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDates)
-
+          UpdateRelationshipCacheData(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDates)
       }
     }
   }
 
-  //TODO make this the main method
   def getConfirmationAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswersCacheData] = {
     fetch () map {
       optionalCacheMap =>

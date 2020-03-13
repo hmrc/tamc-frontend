@@ -16,57 +16,12 @@
 
 package models
 
-import play.api.libs.json._
-
-sealed trait EndMarriageAllowanceReason{
-  val desEnumerationValue: Option[String] = None
-}
-
-case object Divorce extends EndMarriageAllowanceReason {
-  override val desEnumerationValue = Some("Divorce/Separation")
-}
-
-case object Cancel extends EndMarriageAllowanceReason {
-  override val desEnumerationValue = Some("Cancelled by Transferor")
-}
-
-case object Earnings extends EndMarriageAllowanceReason
-
-case object Bereavement extends EndMarriageAllowanceReason
-
-sealed trait DesRelationshipEndEnumeration extends EndMarriageAllowanceReason {
-
-}
+import errors.DesEnumerationNotFound
 
 object EndMarriageAllowanceReason {
-
-  implicit val writesEndRelationship = new Writes[EndMarriageAllowanceReason] {
-    override def writes(endRelationship: EndMarriageAllowanceReason) = {
-      endRelationship match {
-        case Divorce => JsString("Divorce")
-        case Cancel => JsString("Cancel")
-        case Earnings => JsString("Earnings")
-        case Bereavement => JsString("Bereavement")
-      }
-    }
-  }
-
-  implicit val readsEndRelationship = new Reads[EndMarriageAllowanceReason] {
-    override def reads(value: JsValue): JsResult[EndMarriageAllowanceReason] = {
-      value match {
-        case JsString("Divorce") => JsSuccess(Divorce)
-        case JsString("Cancel") => JsSuccess(Cancel)
-        case JsString("Earnings") => JsSuccess(Earnings)
-        case JsString("Bereavement") => JsSuccess(Bereavement)
-
-      }
-    }
-  }
-
-  def toCaseObject(endReason: String): EndMarriageAllowanceReason = endReason match {
-    case "Divorce" => Divorce
-    case "Cancel" => Cancel
-    case "Earnings" => Earnings
-    case "Bereavement" => Bereavement
+  def asDesEnumeration(endReason: String): String = endReason match {
+    case "Divorce" => "Divorce/Separation"
+    case "Cancel" => "Cancelled by Transferor"
+    case _ => throw DesEnumerationNotFound()
   }
 }

@@ -23,6 +23,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class RelationshipRecordsTest extends UnitSpec {
 
+  val dateFormat = "yyyyMMdd"
   val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
     Recipient.asString(),
     creationTimestamp = "56787",
@@ -33,13 +34,13 @@ class RelationshipRecordsTest extends UnitSpec {
     otherParticipantUpdateTimestamp = "TimeStamp")
 
   val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
-  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(TimeService.defaultDateFormat)
+  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(dateFormat)
   val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
 
 
-  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
-  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(TimeService.defaultDateFormat)
-  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(TimeService.defaultDateFormat)
+  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(dateFormat)
+  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(dateFormat)
+  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(dateFormat)
 
   val inactiveRecipientRelationshipRecord1: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
   val inactiveRecipientRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))

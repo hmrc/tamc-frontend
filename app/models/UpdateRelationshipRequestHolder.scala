@@ -24,7 +24,7 @@ object UpdateRelationshipRequestHolder {
 
   implicit val formats = Json.format[UpdateRelationshipRequestHolder]
 
-  def apply(cacheData: UpdateRelationshipCacheDataTemp, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
+  def apply(cacheData: UpdateRelationshipCacheData, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
 
     val relationshipInformation = RelationshipInformation(cacheData.relationshipRecords.primaryRecord, cacheData.endMaReason, cacheData.marriageEndDate)
     val recipient = cacheData.relationshipRecords.recipientInformation

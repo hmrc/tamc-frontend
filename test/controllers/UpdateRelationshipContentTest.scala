@@ -35,15 +35,12 @@ import views.helpers.TextGenerator
 
 import scala.concurrent.Future
 
-//TODO remove this class
-//TODO Put into Ticket to break these out in to their own view specs
 class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
-  val mockListRelationshipService: ListRelationshipService = mock[ListRelationshipService]
 
   def controller(updateRelationshipService: UpdateRelationshipService = mockUpdateRelationshipService): UpdateRelationshipController =
     new UpdateRelationshipController(

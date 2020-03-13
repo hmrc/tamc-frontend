@@ -49,6 +49,8 @@ class RelationshipRecordListTest extends UnitSpec {
     }
   }
 
+
+  val dateFormat = "yyyyMMdd"
   private val activeRelationshipRecord =
     RelationshipRecord(
       Recipient.asString(),
@@ -62,9 +64,9 @@ class RelationshipRecordListTest extends UnitSpec {
   private val activeRelationshipRecord2 = activeRelationshipRecord.copy()
 
 
-  private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
-  private val inactiveRelationshipEndDate2 = new DateTime().minusDays(10).toString(TimeService.defaultDateFormat)
-  private val inactiveRelationshipEndDate3 = new DateTime().minusDays(1000).toString(TimeService.defaultDateFormat)
+  private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(dateFormat)
+  private val inactiveRelationshipEndDate2 = new DateTime().minusDays(10).toString(dateFormat)
+  private val inactiveRelationshipEndDate3 = new DateTime().minusDays(1000).toString(dateFormat)
 
   private val inactiveRelationshipRecord1 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
   private val inactiveRelationshipRecord2 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))

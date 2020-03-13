@@ -29,6 +29,7 @@ class RelationshipRecordTest extends UnitSpec {
   lazy val pastYear: Int = currentYear - 1
   lazy val futureDateTime: String = "" + nextYear + "0101"
   lazy val pastDateTime: String = "" + pastYear + "0101"
+  val dateFormat = "yyyyMMdd"
 
   lazy val relationshipActiveRecordWithNoEndDate: RelationshipRecord =
     RelationshipRecord(
@@ -80,7 +81,7 @@ class RelationshipRecordTest extends UnitSpec {
       }
 
       "relationship end date is today" in {
-        val relationshipEndDate = new DateTime().toString(TimeService.defaultDateFormat)
+        val relationshipEndDate = new DateTime().toString(dateFormat)
         val relationshipRecord = relationshipActiveRecordWithNoEndDate.copy(participant1EndDate = Some(relationshipEndDate))
         relationshipRecord.isActive shouldBe false
       }
