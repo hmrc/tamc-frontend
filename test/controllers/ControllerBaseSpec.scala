@@ -86,18 +86,18 @@ trait ControllerBaseSpec extends UnitSpec
   }
 
   val dateFormat = "yyyyMMdd"
-  val loggedInUser = LoggedInUserInfo(1, "5PM or something like that",None, Some(CitizenName(Some("Test"), Some("User"))))
+  val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
 
   //active
   val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
-    Recipient.asString(),
+    Recipient.value,
     creationTimestamp = "56787",
     participant1StartDate = "20130101",
     relationshipEndReason = Some(DesRelationshipEndReason.Default),
     participant1EndDate = None,
     otherParticipantInstanceIdentifier = "",
     otherParticipantUpdateTimestamp = "")
-  val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
+  val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.value)
   val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(dateFormat)
   val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
 

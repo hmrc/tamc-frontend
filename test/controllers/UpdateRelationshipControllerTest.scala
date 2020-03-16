@@ -703,7 +703,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
   "confirmUpdate" should {
     "display the confirmUpdate page" in {
 
-      val fullName = "testName"
+      val loggedInUser = LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("first"), Some("surname"))))
       val divorceDate = LocalDate.now().minusDays(1)
       val emailAddress = "email@email.com"
       val maEndingDate = LocalDate.now().plusDays(1)
@@ -711,7 +711,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
       val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
 
-      val confirmUpdateAnswers = ConfirmationUpdateAnswers(fullName, Some(divorceDate), emailAddress, maEndingDates)
+      val confirmUpdateAnswers = ConfirmationUpdateAnswers(loggedInUser, Some(divorceDate), emailAddress, maEndingDates)
 
       when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
           .thenReturn(Future.successful(confirmUpdateAnswers))

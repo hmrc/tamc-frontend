@@ -168,11 +168,11 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     fetch() map { optionalCacheMap =>
       optionalCacheMap.fold(throw CacheMapNoFound()){ cacheMap =>
           val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
-          val marriageAllowanceEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
+          val marriageAllowanceEndingDate = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES).map(_.marriageAllowanceEndDate)
           val endReason = cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
           val relationshipRecord = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
-          UpdateRelationshipCacheData(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDates)
+          UpdateRelationshipCacheData(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDate)
       }
     }
   }
@@ -183,11 +183,11 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
         optionalCacheMap.fold(throw CacheMapNoFound()) {
           cacheMap =>
             val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
-            val marriageAllowanceEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
+            val marriageAllowanceEndingDate = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
             val divorceDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
             val relationshipRecords = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
-            ConfirmationUpdateAnswersCacheData(relationshipRecords, divorceDate, emailAddress, marriageAllowanceEndingDates)
+            ConfirmationUpdateAnswersCacheData(relationshipRecords, divorceDate, emailAddress, marriageAllowanceEndingDate)
       }
     }
   }

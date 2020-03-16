@@ -33,7 +33,7 @@ class RelationshipRecordTest extends UnitSpec {
 
   lazy val relationshipActiveRecordWithNoEndDate: RelationshipRecord =
     RelationshipRecord(
-      Recipient.asString(),
+      Recipient.value,
       "56787",
       "20130101",
       Some(DesRelationshipEndReason.Default),
@@ -43,7 +43,7 @@ class RelationshipRecordTest extends UnitSpec {
 
   lazy val relationshipActiveRecordWithFutureValidDate: RelationshipRecord =
     RelationshipRecord(
-      Recipient.asString(),
+      Recipient.value,
       "56787",
       "20130101",
       Some(DesRelationshipEndReason.Default),
@@ -53,7 +53,7 @@ class RelationshipRecordTest extends UnitSpec {
 
   lazy val relationshipActiveRecordWithPastValidDate: RelationshipRecord =
     RelationshipRecord(
-      Recipient.asString(),
+      Recipient.value,
       "56787",
       "20130101",
       Some(DesRelationshipEndReason.Default),

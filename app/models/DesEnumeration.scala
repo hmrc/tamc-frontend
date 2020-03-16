@@ -16,19 +16,12 @@
 
 package models
 
-sealed trait RecordStatus {
-  def asString(): String
-}
+import errors.DesEnumerationNotFound
 
-case object Active extends RecordStatus {
-  def asString(): String = {
-    "Active"
+object DesEnumeration {
+  def apply(endReason: String): String = endReason match {
+    case "Divorce" => "Divorce/Separation"
+    case "Cancel" => "Cancelled by Transferor"
+    case _ => throw DesEnumerationNotFound()
   }
-}
-
-case object ActiveHistoric extends RecordStatus {
-  def asString(): String = {
-    "ActiveHistoric"
-  }
-
 }

@@ -17,46 +17,17 @@
 package models
 
 import errors.{CitizenNotFound, MultipleActiveRecordError, NoPrimaryRecordError}
-import org.joda.time.DateTime
-import services.TimeService
+import test_utils.data.RelationshipRecordData._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class RelationshipRecordsTest extends UnitSpec {
-
-  val dateFormat = "yyyyMMdd"
-  val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
-    Recipient.asString(),
-    creationTimestamp = "56787",
-    participant1StartDate = "20130101",
-    relationshipEndReason = Some(DesRelationshipEndReason.Default),
-    participant1EndDate = None,
-    otherParticipantInstanceIdentifier = "1",
-    otherParticipantUpdateTimestamp = "TimeStamp")
-
-  val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.asString())
-  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(dateFormat)
-  val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
-
-
-  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(dateFormat)
-  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(dateFormat)
-  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(dateFormat)
-
-  val inactiveRecipientRelationshipRecord1: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
-  val inactiveRecipientRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
-  val inactiveRecipientRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
-
-  val inactiveTransferorRelationshipRecord1: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
-  val inactiveTransferorRelationshipRecord2: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
-  val inactiveTransferorRelationshipRecord3: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
-
 
   val loggedInUserInfo = LoggedInUserInfo(1, "TimeStamp", name = Some(CitizenName(Some("Test"), Some("User"))))
   val nonPrimaryRelationships = Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord1)
   val primaryRelationship = activeRecipientRelationshipRecord
 
   "hasMarriageAllowanceBeenCancelled" should {
-    "return true if endDate is present in primary record" in {
+    "return true if endDate is present in primary record (active record)" in {
       val relationship = RelationshipRecords(primaryRelationship.copy(participant1EndDate = Some("20200101")),
         nonPrimaryRelationships,
         loggedInUserInfo)

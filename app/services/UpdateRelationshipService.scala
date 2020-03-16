@@ -135,8 +135,9 @@ trait UpdateRelationshipService {
 
     for {
       updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
-      updateRelationshipData = UpdateRelationshipRequestHolder(updateRelationshipCacheData, LanguageUtils.isWelsh(messages))
-      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipData)
+      updateRelationshipData = UpdateRelationshipData(updateRelationshipCacheData)
+      updateRelationshipRequestHolder = UpdateRelationshipRequestHolder(updateRelationshipData, LanguageUtils.isWelsh(messages))
+      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipRequestHolder)
       _ <- auditUpdateRelationship(postUpdateData)
     } yield Future.successful(Unit)
   }

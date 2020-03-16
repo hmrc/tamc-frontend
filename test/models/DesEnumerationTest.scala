@@ -19,23 +19,23 @@ package models
 import errors.DesEnumerationNotFound
 import uk.gov.hmrc.play.test.UnitSpec
 
-class EndMarriageAllowanceReasonTest extends UnitSpec {
+class DesEnumerationTest extends UnitSpec {
 
-  "EndMarriageAllowanceReason" should {
+  "DesEnumeration" should {
 
     "return a DESEnumeration value for a given marriage allowance endReason" when {
 
       val endReasonsWithEnumerations = Seq(("Divorce", "Divorce/Separation"), ("Cancel", "Cancelled by Transferor"))
 
       endReasonsWithEnumerations foreach { reasonAndEnumeration =>
-        s"the reason is $reasonAndEnumeration" in {
-          EndMarriageAllowanceReason.asDesEnumeration(reasonAndEnumeration._1) shouldBe reasonAndEnumeration._2
+        s"the reason is ${reasonAndEnumeration._1}" in {
+          DesEnumeration(reasonAndEnumeration._1) shouldBe reasonAndEnumeration._2
         }
       }
     }
 
     "return an exception if the value to convert is unsupported" in {
-      a[DesEnumerationNotFound] shouldBe thrownBy(EndMarriageAllowanceReason.asDesEnumeration("Earnings"))
+      a[DesEnumerationNotFound] shouldBe thrownBy(DesEnumeration("Earnings"))
     }
   }
 }

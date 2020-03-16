@@ -28,7 +28,7 @@ object ConfirmUpdateViewModel  {
 
   def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmUpdateViewModel = {
 
-    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.fullName, None, 1)
+    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
     val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
     val endDate = TextGenerator().ukDateTransformer(model.maEndingDates.marriageAllowanceEndDate)

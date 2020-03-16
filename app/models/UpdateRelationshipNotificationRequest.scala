@@ -28,7 +28,7 @@ object UpdateRelationshipNotificationRequest {
 
   def apply(email: String, relationshipRecords: RelationshipRecords, isWelsh: Boolean): UpdateRelationshipNotificationRequest = {
 
-    val role = relationshipRecords.primaryRecord.role.asString()
+    val role = relationshipRecords.primaryRecord.role.value
     val name = relationshipRecords.loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
     val emailAddress = EmailAddress(email)
 

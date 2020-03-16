@@ -44,7 +44,7 @@ class TransferServiceTest extends ControllerBaseSpec {
 
   val nino = Nino(Ninos.nino1)
   val recipientData = RegistrationFormInput("", "", Gender("F"), nino, LocalDate.now())
-  val relationshipRecord = RelationshipRecord("", "", "19960327", None, None, "", "")
+  val relationshipRecord = RelationshipRecord("Recipient", "", "19960327", None, None, "", "")
 
   "isRecipientEligible" should {
     "return true" when {
