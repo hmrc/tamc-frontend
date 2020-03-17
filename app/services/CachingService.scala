@@ -70,10 +70,11 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     cache[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS, details) map
       (_.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS).get)
 
-  def saveDateOfMarriage(details: DateOfMarriageFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DateOfMarriageFormInput] =
+  def saveDateOfMarriage(details: DateOfMarriageFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DateOfMarriageFormInput] = {
+    println("\n\n\nbefore caching\n\n\n")
     cache[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE, details) map
       (_.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE).get)
-
+  }
   def saveNotificationRecord(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     cache[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD, notificationRecord) map
       (_.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD).get)
@@ -124,7 +125,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
           CacheData(
             transferor = cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD),
             recipient = cacheMap.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD),
-            notification = Some(NotificationRecord(EmailAddress(cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).getOrElse("")))),
+            notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
             relationshipCreated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE),
             selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
@@ -141,7 +142,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
           CacheData(
             transferor = cacheMap.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD),
             recipient = cacheMap.getEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD),
-            notification = Some(NotificationRecord(EmailAddress(cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).getOrElse("")))),
+            notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
             relationshipCreated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_CREATE),
             selectedYears = cacheMap.getEntry[List[Int]](ApplicationConfig.CACHE_SELECTED_YEARS),
             recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS),
