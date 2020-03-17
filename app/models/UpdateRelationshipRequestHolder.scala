@@ -26,12 +26,15 @@ object UpdateRelationshipRequestHolder {
 
   def apply(cacheData: UpdateRelationshipData, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
 
+    val relationshipRecords = cacheData.relationshipRecords
+    val primaryRecord = relationshipRecords.primaryRecord
     val desEnumeration = DesEnumeration(cacheData.endMaReason)
-    val relationshipInformation = RelationshipInformation(cacheData.relationshipRecords.primaryRecord, desEnumeration, cacheData.marriageEndDate)
-    val recipient = cacheData.relationshipRecords.recipientInformation
-    val transferor = cacheData.relationshipRecords.transferorInformation
+    val relationshipInformation = RelationshipInformation(primaryRecord, desEnumeration, cacheData.marriageEndDate)
+    val recipient = relationshipRecords.recipientInformation
+    val transferor = relationshipRecords.transferorInformation
     val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInformation)
-    val emailNotificationData = UpdateRelationshipNotificationRequest(cacheData.email, cacheData.relationshipRecords, isWelsh)
+    val emailNotificationData = UpdateRelationshipNotificationRequest(cacheData.email, primaryRecord.role,
+      relationshipRecords.loggedInUserInfo, isWelsh)
 
     UpdateRelationshipRequestHolder(updateRelationshipRequest, emailNotificationData)
 
