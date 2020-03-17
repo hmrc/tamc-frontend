@@ -26,16 +26,16 @@ case class SummaryRow(title: String, userAnswer: String, changeLink: Option[Stri
 
 object ConfirmUpdateViewModel  {
 
-  def apply(model: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmUpdateViewModel = {
+  def apply(updateAnswers: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmUpdateViewModel = {
 
-    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), model.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
-    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), model.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
+    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), updateAnswers.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
+    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), updateAnswers.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
-    val endDate = TextGenerator().ukDateTransformer(model.maEndingDates.marriageAllowanceEndDate)
-    val effectiveDate = TextGenerator().ukDateTransformer(model.maEndingDates.personalAllowanceEffectiveDate)
+    val endDate = TextGenerator().ukDateTransformer(updateAnswers.maEndingDates.marriageAllowanceEndDate)
+    val effectiveDate = TextGenerator().ukDateTransformer(updateAnswers.maEndingDates.personalAllowanceEffectiveDate)
 
     def createRows(defaultRows: List[SummaryRow])(implicit messages: Messages): List[SummaryRow] = {
-      model.divorceDate.fold(defaultRows){ divorceDate =>
+      updateAnswers.divorceDate.fold(defaultRows){ divorceDate =>
         val formattedDate = TextGenerator().ukDateTransformer(divorceDate)
         SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2) :: defaultRows
       }

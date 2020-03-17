@@ -44,10 +44,8 @@ class ConfirmationUpdateAnswersTest extends UnitSpec {
       val cacheData = createCacheData()
       val confirmUpdateAnswers = ConfirmationUpdateAnswers(cacheData)
 
-      confirmUpdateAnswers.loggedInUserInfo shouldBe loggedInUser
-      confirmUpdateAnswers.divorceDate shouldBe dateOfDivorce
-      confirmUpdateAnswers.email shouldBe email
-      confirmUpdateAnswers.maEndingDates shouldBe marriageAllowanceEndingDates
+      confirmUpdateAnswers shouldBe ConfirmationUpdateAnswers(loggedInUser, dateOfDivorce, email, marriageAllowanceEndingDates)
+
     }
 
     "return an error" when {
