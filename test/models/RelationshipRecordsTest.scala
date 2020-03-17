@@ -24,11 +24,12 @@ class RelationshipRecordsTest extends UnitSpec {
 
   val loggedInUserInfo = LoggedInUserInfo(1, "TimeStamp", name = Some(CitizenName(Some("Test"), Some("User"))))
   val nonPrimaryRelationships = Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord1)
-  val primaryRelationship = activeRecipientRelationshipRecord
+  val primaryRecipientRelationship = activeRecipientRelationshipRecord
+  val primaryTransferorRelationship = activeTransferorRelationshipRecord2
 
   "hasMarriageAllowanceBeenCancelled" should {
     "return true if endDate is present in primary record (active record)" in {
-      val relationship = RelationshipRecords(primaryRelationship.copy(participant1EndDate = Some("20200101")),
+      val relationship = RelationshipRecords(primaryRecipientRelationship.copy(participant1EndDate = Some("20200101")),
         nonPrimaryRelationships,
         loggedInUserInfo)
 
@@ -36,7 +37,7 @@ class RelationshipRecordsTest extends UnitSpec {
     }
 
     "return false if endDate is not present in primary record" in {
-      val relationship = RelationshipRecords(primaryRelationship,
+      val relationship = RelationshipRecords(primaryRecipientRelationship,
         nonPrimaryRelationships,
         loggedInUserInfo)
 
@@ -46,11 +47,11 @@ class RelationshipRecordsTest extends UnitSpec {
 
   "recipientInformation" should {
     "return Recipient Information from primaryRecord if role is Transferor" in {
-      val expectedInstanceIdentifier = activeTransferorRelationshipRecord3.otherParticipantInstanceIdentifier
-      val expectedTimestamp = activeTransferorRelationshipRecord3.otherParticipantUpdateTimestamp
+      val expectedInstanceIdentifier = primaryTransferorRelationship.otherParticipantInstanceIdentifier
+      val expectedTimestamp = primaryTransferorRelationship.otherParticipantUpdateTimestamp
       val expectedRecipientInformation = RecipientInformation(expectedInstanceIdentifier, expectedTimestamp)
 
-      val relationship = RelationshipRecords(primaryRelationship,
+      val relationship = RelationshipRecords(primaryTransferorRelationship,
         nonPrimaryRelationships,
         loggedInUserInfo)
 
@@ -62,7 +63,7 @@ class RelationshipRecordsTest extends UnitSpec {
       val expectedTimestamp = loggedInUserInfo.timestamp
       val expectedRecipientInformation = RecipientInformation(expectedInstanceIdentifier, expectedTimestamp)
 
-      val relationship = RelationshipRecords(primaryRelationship,
+      val relationship = RelationshipRecords(primaryRecipientRelationship,
         nonPrimaryRelationships,
         loggedInUserInfo)
 
@@ -75,7 +76,7 @@ class RelationshipRecordsTest extends UnitSpec {
       val expectedTimestamp = activeRecipientRelationshipRecord.otherParticipantUpdateTimestamp
       val expectedTransferorInformation = TransferorInformation(expectedTimestamp)
 
-      val relationship = RelationshipRecords(primaryRelationship,
+      val relationship = RelationshipRecords(primaryRecipientRelationship,
         nonPrimaryRelationships,
         loggedInUserInfo)
 
@@ -85,7 +86,7 @@ class RelationshipRecordsTest extends UnitSpec {
     "return Transferor Information from loggedInUser if role is Transferor" in {
       val expectedTimestamp = loggedInUserInfo.timestamp
       val expectedTransferorInformation = TransferorInformation(expectedTimestamp)
-      val relationship = RelationshipRecords(primaryRelationship,
+      val relationship = RelationshipRecords(primaryTransferorRelationship,
         nonPrimaryRelationships,
         loggedInUserInfo)
 
@@ -101,7 +102,7 @@ class RelationshipRecordsTest extends UnitSpec {
 
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship shouldBe RelationshipRecords(primaryRelationship, nonPrimaryRelationships, loggedInUserInfo)
+      relationship shouldBe RelationshipRecords(primaryRecipientRelationship, nonPrimaryRelationships, loggedInUserInfo)
     }
 
     "populate RelationshipRecord when non-primary records aren't present" in {
@@ -111,7 +112,7 @@ class RelationshipRecordsTest extends UnitSpec {
 
       val relationship = RelationshipRecords(relationshipRecordList)
 
-      relationship shouldBe RelationshipRecords(primaryRelationship, nonPrimaryRelationship, loggedInUserInfo)
+      relationship shouldBe RelationshipRecords(primaryRecipientRelationship, nonPrimaryRelationship, loggedInUserInfo)
     }
 
     "return a NoPrimaryError when no primary Record is found" in {

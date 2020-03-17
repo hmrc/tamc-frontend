@@ -24,12 +24,12 @@ object RelationshipRecordData {
   val dateFormat = "yyyyMMdd"
   val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
     Recipient.value,
-    creationTimestamp = "56787",
-    participant1StartDate = "20130101",
+    creationTimestamp = "20150531235901",
+    participant1StartDate = "20150531235901",
     relationshipEndReason = Some(DesRelationshipEndReason.Default),
     participant1EndDate = None,
-    otherParticipantInstanceIdentifier = "1",
-    otherParticipantUpdateTimestamp = "TimeStamp")
+    otherParticipantInstanceIdentifier = "123456789123",
+    otherParticipantUpdateTimestamp = "20150531235901")
 
   val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.value)
   val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(dateFormat)
