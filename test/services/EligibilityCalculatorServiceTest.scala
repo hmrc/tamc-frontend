@@ -24,7 +24,7 @@ import controllers.ControllerBaseSpec
 import models._
 import uk.gov.hmrc.time
 
-class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
+class EligibilityCalculatorServiceTest extends ServicesBaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
 

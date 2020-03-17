@@ -23,7 +23,7 @@ import uk.gov.hmrc.time.TaxYear
 
 import scala.collection.immutable
 
-class TimeServiceTest extends ControllerBaseSpec {
+class TimeServiceTest extends ServicesBaseTest {
 
   private val currentYear = service.getCurrentDate.getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList

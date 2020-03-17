@@ -108,23 +108,21 @@ class TransferControllerTest extends ControllerBaseSpec {
 
   "dateOfMarriageWithCy" should {
     "redirect to dateOfMarriage, with a welsh language setting" in {
-      val result = controller().dateOfMarriageWithCy()(request)
+      val result = await(controller().dateOfMarriageWithCy()(request))
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      val resolved = awaitResult(result)
-      resolved.header.headers.keys should contain("Set-Cookie")
-      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
+      result.header.headers.keys should contain("Set-Cookie")
+      result.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
     }
   }
 
   "dateOfMarriageWithEn" should {
     "redirect to dateOfMarriage, with an english language setting" in {
-      val result = controller().dateOfMarriageWithEn()(request)
+      val result = await(controller().dateOfMarriageWithEn()(request))
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      val resolved = awaitResult(result)
-      resolved.header.headers.keys should contain("Set-Cookie")
-      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=en")
+      result.header.headers.keys should contain("Set-Cookie")
+      result.header.headers("Set-Cookie") should include("PLAY_LANG=en")
     }
   }
 

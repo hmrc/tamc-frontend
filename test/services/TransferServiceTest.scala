@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 
 import scala.concurrent.Future
 
-class TransferServiceTest extends ControllerBaseSpec {
+class TransferServiceTest extends ServicesBaseTest {
 
   val service: TransferService = new TransferService {
     override val cachingService: CachingService = mock[CachingService]

@@ -33,12 +33,13 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
 import viewModels.FinishedUpdateViewModel
-
+import test_utils.data.RelationshipRecordData._
 import scala.concurrent.Future
 
-class UpdateRelationshipServiceTest extends ControllerBaseSpec {
+class UpdateRelationshipServiceTest extends ServicesBaseTest {
 
   val nino: Nino = new Generator().nextNino
+  val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
   val recordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord), Some(loggedInUser))
   val date = LocalDate.now()
   val OK = 200

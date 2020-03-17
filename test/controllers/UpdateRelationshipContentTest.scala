@@ -41,6 +41,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+  val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
 
   def controller(updateRelationshipService: UpdateRelationshipService = mockUpdateRelationshipService): UpdateRelationshipController =
     new UpdateRelationshipController(
@@ -50,6 +51,19 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
+  def getContactHMRCText(testCase: String): String = {
+    testCase match  {
+      case "changeOfIncome" =>
+        (messagesApi("general.helpline.enquiries.link.pretext") + " "
+          + messagesApi("general.helpline.enquiries.link") + " "
+          + messagesApi("pages.changeOfIncome.enquiries.link.paragraph"))
+      case "bereavement" =>
+        (messagesApi("general.helpline.enquiries.link.pretext") + " "
+          + messagesApi("general.helpline.enquiries.link") + " "
+          + messagesApi("pages.bereavement.enquiries.link.paragraph"))
+      case _ => throw new RuntimeException("asd")
+    }
+  }
 
   "Update relationship cause - get view" should {
     "show all appropriate radio buttons" in {
