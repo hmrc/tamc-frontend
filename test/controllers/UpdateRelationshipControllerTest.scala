@@ -808,9 +808,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
     "return internal server error" when {
       val errors = List(
-        //TODO are these required
-        //(new CacheMissingUpdateRecord, "technical.issue.heading"),
-        //(new CacheUpdateRequestNotSent, "technical.issue.heading"),
+        (new CacheMissingUpdateRecord, "technical.issue.heading"),
+        (new CacheUpdateRequestNotSent, "technical.issue.heading"),
         (new CannotUpdateRelationship, "technical.issue.heading"),
         (new CitizenNotFound, "technical.cannot-find-details.para1"),
         (new BadFetchRequest, "technical.technical-error.para1"),
@@ -842,13 +841,13 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
         }
       }
     }
-//TODO is this still required
-//    "redirect" when {
-//      "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
-//        val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated))
-//        status(result) shouldBe SEE_OTHER
-//        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
-//      }
-//    }
+
+    "redirect" when {
+      "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
+        val result = Future.successful(controller().handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated))
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
+      }
+    }
   }
 }
