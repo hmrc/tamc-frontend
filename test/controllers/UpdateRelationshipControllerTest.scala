@@ -785,7 +785,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
         when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
-          .thenReturn(failedFuture)
+          .thenReturn(Future.failed(CacheMissingEmail()))
 
         val result = controller().submitConfirmUpdate(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
