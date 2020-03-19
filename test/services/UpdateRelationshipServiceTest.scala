@@ -18,7 +18,6 @@ package services
 
 
 import connectors.MarriageAllowanceConnector
-import controllers.ControllerBaseSpec
 import errors.ErrorResponseStatus._
 import errors._
 import forms.coc.CheckClaimOrCancelDecisionForm
@@ -27,13 +26,13 @@ import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
+import test_utils.data.RelationshipRecordData._
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
-import viewModels.FinishedUpdateViewModel
-import test_utils.data.RelationshipRecordData._
+
 import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends ServicesBaseTest {
@@ -182,41 +181,6 @@ class UpdateRelationshipServiceTest extends ServicesBaseTest {
       val result = await(service.getEmailAddress)
 
       result shouldBe None
-    }
-  }
-
-  "getInformationForConfirmation" should {
-    "return String when value returned from cache" in {
-      when(service.cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
-        .thenReturn(Future.successful(Some("email@email.com")))
-
-      when(service.cachingService.getRelationshipRecords(any(), any()))
-        .thenReturn(Future.successful(Some(RelationshipRecords(recordList))))
-
-      val result = await(service.getInformationForConfirmation)
-
-      result shouldBe FinishedUpdateViewModel(EmailAddress("email@email.com"), Recipient)
-    }
-
-    "return RuntimeException when no email returned from cache" in {
-      when(service.cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
-        .thenReturn(Future.successful(None))
-
-      val result = intercept[RuntimeException](await(service.getInformationForConfirmation))
-
-      result.getLocalizedMessage shouldBe "Email not found in cache"
-    }
-
-    "return CacheMissingRelationshipRecords when no RelationshipRecords returned from cache" in {
-      when(service.cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
-        .thenReturn(Future.successful(Some("email@email.com")))
-
-      when(service.cachingService.getRelationshipRecords(any(), any()))
-        .thenReturn(Future.successful(None))
-
-      val result = intercept[CacheMissingRelationshipRecords](await(service.getInformationForConfirmation))
-
-      result shouldBe CacheMissingRelationshipRecords()
     }
   }
 

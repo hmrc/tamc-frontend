@@ -17,9 +17,8 @@
 @import play.twirl.api.Html
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
-@import uk.gov.hmrc.urls.Link
 
-@(viewModel: viewModels.FinishedUpdateViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
+@(userEmailAddress: String)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
@@ -31,8 +30,8 @@ mainConfig = views.helpers.MainConfig(maybeMainDataAttributes = Some(Html("data-
       <h1 class="heading-xlarge">@messages("pages.coc.finish.header")</h1>
   </div>
 
-  <p>@Html(messages("pages.coc.finish.acknowledgement", viewModel.email))</p>
+  <p>@messages("pages.coc.finish.acknowledgement", userEmailAddress)</p>
   <p>@messages("pages.coc.finish.junk")</p>
+  <p>@messages("pages.coc.finish.para1")</p>
 
-  @viewModel.paragraph
 }

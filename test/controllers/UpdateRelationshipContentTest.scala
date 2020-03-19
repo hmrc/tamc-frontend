@@ -30,7 +30,6 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time.TaxYear
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import viewModels.FinishedUpdateViewModel
 import views.helpers.TextGenerator
 
 import scala.concurrent.Future
@@ -508,50 +507,17 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     }
   }
 
-  "Finish Update page" when {
-    "role is Transferor" in {
-      when(mockUpdateRelationshipService.getInformationForConfirmation(any(), any()))
-        .thenReturn(Future.successful(FinishedUpdateViewModel(EmailAddress("email@email.com"), Transferor)))
+  "Finish Update page" should {
+
+    "display the corrrect content" in {
+      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
+        .thenReturn(Future.successful("email@email.com"))
 
       when(mockUpdateRelationshipService.removeCache(any(), any()))
         .thenReturn()
 
       val expectedHeading = messagesApi("pages.coc.finish.header")
-      val expectedParas = Seq(
-        messagesApi("pages.coc.finish.acknowledgement", "email@email.com"),
-        messagesApi("pages.coc.finish.junk"),
-        messagesApi(s"${messagesApi("pages.coc.finish.para1")} " +
-          s"${messagesApi("general.helpline.enquiries.link.pretext")} " +
-          s"${messagesApi("pages.coc.finish.check.status.link")} " +
-          s"${messagesApi("pages.coc.finish.para2")}"
-        )
-      ).toArray
 
-      val expectedLinkText = messagesApi("pages.coc.finish.check.status.link")
-      val expectedLinkHref = controllers.routes.UpdateRelationshipController.history().url
-
-      val result = controller().finishUpdate(request)
-
-      val view  = Jsoup.parse(contentAsString(result))
-
-      val heading = view.getElementsByTag("h1").text
-      val paras = view.getElementsByTag("p").eachText.toArray
-      val link = view.getElementsByTag("a")
-
-      heading shouldBe expectedHeading
-      paras shouldBe expectedParas
-      link.text contains expectedLinkText
-      link.attr("href") shouldBe expectedLinkHref
-    }
-
-    "role is Recipient" in {
-      when(mockUpdateRelationshipService.getInformationForConfirmation(any(), any()))
-        .thenReturn(Future.successful(FinishedUpdateViewModel(EmailAddress("email@email.com"), Recipient)))
-
-      when(mockUpdateRelationshipService.removeCache(any(), any()))
-        .thenReturn()
-
-      val expectedHeading = messagesApi("pages.coc.finish.header")
       val expectedParas = Seq(
         messagesApi("pages.coc.finish.acknowledgement", "email@email.com"),
         messagesApi("pages.coc.finish.junk"),
@@ -560,13 +526,14 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
       val result = controller().finishUpdate(request)
 
-      val view  = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result))
 
       val heading = view.getElementsByTag("h1").text
       val paras = view.getElementsByTag("p").eachText.toArray
 
       heading shouldBe expectedHeading
       paras shouldBe expectedParas
+
     }
   }
 }

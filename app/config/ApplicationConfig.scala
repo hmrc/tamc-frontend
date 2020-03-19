@@ -54,7 +54,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
   override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
-  lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
+  override lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
   lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
@@ -132,6 +132,10 @@ trait ApplicationConfig {
 
   val frontendTemplatePath: String
 
+  val marriageAllowanceUrl: String
+  val taiFrontendUrl: String
+  val taxFreeAllowanceUrl: String
+
   def ivNotAuthorisedUrl: String
 
   private def createUrl(action: String) = s"${loginUrl}/${action}?origin=ma&confidenceLevel=100&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
@@ -139,9 +143,6 @@ trait ApplicationConfig {
   def ivLoginUrl = createUrl(action = "registration")
 
   def ivUpliftUrl = createUrl(action = "uplift")
-
-  val marriageAllowanceUrl: String
-  val taiFrontendUrl: String
 
   val TAMC_JOURNEY = "TAMC_JOURNEY"
   val TAMC_JOURNEY_PTA = "PTA"

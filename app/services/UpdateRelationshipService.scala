@@ -23,18 +23,14 @@ import errors.{RecipientNotFound, _}
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import services.TimeService._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.time
 import utils.LanguageUtils
-import viewModels.FinishedUpdateViewModel
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -94,15 +90,8 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
   }
 
-  private def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+  def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw new RuntimeException("Email not found in cache")))
-  }
-
-  def getInformationForConfirmation(implicit messages: Messages, hc: HeaderCarrier): Future[FinishedUpdateViewModel] = {
-    for {
-      role <- getRelationshipRecords.map(_.primaryRecord.role)
-      email <- getEmailAddressForConfirmation.map(EmailAddress(_))
-    } yield FinishedUpdateViewModel(EmailAddress(email), role)
   }
 
   def saveEmailAddress(emailAddress: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
