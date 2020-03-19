@@ -72,7 +72,6 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       (_.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS).get)
 
   def saveDateOfMarriage(details: DateOfMarriageFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DateOfMarriageFormInput] = {
-    println("\n\n\nbefore caching\n\n\n")
     cache[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE, details) map
       (_.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE).get)
   }
