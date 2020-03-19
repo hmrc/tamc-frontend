@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package models
+package services
 
-sealed trait RecordStatus {
-  def asString(): String
-}
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.i18n.{I18nSupport, MessagesApi}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.test.UnitSpec
 
-case object Active extends RecordStatus {
-  def asString(): String = {
-    "Active"
-  }
-}
+import scala.concurrent.ExecutionContext
 
-case object ActiveHistoric extends RecordStatus {
-  def asString(): String = {
-    "ActiveHistoric"
-  }
+trait ServicesBaseTest extends UnitSpec
+  with I18nSupport
+  with GuiceOneAppPerSuite
+  with MockitoSugar {
 
+  implicit val ec = ExecutionContext.Implicits.global
+
+  implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+
+  implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 }

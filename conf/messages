@@ -1,3 +1,4 @@
+
 #********************************************************************************
 # Forms and Unit tests validation messages
 #********************************************************************************
@@ -484,14 +485,11 @@ pages.history.active.transferor=You are currently helping your partner benefit f
 pages.history.cancellation=You can cancel Marriage Allowance online
 pages.history.cancellation1=If you have divorced or ended your civil partnership, you can cancel Marriage Allowance online. If you are currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
 pages.history.cancellation2=You can also cancel to stop payments if you are still married or in a civil partnership, but no longer want to benefit from Marriage Allowance.
-
 pages.history.historic.ended=Your Marriage Allowance claim has ended.
 pages.history.historic.recipient=You will keep the tax-free allowances transferred to you until {0}.
 pages.history.historic.transferor=You will keep the tax-free allowances transferred by you until {0}.
-
 pages.history.active.button=Check or update your Marriage Allowance
 pages.history.historic.button=Check your Marriage Allowance claims
-
 pages.history.active.recipient.paragraph1=Your partner is currently using Marriage Allowance to transfer £{0} of their Personal Allowance to you.
 pages.history.active.recipient.paragraph2=This can reduce the tax you pay by up to £{0} a year.
 pages.history.cancel=You can cancel Marriage Allowance if you:
@@ -614,7 +612,6 @@ pages.eligibleyear.currentyear=You can apply for the current tax year
 pages.eligibleyear.toldus=You have told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
 pages.eligibleyear.thisyear1=This current tax year
 pages.eligibleyear.thisyear2={0} onwards
-
 pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
 pages.eligibleyear.li2=we will adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
 pages.eligibleyear.li3=it will automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are
@@ -657,21 +654,34 @@ pages.confirm.date.of.marriage=Date of marriage or civil partnership
 pages.coc.finish.header=Marriage Allowance cancelled
 pages.coc.finish.acknowledgement=An email acknowledging your cancellation will be sent to you at {0} from noreply@tax.service.gov.uk within 24 hours.
 pages.coc.finish.junk=If it does not appear in your inbox, please check your spam or junk folder.
-pages.coc.finish.whn=What happens next
 pages.coc.finish.para1=There is no need to contact us.
+
+pages.coc.finish.whn=What happens next
+
+
+
 pages.coc.finish.check.status.link=check the status
+
 pages.coc.finish.para2=of your Marriage Allowance online.
 
 date.fields.day=Day
+
 date.fields.month=Month
+
 date.fields.year=Year
 
 change.other.caption=Other changes that affect Marriage Allowance
+
 change.other.sub.caption1=Change of income
+
 change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £{3} if you live in Scotland).
+
 change.other.income.link=To let us know about a change in income, contact HMRC
+
 change.other.sub.caption2=Bereavement
+
 change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
+
 change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 
 #********************************************************************************

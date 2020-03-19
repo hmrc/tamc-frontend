@@ -19,19 +19,19 @@ package models
 import errors.{CacheMissingEmail, CacheMissingMAEndingDates, CacheMissingRelationshipRecords}
 import org.joda.time.LocalDate
 
-case class ConfirmationUpdateAnswers(fullName: String, divorceDate: Option[LocalDate], email: String, maEndingDates: MarriageAllowanceEndingDates)
+case class ConfirmationUpdateAnswers(loggedInUserInfo: LoggedInUserInfo, divorceDate: Option[LocalDate], email: String, maEndingDates: MarriageAllowanceEndingDates)
 
 object ConfirmationUpdateAnswers {
 
   def apply(cacheData: ConfirmationUpdateAnswersCacheData): ConfirmationUpdateAnswers = {
 
     val relationshipRecords = cacheData.relationshipRecords.getOrElse(throw CacheMissingRelationshipRecords())
-    val name = relationshipRecords.loggedInUserInfo.name.flatMap(_.fullName).getOrElse("")
+    val loggedInUserInfo = relationshipRecords.loggedInUserInfo
     val divorceDate = cacheData.divorceDate
     val emailAddress = cacheData.email.getOrElse(throw CacheMissingEmail())
     val maEndingDates = cacheData.maEndingDates.getOrElse(throw CacheMissingMAEndingDates())
 
-    ConfirmationUpdateAnswers(name, divorceDate, emailAddress, maEndingDates)
+    ConfirmationUpdateAnswers(loggedInUserInfo, divorceDate, emailAddress, maEndingDates)
   }
 }
 

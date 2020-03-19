@@ -59,17 +59,13 @@ trait UpdateRelationshipService {
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
-    //TODO we can probably remove this as regardless of what this is returning we return whatever we pass in
     def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
       cachingService.unlockCreateRelationship().map { _ => trrecord }
 
-    // TODO is this really required
     val transferorRec = UserRecord(Some(relationshipRecords.loggedInUserInfo))
     val checkCreateActionLockFuture = checkCreateActionLock(transferorRec)
     val saveTransferorRecordFuture = cachingService.saveTransferorRecord(transferorRec)
-
     val cacheRelationshipRecordFuture = cachingService.cacheValue(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
-
 
     for {
       _ <-cacheRelationshipRecordFuture
@@ -82,13 +78,12 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
   }
 
-  def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EndMarriageAllowanceReason]] = {
-    cachingService.fetchAndGetEntry[EndMarriageAllowanceReason](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+  def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
+    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
   }
 
-  def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndMarriageAllowanceReason] = {
-    val endReason = EndMarriageAllowanceReason.toCaseObject(makeChangeDecision)
-    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, endReason)
+  def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
   }
 
   def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {
@@ -139,10 +134,10 @@ trait UpdateRelationshipService {
   def updateRelationship(nino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[Unit] = {
 
     for {
-      //TODO would be nice to get a better cache method
-      updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedDataTemp
-      updateRelationshipData = UpdateRelationshipRequestHolder(updateRelationshipCacheData, LanguageUtils.isWelsh(messages))
-      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipData)
+      updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
+      updateRelationshipData = UpdateRelationshipData(updateRelationshipCacheData)
+      updateRelationshipRequestHolder = UpdateRelationshipRequestHolder(updateRelationshipData, LanguageUtils.isWelsh(messages))
+      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipRequestHolder)
       _ <- auditUpdateRelationship(postUpdateData)
     } yield Future.successful(Unit)
   }
@@ -196,17 +191,6 @@ trait UpdateRelationshipService {
       case error =>
         handleAudit(UpdateRelationshipFailureEvent(data, error))
         throw error
-    }
-
-  //TODO is this required
-  private def validateUpdateRelationshipFinishedData(cacheData: Option[UpdateRelationshipCacheData]
-                                                    )(implicit hc: HeaderCarrier,
-                                                      ec: ExecutionContext): Future[(NotificationRecord, EndRelationshipReason)] =
-    Future {
-      cacheData match {
-        case Some(UpdateRelationshipCacheData(_, _, _, _, Some(notification), Some(reason), _)) => (notification, reason)
-        case _ => throw new CacheUpdateRequestNotSent()
-      }
     }
 
   private def auditUpdateRelationship(updateData: UpdateRelationshipRequestHolder

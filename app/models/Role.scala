@@ -16,22 +16,24 @@
 
 package models
 
-//constructor
-sealed trait Role {
-  def asString(): String
-}
+import errors.UnknownParticipant
 
-object Role {
-  def apply(participant: String): Role = {
-    if (participant == "Transferor") Transferor
-    else Recipient
-  }
+sealed trait Role {
+  val value: String
 }
 
 case object Transferor extends Role {
-  def asString(): String = "Transferor"
+  override val value: String = "Transferor"
 }
 
 case object Recipient extends Role {
-  def asString(): String = "Recipient"
+  override val value: String =  "Recipient"
+}
+
+object Role {
+  def apply(participant: String): Role = participant match {
+    case Transferor.value => Transferor
+    case Recipient.value => Recipient
+    case _ => throw UnknownParticipant()
+  }
 }

@@ -49,7 +49,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
   val generatedNino = new Generator().nextNino
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
-  val mockListRelationshipService: ListRelationshipService = mock[ListRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
 
@@ -264,13 +263,12 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
   "makeChange" should {
     "display the make change page" when {
       "there is valid data in the cache" in {
-
-        val userAnswer = Some(EndMarriageAllowanceReason.toCaseObject(MakeChangesDecisionForm.Divorce))
-        when(mockUpdateRelationshipService.getMakeChangesDecision(any(),any())).thenReturn(Future.successful(userAnswer))
+        val userAnswer = "Divorce"
+        when(mockUpdateRelationshipService.getMakeChangesDecision(any(),any())).thenReturn(Future.successful(Some(userAnswer)))
 
         val result = controller().makeChange()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(userAnswer.map(_.toString)))
+        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(Some(userAnswer)))
       }
 
       "there is no data in the cache" in {
@@ -299,7 +297,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
         val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
         when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-          .thenReturn(Future.successful(Divorce))
+          .thenReturn(Future.successful("Divorce"))
 
         val result = controller().submitMakeChange()(request)
         status(result) shouldBe SEE_OTHER
@@ -310,7 +308,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       "redirect to the stop allowance page" when {
 
         val relationshipRecords = createRelationshipRecords("Recipient")
-        val userAnswers = List(MakeChangesDecisionForm.Earnings, MakeChangesDecisionForm.Cancel)
+        val userAnswers = List("Earnings", "Cancel")
 
         userAnswers.foreach { userAnswer =>
 
@@ -319,7 +317,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
             val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
             when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-              .thenReturn(Future.successful(EndMarriageAllowanceReason.toCaseObject(userAnswer)))
+              .thenReturn(Future.successful(userAnswer))
 
             when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
               .thenReturn(Future.successful(relationshipRecords))
@@ -336,12 +334,12 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       "redirect to the change of income page" when {
         "a transferor selects Household Income changes" in {
 
-          val userAnswer = MakeChangesDecisionForm.Earnings
+          val userAnswer = "Earnings"
           val relationshipRecords = createRelationshipRecords()
           val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
           when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-            .thenReturn(Future.successful(Earnings))
+            .thenReturn(Future.successful(userAnswer))
 
           when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
             .thenReturn(Future.successful(relationshipRecords))
@@ -357,12 +355,12 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       "redirect to the cancel page" when {
         "a transferor selects Do not want Marriage Allowance anymore" in {
 
-          val userAnswer = MakeChangesDecisionForm.Cancel
+          val userAnswer = "Cancel"
           val relationshipRecords = createRelationshipRecords()
           val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
           when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-            .thenReturn(Future.successful(Cancel))
+            .thenReturn(Future.successful(userAnswer))
 
           when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
             .thenReturn(Future.successful(relationshipRecords))
@@ -378,11 +376,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       "redirect to the bereavement page" when {
         "a user selects the bereavement option" in {
 
-          val userAnswer = MakeChangesDecisionForm.Bereavement
+          val userAnswer = "Bereavement"
           val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
           when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-            .thenReturn(Future.successful(Bereavement))
+            .thenReturn(Future.successful(userAnswer))
 
           val result = controller().submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
@@ -705,7 +703,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
   "confirmUpdate" should {
     "display the confirmUpdate page" in {
 
-      val fullName = "testName"
+      val loggedInUser = LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("first"), Some("surname"))))
       val divorceDate = LocalDate.now().minusDays(1)
       val emailAddress = "email@email.com"
       val maEndingDate = LocalDate.now().plusDays(1)
@@ -713,7 +711,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
       val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
 
-      val confirmUpdateAnswers = ConfirmationUpdateAnswers(fullName, Some(divorceDate), emailAddress, maEndingDates)
+      val confirmUpdateAnswers = ConfirmationUpdateAnswers(loggedInUser, Some(divorceDate), emailAddress, maEndingDates)
 
       when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
           .thenReturn(Future.successful(confirmUpdateAnswers))
@@ -798,7 +796,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
     }
   }
 
-  //TODO these tests to be moved to individual methods that can throw them
   "handleError" should {
     val auhtRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
       request,
@@ -811,6 +808,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
 
     "return internal server error" when {
       val errors = List(
+        //TODO are these required
         //(new CacheMissingUpdateRecord, "technical.issue.heading"),
         //(new CacheUpdateRequestNotSent, "technical.issue.heading"),
         (new CannotUpdateRelationship, "technical.issue.heading"),

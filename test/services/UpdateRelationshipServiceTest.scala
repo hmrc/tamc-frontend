@@ -20,9 +20,9 @@ package services
 import connectors.MarriageAllowanceConnector
 import controllers.ControllerBaseSpec
 import errors.ErrorResponseStatus._
-import errors.{BadFetchRequest, CacheMissingDivorceDate, CacheMissingRelationshipRecords, CannotUpdateRelationship, CitizenNotFound, RecipientNotFound, TransferorNotFound}
+import errors._
 import forms.coc.CheckClaimOrCancelDecisionForm
-import models.{ConfirmationUpdateAnswers, ConfirmationUpdateAnswersCacheData, Divorce, EndMarriageAllowanceReason, MarriageAllowanceEndingDates, Recipient, RelationshipRecordList, RelationshipRecords, ResponseStatus, Transferor, UpdateRelationshipCacheDataTemp, UpdateRelationshipResponse, UserRecord}
+import models._
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
@@ -33,16 +33,18 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
 import viewModels.FinishedUpdateViewModel
-
+import test_utils.data.RelationshipRecordData._
 import scala.concurrent.Future
 
-class UpdateRelationshipServiceTest extends ControllerBaseSpec {
+class UpdateRelationshipServiceTest extends ServicesBaseTest {
 
   val nino: Nino = new Generator().nextNino
+  val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
   val recordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord), Some(loggedInUser))
   val date = LocalDate.now()
   val OK = 200
   val headers = Map("headers" -> Seq(""))
+  val updateCacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList)), Some("email@email.com"), Some("Divorce"), Some(date))
 
 
   val service: UpdateRelationshipService = new UpdateRelationshipService {
@@ -111,17 +113,17 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
   }
 
   "getMakeChangesDecision" should {
-    "return EndMarriageAllowanceReason when value returned from cache" in {
-      when(service.cachingService.fetchAndGetEntry[EndMarriageAllowanceReason](any())(any(), any(), any()))
-        .thenReturn(Future.successful(Some(Divorce)))
+    "return a cache value" in {
+      when(service.cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
+        .thenReturn(Future.successful(Some("Divorce")))
 
       val result = await(service.getMakeChangesDecision)
 
-      result shouldBe Some(Divorce)
+      result shouldBe Some("Divorce")
     }
 
     "return None when no value returned from cache" in {
-      when(service.cachingService.fetchAndGetEntry[EndMarriageAllowanceReason](any())(any(), any(), any()))
+      when(service.cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
         .thenReturn(Future.successful(None))
 
       val result = await(service.getMakeChangesDecision)
@@ -131,15 +133,15 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
   }
 
   "saveMakeChangeDecision" should {
-    "return EndMarriageAllowaneReason" in {
-      when(service.cachingService.cacheValue[EndMarriageAllowanceReason](any(), any())(any(), any(), any(), any()))
-        .thenReturn(Future.successful(Divorce))
-
+    "return a value from the cache" in {
       val endReason = "Divorce"
+
+      when(service.cachingService.cacheValue[String](any(), any())(any(), any(), any(), any()))
+        .thenReturn(Future.successful(endReason))
 
       val result = await(service.saveMakeChangeDecision(endReason))
 
-      result shouldBe Divorce
+      result shouldBe endReason
     }
   }
 
@@ -288,8 +290,8 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
       val httpResponse = HttpResponse(OK, Some(json), headers)
 
 
-      when(service.cachingService.getUpdateRelationshipCachedDataTemp(any(), any()))
-        .thenReturn(Future.successful(UpdateRelationshipCacheDataTemp(RelationshipRecords(recordList), "email@email.com", "Divorce", date)))
+      when(service.cachingService.getUpdateRelationshipCachedData(any(), any()))
+        .thenReturn(Future.successful(updateCacheData))
 
       when(service.marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
         .thenReturn(Future.successful(httpResponse))
@@ -304,8 +306,8 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)))
         val httpResponse = HttpResponse(OK, Some(json), headers)
 
-        when(service.cachingService.getUpdateRelationshipCachedDataTemp(any(), any()))
-          .thenReturn(Future.successful(UpdateRelationshipCacheDataTemp(RelationshipRecords(recordList), "email@email.com", "Divorce", date)))
+        when(service.cachingService.getUpdateRelationshipCachedData(any(), any()))
+          .thenReturn(Future.successful(updateCacheData))
 
         when(service.marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
           .thenReturn(Future.successful(httpResponse))
@@ -319,8 +321,8 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)))
         val httpResponse = HttpResponse(OK, Some(json), headers)
 
-        when(service.cachingService.getUpdateRelationshipCachedDataTemp(any(), any()))
-          .thenReturn(Future.successful(UpdateRelationshipCacheDataTemp(RelationshipRecords(recordList), "email@email.com", "Divorce", date)))
+        when(service.cachingService.getUpdateRelationshipCachedData(any(), any()))
+          .thenReturn(Future.successful(updateCacheData))
 
         when(service.marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
           .thenReturn(Future.successful(httpResponse))
@@ -334,7 +336,7 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)))
         val httpResponse = HttpResponse(OK, Some(json), headers)
 
-        when(service.cachingService.getUpdateRelationshipCachedDataTemp(any(), any()))
+        when(service.cachingService.getUpdateRelationshipCachedData(any(), any()))
           .thenReturn(Future.failed(new RuntimeException("Failed to retrieve cacheMap")))
 
         when(service.marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -357,7 +359,7 @@ class UpdateRelationshipServiceTest extends ControllerBaseSpec {
 
         val result = await(service.getConfirmationUpdateAnswers)
 
-        result shouldBe ConfirmationUpdateAnswers("Test User", Some(LocalDate.now()), "email@email.com", endDates)
+        result shouldBe ConfirmationUpdateAnswers(loggedInUser, Some(LocalDate.now()), "email@email.com", endDates)
       }
 
       "return RuntimeException when cacheMap not found and returns RuntimeException" in {

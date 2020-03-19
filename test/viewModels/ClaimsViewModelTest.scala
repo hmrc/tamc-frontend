@@ -50,7 +50,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
                                participant1EndDate: Option[String] = None,
                                otherParticipantUpdateTimestamp: LocalDate = now.minusDays(1)): RelationshipRecord = {
     RelationshipRecord(
-      Recipient.asString(),
+      Recipient.value,
       creationTimeStamp.toString(dateInputPattern),
       participant1StartDate.toString(dateInputPattern),
       relationshipEndReason,

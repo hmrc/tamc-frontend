@@ -54,7 +54,7 @@ object RelationshipRecords {
 
     val primaryRecord: RelationshipRecord  = activeRecordCount match {
       case(0) => {
-        logger.error("No active record found")
+        logger.error("No active primary record found")
         throw NoPrimaryRecordError()
       }
       case(1) => relationships.find(_.isActive).head

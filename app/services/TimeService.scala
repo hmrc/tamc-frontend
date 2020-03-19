@@ -20,13 +20,9 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import uk.gov.hmrc.time.TaxYear
 
-object TimeService extends TimeService {
-  //TODO can we make other way?
-  override val defaultDateFormat: String = "yyyyMMdd"
-}
+object TimeService extends TimeService
 
 trait TimeService {
-  val defaultDateFormat: String = "yyyyMMdd"
 
   def isFutureDate(date: LocalDate): Boolean =
     date.isAfter(getCurrentDate)
@@ -49,6 +45,6 @@ trait TimeService {
   def getPreviousYearDate: LocalDate =
     LocalDate.now().minusYears(1)
 
-  def parseDateWithFormat(date: String, format: String = TimeService.defaultDateFormat): LocalDate =
+  def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
     LocalDate.parse(date, DateTimeFormat.forPattern(format))
 }

@@ -16,28 +16,27 @@
 
 package models
 
-import org.joda.time.DateTime
-import services.TimeService
 import uk.gov.hmrc.play.test.UnitSpec
+import test_utils.data.RelationshipRecordData._
 
 class RelationshipRecordListTest extends UnitSpec {
 
   "RelationshipRecordList" should {
 
     "return a RelationshipRecordList with LoggedInUserInfo" in {
-      val recordList = Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      val recordList = Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
       val loggedInUser = LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("First"), Some("Name"))))
       val relationshipRecordList = RelationshipRecordList(recordList, Some(loggedInUser))
 
-      relationshipRecordList.relationships shouldBe Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      relationshipRecordList.relationships shouldBe Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
       relationshipRecordList.userRecord shouldBe Some(LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("First"), Some("Name")))))
     }
 
     "return a RelationshipRecordList without LoggedInUserInfo" in {
-      val recordList = Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      val recordList = Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
       val relationshipRecordList = RelationshipRecordList(recordList)
 
-      relationshipRecordList.relationships shouldBe Seq(activeRelationshipRecord, inactiveRelationshipRecord1)
+      relationshipRecordList.relationships shouldBe Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
       relationshipRecordList.userRecord shouldBe None
     }
 
@@ -49,24 +48,4 @@ class RelationshipRecordListTest extends UnitSpec {
     }
   }
 
-  private val activeRelationshipRecord =
-    RelationshipRecord(
-      Recipient.asString(),
-      "56787",
-      "20130101",
-      Some(DesRelationshipEndReason.Default),
-      None,
-      "",
-      "")
-
-  private val activeRelationshipRecord2 = activeRelationshipRecord.copy()
-
-
-  private val inactiveRelationshipEndDate1 = new DateTime().minusDays(1).toString(TimeService.defaultDateFormat)
-  private val inactiveRelationshipEndDate2 = new DateTime().minusDays(10).toString(TimeService.defaultDateFormat)
-  private val inactiveRelationshipEndDate3 = new DateTime().minusDays(1000).toString(TimeService.defaultDateFormat)
-
-  private val inactiveRelationshipRecord1 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
-  private val inactiveRelationshipRecord2 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
-  private val inactiveRelationshipRecord3 = activeRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
 }

@@ -35,15 +35,13 @@ import views.helpers.TextGenerator
 
 import scala.concurrent.Future
 
-//TODO remove this class
-//TODO Put into Ticket to break these out in to their own view specs
 class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
-  val mockListRelationshipService: ListRelationshipService = mock[ListRelationshipService]
+  val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
 
   def controller(updateRelationshipService: UpdateRelationshipService = mockUpdateRelationshipService): UpdateRelationshipController =
     new UpdateRelationshipController(
@@ -53,6 +51,19 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
+  def getContactHMRCText(testCase: String): String = {
+    testCase match  {
+      case "changeOfIncome" =>
+        (messagesApi("general.helpline.enquiries.link.pretext") + " "
+          + messagesApi("general.helpline.enquiries.link") + " "
+          + messagesApi("pages.changeOfIncome.enquiries.link.paragraph"))
+      case "bereavement" =>
+        (messagesApi("general.helpline.enquiries.link.pretext") + " "
+          + messagesApi("general.helpline.enquiries.link") + " "
+          + messagesApi("pages.bereavement.enquiries.link.paragraph"))
+      case _ => throw new RuntimeException("asd")
+    }
+  }
 
   "Update relationship cause - get view" should {
     "show all appropriate radio buttons" in {
@@ -148,7 +159,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
-            RelationshipRecords(RelationshipRecord(Recipient.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+            RelationshipRecords(RelationshipRecord(Recipient.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
       val result: Future[Result] = controller().bereavement(request)
@@ -167,7 +178,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
-            RelationshipRecords(RelationshipRecord(Transferor.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+            RelationshipRecords(RelationshipRecord(Transferor.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
       val result: Future[Result] = controller().bereavement(request)
@@ -186,7 +197,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
-            RelationshipRecords(RelationshipRecord(Recipient.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+            RelationshipRecords(RelationshipRecord(Recipient.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
       val result: Future[Result] = controller().bereavement(request)
@@ -202,7 +213,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
-            RelationshipRecords(RelationshipRecord(Transferor.asString(), "", "", None, None, "", ""), Seq(), loggedInUser)
+            RelationshipRecords(RelationshipRecord(Transferor.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
       val result: Future[Result] = controller().bereavement(request)
@@ -431,9 +442,10 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
 
   "Confirmation Update Page" when {
     "End reason divorce display divorce date row" in {
+
       when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
         .thenReturn(Future.successful(
-          ConfirmationUpdateAnswers("Test User", Some(LocalDate.now()), "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
+          ConfirmationUpdateAnswers(loggedInUser, Some(LocalDate.now()), "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
       val expectedHeader = messagesApi("pages.confirm.cancel.heading")
       val expectedPara = messagesApi("pages.confirm.cancel.message")
@@ -466,7 +478,7 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
     "display two rows when no DivorceDate is present" in {
       when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
         .thenReturn(Future.successful(
-          ConfirmationUpdateAnswers("Test User", None, "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
+          ConfirmationUpdateAnswers(loggedInUser, None, "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
       val expectedHeader = messagesApi("pages.confirm.cancel.heading")
       val expectedPara = messagesApi("pages.confirm.cancel.message")

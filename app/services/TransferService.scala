@@ -66,16 +66,16 @@ trait TransferService {
   private def checkRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
                                     (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     for {
-      cache <- cachingService.getUpdateRelationshipCachedData
+      cache <- cachingService.getCachedDataForEligibilityCheck
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, taxYears.getOrElse(Nil))
     } yield true
 
-  private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])
-                                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
+  private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[EligibilityCheckCacheData])
+                                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
-      case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
+      case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
         if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
         Future(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()

@@ -32,7 +32,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
-
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 
@@ -43,6 +42,7 @@ class UpdateRelationshipController @Inject()(
                                               timeService: TimeService
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
+
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
