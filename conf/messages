@@ -68,6 +68,7 @@ error.divorce-reason.required=Select an answer for keeping your Marriage Allowan
 pages.form.field-required-alt.endReason=Select an answer for keeping your Marriage Allowance until the end of the tax year
 
 pages.form.extra-year.field-required=Tell us whether you would like to apply for the previous {0} to {1} tax year
+#TODO remove after 6 April 2020
 pages.form.field-required.year-2015-=Confirm whether you would like to apply for the previous 2015 to 2016 tax year
 pages.form.field-required.year-2016-=Confirm whether you would like to apply for the previous 2016 to 2017 tax year
 pages.form.field-required.year-2017-=Confirm whether you would like to apply for the previous 2017 to 2018 tax year
@@ -307,7 +308,7 @@ pages.form.field.dod.question=When did you legally end your marriage or civil pa
 #********************************************************************************
 pages.date-of-marriage.heading=Date of marriage or civil partnership
 pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
-pages.date-of-marriage.para2=You can claim from when Marriage Allowance was first introduced on <span class=nowrap>6 April 2016.</span> This means you might be able to claim for previous tax years.
+pages.date-of-marriage.para2=You can claim for up to 5 previous years.
 pages.date-of-marriage.h2=When did you marry or form a civil partnership with your partner?
 
 
@@ -544,7 +545,6 @@ pages.multiyear.extrayears=Do you want to apply for this extra tax year too?
 # previous-years
 #********************************************************************************
 pages.previousyear.header=You can apply for earlier tax years
-pages.previousyear.lede=You can apply for Marriage Allowance from when it was first introduced on 6 April 2016.
 pages.previousyear.para=You told us you married or formed a civil partnership with <span id=firstNameOnly>{0}</span> on <span id=marriageDate class=nowrap>{1}</span>. This means you can apply for earlier tax years.
 
 #********************************************************************************

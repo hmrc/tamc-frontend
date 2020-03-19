@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object TaxYear {
-  implicit val formats = Json.format[TaxYear]
+  implicit val formats: OFormat[TaxYear] = Json.format[TaxYear]
 }
 
 case class TaxYear(year: Int, isCurrent: Option[Boolean] = None)
