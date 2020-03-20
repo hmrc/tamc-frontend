@@ -54,6 +54,12 @@ trait TimeService {
 
   def parseDateWithFormat(date: String, format: String  = "yyyyMMdd"): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
 
+  /**
+    * TODO Need to change and call this method right before send list of years
+    * TODO in cache itself and return only valid years from cache and use these years after
+    * @param years - cached years
+    * @return valid years to apply for MA
+    */
   def getValidYearsApplyMAPreviousYears(years: Option[List[models.TaxYear]]): List[models.TaxYear] = {
       years.fold(List[models.TaxYear]()) {
         actualYears =>
