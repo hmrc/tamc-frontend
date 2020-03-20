@@ -126,7 +126,7 @@ class TimeServiceTest extends ControllerBaseSpec {
     }
 
     "return empty list if empty list is passed" in {
-      timeService.getValidYearsApplyMAPreviousYears(None) should have size(0)
+      timeService.getValidYearsApplyMAPreviousYears(Some(List[models.TaxYear]())) should have size(0)
     }
 
     "return empty list if years < than minim allowed is passed" in {

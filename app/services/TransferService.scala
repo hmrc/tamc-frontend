@@ -70,9 +70,7 @@ trait TransferService {
       cache <- cachingService.getUpdateRelationshipCachedData
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      validYears <- Future {
-        timeService.getValidYearsApplyMAPreviousYears(taxYears)
-      }
+      validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
 
