@@ -70,18 +70,11 @@ trait TransferService {
       cache <- cachingService.getUpdateRelationshipCachedData
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      validYears <- getValidTaxYears(taxYears)
+      validYears <- Future {
+        timeService.getValidYearsApplyMAPreviousYears(taxYears)
+      }
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
-
-  private def getValidTaxYears(years: Option[List[TaxYear]]): Future[List[TaxYear]] = {
-    Future {
-      years.fold(List[TaxYear]()) {
-        actualYears =>
-          actualYears.filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
-      }
-    }
-  }
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])
                                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
