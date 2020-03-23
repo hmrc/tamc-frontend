@@ -588,13 +588,13 @@ pages.divorce.date.error.max.date=Mae’n rhaid i’ch dyddiad ysgaru, dod â’
 #********************************************************************************
 pages.divorce.explanation.title=Canslo Lwfans Priodasol
 pages.divorce.explanation.paragraph1=Rydych wedi rhoi gwybod i ni eich bod wedi ysgaru, wedi dod â’ch partneriaeth sifil i ben neu’ch bod wedi gwahanu’n gyfreithiol ar {0}
-pages.divorce.explanation.paragraph2=Gan fod y dyddiad hwn yn ystod {0}
-pages.divorce.explanation.current.taxYear=y flwyddyn dreth bresennol:
-pages.divorce.explanation.previous.taxYear=blwyddyn dreth flaenorol:
-pages.divorce.explanation.current.bullet1=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
-pages.divorce.explanation.current.bullet2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol o {0} ymlaen
-pages.divorce.explanation.previous.bullet1=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
-pages.divorce.explanation.previous.bullet2=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
+pages.divorce.explanation.paragraph2=Gan fod y dyddiad hwn yn ystod {0}:
+pages.divorce.explanation.current.taxYear=y flwyddyn dreth bresennol
+pages.divorce.explanation.previous.taxYear=blwyddyn dreth flaenorol
+pages.divorce.explanation.current.ma.bullet=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
+pages.divorce.explanation.current.pa.bullet=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol o {0} ymlaen
+pages.divorce.explanation.previous.bullet=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
+pages.divorce.explanation.adjust.code.bullet=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
 
 
 #********************************************************************************

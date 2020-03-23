@@ -287,8 +287,8 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.current.bullet1", s"5 April ${TaxYear.current.previous.finishYear}"),
-        messagesApi("pages.divorce.explanation.current.bullet2", s"6 April ${TaxYear.current.startYear}")
+        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${TaxYear.current.previous.finishYear}"),
+        messagesApi("pages.divorce.explanation.adjust.code.bullet")
       )
 
       val view = Jsoup.parse(contentAsString(result))
@@ -325,8 +325,8 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.previous.bullet1", s"5 April ${new LocalDate(2017, 4, 5).getYear}"),
-        messagesApi("pages.divorce.explanation.previous.bullet2")
+        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${new LocalDate(2017, 4, 5).getYear}"),
+        messagesApi("pages.divorce.explanation.adjust.code.bullet")
       ).toArray
 
       val heading = view.getElementsByTag("h1").text
@@ -361,8 +361,8 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.current.bullet1", s"5 April ${TaxYear.current.finishYear}"),
-        messagesApi("pages.divorce.explanation.current.bullet2", s"6 April ${TaxYear.current.next.startYear}")
+        messagesApi("pages.divorce.explanation.current.ma.bullet", s"5 April ${TaxYear.current.finishYear}"),
+        messagesApi("pages.divorce.explanation.current.pa.bullet", s"6 April ${TaxYear.current.next.startYear}")
       ).toArray
 
       val heading = view.getElementsByTag("h1").text
@@ -397,8 +397,8 @@ class UpdateRelationshipContentTest extends ControllerBaseSpec {
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.previous.bullet1", s"5 April ${TaxYear.current.previous.finishYear}"),
-        messagesApi("pages.divorce.explanation.previous.bullet2")
+        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${TaxYear.current.previous.finishYear}"),
+        messagesApi("pages.divorce.explanation.adjust.code.bullet")
       ).toArray
 
       val heading = view.getElementsByTag("h1").text

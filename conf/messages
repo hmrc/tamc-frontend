@@ -561,7 +561,7 @@ pages.cancel.paragraph2=Your Personal Allowance will not include any Marriage Al
 #********************************************************************************
 pages.changeOfIncome.title=Change of income
 pages.changeOfIncome.enquiries.link.paragraph=to tell us about a change of income.
-pages.changeOfIncome.paragraph2=You need to tell us if your or your partner’s income changes so we can tell you if:
+pages.changeOfIncome.paragraph2=You need to tell us if you or your partner’s income changes so we can tell you if:
 pages.changeOfIncome.bullet1=claiming Marriage Allowance will still benefit you as a couple
 pages.changeOfIncome.bullet2=you need to cancel your Marriage Allowance
 
@@ -584,13 +584,13 @@ pages.divorce.date.error.max.date=Date of your divorce, end of your civil partne
 #********************************************************************************
 pages.divorce.explanation.title=Cancelling Marriage Allowance
 pages.divorce.explanation.paragraph1=You have told us you divorced, ended your civil partnership or were legally separated on {0}
-pages.divorce.explanation.paragraph2=As this date falls within {0}
+pages.divorce.explanation.paragraph2=As this date falls within {0}:
 pages.divorce.explanation.current.taxYear=the current tax year
 pages.divorce.explanation.previous.taxYear=a previous tax year
-pages.divorce.explanation.current.bullet1=your Marriage Allowance will be cancelled from {0}, the end of the current tax year
-pages.divorce.explanation.current.bullet2=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
-pages.divorce.explanation.previous.bullet1=your Marriage Allowance will be cancelled from {0}
-pages.divorce.explanation.previous.bullet2=if you have not paid enough tax, we will usually collect it by adjusting your tax code
+pages.divorce.explanation.current.ma.bullet=your Marriage Allowance will be cancelled from {0}, the end of the current tax year
+pages.divorce.explanation.current.pa.bullet=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
+pages.divorce.explanation.previous.bullet=your Marriage Allowance will be cancelled from {0}
+pages.divorce.explanation.adjust.code.bullet=if you have not paid enough tax, we will usually collect it by adjusting your tax code
 
 
 #********************************************************************************

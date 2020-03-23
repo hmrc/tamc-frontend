@@ -221,7 +221,7 @@ class UpdateRelationshipController @Inject()(
         datesForDivorce = updateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate)
         _ <- updateRelationshipService.saveMarriageAllowanceEndingDates(datesForDivorce)
       } yield {
-       val viewModel = DivorceEndExplanationViewModel(divorceDate, datesForDivorce)
+       val viewModel = DivorceEndExplanationViewModel(role, divorceDate, datesForDivorce)
         Ok(views.html.coc.divorce_end_explanation(viewModel))
       }) recover handleError
   }

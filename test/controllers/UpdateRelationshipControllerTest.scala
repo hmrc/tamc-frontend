@@ -579,7 +579,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseSpec with Controlle
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any()))
         .thenReturn(Future.successful(maEndingDates))
 
-      val viewModel = DivorceEndExplanationViewModel(divorceDate, maEndingDates)
+      val viewModel = DivorceEndExplanationViewModel(role, divorceDate, maEndingDates)
 
       val result = controller().divorceEndExplanation()(request)
       status(result) shouldBe OK
