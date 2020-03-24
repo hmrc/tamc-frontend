@@ -135,6 +135,14 @@ class DivorceSelectYearFormTest extends FormsBaseSpec {
         errorMessageKey shouldBe "pages.divorce.date.error.invalid"
 
       }
+
+      "year is not a valid value" in {
+
+        val formInput = createDivorceDateInput(today.getDayOfMonth.toString, today.getMonthOfYear.toString, "19")
+        val form = DivorceSelectYearForm.form.bind(formInput)
+        val errorMessageKey = extractErrorMessageKey(form.errors)
+        errorMessageKey shouldBe "pages.divorce.date.error.invalid"
+      }
     }
   }
 

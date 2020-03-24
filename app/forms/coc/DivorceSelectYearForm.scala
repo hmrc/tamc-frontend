@@ -18,6 +18,7 @@ package forms.coc
 
 import config.ApplicationConfig
 import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat
 import play.api.data.Forms.{optional, single, text, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, Mapping}
@@ -34,8 +35,10 @@ object DivorceSelectYearForm {
   val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
   val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE)
 
-  def isNonNumericDate(date: String): Boolean = !date.forall(_.isDigit)
-  def isNonValidDate(date: (String, String, String)): Boolean = Try(new LocalDate(date._1.trim.toInt, date._2.trim.toInt, date._3.trim.toInt)).isFailure
+  def isNonNumericDate(year: String, month: String, day: String): Boolean = !s"$year$month$day".forall(_.isDigit)
+  def isNonValidDate(year: String, month: String, day: String): Boolean = {
+    if(year.length != 4) true else Try(LocalDate.parse(s"$year-$month-$day", DateTimeFormat.forPattern("yyyy-MM-dd"))).isFailure
+  }
 
   private def divorceDateMapping(implicit messages: Messages): Mapping[LocalDate] = {
     tuple(
@@ -50,12 +53,10 @@ object DivorceSelectYearForm {
 
   private def isValidDate = Constraint[(Option[String], Option[String], Option[String])]("valid.date"){
     case (Some(year), Some(month), Some(day)) => {
-      val completeDate = (year, month, day)
-      val nonNumericDate = s"$year$month$day"
 
-      if(isNonNumericDate(nonNumericDate)){
+      if(isNonNumericDate(year, month, day)){
         Invalid(ValidationError("pages.divorce.date.error.non.numeric"))
-      } else if(isNonValidDate(completeDate)){
+      } else if(isNonValidDate(year, month, day)){
         Invalid(ValidationError("pages.divorce.date.error.invalid"))
       } else {
         Valid
