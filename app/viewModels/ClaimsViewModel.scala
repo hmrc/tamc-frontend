@@ -31,7 +31,7 @@ case class ClaimsViewModel(activeRow: ClaimsRow,
 
 object ClaimsViewModel {
 
-  implicit val ordering: Ordering[RelationshipRecord] = Ordering.by(_.participant1StartDate)
+  implicit val historicOrdering: Ordering[RelationshipRecord] = Ordering.by((_:RelationshipRecord).creationTimestamp).reverse
 
   def apply(primaryRelationship: RelationshipRecord,
             historicRelationships: Seq[RelationshipRecord])(implicit messages: Messages): ClaimsViewModel = {

@@ -19,8 +19,8 @@ package viewModels
 import java.util.Locale
 
 import _root_.config.ApplicationConfig
-import models.DesRelationshipEndReason.{Active, Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
-import models.{DesRelationshipEndReason, Recipient, RelationshipRecord, RelationshipRecords}
+import models.DesRelationshipEndReason.{Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
+import models._
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Messages
@@ -46,17 +46,24 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
   def createRelationshipRecord(creationTimeStamp: LocalDate = now.minusDays(1),
                                participant1StartDate: LocalDate = now.minusDays(1),
-                               relationshipEndReason: Option[DesRelationshipEndReason] = Some(DesRelationshipEndReason.Default),
-                               participant1EndDate: Option[String] = None,
+                               relationshipEndReason: Option[DesRelationshipEndReason] = Some(Default),
+                               participant1EndDate: Option[LocalDate] = None,
                                otherParticipantUpdateTimestamp: LocalDate = now.minusDays(1)): RelationshipRecord = {
     RelationshipRecord(
-      Recipient.value,
+      Transferor.value,
       creationTimeStamp.toString(dateInputPattern),
       participant1StartDate.toString(dateInputPattern),
       relationshipEndReason,
-      participant1EndDate,
+      participant1EndDate.map(_.toString(dateInputPattern)),
       otherParticipantInstanceIdentifier = "1",
       otherParticipantUpdateTimestamp.toString(dateInputPattern))
+  }
+
+  def createExpectedClaimRow(recordStartDate: LocalDate, recordEndDate: LocalDate, relationshipRecord: RelationshipRecord): ClaimsRow = {
+    val expectedClaimsRow1DateRange = getDateRange(recordStartDate, recordEndDate)
+    val expectedEndReason1 = getReason(relationshipRecord)
+
+    ClaimsRow(expectedClaimsRow1DateRange ,expectedEndReason1)
   }
 
   "ClaimsViewModel" should {
@@ -91,7 +98,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
         s"endRelationship reason is $endReason" in {
 
           val historicNonPrimaryRecord = createRelationshipRecord(creationTimeStamp, participant1StartDate,
-            Some(endReason), Some(participant1EndDate.toString(dateInputPattern)))
+            Some(endReason), Some(participant1EndDate))
 
           val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(historicNonPrimaryRecord))
           val expectedStatus = getReason(historicNonPrimaryRecord)
@@ -106,35 +113,38 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
       val primaryActiveRecord = createRelationshipRecord()
 
-      val cyMinusOneStartDate = now.minusYears(1)
-      val cyMinusOneEndDate = now.minusYears(1)
-      val expectedClaimsRowMinusOne = getDateRange(cyMinusOneStartDate, cyMinusOneEndDate)
+      val previousClaims1CreationDate = now.minusYears(1)
+      val previousClaims1StartDate = previousClaims1CreationDate
+      val previousClaims1EndDate = previousClaims1CreationDate.plusMonths(8)
 
-      val cyMinusTwoStartDate = now.minusYears(2)
-      val cyMinusTwoEndDate = now.minusYears(2)
-      val expectedClaimsRowMinusTwo = getDateRange(cyMinusTwoStartDate, cyMinusTwoEndDate)
+      val previousClaims2CreationDate = now.minusYears(2)
+      val previousClaims2StartDate = previousClaims2CreationDate
+      val previousClaims2EndDate = previousClaims2CreationDate.plusMonths(3)
 
-      val cyMinusThreeStartDate = now.minusYears(3)
-      val cyMinusThreeEndDate = now.minusYears(3)
-      val expectedClaimsRowMinusThree = getDateRange(cyMinusThreeStartDate, cyMinusThreeEndDate)
+      val previousClaims3CreationDate = now minusYears(3)
+      val previousClaims3StartDate = previousClaims3CreationDate
+      val previousClaims3EndDate = previousClaims3CreationDate.plusMonths(4)
 
-      val endReason = Divorce
+      val previousClaimRecordMinus1 = createRelationshipRecord(creationTimeStamp = previousClaims1CreationDate,
+        participant1StartDate = previousClaims1StartDate, participant1EndDate = Some(previousClaims1EndDate),
+        relationshipEndReason = Some(Divorce))
 
-      val cyMinusOneRecord = createRelationshipRecord(participant1StartDate = cyMinusOneStartDate,
-        participant1EndDate = Some(cyMinusOneEndDate.toString(dateInputPattern)), relationshipEndReason = Some(endReason))
+      val previousClaimRecordMinus2 = createRelationshipRecord(creationTimeStamp = previousClaims2CreationDate,
+        participant1StartDate = previousClaims2StartDate, participant1EndDate = Some(previousClaims2EndDate),
+        relationshipEndReason = Some(Cancelled))
 
-      val cyMinusTwoRecord = createRelationshipRecord(participant1StartDate = cyMinusTwoStartDate,
-        participant1EndDate = Some(cyMinusTwoEndDate.toString(dateInputPattern)), relationshipEndReason = Some(endReason))
+      val previousClaimRecordMinus3 = createRelationshipRecord(creationTimeStamp = previousClaims3CreationDate,
+        participant1StartDate = previousClaims3StartDate, participant1EndDate = Some(previousClaims3EndDate))
 
-      val cyMinusThreeRecord = createRelationshipRecord(participant1StartDate = cyMinusThreeStartDate,
-        participant1EndDate = Some(cyMinusThreeEndDate.toString(dateInputPattern)), relationshipEndReason = Some(endReason))
+      val historicSequenceUnordered = Seq(previousClaimRecordMinus2, previousClaimRecordMinus1, previousClaimRecordMinus3)
 
-      val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusTwoRecord, cyMinusThreeRecord, cyMinusOneRecord))
-      val expectedStatus = messagesApi(s"coc.end-reason.${endReason.value}")
-      val orderedClaimRows = Seq(ClaimsRow(expectedClaimsRowMinusThree ,expectedStatus), ClaimsRow(expectedClaimsRowMinusTwo, expectedStatus),
-        ClaimsRow(expectedClaimsRowMinusOne, expectedStatus))
+      val expectedClaimsRow1 = createExpectedClaimRow(previousClaims1StartDate, previousClaims1EndDate, previousClaimRecordMinus1)
+      val expectedClaimsRow2 = createExpectedClaimRow(previousClaims2StartDate, previousClaims2EndDate, previousClaimRecordMinus2)
+      val expectedClaimsRow3 = createExpectedClaimRow(previousClaims3StartDate, previousClaims3EndDate, previousClaimRecordMinus3)
 
-      viewModel.historicRows shouldBe orderedClaimRows
+      val orderedClaimRows = Seq(expectedClaimsRow1, expectedClaimsRow2, expectedClaimsRow3)
+
+      ClaimsViewModel(primaryActiveRecord, historicSequenceUnordered).historicRows shouldBe orderedClaimRows
     }
 
     "create a historic claims row" when {
@@ -147,7 +157,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
         val expectedClaimsRowMinusOne = getDateRange(cyMinusOneStartDate, cyMinusOneEndDate)
 
         val cyMinusOneRecord = createRelationshipRecord(participant1StartDate = cyMinusOneStartDate,
-          participant1EndDate = Some(cyMinusOneEndDate.toString(dateInputPattern)), relationshipEndReason = None)
+          participant1EndDate = Some(cyMinusOneEndDate), relationshipEndReason = None)
 
         val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusOneRecord))
         val expectedStatus = messagesApi("coc.end-reason.DEFAULT")
@@ -157,7 +167,6 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
       }
     }
-
   }
 
   private def getReason(record: RelationshipRecord)(implicit messages: Messages): String = {
