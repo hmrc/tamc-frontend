@@ -490,8 +490,8 @@ pages.history.cancellation=Gallwch ganslo Lwfans Priodasol ar-lein
 pages.history.cancellation1=Os ydych wedi ysgaru neu wedi dod &#226;’ch partneriaeth sifil i ben, gallwch ganslo’ch Lwfans Priodasol ar-lein. Os ydych wedi gwahanu &#226;’ch priod neu bartner sifil ar hyn o bryd, gallwch barhau i gael Lwfans Priodasol hyd nes eich bod yn dod &#226;’ch priodas neu bartneriaeth sifil i ben yn gyfreithlon.
 pages.history.cancellation2=Gallwch hefyd ganslo er mwyn dod &#226; thaliadau i ben os ydych yn dal i fod yn briod neu mewn partneriaeth sifil, ond nad ydych bellach am elwa o Lwfans Priodasol.
 pages.history.historic.ended=Mae’ch hawliad am Lwfans Priodasol wedi dod i ben.
-pages.history.historic.recipient=
-pages.history.historic.transferor=
+pages.history.historic.recipient=Byddwch yn cadw’r lwfansau rhydd o dreth a drosglwyddwyd i chi tan {0}
+pages.history.historic.transferor=Byddwch yn cadw’r lwfansau rhydd o dreth a drosglwyddwyd gennych tan {0}
 pages.history.active.button=Gwirio neu ddiweddaru’ch Lwfans Priodasol
 pages.history.historic.button=Gwirio’ch hawliadau am Lwfans Priodasol
 pages.history.active.recipient.paragraph1=Mae’ch partner ar hyn o bryd yn defnyddio Lwfans Priodasol i drosglwyddo £{0} o’i Lwfans Personol i chi.
@@ -657,45 +657,17 @@ pages.confirm.date.of.marriage=Dyddiad y briodas neu’r dyddiad y ffurfiwyd y b
 # change-of-circs-finish-page
 #********************************************************************************
 pages.coc.finish.header=Lwfans Priodasol wedi’i ganslo
-pages.coc.finish.acknowledgement=Anfonir e-bost atoch yn <strong>{0}</strong> i gydnabod y canslo, a hynny o <strong>noreply&#64;tax.service.gov.uk</strong> cyn pen 24 awr.
+pages.coc.finish.acknowledgement=Anfonir e-bost atoch yn {0} i gydnabod y canslo, a hynny o noreply@tax.service.gov.uk cyn pen 24 awr.
 pages.coc.finish.junk=Os nad yw’n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
-pages.coc.finish.para1=
+pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
 
-pages.coc.finish.whn=Yr hyn sy’n digwydd nesaf
+#********************************************************************************
+# misc
+#********************************************************************************
 
-
-
-pages.coc.finish.para2=Nid oes angen i chi gysylltu &#226; ni. Gallwch <a href="history">wirio statws</a> eich Lwfans Priodasol ar-lein.
 date.fields.day=Diwrnod
 date.fields.month=Mis
 date.fields.year=Blwyddyn
-change.other.caption=Newidiadau eraill sy’n effeithio ar Lwfans Priodasol
-change.other.sub.caption1=Newid mewn incwm
-change.other.income.content=Er mwyn elwa o Lwfans Priodasol fel p&#226;r, dylech ennill £{0} neu lai’r flwyddyn. Er mwyn bod yn gymwys, mae’n rhaid i’ch partner ennill rhwng £{1} a £{2} y flwyddyn (neu £{3} os ydych yn byw yn yr Alban).
-change.other.income.link=Er mwyn rhoi gwybod i ni am newid mewn incwm, cysylltwch &#226; CThEM
-change.other.sub.caption2=Profedigaeth
-change.other.bereavement.content=Os yw’ch partner yn marw, bydd eich Lwfans Priodasol yn newid.
-change.other.bereavement.link=Er mwyn rhoi gwybod i ni am brofedigaeth, cysylltwch &#226; CThEM
-change.status.active=Gweithredol
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #********************************************************************************
 # no years selected page

@@ -656,33 +656,13 @@ pages.coc.finish.acknowledgement=An email acknowledging your cancellation will b
 pages.coc.finish.junk=If it does not appear in your inbox, please check your spam or junk folder.
 pages.coc.finish.para1=There is no need to contact us.
 
-pages.coc.finish.whn=What happens next
-
-
-
-pages.coc.finish.check.status.link=check the status
-
-pages.coc.finish.para2=of your Marriage Allowance online.
+#********************************************************************************
+# misc
+#********************************************************************************
 
 date.fields.day=Day
-
 date.fields.month=Month
-
 date.fields.year=Year
-
-change.other.caption=Other changes that affect Marriage Allowance
-
-change.other.sub.caption1=Change of income
-
-change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £{3} if you live in Scotland).
-
-change.other.income.link=To let us know about a change in income, contact HMRC
-
-change.other.sub.caption2=Bereavement
-
-change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
-
-change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 
 #********************************************************************************
 # no years selected page
