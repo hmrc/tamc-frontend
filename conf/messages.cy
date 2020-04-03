@@ -508,7 +508,7 @@ pages.history.button.remove=Dileu lwfans
 #********************************************************************************
 pages.bereavement.title=Mae’n ddrwg gennym am eich colled
 pages.bereavement.enquiries.link.paragraph=i roi gwybod i ni am brofedigaeth.
-pages.bereavement.recipient.paragraph=You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.
+pages.bereavement.recipient.paragraph=Byddwch yn cadw’r Lwfans Priodasol y trosglwyddodd eich partner i chi tan ddiwedd y flwyddyn dreth.
 pages.bereavement.transferor.paragraph=Os bydd eich partner yn marw ar ôl i chi drosglwyddo rhywfaint o’ch Lwfans Personol iddo:
 pages.bereavement.transferor.point1=ystyrir bod ei ystâd yn cynnwys y Lwfans Personol ychwanegol y gwnaethoch drosglwyddo iddo
 pages.bereavement.transferor.point2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol ar ddiwedd y flwyddyn dreth (5 Ebrill)
@@ -591,8 +591,8 @@ pages.divorce.explanation.paragraph1=Rydych wedi rhoi gwybod i ni eich bod wedi 
 pages.divorce.explanation.paragraph2=Gan fod y dyddiad hwn yn ystod {0}:
 pages.divorce.explanation.current.taxYear=y flwyddyn dreth bresennol
 pages.divorce.explanation.previous.taxYear=blwyddyn dreth flaenorol
-pages.divorce.explanation.current.ma.bullet=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
-pages.divorce.explanation.current.pa.bullet=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol o {0} ymlaen
+pages.divorce.explanation.current.ma.bullet=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen, sef diwedd y flwyddyn dreth bresennol
+pages.divorce.explanation.current.pa.bullet=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol o {0} ymlaen, sef diwedd y flwyddyn dreth bresennol
 pages.divorce.explanation.previous.bullet=bydd eich Lwfans Priodasol yn cael ei ganslo o {0} ymlaen
 pages.divorce.explanation.adjust.code.bullet=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
 
