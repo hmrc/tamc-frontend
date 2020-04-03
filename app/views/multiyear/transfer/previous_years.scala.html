@@ -49,9 +49,6 @@ Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
     <header class="page-heading">
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
     </header>
-
-    <p>@Html(Messages("pages.previousyear.lede"))</p>
-
     <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage),
         LanguageUtils.isWelsh(messages))))</p>
 

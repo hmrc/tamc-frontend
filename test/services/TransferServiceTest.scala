@@ -21,6 +21,7 @@ import controllers.ControllerBaseSpec
 import errors.{CacheMissingRecipient, CacheMissingTransferor, NoTaxYearsForTransferor, RecipientNotFound}
 import models._
 import org.joda.time.LocalDate
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.libs.json.Json
 import play.api.test.Helpers._
@@ -58,6 +59,8 @@ class TransferServiceTest extends ControllerBaseSpec {
           .thenReturn(true)
         when(service.marriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
+        when(service.timeService.getValidYearsApplyMAPreviousYears(any()))
+          .thenReturn(Nil)
         when(service.cachingService.saveRecipientRecord(RecipientRecordData.userRecord, recipientData, Nil))
           .thenReturn(RecipientRecordData.userRecord)
 

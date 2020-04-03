@@ -16,20 +16,12 @@
 
 package forms
 
-import java.util.Locale
-
 import config.ApplicationConfig
 import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import uk.gov.hmrc.play.test.UnitSpec
+import test_utils.TAMCSetupSpec
 
-class RegistrationFormTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
-
-  implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val messages = messagesApi.preferred(Seq(Lang(Locale.ENGLISH)))
+class RegistrationFormTest extends TAMCSetupSpec {
 
   ".dateOfMarriageValidator" should {
 
@@ -67,7 +59,7 @@ class RegistrationFormTest extends UnitSpec with I18nSupport with GuiceOneAppPer
 
     "fail to bind a date which is earlier the minimum configured date" in {
 
-      val earliestDate = ApplicationConfig.TAMC_MIN_DATE.minusDays(1)
+      val earliestDate = ApplicationConfig.TAMC_MIN_DATE
       val checkDate = earliestDate.minusDays(1)
 
       val formInput = Map[String, String](
@@ -78,7 +70,7 @@ class RegistrationFormTest extends UnitSpec with I18nSupport with GuiceOneAppPer
       val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messages("pages.form.field.dom.error.min-date", earliestDate.toString("d MM YYYY")), Nil)
+        FormError("", messagesApi("pages.form.field.dom.error.min-date", earliestDate.toString("d MM YYYY")), Nil)
       ))
     }
 
@@ -95,7 +87,7 @@ class RegistrationFormTest extends UnitSpec with I18nSupport with GuiceOneAppPer
       val res = RegistrationForm.dateOfMarriageValidator(today).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messages("pages.form.field.dom.error.max-date", today.plusDays(1).toString("d MM YYYY")), Nil)
+        FormError("", messagesApi("pages.form.field.dom.error.max-date", today.plusDays(1).toString("d MM YYYY")), Nil)
       ))
     }
 

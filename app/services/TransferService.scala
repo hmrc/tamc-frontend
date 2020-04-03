@@ -16,6 +16,7 @@
 
 package services
 
+import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors._
@@ -69,7 +70,8 @@ trait TransferService {
       cache <- cachingService.getUpdateRelationshipCachedData
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, taxYears.getOrElse(Nil))
+      validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
+      _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])

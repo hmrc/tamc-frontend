@@ -16,10 +16,10 @@
 
 package services
 
+import config.ApplicationConfig
 import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
-import services.TimeService.parseDateWithFormat
 import uk.gov.hmrc.time.TaxYear
 
 object TimeService extends TimeService
@@ -53,4 +53,17 @@ trait TimeService {
   def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
 
   def parseDateWithFormat(date: String, format: String  = "yyyyMMdd"): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
+
+  /**
+    * TODO Need to change and call this method right before send list of years
+    * TODO in cache itself and return only valid years from cache and use these years after
+    * @param years - cached years
+    * @return valid years to apply for MA
+    */
+  def getValidYearsApplyMAPreviousYears(years: Option[List[models.TaxYear]]): List[models.TaxYear] = {
+      years.fold(List[models.TaxYear]()) {
+        actualYears =>
+          actualYears.filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
+    }
+  }
 }

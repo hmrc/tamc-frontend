@@ -57,8 +57,8 @@ pages.form.field-required.partners-income=Select yes if your partner’s income 
 pages.form.field-required.do-you-want-to-apply=Select yes if you want to apply for Marriage Allowance
 
 pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
-pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2015 was at or below the Personal Allowance level?
-pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2015?
+pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2016 was at or below the Personal Allowance level?
+pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2016?
 pages.form.field-required.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
 
 error.end-reason.required=Select a reason for changing your Marriage Allowance below.
@@ -68,6 +68,7 @@ error.divorce-reason.required=Select an answer for keeping your Marriage Allowan
 pages.form.field-required-alt.endReason=Select an answer for keeping your Marriage Allowance until the end of the tax year
 
 pages.form.extra-year.field-required=Tell us whether you would like to apply for the previous {0} to {1} tax year
+#TODO remove after 6 April 2020
 pages.form.field-required.year-2015-=Confirm whether you would like to apply for the previous 2015 to 2016 tax year
 pages.form.field-required.year-2016-=Confirm whether you would like to apply for the previous 2016 to 2017 tax year
 pages.form.field-required.year-2017-=Confirm whether you would like to apply for the previous 2017 to 2018 tax year
@@ -240,7 +241,7 @@ eligibility.check.married.legend=Are you married or in a legally registered civi
 eligibility.check.yes = Yes
 eligibility.check.married.error1=You are not eligible for Marriage Allowance because you are not married or in a legally registered civil partnership.
 eligibility.check.married.error2=You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
-multiyear.check.income=Since 6 April 2015 was your annual income at or below the Personal Allowance level?
+multiyear.check.income=Since 6 April 2016 was your annual income at or below the Personal Allowance level?
 eligibility.check.non-eligible=Based on your answers, you are not eligible for Marriage Allowance.
 eligibility.check.lower.earner.information2= This is your total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above your Dividend Allowance – before any tax and National Insurance is taken off.
 eligibility.check.lower.earner.h1=Is your income less than £{0} a year?
@@ -307,7 +308,7 @@ pages.form.field.dod.question=When did you legally end your marriage or civil pa
 #********************************************************************************
 pages.date-of-marriage.heading=Date of marriage or civil partnership
 pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
-pages.date-of-marriage.para2=You can claim from when Marriage Allowance was first introduced on <span class=nowrap>6 April 2015.</span> This means you might be able to claim for previous tax years.
+pages.date-of-marriage.para2=You can claim for up to 5 previous years.
 pages.date-of-marriage.h2=When did you marry or form a civil partnership with your partner?
 
 
@@ -318,7 +319,7 @@ pages.how-it-works.heading=How it works
 pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
 pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
-pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year since 5 April 2015 that you were eligible for Marriage Allowance.
+pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year since 5 April 2016 that you were eligible for Marriage Allowance.
 pages.how-it-works.lede-pre6=You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
 pages.how-it-works.lede-in=Personal Allowance
 pages.how-it-works.tse=to see if you are eligible for Marriage Allowance
@@ -544,7 +545,6 @@ pages.multiyear.extrayears=Do you want to apply for this extra tax year too?
 # previous-years
 #********************************************************************************
 pages.previousyear.header=You can apply for earlier tax years
-pages.previousyear.lede=You can apply for Marriage Allowance from when it was first introduced on 6 April 2015.
 pages.previousyear.para=You told us you married or formed a civil partnership with <span id=firstNameOnly>{0}</span> on <span id=marriageDate class=nowrap>{1}</span>. This means you can apply for earlier tax years.
 
 #********************************************************************************
