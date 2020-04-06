@@ -570,3 +570,16 @@ span.block {
 .no-top-margin {
     margin-top: 0;
 }
+
+.form-date .form-group-day {
+ margin: 0em 1.6em 0em 0em;
+}
+
+.form-date .form-group-month {
+ margin: 0em 1.6em 0em 0em;
+}
+
+.form-date .form-group-year {
+ margin: 0em 1.6em 0em 0em;
+}
+
