@@ -39,7 +39,7 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseSpec {
   class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
     def onPageLoad() = authAction(implicit request => Ok.withHeaders("authState" -> request.authState.toString))
 
-    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L100), ArgumentMatchers.eq(retrievals))(any(), any()))
+    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
       .thenReturn(authReturn)
   }
 
@@ -73,6 +73,6 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseSpec {
 
   object NoActiveSessionException extends NoActiveSession("")
 
-  val withCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L100, None), Some(Credentials("", "")))
-  val withoutCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L100, None), None)
+  val withCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L200, None), Some(Credentials("", "")))
+  val withoutCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L200, None), None)
 }
