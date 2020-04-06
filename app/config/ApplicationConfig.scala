@@ -155,7 +155,7 @@ trait ApplicationConfig {
 
   def ivNotAuthorisedUrl: String
 
-  private def createUrl(action: String) = s"${loginUrl}/${action}?origin=ma&confidenceLevel=100&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
+  private def createUrl(action: String) = s"${loginUrl}/$action?origin=ma&confidenceLevel=200&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
 
   def ivLoginUrl = createUrl(action = "registration")
 

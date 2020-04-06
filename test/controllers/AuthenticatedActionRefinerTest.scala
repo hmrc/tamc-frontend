@@ -27,7 +27,7 @@ import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
+import uk.gov.hmrc.auth.core.{AuthConnector, BearerTokenExpired, ConfidenceLevel, InsufficientConfidenceLevel, InvalidBearerToken, NoActiveSession}
 import utils.ControllerBaseTest
 
 import scala.concurrent.Future
@@ -42,7 +42,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
     def onPageLoad() = authAction { implicit request => Ok.withHeaders("authState" -> request.authState.toString) }
 
-    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L100), ArgumentMatchers.eq(retrievals))(any(), any()))
+    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
       .thenReturn(authReturn)
   }
 
@@ -58,6 +58,16 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(ApplicationConfig.ivLoginUrl)
+      }
+      "the Bearer Token has expired" in new FakeController(Future.failed(BearerTokenExpired("msg"))) {
+        val result: Future[Result] = onPageLoad()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).get shouldBe "/sign-in"
+      }
+      "the bearer Token is invalid" in new FakeController(Future.failed(InvalidBearerToken("msg"))) {
+        val result: Future[Result] = onPageLoad()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).get shouldBe "/sign-in"
       }
     }
 
@@ -87,12 +97,12 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   object NoActiveSessionException extends NoActiveSession("")
 
   val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(None, None), ConfidenceLevel.L100), None)
+    new ~(new ~(new ~(None, None), ConfidenceLevel.L200), None)
   }
   val withNinoNoCredRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(None, Some(Ninos.nino1)), ConfidenceLevel.L100), None)
+    new ~(new ~(new ~(None, Some(Ninos.nino1)), ConfidenceLevel.L200), None)
   }
   val withNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(Some(Credentials("", "")), Some(Ninos.nino1)), ConfidenceLevel.L100), None)
+    new ~(new ~(new ~(Some(Credentials("", "")), Some(Ninos.nino1)), ConfidenceLevel.L200), None)
   }
 }
