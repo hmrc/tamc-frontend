@@ -56,6 +56,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
+  def ggSignInUrl: String = "/gg/sign-in"
+
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
   override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
   override lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
@@ -160,6 +162,8 @@ trait ApplicationConfig {
   def ivLoginUrl = createUrl(action = "registration")
 
   def ivUpliftUrl = createUrl(action = "uplift")
+
+  def ggSignInUrl: String
 
   val TAMC_JOURNEY = "TAMC_JOURNEY"
   val TAMC_JOURNEY_PTA = "PTA"
