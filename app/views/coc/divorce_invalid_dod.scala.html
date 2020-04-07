@@ -17,6 +17,7 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.UserRequest
+@import config.ApplicationConfig._
 
 @(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
 request: UserRequest[_],
@@ -40,21 +41,21 @@ mainConfig = views.helpers.MainConfig()) {
 <p>@Html(Messages("change.status.divorce.date.invalid.para2"))</p>
 <p>@Html(Messages("change.status.divorce.date.invalid.para3"))</p>
 
-<p>@Html(Messages("hmrc.contact-details"))</p>
-<p>@Html(Messages("hmrc.contact-details-2"))</br>
-@Html(Messages("hmrc.contact-details-3"))</br>
-@Html(Messages("hmrc.contact-details-4"))</br>
-@Html(Messages("hmrc.contact-details-5"))</br>
-@Html(Messages("hmrc.contact-details-6"))</br>
-@Html(Messages("hmrc.contact-details-7"))</br>
-@Html(Messages("hmrc.contact-details-8"))</p>
+<p>@messages("hmrc.contact-details")</p>
+<p>@messages("hmrc.contact-details-2")</br>
+@messages("hmrc.contact-details-3")</br>
+@messages("hmrc.contact-details-4")</br>
+@messages("hmrc.contact-details-5")</br>
+@messages("hmrc.contact-details-6")</br>
+@messages("hmrc.contact-details-7")</br>
+@messages("hmrc.contact-details-8")</p>
 
-<p>@Html(Messages("hmrc.contact-details-9"))</p>
+<a href=@callChargeUrl>@messages("hmrc.contact-details-9")</a>"
 
 <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
 <input name="historicActiveRecord" type="hidden" id="historicActiveRecord"
        value="@changeRelationshipForm.get.historicActiveRecord.get"/>
 <input name="endReason" id="endReason" type="hidden" value="@EndReasonCode.DIVORCE"/>
-<button class="button" type="submit">@Html(Messages("generic.back"))</button>
+<button class="button" type="submit">@messages("generic.back"))</button>
 }
 }
