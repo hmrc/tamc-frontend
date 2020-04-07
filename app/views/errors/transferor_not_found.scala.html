@@ -16,28 +16,29 @@
 
 @import play.twirl.api.Html
 @import models.auth.UserRequest
+@import config.ApplicationConfig
 
 @()(implicit messages: Messages,
     request: UserRequest[_],
     templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
     formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(title = Messages("title.pattern", Messages("title.error")),
+@templates.tamc_main(title = messages("title.pattern", messages("title.error")),
                      mainConfig = views.helpers.MainConfig(
                      maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-not-found")))) {
 
-    <p id="error">@Html(Messages("transferor.not.found"))</p>
+    <p id="error">@Html(messages("transferor.not.found"))</p>
 
-    <strong>@Html(Messages("hmrc.contact-details"))</strong>
+    <strong>@messages("hmrc.contact-details")</strong>
 
     <ul>
-        <li>@Html(Messages("hmrc.contact-details-2"))</li>
-        <li>@Html(Messages("hmrc.contact-details-3"))</li>
-        <li>@Html(Messages("hmrc.contact-details-4"))</li>
-        <li>@Html(Messages("hmrc.contact-details-5"))</li>
-        <li>@Html(Messages("hmrc.contact-details-6"))</li>
-        <li>@Html(Messages("hmrc.contact-details-7"))</li>
-        <li>@Html(Messages("hmrc.contact-details-8"))</li>
-        <li><a href="https://www.gov.uk/call-charges">@messages("hmrc.contact-details-9")</a></li>
+        <li>@messages("hmrc.contact-details-2")</li>
+        <li>@messages("hmrc.contact-details-3")</li>
+        <li>@messages("hmrc.contact-details-4")</li>
+        <li>@messages("hmrc.contact-details-5")</li>
+        <li>@messages("hmrc.contact-details-6")</li>
+        <li>@messages("hmrc.contact-details-7")</li>
+        <li>@messages("hmrc.contact-details-8")</li>
+        <li><a href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
     </ul>
 }

@@ -16,6 +16,7 @@
 
 @import models.auth.UserRequest
 @import play.twirl.api.Html
+@import config.ApplicationConfig
 
 @()(implicit messages: Messages,
 request: UserRequest[_],
@@ -23,17 +24,17 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.technical-error"))) {
-<h1 class="heading-large">@Html(Messages("technical.technical-error.h1"))</h1>
-<p id="error">@Html(Messages("technical.technical-error.para1"))</p>
-<p><strong>@Html(Messages("hmrc.contact-details"))</strong></p>
+title = messages("title.pattern", messages("title.technical-error"))) {
+<h1 class="heading-large">@Html(messages("technical.technical-error.h1"))</h1>
+<p id="error">@Html(messages("technical.technical-error.para1"))</p>
+<p><strong>@messages("hmrc.contact-details")</strong></p>
 
-<p>@Html(Messages("hmrc.contact-details-2")) <br>
-    @Html(Messages("hmrc.contact-details-3")) <br>
-    @Html(Messages("hmrc.contact-details-4"))</p>
-<p>@Html(Messages("hmrc.contact-details-5")) <br>
-    @Html(Messages("hmrc.contact-details-6"))</p>
-<p>@Html(Messages("hmrc.contact-details-7")) <br>
-    @Html(Messages("hmrc.contact-details-8"))</p>
-<a href="https://www.gov.uk/call-charges">@messages("hmrc.contact-details-9")</a>
+<p>@messages("hmrc.contact-details-2") <br>
+    @messages("hmrc.contact-details-3") <br>
+    @messages("hmrc.contact-details-4")</p>
+<p>@messages("hmrc.contact-details-5") <br>
+    @messages("hmrc.contact-details-6")</p>
+<p>@messages("hmrc.contact-details-7") <br>
+    @messages("hmrc.contact-details-8")</p>
+<a href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a>
 }
