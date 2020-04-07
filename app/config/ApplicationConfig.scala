@@ -51,6 +51,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val callbackUrl = loadConfig("tamc.external-urls.callback-url")
   override lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
 
+  def ggSignInUrl: String = "/gg/sign-in"
+
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
@@ -138,6 +140,8 @@ trait ApplicationConfig {
   def ivLoginUrl = createUrl(action = "registration")
 
   def ivUpliftUrl = createUrl(action = "uplift")
+
+  def ggSignInUrl: String
 
   val marriageAllowanceUrl: String
 

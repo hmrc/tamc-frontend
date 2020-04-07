@@ -52,12 +52,10 @@ class AuthenticatedActionRefiner @Inject()(
       case _ =>
         throw new Exception("Nino not found")
     } recover {
-      case _: BearerTokenExpired | _: InvalidBearerToken =>
-        Left(Redirect("/sign-in"))
       case _: InsufficientConfidenceLevel =>
         Left(Redirect(ApplicationConfig.ivUpliftUrl))
       case _: NoActiveSession =>
-        Left(Redirect(ApplicationConfig.ivLoginUrl))
+        Left(Redirect(ApplicationConfig.ggSignInUrl))
     }
   }
 }

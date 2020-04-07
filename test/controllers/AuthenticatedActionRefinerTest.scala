@@ -57,17 +57,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
       "there is no active session" in new FakeController(Future.failed(NoActiveSessionException)) {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.ivLoginUrl)
-      }
-      "the Bearer Token has expired" in new FakeController(Future.failed(BearerTokenExpired("msg"))) {
-        val result: Future[Result] = onPageLoad()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result).get shouldBe "/sign-in"
-      }
-      "the bearer Token is invalid" in new FakeController(Future.failed(InvalidBearerToken("msg"))) {
-        val result: Future[Result] = onPageLoad()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result).get shouldBe "/sign-in"
+        redirectLocation(result).get shouldBe "/gg/sign-in"
       }
     }
 
@@ -96,13 +86,21 @@ class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
 
   object NoActiveSessionException extends NoActiveSession("")
 
-  val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(None, None), ConfidenceLevel.L200), None)
-  }
-  val withNinoNoCredRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(None, Some(Ninos.nino1)), ConfidenceLevel.L200), None)
-  }
-  val withNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(Some(Credentials("", "")), Some(Ninos.nino1)), ConfidenceLevel.L200), None)
+  import AuthenticatedActionRefinerTest._
+
+  val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
+    None ~ None ~ ConfidenceLevel.L200 ~ None
+
+  val withNinoNoCredRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
+    None ~ Some(Ninos.nino1) ~ ConfidenceLevel.L200 ~ None
+
+  val withNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
+    Some(Credentials("", "")) ~ Some(Ninos.nino1) ~ ConfidenceLevel.L200 ~ None
+
+}
+
+object AuthenticatedActionRefinerTest {
+  implicit class RetrievalsUtil[A](val retrieval: A) extends AnyVal {
+    def `~`[B](anotherRetrieval: B): A ~ B = uk.gov.hmrc.auth.core.retrieve.~(retrieval, anotherRetrieval)
   }
 }

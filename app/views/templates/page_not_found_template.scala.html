@@ -50,7 +50,6 @@
 @{
     templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
     "pageTitle" -> messages("title.pattern", messages("global.page.not.found.error.title")),
-    "navTitle" -> messages("tamc.yourtaxaccount"),
     "isWelsh" -> isWelsh,
     "getHelpForm" -> getHelpForm,
     "showPropositionLinks" -> true,
@@ -61,7 +60,7 @@
     "cookieDomain" -> appConfig.analyticsHost
     ),
     "mainContentHeader" -> contentHeader,
-    "betaBanner" -> true,
+    "betaBanner" -> false,
     "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier
     ))
 }
