@@ -33,10 +33,7 @@ trait TimeService {
     LocalDate.now()
 
   def getCurrentTaxYear: Int =
-    currentTaxYear.startYear
-
-  private def currentTaxYear: TaxYear =
-    TaxYear.current
+    TaxYear.current.startYear
 
   def getTaxYearForDate(date: LocalDate): Int =
     TaxYear.taxYearFor(date).startYear

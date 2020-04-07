@@ -17,7 +17,7 @@
 package models
 
 import play.api.libs.json.Json
-import services.TimeService
+import services.TimeService._
 
 case class RelationshipRecord(participant: String,
                               creationTimestamp: String,
@@ -29,22 +29,19 @@ case class RelationshipRecord(participant: String,
 
   def isActive: Boolean = participant1EndDate match {
     case None => true
-    case Some(date) => TimeService.isFutureDate(TimeService.parseDateWithFormat(date))
+    case Some(date) => isFutureDate(parseDateWithFormat(date))
   }
 
   val role: Role = Role(participant)
 
   def overlappingTaxYears: Set[Int] = {
-    val timeService = TimeService
 
-    val parseDate = timeService.parseDateWithFormat(_: String)
-
-    val taxYearOfRelationshipStart = timeService.getTaxYearForDate(parseDate(participant1StartDate))
-    val taxYearOfRelationshipEnd = participant1EndDate.fold(timeService.getCurrentTaxYear)(
+    val taxYearOfRelationshipStart = getTaxYearForDate(parseDateWithFormat(participant1StartDate))
+    val taxYearOfRelationshipEnd = participant1EndDate.fold(getCurrentTaxYear)(
       participant1EndDateAsString => {
-        val participant1EndDate = parseDate(participant1EndDateAsString)
-        val taxYearOfParticipant1EndDate = timeService.getTaxYearForDate(participant1EndDate)
-        val isParticipant1EndDateOnTheFirstDayOfTaxYear: Boolean = participant1EndDate == timeService.getStartDateForTaxYear(taxYearOfParticipant1EndDate)
+        val participant1EndDate = parseDateWithFormat(participant1EndDateAsString)
+        val taxYearOfParticipant1EndDate = getTaxYearForDate(participant1EndDate)
+        val isParticipant1EndDateOnTheFirstDayOfTaxYear: Boolean = participant1EndDate == getStartDateForTaxYear(taxYearOfParticipant1EndDate)
 
         relationshipEndReason match {
           case Some(DesRelationshipEndReason.Divorce) if isParticipant1EndDateOnTheFirstDayOfTaxYear => taxYearOfParticipant1EndDate - 1
