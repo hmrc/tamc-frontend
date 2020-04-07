@@ -14,31 +14,18 @@
  * limitations under the License.
  */
 
-package forms
-
-import java.util.Locale
+package utils
 
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
-import models.{Recipient, Role, Transferor}
-import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import test_utils.{MockAuthenticatedAction, MockFormPartialRetriever, MockTemplateRenderer, MockUnauthenticatedAction}
+import play.api.mvc.{AnyContent, Request}
+import play.api.test.FakeRequest
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
-import uk.gov.hmrc.time.TaxYear
-import views.helpers.TextGenerator
 
-class FormsBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
-
-  implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
-  val messages: Messages = messagesApi.preferred(Seq(Lang(Locale.ENGLISH)))
+trait ControllerBaseTest extends BaseTest {
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
@@ -49,4 +36,9 @@ class FormsBaseSpec extends UnitSpec with I18nSupport with GuiceOneAppPerSuite w
     "metrics.jvm" -> false,
     "metrics.enabled" -> false
   ).build()
+
+  def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]
+
+  implicit val request: Request[AnyContent] = FakeRequest()
+
 }

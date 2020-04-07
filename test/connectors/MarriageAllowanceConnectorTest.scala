@@ -18,7 +18,6 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import config.ApplicationConfig
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
@@ -27,12 +26,13 @@ import play.api.libs.json.Json
 import test_utils.TestData.Ninos
 import test_utils._
 import uk.gov.hmrc.domain.Nino
+import utils.ConnectorBaseTest
 
 import scala.concurrent.Future
 
-class MarriageAllowanceConnectorTest extends TAMCSetupSpec {
+class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
 
-  val nino: Nino = Nino(Ninos.nino1)
+  val nino = Nino(Ninos.nino1)
 
   "listRelationship" should {
     def serverStub(data: RelationshipRecordStatusWrapper): StubMapping = {
@@ -124,6 +124,5 @@ class MarriageAllowanceConnectorTest extends TAMCSetupSpec {
       )
     }
   }
-
 
 }

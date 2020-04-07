@@ -16,10 +16,10 @@
 
 package models
 
-import controllers.ControllerBaseSpec
 import play.api.libs.json.{JsResultException, JsString, Json}
+import utils.ControllerBaseTest
 
-class GenderTest extends ControllerBaseSpec {
+class GenderTest extends ControllerBaseTest {
 
   "Gender" should {
     "accept M as gender" in {

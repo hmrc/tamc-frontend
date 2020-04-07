@@ -30,11 +30,12 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time.TaxYear
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.ControllerBaseTest
 import views.helpers.TextGenerator
 
 import scala.concurrent.Future
 
-class UpdateRelationshipContentTest extends ControllerBaseSpec {
+class UpdateRelationshipContentTest extends ControllerBaseTest {
 
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]

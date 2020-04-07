@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package config
+package utils
 
-import uk.gov.hmrc.play.test.UnitSpec
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
-class ApplicationConfigSpec extends UnitSpec {
+trait ConnectorBaseTest extends BaseTest with WireMockHelper {
 
-  "check rates for earliest valid year" when {
-    "return valid year" in {
-      ApplicationConfig.TAMC_BEGINNING_YEAR should be(2016)
-    }
-  }
+  override def fakeApplication(): Application = new GuiceApplicationBuilder()
+    .configure("microservice.services.marriage-allowance.port" -> server.port()).build()
+
 }

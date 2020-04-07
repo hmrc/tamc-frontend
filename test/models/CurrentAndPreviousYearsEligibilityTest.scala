@@ -23,7 +23,7 @@ import org.mockito.Mockito._
 
 class CurrentAndPreviousYearsEligibilityTest extends UnitSpec with MockitoSugar {
 
-  val currentYear: Int = TimeService.currentTaxYear.startYear
+  val currentYear: Int = TimeService.getCurrentTaxYear
   val previousTaxYear: TaxYear = TaxYear(currentYear - 1)
   val mockData: RegistrationFormInput = mock[RegistrationFormInput]
   val mockTimeService: TimeService = mock[TimeService]

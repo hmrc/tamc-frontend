@@ -30,7 +30,7 @@
  * limitations under the License.
  */
 
-package test_utils
+package utils
 
 import play.api.i18n.Messages
 import play.twirl.api.Html

@@ -17,7 +17,6 @@
 package services
 
 import connectors.MarriageAllowanceConnector
-import controllers.ControllerBaseSpec
 import errors.{CacheMissingRecipient, CacheMissingTransferor, NoTaxYearsForTransferor, RecipientNotFound}
 import models._
 import org.joda.time.LocalDate
@@ -30,10 +29,11 @@ import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import utils.BaseTest
 
 import scala.concurrent.Future
 
-class TransferServiceTest extends ServicesBaseTest {
+class TransferServiceTest extends BaseTest {
 
   val service: TransferService = new TransferService {
     override val cachingService: CachingService = mock[CachingService]

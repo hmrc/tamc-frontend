@@ -16,12 +16,11 @@
 
 package forms.coc
 
-import forms.FormsBaseSpec
 import play.api.data.FormError
-
+import utils.BaseTest
 import scala.collection.mutable
 
-class MakeChangesDecisionFormTest extends FormsBaseSpec {
+class MakeChangesDecisionFormTest extends BaseTest {
 
   "MakeChangesDecisionForm" should {
     val decisions = Seq(

@@ -26,11 +26,11 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.EligibilityCalculatorService
-import test_utils.MockPermUnauthenticatedAction
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.{ControllerBaseTest, MockPermUnauthenticatedAction}
 
-class EligibilityControllerTest extends ControllerBaseSpec {
+class EligibilityControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
 

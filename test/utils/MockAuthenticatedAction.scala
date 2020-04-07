@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package test_utils
+package utils
 
 import com.google.inject.Inject
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import models.auth._
 import play.api.mvc.{Request, Result}
+import test_utils.TestData
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel}
 import uk.gov.hmrc.domain.Nino
 

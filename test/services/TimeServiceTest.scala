@@ -18,10 +18,11 @@ package services
 
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
+import utils.BaseTest
 
 import scala.collection.immutable
 
-class TimeServiceTest extends ServicesBaseTest {
+class TimeServiceTest extends BaseTest {
 
   def timeService: TimeService = TimeService
 

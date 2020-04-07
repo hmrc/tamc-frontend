@@ -16,11 +16,11 @@
 
 package forms.coc
 
-import forms.FormsBaseSpec
 import org.joda.time.LocalDate
 import play.api.data.FormError
+import utils.BaseTest
 
-class DivorceSelectYearFormTest extends FormsBaseSpec {
+class DivorceSelectYearFormTest extends BaseTest {
 
   val today = LocalDate.now()
   val defaultDate = new LocalDate(2000, 1, 1)

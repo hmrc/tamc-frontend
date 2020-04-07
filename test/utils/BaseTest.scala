@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package services
+package utils
 
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -24,14 +24,10 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext
 
-trait ServicesBaseTest extends UnitSpec
-  with I18nSupport
-  with GuiceOneAppPerSuite
-  with MockitoSugar {
+trait BaseTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
 
   implicit val ec = ExecutionContext.Implicits.global
-
   implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
+
 }

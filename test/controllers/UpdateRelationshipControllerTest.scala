@@ -40,11 +40,12 @@ import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.jsoup.Jsoup
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.{ControllerBaseTest, MockTemporaryAuthenticatedAction}
 
 import scala.concurrent.Future
 import scala.language.postfixOps
 
-class UpdateRelationshipControllerTest extends ControllerBaseSpec with ControllerViewTestHelper {
+class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper {
 
   val generatedNino = new Generator().nextNino
   val mockRegistrationService: TransferService = mock[TransferService]

@@ -18,9 +18,10 @@ package forms
 
 import play.api.data.FormError
 import uk.gov.hmrc.emailaddress.EmailAddress
+import utils.BaseTest
 
 
-class EmailFormTest extends FormsBaseSpec {
+class EmailFormTest extends BaseTest {
 
   ".email" should {
     "bind a valid email address" in {

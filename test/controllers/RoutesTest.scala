@@ -31,8 +31,9 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.ControllerBaseTest
 
-class RoutesTest extends ControllerBaseSpec {
+class RoutesTest extends ControllerBaseTest {
 
   "Hitting calculator page" should {
     "have a ’previous’ and ’next’ links to gov.ukpage" in {

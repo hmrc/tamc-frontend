@@ -25,10 +25,11 @@ import play.api.mvc.{Controller, Result}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
+import utils.ControllerBaseTest
 
 import scala.concurrent.Future
 
-class UnauthenticatedActionTransformerTest extends ControllerBaseSpec {
+class UnauthenticatedActionTransformerTest extends ControllerBaseTest {
 
   type AuthRetrievals = ConfidenceLevel ~ Option[String] ~ Option[Credentials]
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials

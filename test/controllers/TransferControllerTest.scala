@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import test_utils.data.{ConfirmationModelData, RecipientRecordData, RelationshipRecordData}
-import test_utils.{MockTemporaryAuthenticatedAction, TestData}
+import test_utils.TestData
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -38,12 +38,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
+import utils.{ControllerBaseTest, MockTemporaryAuthenticatedAction}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-class TransferControllerTest extends ControllerBaseSpec {
+class TransferControllerTest extends ControllerBaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
 

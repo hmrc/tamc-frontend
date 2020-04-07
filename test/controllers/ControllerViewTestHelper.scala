@@ -22,11 +22,11 @@ import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, _}
 import play.twirl.api.Html
-import test_utils.{MockFormPartialRetriever, MockTemplateRenderer}
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.{MockFormPartialRetriever, MockTemplateRenderer}
 
 import scala.concurrent.Future
 

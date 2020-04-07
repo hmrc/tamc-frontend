@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test_utils
+package utils
 
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html

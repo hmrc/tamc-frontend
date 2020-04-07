@@ -28,14 +28,14 @@ import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
 import test_utils.data.RelationshipRecordData._
 import uk.gov.hmrc.domain.{Generator, Nino}
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
+import utils.BaseTest
 
 import scala.concurrent.Future
 
-class UpdateRelationshipServiceTest extends ServicesBaseTest {
+class UpdateRelationshipServiceTest extends BaseTest {
 
   val nino: Nino = new Generator().nextNino
   val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
