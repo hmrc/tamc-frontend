@@ -120,7 +120,7 @@ object RegistrationForm {
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
   def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages): Mapping[LocalDate] = {
-    val minDate = ApplicationConfig.TAMC_MIN_DATE.minusDays(1)
+    val minDate = ApplicationConfig.TAMC_MIN_DATE
     val maxDate = today.plusDays(1)
 
     validDateTuple("pages.form.field.dom.error.enter_full_date",

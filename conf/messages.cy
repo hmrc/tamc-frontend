@@ -57,8 +57,8 @@ pages.form.field-required.partners-income=Dewiswch ‘Iawn’ os yw incwm eich p
 pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
 
 pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
-pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2015 ar lefel y Lwfans Personol neu’n is.
-pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2015?
+pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2016 ar lefel y Lwfans Personol neu’n is.
+pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2016?
 pages.form.field-required.applyForHistoricYears=Dewiswch Iawn a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
 
 pages.form.extra-year.field-required=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}
@@ -236,7 +236,7 @@ eligibility.check.married.legend=A ydych yn briod neu mewn partneriaeth sifil sy
 eligibility.check.yes=Iawn
 eligibility.check.married.error1=Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
 eligibility.check.married.error2=Gallwch wneud cais am Lwfans Priodasol os yw’ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
-multiyear.check.income=Er 6 Ebrill 2015, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
+multiyear.check.income=Er 6 Ebrill 2016, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible=Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
 eligibility.check.lower.earner.information2=Dyma gyfanswm eich enillion o bob cyflogaeth, pensiwn, buddiant, ymddiriedolaeth, incwm rhent, gan gynnwys incwm difidend sy’n fwy na’ch Lwfans Difidend – cyn i unrhyw dreth ac Yswiriant Gwladol gael eu didynnu.
 eligibility.check.lower.earner.h1=A yw’ch incwm yn llai na £{0} y flwyddyn?
@@ -295,7 +295,7 @@ pages.form.field.dod=Os ydych wedi ymwahanu &#226;’ch priod neu bartner sifil 
 #********************************************************************************
 pages.date-of-marriage.heading=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
 pages.date-of-marriage.para1=Mae hyn er mwyn sicrhau’n bod yn caniat&#225;u i chi elwa o Lwfans Priodasol am y maint cywir o amser.
-pages.date-of-marriage.para2=Gallwch wneud cais o’r adeg pan gafodd y Lwfans Priodasol ei gyflwyno am y tro cyntaf, sef <span class=nowrap>6 Ebrill 2015.</span> O’r herwydd, efallai y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
+pages.date-of-marriage.para2=Gallwch hawlio am hyd at 5 blwyddyn flaenorol.
 pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda’ch partner?
 #********************************************************************************
 # How it works
@@ -304,7 +304,7 @@ pages.how-it-works.heading=Sut y mae’n gweithio
 pages.how-it-works.lede-pre1=Mae <a href="https://www.gov.uk/marriage-allowance-guide">Lwfans Priodasol</a> yn caniat&#225;u i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
 pages.how-it-works.lede-pre2=Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre4=Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
-pages.how-it-works.lede-pre5=Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2015 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
+pages.how-it-works.lede-pre5=Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2016 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
 pages.how-it-works.lede-pre6=Gallwch wneud cais am Lwfans Priodasol os yw'ch partner wedi marw, cyn belled â bod yr amodau'n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
 pages.how-it-works.lede-in=Lwfans Personol
 pages.how-it-works.tse=i weld a ydych yn gymwys ar gyfer Lwfans Priodasol
@@ -636,7 +636,6 @@ pages.multiyear.extrayears=A hoffech wneud cais ar gyfer y flwyddyn dreth ychwan
 # previous-years
 #********************************************************************************
 pages.previousyear.header=Gallwch wneud cais ar gyfer blynyddoedd treth blaenorol
-pages.previousyear.lede=Gallwch wneud cais am Lwfans Priodasol o’r adeg pan gafodd ei gyflwyno am y tro cyntaf, sef 6 Ebrill 2015.
 pages.previousyear.para=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda <span id=firstNameOnly>{0}</span> ar <span id=marriageDate class=nowrap>{1}</span>. Mae hyn yn golygu y gallwch wneud cais ar gyfer blynyddoedd treth blaenorol.
 
 #********************************************************************************

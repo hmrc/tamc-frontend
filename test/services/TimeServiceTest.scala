@@ -16,8 +16,6 @@
 
 package services
 
-import controllers.ControllerBaseSpec
-import models.EndRelationshipReason
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 
@@ -25,10 +23,10 @@ import scala.collection.immutable
 
 class TimeServiceTest extends ServicesBaseTest {
 
-  private val currentYear = service.getCurrentDate.getYear
-  private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
+  def timeService: TimeService = TimeService
 
-  def service: TimeService = TimeService
+  private val currentYear = timeService.getCurrentDate.getYear
+  private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
 
   "getTaxYearForDate" should {
     "return current year before 6th April" in {
@@ -37,7 +35,7 @@ class TimeServiceTest extends ServicesBaseTest {
       val month = 4
       val day = 5
       val expected = new LocalDate(year, month, day)
-      service.getTaxYearForDate(expected) shouldBe expectedYear
+      timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
 
     "return current year after 6th April" in {
@@ -46,7 +44,7 @@ class TimeServiceTest extends ServicesBaseTest {
       val month = 4
       val day = 6
       val expected = new LocalDate(year, month, day)
-      service.getTaxYearForDate(expected) shouldBe expectedYear
+      timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
   }
 
@@ -60,7 +58,7 @@ class TimeServiceTest extends ServicesBaseTest {
 
       val date: String = "" + year + month + day
 
-      service.parseDateWithFormat(date.trim) shouldBe expected
+      timeService.parseDateWithFormat(date.trim) shouldBe expected
     }
 
     val formats = List[String]("-yyyyMMdd", " yyyyMMdd")
@@ -74,7 +72,7 @@ class TimeServiceTest extends ServicesBaseTest {
         val prefix: String = format.substring(0, 1)
         val date: String = "" + prefix + year + month + day
 
-        service.parseDateWithFormat(date.trim, format.trim) shouldBe expected
+        timeService.parseDateWithFormat(date.trim, format.trim) shouldBe expected
       }
     }
   }
@@ -82,19 +80,16 @@ class TimeServiceTest extends ServicesBaseTest {
   "isFutureDate" should {
 
     "future date is today" in {
-      val timeService = service
       val data = LocalDate.now()
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is yesterday" in {
-      val timeService = service
       val data = LocalDate.now().minusDays(1)
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is tomorrow" in {
-      val timeService = service
       val data = LocalDate.now().plusDays(1)
       timeService.isFutureDate(data) shouldBe true
     }
@@ -104,7 +99,6 @@ class TimeServiceTest extends ServicesBaseTest {
   "getCurrentTaxYear" should {
 
     "get current tax year" in {
-      val timeService = service
       val data = TaxYear.current.startYear
       timeService.getCurrentTaxYear shouldBe data
     }
@@ -115,12 +109,36 @@ class TimeServiceTest extends ServicesBaseTest {
 
     for (year <- years) {
       s"start date of tax year is $year April 6th" in {
-        val timeService = service
         val expected = new LocalDate(year, 4, 6)
         timeService.getStartDateForTaxYear(year) shouldBe expected
       }
     }
   }
 
+  "getValidYearsApplyMAPreviousYears" should {
+
+    "return empty list if none is passed" in {
+      timeService.getValidYearsApplyMAPreviousYears(None) should have size(0)
+    }
+
+    "return empty list if empty list is passed" in {
+      timeService.getValidYearsApplyMAPreviousYears(Some(List[models.TaxYear]())) should have size(0)
+    }
+
+    "return empty list if years < than minim allowed is passed" in {
+      val list = List(models.TaxYear(year = 2002))
+      timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(0)
+    }
+
+    "return valid list if years > than minim allowed is passed" in {
+      val year = timeService.getCurrentDate.getYear
+      val from = year - 10
+      val to = year + 5
+      val list: List[models.TaxYear] = (from to to).map(year => {
+        models.TaxYear(year)
+      }).toList
+      timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(10)
+    }
+  }
 
 }

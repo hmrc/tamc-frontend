@@ -18,27 +18,21 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
-import controllers.ControllerBaseSpec
+import config.ApplicationConfig
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
 import org.joda.time.LocalDate
-import play.api.Application
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import test_utils.TestData.Ninos
 import test_utils._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.WireMockHelper
 
 import scala.concurrent.Future
 
-class MarriageAllowanceConnectorTest extends ControllerBaseSpec with WireMockHelper {
+class MarriageAllowanceConnectorTest extends TAMCSetupSpec {
 
+  val nino: Nino = Nino(Ninos.nino1)
 
   "listRelationship" should {
     def serverStub(data: RelationshipRecordStatusWrapper): StubMapping = {
@@ -131,16 +125,5 @@ class MarriageAllowanceConnectorTest extends ControllerBaseSpec with WireMockHel
     }
   }
 
-  val nino = Nino(Ninos.nino1)
-  override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
-    .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
-    .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))
-    .overrides(bind[FormPartialRetriever].toInstance(MockFormPartialRetriever)
-    ).configure(
-    "metrics.jvm" -> false,
-    "metrics.enabled" -> false,
-    "microservice.services.marriage-allowance.port" -> server.port()
-  ).build()
 
 }

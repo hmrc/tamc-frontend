@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package config
 
-import play.api.libs.json.{Json, OFormat}
+import test_utils.TAMCSetupSpec
 
-object TaxYear {
-  implicit val formats: OFormat[TaxYear] = Json.format[TaxYear]
+class ApplicationConfigSpec extends TAMCSetupSpec {
+
+  "check rates for earliest valid year" when {
+
+    "return valid year" in {
+      ApplicationConfig.TAMC_BEGINNING_YEAR should be(2016)
+    }
+
+  }
+
 }
-
-case class TaxYear(year: Int, isCurrent: Option[Boolean] = None)

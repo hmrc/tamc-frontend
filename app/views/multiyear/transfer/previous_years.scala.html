@@ -49,8 +49,6 @@ Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
     </header>
 
-    <p>@Html(Messages("pages.previousyear.lede"))</p>
-
     <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerator().ukDateTransformer(input.dateOfMarriage)))</p>
 
     <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" role="button"

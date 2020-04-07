@@ -16,7 +16,7 @@
 
 package config
 
-import config.ApplicationConfig.loadConfig
+import config.ApplicationConfig.{loadConfig, runModeConfiguration}
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
@@ -29,7 +29,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override protected def runModeConfiguration: Configuration = Play.current.configuration
 
-  val currentTaxYear: Int = TaxYear.current.startYear
+  private lazy val currentTaxYear: TaxYear = TaxYear.current
 
   private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -57,10 +57,13 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
-  lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+  lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path")
+    .getOrElse("/template/mustache")
 
-  val TAMC_BEGINNING_YEAR = 2015
-  val TAMC_MIN_DATE = new LocalDate(1900, 1, 1)
+  val TAMC_BEGINNING_YEAR: Int = runModeConfiguration.getInt("tamc-earliest-valid-year")
+    .getOrElse(throw new RuntimeException("Cannot find 'tamc-earliest-valid-year' in 'data/tax-rates.conf'!"))
+
+  val TAMC_MIN_DATE: LocalDate = new LocalDate(1899, 12, 31)
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
   val generalEnquiriesLink = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
@@ -86,7 +89,13 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_MA_ENDING_DATES = "MA_ENDING_DATES"
   val CACHE_RELATIONSHIP_RECORDS = "RELATIONSHIP_RECORDS"
 
-  def actualTaxYear(taxYear: Int = 0): Int = if (taxYear == 0) currentTaxYear else taxYear
+  def actualTaxYear(taxYear: Int): Int = {
+    if (taxYear <= 0)
+      currentTaxYear.startYear
+    else
+      taxYear
+  }
+
   def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT_SCOT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-scot-" + actualTaxYear(taxYear)).getOrElse(0)

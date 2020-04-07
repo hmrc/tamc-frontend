@@ -26,21 +26,21 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.date-of-marriage")),
+title = messages("title.application.pattern", messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerator().formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
 ){
 
-<a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(messages("generic.back"))</a>
 
 @templates.form_error_notification(marriageForm)
 
 <header class="page-heading">
-    <h1 class="heading-xlarge">@Html(Messages("pages.date-of-marriage.heading"))</h1>
+    <h1 class="heading-xlarge">@Html(messages("pages.date-of-marriage.heading"))</h1>
 </header>
 
-<p>@Html(Messages("pages.date-of-marriage.para1"))</p>
-<p>@Html(Messages("pages.date-of-marriage.para2"))</p>
+<p>@Html(messages("pages.date-of-marriage.para1"))</p>
+<p>@Html(messages("pages.date-of-marriage.para2"))</p>
 
 @helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 <fieldset>
@@ -48,17 +48,17 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${TextGenerator().formPageDat
         @templates.dateFields(
         marriageForm,
         "dateOfMarriage",
-        Html(Messages("pages.date-of-marriage.h2")),
+        Html(messages("pages.date-of-marriage.h2")),
         None,
-        '_hintText -> Messages("pages.form.field-helper.dom"),
-        '_label -> Messages("collect_user_data.dob.error"),
+        '_hintText -> messages("pages.form.field-helper.dom"),
+        '_label -> messages("collect_user_data.dob.error"),
         '_labelTextClass -> "client-error-notification")
     </div>
 </fieldset>
 
 
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofmarriage_continue">
-        @Html(Messages("generic.continue"))
+        @Html(messages("generic.continue"))
     </button>
 
 }

@@ -28,10 +28,11 @@ object EligibilityCalculatorService extends EligibilityCalculatorService
 trait EligibilityCalculatorService {
 
   def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country): EligibilityCalculatorResult = {
+    val maxBenefitLimit = BenefitCalculatorHelper.maxLimit(countryOfResidence)
 
     val hasMaxBenefit = transferorIncome < TRANSFEROR_ALLOWANCE && recipientIncome > RECIPIENT_ALLOWANCE
-    val recipientNotEligible = recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence) || recipientIncome < PERSONAL_ALLOWANCE()
-    val bothOverMaxLimit = transferorIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence) && recipientIncome > BenefitCalculatorHelper.maxLimit(countryOfResidence)
+    val recipientNotEligible = recipientIncome > maxBenefitLimit || recipientIncome < PERSONAL_ALLOWANCE()
+    val bothOverMaxLimit = transferorIncome > maxBenefitLimit && recipientIncome > maxBenefitLimit
 
     if (transferorIncome > recipientIncome)
       EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
