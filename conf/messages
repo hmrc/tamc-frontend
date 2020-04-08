@@ -269,7 +269,9 @@ pages.finished.para2=If it does not appear in your inbox, please check your spam
 pages.finished.now=What happens next
 pages.finished.para4=HMRC will now process your Marriage Allowance application. Please check the email we have sent you for full details on how you will receive Marriage Allowance.
 pages.finished.back-pta=Back to Personal Tax Account
-pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
+pages.finished.check-link-para1=You can
+pages.finished.check-link-para2=at any time through your personal tax account.
+pages.finished.check-link.text=check your current Marriage Allowance and make changes
 pages.finished.backdated-payments=Backdated payments can take up to 8 weeks to process.
 pages.finished.hidden-warning=Warning
 
