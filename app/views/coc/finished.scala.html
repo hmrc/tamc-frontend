@@ -38,5 +38,9 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finis
 <p>@Html(Messages("pages.coc.finish.junk"))</p>
 <h2 class="heading-medium">@Html(Messages("pages.coc.finish.whn"))</h2>
 <p>@Html(Messages("pages.coc.finish.para1"))</p>
-<p>@Html(Messages("pages.coc.finish.para2"))</p>
+<p>
+ @messages("pages.coc.finish.para2.part1")
+ <a href=@ApplicationConfig.callbackUrl>@messages("pages.coc.finish.para2.link-text")</a>
+ @messages("pages.coc.finish.para2.part2")
+</p>
 }
