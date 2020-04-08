@@ -108,7 +108,7 @@ class RoutesTest extends ControllerBaseSpec {
 
       val ptaLink = document.getElementById("paragraph-5")
       ptaLink shouldNot be(null)
-      ptaLink.getElementById("pta-link").attr("href") shouldBe "/personal-account"
+      ptaLink.getElementById("pta-link").attr("href") shouldBe "http://localhost:9232/personal-account"
     }
   }
 
