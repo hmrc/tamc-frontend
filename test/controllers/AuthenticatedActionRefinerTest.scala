@@ -58,7 +58,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
       "there is no active session" in new FakeController(Future.failed(NoActiveSessionException)) {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result).get shouldBe "/gg/sign-in"
+        redirectLocation(result) shouldBe Some("/gg/sign-in")
       }
     }
 
