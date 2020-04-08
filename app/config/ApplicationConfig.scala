@@ -51,8 +51,9 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val callbackUrl = loadConfig("tamc.external-urls.callback-url")
   override lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
   override lazy val callChargeUrl: String = loadConfig("tamc.external-urls.govuk-call-charges")
-  override lazy val contactIncomeTaxHelpline: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
-  override lazy val marriageAllowanceGuide: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
+  override lazy val contactIncomeTaxHelplineUrl: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
+  override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
+  override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
 
@@ -129,8 +130,9 @@ trait ApplicationConfig {
   val logoutCallbackUrl: String
   val callbackUrl: String
   val callChargeUrl: String
-  val contactIncomeTaxHelpline: String
-  val marriageAllowanceGuide: String
+  val contactIncomeTaxHelplineUrl: String
+  val marriageAllowanceGuideUrl: String
+  val howItWorksUrl: String
 
   val analyticsToken: Option[String]
   val analyticsHost: String
