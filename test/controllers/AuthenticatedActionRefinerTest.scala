@@ -22,7 +22,8 @@ import models.auth.{PermanentlyAuthenticated, TemporarilyAuthenticated}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api.mvc.{Controller, Result}
+import play.api.mvc.{AnyContent, Controller, Request, Result}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -56,9 +57,10 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
       }
 
       "there is no active session" in new FakeController(Future.failed(NoActiveSessionException)) {
+        val request: Request[AnyContent] = FakeRequest("GET", "/tamc")
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some("/gg/sign-in")
+        redirectLocation(result) shouldBe Some("/gg/sign-in?continue=%2Ftamc")
       }
     }
 

@@ -55,7 +55,7 @@ class AuthenticatedActionRefiner @Inject()(
       case _: InsufficientConfidenceLevel =>
         Left(Redirect(ApplicationConfig.ivUpliftUrl))
       case _: NoActiveSession =>
-        Left(Redirect(ApplicationConfig.ggSignInUrl))
+        Left(Redirect(ApplicationConfig.ggSignInUrl(Some(request.uri))))
     }
   }
 }

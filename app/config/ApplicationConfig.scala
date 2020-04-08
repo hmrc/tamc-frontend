@@ -16,6 +16,8 @@
 
 package config
 
+import java.net.URLEncoder
+
 import config.ApplicationConfig.{loadConfig, runModeConfiguration}
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
@@ -56,7 +58,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
-  def ggSignInUrl: String = "/gg/sign-in"
+  def ggSignInUrl(continueUrl: Option[String]): String = "/gg/sign-in" + continueUrl.fold("")(url => s"?continue=${URLEncoder.encode(url, "UTF-8")}")
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
   override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
@@ -163,7 +165,7 @@ trait ApplicationConfig {
 
   def ivUpliftUrl = createUrl(action = "uplift")
 
-  def ggSignInUrl: String
+  def ggSignInUrl(continueUrl: Option[String]): String
 
   val TAMC_JOURNEY = "TAMC_JOURNEY"
   val TAMC_JOURNEY_PTA = "PTA"

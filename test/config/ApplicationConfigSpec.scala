@@ -25,4 +25,16 @@ class ApplicationConfigSpec extends UnitSpec {
       ApplicationConfig.TAMC_BEGINNING_YEAR should be(2016)
     }
   }
+
+  "ggSignInUrl" must {
+    "build ggSignInUrl" when {
+      "has no continue" in {
+        ApplicationConfig.ggSignInUrl(None) shouldBe "/gg/sign-in"
+      }
+      "has continue" in {
+        ApplicationConfig.ggSignInUrl(Some("/tamc")) shouldBe "/gg/sign-in?continue=%2Ftamc"
+      }
+    }
+  }
+
 }
