@@ -27,7 +27,8 @@ import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import uk.gov.hmrc.auth.core.{AuthConnector, BearerTokenExpired, ConfidenceLevel, InsufficientConfidenceLevel, InvalidBearerToken, NoActiveSession}
+import utils.RetrivalHelper._
+import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 import utils.ControllerBaseTest
 
 import scala.concurrent.Future
@@ -86,8 +87,6 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
 
   object NoActiveSessionException extends NoActiveSession("")
 
-  import AuthenticatedActionRefinerTest._
-
   val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
     None ~ None ~ ConfidenceLevel.L200 ~ None
 
@@ -97,10 +96,4 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   val withNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
     Some(Credentials("", "")) ~ Some(Ninos.nino1) ~ ConfidenceLevel.L200 ~ None
 
-}
-
-object AuthenticatedActionRefinerTest {
-  implicit class RetrievalsUtil[A](val retrieval: A) extends AnyVal {
-    def `~`[B](anotherRetrieval: B): A ~ B = uk.gov.hmrc.auth.core.retrieve.~(retrieval, anotherRetrieval)
-  }
 }

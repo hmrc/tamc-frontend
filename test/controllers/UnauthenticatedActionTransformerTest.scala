@@ -24,6 +24,7 @@ import org.mockito.Mockito.when
 import play.api.mvc.{Controller, Result}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
+import utils.RetrivalHelper._
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 import utils.ControllerBaseTest
 
@@ -73,6 +74,6 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseTest {
 
   object NoActiveSessionException extends NoActiveSession("")
 
-  val withCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L200, None), Some(Credentials("", "")))
-  val withoutCredRetrieval: AuthRetrievals = new ~(new ~(ConfidenceLevel.L200, None), None)
+  val withCredRetrieval: AuthRetrievals = ConfidenceLevel.L200 ~  None ~ Some(Credentials("", ""))
+  val withoutCredRetrieval: AuthRetrievals = ConfidenceLevel.L200 ~ None ~  None
 }
