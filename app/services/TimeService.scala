@@ -23,7 +23,6 @@ import uk.gov.hmrc.time.TaxYear
 
 object TimeService extends TimeService
 
-//TODO tidy this up
 trait TimeService {
 
   def isFutureDate(date: LocalDate): Boolean =
