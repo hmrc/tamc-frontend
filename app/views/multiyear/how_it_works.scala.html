@@ -35,8 +35,11 @@ title = Messages("title.pattern", Messages("title.how-it-works"))
     </header>
 
     <p>
+        @if(LanguageUtils.isWelsh(messages)) {
+        messages("pages.how-it-works.lede-pre1.part1")
+        }
         <a href=@marriageAllowanceGuideUrl target="_blank">@messages("pages.how-it-works.lede-pre1.link-text")</a>
-        @messages("pages.how-it-works.lede-pre1",
+        @messages("pages.how-it-works.lede-pre1.part2",
     NumberFormat.getIntegerInstance().format(MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()))</p>
     <p>@Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(MAX_BENEFIT())))</p>
     <p>@Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))</p>

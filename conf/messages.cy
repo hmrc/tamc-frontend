@@ -306,8 +306,9 @@ pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifi
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=Sut y mae’n gweithio
-pages.how-it-works.lede-pre1=yn caniatáu i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
-pages.how-it-works.lede-pre1.link-text=Mae Lwfans Priodasol
+pages.how-it-works.lede-pre1.part1=Mae
+pages.how-it-works.lede-pre1.part2=yn caniatáu i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
+pages.how-it-works.lede-pre1.link-text=Lwfans Priodasol
 pages.how-it-works.lede-pre2=Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre4=Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
 pages.how-it-works.lede-pre5=Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2016 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
@@ -473,7 +474,7 @@ technical.issue.back=Dychwelyd i GOV.UK
 technical.other-ways.h1=Ffyrdd eraill o wneud cais am Lwfans Priodasol
 technical.other-ways.para0.part1=Gallwch wneud cais am Lwfans Priodasol drwy’’ch
 technical.other-ways.para0.link-text=Cyfrif Treth Personol
-technical.other-ways.para0.part2=, o dan ‘gwasanaethau y mae’‘n bosibl y bydd eu hangen arnoch’.
+technical.other-ways.para0.part2=, o dan ‘gwasanaethau y mae’n bosibl y bydd eu hangen arnoch’.
 technical.other-ways.para1=Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
 technical.other-ways.para2=Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details=Methu dod o hyd i fanylion
@@ -566,7 +567,7 @@ change.status.active=Gweithredol
 pages.noyears.h1=Nid ydych wedi dewis blynyddoedd treth i wneud cais ar eu cyfer
 pages.noyears.content1=Ewch yn &#244;l os ydych am ddewis blwyddyn i wneud cais ar ei chyfer.
 pages.noyears.findoutmore.part1=Rhagor o wybodaeth am
-pages.noyears.findoutmore.link-text=sut y mae Lwfans Priodasol yn gweithio.
+pages.noyears.findoutmore.link-text=sut y mae Lwfans Priodasol yn gweithio
 #********************************************************************************
 # Breadcrumb
 #********************************************************************************
