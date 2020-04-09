@@ -317,7 +317,7 @@ pages.date-of-marriage.h2=When did you marry or form a civil partnership with yo
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=How it works
-pages.how-it-works.lede-pre1=lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
+pages.how-it-works.lede-pre1.part2=lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
 pages.how-it-works.lede-pre1.link-text=Marriage Allowance 
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
 pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
@@ -492,7 +492,7 @@ technical.issue.back=Return to GOV.UK
 technical.other-ways.h1=Other ways to apply for Marriage Allowance
 technical.other-ways.para0.part1=You can apply for Marriage Allowance through your 
 technical.other-ways.para0.link-text=personal account 
-technical.other-ways.para0.part2=, under &#8216;services you might need&#8217;.
+technical.other-ways.para0.part2=, under ‘services you might need’.
 technical.other-ways.para1=You can also call HM Revenue and Customs (HMRC) to make an application.
 technical.other-ways.para2=You will need to know you and your partner’s National Insurance number.
 title.cannot-find-details = Cannot find details
@@ -594,7 +594,7 @@ change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 pages.noyears.h1=You have not selected any tax years to apply for
 pages.noyears.content1=Go back if you want to select a year to apply for.
 pages.noyears.findoutmore.part1=You can find out more about 
-pages.noyears.findoutmore.link-text=how Marriage Allowance works.
+pages.noyears.findoutmore.link-text=how Marriage Allowance works
 
 #********************************************************************************
 # Breadcrumb
