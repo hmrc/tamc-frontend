@@ -306,7 +306,7 @@ pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifi
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=Sut y mae’n gweithio
-pages.how-it-works.lede-pre1=yn caniat&#225;u i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
+pages.how-it-works.lede-pre1=yn caniatáu i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
 pages.how-it-works.lede-pre1.link-text=Mae Lwfans Priodasol
 pages.how-it-works.lede-pre2=Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre4=Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
@@ -471,9 +471,9 @@ technical.issue.heading=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 technical.issue.try.later=Rhowch gynnig arall arni yn nes ymlaen.
 technical.issue.back=Dychwelyd i GOV.UK
 technical.other-ways.h1=Ffyrdd eraill o wneud cais am Lwfans Priodasol
-technical.other-ways.para0.part1=Gallwch wneud cais am Lwfans Priodasol drwy''ch
+technical.other-ways.para0.part1=Gallwch wneud cais am Lwfans Priodasol drwy’’ch
 technical.other-ways.para0.link-text=Cyfrif Treth Personol
-technical.other-ways.para0.part2=, o dan &#8216;gwasanaethau y mae&#8217;&#8216;n bosibl y bydd eu hangen arnoch&#8217;.
+technical.other-ways.para0.part2=, o dan ‘gwasanaethau y mae’‘n bosibl y bydd eu hangen arnoch’.
 technical.other-ways.para1=Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
 technical.other-ways.para2=Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details=Methu dod o hyd i fanylion
