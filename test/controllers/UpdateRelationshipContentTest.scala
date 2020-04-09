@@ -26,11 +26,10 @@ import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.time.TaxYear
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.time.TaxYear
 import utils.ControllerBaseTest
 import views.helpers.TextGenerator
 
@@ -108,7 +107,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
     when(mockUpdateRelationshipService.getMAEndingDatesForCancelation)
       .thenReturn(maEndingDates)
 
-    when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+    when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
       .thenReturn(Future.successful(maEndingDates))
 
     val result: Future[Result] = controller().cancel(request)
@@ -278,7 +277,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
       val result = controller().divorceEndExplanation(request)
@@ -314,7 +313,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
       val result =  controller().divorceEndExplanation(request)
@@ -350,7 +349,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
       val result =  controller().divorceEndExplanation(request)
@@ -386,7 +385,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
       val result =  controller().divorceEndExplanation(request)

@@ -416,7 +416,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val marriageAllowanceEndingDates = MarriageAllowanceEndingDates(nowDate, nowDate)
 
       when(mockUpdateRelationshipService.getMAEndingDatesForCancelation).thenReturn(Future.successful(marriageAllowanceEndingDates))
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(marriageAllowanceEndingDates))(any())).
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(marriageAllowanceEndingDates))(any(), any())).
         thenReturn(Future.successful(marriageAllowanceEndingDates))
 
       val result = controller().cancel(request)
@@ -576,7 +576,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
         .thenReturn(Future.successful(maEndingDates))
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any(), any()))
         .thenReturn(Future.successful(maEndingDates))
 
       val viewModel = DivorceEndExplanationViewModel(role, divorceDate, maEndingDates)
@@ -616,7 +616,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
           .thenReturn(Future.successful(maEndingDates))
 
-        when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any()))
+        when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any(), any()))
           .thenReturn(failedFuture)
 
         val result = controller().divorceEndExplanation()(request)
@@ -744,7 +744,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   "submitConfirmUpdate" should {
     "redirect to the finish update page" in {
       when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any()))
-        .thenReturn(Future.successful())
+        .thenReturn(Future.successful(mock[UpdateRelationshipRequestHolder]))
 
       val result = controller().submitConfirmUpdate(request)
 

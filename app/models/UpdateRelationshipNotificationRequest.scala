@@ -25,15 +25,6 @@ case class UpdateRelationshipNotificationRequest(full_name: String, email: Email
 
 object UpdateRelationshipNotificationRequest {
   implicit val formats = Json.format[UpdateRelationshipNotificationRequest]
-
-  def apply(email: String, primaryRole: Role, loggedInUserInfo: LoggedInUserInfo, isWelsh: Boolean): UpdateRelationshipNotificationRequest = {
-
-    val role = primaryRole.value
-    val name = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
-    val emailAddress = EmailAddress(email)
-
-    UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)
-  }
 }
 
 

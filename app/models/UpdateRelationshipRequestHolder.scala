@@ -21,22 +21,5 @@ import play.api.libs.json.Json
 case class UpdateRelationshipRequestHolder(request: UpdateRelationshipRequest, notification: UpdateRelationshipNotificationRequest)
 
 object UpdateRelationshipRequestHolder {
-
   implicit val formats = Json.format[UpdateRelationshipRequestHolder]
-
-  def apply(updateRelationshipData: UpdateRelationshipData, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
-
-    val relationshipRecords = updateRelationshipData.relationshipRecords
-    val primaryRecord = relationshipRecords.primaryRecord
-    val relationshipInformation = RelationshipInformation(primaryRecord.creationTimestamp, updateRelationshipData.endMaReason,
-      updateRelationshipData.marriageEndDate)
-    val recipient = relationshipRecords.recipientInformation
-    val transferor = relationshipRecords.transferorInformation
-    val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInformation)
-    val emailNotificationData = UpdateRelationshipNotificationRequest(updateRelationshipData.email, primaryRecord.role,
-      relationshipRecords.loggedInUserInfo, isWelsh)
-
-    UpdateRelationshipRequestHolder(updateRelationshipRequest, emailNotificationData)
-
-  }
 }

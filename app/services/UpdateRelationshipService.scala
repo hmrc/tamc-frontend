@@ -25,14 +25,13 @@ import models._
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import services.TimeService._
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import utils.LanguageUtils
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 object UpdateRelationshipService extends UpdateRelationshipService {
@@ -47,11 +46,9 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
 
-  private val parseDate = parseDateWithFormat(_: String)
-
-  def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
+  def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_))
-  }
+
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
 
@@ -64,7 +61,7 @@ trait UpdateRelationshipService {
     val cacheRelationshipRecordFuture = cachingService.cacheValue(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
 
     for {
-      _ <-cacheRelationshipRecordFuture
+      _ <- cacheRelationshipRecordFuture
       _ <- checkCreateActionLockFuture
       _ <- saveTransferorRecordFuture
     } yield relationshipRecords
@@ -120,15 +117,51 @@ trait UpdateRelationshipService {
   def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
     cachingService.cacheValue[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
 
-  def updateRelationship(nino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[Unit] = {
+  def updateRelationship(nino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] = {
+
+    def updateRelationshipRequestHolder(updateRelationshipData: UpdateRelationshipData): UpdateRelationshipRequestHolder = {
+
+      val relationshipRecords = updateRelationshipData.relationshipRecords
+      val primaryRecord = relationshipRecords.primaryRecord
+      val relationshipInfo = relationshipInformation(primaryRecord.creationTimestamp, updateRelationshipData.endMaReason,
+        updateRelationshipData.marriageEndDate)
+      val recipient = relationshipRecords.recipientInformation
+      val transferor = relationshipRecords.transferorInformation
+      val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInfo)
+      val emailNotificationData = updateRelationshipNotificationRequest(updateRelationshipData.email, primaryRecord.role,
+        relationshipRecords.loggedInUserInfo, LanguageUtils.isWelsh(messages))
+
+      UpdateRelationshipRequestHolder(updateRelationshipRequest, emailNotificationData)
+    }
+
+    def relationshipInformation(creationTimeStamp: String, relationshipEndReason: String, endDate: LocalDate): RelationshipInformation = {
+
+      val endDateFormatted = endDate.toString("yyyyMMdd")
+      val desEnumeration = relationshipEndReason match {
+        case "Divorce" => "Divorce/Separation"
+        case "Cancel" => "Cancelled by Transferor"
+        case _ => throw DesEnumerationNotFound()
+      }
+
+      RelationshipInformation(creationTimeStamp, desEnumeration, endDateFormatted)
+    }
+
+    def updateRelationshipNotificationRequest(email: String, primaryRole: Role, loggedInUserInfo: LoggedInUserInfo, isWelsh: Boolean):
+     UpdateRelationshipNotificationRequest = {
+        val role = primaryRole.value
+        val name = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
+        val emailAddress = EmailAddress(email)
+
+        UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)
+    }
 
     for {
       updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
       updateRelationshipData = UpdateRelationshipData(updateRelationshipCacheData)
-      updateRelationshipRequestHolder = UpdateRelationshipRequestHolder(updateRelationshipData, LanguageUtils.isWelsh(messages))
-      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipRequestHolder)
+      updateRelationshipRequest = updateRelationshipRequestHolder(updateRelationshipData)
+      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipRequest)
       _ <- auditUpdateRelationship(postUpdateData)
-    } yield Future.successful(Unit)
+    } yield postUpdateData
   }
 
   def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
@@ -151,16 +184,17 @@ trait UpdateRelationshipService {
 
   }
 
-  def saveMarriageAllowanceEndingDates(maEndingDates: MarriageAllowanceEndingDates)(implicit hc: HeaderCarrier): Future[MarriageAllowanceEndingDates] = {
+  def saveMarriageAllowanceEndingDates(maEndingDates: MarriageAllowanceEndingDates)(implicit hc: HeaderCarrier, ec: ExecutionContext):
+  Future[MarriageAllowanceEndingDates] =
     cachingService.cacheValue[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES, maEndingDates)
-  }
+
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     cachingService.getRelationshipRecords.map(_.getOrElse(throw CacheMissingRelationshipRecords()))
 
   def removeCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = cachingService.remove()
 
-  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
+  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }
