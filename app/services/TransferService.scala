@@ -16,7 +16,6 @@
 
 package services
 
-import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors._
@@ -31,8 +30,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
 import utils.LanguageUtils
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 object TransferService extends TransferService {
@@ -51,7 +48,7 @@ trait TransferService {
   val timeService: TimeService
   val applicationService: ApplicationService
 
-  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
+  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }

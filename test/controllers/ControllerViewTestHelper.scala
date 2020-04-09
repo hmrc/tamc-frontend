@@ -45,7 +45,7 @@ trait ControllerViewTestHelper extends UnitSpec with MockitoSugar {
 
   implicit class ViewMatcherHelper(result: Future[Result]) {
 
-    def rendersTheSameViewAs[A](expected: Html): Unit =
+    def rendersTheSameViewAs(expected: Html): Unit =
       contentAsString(result) should equal(expected.toString)
   }
 }

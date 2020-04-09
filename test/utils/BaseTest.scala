@@ -26,8 +26,7 @@ import scala.concurrent.ExecutionContext
 
 trait BaseTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
 
-  implicit val ec = ExecutionContext.Implicits.global
-  implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
-
+  implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 }
