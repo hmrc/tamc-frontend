@@ -16,17 +16,26 @@
 
 package models
 
+import errors.DesEnumerationNotFound
 import org.joda.time.LocalDate
 import play.api.libs.json.Json
 
 object RelationshipInformation {
   implicit val formats = Json.format[RelationshipInformation]
 
-  def apply(activeRelationship: RelationshipRecord, relationshipEndReason: String, endDate: LocalDate):  RelationshipInformation = {
-    val creationTimeStamp = activeRelationship.creationTimestamp
+  def apply(creationTimeStamp: String, relationshipEndReason: String, endDate: LocalDate):  RelationshipInformation = {
     val endDateFormatted = endDate.toString("yyyyMMdd")
-    RelationshipInformation(creationTimeStamp, relationshipEndReason, endDateFormatted)
+    RelationshipInformation(creationTimeStamp, toDesEnumeration(relationshipEndReason), endDateFormatted)
   }
+
+  private def toDesEnumeration(endReason: String): String = {
+    endReason match {
+      case "Divorce" => "Divorce/Separation"
+      case "Cancel" => "Cancelled by Transferor"
+      case _ => throw DesEnumerationNotFound()
+    }
+  }
+
 }
 
 case class RelationshipInformation(creationTimestamp: String, relationshipEndReason: String, actualEndDate: String)

@@ -32,6 +32,7 @@ class UpdateRelationshipRequestHolderTest extends UnitSpec {
   val email = "email@email.com"
   val fullName = s"$firstName $surname"
   val maEndReason = "Divorce"
+  val maDesEnumeration = "Divorce/Separation"
   val marriageAllowanceEndDate = now.toLocalDate.plusDays(1)
   val isWelsh = false
   val relationshipRecords = RelationshipRecords(activeRecipientRelationshipRecord, Seq.empty[RelationshipRecord], loggedInUser)
@@ -44,7 +45,7 @@ class UpdateRelationshipRequestHolderTest extends UnitSpec {
 
         val expectedRecipientInformation = RecipientInformation(instanceIdentifier.toString, now.toString(timeStampFormat))
         val expectedTransferorInformation = TransferorInformation(activeRecipientRelationshipRecord.otherParticipantUpdateTimestamp)
-        val expectedRelationshipInfo = RelationshipInformation(activeRecipientRelationshipRecord.creationTimestamp, DesEnumeration(maEndReason),
+        val expectedRelationshipInfo = RelationshipInformation(activeRecipientRelationshipRecord.creationTimestamp, maDesEnumeration,
           marriageAllowanceEndDate.toString("yyyyMMdd"))
         val expectedEmailNotification = UpdateRelationshipNotificationRequest(fullName, EmailAddress(email), Recipient.value)
         val expectedUpdateRelationshipRequest = UpdateRelationshipRequest(expectedRecipientInformation, expectedTransferorInformation, expectedRelationshipInfo)

@@ -18,29 +18,28 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
+import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
+import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
 import org.joda.time.LocalDate
+import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api.mvc.Result
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{TimeService, _}
+import services._
 import test_utils._
+import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.RequestBuilder._
-import viewModels._
-import forms.EmailForm.emailForm
-import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
-import org.jsoup.Jsoup
-import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.{ControllerBaseTest, MockTemporaryAuthenticatedAction}
+import viewModels._
 
 import scala.concurrent.Future
 import scala.language.postfixOps
@@ -640,7 +639,9 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller().confirmEmail(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs views.html.coc.email(emailForm.fill(EmailAddress(email)))
+        val populatedForm = emailForm.fill(EmailAddress(email))
+
+        result rendersTheSameViewAs views.html.coc.email(populatedForm)
 
       }
 
@@ -774,7 +775,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         .thenReturn(Future.successful(email))
 
       when(mockUpdateRelationshipService.removeCache(any(), any()))
-        .thenReturn(Future.successful())
+        .thenReturn(Future.successful(mock[HttpResponse]))
 
       val result = controller().finishUpdate()(request)
       status(result) shouldBe OK

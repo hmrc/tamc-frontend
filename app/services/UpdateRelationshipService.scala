@@ -27,7 +27,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import services.TimeService._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import utils.LanguageUtils
@@ -158,9 +158,7 @@ trait UpdateRelationshipService {
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     cachingService.getRelationshipRecords.map(_.getOrElse(throw CacheMissingRelationshipRecords()))
 
-  def removeCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
-    cachingService.remove().map(_ => Unit)
-  }
+  def removeCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = cachingService.remove()
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
     Future {

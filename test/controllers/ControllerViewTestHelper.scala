@@ -20,7 +20,7 @@ import models.auth.{AuthState, AuthenticatedUserRequest}
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.{contentAsString, _}
+import play.api.test.Helpers._
 import play.twirl.api.Html
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.play.partials.FormPartialRetriever

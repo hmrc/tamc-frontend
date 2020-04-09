@@ -427,12 +427,13 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
     "removeCache" should {
       "return Unit when cache has been dropped" in {
-        when(service.cachingService.remove()(any(), any()))
-          .thenReturn(Future.successful(HttpResponse(200, None, Map("" -> Seq("")))))
+
+        val httpResponse = HttpResponse(200, None, Map("" -> Seq("")))
+        when(service.cachingService.remove()(any(), any())).thenReturn(Future.successful(httpResponse))
 
         val result = await(service.removeCache)
 
-        result shouldBe ()
+        result shouldBe httpResponse
       }
     }
 

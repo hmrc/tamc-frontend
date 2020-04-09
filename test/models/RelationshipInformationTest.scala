@@ -17,11 +17,25 @@
 package models
 
 import errors.DesEnumerationNotFound
+import org.joda.time.LocalDate
 import uk.gov.hmrc.play.test.UnitSpec
 
-class DesEnumerationTest extends UnitSpec {
+class RelationshipInformationTest extends UnitSpec {
 
-  "DesEnumeration" should {
+  val creationTimestamp = "20191212105512"
+  val endDate = LocalDate.now()
+
+  "RelationshipInformation" should {
+
+    "create a RelationshipInformation object" in {
+
+      val relationshipEndReason = "Divorce"
+      val expectedResult = RelationshipInformation(creationTimestamp, "Divorce/Separation", endDate.toString("yyyyMMdd"))
+
+      RelationshipInformation(creationTimestamp, relationshipEndReason, endDate) shouldBe expectedResult
+
+    }
+
 
     "return a DESEnumeration value for a given marriage allowance endReason" when {
 
@@ -29,13 +43,15 @@ class DesEnumerationTest extends UnitSpec {
 
       endReasonsWithEnumerations foreach { reasonAndEnumeration =>
         s"the reason is ${reasonAndEnumeration._1}" in {
-          DesEnumeration(reasonAndEnumeration._1) shouldBe reasonAndEnumeration._2
+          RelationshipInformation(creationTimestamp, reasonAndEnumeration._1, endDate).relationshipEndReason shouldBe
+            reasonAndEnumeration._2
         }
       }
     }
 
     "return an exception if the value to convert is unsupported" in {
-      a[DesEnumerationNotFound] shouldBe thrownBy(DesEnumeration("Earnings"))
+      a[DesEnumerationNotFound] shouldBe thrownBy(RelationshipInformation(creationTimestamp, "Earnings", endDate))
     }
+
   }
 }

@@ -22,8 +22,3 @@ import play.api.i18n.Messages
 object LanguageUtils {
   def isWelsh(messages: Messages): Boolean = messages.lang.language == ApplicationConfig.LANG_LANG_WELSH
 }
-
-
-
-
-

@@ -27,6 +27,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.time.TaxYear
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -511,11 +512,12 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
   "Finish Update page" should {
 
     "display the corrrect content" in {
+
       when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
         .thenReturn(Future.successful("email@email.com"))
 
       when(mockUpdateRelationshipService.removeCache(any(), any()))
-        .thenReturn()
+        .thenReturn(mock[HttpResponse])
 
       val expectedHeading = messagesApi("pages.coc.finish.header")
 

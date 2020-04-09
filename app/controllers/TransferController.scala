@@ -238,9 +238,9 @@ class TransferController @Inject()(
       } recover handleError
   }
 
-  def cannotUseService: Action[AnyContent] = authenticate.async {
+  def cannotUseService: Action[AnyContent] = authenticate {
     implicit request =>
-      Future.successful(Ok(views.html.errors.transferer_deceased()))
+      Ok(views.html.errors.transferer_deceased())
   }
 
   def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =

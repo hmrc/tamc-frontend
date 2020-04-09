@@ -28,8 +28,8 @@ object UpdateRelationshipRequestHolder {
 
     val relationshipRecords = updateRelationshipData.relationshipRecords
     val primaryRecord = relationshipRecords.primaryRecord
-    val desEnumeration = DesEnumeration(updateRelationshipData.endMaReason)
-    val relationshipInformation = RelationshipInformation(primaryRecord, desEnumeration, updateRelationshipData.marriageEndDate)
+    val relationshipInformation = RelationshipInformation(primaryRecord.creationTimestamp, updateRelationshipData.endMaReason,
+      updateRelationshipData.marriageEndDate)
     val recipient = relationshipRecords.recipientInformation
     val transferor = relationshipRecords.transferorInformation
     val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInformation)
