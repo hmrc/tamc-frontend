@@ -26,10 +26,10 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = messages("title.pattern", messages("title.cannot-find-details"))) {
 
-<h1 class="heading-large">@Html(messages("technical.cannot-find-details.h1"))</h1>
+<h1 class="heading-large">@messages("technical.cannot-find-details.h1")</h1>
 
 <p id="error">
-    @Html(messages("technical.cannot-find-details.para1"))
+    @messages("technical.cannot-find-details.para1")
 </p>
 
 <p><strong>@messages("hmrc.contact-details")</strong></p>
@@ -54,5 +54,5 @@ title = messages("title.pattern", messages("title.cannot-find-details"))) {
     @messages("hmrc.contact-details-8")
 </p>
 
-<a href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a>
+<p><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }
