@@ -16,6 +16,7 @@
 
 @import play.twirl.api.Html
 @import models.auth.UserRequest
+@import config.ApplicationConfig
 
 @()(implicit messages: Messages,
 request: UserRequest[_],
@@ -23,19 +24,19 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.transfer-in-place")),
+title = messages("title.pattern", messages("title.transfer-in-place")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-rel-exists")))) {
-<p>@Html(Messages("transferor.has.relationship"))</p>
-<strong>@Html(Messages("hmrc.contact-details"))</strong>
+<p>@Html(messages("transferor.has.relationship"))</p>
+<strong>@Html(messages("hmrc.contact-details"))</strong>
 <ul>
-    <li>@Html(Messages("hmrc.contact-details-2"))</li>
-    <li>@Html(Messages("hmrc.contact-details-3"))</li>
-    <li>@Html(Messages("hmrc.contact-details-4"))</li>
-    <li>@Html(Messages("hmrc.contact-details-5"))</li>
-    <li>@Html(Messages("hmrc.contact-details-6"))</li>
-    <li>@Html(Messages("hmrc.contact-details-7"))</li>
-    <li>@Html(Messages("hmrc.contact-details-8"))</li>
-    <li>@Html(Messages("hmrc.contact-details-9"))</li>
+    <li>@messages("hmrc.contact-details-2")</li>
+    <li>@messages("hmrc.contact-details-3")</li>
+    <li>@messages("hmrc.contact-details-4")</li>
+    <li>@messages("hmrc.contact-details-5")</li>
+    <li>@messages("hmrc.contact-details-6")</li>
+    <li>@messages("hmrc.contact-details-7")</li>
+    <li>@messages("hmrc.contact-details-8")</li>
+    <li><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
 </ul>
 }

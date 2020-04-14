@@ -16,6 +16,7 @@
 
 @import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
+@import config.ApplicationConfig
 
 @()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -23,32 +24,32 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.bereavement")),
+title = messages("title.pattern", messages("title.bereavement")),
 manageService = true,
 mainConfig = views.helpers.MainConfig()) {
 
 <header class="page-heading">
-    <h1 class="heading-xlarge" id="bereavement-recipient">@Html(Messages("change.status.bereavement.sorry"))</h1>
+    <h1 class="heading-xlarge" id="bereavement-recipient">@messages("change.status.bereavement.sorry")</h1>
 </header>
 
-<p>@Html(Messages("change.status.bereavement.rec.instruction"))</p>
+<p>@messages("change.status.bereavement.rec.instruction")</p>
 
 <ul class="list list-bullet">
-    <li>@Html(Messages("change.status.bereavement.rec.instruction-1"))</li>
-    <li>@Html(Messages("change.status.bereavement.rec.instruction-2"))</li>
+    <li>@messages("change.status.bereavement.rec.instruction-1")</li>
+    <li>@messages("change.status.bereavement.rec.instruction-2")</li>
 </ul>
 
-<h2 class="heading-medium">@Html(Messages("change.status.bereavement.notify-hmrc"))</h2>
+<h2 class="heading-medium">@messages("change.status.bereavement.notify-hmrc")</h2>
 
-<p>@Html(Messages("hmrc.contact-details-2"))<br>
-    @Html(Messages("hmrc.contact-details-3"))<br>
-    @Html(Messages("hmrc.contact-details-4"))</p>
+<p>@messages("hmrc.contact-details-2")<br>
+    @messages("hmrc.contact-details-3")<br>
+    @messages("hmrc.contact-details-4")</p>
 
-<p>@Html(Messages("hmrc.contact-details-5"))<br>
-    @Html(Messages("hmrc.contact-details-6"))</p>
+<p>@messages("hmrc.contact-details-5")<br>
+    @messages("hmrc.contact-details-6")</p>
 
-<p>@Html(Messages("hmrc.contact-details-7"))<br>
-    @Html(Messages("hmrc.contact-details-8"))</p>
+<p>@messages("hmrc.contact-details-7")<br>
+    @messages("hmrc.contact-details-8")</p>
 
-<p>@Html(Messages("hmrc.contact-details-9"))</p>
+<p><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

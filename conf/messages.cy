@@ -123,7 +123,7 @@ income-between-scots=os oedd incwm rhwng {0} {1} a {2} (neu {3} os ydych yn byw 
 #General messages
 generic.ma=Lwfans Priodasol
 generic.ma.apply=Gwneud cais am Lwfans Priodasol
-generic.back=Yn &#244;l
+generic.back=Yn ôl
 generic.next=Nesaf
 generic.previous=Blaenorol
 generic.finish=Gorffen
@@ -183,16 +183,16 @@ title.cannot-use-service=Ni allwch ddefnyddio’r gwasanaeth hwn
 #********************************************************************************
 hmrc.contact-details=Gallwch ffonio CThEM ar:
 hmrc.contact-details-1=Gallwch roi gwybod i CThEM am newid mewn incwm ar:
-hmrc.contact-details-2=Ff&#244;n: 0300 200 1900
-hmrc.contact-details-3=Ff&#244;n testun: 0300 200 3319
+hmrc.contact-details-2=Ffôn: 0300 200 1900
+hmrc.contact-details-3=Ffôn testun: 0300 200 3319
 hmrc.contact-details-4=Y tu allan i’r DU: +44 135 535 9022
 hmrc.contact-detials.time=Oriau agor
 hmrc.contact-details-5=08:30 – 17:00 Dydd Llun – Dydd Gwener
 hmrc.contact-details-6=08:00 – 16:00, Dydd Sadwrn
 hmrc.contact-details-7=Ar gau ar Ddydd Sul a gwyliau’r banc.
-hmrc.contact-detials.calling.time=Yr amser gorau i gysylltu &#226; ni
+hmrc.contact-detials.calling.time=Yr amser gorau i gysylltu â ni
 hmrc.contact-details-8=Mae llinellau ffon yn llai prysur cyn 10:00, Dydd Llun i Ddydd Gwener.
-hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Gwybodaeth am gost galwadau</a>
+hmrc.contact-details-9=Gwybodaeth am gost galwadau
 
 #********************************************************************************
 # Eligibility Calculator
@@ -264,7 +264,9 @@ pages.finished.para2=Os nad yw’n ymddangos yn eich mewnflwch, edrychwch yn eic
 pages.finished.now=Yr hyn sy’n digwydd nesaf
 pages.finished.para4=Bydd CThEM yn prosesu’ch cais am Lwfans Priodasol. Gwiriwch yr e-bost yr ydym wedi’i anfon atoch am fanylion llawn ynghylch sut y byddwch yn cael Lwfans Priodasol.
 pages.finished.back-pta=Yn &#244;l i’r Cyfrif Treth Personol
-pages.finished.check-link-para=Gallwch <a id="pta-link" href="{0}" data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">wirio’ch Lwfans Priodasol presennol a gwneud newidiadau</a> ar unrhyw bryd drwy’ch cyfrif treth personol.
+pages.finished.check-link-para1=Gallwch
+pages.finished.check-link-para2=ar unrhyw bryd drwy’ch cyfrif treth personol.
+pages.finished.check-link.text=wirio’ch Lwfans Priodasol presennol a gwneud newidiadau
 pages.finished.backdated-payments=Gall taliadau sydd wedi’u hôl-ddyddio gymryd hyd at 8 wythnos i’w prosesu.
 #********************************************************************************
 # Registration page - Your spouse details
@@ -304,7 +306,9 @@ pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifi
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=Sut y mae’n gweithio
-pages.how-it-works.lede-pre1=Mae <a href="https://www.gov.uk/marriage-allowance-guide">Lwfans Priodasol</a> yn caniat&#225;u i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
+pages.how-it-works.lede-pre1.part1=Mae
+pages.how-it-works.lede-pre1.part2=yn caniatáu i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
+pages.how-it-works.lede-pre1.link-text=Lwfans Priodasol
 pages.how-it-works.lede-pre2=Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre4=Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
 pages.how-it-works.lede-pre5=Gallwch ôl-ddyddio’ch cais i gynnwys unrhyw flwyddyn dreth er 5 Ebrill 2016 pan oeddech yn gymwys ar gyfer Lwfans Priodasol.
@@ -364,7 +368,6 @@ change.status.divorce.recipient.previous.para1=bydd eich Lwfans Priodasol yn cae
 change.status.divorce.recipient.previous.para2=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth
 change.status.divorce.recipient.content1=Gan fod y dyddiad hwn yn ystod y flwyddyn dreth bresennol:
 change.status.divorce.recipient.options=Ar &#244;l i chi roi gwybod i ni, bydd eich Lwfans Priodasol yn aros yn ei le tan ddiwedd y flwyddyn dreth ({0}). Ni fydd CThEM yn gofyn i chi ad-dalu’r lwfans ychwanegol hwn.
-change.status.divorce.recipient.directions=Dylech roi gwybod i ni os ydych wedi ysgaru ac mae gennych <a href="{0}">archddyfarniad absoliwt</a>, neu os yw’ch partneriaeth sifil wedi dod i ben ac mae gennych <a href="{1}">orchymyn terfynol</a>. Dyma’r dogfennau sy’n dod &#226;’ch priodas neu’ch partneriaeth sifil i ben yn gyfreithlon.
 change.status.historic-active.result=Gallai dileu Lwfans Priodasol o ddechrau’r flwyddyn dreth arwain at eich partner yn tandalu treth. Rhown wybod iddo ar ddiwedd y flwyddyn dreth. Bydd unrhyw dandaliad fel arfer yn cael ei gasglu drwy addasu’i god treth.
 change.status.historic-active.directions=Gallwch ddileu Lwfans Priodasol o ddechrau’r flwyddyn dreth ({2}) os ydych wedi ysgaru ac mae gennych <a href="{0}">archddyfarniad absoliwt</a>, neu os yw’ch partneriaeth sifil wedi dod i ben ac mae gennych <a href="{1}">orchymyn terfynol</a>. Dyma’r dogfennau sy’n dod &#226;’ch priodas neu’ch partneriaeth sifil i ben yn gyfreithlon.
 change.status.cancel.h1=Canslo Lwfans Priodasol
@@ -410,8 +413,8 @@ change.status.bereavement.notify-hmrc=Gallwch roi gwybod i CThEM am brofedigaeth
 change.status.bereavement.rec.instruction=Os trosglwyddodd eich partner rywfaint o’i Lwfans Personol i chi cyn iddo farw:
 change.status.bereavement.rec.instruction-1=bydd eich Lwfans Personol yn parhau ar y lefel uchaf tan ddiwedd y flwyddyn dreth (5 Ebrill)
 change.status.bereavement.rec.instruction-2=caiff ei yst&#226;d ei drin fel bod ei Lwfans Personol yn llai, am ei fod wedi trosglwyddo ychydig ohono i chi
-change.status.bereavement.tr.instruction=Os yw’ch partner yn marw ar &#244;l i chi drosglwyddo rhywfaint o’ch Lwfans Personol iddo:
-change.status.bereavement.tr.instruction-1=caiff ei yst&#226;d ei drin fel bod ganddo’r Lwfans Personol ychwanegol y gwnaethoch drosglwyddo iddo
+change.status.bereavement.tr.instruction=Os yw’ch partner yn marw ar ôl i chi drosglwyddo rhywfaint o’ch Lwfans Personol iddo:
+change.status.bereavement.tr.instruction-1=caiff ei ystâd ei drin fel bod ganddo’r Lwfans Personol ychwanegol y gwnaethoch drosglwyddo iddo
 change.status.bereavement.tr.instruction-2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol ar ddiwedd y flwyddyn dreth (5 Ebrill)
 change.status.divorce.radio=Ysgariad neu ddiwedd partneriaeth sifil
 change.status.bereavement.radio=Profedigaeth
@@ -469,7 +472,9 @@ technical.issue.heading=Mae’n ddrwg gennym, mae problem gyda’r gwasanaeth
 technical.issue.try.later=Rhowch gynnig arall arni yn nes ymlaen.
 technical.issue.back=Dychwelyd i GOV.UK
 technical.other-ways.h1=Ffyrdd eraill o wneud cais am Lwfans Priodasol
-technical.other-ways.para0=Gallwch wneud cais am Lwfans Priodasol drwy''ch <a href="https://www.gov.uk/cyfrif-treth-personol">Cyfrif Treth Personol</a>, o dan ‘gwasanaethau y mae''n bosibl y bydd eu hangen arnoch’.
+technical.other-ways.para0.part1=Gallwch wneud cais am Lwfans Priodasol drwy’’ch
+technical.other-ways.para0.link-text=Cyfrif Treth Personol
+technical.other-ways.para0.part2=, o dan ‘gwasanaethau y mae’n bosibl y bydd eu hangen arnoch’.
 technical.other-ways.para1=Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
 technical.other-ways.para2=Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details=Methu dod o hyd i fanylion
@@ -503,8 +508,8 @@ pages.eligibleyear.toldus=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partner
 pages.eligibleyear.thisyear1=Yn ystod y flwyddyn dreth bresennol
 pages.eligibleyear.thisyear2={0} ymlaen
 pages.eligibleyear.li1=bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn
-pages.eligibleyear.li2=byddwn yn addasu cod treth <span id="firstNameOnly3">{0}</span> i gynnwys y lwfans ychwanegol hwn
-pages.eligibleyear.li3=bydd yn adnewyddu’n awtomatig bob blwyddyn oni bai’ch bod chi neu <span id="firstNameOnly4">{0}</span> yn ei ganslo neu
+pages.eligibleyear.li2=byddwn yn addasu cod treth {0} i gynnwys y lwfans ychwanegol hwn
+pages.eligibleyear.li3=bydd yn adnewyddu’n awtomatig bob blwyddyn oni bai’ch bod chi neu {0} yn ei ganslo neu
 pages.eligibleyear.li3.link.text=nad ydych bellach yn gymwys
 pages.eligibleyear.doyou.want=A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
 pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
@@ -541,7 +546,9 @@ pages.coc.finish.acknowledgement=Anfonir e-bost atoch yn <strong>{0}</strong> i 
 pages.coc.finish.junk=Os nad yw’n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
 pages.coc.finish.whn=Yr hyn sy’n digwydd nesaf
 pages.coc.finish.para1=Bydd y canslo’n cael ei brosesu gan CThEM. Am fanylion llawn, edrychwch ar yr e-bost yr ydym wedi’i anfon atoch.
-pages.coc.finish.para2=Nid oes angen i chi gysylltu &#226; ni. Gallwch <a href="history">wirio statws</a> eich Lwfans Priodasol ar-lein.
+pages.coc.finish.para2.part1=Nid oes angen i chi gysylltu â ni. Gallwch
+pages.coc.finish.para2.link-text=wirio statws
+pages.coc.finish.para2.part2=eich Lwfans Priodasol ar-lein.
 date.fields.day=Diwrnod
 date.fields.month=Mis
 date.fields.year=Blwyddyn
@@ -559,7 +566,8 @@ change.status.active=Gweithredol
 #********************************************************************************
 pages.noyears.h1=Nid ydych wedi dewis blynyddoedd treth i wneud cais ar eu cyfer
 pages.noyears.content1=Ewch yn &#244;l os ydych am ddewis blwyddyn i wneud cais ar ei chyfer.
-pages.noyears.findoutmore=Rhagor o wybodaeth am <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">sut y mae Lwfans Priodasol yn gweithio</a>.
+pages.noyears.findoutmore.part1=Rhagor o wybodaeth am
+pages.noyears.findoutmore.link-text=sut y mae Lwfans Priodasol yn gweithio
 #********************************************************************************
 # Breadcrumb
 #********************************************************************************

@@ -45,5 +45,8 @@ title = Messages("title.application.pattern", Messages("title.finished"))
 </div>
 }
 
-<p id="paragraph-5">@Html(Messages("pages.finished.check-link-para", "/personal-account"))</p>
+<p id="paragraph-5">@messages("pages.finished.check-link-para1")
+    <a id="pta-link" href=@ApplicationConfig.ptaFinishedUrl data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">@messages("pages.finished.check-link.text")</a>
+    @messages("pages.finished.check-link-para2")
+</p>
 }

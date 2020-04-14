@@ -16,6 +16,7 @@
 
 @import models.auth.UserRequest
 @import play.twirl.api.Html
+@import config.ApplicationConfig
 
 @()(implicit messages: Messages,
 request: UserRequest[_],
@@ -23,15 +24,15 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.cannot-use-service")),
+title = messages("title.pattern", messages("title.cannot-use-service")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found")))) {
-<h1 id="error">@Messages("title.cannot-use-service")</h1>
+<h1 id="error">@messages("title.cannot-use-service")</h1>
 <p class="get-started group" id="contact-helpline">
-    <a href=@Messages("hmrc.contact-income-tax-helpline") target="_blank" role="button"
+    <a href=@ApplicationConfig.contactIncomeTaxHelplineUrl target="_blank" role="button"
        data-journey-click='click - link:@Messages("technical.transferor-dead-p1"):@Messages("title.pattern", Messages("title.cannot-use-service"))'>
-        @Messages("technical.transferor-dead-p1") @Messages("tamc.open.in.new.window")
+        @messages("technical.transferor-dead-p1") @messages("tamc.open.in.new.window")
     </a>
-    @Messages("technical.transferor-dead-p2")
+    @messages("technical.transferor-dead-p2")
 </p>
 }
