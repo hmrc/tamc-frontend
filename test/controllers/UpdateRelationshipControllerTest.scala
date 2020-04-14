@@ -631,7 +631,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   "confirmEmail" should {
     "display the confirm email page" when {
       "an email is recovered from the cache" in {
-        val email = "test@test.com"
+        val email = EmailAddress("test@test.com")
 
         when(mockUpdateRelationshipService.getEmailAddress(any(), any()))
           .thenReturn(Future.successful(Some(email)))
@@ -669,7 +669,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   "confirmYourEmailActionUpdate" should {
     "redirect to the confirmUpdate page" in {
 
-      val emailAddress = "example@example.com"
+      val emailAddress = EmailAddress("example@example.com")
       when(mockUpdateRelationshipService.saveEmailAddress(ArgumentMatchers.eq(emailAddress))(any(), any())).
         thenReturn(Future.successful(emailAddress))
 
@@ -772,7 +772,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val email = "email@email.com"
 
       when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
-        .thenReturn(Future.successful(email))
+        .thenReturn(Future.successful(EmailAddress(email)))
 
       when(mockUpdateRelationshipService.removeCache(any(), any()))
         .thenReturn(Future.successful(mock[HttpResponse]))

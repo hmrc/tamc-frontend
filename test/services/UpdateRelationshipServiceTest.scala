@@ -209,12 +209,12 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "saveEmailAddress" should {
     "return a String" in {
-      when(service.cachingService.cacheValue[String](any(), any())(any(), any(), any(), any()))
-        .thenReturn(Future.successful("email@email.com"))
+      when(service.cachingService.cacheValue[EmailAddress](any(), any())(any(), any(), any(), any()))
+        .thenReturn(Future.successful(EmailAddress("email@email.com")))
 
-      val result = await(service.saveEmailAddress("email@email.com"))
+      val result = await(service.saveEmailAddress(EmailAddress("email@email.com")))
 
-      result shouldBe "email@email.com"
+      result shouldBe EmailAddress("email@email.com")
     }
   }
 

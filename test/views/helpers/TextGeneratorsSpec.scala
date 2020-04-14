@@ -34,12 +34,12 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
 
 
   trait EnglishSetup {
-    implicit val englishMessages = mock[Messages]
+    implicit val englishMessages: Messages = mock[Messages]
     when(englishMessages.lang).thenReturn(Lang("en"))
   }
 
   trait WelshSetup {
-    implicit val welshMessage = mock[Messages]
+    implicit val welshMessage: Messages = mock[Messages]
     when(welshMessage.lang).thenReturn(Lang("cy"))
   }
 

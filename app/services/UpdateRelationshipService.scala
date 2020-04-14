@@ -27,6 +27,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.emailaddress.PlayJsonFormats._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
@@ -83,16 +84,16 @@ trait UpdateRelationshipService {
     cachingService.fetchAndGetEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
   }
 
-  def getEmailAddress(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
-    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+  def getEmailAddress(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EmailAddress]] = {
+    cachingService.fetchAndGetEntry[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS)
   }
 
-  def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
-    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw CacheMissingEmail()))
+  def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
+    cachingService.fetchAndGetEntry[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw CacheMissingEmail()))
   }
 
-  def saveEmailAddress(emailAddress: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
-    cachingService.cacheValue[String](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress)
+  def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
+    cachingService.cacheValue[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress)
   }
 
   def getDataForDivorceExplanation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {

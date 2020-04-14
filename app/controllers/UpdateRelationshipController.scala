@@ -231,7 +231,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       lazy val emptyEmailView = views.html.coc.email(emailForm)
       updateRelationshipService.getEmailAddress map {
-        case Some(email) => Ok(views.html.coc.email(emailForm.fill(EmailAddress(email))))
+        case Some(email) => Ok(views.html.coc.email(emailForm.fill(email)))
         case None => Ok(emptyEmailView)
       } recover {
         case NonFatal(_) => Ok(emptyEmailView)
@@ -246,7 +246,7 @@ class UpdateRelationshipController @Inject()(
           Future.successful(BadRequest(views.html.coc.email(formWithErrors)))
         },
         email =>
-          updateRelationshipService.saveEmailAddress(email.value) map {
+          updateRelationshipService.saveEmailAddress(email) map {
             _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
           }
       ) recover handleError
