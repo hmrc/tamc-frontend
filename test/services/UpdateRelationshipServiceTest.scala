@@ -16,12 +16,11 @@
 
 package services
 
-
 import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors._
 import forms.coc.CheckClaimOrCancelDecisionForm
-import models.{UpdateRelationshipRequestHolder, _}
+import models._
 import org.joda.time.LocalDate
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
@@ -33,7 +32,6 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
-
 import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends BaseTest {

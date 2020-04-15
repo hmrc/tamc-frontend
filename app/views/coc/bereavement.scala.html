@@ -29,10 +29,9 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @contactHMRCLink = @{
-Html(
-s"""<p>${messages("general.helpline.enquiries.link.pretext")} <a href="${generalEnquiriesLink}">
-    |${messages("general.helpline.enquiries.link")}</a> ${messages("pages.bereavement.enquiries.link.paragraph")}
-</p>""".stripMargin)
+<p>{messages("general.helpline.enquiries.link.pretext")} <a href="@generalEnquiriesLink">
+    {messages("general.helpline.enquiries.link")}</a> {messages("pages.bereavement.enquiries.link.paragraph")}
+</p>
 }
 
 @endOfYear = @{

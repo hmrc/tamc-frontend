@@ -46,14 +46,14 @@ class UpdateRelationshipController @Inject()(
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
-      (updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
+      updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
         updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
-            val viewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
-                                                    relationshipRecords.hasMarriageAllowanceBeenCancelled,
-                                                    relationshipRecords.loggedInUserInfo)
-            Ok(views.html.coc.history_summary(viewModel))
+          val viewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
+            relationshipRecords.hasMarriageAllowanceBeenCancelled,
+            relationshipRecords.loggedInUserInfo)
+          Ok(views.html.coc.history_summary(viewModel))
         }
-      }) recover handleError
+      } recover handleError
   }
 
   private def noPrimaryRecordRedirect(request: UserRequest[_]): Result = {

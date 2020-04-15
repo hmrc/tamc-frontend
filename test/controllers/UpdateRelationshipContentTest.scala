@@ -43,6 +43,9 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
   val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
+  val contactHMRCBereavementText = (messagesApi("general.helpline.enquiries.link.pretext") + " "
+    + messagesApi("general.helpline.enquiries.link") + " "
+    + messagesApi("pages.bereavement.enquiries.link.paragraph"))
 
   def controller(updateRelationshipService: UpdateRelationshipService = mockUpdateRelationshipService): UpdateRelationshipController =
     new UpdateRelationshipController(
@@ -51,20 +54,6 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       updateRelationshipService,
       mockTimeService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
-
-  def getContactHMRCText(testCase: String): String = {
-    testCase match  {
-      case "changeOfIncome" =>
-        (messagesApi("general.helpline.enquiries.link.pretext") + " "
-          + messagesApi("general.helpline.enquiries.link") + " "
-          + messagesApi("pages.changeOfIncome.enquiries.link.paragraph"))
-      case "bereavement" =>
-        (messagesApi("general.helpline.enquiries.link.pretext") + " "
-          + messagesApi("general.helpline.enquiries.link") + " "
-          + messagesApi("pages.bereavement.enquiries.link.paragraph"))
-      case _ => throw new RuntimeException("asd")
-    }
-  }
 
   "Update relationship cause - get view" should {
     "show all appropriate radio buttons" in {
@@ -131,9 +120,13 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
 
   "changeOfIncome(text)" in {
     val result: Future[Result] = controller().changeOfIncome(request)
+    val contactHMRCText = (messagesApi("general.helpline.enquiries.link.pretext") + " "
+      + messagesApi("general.helpline.enquiries.link") + " "
+      + messagesApi("pages.changeOfIncome.enquiries.link.paragraph"))
+
 
     val expected = Seq(
-      getContactHMRCText("changeOfIncome"),
+      contactHMRCText,
       messagesApi("pages.changeOfIncome.paragraph2")
     ).toArray
     val parsed = Jsoup.parse(contentAsString(result))
@@ -166,7 +159,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       val result: Future[Result] = controller().bereavement(request)
 
       val expected = Seq(
-        getContactHMRCText("bereavement"),
+        contactHMRCBereavementText,
         messagesApi("pages.bereavement.recipient.paragraph")
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result))
@@ -185,7 +178,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       val result: Future[Result] = controller().bereavement(request)
 
       val expected = Seq(
-        getContactHMRCText("bereavement"),
+        contactHMRCBereavementText,
         messagesApi("pages.bereavement.transferor.paragraph")
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result))
