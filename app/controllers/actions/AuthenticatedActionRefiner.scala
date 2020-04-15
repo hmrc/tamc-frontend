@@ -43,10 +43,9 @@ class AuthenticatedActionRefiner @Inject()(
     authorised(ConfidenceLevel.L200)
       .retrieve(Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr) {
       case credentials ~ Some(nino) ~ confidenceLevel ~ saUtr =>
-        val authState = if (credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
         Future.successful(
           Right(
-            AuthenticatedUserRequest(request, authState, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
+            AuthenticatedUserRequest(request, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
           )
         )
       case _ =>

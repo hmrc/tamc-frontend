@@ -15,11 +15,11 @@
  *@
 
 @import play.twirl.api.Html
-@import models.auth.RequestWithAuthState
+@import models.auth.MaybeAuthenticatedUserRequest
 
 @(finishedUrl: String
 )(implicit messages: Messages,
-request: RequestWithAuthState[_],
+request: MaybeAuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 

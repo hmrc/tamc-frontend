@@ -17,11 +17,12 @@
 @import play.twirl.api.Html
 @import config.ApplicationConfig._
 @import java.text.NumberFormat
-@import models.auth.RequestWithAuthState
 @import views.helpers.LanguageUtils
+@import views.helpers.TextGenerators
+@import models.auth.MaybeAuthenticatedUserRequest
 
 @()(implicit messages: Messages,
-request: RequestWithAuthState[_],
+request: MaybeAuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 

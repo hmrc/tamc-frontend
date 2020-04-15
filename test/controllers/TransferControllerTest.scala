@@ -19,7 +19,7 @@ package controllers
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
-import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
+import models.auth.AuthenticatedUserRequest
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -392,15 +392,6 @@ class TransferControllerTest extends ControllerBaseTest {
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
         verify(mockTransferService, times(1)).createRelationship(any(), ArgumentMatchers.eq("PTA"))(any(), any(), any())
       }
-
-      "a user is temporarily authenticated" in {
-        when(mockTransferService.createRelationship(any(), ArgumentMatchers.eq("GDS"))(any(), any(), any()))
-          .thenReturn(notificationRecord)
-        val result = controller(instanceOf[MockTemporaryAuthenticatedAction]).confirmAction()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
-        verify(mockTransferService, times(1)).createRelationship(any(), ArgumentMatchers.eq("GDS"))(any(), any(), any())
-      }
     }
   }
 
@@ -445,7 +436,6 @@ class TransferControllerTest extends ControllerBaseTest {
   "handleError" should {
     val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
       request,
-      PermanentlyAuthenticated,
       Some(ConfidenceLevel.L200),
       isSA = false,
       Some("GovernmentGateway"),

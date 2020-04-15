@@ -34,26 +34,8 @@ class MockAuthenticatedAction @Inject()(override val authConnector: AuthConnecto
       Right(
         AuthenticatedUserRequest(
           request,
-          PermanentlyAuthenticated,
           Some(ConfidenceLevel.L200),
-          false,
-          Some("GovernmentGateway"),
-          Nino(TestData.Ninos.nino1))
-      )
-    )
-  }
-}
-
-class MockTemporaryAuthenticatedAction @Inject()(override val authConnector: AuthConnector) extends AuthenticatedActionRefiner(authConnector) {
-
-  override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
-    Future.successful(
-      Right(
-        AuthenticatedUserRequest(
-          request,
-          TemporarilyAuthenticated,
-          Some(ConfidenceLevel.L200),
-          false,
+          isSA = false,
           Some("GovernmentGateway"),
           Nino(TestData.Ninos.nino1))
       )
@@ -62,13 +44,13 @@ class MockTemporaryAuthenticatedAction @Inject()(override val authConnector: Aut
 }
 
 class MockUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
-  override protected def transform[A](request: Request[A]): Future[RequestWithAuthState[A]] = {
-    Future.successful(RequestWithAuthState(request, Unauthenticated, None, isSA = false, None))
+  override protected def transform[A](request: Request[A]): Future[MaybeAuthenticatedUserRequest[A]] = {
+    Future.successful(MaybeAuthenticatedUserRequest(request, None, isSA = false, isAuthenticated = false, authProvider =  None))
   }
 }
 
 class MockPermUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
-  override protected def transform[A](request: Request[A]): Future[RequestWithAuthState[A]] = {
-    Future.successful(RequestWithAuthState(request, PermanentlyAuthenticated, None, isSA = false, None))
+  override protected def transform[A](request: Request[A]): Future[MaybeAuthenticatedUserRequest[A]] = {
+    Future.successful(MaybeAuthenticatedUserRequest(request,  None, isSA = false, isAuthenticated = true, authProvider = None))
   }
 }

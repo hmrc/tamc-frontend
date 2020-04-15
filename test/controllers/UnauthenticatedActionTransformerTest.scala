@@ -17,16 +17,15 @@
 package controllers
 
 import controllers.actions.UnauthenticatedActionTransformer
-import models.auth.{PermanentlyAuthenticated, TemporarilyAuthenticated, Unauthenticated}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import play.api.mvc.{Controller, Result}
+import play.api.mvc.{Action, AnyContent, Controller, Result}
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import utils.RetrivalHelper._
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 import utils.ControllerBaseTest
+import utils.RetrivalHelper._
 
 import scala.concurrent.Future
 
@@ -38,7 +37,8 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseTest {
   val authAction = new UnauthenticatedActionTransformer(mockAuthConnector)
 
   class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
-    def onPageLoad() = authAction(implicit request => Ok.withHeaders("authState" -> request.authState.toString))
+    def onPageLoad(): Action[AnyContent] = authAction(
+      implicit request => Ok.withHeaders("isAuthenticated" -> request.isAuthenticated.toString))
 
     when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
       .thenReturn(authReturn)
@@ -49,25 +49,19 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseTest {
       "details are successfully retrieved and credentials have been defined" in new FakeController(withCredRetrieval) {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe OK
-        result.header.headers("authState") shouldBe PermanentlyAuthenticated.toString
-      }
-
-      "details are successfully retrieved and credentials are not defined" in new FakeController(withoutCredRetrieval) {
-        val result: Future[Result] = onPageLoad()(request)
-        status(result) shouldBe OK
-        result.header.headers("authState") shouldBe TemporarilyAuthenticated.toString
+        result.header.headers("isAuthenticated") shouldBe "true"
       }
 
       "NoActiveSession is returned from auth connector" in new FakeController(Future.failed(NoActiveSessionException)) {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe OK
-        result.header.headers("authState") shouldBe Unauthenticated.toString
+        result.header.headers("isAuthenticated") shouldBe "false"
       }
 
       "InsufficientConfidenceLevel is returned from auth connector" in new FakeController(Future.failed(InsufficientConfidenceLevel())) {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe OK
-        result.header.headers("authState") shouldBe Unauthenticated.toString
+        result.header.headers("isAuthenticated") shouldBe "false"
       }
     }
   }
@@ -75,5 +69,4 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseTest {
   object NoActiveSessionException extends NoActiveSession("")
 
   val withCredRetrieval: AuthRetrievals = ConfidenceLevel.L200 ~  None ~ Some(Credentials("", ""))
-  val withoutCredRetrieval: AuthRetrievals = ConfidenceLevel.L200 ~ None ~  None
 }

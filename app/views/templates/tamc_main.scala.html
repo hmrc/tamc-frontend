@@ -120,7 +120,7 @@
 }
 
 @titleName = @{
- if(request.authState.permanent) {
+ if(request.isAuthenticated) {
    if(manageService) {
      messages("tamc.manage")
    } else {
@@ -166,13 +166,13 @@
   "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
   "includeHMRCBranding" -> true,
 
-  "hideAccountMenu" -> !request.authState.permanent,
+  "hideAccountMenu" -> !request.isAuthenticated,
   "assetsPath" -> appConfig.assetsPrefix,
 
   "isGovernmentGateway" -> request.authProvider.contains("GovernmentGateway"),
   "isVerify" -> request.authProvider.contains("Verify"),
   "isSa" -> request.isSA,
-  "signOutUrl" -> (if(request.authState.isLoggedIn) Some(routes.AuthorisationController.logout()) else None),
+  "signOutUrl" -> (if(request.isAuthenticated) Some(routes.AuthorisationController.logout()) else None),
 
   "actingAttorneyBanner" -> actingAttorneyBanner,
   "mainContentHeader" -> commonContentHeader,

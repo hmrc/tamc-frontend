@@ -17,11 +17,11 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
-@import models.auth.RequestWithAuthState
+@import models.auth.MaybeAuthenticatedUserRequest
 
 @(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)]
 )(implicit messages: Messages,
-request: RequestWithAuthState[_],
+request: MaybeAuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 

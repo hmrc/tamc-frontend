@@ -219,12 +219,7 @@ class TransferController @Inject()(
   def confirmAction: Action[AnyContent] = authenticate.async {
     implicit request =>
 
-      val getJourneyName: String =
-        if (request.authState.permanent) TAMC_JOURNEY_PTA else TAMC_JOURNEY_GDS
-
-      Logger.info("registration service.createRelationship - confirm action.")
-
-      registrationService.createRelationship(request.nino, getJourneyName) map {
+      registrationService.createRelationship(request.nino, TAMC_JOURNEY_PTA) map {
         _ => Redirect(controllers.routes.TransferController.finished())
       } recover handleError
   }

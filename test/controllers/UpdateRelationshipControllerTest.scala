@@ -21,7 +21,7 @@ import errors._
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
-import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
+import models.auth.AuthenticatedUserRequest
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -108,7 +108,16 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
     }
 
+  "History" should {
     "redirect to how-it-works" when {
+      "has no active record, no historic" in {
+        when(mockListRelationshipService.listRelationship(any())(any(), any()))
+          .thenReturn(
+            Future.successful(
+              (RelationshipRecordList(None, None, None, activeRecord = false, historicRecord = false, historicActiveRecord = false), true)
+            )
+          )
+        val result: Future[Result] = controller().history()(request)
       "there is no active (primary) record and permanent authentication" in {
         when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
           .thenReturn(Future.failed(NoPrimaryRecordError()))
@@ -192,6 +201,16 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         result rendersTheSameViewAs views.html.coc.decision(validForm)
       }
 
+  "historyWithCy" should {
+    "redirect to history, with a welsh language setting" in {
+      val result: Future[Result] = controller().historyWithCy()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
+      val resolved = Await.result(result, 5 seconds)
+      resolved.header.headers.keys should contain("Set-Cookie")
+      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
+    }
+  }
     }
   }
 
@@ -212,6 +231,14 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     }
 
+  "historyWithEn" should {
+    "redirect to history, with an english language setting" in {
+      val result: Future[Result] = controller().historyWithEn()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.history().url)
+      val resolved = Await.result(result, 5 seconds)
+      resolved.header.headers.keys should contain("Set-Cookie")
+      resolved.header.headers("Set-Cookie") should include("PLAY_LANG=en")
     "redirect to the make change page" when {
       "a user selects the stopMarriageAllowance option" in {
 
@@ -807,7 +834,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   "handleError" should {
     val auhtRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
       request,
-      PermanentlyAuthenticated,
       Some(ConfidenceLevel.L200),
       isSA = false,
       Some("GovernmentGateway"),
