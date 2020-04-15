@@ -167,10 +167,6 @@ trait ApplicationConfig {
 
   def ggSignInUrl(continueUrl: Option[String]): String
 
-  val TAMC_JOURNEY = "TAMC_JOURNEY"
-  val TAMC_JOURNEY_PTA = "PTA"
-  val TAMC_JOURNEY_GDS = "GDS"
-
   val gdsFinishedUrl: String
   val ptaFinishedUrl: String
 

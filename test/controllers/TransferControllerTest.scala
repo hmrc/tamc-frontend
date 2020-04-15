@@ -385,12 +385,12 @@ class TransferControllerTest extends ControllerBaseTest {
   "confirmAction" should {
     "redirect" when {
       "a user is permanently authenticated" in {
-        when(mockTransferService.createRelationship(any(), ArgumentMatchers.eq("PTA"))(any(), any(), any()))
+        when(mockTransferService.createRelationship(any())(any(), any(), any()))
           .thenReturn(notificationRecord)
         val result = controller().confirmAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
-        verify(mockTransferService, times(1)).createRelationship(any(), ArgumentMatchers.eq("PTA"))(any(), any(), any())
+        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any())
       }
     }
   }

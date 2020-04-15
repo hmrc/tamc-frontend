@@ -22,11 +22,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 object CreateRelationshipSuccessEvent {
-  def apply(cacheData: CacheData, journey: String)(implicit hc: HeaderCarrier) =
+  def apply(cacheData: CacheData)(implicit hc: HeaderCarrier) =
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(
-        "event" -> ("create-relationship-" + journey),
+        "event" -> ("create-relationship-pta"),
         "data" -> cacheData.toString()))
 }
 
@@ -40,11 +40,11 @@ object UpdateRelationshipSuccessEvent {
 }
 
 object CreateRelationshipFailureEvent {
-  def apply(cacheData: CacheData, journey: String, error: Throwable)(implicit hc: HeaderCarrier) =
+  def apply(cacheData: CacheData, error: Throwable)(implicit hc: HeaderCarrier) =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
-        "event" -> ("create-relationship-" + journey),
+        "event" -> ("create-relationship-pta"),
         "error" -> error.toString(),
         "data" -> cacheData.toString()))
 }

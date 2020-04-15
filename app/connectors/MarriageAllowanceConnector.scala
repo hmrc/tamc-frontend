@@ -51,9 +51,9 @@ trait MarriageAllowanceConnector {
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     httpPost.POST(s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData)
 
-  def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = {
-    httpPut.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/$journey", data)
-  }
+  def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder
+                        )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+    httpPut.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/pta", data)
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
     httpPut.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data)

@@ -17,7 +17,6 @@
 package controllers
 
 import config.ApplicationConfig
-import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.CurrentYearForm.currentYearForm
@@ -219,7 +218,7 @@ class TransferController @Inject()(
   def confirmAction: Action[AnyContent] = authenticate.async {
     implicit request =>
 
-      registrationService.createRelationship(request.nino, TAMC_JOURNEY_PTA) map {
+      registrationService.createRelationship(request.nino) map {
         _ => Redirect(controllers.routes.TransferController.finished())
       } recover handleError
   }
