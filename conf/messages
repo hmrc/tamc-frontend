@@ -1,4 +1,3 @@
-
 #********************************************************************************
 # Forms and Unit tests validation messages
 #********************************************************************************
@@ -124,6 +123,7 @@ income-between-scots= {0} income was between {1} and {2} (or {3} if you live in 
 # General
 #********************************************************************************
 #General messages
+generic.ma=Marriage Allowance
 generic.ma.apply=Apply for Marriage Allowance
 generic.back=Back
 generic.next=Next
@@ -193,8 +193,7 @@ hmrc.contact-details-6=8am to 4pm, Saturday
 hmrc.contact-details-7=Closed Sundays and bank holidays.
 hmrc.contact-detials.calling.time=Best time to call
 hmrc.contact-details-8=Phone lines are less busy before 10am, Monday to Friday.
-hmrc.contact-details-9=<a href="https://www.gov.uk/call-charges"> Find out about call charges</a>
-hmrc.contact-income-tax-helpline=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees
+hmrc.contact-details-9=Find out about call charges
 
 #********************************************************************************
 # Eligibility Calculator
@@ -269,7 +268,9 @@ pages.finished.para2=If it does not appear in your inbox, please check your spam
 pages.finished.now=What happens next
 pages.finished.para4=HMRC will now process your Marriage Allowance application. Please check the email we have sent you for full details on how you will receive Marriage Allowance.
 pages.finished.back-pta=Back to Personal Tax Account
-pages.finished.check-link-para=You can <a id="pta-link" href="{0}" data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">check your current Marriage Allowance and make changes</a> at any time through your personal tax account.
+pages.finished.check-link-para1=You can
+pages.finished.check-link-para2=at any time through your personal tax account.
+pages.finished.check-link.text=check your current Marriage Allowance and make changes
 pages.finished.backdated-payments=Backdated payments can take up to 8 weeks to process.
 pages.finished.hidden-warning=Warning
 
@@ -293,11 +294,13 @@ pages.form.field-helper.nino-where=Where do I find this?
 pages.form.field-helper.nino.expand=click to expand
 pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits.
 pages.form.field-helper.dom=For example, 31 3 1980
+pages.form.field-helper.dod=For example, 31 3 1980
 pages.form.field.your-confirmation=Confirmation email
 pages.form.field.yourDetails=We will email confirmation of your Marriage Allowance application within 24 hours. We will not share your email with anyone else.
 pages.form.field.transferor-email=Your email address
 pages.form.field.enter-email=Enter email address
 pages.form.field.dod=If you are currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
+pages.form.field.dod.question=When did you legally end your marriage or civil partnership?
 
 
 #********************************************************************************
@@ -313,7 +316,8 @@ pages.date-of-marriage.h2=When did you marry or form a civil partnership with yo
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=How it works
-pages.how-it-works.lede-pre1=<a href="https://www.gov.uk/marriage-allowance-guide">Marriage Allowance</a> lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
+pages.how-it-works.lede-pre1.part2=lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
+pages.how-it-works.lede-pre1.link-text=Marriage Allowance
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
 pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
 pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year since 5 April 2016 that you were eligible for Marriage Allowance.
@@ -370,7 +374,6 @@ change.status.divorce.recipient.previous.para1=your Marriage Allowance will be c
 change.status.divorce.recipient.previous.para2=if you have not paid enough tax, we will usually collect it by adjusting your tax code
 change.status.divorce.recipient.content1=As this date falls within the current tax year:
 change.status.divorce.recipient.options=Once you have told us, Marriage Allowance will remain in place until the end of the tax year ({0}). HMRC will not ask you to pay back this extra allowance.
-change.status.divorce.recipient.directions=You should tell us if you have divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.historic-active.result=Removing Marriage Allowance from the start of the tax year could result in your partner underpaying tax. We will notify them at the end of the tax year. Any underpayment will usually be collected through an adjustment to their tax code.
 change.status.historic-active.directions=You can remove Marriage Allowance from the start of the tax year ({2}) if you have divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.cancel.h1=Cancelling Marriage Allowance
@@ -460,7 +463,9 @@ technical.issue.heading=Sorry, there is a problem with the service
 technical.issue.try.later=Try again later.
 technical.issue.back=Return to GOV.UK
 technical.other-ways.h1=Other ways to apply for Marriage Allowance
-technical.other-ways.para0=You can apply for Marriage Allowance through your <a href="/personal-account">personal account</a>, under ‘services you might need’.
+technical.other-ways.para0.part1=You can apply for Marriage Allowance through your
+technical.other-ways.para0.link-text=personal account
+technical.other-ways.para0.part2=, under ‘services you might need’.
 technical.other-ways.para1=You can also call HM Revenue and Customs (HMRC) to make an application.
 technical.other-ways.para2=You will need to know you and your partner’s National Insurance number.
 title.cannot-find-details = Cannot find details
@@ -614,8 +619,8 @@ pages.eligibleyear.toldus=You have told us you married or formed a civil partner
 pages.eligibleyear.thisyear1=This current tax year
 pages.eligibleyear.thisyear2={0} onwards
 pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
-pages.eligibleyear.li2=we will adjust <span id="firstNameOnly3">{0}</span> tax code to include this extra allowance
-pages.eligibleyear.li3=it will automatically renew every year until you or <span id="firstNameOnly4">{0}</span> cancel it or are
+pages.eligibleyear.li2=we will adjust {0} tax code to include this extra allowance
+pages.eligibleyear.li3=it will automatically renew every year until you or {0} cancel it or are
 pages.eligibleyear.li3.link.text=no longer eligible
 pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
 pages.eligibleyear.notice=You can apply for earlier years if you continue.
@@ -669,7 +674,8 @@ date.fields.year=Year
 #********************************************************************************
 pages.noyears.h1=You have not selected any tax years to apply for
 pages.noyears.content1=Go back if you want to select a year to apply for.
-pages.noyears.findoutmore=You can find out more about <a href="https://www.gov.uk/marriage-allowance-guide/how-it-works">how Marriage Allowance works</a>.
+pages.noyears.findoutmore.part1=You can find out more about
+pages.noyears.findoutmore.link-text=how Marriage Allowance works
 
 #********************************************************************************
 # Breadcrumb
