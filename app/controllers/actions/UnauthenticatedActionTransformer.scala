@@ -30,20 +30,20 @@ import scala.concurrent.{ExecutionContext, Future}
 class UnauthenticatedActionTransformer @Inject()(
                                                   val authConnector: AuthConnector
                                                 )(implicit ec: ExecutionContext)
-  extends ActionTransformer[Request, MaybeAuthenticatedUserRequest]
-    with ActionBuilder[MaybeAuthenticatedUserRequest] with AuthorisedFunctions {
+  extends ActionTransformer[Request, UserRequest]
+    with ActionBuilder[UserRequest] with AuthorisedFunctions {
 
-  override protected def transform[A](request: Request[A]): Future[MaybeAuthenticatedUserRequest[A]] = {
+  override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
     authorised(ConfidenceLevel.L200).retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
       case cl ~ saUtr ~ credentials =>
-        Future.successful(MaybeAuthenticatedUserRequest(request, Some(cl), isAuthenticated = true, credentials.map(_.providerType), isSA = saUtr.isDefined))
+        Future.successful(UserRequest(request, Some(cl), isAuthenticated = true, credentials.map(_.providerType), isSA = saUtr.isDefined))
     } recover {
       case _: NoActiveSession | _: InsufficientConfidenceLevel =>
-        MaybeAuthenticatedUserRequest(request, None, isAuthenticated = false, None, isSA = false)
+        UserRequest(request, None, isAuthenticated = false, None, isSA = false)
     }
   }
 }

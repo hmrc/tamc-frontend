@@ -36,7 +36,7 @@
  langSwitch: Option[play.twirl.api.Html] = None,
  scriptElem: Option[Html] = None,
  langSelectorOverride: Option[Map[String, Call]] = None)(mainContent: Html)(implicit messages: Messages,
- request: UserRequest[_],
+ request: BaseUserRequest[_],
  gaDimensions: Option[Map[String, String]] = None,
  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever

@@ -44,13 +44,13 @@ class MockAuthenticatedAction @Inject()(override val authConnector: AuthConnecto
 }
 
 class MockUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
-  override protected def transform[A](request: Request[A]): Future[MaybeAuthenticatedUserRequest[A]] = {
-    Future.successful(MaybeAuthenticatedUserRequest(request, None, isSA = false, isAuthenticated = false, authProvider =  None))
+  override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
+    Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = false, authProvider =  None))
   }
 }
 
 class MockPermUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
-  override protected def transform[A](request: Request[A]): Future[MaybeAuthenticatedUserRequest[A]] = {
-    Future.successful(MaybeAuthenticatedUserRequest(request,  None, isSA = false, isAuthenticated = true, authProvider = None))
+  override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
+    Future.successful(UserRequest(request,  None, isSA = false, isAuthenticated = true, authProvider = None))
   }
 }
