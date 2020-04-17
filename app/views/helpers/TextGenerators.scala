@@ -95,7 +95,12 @@ object WelshTextGenerator extends TextGenerator {
   override def separator: String = " i "
 
   override def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
-    nonBreakingSpace(welshConverted(date, transformPattern))
+
+    val fetchMonthName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
+    val month = fetchMonthName(date)
+    val endDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
+
+    nonBreakingSpace(endDate.replace(month, welshMonths(month)))
   }
 
   override def formPossessive(noun: String): String = noun
@@ -114,15 +119,7 @@ object WelshTextGenerator extends TextGenerator {
     "November" -> "Tachwedd",
     "December" -> "Rhagfyr"
   )
-  
-  def welshConverted(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
-    val fetchMonthName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
-    val month = fetchMonthName(date)
-    val endDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
 
-    endDate.toString.replace(month, welshMonths(month))
-  }
-  
   override val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " i’r Presennol")
 
 }

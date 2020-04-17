@@ -580,7 +580,7 @@ pages.divorce.paragraph1=You need to go to court to be legally separated. You ca
 pages.divorce.date.hint=For example, 30 6 2019
 pages.divorce.date.error.mandatory=Enter your date of divorce, end of civil partnership or legal separation
 pages.divorce.date.error.invalid=Enter a real date
-pages.divorce.date.error.non.numeric=Date of your divorce, end of civil partnership or legal separation most only include numbers 0 to 9
+pages.divorce.date.error.non.numeric=Date of your divorce, end of civil partnership or legal separation must only include numbers 0 to 9
 pages.divorce.date.error.min.date=Date of your divorce, end of your civil partnership or legal separation must be after {0}
 pages.divorce.date.error.max.date=Date of your divorce, end of your civil partnership or legal separation must be before {0}
 
@@ -589,7 +589,7 @@ pages.divorce.date.error.max.date=Date of your divorce, end of your civil partne
 # Divorce Explanation page
 #********************************************************************************
 pages.divorce.explanation.title=Cancelling Marriage Allowance
-pages.divorce.explanation.paragraph1=You have told us you divorced, ended your civil partnership or were legally separated on {0}
+pages.divorce.explanation.paragraph1=You have told us you divorced, ended your civil partnership or were legally separated on {0}.
 pages.divorce.explanation.paragraph2=As this date falls within {0}:
 pages.divorce.explanation.current.taxYear=the current tax year
 pages.divorce.explanation.previous.taxYear=a previous tax year

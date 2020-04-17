@@ -71,15 +71,13 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
         }
       }
 
-      val welshList = List(
-        (new LocalDate(2016, 5, 6), "Mai"),
-        (new LocalDate(1993, 11, 11), "Tachwedd"),
-        (new LocalDate(2020, 1, 1), "Ionawr")
-      )
+      val welshMonthsInOrder = Seq("Ionawr", "Chwefror", "Mawrth", "Ebrill", "Mai", "Mehefin", "Gorffennaf", "Awst",
+        "Medi", "Hydref", "Tachwedd", "Rhagfyr")
 
-      welshList.foreach { dateMonthTuple =>
-        s"return month as Welsh ${dateMonthTuple._2}" in new WelshSetup {
-          TextGenerator().ukDateTransformer(dateMonthTuple._1) should include(dateMonthTuple._2)
+
+      for ((month, monthAsInt) <- welshMonthsInOrder.zip(Stream from 1)) {
+        s"return month as Welsh $month" in new WelshSetup {
+          TextGenerator().ukDateTransformer(new LocalDate(2020, monthAsInt, 1)) should include(month)
         }
       }
     }
@@ -157,7 +155,7 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
         val formWithErrors = EmailForm.emailForm.bind(Map("transferor-email" -> "exampleemail.com"))
 
         TextGenerator().formPageDataJourney("prefix", formWithErrors) shouldBe
-          s"prefix-erroneous(transferor-email)"
+          "prefix-erroneous(transferor-email)"
       }
 
       "return prefix" in new EnglishSetup {

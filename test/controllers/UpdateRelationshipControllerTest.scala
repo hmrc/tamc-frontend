@@ -109,7 +109,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     }
 
     "redirect to how-it-works" when {
-      "here is no active (primary) record and permanent authentication" in {
+      "there is no active (primary) record and permanent authentication" in {
         when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
           .thenReturn(Future.failed(NoPrimaryRecordError()))
 
@@ -119,37 +119,44 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
     }
 
-    "return an Internal Server Error with an error page" when {
-        val errorTypesWithDisplayPages = Seq((BadFetchRequest, views.html.errors.bad_request,
-                                                (CitizenNotFound, views.html.errors.citizen_not_found)))
-
-        errorTypesWithDisplayPages.foreach { errorScenario =>
-
-          s"a ${errorScenario._1} is returned" in {
-            when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
-            .thenReturn(Future.failed(errorScenario._1()))
-
-            val result = controller().history()(request)
-            status(result) shouldBe INTERNAL_SERVER_ERROR
-
-            result rendersTheSameViewAs errorScenario._2()
-        }
-      }
-    }
-
     "display an error page" when {
       "a TransferorNotFound error is returned " in {
-
         when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
           .thenReturn(Future.failed(TransferorNotFound()))
 
         val result = controller().history()(request)
+        status(result) shouldBe OK
         result rendersTheSameViewAs views.html.errors.transferor_not_found()
+      }
 
+      "a BadFetchRequest error is returned " in {
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.failed(BadFetchRequest()))
+
+        val result = controller().history()(request)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        result rendersTheSameViewAs views.html.errors.bad_request()
+      }
+
+      "a CitizenNotFound error is returned " in {
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.failed(CitizenNotFound()))
+
+        val result = controller().history()(request)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        result rendersTheSameViewAs views.html.errors.citizen_not_found()
+      }
+
+      "a MultipleActiveRecordError error is returned " in {
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.failed(MultipleActiveRecordError()))
+
+        val result = controller().history()(request)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        result rendersTheSameViewAs views.html.errors.try_later()
       }
     }
   }
-
 
   "decision" should {
     "display the decision page with cached data" in {

@@ -594,7 +594,7 @@ pages.divorce.date.error.max.date=Mae’n rhaid i’ch dyddiad ysgaru, dod â’
 # Divorce Explanation page
 #********************************************************************************
 pages.divorce.explanation.title=Canslo Lwfans Priodasol
-pages.divorce.explanation.paragraph1=Rydych wedi rhoi gwybod i ni eich bod wedi ysgaru, wedi dod â’ch partneriaeth sifil i ben neu’ch bod wedi gwahanu’n gyfreithiol ar {0}
+pages.divorce.explanation.paragraph1=Rydych wedi rhoi gwybod i ni eich bod wedi ysgaru, wedi dod â’ch partneriaeth sifil i ben neu’ch bod wedi gwahanu’n gyfreithiol ar {0}.
 pages.divorce.explanation.paragraph2=Gan fod y dyddiad hwn yn ystod {0}:
 pages.divorce.explanation.current.taxYear=y flwyddyn dreth bresennol
 pages.divorce.explanation.previous.taxYear=blwyddyn dreth flaenorol

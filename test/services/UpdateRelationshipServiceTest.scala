@@ -16,12 +16,14 @@
 
 package services
 
+import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors._
 import forms.coc.CheckClaimOrCancelDecisionForm
 import models._
 import org.joda.time.LocalDate
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.libs.json.{JsValue, Json}
@@ -32,6 +34,7 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
+
 import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends BaseTest {
@@ -84,33 +87,80 @@ class UpdateRelationshipServiceTest extends BaseTest {
     }
 
     "throw Runtime Exception" when {
-      "a TransferorNotFound Error is returned" in {
+      "a NoPrimaryRecordError is returned" in {
+
+        val noActiveRecordList = RelationshipRecordList(Seq(inactiveRelationshipRecord1), Some(createLoggedInUserInfo()))
+
         when(service.marriageAllowanceConnector.listRelationship(any())(any(), any()))
-          .thenReturn(Future.failed(TransferorNotFound()))
+          .thenReturn(Future.successful(noActiveRecordList))
 
-        val result = intercept[TransferorNotFound](await(service.retrieveRelationshipRecords(nino)))
+        val result = intercept[NoPrimaryRecordError](await(service.retrieveRelationshipRecords(nino)))
 
-        result shouldBe TransferorNotFound()
+        result shouldBe NoPrimaryRecordError()
       }
 
-      "a CitizenNotFoundError is returned" in {
+      "a MultipleActiveRecordError is returned" in {
+        val multipleActiveRecordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord,
+          activeTransferorRelationshipRecord2), Some(createLoggedInUserInfo()))
+
         when(service.marriageAllowanceConnector.listRelationship(any())(any(), any()))
-          .thenReturn(Future.failed(CitizenNotFound()))
+          .thenReturn(Future.successful(multipleActiveRecordList))
+
+        val result = intercept[MultipleActiveRecordError](await(service.retrieveRelationshipRecords(nino)))
+
+        result shouldBe MultipleActiveRecordError()
+      }
+
+      "a CitizenNotFound error is returned" in {
+        val noCitizenDetailsList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord), None)
+
+        when(service.marriageAllowanceConnector.listRelationship(any())(any(), any()))
+          .thenReturn(Future.successful(noCitizenDetailsList))
 
         val result = intercept[CitizenNotFound](await(service.retrieveRelationshipRecords(nino)))
 
         result shouldBe CitizenNotFound()
       }
 
-      "a BadFetchRequest is returned" in {
-        when(service.marriageAllowanceConnector.listRelationship(any())(any(), any()))
-          .thenReturn(Future.failed(BadFetchRequest()))
-
-        val result = intercept[BadFetchRequest](await(service.retrieveRelationshipRecords(nino)))
-
-        result shouldBe BadFetchRequest()
-      }
     }
+  }
+
+  "saveRelationshipRecords" should {
+
+    val loggedInUserInfo = createLoggedInUserInfo()
+
+    val relationshipRecords = RelationshipRecords(activeRecipientRelationshipRecord, Seq.empty[RelationshipRecord],
+      loggedInUserInfo)
+
+    val userRecord = UserRecord(Some(loggedInUserInfo))
+
+    "return the saved RelationRecords" in {
+      when(service.cachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
+      when(service.cachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
+        thenReturn(Future.successful(userRecord))
+      when(service.cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS),
+        ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
+
+      val result = await(service.saveRelationshipRecords(relationshipRecords))
+
+      result shouldBe relationshipRecords
+    }
+
+    "throw an exception if there is an issue saving to the cache" in {
+
+      val exception = new RuntimeException("error")
+
+      when(service.cachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
+      when(service.cachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
+        thenReturn(Future.successful(userRecord))
+      when(service.cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS),
+        ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.failed(exception))
+
+      val result = intercept[RuntimeException](await(service.saveRelationshipRecords(relationshipRecords)))
+
+      result shouldBe exception
+    }
+
   }
 
   "getCheckClaimOrCancelDecision" should {

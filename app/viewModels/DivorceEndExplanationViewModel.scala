@@ -48,7 +48,7 @@ object DivorceEndExplanationViewModel {
         (messages("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate)),
         messages("pages.divorce.explanation.adjust.code.bullet"))
       }
-      case(Transferor, false) => {
+      case(Transferor, _) => {
         (messages("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate)),
           messages("pages.divorce.explanation.adjust.code.bullet"))
       }
@@ -56,7 +56,7 @@ object DivorceEndExplanationViewModel {
         (messages("pages.divorce.explanation.current.ma.bullet", TextGenerator().ukDateTransformer(maEndDate)),
           messages("pages.divorce.explanation.current.pa.bullet", TextGenerator().ukDateTransformer(paEffectiveDate)))
       }
-      case (Recipient,false) => {
+      case (Recipient, _) => {
         (messages("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate)),
           messages("pages.divorce.explanation.adjust.code.bullet"))
       }
