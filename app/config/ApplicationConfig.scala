@@ -24,6 +24,7 @@ import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
+import utils.encodeQueryStringValue
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
@@ -58,7 +59,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
-  def ggSignInUrl(continueUrl: Option[String]): String = "/gg/sign-in" + continueUrl.fold("")(url => s"?continue=${URLEncoder.encode(url, "UTF-8")}")
+  def ggSignInUrl(continueUrl: String): String = s"/gg/sign-in?continue=${encodeQueryStringValue(continueUrl)}"
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
   override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
@@ -159,13 +160,14 @@ trait ApplicationConfig {
 
   def ivNotAuthorisedUrl: String
 
-  private def createUrl(action: String) = s"${loginUrl}/$action?origin=ma&confidenceLevel=200&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
+  private def createUrl(action: String) =
+    s"$loginUrl/$action?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(callbackUrl)}&failureURL=${encodeQueryStringValue(ivNotAuthorisedUrl)}"
 
   def ivLoginUrl = createUrl(action = "registration")
 
   def ivUpliftUrl = createUrl(action = "uplift")
 
-  def ggSignInUrl(continueUrl: Option[String]): String
+  def ggSignInUrl(continueUrl: String): String
 
   val gdsFinishedUrl: String
   val ptaFinishedUrl: String

@@ -27,13 +27,8 @@ class ApplicationConfigSpec extends UnitSpec {
   }
 
   "ggSignInUrl" must {
-    "build ggSignInUrl" when {
-      "has no continue" in {
-        ApplicationConfig.ggSignInUrl(None) shouldBe "/gg/sign-in"
-      }
-      "has continue" in {
-        ApplicationConfig.ggSignInUrl(Some("/tamc")) shouldBe "/gg/sign-in?continue=%2Ftamc"
-      }
+    "build ggSignInUrl and encode continue url" in {
+      ApplicationConfig.ggSignInUrl("/tamc") shouldBe "/gg/sign-in?continue=%2Ftamc"
     }
   }
 
