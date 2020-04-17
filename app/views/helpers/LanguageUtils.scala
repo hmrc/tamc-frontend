@@ -17,22 +17,23 @@
 package views.helpers
 
 import java.util.Locale
-
+import config.ApplicationConfig
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
-import utils.LanguageUtils.isWelsh
 
-object TextGenerator {
+object LanguageUtils {
 
-  def apply()(implicit messages: Messages): TextGenerator = {
-    if(isWelsh(messages)) WelshTextGenerator else EnglishTextGenerator
+  def isWelsh(messages: Messages): Boolean = messages.lang.language == ApplicationConfig.LANG_LANG_WELSH
+
+  def apply()(implicit messages: Messages): LanguageUtils = {
+    if(isWelsh(messages)) WelshLanguageUtils else EnglishLangaugeUtils
   }
 }
 
-sealed trait TextGenerator {
+sealed trait LanguageUtils {
 
   val taxDateIntervalString: (String, Option[String]) => String
 
@@ -75,7 +76,7 @@ sealed trait TextGenerator {
   }
 }
 
-object EnglishTextGenerator extends TextGenerator {
+object EnglishLangaugeUtils extends LanguageUtils {
 
   override def separator: String = " to "
 
@@ -90,7 +91,7 @@ object EnglishTextGenerator extends TextGenerator {
   override val taxDateIntervalString: (String, Option[String]) => String  = taxDateIntervalGenerator(_:String, _:Option[String], " to Present")
 }
 
-object WelshTextGenerator extends TextGenerator {
+object WelshLanguageUtils extends LanguageUtils {
 
   override def separator: String = " i "
 

@@ -27,7 +27,7 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 
 class ClaimsViewModelTest extends TamcViewModelTest {
@@ -72,7 +72,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
       val primaryActiveRecord = createRelationshipRecord()
       val viewModel = ClaimsViewModel(primaryActiveRecord, Seq.empty[RelationshipRecord])
-      val dateInterval = TextGenerator().taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
+      val dateInterval = LanguageUtils().taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
       val activeRow = ClaimsRow(dateInterval, messagesApi("change.status.active"))
 
       viewModel.activeRow shouldBe activeRow
@@ -87,7 +87,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
       val creationTimeStamp = now.minusDays(2)
       val participant1StartDate = now.minusDays(2)
       val participant1EndDate = now.minusDays(1)
-      lazy val dateInterval = TextGenerator().taxDateIntervalString(participant1StartDate.toString(dateInputPattern),
+      lazy val dateInterval = LanguageUtils().taxDateIntervalString(participant1StartDate.toString(dateInputPattern),
         Some(participant1EndDate.toString(dateInputPattern)))
 
       val endReasons = Set(
@@ -177,7 +177,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
   }
 
   private def getDateRange(startDate: LocalDate, endDate: LocalDate) = {
-    TextGenerator().taxDateIntervalString(startDate.toString(dateInputPattern), Some(endDate.toString(dateInputPattern)))
+    LanguageUtils().taxDateIntervalString(startDate.toString(dateInputPattern), Some(endDate.toString(dateInputPattern)))
   }
 
 }

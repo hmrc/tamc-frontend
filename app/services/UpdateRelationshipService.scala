@@ -31,7 +31,7 @@ import uk.gov.hmrc.emailaddress.PlayJsonFormats._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import utils.LanguageUtils
+import views.helpers.LanguageUtils
 
 import scala.concurrent.{ExecutionContext, Future}
 

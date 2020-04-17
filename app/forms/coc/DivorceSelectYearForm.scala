@@ -25,7 +25,7 @@ import play.api.data.{Form, Mapping}
 import play.api.i18n.Messages
 import services.TimeService
 import uk.gov.hmrc.play.mappers.DateFields.{day, month, year}
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 import scala.util.Try
 
@@ -83,10 +83,10 @@ object DivorceSelectYearForm {
 
   private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
     case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date",
-      TextGenerator().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
+      LanguageUtils().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
       Invalid(ValidationError("pages.divorce.date.error.max.date",
-        TextGenerator().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))
+        LanguageUtils().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))
     case _ => Valid
   }
 

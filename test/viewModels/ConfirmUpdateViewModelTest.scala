@@ -19,7 +19,7 @@ package viewModels
 import models.{CitizenName, ConfirmationUpdateAnswers, LoggedInUserInfo, MarriageAllowanceEndingDates}
 import org.joda.time.LocalDate
 import utils.TamcViewModelTest
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 class ConfirmUpdateViewModelTest extends TamcViewModelTest {
 
@@ -39,7 +39,7 @@ class ConfirmUpdateViewModelTest extends TamcViewModelTest {
   }
 
   def transformedDate(dateToTransform: LocalDate): String = {
-    TextGenerator().ukDateTransformer(dateToTransform)
+    LanguageUtils().ukDateTransformer(dateToTransform)
   }
 
   "ConfirmationUpdateViewModel" should {

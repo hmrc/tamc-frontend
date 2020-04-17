@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import play.twirl.api.Html
 @import uk.gov.hmrc.time.TaxYear
-@import views.helpers.TextGenerator
+@import views.helpers.LanguageUtils
 @import config.ApplicationConfig._
 @import java.text.NumberFormat
 @import org.joda.time.LocalDate
@@ -93,7 +93,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         <col class="width10">
         <tr>
             <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
-            <td id="marriage-date">@TextGenerator().ukDateTransformer(data.dateOfMarriage.dateOfMarriage)
+            <td id="marriage-date">@LanguageUtils().ukDateTransformer(data.dateOfMarriage.dateOfMarriage)
             </td>
             <td>
                 <a href="@controllers.routes.TransferController.dateOfMarriage()"
@@ -107,14 +107,14 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             @if(taxYear.isCurrent) {
 
             <td id="year-@taxYear.year">
-                @Html(Messages("pages.confirm.current.tax",TextGenerator().ukDateTransformer(TaxYear(taxYear.year).starts)))
+                @Html(Messages("pages.confirm.current.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts)))
             </td>
             <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
-                TextGenerator().formPossessive(data.recipientFirstName),
+                LanguageUtils().formPossessive(data.recipientFirstName),
                 data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
                 } else {
             <td id="year-@taxYear.year">
-                @Html(Messages("pages.confirm.previous.tax",TextGenerator().ukDateTransformer(TaxYear(taxYear.year).starts), TextGenerator().ukDateTransformer(TaxYear(taxYear.year).finishes)))
+                @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
             </td>
             <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
                 Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)))))

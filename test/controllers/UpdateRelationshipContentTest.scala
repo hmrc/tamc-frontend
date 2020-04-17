@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
 import utils.ControllerBaseTest
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 import scala.concurrent.Future
 
@@ -103,9 +103,9 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
     val result: Future[Result] = controller().cancel(request)
 
     val currentEndDate =
-      TextGenerator().ukDateTransformer(TaxYear.current.finishes)
+      LanguageUtils().ukDateTransformer(TaxYear.current.finishes)
     val nextStartDate =
-      TextGenerator().ukDateTransformer(TaxYear.current.next.starts)
+      LanguageUtils().ukDateTransformer(TaxYear.current.next.starts)
 
     val expected = Seq(
       s"We will cancel your Marriage Allowance, but it will remain in place until 5 April ${TaxYear.current.finishYear}, the end of the current tax year.",
@@ -211,12 +211,12 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
           )
         )
       val result: Future[Result] = controller().bereavement(request)
-      val endOfYear = TextGenerator().ukDateTransformer(uk.gov.hmrc.time.TaxYear.current.finishes)
 
       val expected = Seq(
         messagesApi("pages.bereavement.transferor.point1"),
-        messagesApi("pages.bereavement.transferor.point2", endOfYear)
+        messagesApi("pages.bereavement.transferor.point2")
       ).toArray
+
       val parsed = Jsoup.parse(contentAsString(result))
       val current = parsed.getElementsByTag("li").eachText().toArray()
 

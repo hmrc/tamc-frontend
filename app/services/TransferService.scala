@@ -29,7 +29,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
-import utils.LanguageUtils
+import views.helpers.LanguageUtils
+
 import scala.concurrent.{ExecutionContext, Future}
 
 object TransferService extends TransferService {

@@ -20,7 +20,7 @@ import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
 
@@ -35,7 +35,7 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
     DivorceEndExplanationViewModel(role, divorceDate, MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
   }
 
-  def formatDate(date: LocalDate): String = TextGenerator().ukDateTransformer(date)
+  def formatDate(date: LocalDate): String = LanguageUtils().ukDateTransformer(date)
 
 
   "DivorceEndExplanationViewModel" should {
@@ -57,7 +57,7 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
 
       "a Recipient is divorced in a previous tax year" in {
 
-        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate))
+        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
         val bulletStatement2 = messagesApi("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
         val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
@@ -70,7 +70,7 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
 
       "a transferor is divorced in the current tax year" in {
 
-        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate))
+        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
         val bulletStatement2 = messagesApi("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
         val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
@@ -83,7 +83,7 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
 
       "a transferor is divorced in a previous tax year" in {
 
-        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate))
+        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
         val bulletStatement2 = messagesApi("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
         val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")

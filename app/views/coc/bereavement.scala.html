@@ -15,12 +15,8 @@
  *@
 
 @import play.twirl.api.Html
-@import config.ApplicationConfig._
 @import models.auth.AuthenticatedUserRequest
 @import models.Role
-@import utils.LanguageUtils
-@import views.helpers.TextGenerator
-@import uk.gov.hmrc.time.TaxYear
 @import includes.backLink
 
 @(role: Role)(implicit messages: Messages,
@@ -32,10 +28,6 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
   <p>{messages("general.helpline.enquiries.link.pretext")} <a href="@generalEnquiriesLink">
       {messages("general.helpline.enquiries.link")}</a> {messages("pages.bereavement.enquiries.link.paragraph")}
   </p>
-}
-
-@endOfYear = @{
-  TextGenerator().ukDateTransformer(TaxYear.current.finishes, transformPattern = "d MMMM")
 }
 
 @templates.tamc_main( title = messages("title.pattern", messages("pages.bereavement.title")),
@@ -56,7 +48,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     <ul class="bullets">
         <li>@messages("pages.bereavement.transferor.point1")</li>
-        <li>@messages("pages.bereavement.transferor.point2", endOfYear)</li>
+        <li>@messages("pages.bereavement.transferor.point2")</li>
     </ul>
   }
 }

@@ -21,7 +21,7 @@ import models.DesRelationshipEndReason.Default
 import models.RelationshipRecord
 import play.api.i18n.Messages
 import play.twirl.api.Html
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 case class ClaimsRow(dateInterval: String, status: String)
 
@@ -50,7 +50,7 @@ object ClaimsViewModel {
 
   private def activeClaimsRow(primaryRelationshipRecord: RelationshipRecord)(implicit messages: Messages): ClaimsRow = {
 
-    val activeDateInterval = TextGenerator().taxDateIntervalString(
+    val activeDateInterval = LanguageUtils().taxDateIntervalString(
       primaryRelationshipRecord.participant1StartDate,
       primaryRelationshipRecord.participant1EndDate)
 
@@ -62,7 +62,7 @@ object ClaimsViewModel {
 
   private def historicClaimsRow(nonPrimaryRelation: RelationshipRecord)(implicit messages: Messages): ClaimsRow = {
 
-    val historicDateInterval = TextGenerator().taxDateIntervalString(
+    val historicDateInterval = LanguageUtils().taxDateIntervalString(
       nonPrimaryRelation.participant1StartDate,
       nonPrimaryRelation.participant1EndDate)
 

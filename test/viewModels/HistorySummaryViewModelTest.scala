@@ -22,7 +22,7 @@ import org.joda.time.LocalDate
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 
 class HistorySummaryViewModelTest extends TamcViewModelTest {
@@ -32,7 +32,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
   lazy val maxPATransfer: Int = PERSONAL_ALLOWANCE(currentOfTaxYear)
   lazy val maxBenefit: Int = MAX_BENEFIT(currentOfTaxYear)
   lazy val maxPaTransferFormatted: Int = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
-  lazy val formattedEndOfYear = TextGenerator().ukDateTransformer(endOfTaxYear)
+  lazy val formattedEndOfYear = LanguageUtils().ukDateTransformer(endOfTaxYear)
 
   val citizenName = CitizenName(Some("Test"), Some("User"))
   val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = new LocalDate().toString, has_allowance = None, name = Some(citizenName))

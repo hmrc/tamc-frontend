@@ -20,7 +20,7 @@ import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
 import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 case class DivorceEndExplanationViewModel(divorceDate: String, taxYearStatus: String, bulletStatement: (String, String))
 
@@ -28,7 +28,7 @@ object DivorceEndExplanationViewModel {
 
   def apply(role: Role, divorceDate: LocalDate, datesForDivorce: MarriageAllowanceEndingDates)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
-    val divorceDateFormatted = TextGenerator().ukDateTransformer(divorceDate)
+    val divorceDateFormatted = LanguageUtils().ukDateTransformer(divorceDate)
     val isCurrentYearDivorced: Boolean =  TaxYear.current.contains(divorceDate)
 
     val taxYearStatus = if(isCurrentYearDivorced) {
@@ -45,19 +45,19 @@ object DivorceEndExplanationViewModel {
   def createBullets(role: Role, isCurrentYearDivorced: Boolean, maEndDate: LocalDate, paEffectiveDate: LocalDate)(implicit messages: Messages): (String, String) = {
     (role, isCurrentYearDivorced) match {
       case (Transferor, true) => {
-        (messages("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate)),
+        (messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
         messages("pages.divorce.explanation.adjust.code.bullet"))
       }
       case(Transferor, _) => {
-        (messages("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate)),
+        (messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
           messages("pages.divorce.explanation.adjust.code.bullet"))
       }
       case (Recipient, true) => {
-        (messages("pages.divorce.explanation.current.ma.bullet", TextGenerator().ukDateTransformer(maEndDate)),
-          messages("pages.divorce.explanation.current.pa.bullet", TextGenerator().ukDateTransformer(paEffectiveDate)))
+        (messages("pages.divorce.explanation.current.ma.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
+          messages("pages.divorce.explanation.current.pa.bullet", LanguageUtils().ukDateTransformer(paEffectiveDate)))
       }
       case (Recipient, _) => {
-        (messages("pages.divorce.explanation.previous.bullet", TextGenerator().ukDateTransformer(maEndDate)),
+        (messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
           messages("pages.divorce.explanation.adjust.code.bullet"))
       }
     }

@@ -18,7 +18,7 @@ package viewModels
 
 import models.ConfirmationUpdateAnswers
 import play.api.i18n.Messages
-import views.helpers.TextGenerator
+import views.helpers.LanguageUtils
 
 case class ConfirmUpdateViewModel(endDate: String, effectiveDate: String, rows: Seq[SummaryRow])
 
@@ -31,12 +31,12 @@ object ConfirmUpdateViewModel  {
     val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), updateAnswers.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
     val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), updateAnswers.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
-    val endDate = TextGenerator().ukDateTransformer(updateAnswers.maEndingDates.marriageAllowanceEndDate)
-    val effectiveDate = TextGenerator().ukDateTransformer(updateAnswers.maEndingDates.personalAllowanceEffectiveDate)
+    val endDate = LanguageUtils().ukDateTransformer(updateAnswers.maEndingDates.marriageAllowanceEndDate)
+    val effectiveDate = LanguageUtils().ukDateTransformer(updateAnswers.maEndingDates.personalAllowanceEffectiveDate)
 
     def createRows(defaultRows: List[SummaryRow])(implicit messages: Messages): List[SummaryRow] = {
       updateAnswers.divorceDate.fold(defaultRows){ divorceDate =>
-        val formattedDate = TextGenerator().ukDateTransformer(divorceDate)
+        val formattedDate = LanguageUtils().ukDateTransformer(divorceDate)
         SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2) :: defaultRows
       }
     }

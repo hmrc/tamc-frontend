@@ -17,9 +17,9 @@
 package views.helpers
 
 import forms.EmailForm
-import org.scalatest.mockito.MockitoSugar
-import org.mockito.Mockito.when
 import org.joda.time.LocalDate
+import org.mockito.Mockito.when
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages}
@@ -27,15 +27,14 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 
 import scala.collection.immutable
 
-class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with GuiceOneAppPerSuite {
+class LanguageUtilsSpec extends WordSpec with Matchers with MockitoSugar with GuiceOneAppPerSuite {
 
   private val currentYear = LocalDate.now().getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
 
-
   trait EnglishSetup {
-    implicit val englishMessages: Messages = mock[Messages]
-    when(englishMessages.lang).thenReturn(Lang("en"))
+    implicit val englishMessage: Messages = mock[Messages]
+    when(englishMessage.lang).thenReturn(Lang("en"))
   }
 
   trait WelshSetup {
@@ -43,17 +42,23 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
     when(welshMessage.lang).thenReturn(Lang("cy"))
   }
 
+  "isWelsh" must {
 
+    "return true if the language is set to Welsh" in new WelshSetup {
+      LanguageUtils.isWelsh(welshMessage) shouldBe true
+    }
 
-  "TextGenerators" when {
+    "return false if the language is not set to Welsh" in new EnglishSetup {
+      LanguageUtils.isWelsh(englishMessage) shouldBe false
+    }
 
     "seperator" must {
       "return English separator" in new EnglishSetup {
-        TextGenerator().separator shouldBe " to "
+        LanguageUtils().separator shouldBe " to "
       }
 
       "return Welsh separator" in new WelshSetup {
-        TextGenerator().separator shouldBe " i "
+        LanguageUtils().separator shouldBe " i "
       }
     }
 
@@ -67,7 +72,7 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
 
       englishList.foreach { dateMonthTuple =>
         s"return month as English ${dateMonthTuple._2}" in new EnglishSetup {
-          TextGenerator().ukDateTransformer(dateMonthTuple._1) should include(dateMonthTuple._2)
+          LanguageUtils().ukDateTransformer(dateMonthTuple._1) should include(dateMonthTuple._2)
         }
       }
 
@@ -77,18 +82,18 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
 
       for ((month, monthAsInt) <- welshMonthsInOrder.zip(Stream from 1)) {
         s"return month as Welsh $month" in new WelshSetup {
-          TextGenerator().ukDateTransformer(new LocalDate(2020, monthAsInt, 1)) should include(month)
+          LanguageUtils().ukDateTransformer(new LocalDate(2020, monthAsInt, 1)) should include(month)
         }
       }
     }
 
     "formPossessive" must {
       "append an 's in English" in new EnglishSetup {
-        TextGenerator().formPossessive("Richard") shouldBe "Richard’s"
+        LanguageUtils().formPossessive("Richard") shouldBe "Richard’s"
       }
 
       "remain the same in Welsh" in new WelshSetup {
-        TextGenerator().formPossessive("Gareth") shouldBe "Gareth"
+        LanguageUtils().formPossessive("Gareth") shouldBe "Gareth"
       }
     }
 
@@ -97,10 +102,10 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
         val start = year
         val finish = year + 1
         s"return the beginning and end dates of $year tax year(UK)" in new EnglishSetup {
-          TextGenerator().taxDateInterval(year) shouldBe s"6 April $start to 5 April $finish"
+          LanguageUtils().taxDateInterval(year) shouldBe s"6 April $start to 5 April $finish"
         }
         s"return the beginning and end dates of $year tax year(CY)" in new WelshSetup {
-          TextGenerator().taxDateInterval(year) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
+          LanguageUtils().taxDateInterval(year) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
         }
       }
     }
@@ -111,10 +116,10 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
         val finish = year + 1
         val expected = finish + 1
         s"return the years that two tax years span from $start to $finish (UK)" in  new EnglishSetup {
-          TextGenerator().taxDateIntervalMultiYear(start, finish) shouldBe s"$start to $expected"
+          LanguageUtils().taxDateIntervalMultiYear(start, finish) shouldBe s"$start to $expected"
         }
         s"return the years that two tax years span from $start to $finish (CY)" in new WelshSetup {
-          TextGenerator().taxDateIntervalMultiYear(start, finish) shouldBe s"$start i $expected"
+          LanguageUtils().taxDateIntervalMultiYear(start, finish) shouldBe s"$start i $expected"
         }
       }
     }
@@ -124,29 +129,29 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
         val start = year
         val finish = year + 1
         s"return the years that a single($start) tax year spans across(UK)" in new EnglishSetup {
-          TextGenerator().taxDateIntervalShort(start) shouldBe s"$start to $finish"
+          LanguageUtils().taxDateIntervalShort(start) shouldBe s"$start to $finish"
         }
         s"return the years that a single($start) tax year spans across(CY)" in new WelshSetup {
-          TextGenerator().taxDateIntervalShort(start) shouldBe s"$start i $finish"
+          LanguageUtils().taxDateIntervalShort(start) shouldBe s"$start i $finish"
         }
       }
     }
 
     "taxDateIntervalString" must {
       "return dates for one tax year to present(UK)" in new EnglishSetup {
-        TextGenerator().taxDateIntervalString("20160505", Some("20170505")) shouldBe "2016 to 2018"
+        LanguageUtils().taxDateIntervalString("20160505", Some("20170505")) shouldBe "2016 to 2018"
       }
 
       "return dates for one tax year to another(UK)" in new EnglishSetup {
-        TextGenerator().taxDateIntervalString("20160505", None) shouldBe "2016 to Present"
+        LanguageUtils().taxDateIntervalString("20160505", None) shouldBe "2016 to Present"
       }
 
       "return dates for one tax year to present(CY)" in new WelshSetup  {
-        TextGenerator().taxDateIntervalString("20160505", Some("20170505")) shouldBe "2016 i 2018"
+        LanguageUtils().taxDateIntervalString("20160505", Some("20170505")) shouldBe "2016 i 2018"
       }
 
       "return dates for one tax year to another(CY)" in new WelshSetup {
-        TextGenerator().taxDateIntervalString("20160505", None) shouldBe "2016 i’r Presennol"
+        LanguageUtils().taxDateIntervalString("20160505", None) shouldBe "2016 i’r Presennol"
       }
     }
 
@@ -154,33 +159,33 @@ class TextGeneratorsSpec extends WordSpec with Matchers with MockitoSugar with G
       "return list of keys string" in new EnglishSetup {
         val formWithErrors = EmailForm.emailForm.bind(Map("transferor-email" -> "exampleemail.com"))
 
-        TextGenerator().formPageDataJourney("prefix", formWithErrors) shouldBe
+        LanguageUtils().formPageDataJourney("prefix", formWithErrors) shouldBe
           "prefix-erroneous(transferor-email)"
       }
 
       "return prefix" in new EnglishSetup {
         val form = EmailForm.emailForm.fill(EmailAddress("example@email.com"))
 
-        TextGenerator().formPageDataJourney("prefix", form) shouldBe
+        LanguageUtils().formPageDataJourney("prefix", form) shouldBe
           "prefix"
       }
     }
 
     "dateTransformer" must {
       "return String from LocalDate" in new EnglishSetup {
-        TextGenerator().dateTransformer(new LocalDate(2020, 2, 2)) shouldBe
+        LanguageUtils().dateTransformer(new LocalDate(2020, 2, 2)) shouldBe
           "02/02/2020"
       }
 
       "return LocalDate from String" in new EnglishSetup {
-        TextGenerator().dateTransformer("20200202") shouldBe
+        LanguageUtils().dateTransformer("20200202") shouldBe
           new LocalDate(2020, 2, 2)
       }
     }
 
     "nonBreakingSpace" must {
       "replace spaces in String" in new EnglishSetup {
-        TextGenerator().nonBreakingSpace("Break space") shouldBe
+        LanguageUtils().nonBreakingSpace("Break space") shouldBe
           "Break\u00A0space"
       }
     }
