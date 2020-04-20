@@ -43,23 +43,13 @@ object DivorceEndExplanationViewModel {
   }
 
   def createBullets(role: Role, isCurrentYearDivorced: Boolean, maEndDate: LocalDate, paEffectiveDate: LocalDate)(implicit messages: Messages): (String, String) = {
-    (role, isCurrentYearDivorced) match {
-      case (Transferor, true) => {
-        (messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
+
+    if(role == Recipient && isCurrentYearDivorced) {
+      (messages("pages.divorce.explanation.current.ma.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
+        messages("pages.divorce.explanation.current.pa.bullet", LanguageUtils().ukDateTransformer(paEffectiveDate)))
+    } else {
+      (messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
         messages("pages.divorce.explanation.adjust.code.bullet"))
-      }
-      case(Transferor, _) => {
-        (messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
-          messages("pages.divorce.explanation.adjust.code.bullet"))
-      }
-      case (Recipient, true) => {
-        (messages("pages.divorce.explanation.current.ma.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
-          messages("pages.divorce.explanation.current.pa.bullet", LanguageUtils().ukDateTransformer(paEffectiveDate)))
-      }
-      case (Recipient, _) => {
-        (messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate)),
-          messages("pages.divorce.explanation.adjust.code.bullet"))
-      }
     }
   }
 
