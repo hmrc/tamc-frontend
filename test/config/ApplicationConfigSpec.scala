@@ -16,16 +16,13 @@
 
 package config
 
-import test_utils.TAMCSetupSpec
+import uk.gov.hmrc.play.test.UnitSpec
 
-class ApplicationConfigSpec extends TAMCSetupSpec {
+class ApplicationConfigSpec extends UnitSpec {
 
   "check rates for earliest valid year" when {
-
     "return valid year" in {
       ApplicationConfig.TAMC_BEGINNING_YEAR should be(2016)
     }
-
   }
-
 }

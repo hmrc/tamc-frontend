@@ -40,6 +40,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
+
   override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version") + '/'
 
   override lazy val analyticsToken: Option[String] = runModeConfiguration.getString("google-analytics.token")
@@ -56,6 +57,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
+  override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
+  override lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
   lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path")
@@ -64,9 +67,13 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val TAMC_BEGINNING_YEAR: Int = runModeConfiguration.getInt("tamc-earliest-valid-year")
     .getOrElse(throw new RuntimeException("Cannot find 'tamc-earliest-valid-year' in 'data/tax-rates.conf'!"))
 
-  val TAMC_MIN_DATE: LocalDate = new LocalDate(1899, 12, 31)
+  val TAMC_MIN_DATE: LocalDate = new LocalDate(1900,1 , 1)
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
+  val generalEnquiriesLink = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
+  val CACHE_DIVORCE_DATE = "DIVORCE_DATE"
+  val CACHE_MAKE_CHANGES_DECISION = "MAKE_CHANGES_DECISION"
+  val CACHE_CHECK_CLAIM_OR_CANCEL = "CHECK_CLAIM_OR_CANCEL"
   val CACHE_TRANSFEROR_RECORD = "TRANSFEROR_RECORD"
   val CACHE_RECIPIENT_RECORD = "RECIPIENT_RECORD"
   val CACHE_RECIPIENT_DETAILS = "RECIPIENT_DETAILS"
@@ -82,6 +89,9 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_LOCKED_UPDATE = "LOCKED_UPDATE"
   val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
   val CACHE_ROLE_RECORD = "ROLE"
+  val CACHE_EMAIL_ADDRESS = "EMAIL_ADDRESS"
+  val CACHE_MA_ENDING_DATES = "MA_ENDING_DATES"
+  val CACHE_RELATIONSHIP_RECORDS = "RELATIONSHIP_RECORDS"
 
   def actualTaxYear(taxYear: Int): Int = {
     if (taxYear <= 0)
@@ -139,6 +149,10 @@ trait ApplicationConfig {
 
   val frontendTemplatePath: String
 
+  val marriageAllowanceUrl: String
+  val taiFrontendUrl: String
+  val taxFreeAllowanceUrl: String
+
   def ivNotAuthorisedUrl: String
 
   private def createUrl(action: String) = s"${loginUrl}/${action}?origin=ma&confidenceLevel=100&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
@@ -146,8 +160,6 @@ trait ApplicationConfig {
   def ivLoginUrl = createUrl(action = "registration")
 
   def ivUpliftUrl = createUrl(action = "uplift")
-
-  val marriageAllowanceUrl: String
 
   val TAMC_JOURNEY = "TAMC_JOURNEY"
   val TAMC_JOURNEY_PTA = "PTA"
@@ -165,5 +177,5 @@ trait ApplicationConfig {
   val webchatId: String
   /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
   lazy val refreshInterval = 900
-  val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
+  lazy val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
 }

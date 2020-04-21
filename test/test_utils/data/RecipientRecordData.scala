@@ -25,6 +25,5 @@ object RecipientRecordData {
   val citizenName: CitizenName = CitizenName(Some("Test"), Some("User"))
   val userRecord: UserRecord = UserRecord(Cids.cid1, "2015", Some(true), Some(citizenName))
   val registrationFormInput: RegistrationFormInput = RegistrationFormInput("Test", "User", Gender("M"), Nino(Ninos.nino1), LocalDate.now())
-
   val recipientRecord: RecipientRecord = RecipientRecord(userRecord, registrationFormInput, List(TaxYear(2015, Some(false))))
 }

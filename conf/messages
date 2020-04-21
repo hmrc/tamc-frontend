@@ -170,7 +170,6 @@ title.eligibility-criteria=Eligibility Criteria
 title.how-it-works=Apply for Marriage Allowance
 title.other-ways=Other Ways to apply
 title.change.complete=Marriage Allowance cancelled
-title.change.earnings=Tell us about a change of income
 title.change.reason=Cancelling your Marriage Allowance
 title.error=Error
 title.history=Your Marriage Allowance summary
@@ -318,7 +317,7 @@ pages.date-of-marriage.h2=When did you marry or form a civil partnership with yo
 #********************************************************************************
 pages.how-it-works.heading=How it works
 pages.how-it-works.lede-pre1.part2=lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
-pages.how-it-works.lede-pre1.link-text=Marriage Allowance 
+pages.how-it-works.lede-pre1.link-text=Marriage Allowance
 pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
 pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
 pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year since 5 April 2016 that you were eligible for Marriage Allowance.
@@ -345,11 +344,7 @@ change.status.reason-for=Reason for change
 change.status.reason-for-divorce=Do you want to keep your Marriage Allowance in place until {0}?
 change.status.confirm.info=We will email confirmation that you have cancelled your Marriage Allowance within 24 hours.
 change.status.confirm.more.info=We will not share your email with anyone else.
-change.status.confirm-cancellation.button=Confirm cancellation
 change.status.confirm.field.your-email=We will send you confirmation of your cancellation.
-change.status.confirm.field.your-name=Your name
-change.status.earnings.h1=Change of income
-change.status.earnings.h2=You need to tell us if your or your partner’s income changes so we can tell you if:
 change.status.earnings.tr.instruction-1=claiming Marriage Allowance will still benefit you as a couple
 change.status.earnings.tr.instruction-2=you need to cancel your Marriage Allowance
 change.status.earnings.rec.instruction-1=you expect your income over the whole tax year to be more than £{0}, because you will no longer be eligible as a couple in this tax year
@@ -382,10 +377,7 @@ change.status.divorce.recipient.options=Once you have told us, Marriage Allowanc
 change.status.historic-active.result=Removing Marriage Allowance from the start of the tax year could result in your partner underpaying tax. We will notify them at the end of the tax year. Any underpayment will usually be collected through an adjustment to their tax code.
 change.status.historic-active.directions=You can remove Marriage Allowance from the start of the tax year ({2}) if you have divorced and have a <a href="{0}">decree absolute</a>, or if your civil partnership has ended and you have a <a href="{1}">final order</a>. These are the documents that legally end your marriage or civil partnership.
 change.status.cancel.h1=Cancelling Marriage Allowance
-
 change.status.continue=Continue
-change.status.cancel.content=We will cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
-change.status.cancel.content1=Your Personal Allowance will not include any Marriage Allowance from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
 change.status.reject.h1=Remove a previous Marriage Allowance claim
 change.status.reject.content=You can only cancel your Marriage Allowance from the start of the claim, {0}, the start of the tax year you first received it.
 change.status.reject.partner=If your partner cancels your Marriage Allowance, it will remain in place until {0}, the end of the current tax year.
@@ -400,18 +392,14 @@ change.status.divorce-cy-content=This will be removed at the end of the current 
 change.status.cancel-your.h1=Cancelling Marriage Allowance
 change.status.cancel-your.p=Why do you want to cancel your Marriage Allowance?
 change.status.confirm.email=Enter your email to confirm
-change.status.history.h4=Your Marriage Allowance claims
-change.status.start-date=Tax year
+
 change.status.end-date=End date
 change.status.history.allowance-status=Allowance status
-change.status.history.status=Status
 change.status.history.role=Allowance role
-change.status.history.reason=Status
 change.status.active=Active
 change.status.active.present.year=to Present
 change.status.active.to=to
-change.status.transferor.amount=You will stop transferring Marriage Allowance to your partner at end of the tax year ({0}).
-change.status.receiving.amount=You will stop receiving Marriage Allowance from your partner at end of the tax year ({0}).
+
 change.status.transferor.stop-sooner=You can end your Marriage Allowance transfer sooner.
 change.status.recipient.stop-sooner=You can stop receiving Marriage Allowance sooner.
 change.status.finish.divorce=Divorce successful
@@ -421,28 +409,13 @@ change.status.finish.will-be-next=Your Marriage Allowance will be removed from t
 change.status.apply=Apply for Marriage Allowance
 change.status.have-not-applied=You are not currently benefiting from Marriage Allowance.
 change.status.ask-to-check=If you are married or in a civil partnership you may be able to transfer some of your tax-free Personal Allowance to your partner. Check if you are eligible to apply for Marriage Allowance.
-change.status.bereavement.sorry=We are sorry for your loss
-change.status.bereavement.notify-hmrc=You can let HMRC know of a bereavement on:
-change.status.bereavement.rec.instruction=If your partner transferred some of their Personal Allowance to you before they died:
-change.status.bereavement.rec.instruction-1=your Personal Allowance will remain at the higher level until the end of the tax year (5 April)
-change.status.bereavement.rec.instruction-2=their estate will be treated as having a smaller Personal Allowance, because they transferred some of it to you
-change.status.bereavement.tr.instruction=If your partner dies after you have transferred some of your Personal Allowance to them:
-change.status.bereavement.tr.instruction-1=their estate will be treated as having the extra Personal Allowance you transferred to them
-change.status.bereavement.tr.instruction-2=your Personal Allowance will go back to the normal amount at the end of the tax year (5 April)
-change.status.divorce.radio=Divorce or end of civil partnership
-change.status.bereavement.radio=Bereavement
-change.status.earnings.radio=Change in your income
-change.status.cancel.radio=I want to stop Marriage Allowance payments
 change.status.confirm-change=Confirm you want to change this Marriage Allowance transfer.
 change.status.previous-years=We have noticed you might be able to claim Marriage Allowance for previous tax years. If you are eligible we will backdate it and send your partner a cheque in the post.
-confirm.transferor.heading=Confirm cancellation of Marriage Allowance
+
 confirm.recipient.ended.reject.heading=Confirm removal of a previous Marriage Allowance claim
 pages.ended.reject.message=You have asked us to remove your Marriage Allowance from tax year {0}. This means:
 pages.ended.reject.message1=your Marriage Allowance will be removed from {0}, the start of the tax year you first received it
 pages.ended.reject.message2=if you have not paid enough tax, we will usually collect it by adjusting your tax code
-pages.confirm.message=You have asked us to cancel your Marriage Allowance. This means:
-pages.confirm.message1=your Marriage Allowance will remain in place until {0}, the end of the current tax year
-pages.confirm.message2=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
 pages.reject.message1=your Marriage Allowance will be cancelled from {0}, the start of the tax year you first received it
 pages.reject.message2=we will let you know if you have paid the right amount of tax at the end of tax year
 pages.reject.message3=if you have not paid enough tax, we will usually collect it by adjusting your tax code
@@ -490,8 +463,8 @@ technical.issue.heading=Sorry, there is a problem with the service
 technical.issue.try.later=Try again later.
 technical.issue.back=Return to GOV.UK
 technical.other-ways.h1=Other ways to apply for Marriage Allowance
-technical.other-ways.para0.part1=You can apply for Marriage Allowance through your 
-technical.other-ways.para0.link-text=personal account 
+technical.other-ways.para0.part1=You can apply for Marriage Allowance through your
+technical.other-ways.para0.link-text=personal account
 technical.other-ways.para0.part2=, under ‘services you might need’.
 technical.other-ways.para1=You can also call HM Revenue and Customs (HMRC) to make an application.
 technical.other-ways.para2=You will need to know you and your partner’s National Insurance number.
@@ -505,15 +478,26 @@ technical.transferor-dead-p1=Contact the Income Tax Helpline
 technical.transferor-dead-p2=if you need to discuss your Marriage Allowance application.
 
 #********************************************************************************
+# Cancel Journey
+#********************************************************************************
+claim.summary.link=Back to your Marriage Allowance claim summary
+general.helpline.enquiries.link.pretext=You can
+general.helpline.enquiries.link=contact the Income Tax general enquiries helpline
+
+#********************************************************************************
 # history page
 #********************************************************************************
-pages.history.help.partner=You are currently helping your partner benefit from Marriage Allowance.
-pages.history.helped.by.partner=Your partner is currently helping you benefit from Marriage Allowance.
+pages.history.active.transferor=You are currently helping your partner benefit from Marriage Allowance.
 pages.history.cancellation=You can cancel Marriage Allowance online
 pages.history.cancellation1=If you have divorced or ended your civil partnership, you can cancel Marriage Allowance online. If you are currently separated, you can still receive Marriage Allowance until you legally end your marriage or civil partnership.
 pages.history.cancellation2=You can also cancel to stop payments if you are still married or in a civil partnership, but no longer want to benefit from Marriage Allowance.
-
-pages.history.partner.help=Your partner is currently helping you benefit from Marriage Allowance.
+pages.history.historic.ended=Your Marriage Allowance claim has ended.
+pages.history.historic.recipient=You will keep the tax-free allowances transferred to you until {0}.
+pages.history.historic.transferor=You will keep the tax-free allowances transferred by you until {0}.
+pages.history.active.button=Check or update your Marriage Allowance
+pages.history.historic.button=Check your Marriage Allowance claims
+pages.history.active.recipient.paragraph1=Your partner is currently using Marriage Allowance to transfer £{0} of their Personal Allowance to you.
+pages.history.active.recipient.paragraph2=This can reduce the tax you pay by up to £{0} a year.
 pages.history.cancel=You can cancel Marriage Allowance if you:
 pages.history.cancel1=have divorced or ended your civil partnership
 pages.history.cancel2=have had a change in your income
@@ -522,13 +506,118 @@ pages.history.cancel4=have suffered a bereavement
 pages.history.button.remove=Remove allowance
 
 #********************************************************************************
+# bereavement page
+#********************************************************************************
+pages.bereavement.title=We are sorry for your loss
+pages.bereavement.enquiries.link.paragraph=to tell us about a bereavement.
+pages.bereavement.recipient.paragraph=You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.
+pages.bereavement.transferor.paragraph=If your partner dies after you have transferred some of your Personal Allowance to them:
+pages.bereavement.transferor.point1=their estate will be treated as having the extra Personal Allowance you transferred to them
+pages.bereavement.transferor.point2=your Personal Allowance will go back to the normal amount at the end of the tax year (5 April)
+
+#********************************************************************************
+# stop allowance page
+#********************************************************************************
+pages.stopAllowance.title=Your partner needs to stop the Marriage Allowance claim
+pages.stopAllowance.paragraph1=As your partner is transferring their allowances to you, they will need to stop the claim.
+pages.stopAllowance.paragraph2=Your partner can do this from the Marriage Allowance section of their personal tax account.
+
+
+#********************************************************************************
+# claims page
+#********************************************************************************
+pages.claims.title=Your Marriage Allowance claims
+pages.claims.table.heading.tax-year=Tax year
+pages.claims.table.heading.status=Status
+pages.claims.link.tax.free.allowance.part1=You can
+pages.claims.link.tax.free.allowance.link.text=see the transferred allowance in your tax-free amount.
+
+
+#********************************************************************************
+# Decision page
+#********************************************************************************
+pages.decision.title=What do you want to do?
+pages.decision.radio.check=Check current or earlier Marriage Allowance claims
+pages.decision.radio.stop=Stop current Marriage Allowance claim
+pages.decision.error.mandatory.value=Select if you want to check or stop your marriage allowance claim
+
+
+
+#********************************************************************************
+# Make Changes page
+#********************************************************************************
+pages.makeChanges.title=Why do you need to stop your Marriage Allowance?
+pages.makeChanges.radio.divorce=Divorce, end of civil partnership or legally separated
+pages.makeChanges.radio.incomeChanges=Household income changes
+pages.makeChanges.radio.noLongerRequired=Do not want Marriage Allowance anymore
+pages.makeChanges.radio.bereavement=Bereavement
+pages.makeChanges.error.mandatory.value=Select the reason you want to stop your marriage allowance
+
+
+#********************************************************************************
+# Cancel page
+#********************************************************************************
+pages.cancel.title=Cancelling Marriage Allowance
+pages.cancel.paragraph1=We will cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
+pages.cancel.paragraph2=Your Personal Allowance will not include any Marriage Allowance from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
+
+
+#********************************************************************************
+# Change of Income page
+#********************************************************************************
+pages.changeOfIncome.title=Change of income
+pages.changeOfIncome.enquiries.link.paragraph=to tell us about a change of income.
+pages.changeOfIncome.paragraph2=You need to tell us if you or your partner’s income changes so we can tell you if:
+pages.changeOfIncome.bullet1=claiming Marriage Allowance will still benefit you as a couple
+pages.changeOfIncome.bullet2=you need to cancel your Marriage Allowance
+
+
+#********************************************************************************
+# Divorce page
+#********************************************************************************
+pages.divorce.title=Date of divorce, end of civil partnership or legal separation
+pages.divorce.paragraph1=You need to go to court to be legally separated. You can still get Marriage Allowance if you are separated, but not legally separated.
+pages.divorce.date.hint=For example, 30 6 2019
+pages.divorce.date.error.mandatory=Enter your date of divorce, end of civil partnership or legal separation
+pages.divorce.date.error.invalid=Enter a real date
+pages.divorce.date.error.non.numeric=Date of your divorce, end of civil partnership or legal separation must only include numbers 0 to 9
+pages.divorce.date.error.min.date=Date of your divorce, end of your civil partnership or legal separation must be after {0}
+pages.divorce.date.error.max.date=Date of your divorce, end of your civil partnership or legal separation must be before {0}
+
+
+#********************************************************************************
+# Divorce Explanation page
+#********************************************************************************
+pages.divorce.explanation.title=Cancelling Marriage Allowance
+pages.divorce.explanation.paragraph1=You have told us you divorced, ended your civil partnership or were legally separated on {0}.
+pages.divorce.explanation.paragraph2=As this date falls within {0}:
+pages.divorce.explanation.current.taxYear=the current tax year
+pages.divorce.explanation.previous.taxYear=a previous tax year
+pages.divorce.explanation.current.ma.bullet=your Marriage Allowance will be cancelled from {0}, the end of the current tax year
+pages.divorce.explanation.current.pa.bullet=your Personal Allowance will go back to the normal amount from {0}, the start of the new tax year
+pages.divorce.explanation.previous.bullet=your Marriage Allowance will be cancelled from {0}
+pages.divorce.explanation.adjust.code.bullet=if you have not paid enough tax, we will usually collect it by adjusting your tax code
+
+
+#********************************************************************************
+# confirm cancellation page
+#********************************************************************************
+pages.confirm.cancel.heading=Confirm cancellation of Marriage Allowance
+pages.confirm.cancel.message=You have asked us to cancel your Marriage Allowance. This means:
+pages.confirm.cancel.message1=your Marriage Allowance will remain in place until {0}
+pages.confirm.cancel.message2=your Personal Allowance will go back to the normal amount from {0}
+pages.confirm.cancel.your-name=Your name
+pages.confirm.cancel.email=Email
+pages.confirm.cancel.continue.button=Confirm cancellation
+
+
+#********************************************************************************
 # eligible year page
 #********************************************************************************
 pages.eligibleyear.currentyear=You can apply for the current tax year
 pages.eligibleyear.toldus=You have told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
 pages.eligibleyear.thisyear1=This current tax year
 pages.eligibleyear.thisyear2={0} onwards
-
 pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
 pages.eligibleyear.li2=we will adjust {0} tax code to include this extra allowance
 pages.eligibleyear.li3=it will automatically renew every year until you or {0} cancel it or are
@@ -568,32 +657,24 @@ pages.confirm.date.of.marriage=Date of marriage or civil partnership
 # change-of-circs-finish-page
 #********************************************************************************
 pages.coc.finish.header=Marriage Allowance cancelled
-pages.coc.finish.acknowledgement=An email acknowledging your cancellation will be sent to you at <strong>{0}</strong> from <strong>noreply&#64;tax.service.gov.uk</strong> within 24 hours.
+pages.coc.finish.acknowledgement=An email acknowledging your cancellation will be sent to you at {0} from noreply@tax.service.gov.uk within 24 hours.
 pages.coc.finish.junk=If it does not appear in your inbox, please check your spam or junk folder.
-pages.coc.finish.whn=What happens next
-pages.coc.finish.para1=HMRC will now process your cancellation. Please check the email we have sent you for full details.
-pages.coc.finish.para2.part1=There is no need to contact us. You can 
-pages.coc.finish.para2.link-text=check the status 
-pages.coc.finish.para2.part2=of your Marriage Allowance online.
+pages.coc.finish.para1=There is no need to contact us.
+
+#********************************************************************************
+# misc
+#********************************************************************************
 
 date.fields.day=Day
 date.fields.month=Month
 date.fields.year=Year
-
-change.other.caption=Other changes that affect Marriage Allowance
-change.other.sub.caption1=Change of income
-change.other.income.content=To benefit as a couple from Marriage Allowance, you should earn £{0} or less a year. To be eligible, your partner must earn between £{1} and £{2} a year (or £{3} if you live in Scotland).
-change.other.income.link=To let us know about a change in income, contact HMRC
-change.other.sub.caption2=Bereavement
-change.other.bereavement.content=If your partner dies, your Marriage Allowance will change.
-change.other.bereavement.link=To let us know about a bereavement, contact HMRC
 
 #********************************************************************************
 # no years selected page
 #********************************************************************************
 pages.noyears.h1=You have not selected any tax years to apply for
 pages.noyears.content1=Go back if you want to select a year to apply for.
-pages.noyears.findoutmore.part1=You can find out more about 
+pages.noyears.findoutmore.part1=You can find out more about
 pages.noyears.findoutmore.link-text=how Marriage Allowance works
 
 #********************************************************************************

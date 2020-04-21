@@ -17,7 +17,6 @@
 package services
 
 import config.ApplicationConfig
-import models.{EndReasonCode, EndRelationshipReason}
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import uk.gov.hmrc.time.TaxYear
@@ -26,33 +25,26 @@ object TimeService extends TimeService
 
 trait TimeService {
 
-  def currentTaxYear: TaxYear = TaxYear.current
+  def isFutureDate(date: LocalDate): Boolean =
+    date.isAfter(getCurrentDate)
 
-  def getEffectiveUntilDate(endReason: EndRelationshipReason): Option[LocalDate] =
-    endReason.endReason match {
-      case EndReasonCode.CANCEL => Some(currentTaxYear.finishes)
-      case EndReasonCode.DIVORCE_CY => Some(TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes)
-      case EndReasonCode.DIVORCE_PY => None
-    }
+  def getCurrentDate: LocalDate =
+    LocalDate.now()
 
-  def getEffectiveDate(endReason: EndRelationshipReason): LocalDate =
-    endReason.endReason match {
-      case EndReasonCode.CANCEL => currentTaxYear.next.starts
-      case EndReasonCode.DIVORCE_CY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).finishes.plusDays(1)
-      case EndReasonCode.DIVORCE_PY => TaxYear.taxYearFor(endReason.dateOfDivorce.get).starts
-    }
+  def getCurrentTaxYear: Int =
+    TaxYear.current.startYear
 
-  def getCurrentDate: LocalDate = LocalDate.now()
+  def getTaxYearForDate(date: LocalDate): Int =
+    TaxYear.taxYearFor(date).startYear
 
-  def getCurrentTaxYear: Int = currentTaxYear.startYear
+  def getStartDateForTaxYear(year: Int): LocalDate =
+    TaxYear.firstDayOfTaxYear(year)
 
-  def getTaxYearForDate(date: LocalDate): Int = TaxYear.taxYearFor(date).startYear
+  def getPreviousYearDate: LocalDate =
+    LocalDate.now().minusYears(1)
 
-  def getStartDateForTaxYear(year: Int): LocalDate = TaxYear.firstDayOfTaxYear(year)
-
-  def getPreviousYearDate: LocalDate = LocalDate.now().minusYears(1)
-
-  def parseDateWithFormat(date: String, format: String  = "yyyyMMdd"): LocalDate = LocalDate.parse(date, DateTimeFormat.forPattern(format))
+  def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
+    LocalDate.parse(date, DateTimeFormat.forPattern(format))
 
   /**
     * TODO Need to change and call this method right before send list of years
@@ -61,9 +53,10 @@ trait TimeService {
     * @return valid years to apply for MA
     */
   def getValidYearsApplyMAPreviousYears(years: Option[List[models.TaxYear]]): List[models.TaxYear] = {
-      years.fold(List[models.TaxYear]()) {
-        actualYears =>
-          actualYears.filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
+    years.fold(List[models.TaxYear]()) {
+      actualYears =>
+        actualYears.filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
     }
   }
+
 }

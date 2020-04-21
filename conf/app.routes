@@ -33,21 +33,22 @@ GET    /you-cannot-use-this-service                @controllers.TransferControll
 
 #Change of Circumstances
 GET    /history                                    @controllers.UpdateRelationshipController.history
-GET    /history-en                                 @controllers.UpdateRelationshipController.historyWithEn
-GET    /history-cy                                 @controllers.UpdateRelationshipController.historyWithCy
-POST   /make-changes                               @controllers.UpdateRelationshipController.makeChange
+GET    /choose                                     @controllers.UpdateRelationshipController.decision
+POST   /choose                                     @controllers.UpdateRelationshipController.submitDecision
+GET    /claims                                     @controllers.UpdateRelationshipController.claims
+GET    /make-changes                               @controllers.UpdateRelationshipController.makeChange
+POST   /make-changes                               @controllers.UpdateRelationshipController.submitMakeChange
+GET    /stop-allowance                             @controllers.UpdateRelationshipController.stopAllowance
+GET    /cancel                                     @controllers.UpdateRelationshipController.cancel
 GET    /change-of-income                           @controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                @controllers.UpdateRelationshipController.bereavement
-POST   /reason-for-change                          @controllers.UpdateRelationshipController.updateRelationshipAction
-POST   /divorce                                    @controllers.UpdateRelationshipController.divorceAction
-GET    /divorce-select-year                        @controllers.UpdateRelationshipController.divorceYear
-POST   /divorce-select-year                        @controllers.UpdateRelationshipController.divorceSelectYear
+GET    /divorce-enter-year                         @controllers.UpdateRelationshipController.divorceEnterYear
+POST   /divorce-enter-year                         @controllers.UpdateRelationshipController.submitDivorceEnterYear
+GET    /divorce-end-explanation                    @controllers.UpdateRelationshipController.divorceEndExplanation
 GET    /confirm-email                              @controllers.UpdateRelationshipController.confirmEmail
 GET    /confirm-change                             @controllers.UpdateRelationshipController.confirmUpdate
 #TO be post to edit
-GET    /confirm-change-action                      @controllers.UpdateRelationshipController.confirmUpdateAction
-GET    /cancel                                     @controllers.UpdateRelationshipController.confirmCancel
-GET    /reject                                     @controllers.UpdateRelationshipController.confirmReject
+GET    /confirm-change-action                      @controllers.UpdateRelationshipController.submitConfirmUpdate
 GET    /finished-change                            @controllers.UpdateRelationshipController.finishUpdate
 POST   /confirm-email-update                       @controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
 

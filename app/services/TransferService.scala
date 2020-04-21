@@ -16,7 +16,6 @@
 
 package services
 
-import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors._
@@ -30,9 +29,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
-import utils.LanguageUtils
+import views.helpers.LanguageUtils
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 object TransferService extends TransferService {
@@ -51,7 +49,7 @@ trait TransferService {
   val timeService: TimeService
   val applicationService: ApplicationService
 
-  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
+  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }
@@ -67,17 +65,17 @@ trait TransferService {
   private def checkRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
                                     (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     for {
-      cache <- cachingService.getUpdateRelationshipCachedData
+      cache <- cachingService.getCachedDataForEligibilityCheck
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
       validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
 
-  private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[UpdateRelationshipCacheData])
-                                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
+  private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[EligibilityCheckCacheData])
+                                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
-      case (RegistrationFormInput(_, _, _, _, dom), Some(UpdateRelationshipCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
+      case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
         if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
         Future(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()

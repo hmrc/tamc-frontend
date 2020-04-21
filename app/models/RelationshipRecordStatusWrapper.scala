@@ -22,4 +22,4 @@ object RelationshipRecordStatusWrapper {
   implicit val formats = Json.format[RelationshipRecordStatusWrapper]
 }
 
-case class RelationshipRecordStatusWrapper(relationship_record: RelationshipRecordWrapper = RelationshipRecordWrapper(Seq()), status: ResponseStatus)
+case class RelationshipRecordStatusWrapper(relationship_record: RelationshipRecordList = RelationshipRecordList(Seq()), status: ResponseStatus)

@@ -16,53 +16,115 @@
 
 package models
 
+import java.time.LocalDate
+
 import org.joda.time.DateTime
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import services.TimeService
 import uk.gov.hmrc.play.test.UnitSpec
-import utils.DateUtils
 
-class RelationshipRecordTest extends UnitSpec with GuiceOneAppPerSuite {
+class RelationshipRecordTest extends UnitSpec {
 
-  "isActive" should {
-    "return true" when {
-      "there is no relationship end date" in {
-        relationshipRecordWitNoEndDate.isActive shouldBe true
-      }
-      "relationship end date is a future date" in {
-        val relationshipEndDateTomorrow = new DateTime().plusDays(1).toString("yyyyMMdd")
-        val relationshipRecordTomorrow = relationshipRecordWitNoEndDate.copy(participant1EndDate = Some(relationshipEndDateTomorrow))
-        relationshipRecordTomorrow.isActive shouldBe true
+  lazy val currentYear: Int = LocalDate.now().getYear
+  lazy val nextYear: Int = currentYear + 1
+  lazy val pastYear: Int = currentYear - 1
+  lazy val futureDateTime: String = "" + nextYear + "0101"
+  lazy val pastDateTime: String = "" + pastYear + "0101"
+  val dateFormat = "yyyyMMdd"
 
-        val relationshipEndDateFuture = new DateTime().plusYears(10).toString("yyyyMMdd")
-        val relationshipRecordFuture = relationshipRecordWitNoEndDate.copy(participant1EndDate = Some(relationshipEndDateFuture))
-        relationshipRecordFuture.isActive shouldBe true
-      }
-    }
-
-    "return false" when {
-      "relationship end date is a past date" in {
-        val relationshipEndDateYesterday = new DateTime().minusDays(1).toString(DateUtils.DatePattern)
-        val relationshipRecordYesterday = relationshipRecordWitNoEndDate.copy(participant1EndDate = Some(relationshipEndDateYesterday))
-        relationshipRecordYesterday.isActive shouldBe false
-
-        val relationshipEndDatePast = new DateTime().minusYears(5).toString(DateUtils.DatePattern)
-        val relationshipRecordPast = relationshipRecordWitNoEndDate.copy(participant1EndDate = Some(relationshipEndDatePast))
-        relationshipRecordPast.isActive shouldBe false
-      }
-      "relationship end date is today" in {
-        val relationshipEndDate = new DateTime().toString(DateUtils.DatePattern)
-        val relationshipRecord = relationshipRecordWitNoEndDate.copy(participant1EndDate = Some(relationshipEndDate))
-        relationshipRecord.isActive shouldBe false
-      }
-    }
-  }
-  val relationshipRecordWitNoEndDate =
+  lazy val relationshipActiveRecordWithNoEndDate: RelationshipRecord =
     RelationshipRecord(
-      Role.RECIPIENT,
+      Recipient.value,
       "56787",
       "20130101",
-      Some(RelationshipEndReason.Default),
+      Some(DesRelationshipEndReason.Default),
       None,
       "",
       "")
+
+  lazy val relationshipActiveRecordWithFutureValidDate: RelationshipRecord =
+    RelationshipRecord(
+      Recipient.value,
+      "56787",
+      "20130101",
+      Some(DesRelationshipEndReason.Default),
+      Some(futureDateTime),
+      "",
+      "")
+
+  lazy val relationshipActiveRecordWithPastValidDate: RelationshipRecord =
+    RelationshipRecord(
+      Recipient.value,
+      "56787",
+      "20130101",
+      Some(DesRelationshipEndReason.Default),
+      Some(pastDateTime),
+      "",
+      "")
+
+  "isActive" should {
+    "return true" when {
+
+      "there is no relationship end date" in {
+        relationshipActiveRecordWithNoEndDate.isActive shouldBe true
+      }
+
+      "relationship end date is a future date" in {
+        relationshipActiveRecordWithFutureValidDate.isActive shouldBe true
+      }
+
+    }
+
+    "return false" when {
+
+      "relationship end date is a past date" in {
+        relationshipActiveRecordWithPastValidDate.isActive shouldBe false
+      }
+
+      "relationship end date is today" in {
+        val relationshipEndDate = new DateTime().toString(dateFormat)
+        val relationshipRecord = relationshipActiveRecordWithNoEndDate.copy(participant1EndDate = Some(relationshipEndDate))
+        relationshipRecord.isActive shouldBe false
+      }
+
+    }
+  }
+
+  "overlappingTaxYears" should {
+    "return a set of Tax Years" when {
+      "participant endDate is in PastYear" in {
+        val relationshipRecord = relationshipActiveRecordWithPastValidDate
+
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018)
+      }
+
+      "participant endDate is in FutureYear" in {
+        val relationshipRecord = relationshipActiveRecordWithFutureValidDate
+
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020)
+      }
+
+      "participant startDate and endDate is in same year" in {
+        val relationshipEndDate = "20200101"
+        val relationshipStartDate = "20200102"
+        val relationshipRecord = relationshipActiveRecordWithNoEndDate.copy(participant1EndDate = Some(relationshipEndDate),
+          participant1StartDate = relationshipStartDate)
+
+        relationshipRecord.overlappingTaxYears shouldBe Set(2019)
+      }
+
+      "particpantEndDate is not set" in {
+        val relationshipRecord = relationshipActiveRecordWithNoEndDate
+
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020)
+      }
+
+      "Return a set of years that ends with the start year of the previous tax year when a participant endReason is Divorce" in {
+        val relationshipRecord = relationshipActiveRecordWithNoEndDate.copy(relationshipEndReason = Some(DesRelationshipEndReason.Divorce),
+          participant1EndDate = Some("20190406"))
+
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018)
+      }
+    }
+  }
+
 }

@@ -18,11 +18,14 @@ package services
 
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
-import errors.TransferorNotFound
+import errors.{CacheMapNoFound, CacheMissingRelationshipRecords, TransferorNotFound}
 import models._
+import org.joda.time.LocalDate
 import play.api.Mode.Mode
+import play.api.libs.json.{Reads, Writes}
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
@@ -47,6 +50,10 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
 
   def marriageAllowanceConnector: MarriageAllowanceConnector
 
+  def cacheValue[T](key: String, value:T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
+    cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException(s"Failed to retrieve $key from cache after saving")))
+  }
+
   def saveTransferorRecord(transferorRecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cache[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD, transferorRecord) map
       (_.getEntry[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD).get)
@@ -63,10 +70,10 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     cache[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS, details) map
       (_.getEntry[RecipientDetailsFormInput](ApplicationConfig.CACHE_RECIPIENT_DETAILS).get)
 
-  def saveDateOfMarriage(details: DateOfMarriageFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DateOfMarriageFormInput] =
+  def saveDateOfMarriage(details: DateOfMarriageFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DateOfMarriageFormInput] = {
     cache[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE, details) map
       (_.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE).get)
-
+  }
   def saveNotificationRecord(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     cache[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD, notificationRecord) map
       (_.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD).get)
@@ -126,6 +133,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
   def getRecipientRecord(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientRecord]] =
     fetchAndGetEntry[RecipientRecord](ApplicationConfig.CACHE_RECIPIENT_RECORD)
 
+
   def getCachedData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[CacheData]] =
     getCacheData(nino).map {
       _.map {
@@ -141,12 +149,11 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
       }
     }
 
-
-  def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
+  def getCachedDataForEligibilityCheck(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     fetch() map (
       _ map (
         cacheMap =>
-          UpdateRelationshipCacheData(
+            EligibilityCheckCacheData(
             loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD),
             roleRecord = cacheMap.getEntry[String](ApplicationConfig.CACHE_ROLE_RECORD),
             activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD),
@@ -154,6 +161,40 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             notification = cacheMap.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD),
             relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](ApplicationConfig.CACHE_RELATION_END_REASON_RECORD),
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
+
+
+
+    def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] = {
+    fetch() map { optionalCacheMap =>
+      optionalCacheMap.fold(throw CacheMapNoFound()){ cacheMap =>
+          val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+          val marriageAllowanceEndingDate = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES).map(_.marriageAllowanceEndDate)
+          val endReason = cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+          val relationshipRecord = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
+
+          UpdateRelationshipCacheData(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDate)
+      }
+    }
+  }
+
+  def getConfirmationAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswersCacheData] = {
+    fetch () map {
+      optionalCacheMap =>
+        optionalCacheMap.fold(throw CacheMapNoFound()) {
+          cacheMap =>
+            val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+            val marriageAllowanceEndingDate = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES)
+            val divorceDate = cacheMap.getEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
+            val relationshipRecords = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
+
+            ConfirmationUpdateAnswersCacheData(relationshipRecords, divorceDate, emailAddress, marriageAllowanceEndingDate)
+      }
+    }
+  }
+
+  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RelationshipRecords]] = {
+    fetchAndGetEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
+  }
 
   private def getCacheData(nino: Nino)(implicit hc: HeaderCarrier, executionContext: ExecutionContext): Future[Option[CacheMap]] = {
     fetch().flatMap {

@@ -38,7 +38,6 @@ class TamcModule extends Module {
       bind[CachingService].toInstance(CachingService),
       bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService),
       bind[ApplicationService].toInstance(ApplicationService),
-      bind[ListRelationshipService].toInstance(ListRelationshipService),
       bind[TemplateRenderer].toInstance(LocalTemplateRenderer),
       bind[FormPartialRetriever].toInstance(TamcFormPartialRetriever)
     )

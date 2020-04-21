@@ -16,24 +16,23 @@
 
 package services
 
+import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
-import events.{UpdateRelationshipCacheFailureEvent, UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
+import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
 import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
 import play.api.i18n.Messages
 import play.api.libs.json.Json
-import services.TimeService._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.emailaddress.PlayJsonFormats._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import uk.gov.hmrc.time
-import utils.LanguageUtils
+import views.helpers.LanguageUtils
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 object UpdateRelationshipService extends UpdateRelationshipService {
@@ -48,149 +47,162 @@ trait UpdateRelationshipService {
   val customAuditConnector: AuditConnector
   val cachingService: CachingService
 
-  def updateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] =
-    doUpdateRelationship(transferorNino, LanguageUtils.isWelsh(messages)) recover {
-      case error =>
-        handleAudit(UpdateRelationshipCacheFailureEvent(error))
-        throw error
-    }
+  def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
+    marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_))
 
-  def getRelationship(sessionData: UpdateRelationshipCacheData): RelationshipRecord = {
-    sessionData match {
-      case UpdateRelationshipCacheData(_, _, _, historic, _, Some(EndRelationshipReason(EndReasonCode.REJECT, _, Some(timestamp))), _) => {
-        historic.get.filter { relation => relation.creationTimestamp == timestamp && relation.participant == Role.RECIPIENT }.head
-      }
-      case _ => {
-        sessionData.activeRelationshipRecord.get
+
+  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
+
+    def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
+      cachingService.unlockCreateRelationship().map { _ => trrecord }
+
+    val transferorRec = UserRecord(Some(relationshipRecords.loggedInUserInfo))
+    val checkCreateActionLockFuture = checkCreateActionLock(transferorRec)
+    val saveTransferorRecordFuture = cachingService.saveTransferorRecord(transferorRec)
+    val cacheRelationshipRecordFuture = cachingService.cacheValue(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
+
+    for {
+      _ <- cacheRelationshipRecordFuture
+      _ <- checkCreateActionLockFuture
+      _ <- saveTransferorRecordFuture
+    } yield relationshipRecords
+  }
+
+  def getCheckClaimOrCancelDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
+    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
+  }
+
+  def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
+    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+  }
+
+  def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
+  }
+
+  def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {
+    cachingService.fetchAndGetEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
+  }
+
+  def getEmailAddress(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EmailAddress]] = {
+    cachingService.fetchAndGetEntry[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+  }
+
+  def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
+    cachingService.fetchAndGetEntry[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw CacheMissingEmail()))
+  }
+
+  def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
+    cachingService.cacheValue[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress)
+  }
+
+  def getDataForDivorceExplanation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {
+
+    val relationshipRecordsFuture = getRelationshipRecords
+    val divorceDateFuture = getDivorceDate
+
+    for {
+      relationshipRecords <- relationshipRecordsFuture
+      divorceDate <- divorceDateFuture
+    } yield {
+      divorceDate.fold(throw CacheMissingDivorceDate()) {
+        (relationshipRecords.primaryRecord.role, _)
       }
     }
   }
 
-  def getUpdateNotification(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[NotificationRecord]] =
-    cachingService.getUpdateRelationshipCachedData map {
-      case Some(
-      UpdateRelationshipCacheData(
-      Some(LoggedInUserInfo(_, _, _, _)),
-      _,
-      active,
-      historic,
-      notificationRecord, _, _)) if active.isDefined || historic.isDefined => notificationRecord
-      case _ => throw CacheMissingUpdateRecord()
+  def saveDivorceDate(dateOfDivorce: LocalDate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[LocalDate] =
+    cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE, dateOfDivorce)
+
+
+  def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
+    cachingService.cacheValue[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
+
+  def updateRelationship(nino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] = {
+
+    def updateRelationshipRequestHolder(updateRelationshipData: UpdateRelationshipData): UpdateRelationshipRequestHolder = {
+
+      val relationshipRecords = updateRelationshipData.relationshipRecords
+      val primaryRecord = relationshipRecords.primaryRecord
+      val relationshipInfo = relationshipInformation(primaryRecord.creationTimestamp, updateRelationshipData.endMaReason,
+        updateRelationshipData.marriageEndDate)
+      val recipient = relationshipRecords.recipientInformation
+      val transferor = relationshipRecords.transferorInformation
+      val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInfo)
+      val emailNotificationData = updateRelationshipNotificationRequest(updateRelationshipData.email, primaryRecord.role,
+        relationshipRecords.loggedInUserInfo, LanguageUtils.isWelsh(messages))
+
+      UpdateRelationshipRequestHolder(updateRelationshipRequest, emailNotificationData)
     }
 
-  def getConfirmationUpdateData(implicit hc: HeaderCarrier,
-                                ec: ExecutionContext): Future[(UpdateRelationshipConfirmationModel, Option[UpdateRelationshipCacheData])] =
-    for {
-      updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
-      validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
-      requiredData <- transformUpdateRelationshipCache(validatedUpdateRelationship)
-    } yield (requiredData, updateRelationshipCache)
+    def relationshipInformation(creationTimeStamp: String, relationshipEndReason: String, endDate: LocalDate): RelationshipInformation = {
 
-  def getUpdateRelationshipCacheDataForDateOfDivorce(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
-    for {
-      updateRelationshipCache <- cachingService.getUpdateRelationshipCachedData
-      validatedUpdateRelationship <- validateupdateRelationshipCompleteCache(updateRelationshipCache)
-    } yield updateRelationshipCache
+      val endDateFormatted = endDate.toString("yyyyMMdd")
+      val desEnumeration = relationshipEndReason match {
+        case "Divorce" => "Divorce/Separation"
+        case "Cancel" => "Cancelled by Transferor"
+        case _ => throw DesEnumerationNotFound()
+      }
 
-  def getUpdateRelationshipCacheForReject(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]] =
-    cachingService.getUpdateRelationshipCachedData
-
-  def getupdateRelationshipFinishedData(transferorNino: Nino
-                                       )(implicit hc: HeaderCarrier,
-                                         ec: ExecutionContext): Future[(NotificationRecord, EndRelationshipReason)] =
-    for {
-      cacheData <- cachingService.getUpdateRelationshipCachedData
-      notificationAndEmail <- validateUpdateRelationshipFinishedData(cacheData)
-    } yield notificationAndEmail
-
-  def saveEndRelationshipReason(endRealtionshipReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
-    cachingService.savRelationshipEndReasonRecord(endRealtionshipReason)
-
-  def isValidDivorceDate(dod: Option[LocalDate])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
-    for {
-      cacheData <- cachingService.getUpdateRelationshipCachedData
-    } yield isValidDivorceDate(dod, cacheData)
-
-
-  def getEndDate(endRelationshipReason: EndRelationshipReason,
-                 selectedRelationship: RelationshipRecord): LocalDate =
-    endRelationshipReason match {
-      case EndRelationshipReason(EndReasonCode.DIVORCE_PY, _, _) => getPreviousYearDate
-      case EndRelationshipReason(EndReasonCode.DIVORCE_CY, _, _) =>
-        if (time.TaxYear.current.contains(endRelationshipReason.dateOfDivorce.get)) getCurrentDate
-        else time.TaxYear.taxYearFor(endRelationshipReason.dateOfDivorce.get).finishes
-      case EndRelationshipReason(EndReasonCode.CANCEL, _, _) => getCurrentDate
-      case EndRelationshipReason(EndReasonCode.REJECT, _, _) => time.TaxYear.taxYearFor(parseDateWithFormat(selectedRelationship.participant1StartDate)).starts
+      RelationshipInformation(creationTimeStamp, desEnumeration, endDateFormatted)
     }
 
-  def getRelationEndDate(selectedRelationship: RelationshipRecord): LocalDate =
-    parseDateWithFormat(selectedRelationship.participant1EndDate.get)
+    def updateRelationshipNotificationRequest(email: String, primaryRole: Role, loggedInUserInfo: LoggedInUserInfo, isWelsh: Boolean):
+     UpdateRelationshipNotificationRequest = {
+        val role = primaryRole.value
+        val name = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
+        val emailAddress = EmailAddress(email)
 
+        UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)
+    }
 
-  private def doUpdateRelationship(transferorNino: Nino, isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     for {
       updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
-      validated <- validateupdateRelationshipCompleteCache(updateRelationshipCacheData)
-      postUpdateData <- sendUpdateRelationship(transferorNino, validated, isWelsh)
+      updateRelationshipData = UpdateRelationshipData(updateRelationshipCacheData)
+      updateRelationshipRequest = updateRelationshipRequestHolder(updateRelationshipData)
+      postUpdateData <- sendUpdateRelationship(nino, updateRelationshipRequest)
       _ <- auditUpdateRelationship(postUpdateData)
-    } yield validated.notification.get
+    } yield postUpdateData
+  }
 
-  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier): Future[Unit] =
+  def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
+    cachingService.getConfirmationAnswers.map(ConfirmationUpdateAnswers(_))
+  }
+
+  def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
+    val marriageAllowanceEndDate = EndDateForMACeased.endDate
+    val personalAllowanceEffectiveDate = EndDateForMACeased.personalAllowanceEffectiveDate
+
+    MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
+  }
+
+  def getMAEndingDatesForDivorce(role: Role, divorceDate: LocalDate): MarriageAllowanceEndingDates = {
+
+    val marriageAllowanceEndDate = EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
+    val personalAllowanceEffectiveDate = EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
+
+    MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
+
+  }
+
+  def saveMarriageAllowanceEndingDates(maEndingDates: MarriageAllowanceEndingDates)(implicit hc: HeaderCarrier, ec: ExecutionContext):
+  Future[MarriageAllowanceEndingDates] =
+    cachingService.cacheValue[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES, maEndingDates)
+
+
+  def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
+    cachingService.getRelationshipRecords.map(_.getOrElse(throw CacheMissingRelationshipRecords()))
+
+  def removeCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = cachingService.remove()
+
+  private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
       customAuditConnector.sendEvent(event)
     }
 
-  private def transformDateAgain(date: String): Option[LocalDate] = {
-    date match {
-      case "" => None
-      case date => Some(DateTimeFormat.forPattern("yyyyMMdd").parseLocalDate(date));
-    }
-  }
-
-  private def transformUpdateData(sessionData: UpdateRelationshipCacheData, isWelsh: Boolean): UpdateRelationshipRequestHolder = {
-    val loggedInUser = sessionData.loggedInUserInfo.get
-    val relationshipRecord = sessionData.relationshipEndReasonRecord.get
-    val endReason = getEndReasonCode(relationshipRecord)
-
-    val selectedRelationship = getRelationship(sessionData)
-    val role = selectedRelationship.participant
-    val relationCreationTimestamp = selectedRelationship.creationTimestamp
-    val effectiveDate = getEndDate(relationshipRecord, selectedRelationship)
-    val endDate = effectiveDate.toString("yyyyMMdd")
-
-    val isRetrospective = relationshipRecord.endReason match {
-      case EndReasonCode.REJECT =>
-        selectedRelationship.participant1EndDate != None && selectedRelationship.participant1EndDate.nonEmpty &&
-          !selectedRelationship.participant1EndDate.get.equals("") && (effectiveDate.getYear != TimeService.getCurrentTaxYear)
-      case _ => false
-    }
-
-    val participants = role match {
-      case Role.TRANSFEROR =>
-        (RecipientInformation(instanceIdentifier = selectedRelationship.otherParticipantInstanceIdentifier,
-          updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp),
-          TransferorInformation(updateTimestamp = loggedInUser.timestamp))
-      case Role.RECIPIENT =>
-        (RecipientInformation(instanceIdentifier = loggedInUser.cid.toString(), updateTimestamp = loggedInUser.timestamp),
-          TransferorInformation(updateTimestamp = selectedRelationship.otherParticipantUpdateTimestamp))
-    }
-
-    val relationship = RelationshipInformation(creationTimestamp = relationCreationTimestamp, relationshipEndReason = endReason, actualEndDate = endDate)
-    val updateRelationshipReq = UpdateRelationshipRequest(participant1 = participants._1, participant2 = participants._2, relationship = relationship)
-    val sendNotificationData = UpdateRelationshipNotificationRequest(
-      full_name = "UNKNOWN",
-      email = sessionData.notification.get.transferor_email,
-      role = role,
-      welsh = isWelsh,
-      isRetrospective = isRetrospective)
-    UpdateRelationshipRequestHolder(request = updateRelationshipReq, notification = sendNotificationData)
-  }
-
-
   private def sendUpdateRelationship(transferorNino: Nino,
-                                     data: UpdateRelationshipCacheData,
-                                     isWelsh: Boolean)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
-    marriageAllowanceConnector.updateRelationship(transferorNino, transformUpdateData(data, isWelsh)) map {
+                                     data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] =
+    marriageAllowanceConnector.updateRelationship(transferorNino, data) map {
       httpResponse =>
         Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
           case UpdateRelationshipResponse(ResponseStatus("OK")) => data
@@ -203,70 +215,9 @@ trait UpdateRelationshipService {
         throw error
     }
 
-  private def validateUpdateRelationshipFinishedData(cacheData: Option[UpdateRelationshipCacheData]
-                                                    )(implicit hc: HeaderCarrier,
-                                                      ec: ExecutionContext): Future[(NotificationRecord, EndRelationshipReason)] =
-    Future {
-      cacheData match {
-        case Some(UpdateRelationshipCacheData(_, _, _, _, Some(notification), Some(reason), _)) => (notification, reason)
-        case _ => throw new CacheUpdateRequestNotSent()
-      }
-    }
-
-  private def auditUpdateRelationship(cacheData: UpdateRelationshipCacheData
+  private def auditUpdateRelationship(updateData: UpdateRelationshipRequestHolder
                                      )(implicit hc: HeaderCarrier,
                                        ec: ExecutionContext): Future[Unit] = {
-    handleAudit(UpdateRelationshipSuccessEvent(cacheData))
-  }
-
-
-  private def validateupdateRelationshipCompleteCache(cacheData: Option[UpdateRelationshipCacheData]
-                                                     )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
-    cacheData match {
-      case Some(
-      UpdateRelationshipCacheData(
-      Some(LoggedInUserInfo(_, _, _, Some(CitizenName(_, _)))),
-      _,
-      active,
-      historic,
-      Some(notification: NotificationRecord),
-      Some(_), _)) if active.isDefined || historic.isDefined => Future.successful(cacheData.get)
-      case _ => throw CacheMissingUpdateRecord()
-    }
-
-
-  private def isValidDivorceDate(dod: Option[LocalDate], cacheData: Option[UpdateRelationshipCacheData]): Boolean =
-    (dod, cacheData) match {
-      case (Some(dayOfDivorce), Some(UpdateRelationshipCacheData(_, _, Some(RelationshipRecord(_, _, startDate, _, _, _, _)), _, _, _, _))) =>
-        transformDateAgain(startDate).exists {
-          !_.isAfter(dayOfDivorce)
-        }
-      case _ =>
-        false
-    }
-
-
-  private def transformUpdateRelationshipCache(updateRelationshipCacheData: UpdateRelationshipCacheData
-                                              )(implicit hc: HeaderCarrier,
-                                                ec: ExecutionContext): Future[UpdateRelationshipConfirmationModel] =
-    Future {
-      UpdateRelationshipConfirmationModel(
-        fullName = updateRelationshipCacheData.loggedInUserInfo.get.name,
-        email = updateRelationshipCacheData.notification.get.transferor_email,
-        endRelationshipReason = updateRelationshipCacheData.relationshipEndReasonRecord.get,
-        historicRelationships = updateRelationshipCacheData.historicRelationships,
-        role = updateRelationshipCacheData.roleRecord)
-    }
-
-
-
-
-  private def getEndReasonCode(endReasonCode: EndRelationshipReason): String = {
-    endReasonCode.endReason match {
-      case EndReasonCode.CANCEL => "Cancelled by Transferor"
-      case EndReasonCode.DIVORCE_CY => "Divorce/Separation"
-      case EndReasonCode.DIVORCE_PY => "Divorce/Separation"
-      case EndReasonCode.REJECT => "Rejected by Recipient"
-    }
+    handleAudit(UpdateRelationshipSuccessEvent(updateData))
   }
 }

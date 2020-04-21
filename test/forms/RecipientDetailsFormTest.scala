@@ -16,18 +16,15 @@
 
 package forms
 
-import java.util.Locale
-
 import models.{Gender, RecipientDetailsFormInput}
 import org.joda.time.LocalDate
 import play.api.data.FormError
-import play.api.i18n.{Lang, MessagesApi}
-import test_utils.TAMCSetupSpec
 import uk.gov.hmrc.domain.Generator
+import utils.BaseTest
 
 import scala.util.Random
 
-class RecipientDetailsFormTest extends TAMCSetupSpec {
+class RecipientDetailsFormTest extends BaseTest {
 
   ".recipientDetailsForm nino mapping" should {
 
@@ -88,7 +85,7 @@ class RecipientDetailsFormTest extends TAMCSetupSpec {
       )
       val res = form.mapping.bind(formInput)
 
-      res shouldBe Right(RecipientDetailsFormInput("name","last-name",Gender("M"),testValidNino))
+      res shouldBe Right(RecipientDetailsFormInput("name", "last-name", Gender("M"), testValidNino))
     }
   }
 }

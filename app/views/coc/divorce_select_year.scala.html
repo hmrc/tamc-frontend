@@ -17,56 +17,46 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
+@import org.joda.time.LocalDate
+@import forms.coc.DivorceSelectYearForm
+@import includes.backLink
 
-@(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
+@(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.divorce")),
+    title = messages("title.pattern", messages("pages.divorce.title")),
     manageService = true,
-    langSelectorOverride = Some(
-        Map("enUrl" -> controllers.routes.UpdateRelationshipController.historyWithEn(),
-            "cyUrl" -> controllers.routes.UpdateRelationshipController.historyWithCy()
-        )
-    ),
     mainConfig = views.helpers.MainConfig()) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+    @backLink()
 
-@templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @templates.form_error_notification(divorceSelectYearForm, formErrorMessage = "pages.form.error.mandatory.data")
 
-<header class="page-heading">
-    <h1 class="heading-xlarge">@Html(Messages("change.status.divorce.h1"))</h1>
-</header>
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@messages("pages.divorce.title")</h1>
+    </header>
 
-@helpers.form(action = routes.UpdateRelationshipController.divorceSelectYear, args = ('id -> "change-relationship-form")) {
-<div class="form-group">
-    <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
-    <input name="historicActiveRecord" id="historicActiveRecord" type="hidden"
-           value="@changeRelationshipForm.get.historicActiveRecord.get"/>
-    <input name="endReason" id="endReason" type="hidden" value="@changeRelationshipForm.get.endReason.get"/>
-</div>
+    <p>@messages("pages.divorce.paragraph1")</p>
 
-<p>@Html(Messages("pages.form.field.dod"))</p>
+    @helpers.form(action = routes.UpdateRelationshipController.submitDivorceEnterYear, args = ('id -> "")) {
 
-<div class="form-group">
-    @templates.dateFields(
-    changeRelationshipForm,
-    "dateOfDivorce",
-    Html(Messages("pages.form.field.dod.question")),
-    None,
-    '_hintText -> Messages("pages.form.field-helper.dod"),
-    '_label -> Messages("collect_user_data.dod.error"),
-    '_labelTextClass -> "client-error-notification")
-</div>
+        <div class="form-group">
+            @templates.dateFields(
+            divorceSelectYearForm,
+            DivorceSelectYearForm.DateOfDivorce,
+            Html(""),
+            None,
+            '_hintText -> Messages("pages.divorce.date.hint"),
+            '_label -> Messages("collect_user_data.dod.error"),
+            '_labelTextClass -> "client-error-notification")
+        </div>
 
 
-    <button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofdivorce_continue">
-        @Html(Messages("generic.continue"))
-    </button>
-
-
-}
+        <button class="button" type="submit">
+            @messages("generic.continue")
+        </button>
+    }
 }

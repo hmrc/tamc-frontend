@@ -19,9 +19,9 @@ package forms
 import config.ApplicationConfig
 import org.joda.time.LocalDate
 import play.api.data.FormError
-import test_utils.TAMCSetupSpec
+import utils.BaseTest
 
-class RegistrationFormTest extends TAMCSetupSpec {
+class RegistrationFormTest extends BaseTest {
 
   ".dateOfMarriageValidator" should {
 

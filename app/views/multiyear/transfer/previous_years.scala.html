@@ -15,13 +15,11 @@
  *@
 
 @import play.twirl.api.Html
-@import views.helpers.TextGenerators
 @import uk.gov.hmrc.play.views.html._
-@import views.helpers.TextGenerators
+@import views.helpers.LanguageUtils
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
-@import utils.LanguageUtils
 @import models.auth.AuthenticatedUserRequest
 
 @(input:RegistrationFormInput,
@@ -49,8 +47,8 @@ Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
     <header class="page-heading">
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
     </header>
-    <p>@Html(Messages("pages.previousyear.para", input.name, TextGenerators.ukDateTransformer(Some(input.dateOfMarriage),
-        LanguageUtils.isWelsh(messages))))</p>
+
+    <p>@Html(Messages("pages.previousyear.para", input.name, LanguageUtils().ukDateTransformer(input.dateOfMarriage)))</p>
 
     <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" role="button"
        data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>

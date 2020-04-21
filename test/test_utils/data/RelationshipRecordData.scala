@@ -17,28 +17,40 @@
 package test_utils.data
 
 import models._
-import test_utils.TestData.Cids
-import uk.gov.hmrc.emailaddress.EmailAddress
+import org.joda.time.DateTime
 
 object RelationshipRecordData {
-  val citizenName: CitizenName = CitizenName(Some("Test"), Some("User"))
-  val loggedInUserInfo = LoggedInUserInfo(Cids.cid1, "", Some(true), Some(citizenName))
-  val notificationRecord = NotificationRecord(EmailAddress("test@test.com"))
 
-  val activeRecord = RelationshipRecord(Role.RECIPIENT, "56787", "20130101", Some(RelationshipEndReason.Default), Some("20130110"), "", "")
-  val activeRecordWithNoEndDate: RelationshipRecord = activeRecord.copy(relationshipEndReason = None, participant1EndDate = None)
+  val dateFormat = "yyyyMMdd"
+  val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
+    Recipient.value,
+    creationTimestamp = "20150531235901",
+    participant1StartDate = "20150531235901",
+    relationshipEndReason = Some(DesRelationshipEndReason.Default),
+    participant1EndDate = None,
+    otherParticipantInstanceIdentifier = "123456789123",
+    otherParticipantUpdateTimestamp = "20150531235901")
 
-  val historicRecord = RelationshipRecord(Role.TRANSFEROR, "56789", "01-01-2012", Some(RelationshipEndReason.Death), Some("1-01-2013"), "", "")
-  val historicRecordDivorce: RelationshipRecord = historicRecord.copy(relationshipEndReason = Some(RelationshipEndReason.Divorce))
-  val historicRecordDivorcePY = RelationshipRecord(Role.RECIPIENT, "12345", "01-01-2002", Some(RelationshipEndReason.Divorce), Some("1-01-2013"), "", "")
+  val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.value)
+  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(dateFormat)
+  val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
 
-  val activeRelationshipRecordList = RelationshipRecordList(Some(activeRecord), None, Some(loggedInUserInfo), true, false, false)
-  val historicRelationshipRecordList = RelationshipRecordList(None, Some(List(historicRecord)), Some(loggedInUserInfo), false, true, false)
-  val multiHistoricRelRecordList = historicRelationshipRecordList.copy(historicRelationships = Some(List(historicRecordDivorce, historicRecordDivorcePY)))
-  val bothRelationshipRecordList: RelationshipRecordList = historicRelationshipRecordList.copy(activeRelationship = Some(activeRecord), activeRecord = true)
-  val noRelationshipRecordList = RelationshipRecordList(None, None, Some(loggedInUserInfo), false, false, false)
-  val activeHistoricRelRecordList = RelationshipRecordList(Some(activeRecord), Some(List(historicRecordDivorcePY)), Some(loggedInUserInfo), false, true, true)
 
-  val updateRelationshipCacheData = UpdateRelationshipCacheData(Some(loggedInUserInfo), Some(Role.TRANSFEROR), Some(activeRecord),
-    notification = Some(notificationRecord), relationshipEndReasonRecord = Some(EndRelationshipReason(EndReasonCode.DIVORCE_PY)))
+  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(dateFormat)
+  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(dateFormat)
+  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(dateFormat)
+
+  val inactiveRecipientRelationshipRecord1: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
+  val inactiveRecipientRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
+  val inactiveRecipientRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
+
+  val inactiveTransferorRelationshipRecord1: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
+  val inactiveTransferorRelationshipRecord2: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
+  val inactiveTransferorRelationshipRecord3: RelationshipRecord = activeTransferorRelationshipRecord2.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
+
+  val activeRelationshipRecord2 = activeRecipientRelationshipRecord.copy()
+  val inactiveRelationshipRecord1 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
+  val inactiveRelationshipRecord2 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))
+  val inactiveRelationshipRecord3 = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate3))
+
 }

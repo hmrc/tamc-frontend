@@ -23,11 +23,11 @@ object UserRecord {
   implicit val formats = Json.format[UserRecord]
 
   def apply(rec: Option[LoggedInUserInfo]): UserRecord =
-      rec.fold(throw TransferorNotFound())(rec => UserRecord(
-        cid = rec.cid,
-        timestamp = rec.timestamp,
-        has_allowance = None,
-        name = rec.name))
+        rec.fold(throw TransferorNotFound())(rec => UserRecord(
+          cid = rec.cid,
+          timestamp = rec.timestamp,
+          has_allowance = None,
+          name = rec.name))
 }
 
 case class UserRecord(cid: Cid, timestamp: Timestamp, has_allowance: Option[Boolean] = None, name: Option[CitizenName] = None)

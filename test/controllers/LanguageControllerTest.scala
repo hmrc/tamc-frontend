@@ -18,8 +18,9 @@ package controllers
 
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import utils.ControllerBaseTest
 
-class LanguageControllerTest extends ControllerBaseSpec {
+class LanguageControllerTest extends ControllerBaseTest {
 
   lazy val controller = app.injector.instanceOf[LanguageController]
   "Calling LanguageController.enGb" should {

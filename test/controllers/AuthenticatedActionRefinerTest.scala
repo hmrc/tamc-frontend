@@ -28,11 +28,11 @@ import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
+import utils.ControllerBaseTest
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class AuthenticatedActionRefinerTest extends ControllerBaseSpec {
+class AuthenticatedActionRefinerTest extends ControllerBaseTest {
 
   type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]

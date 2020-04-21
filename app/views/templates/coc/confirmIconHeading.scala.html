@@ -16,13 +16,12 @@
 
 @(messageKey: String, relevantDate: Option[org.joda.time.LocalDate] = None)(implicit messages: Messages)
 
-@import views.helpers.TextGenerators
-@import utils.LanguageUtils
+@import views.helpers.LanguageUtils
 
 <p>
     @relevantDate match {
-    case optionDate@Some(date) => {@Html(Messages(messageKey,
-        TextGenerators.ukDateTransformer(optionDate, LanguageUtils.isWelsh(messages))))}
+    case Some(date) => {@Html(Messages(messageKey,
+        LanguageUtils().ukDateTransformer(date)))}
     case _ => {@Html(Messages(messageKey))}
     }
 </p>

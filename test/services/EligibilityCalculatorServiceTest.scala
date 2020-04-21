@@ -20,11 +20,11 @@ import java.text.NumberFormat
 import java.util.Locale
 
 import config.ApplicationConfig._
-import controllers.ControllerBaseSpec
 import models._
 import uk.gov.hmrc.time
+import utils.BaseTest
 
-class EligibilityCalculatorServiceTest extends ControllerBaseSpec {
+class EligibilityCalculatorServiceTest extends BaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
 

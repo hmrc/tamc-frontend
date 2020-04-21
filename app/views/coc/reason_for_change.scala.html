@@ -17,89 +17,45 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
+@import forms.coc.MakeChangesDecisionForm
+@import includes.backLink
 
-@(changeRelationshipForm: Form[ChangeRelationship])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+@(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
+request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.pattern", Messages("title.make-a-change")),
+    title = Messages("title.pattern", messages("title.make-a-change")),
     manageService = true,
-    langSelectorOverride = Some(
-        Map("enUrl" -> controllers.routes.UpdateRelationshipController.historyWithEn(),
-            "cyUrl" -> controllers.routes.UpdateRelationshipController.historyWithCy()
-        )
-    ),
-    mainConfig = views.helpers.MainConfig()) {
+    mainConfig = views.helpers.MainConfig()
+){
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@Html(Messages("generic.back"))</a>
+    @backLink()
+    @templates.form_error_notification(makeChangesDecisionForm, formErrorMessage = "pages.form.error.mandatory.data")
 
-@templates.form_error_notification(changeRelationshipForm, formErrorMessage = "pages.form.error.mandatory.data")
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@messages("pages.makeChanges.title")</h1>
+    </header>
 
-<header class="page-heading">
-    <h1 class="heading-xlarge">@Html(Messages("change.status.cancel-your.h1"))</h1>
-</header>
+    @helpers.form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
 
-<p>@Html(Messages("change.status.cancel-your.p"))</p>
-@helpers.form(action = routes.UpdateRelationshipController.updateRelationshipAction, args = ('id -> "change-relationship-form")) {
+      <div class="form-group">
+        @templates.input_radio_group(
+          makeChangesDecisionForm(MakeChangesDecisionForm.StopMAChoice),
+          Seq((MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
+               (MakeChangesDecisionForm.Earnings, messages("pages.makeChanges.radio.incomeChanges")),
+               (MakeChangesDecisionForm.Cancel, messages("pages.makeChanges.radio.noLongerRequired")),
+               (MakeChangesDecisionForm.Bereavement, messages("pages.makeChanges.radio.bereavement"))
+          ),
+          '_legend -> Html(messages("title.change.reason")),
+          '_legendClass -> "visuallyhidden",
+          '_labelClass -> "block-label",
+          '_labelAfter -> true )
+      </div>
 
-<div class="form-group">
-    @if(changeRelationshipForm.get.role.get == Role.TRANSFEROR) {
-    @if(changeRelationshipForm.get.historicActiveRecord.get) {
-    @templates.input_radio_group(
-    changeRelationshipForm("endReason"),
-    Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio"))),
-    '_legend -> Html(Messages("title.change.reason")),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_labelAfter -> true
-    )
-    } else {
-    @templates.input_radio_group(
-    changeRelationshipForm("endReason"),
-    Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")),
-    (EndReasonCode.CANCEL, Messages("change.status.cancel.radio"))),
-    '_legend -> Html(Messages("title.change.reason")),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_labelAfter -> true
-    )
-    }
-    } else {
-    @if(changeRelationshipForm.get.historicActiveRecord.get) {
-    @templates.input_radio_group(
-    changeRelationshipForm("endReason"),
-    Seq((EndReasonCode.REJECT, Messages("change.status.cancel.radio"))),
-    '_legend -> Html(Messages("title.change.reason")),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_labelAfter -> true
-    )
-    } else {
-    @templates.input_radio_group(
-    changeRelationshipForm("endReason"),
-    Seq((EndReasonCode.DIVORCE, Messages("change.status.divorce.radio")),
-    (EndReasonCode.REJECT, Messages("change.status.cancel.radio"))),
-    '_legend -> Html(Messages("title.change.reason")),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_labelAfter -> true
-    )
-    }
+      <button class="button" type="submit">
+          @messages("generic.continue")
+      </button>
 
     }
-
-    <input name="role" id="role" type="hidden" value="@changeRelationshipForm.get.role.get"/>
-    <input name="historicActiveRecord" id="historicActiveRecord" type="hidden"
-           value="@changeRelationshipForm.get.historicActiveRecord.get"/>
-</div>
-
-
-
-    <button class="button" type="submit" data-journey-click="marriage-allowance:button:reason_continue">
-        @Html(Messages("generic.continue"))
-    </button>
-
-}
 }

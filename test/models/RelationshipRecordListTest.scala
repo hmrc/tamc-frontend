@@ -16,44 +16,36 @@
 
 package models
 
-import controllers.ControllerBaseSpec
+import uk.gov.hmrc.play.test.UnitSpec
 import test_utils.data.RelationshipRecordData._
 
-class RelationshipRecordListTest extends ControllerBaseSpec {
+class RelationshipRecordListTest extends UnitSpec {
 
   "RelationshipRecordList" should {
-    "set activeRecord as true" when {
-      "activeRelationship is defined and participant1EndDate is empty" in {
-        val recordList = new RelationshipRecordList(Some(activeRecordWithNoEndDate), None, None)
-        recordList.activeRecord shouldBe true
-        recordList.historicRecord shouldBe false
-        recordList.historicActiveRecord shouldBe false
-      }
+
+    "return a RelationshipRecordList with LoggedInUserInfo" in {
+      val recordList = Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
+      val loggedInUser = LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("First"), Some("Name"))))
+      val relationshipRecordList = RelationshipRecordList(recordList, Some(loggedInUser))
+
+      relationshipRecordList.relationships shouldBe Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
+      relationshipRecordList.userRecord shouldBe Some(LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some("First"), Some("Name")))))
     }
 
-    "set historicRecord true" when {
-      "historic relationship is defined" in {
-        val recordList = new RelationshipRecordList(None, Some(List(historicRecord)), None)
-        recordList.activeRecord shouldBe false
-        recordList.historicRecord shouldBe true
-        recordList.historicActiveRecord shouldBe false
-      }
+    "return a RelationshipRecordList without LoggedInUserInfo" in {
+      val recordList = Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
+      val relationshipRecordList = RelationshipRecordList(recordList)
 
-      "historic and active relationship is defined" in {
-        val recordList = new RelationshipRecordList(Some(activeRecordWithNoEndDate), Some(List(historicRecord)), None)
-        recordList.activeRecord shouldBe true
-        recordList.historicRecord shouldBe true
-        recordList.historicActiveRecord shouldBe false
-      }
+      relationshipRecordList.relationships shouldBe Seq(activeRecipientRelationshipRecord, inactiveRelationshipRecord1)
+      relationshipRecordList.userRecord shouldBe None
     }
 
-    "set activeHistoricRecord as true" when {
-      "activeRelationship and participant1EndDate is defined" in {
-        val recordList = new RelationshipRecordList(Some(activeRecord), None, None)
-        recordList.activeRecord shouldBe false
-        recordList.historicRecord shouldBe false
-        recordList.historicActiveRecord shouldBe true
+    "return Empty sequence for relationships" when {
+      "relationships is an empty list" in {
+        val relationshipRecordList = RelationshipRecordList(Seq())
+        relationshipRecordList.relationships shouldBe Seq()
       }
     }
   }
+
 }

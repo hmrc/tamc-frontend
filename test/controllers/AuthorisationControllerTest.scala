@@ -18,8 +18,9 @@ package controllers
 
 import config.ApplicationConfig
 import play.api.test.Helpers._
+import utils.ControllerBaseTest
 
-class AuthorisationControllerTest extends ControllerBaseSpec {
+class AuthorisationControllerTest extends ControllerBaseTest {
 
   lazy val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
 

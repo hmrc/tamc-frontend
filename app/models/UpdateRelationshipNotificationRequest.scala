@@ -21,8 +21,11 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
 
+case class UpdateRelationshipNotificationRequest(full_name: String, email: EmailAddress, role: String, welsh: Boolean = false, isRetrospective: Boolean = false)
+
 object UpdateRelationshipNotificationRequest {
   implicit val formats = Json.format[UpdateRelationshipNotificationRequest]
 }
 
-case class UpdateRelationshipNotificationRequest(full_name: String, email: EmailAddress, role: String, welsh: Boolean = false, isRetrospective: Boolean = false)
+
+

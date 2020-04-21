@@ -1,0 +1,71 @@
+@*
+ * Copyright 2020 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.views.html._
+@import models.auth.AuthenticatedUserRequest
+@import viewModels.ClaimsViewModel
+@import uk.gov.hmrc.urls.Link
+@import includes.backLink
+
+@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@templates.tamc_main(
+title = messages("title.pattern", messages("pages.claims.title")),
+mainConfig = views.helpers.MainConfig(None)
+){
+
+    @backLink()
+
+    <header class="page-heading">
+        <h1 class="heading-xlarge">@messages("pages.claims.title")</h1>
+    </header>
+
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>@messages("pages.claims.table.heading.tax-year")</th>
+                    <th colspan="2">@messages("pages.claims.table.heading.status")</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td class="bold" id="active">
+                        @viewModel.activeRow.dateInterval
+                    </td>
+                    <td id="active-reason" colspan="2">@viewModel.activeRow.status</td>
+                </tr>
+
+                @for((row, index) <- viewModel.historicRows.zipWithIndex) {
+                    <tr>
+                        <td class="bold" id="line${index}-start">
+                            @row.dateInterval
+                        </td>
+                        <td id="line${index}-reason">
+                            @row.status
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
+
+    <p class="panel-indent panel-indent--gutter">@viewModel.taxFreeAllowanceLink</p>
+
+}

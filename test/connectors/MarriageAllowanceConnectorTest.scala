@@ -18,7 +18,6 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import config.ApplicationConfig
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
@@ -27,13 +26,13 @@ import play.api.libs.json.Json
 import test_utils.TestData.Ninos
 import test_utils._
 import uk.gov.hmrc.domain.Nino
+import utils.ConnectorBaseTest
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class MarriageAllowanceConnectorTest extends TAMCSetupSpec {
+class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
 
-  val nino: Nino = Nino(Ninos.nino1)
+  val nino = Nino(Ninos.nino1)
 
   "listRelationship" should {
     def serverStub(data: RelationshipRecordStatusWrapper): StubMapping = {
@@ -48,27 +47,27 @@ class MarriageAllowanceConnectorTest extends TAMCSetupSpec {
 
     "return data" when {
       "success response returned from HOD" in {
-        val response = RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus("OK"))
+        val response = RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus("OK"))
         serverStub(response)
-        val result: Future[RelationshipRecordWrapper] = MarriageAllowanceConnector.listRelationship(nino)
-        await(result) shouldBe RelationshipRecordWrapper(Nil, None)
+        val result: Future[RelationshipRecordList] = MarriageAllowanceConnector.listRelationship(nino)
+        await(result) shouldBe RelationshipRecordList(Nil, None)
       }
     }
 
     "throw an exception" when {
 
       "TRANSFEROR_NOT_FOUND is returned" in {
-        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus(TRANSFEROR_NOT_FOUND)))
+        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(TRANSFEROR_NOT_FOUND)))
         intercept[TransferorNotFound](await(MarriageAllowanceConnector.listRelationship(nino)))
       }
 
       "CITIZEN_NOT_FOUND is returned" in {
-        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus(CITIZEN_NOT_FOUND)))
+        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(CITIZEN_NOT_FOUND)))
         intercept[CitizenNotFound](await(MarriageAllowanceConnector.listRelationship(nino)))
       }
 
       "BAD_REQUEST is returned" in {
-        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordWrapper(Nil, None), ResponseStatus(BAD_REQUEST)))
+        serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(BAD_REQUEST)))
         intercept[BadFetchRequest](await(MarriageAllowanceConnector.listRelationship(nino)))
       }
     }
@@ -125,6 +124,5 @@ class MarriageAllowanceConnectorTest extends TAMCSetupSpec {
       )
     }
   }
-
 
 }
