@@ -22,7 +22,7 @@ import errors._
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
-import models.auth.BaseUserRequest
+import models.auth.{AuthenticatedUserRequest, BaseUserRequest}
 import org.joda.time.LocalDate
 import play.Logger
 import play.api.i18n.MessagesApi
@@ -33,6 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
+
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 
@@ -55,14 +56,6 @@ class UpdateRelationshipController @Inject()(
           Ok(views.html.coc.history_summary(viewModel))
         }
       } recover handleError
-  }
-
-  private def noPrimaryRecordRedirect(request: UserRequest[_]): Result = {
-    if (!request.authState.permanent) {
-      Redirect(controllers.routes.TransferController.transfer())
-    } else {
-     Redirect(controllers.routes.EligibilityController.howItWorks())
-    }
   }
 
   def decision: Action[AnyContent] = authenticate.async {
@@ -289,7 +282,7 @@ class UpdateRelationshipController @Inject()(
         }
 
         throwable match {
-          case _: NoPrimaryRecordError => noPrimaryRecordRedirect(request)
+          case _: NoPrimaryRecordError => Redirect(controllers.routes.EligibilityController.howItWorks())
           case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
           case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))

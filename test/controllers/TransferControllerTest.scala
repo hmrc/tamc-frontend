@@ -38,7 +38,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockTemporaryAuthenticatedAction}
+import utils.ControllerBaseTest
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
