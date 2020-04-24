@@ -52,14 +52,14 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
   override lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
   override lazy val logoutCallbackUrl = loadConfig("tamc.external-urls.logout-callback-url")
-  override lazy val callbackUrl = loadConfig("tamc.external-urls.callback-url")
+  override lazy val callbackUrl: String = loadConfig("tamc.external-urls.callback-url")
   override lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
   override lazy val callChargeUrl: String = loadConfig("tamc.external-urls.govuk-call-charges")
   override lazy val contactIncomeTaxHelplineUrl: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
   override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
-  def ggSignInUrl(continueUrl: String): String = s"/gg/sign-in?continue=${encodeQueryStringValue(continueUrl)}"
+  override lazy val ggSignInUrl: String = s"${baseUrl("bas-gateway")}/gg/sign-in?continue=${encodeQueryStringValue(callbackUrl)}"
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
   override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
@@ -167,7 +167,7 @@ trait ApplicationConfig {
 
   def ivUpliftUrl = createUrl(action = "uplift")
 
-  def ggSignInUrl(continueUrl: String): String
+  val ggSignInUrl: String
 
   val gdsFinishedUrl: String
   val ptaFinishedUrl: String
