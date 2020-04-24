@@ -16,9 +16,10 @@
 
 package config
 
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ApplicationConfigSpec extends UnitSpec {
+class ApplicationConfigSpec extends UnitSpec with GuiceOneAppPerSuite {
 
   "check rates for earliest valid year" when {
     "return valid year" in {
@@ -28,7 +29,7 @@ class ApplicationConfigSpec extends UnitSpec {
 
   "ggSignInUrl" must {
     "build ggSignInUrl and encode continue url" in {
-      ApplicationConfig.ggSignInUrl("/tamc") shouldBe "/gg/sign-in?continue=%2Ftamc"
+      ApplicationConfig.ggSignInUrl shouldBe "http://localhost:9025/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
     }
   }
 
