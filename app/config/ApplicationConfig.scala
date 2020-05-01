@@ -57,7 +57,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
-  override lazy val taiFrontendUrl: String = s"${runModeConfiguration.getString("microservice.tai-frontend.host")}/check-income-tax"
+  override lazy val taiFrontendUrl: String = s"${runModeConfiguration.getString("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
   override lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
