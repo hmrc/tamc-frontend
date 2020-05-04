@@ -17,7 +17,6 @@
 package controllers
 
 import config.ApplicationConfig
-import config.ApplicationConfig.{TAMC_JOURNEY_GDS, TAMC_JOURNEY_PTA}
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.CurrentYearForm.currentYearForm
@@ -27,7 +26,7 @@ import forms.EmailForm.emailForm
 import forms.RecipientDetailsForm.recipientDetailsForm
 import javax.inject.Inject
 import models._
-import models.auth.UserRequest
+import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
 import play.api.data.FormError
@@ -219,12 +218,7 @@ class TransferController @Inject()(
   def confirmAction: Action[AnyContent] = authenticate.async {
     implicit request =>
 
-      val getJourneyName: String =
-        if (request.authState.permanent) TAMC_JOURNEY_PTA else TAMC_JOURNEY_GDS
-
-      Logger.info("registration service.createRelationship - confirm action.")
-
-      registrationService.createRelationship(request.nino, getJourneyName) map {
+      registrationService.createRelationship(request.nino) map {
         _ => Redirect(controllers.routes.TransferController.finished())
       } recover handleError
   }
@@ -243,7 +237,7 @@ class TransferController @Inject()(
       Ok(views.html.errors.transferer_deceased())
   }
 
-  def handleError(implicit hc: HeaderCarrier, request: UserRequest[_]): PartialFunction[Throwable, Result] =
+  def handleError(implicit hc: HeaderCarrier, request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
         val message: String = s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils.getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"

@@ -17,11 +17,11 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
-@import models.auth.RequestWithAuthState
+@import models.auth.UserRequest
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)]
 )(implicit messages: Messages,
-request: RequestWithAuthState[_],
+request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -29,7 +29,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
 ) {
 
-@if(request.authState.permanent){
+@if(request.isAuthenticated){
     <a href="@controllers.routes.EligibilityController.ptaCalculator" class="link-back">@Html(Messages("generic.back"))</a>
 } else {
     <a href="@ApplicationConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>

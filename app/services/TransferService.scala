@@ -82,8 +82,8 @@ trait TransferService {
       case _ => throw CacheMissingTransferor()
     }
 
-  def createRelationship(transferorNino: Nino, journey: String)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
-    doCreateRelationship(transferorNino, journey)(hc, messages, ec) recover {
+  def createRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
+    doCreateRelationship(transferorNino)(hc, messages, ec) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
         throw error
@@ -104,13 +104,13 @@ trait TransferService {
       }
     }
 
-  private def doCreateRelationship(transferorNino: Nino, journey: String)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
+  private def doCreateRelationship(transferorNino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
     for {
       cacheData <- cachingService.getCachedData
       validated <- validateCompleteCache(cacheData)
-      postCreateData <- sendCreateRelationship(transferorNino, validated, journey)(hc, messages, ec)
+      postCreateData <- sendCreateRelationship(transferorNino, validated)(hc, messages, ec)
       _ <- lockCreateRelationship()
-      _ <- auditCreateRelationship(postCreateData, journey)
+      _ <- auditCreateRelationship(postCreateData)
     } yield validated.notification.get
   }
 
@@ -135,8 +135,8 @@ trait TransferService {
       }
     }
 
-  private def auditCreateRelationship(cacheData: CacheData, journey: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
-    handleAudit(CreateRelationshipSuccessEvent(cacheData, journey))
+  private def auditCreateRelationship(cacheData: CacheData)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = {
+    handleAudit(CreateRelationshipSuccessEvent(cacheData))
   }
 
   def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
@@ -236,8 +236,8 @@ trait TransferService {
     CreateRelationshipRequestHolder(request = createRelationshipreq, notification = sendNotificationData)
   }
 
-  private def sendCreateRelationship(transferorNino: Nino, data: CacheData, journey: String)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[CacheData] = {
-    marriageAllowanceConnector.createRelationship(transferorNino, transform(data, messages), journey) map {
+  private def sendCreateRelationship(transferorNino: Nino, data: CacheData)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[CacheData] = {
+    marriageAllowanceConnector.createRelationship(transferorNino, transform(data, messages)) map {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
           case CreateRelationshipResponse(ResponseStatus("OK")) => data
@@ -247,7 +247,7 @@ trait TransferService {
         }
     } recover {
       case error =>
-        handleAudit(CreateRelationshipFailureEvent(data, journey, error))
+        handleAudit(CreateRelationshipFailureEvent(data, error))
         throw error
     }
   }

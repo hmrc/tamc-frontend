@@ -39,12 +39,6 @@ title = Messages("title.application.pattern", Messages("title.finished"))
 <h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
 <p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
 
-@if(!request.authState.isLoggedIn){
-<div class="panel-indent panel panel-border-wide">
-    <p>@Html(Messages("pages.finished.backdated-payments"))</p>
-</div>
-}
-
 <p id="paragraph-5">@messages("pages.finished.check-link-para1")
     <a id="pta-link" href=@ApplicationConfig.ptaFinishedUrl data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">@messages("pages.finished.check-link.text")</a>
     @messages("pages.finished.check-link-para2")

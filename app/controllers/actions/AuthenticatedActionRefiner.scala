@@ -32,19 +32,20 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticatedActionRefiner @Inject()(
                                             val authConnector: AuthConnector
-                                          )(implicit ec: ExecutionContext) extends ActionRefiner[Request, AuthenticatedUserRequest] with ActionBuilder[AuthenticatedUserRequest] with AuthorisedFunctions {
+                                          )(implicit ec: ExecutionContext)
+  extends ActionRefiner[Request, AuthenticatedUserRequest] with ActionBuilder[AuthenticatedUserRequest] with AuthorisedFunctions {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L100).retrieve(Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr) {
+    authorised(ConfidenceLevel.L200)
+      .retrieve(Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr) {
       case credentials ~ Some(nino) ~ confidenceLevel ~ saUtr =>
-        val authState = if (credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
         Future.successful(
           Right(
-            AuthenticatedUserRequest(request, authState, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
+            AuthenticatedUserRequest(request, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
           )
         )
       case _ =>
@@ -53,7 +54,7 @@ class AuthenticatedActionRefiner @Inject()(
       case _: InsufficientConfidenceLevel =>
         Left(Redirect(ApplicationConfig.ivUpliftUrl))
       case _: NoActiveSession =>
-        Left(Redirect(ApplicationConfig.ivLoginUrl))
+        Left(Redirect(ApplicationConfig.ggSignInUrl))
     }
   }
 }

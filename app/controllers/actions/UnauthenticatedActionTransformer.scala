@@ -29,20 +29,21 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UnauthenticatedActionTransformer @Inject()(
                                                   val authConnector: AuthConnector
-                                                )(implicit ec: ExecutionContext) extends ActionTransformer[Request, RequestWithAuthState] with ActionBuilder[RequestWithAuthState] with AuthorisedFunctions {
+                                                )(implicit ec: ExecutionContext)
+  extends ActionTransformer[Request, UserRequest]
+    with ActionBuilder[UserRequest] with AuthorisedFunctions {
 
-  override protected def transform[A](request: Request[A]): Future[RequestWithAuthState[A]] = {
+  override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
 
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
-    authorised(ConfidenceLevel.L100).retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
+    authorised(ConfidenceLevel.L200).retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
       case cl ~ saUtr ~ credentials =>
-        val authState = if (credentials.isDefined) PermanentlyAuthenticated else TemporarilyAuthenticated
-        Future.successful(RequestWithAuthState(request, authState = authState, Some(cl), saUtr.isDefined, credentials.map(_.providerType)))
+        Future.successful(UserRequest(request, Some(cl), isAuthenticated = true, credentials.map(_.providerType), isSA = saUtr.isDefined))
     } recover {
       case _: NoActiveSession | _: InsufficientConfidenceLevel =>
-        RequestWithAuthState(request, Unauthenticated, None, isSA = false, None)
+        UserRequest(request, None, isAuthenticated = false, None, isSA = false)
     }
   }
 }

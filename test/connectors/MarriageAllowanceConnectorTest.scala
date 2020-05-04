@@ -99,7 +99,7 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
         ))
       val data = MarriageAllowanceConnectorTestData.relationshipRequestHolder
 
-      await(MarriageAllowanceConnector.createRelationship(nino, data, "pta"))
+      await(MarriageAllowanceConnector.createRelationship(nino, data))
       verify(1,
         putRequestedFor(urlEqualTo(s"/paye/$nino/create-multi-year-relationship/pta"))
           .withRequestBody(equalToJson(Json.toJson(data).toString()))

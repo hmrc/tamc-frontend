@@ -20,10 +20,10 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
-@import models.auth.RequestWithAuthState
+@import models.auth.UserRequest
 
 @(partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput], scottishResident: Boolean)(
-    implicit messages: Messages, request: RequestWithAuthState[_], templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever
+    implicit messages: Messages, request: UserRequest[_], templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever
 )
 
 @maxLimit = @{

@@ -18,15 +18,16 @@ package controllers
 
 import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
-import models.auth.{PermanentlyAuthenticated, TemporarilyAuthenticated}
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api.mvc.{Controller, Result}
+import play.api.mvc.{Action, AnyContent, Controller, Request, Result}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
+import utils.RetrivalHelper._
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 import utils.ControllerBaseTest
 
@@ -40,9 +41,10 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
   class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
-    def onPageLoad() = authAction { implicit request => Ok.withHeaders("authState" -> request.authState.toString) }
-
-    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L100), ArgumentMatchers.eq(retrievals))(any(), any()))
+    def onPageLoad(): Action[AnyContent] = authAction {
+      implicit request => Ok(request.nino.nino)
+    }
+    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
       .thenReturn(authReturn)
   }
 
@@ -55,9 +57,12 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
       }
 
       "there is no active session" in new FakeController(Future.failed(NoActiveSessionException)) {
+        val request: Request[AnyContent] = FakeRequest("GET", "/tamc")
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.ivLoginUrl)
+        redirectLocation(result) shouldBe Some(
+          "http://localhost:9025/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
+        )
       }
     }
 
@@ -70,29 +75,20 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
     }
 
     "return success" when {
-      "nino and credentials are returned" in new FakeController(Future.successful(withNinoRetrieval)) {
+      "nino is returned" in new FakeController(Future.successful(withNinoRetrieval)) {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe OK
-        result.header.headers("authState") shouldBe PermanentlyAuthenticated.toString
-      }
-
-      "nino is returned without credentials" in new FakeController(Future.successful(withNinoNoCredRetrieval)) {
-        val result: Future[Result] = onPageLoad()(request)
-        status(result) shouldBe OK
-        result.header.headers("authState") shouldBe TemporarilyAuthenticated.toString
+        contentAsString(result) shouldBe Ninos.nino1
       }
     }
   }
 
   object NoActiveSessionException extends NoActiveSession("")
 
-  val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(None, None), ConfidenceLevel.L100), None)
-  }
-  val withNinoNoCredRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(None, Some(Ninos.nino1)), ConfidenceLevel.L100), None)
-  }
-  val withNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] = {
-    new ~(new ~(new ~(Some(Credentials("", "")), Some(Ninos.nino1)), ConfidenceLevel.L100), None)
-  }
+  val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
+    None ~ None ~ ConfidenceLevel.L200 ~ None
+
+  val withNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
+    Some(Credentials("", "")) ~ Some(Ninos.nino1) ~ ConfidenceLevel.L200 ~ None
+
 }

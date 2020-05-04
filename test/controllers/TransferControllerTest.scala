@@ -19,7 +19,7 @@ package controllers
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
-import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
+import models.auth.AuthenticatedUserRequest
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -38,7 +38,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockTemporaryAuthenticatedAction}
+import utils.ControllerBaseTest
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -385,21 +385,12 @@ class TransferControllerTest extends ControllerBaseTest {
   "confirmAction" should {
     "redirect" when {
       "a user is permanently authenticated" in {
-        when(mockTransferService.createRelationship(any(), ArgumentMatchers.eq("PTA"))(any(), any(), any()))
+        when(mockTransferService.createRelationship(any())(any(), any(), any()))
           .thenReturn(notificationRecord)
         val result = controller().confirmAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
-        verify(mockTransferService, times(1)).createRelationship(any(), ArgumentMatchers.eq("PTA"))(any(), any(), any())
-      }
-
-      "a user is temporarily authenticated" in {
-        when(mockTransferService.createRelationship(any(), ArgumentMatchers.eq("GDS"))(any(), any(), any()))
-          .thenReturn(notificationRecord)
-        val result = controller(instanceOf[MockTemporaryAuthenticatedAction]).confirmAction()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
-        verify(mockTransferService, times(1)).createRelationship(any(), ArgumentMatchers.eq("GDS"))(any(), any(), any())
+        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any())
       }
     }
   }
@@ -445,7 +436,6 @@ class TransferControllerTest extends ControllerBaseTest {
   "handleError" should {
     val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
       request,
-      PermanentlyAuthenticated,
       Some(ConfidenceLevel.L200),
       isSA = false,
       Some("GovernmentGateway"),
