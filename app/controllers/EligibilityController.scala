@@ -72,7 +72,7 @@ class EligibilityController @Inject()(
             if (eligibilityInput.married) {
               Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
             } else {
-              Ok(views.html.multiyear.eligibility_non_eligible_finish(finishUrl(request.authState.permanent)))
+              Ok(views.html.multiyear.eligibility_non_eligible_finish(finishUrl(request.isAuthenticated)))
             }
           })
     }
@@ -159,7 +159,7 @@ class EligibilityController @Inject()(
             if (doYouWantToApplyInput.doYouWantToApply) {
               Redirect(controllers.routes.TransferController.transfer())
             } else {
-              Redirect(Call("GET", finishUrl(request.authState.permanent)))
+              Redirect(Call("GET", finishUrl(request.isAuthenticated)))
             }
           })
     }

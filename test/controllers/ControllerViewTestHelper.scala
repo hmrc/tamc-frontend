@@ -16,7 +16,7 @@
 
 package controllers
 
-import models.auth.{AuthState, AuthenticatedUserRequest}
+import models.auth.AuthenticatedUserRequest
 import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
@@ -34,10 +34,9 @@ trait ControllerViewTestHelper extends UnitSpec with MockitoSugar {
 
   implicit val authRequest = {
     val request: Request[AnyContent] = FakeRequest()
-    val authState = mock[AuthState]
     val nino = new Generator().nextNino
 
-    AuthenticatedUserRequest(request, authState, None, true, None, nino)
+    AuthenticatedUserRequest(request, None, isSA = true, None, nino)
   }
 
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer

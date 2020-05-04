@@ -16,12 +16,15 @@
 
 package config
 
+import java.net.URLEncoder
+
 import config.ApplicationConfig.{loadConfig, runModeConfiguration}
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
+import utils.encodeQueryStringValue
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
@@ -49,12 +52,15 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
   override lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
   override lazy val logoutCallbackUrl = loadConfig("tamc.external-urls.logout-callback-url")
-  override lazy val callbackUrl = loadConfig("tamc.external-urls.callback-url")
+  override lazy val callbackUrl: String = loadConfig("tamc.external-urls.callback-url")
   override lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
   override lazy val callChargeUrl: String = loadConfig("tamc.external-urls.govuk-call-charges")
   override lazy val contactIncomeTaxHelplineUrl: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
   override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
+
+  override lazy val ggSignInHost: String = runModeConfiguration.getString("microservice.bas-gateway.host").getOrElse("")
+  override lazy val ggSignInUrl: String = s"$ggSignInHost/gg/sign-in?continue=${encodeQueryStringValue(callbackUrl)}"
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
   override lazy val taiFrontendUrl: String = s"${runModeConfiguration.getString("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
@@ -155,15 +161,15 @@ trait ApplicationConfig {
 
   def ivNotAuthorisedUrl: String
 
-  private def createUrl(action: String) = s"${loginUrl}/${action}?origin=ma&confidenceLevel=100&completionURL=${utils.encodeQueryStringValue(callbackUrl)}&failureURL=${utils.encodeQueryStringValue(ivNotAuthorisedUrl)}"
+  private def createUrl(action: String) =
+    s"$loginUrl/$action?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(callbackUrl)}&failureURL=${encodeQueryStringValue(ivNotAuthorisedUrl)}"
 
   def ivLoginUrl = createUrl(action = "registration")
 
   def ivUpliftUrl = createUrl(action = "uplift")
 
-  val TAMC_JOURNEY = "TAMC_JOURNEY"
-  val TAMC_JOURNEY_PTA = "PTA"
-  val TAMC_JOURNEY_GDS = "GDS"
+  val ggSignInHost: String
+  val ggSignInUrl: String
 
   val gdsFinishedUrl: String
   val ptaFinishedUrl: String

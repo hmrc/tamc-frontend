@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package models.auth
+package utils
 
-sealed abstract class AuthState(val isLoggedIn: Boolean, val permanent: Boolean)
+import uk.gov.hmrc.auth.core.retrieve.~
 
-case object PermanentlyAuthenticated extends AuthState(true, true)
-
-case object TemporarilyAuthenticated extends AuthState(true, false)
-
-case object Unauthenticated extends AuthState(false, false)
+object RetrivalHelper {
+  implicit class RetrievalsUtil[A](val retrieval: A) extends AnyVal {
+    def `~`[B](anotherRetrieval: B): A ~ B = uk.gov.hmrc.auth.core.retrieve.~(retrieval, anotherRetrieval)
+  }
+}

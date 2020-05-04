@@ -19,10 +19,10 @@
 @import views.html.templates._
 @import config.ApplicationConfig._
 @import java.text.NumberFormat
-@import models.auth.RequestWithAuthState
+@import models.auth.UserRequest
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
-    implicit messages: Messages, request: RequestWithAuthState[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+    implicit messages: Messages, request: UserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
     title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))

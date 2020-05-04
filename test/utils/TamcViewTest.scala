@@ -16,7 +16,7 @@
 
 package utils
 
-import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
+import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -38,7 +38,6 @@ trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite wi
   implicit val request: Request[AnyContent] = FakeRequest()
   implicit val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
     request,
-    PermanentlyAuthenticated,
     Some(ConfidenceLevel.L200),
     isSA = false,
     Some("GovernmentGateway"),

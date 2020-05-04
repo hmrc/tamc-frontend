@@ -21,7 +21,7 @@ import errors._
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
-import models.auth.{AuthenticatedUserRequest, PermanentlyAuthenticated}
+import models.auth.AuthenticatedUserRequest
 import org.joda.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -38,7 +38,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.RequestBuilder._
-import utils.{ControllerBaseTest, MockTemporaryAuthenticatedAction}
+import utils.ControllerBaseTest
 import viewModels._
 
 import scala.concurrent.Future
@@ -81,8 +81,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val relationshipRecords = createRelationshipRecords()
       val historySummaryViewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
-                                                            relationshipRecords.hasMarriageAllowanceBeenCancelled,
-                                                            relationshipRecords.loggedInUserInfo)
+        relationshipRecords.hasMarriageAllowanceBeenCancelled,
+        relationshipRecords.loggedInUserInfo)
 
       when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
         .thenReturn(Future.successful(relationshipRecords))
@@ -94,22 +94,11 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       status(result) shouldBe OK
 
       result rendersTheSameViewAs views.html.coc.history_summary(historySummaryViewModel)
-
     }
-
-    "redirect to the transfer controller" when {
-      "there is no active (primary) record and non permanent authentication" in {
-        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
-            .thenReturn(Future.failed(NoPrimaryRecordError()))
-
-        val result = controller(instanceOf[MockTemporaryAuthenticatedAction]).history()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
-      }
-    }
-
+  }
+  "History" should {
     "redirect to how-it-works" when {
-      "there is no active (primary) record and permanent authentication" in {
+      "there is no active (primary) record" in {
         when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
           .thenReturn(Future.failed(NoPrimaryRecordError()))
 
@@ -191,7 +180,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         result rendersTheSameViewAs views.html.coc.decision(validForm)
       }
-
     }
   }
 
@@ -211,7 +199,9 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
 
     }
+  }
 
+  "submitDecision" should {
     "redirect to the make change page" when {
       "a user selects the stopMarriageAllowance option" in {
 
@@ -807,7 +797,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   "handleError" should {
     val auhtRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
       request,
-      PermanentlyAuthenticated,
       Some(ConfidenceLevel.L200),
       isSA = false,
       Some("GovernmentGateway"),
