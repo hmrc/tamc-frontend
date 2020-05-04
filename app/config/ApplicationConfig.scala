@@ -63,7 +63,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val ggSignInUrl: String = s"$ggSignInHost/gg/sign-in?continue=${encodeQueryStringValue(callbackUrl)}"
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
-  override lazy val taiFrontendUrl = s"${baseUrl("tai-frontend")}/check-income-tax"
+  override lazy val taiFrontendUrl: String = s"${runModeConfiguration.getString("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
   override lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
