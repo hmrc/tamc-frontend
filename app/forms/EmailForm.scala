@@ -47,7 +47,12 @@ object EmailForm {
     Constraint[String](name) {
       email =>
         if (EmailAddress.isValid(email) && email.matches(initialCharCheckRegexStr)) {
-          Valid
+          try {
+            EmailAddress(email)
+            Valid
+          } catch {
+            case _: IllegalArgumentException => Invalid(ValidationError(formatError))
+          }
         } else if (!email.matches(initialCharCheckRegexStr)) {
           Invalid(ValidationError(charError))
         } else {

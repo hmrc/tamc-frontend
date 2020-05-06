@@ -68,6 +68,16 @@ class EmailFormTest extends BaseTest {
       ))
     }
 
+    "fail to bind, with a general format failure for an invalid email address containing invalid domain" in {
+      val formInput = Map[String, String](
+        "transferor-email" -> """example@.example.com"""
+      )
+      val res = EmailForm.emailForm.mapping.bind(formInput)
+      res shouldBe Left(Seq(
+        FormError("transferor-email", Seq("pages.form.field.transferor-email.error.email"), Nil)
+      ))
+    }
+
     "fail to bind, with a max length failure, for am email address that is too long " in {
       val formInput = Map[String, String](
         "transferor-email" ->
