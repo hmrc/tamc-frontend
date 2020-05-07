@@ -25,7 +25,7 @@
             <tr>
                 <th scope="row" class="bold">@row.title</th>
                 <td>@row.userAnswer</td>
-                @row.changeLink.fold(Html("<td></td>"))(changeLink => Html(s"""<td><a href="$changeLink" id="edit-field">${messages("generic.change")}</a></td>"""))
+                @row.changeLink.fold(Html("<td></td>"))(changeLink => Html(s"""<td><a href="$changeLink" id="${row.id}" aria-label="${row.aria}">${messages("generic.change")}</a></td>"""))
             </tr>
         }
 

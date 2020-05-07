@@ -28,8 +28,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.application.pattern", Messages("title.finished"))
 ){
 
-<div class="highlighted-event govuk-box-highlight">
-    <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")">
+<div class="highlighted-event govuk-box-highlight" id="govuk-box">
+    <h1 class="heading-large"><img src="@routes.Assets.at("images/tick.png")" alt="tick" aria-label="success image" aria-labelledby="govuk-box">
         @Html(Messages("pages.finished.successful"))</h1>
 </div>
 
