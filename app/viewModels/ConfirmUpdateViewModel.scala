@@ -22,14 +22,14 @@ import views.helpers.LanguageUtils
 
 case class ConfirmUpdateViewModel(endDate: String, effectiveDate: String, rows: Seq[SummaryRow])
 
-case class SummaryRow(title: String, userAnswer: String, changeLink: Option[String] = None, index: Int)
+case class SummaryRow(title: String, id: String, aria: String, userAnswer: String, changeLink: Option[String] = None, index: Int)
 
 object ConfirmUpdateViewModel  {
 
   def apply(updateAnswers: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmUpdateViewModel = {
 
-    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), updateAnswers.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
-    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), updateAnswers.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
+    val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), "change-link-name", "change name", updateAnswers.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
+    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), "change-link-email","change email", updateAnswers.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
     val endDate = LanguageUtils().ukDateTransformer(updateAnswers.maEndingDates.marriageAllowanceEndDate)
     val effectiveDate = LanguageUtils().ukDateTransformer(updateAnswers.maEndingDates.personalAllowanceEffectiveDate)
@@ -37,7 +37,7 @@ object ConfirmUpdateViewModel  {
     def createRows(defaultRows: List[SummaryRow])(implicit messages: Messages): List[SummaryRow] = {
       updateAnswers.divorceDate.fold(defaultRows){ divorceDate =>
         val formattedDate = LanguageUtils().ukDateTransformer(divorceDate)
-        SummaryRow(messages("pages.divorce.title"), formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2) :: defaultRows
+        SummaryRow(messages("pages.divorce.title"), "change-link-date", "change date", formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2) :: defaultRows
       }
     }
 
