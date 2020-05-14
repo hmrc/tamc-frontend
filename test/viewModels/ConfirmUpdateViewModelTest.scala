@@ -28,8 +28,8 @@ class ConfirmUpdateViewModelTest extends TamcViewModelTest {
   val loggedInUser = LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some(firstName), Some(surname))))
   val email = "email@email.com"
   val marriageAllowanceEndingDates = MarriageAllowanceEndingDates(LocalDate.now(), LocalDate.now())
-  val emailRow = SummaryRow(messagesApi("pages.confirm.cancel.email"), email, Some("/marriage-allowance-application/confirm-email"), 3)
-  val nameRow = SummaryRow(messagesApi("pages.confirm.cancel.your-name"), s"$firstName $surname", None, 1)
+  val emailRow = SummaryRow(messagesApi("pages.confirm.cancel.email"), "change-link-email","change email", email, Some("/marriage-allowance-application/confirm-email"), 3)
+  val nameRow = SummaryRow(messagesApi("pages.confirm.cancel.your-name"), "change-link-name", "change name", s"$firstName $surname", None, 1)
 
   def createConfirmationUpdateAnswers(loggedInUser: LoggedInUserInfo = loggedInUser,
                                       dateOfDivorce: Option[LocalDate] = Some(LocalDate.now().minusDays(1))
@@ -49,7 +49,7 @@ class ConfirmUpdateViewModelTest extends TamcViewModelTest {
         val viewModel = ConfirmUpdateViewModel(confirmationUpdateAnswers)
 
         val divorceDate = transformedDate(LocalDate.now().minusDays(1))
-        val divorceDateRow = SummaryRow(messagesApi("pages.divorce.title"), divorceDate,
+        val divorceDateRow = SummaryRow(messagesApi("pages.divorce.title"), "change-link-date", "change date", divorceDate,
           Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2)
 
         val expectedRows = Seq(nameRow, divorceDateRow, emailRow)
