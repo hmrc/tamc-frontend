@@ -78,12 +78,7 @@ trait TransferService {
     Future {
       years.fold(List[TaxYear]()) {
         actualYears =>
-          val validExtraYears = actualYears
-            .filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
-
-          Logger.info(s"Valid extra year [$validExtraYears]")
-
-          validExtraYears
+          actualYears.filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
       }
     }
   }

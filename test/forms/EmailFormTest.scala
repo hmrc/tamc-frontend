@@ -16,20 +16,11 @@
 
 package forms
 
-import java.util.Locale
-
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import test_utils.TAMCSetupSpec
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.test.UnitSpec
 
-class EmailFormTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
-
-  implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-
-  val messages: Messages = messagesApi.preferred(Seq(Lang(Locale.ENGLISH)))
+class EmailFormTest extends TAMCSetupSpec {
 
   ".email" should {
     "bind a valid email address" in {

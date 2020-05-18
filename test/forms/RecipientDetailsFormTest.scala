@@ -20,19 +20,14 @@ import java.util.Locale
 
 import models.{Gender, RecipientDetailsFormInput}
 import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.i18n.{Lang, MessagesApi}
+import test_utils.TAMCSetupSpec
 import uk.gov.hmrc.domain.Generator
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.util.Random
 
-class RecipientDetailsFormTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with MockitoSugar {
-
-  implicit def messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  val messages = messagesApi.preferred(Seq(Lang(Locale.ENGLISH)))
+class RecipientDetailsFormTest extends TAMCSetupSpec {
 
   ".recipientDetailsForm nino mapping" should {
 

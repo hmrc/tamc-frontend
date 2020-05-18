@@ -61,8 +61,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path")
     .getOrElse("/template/mustache")
 
-  val TAMC_BEGINNING_YEAR: Int = runModeConfiguration.getInt("tamc-beginning-year")
-    .getOrElse(throw new RuntimeException("Cannot find 'tamc-beginning-year' in 'data/tax-rates.conf'!"))
+  val TAMC_BEGINNING_YEAR: Int = runModeConfiguration.getInt("tamc-earliest-valid-year")
+    .getOrElse(throw new RuntimeException("Cannot find 'tamc-earliest-valid-year' in 'data/tax-rates.conf'!"))
 
   val TAMC_MIN_DATE: LocalDate = new LocalDate(1899, 12, 31)
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
@@ -84,22 +84,13 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val CACHE_ROLE_RECORD = "ROLE"
 
   def actualTaxYear(taxYear: Int): Int = {
-    val year = if (taxYear == 0)
+    if (taxYear <= 0)
       currentTaxYearStart
     else
       taxYear
-
-
-    year
-//    if (year)
   }
 
-  private def getIntProperty(runModeConfiguration: Configuration, keyPrefix: String, taxYear: Int): Int = {
-    val year = actualTaxYear(taxYear)
-    runModeConfiguration.getInt(keyPrefix + year).getOrElse(0)
-  }
-
-  def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = getIntProperty(runModeConfiguration, "personal-allowance-",taxYear)// runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)
+  def PERSONAL_ALLOWANCE(taxYear: Int = 0): Int = runModeConfiguration.getInt("personal-allowance-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT_SCOT(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-scot-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_LIMIT_WALES(taxYear: Int = 0): Int = runModeConfiguration.getInt("max-limit-wales-" + actualTaxYear(taxYear)).getOrElse(0)

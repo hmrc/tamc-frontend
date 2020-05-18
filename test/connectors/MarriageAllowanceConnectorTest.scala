@@ -126,10 +126,5 @@ class MarriageAllowanceConnectorTest extends TAMCSetupSpec {
     }
   }
 
-  "labala portocala" should {
-    "tralalallalala" in {
-        println(ApplicationConfig.PERSONAL_ALLOWANCE())
-    }
-  }
 
 }
