@@ -124,7 +124,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller().history()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs views.html.errors.bad_request()
+        result rendersTheSameViewAs views.html.errors.try_later()
       }
 
       "a CitizenNotFound error is returned " in {
@@ -809,7 +809,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         (new CacheUpdateRequestNotSent, "technical.issue.heading"),
         (new CannotUpdateRelationship, "technical.issue.heading"),
         (new CitizenNotFound, "technical.cannot-find-details.para1"),
-        (new BadFetchRequest, "technical.technical-error.para1"),
+        (new BadFetchRequest, "technical.issue.heading"),
         (new Exception, "technical.issue.heading")
       )
 
