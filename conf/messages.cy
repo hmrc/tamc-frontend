@@ -614,6 +614,7 @@ pages.confirm.cancel.message2=bydd eich Lwfans Personol yn dychwelyd i’r swm a
 pages.confirm.cancel.your-name=Eich enw
 pages.confirm.cancel.email=E-bost
 pages.confirm.cancel.continue.button=Cadarnhau canslo
+pages.confirm.change.email=Newid E-bost
 
 
 #********************************************************************************
