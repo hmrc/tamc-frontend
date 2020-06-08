@@ -474,11 +474,8 @@ technical.other-ways.para0.part2=, o dan ‘gwasanaethau y mae’n bosibl y bydd
 technical.other-ways.para1=Gallwch hefyd ffonio Cyllid a Thollau EM (CThEM) er mwyn gwneud cais.
 technical.other-ways.para2=Mae arnoch angen gwybod eich rhif Yswiriant Gwladol, ac un eich partner.
 title.cannot-find-details=Methu dod o hyd i fanylion
-title.technical-error=Problem dechnegol
 technical.cannot-find-details.h1=Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol
 technical.cannot-find-details.para1=Ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio
-technical.technical-error.h1=Mae problem dechnegol wedi codi
-technical.technical-error.para1=Rhowch gynnig arall arni. Os yw’r broblem yn parhau, ffoniwch ni er mwyn newid eich Lwfans Priodasol. Sicrhewch fod gennych eich rhif Yswiriant Gwladol wrth law pan fyddwch yn ffonio.
 technical.transferor-dead-p1=Cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM
 technical.transferor-dead-p2=os bydd angen i chi drafod eich cais am Lwfans Priodasol.
 

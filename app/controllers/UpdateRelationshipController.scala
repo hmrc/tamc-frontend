@@ -289,7 +289,7 @@ class UpdateRelationshipController @Inject()(
           case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: MultipleActiveRecordError => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
-          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.bad_request()))
+          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
           case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
           case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
