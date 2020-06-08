@@ -29,7 +29,7 @@ object ConfirmUpdateViewModel  {
   def apply(updateAnswers: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmUpdateViewModel = {
 
     val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), "change-link-name", "change name", updateAnswers.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
-    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), "change-link-email","change email", updateAnswers.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
+    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), "change-link-email" ,"change email", updateAnswers.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
     val endDate = LanguageUtils().ukDateTransformer(updateAnswers.maEndingDates.marriageAllowanceEndDate)
     val effectiveDate = LanguageUtils().ukDateTransformer(updateAnswers.maEndingDates.personalAllowanceEffectiveDate)
