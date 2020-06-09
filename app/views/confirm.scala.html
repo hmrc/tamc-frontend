@@ -55,7 +55,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             <td>@Html(Messages("generic.email"))</td>
             <td id="transferor-email">@data.transferorEmail</td>
             <td>
-                <a href="@controllers.routes.TransferController.confirmYourEmail()"
+                <a href="@controllers.routes.TransferController.confirmYourEmail()" aria-label="@Html(messages("pages.confirm.change.email"))"
                    data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                     @Html(Messages("generic.change"))
                 </a>

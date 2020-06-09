@@ -606,6 +606,7 @@ pages.confirm.cancel.message2=your Personal Allowance will go back to the normal
 pages.confirm.cancel.your-name=Your name
 pages.confirm.cancel.email=Email
 pages.confirm.cancel.continue.button=Confirm cancellation
+pages.confirm.change.email=Change Email
 
 
 #********************************************************************************
