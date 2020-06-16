@@ -1,0 +1,598 @@
+// this file is an example of how you might import the files into your service
+
+// import any service custom css first eg:
+// @import 'custom';
+
+// import these files last, in this order
+@import 'partials/_palette';
+@import 'partials/_focus';
+@import "partials/_banner-panel";
+
+/**TAMC - External CSS**/
+
+#egot_iframe {
+  display: none;
+}
+/*******Generic**********/
+.button-get-started {
+  font-weight: 700;
+  padding: 0.36842em 2.15789em 0.21053em 0.84211em;
+}
+.paddingboost{
+  padding-top:20px;
+}
+table {
+  border-bottom: 1px solid #a1acb2;
+  margin-bottom: 30px;
+}
+.highlight {
+  color: #0076c0;
+  font-style: normal;
+  text-transform: capitalize;
+}
+.horizontal {
+  border-bottom: thin solid #6f777b;
+  margin-bottom: 20px;
+  padding-top: 20px;
+}
+.form-field--error {
+  width: 90%;
+}
+.reduce{
+  margin-bottom: 0.1em
+}
+
+.confirmation-notice {
+  margin-bottom: 20px;
+}
+.icon-important {
+  background-repeat: no-repeat;
+  float: left;
+  /*height: 80px;*/
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-top: 6px;
+  width: 36px;
+}
+.icon-important-text {
+  font-weight: bold;
+  font-size: 16;
+
+}
+
+/*******Landing Page**********/
+.list-number {
+  list-style-type: decimal;
+  margin-left:0px;
+}
+.steps {
+  color: #6f777b;
+  padding-top: 30px;
+}
+/*******Last signed in Element**********/
+.service-info  .service-info__help {
+  float: right;
+  text-align:right;
+  padding-top:3px;
+}
+.service-info .service-info__help p {
+  font-size:15px;
+}
+.lastLogin p
+{
+  color: #424242;
+}
+#global-header .header-proposition #proposition-links li a {
+  text-decoration: underline;
+}
+/********FOR Mock********/
+.get-started .destination {
+  color: #0b0c0c;
+  display: block;
+  font-family: "nta",Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857;
+  margin-top: 0.5em;
+  max-width: 13em;
+  text-transform: none;
+}
+.pagination li.previous {
+  float: left;
+  text-align: left;
+}
+.content-block li, article li {
+  font-family: "nta",Arial,sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.31579;
+  margin: 0.25em 0;
+  padding-left: 0.3em;
+  text-transform: none;
+}
+.pagination li {
+  float: left;
+  font-family: "nta",Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.25;
+  list-style: outside none none;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  text-transform: none;
+  width: 49%;
+}
+
+div.last-login>p {
+  font-size: 16px;
+  font-family: nta,Arial,sans-serif;
+  font-weight: 300;
+  line-height: 1.25;
+  text-transform: none;
+  margin-bottom: 5px;
+  color: #6f777b;
+  text-align: right;
+}
+
+.pagination li.previous a::before {
+  background: transparent url("https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-20de3c9fa524b493538ff1b101cc2c04.png") no-repeat scroll -20px -11px;
+  content: " ";
+  display: block;
+  float: left;
+  height: 38px;
+  margin: -4px 0 0 -32px;
+  width: 30px;
+}
+.pagination li.previous a {
+  padding: 0.75em 0 0.75em 3em;
+}
+.pagination li a {
+  background-color: transparent;
+  color: #005ea5;
+  display: block;
+  text-decoration: none;
+}
+
+.pagination li a .pagination-label {
+  display: block;
+  font-family: "nta",Arial,sans-serif;
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 1.25;
+  margin-bottom: 0.1em;
+  text-transform: none;
+}
+.pagination li a .pagination-part-title {
+  text-decoration: underline;
+}
+
+.pagination li.next {
+  float: right;
+  text-align: right;
+}
+
+.pagination li.next a::before {
+  background: transparent url("https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-20de3c9fa524b493538ff1b101cc2c04.png") no-repeat scroll -102px -11px;
+  content: " ";
+  display: block;
+  float: right;
+  height: 38px;
+  margin: -4px -32px 0 0;
+  width: 30px;
+}
+.pagination li.next a {
+  padding: 0.75em 3em 0.75em 0;
+}
+.blue-underline-large {
+  font-family: "nta",Arial,sans-serif;
+  font-size: 36px;
+  line-height: 1.25;
+  text-transform: none;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  margin-top: 45px;
+  border-bottom: 5px solid #005EA5;
+}
+.blue-underline-no-padding {
+  font-family: "nta",Arial,sans-serif;
+  line-height: 1.25;
+  text-transform: none;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  margin-top: 45px;
+  border-bottom: 5px solid #005EA5;
+}
+.govuk-box-highlight {
+  margin: 0 -0.1em 1em;
+  display: inline-block;
+}
+.govuk-box-highlight h1 {
+  color: #fff;
+  margin: 0 0em 0em;
+}
+.govuk-box-highlight h1.heading-large{
+  margin-bottom: 0.55556em;
+  margin-top: .8em;
+}
+
+.blue-overline-large{
+  margin-bottom: 0.5em;
+  padding-bottom: 1.5em;
+  border-top: 5px solid #005EA5;
+}
+
+.blue-underline-large {
+  margin-bottom: 0.5em;
+  padding-bottom: 1.5em;
+  border-bottom: 5px solid #005EA5;
+}
+
+.error-inline {
+  margin-top: 15px;
+  clear: both;
+  background-color: #fef7f7;
+}
+
+.tamc-js-hidden {
+  display : none;
+}
+
+.boost-below{
+  padding-bottom: 10px;
+}
+
+.blue-underline-large-thin{
+  margin-bottom: 0.5em;
+  padding-bottom: 1.5em;
+  border-bottom: 2px solid #005EA5;
+}
+
+.help-notice {
+  background: url(https://assets.digital.cabinet-office.gov.uk/static/icon-important-0976ff4a275422b183be917d4b3ef444.png) no-repeat scroll 0 2.5em;
+  padding: 0.8em 0 0.8em 2.5em;
+}
+
+.booster{
+  padding-top:10px;
+}
+
+.noBold{
+  font-weight: 300;
+}
+
+.padd-from {
+  padding-top: 18px;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.padd-to {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+p.blue-underline-large {
+  font-size:inherit;
+  font-weight:500;
+}
+
+.blue-underline-large {
+  margin-bottom: 0.5em;
+  padding-bottom: 1.5em;
+  border-bottom: 5px solid #005EA5;
+}
+
+/**Error messages - styles input**/
+.error-message{
+  font-weight:800;
+  color:#b10e1e;
+}
+.error-summary-list a{
+  font-weight:800;
+  color:#b10e1e;
+}
+.validation-summary {
+  border: 5px solid #b10e1e;
+  padding: 15px 30px;
+  margin-bottom: 30px;
+}
+.form-group .error{
+  border-left: 5px solid #b10e1e;
+  border-bottom: 2px solid #005EA5;
+}
+.error .form-control {
+  border: 4px solid #b10e1e;
+}
+
+.form-field--error .error-notification {
+  display: block;
+  font-weight: 800;
+  font-size:inherit;
+  text-transform: none;
+}
+
+.error .form-control {
+  border: 4px solid #b10e1e;
+}
+
+.form-field--error .form-control{
+  border: 4px solid #bb1100;
+}
+.report-error {
+  display: inline-block;
+  clear: both;
+  width: 100%;
+  margin: 2em 0 1.5em 0em;
+}
+/**Restyle Breadcrumbs to match PTA**/
+#global-breadcrumb ol li a {
+  color: #005ea5;
+}
+
+#global-breadcrumb nav ol li a, #global-breadcrumb nav ol li .link-style, #global-breadcrumb nav ol li .button--link-style {
+  color: #005ea5;
+}
+#global-breadcrumb {
+  background-color: #fff;
+  border-top: none;
+  border-bottom: none;
+  margin: 0em;
+  padding: 0.75em 0;
+  z-index: 50;
+}
+#global-breadcrumb nav ol li:last-child {
+  background-image: url("https://assets.digital.cabinet-office.gov.uk/static/separator-73822610794bc3a64871f144d93d6526.png");
+}
+.vertical-boost-hr
+{
+  margin-top:30px;
+  margin-bottom:30px;
+}
+/**Your Status**/
+.secondary-text-colour {
+  color: #6f777b;
+}
+.section--branded h4 {
+  border-bottom: 5px solid #005ea5;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+/**Error Message Playback**/
+.error-summary .error-summary-heading {
+  margin-top: 0;
+}
+/*** Grey button for previous years***/
+.grey-button {
+  background-color: #dee0e2;
+  border: medium none;
+  border-radius: 0;
+  box-shadow: 0 2px 0 #b5babe;
+  box-sizing: border-box;
+  color: #0b0c0c;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1.25;
+  margin: 0 15px 5px 0;
+  padding: 0.526316em 0.789474em 0.263158em;
+  position: relative;
+  text-decoration: none;
+  vertical-align: top;
+}
+.grey-button:link, .grey-button:hover, .grey-button:focus, .grey-button:visited {
+  color: #0b0c0c;
+}
+.grey-underline-large-thick {
+  border-bottom: 5px solid #6F777B;
+}
+
+.form-control{border: 2px solid #6f777b;}
+
+.remove-block
+{
+  /* Remove all decorations to look like normal text */
+  background: none;
+  border: none;
+  display: inline;
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  outline-offset: 0;
+  width: max-content;
+  /* Additional styles to look like a link */
+  color: #2a4f69;
+  cursor: pointer;
+  text-decoration: underline;
+  box-shadow: none;
+}
+.remove-block:hover
+{
+  /* Remove all decorations to look like normal text */
+  background: none;
+  border: none;
+  display: inline;
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  outline-offset: 0;
+  /* Additional styles to look like a link */
+  color: #2e8aca;
+  cursor: pointer;
+  text-decoration: underline;
+  box-shadow: none;
+}
+
+.remove-block:focus{
+  background-color: #ffbf47;
+  outline: 3px solid #ffbf47;
+  color: #4c2c92;
+}
+
+.service-info {
+  text-align: initial;
+}
+/** Link Back class **/
+.link-back::before {
+  border-bottom: 5px solid transparent;
+  border-right: 6px solid #0b0c0c;
+  border-top: 5px solid transparent;
+  content: "";
+  display: block;
+  height: 0;
+  left: 0;
+  margin-top: -6px;
+  position: absolute;
+  top: 50%;
+  width: 0;
+}
+.link-back:link, .link-back:visited, .link-back:hover, .link-back:active {
+  color: #0b0c0c;
+}
+.link-back {
+  border-bottom: 1px solid #0b0c0c;
+  color: #0b0c0c;
+  display: inline-block;
+  font-family: "nta",Arial,sans-serif;
+  font-size: 14px;
+  font-size-adjust: 0.5;
+  font-weight: 400;
+  line-height: 1.14286;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  padding-left: 14px;
+  position: relative;
+  text-decoration: none;
+  text-transform: none;
+}
+.column-third,
+.column-one-third {
+  padding: 0 15px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media (min-width: 641px) {
+  .column-third,
+  .column-one-third {
+    float: left;
+    width: 33.3333333333%;
+  }
+}
+
+.column-two-thirds {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media (min-width: 641px) {
+  .column-two-thirds {
+    float: left;
+    width: 66.6666666667%;
+  }
+}
+
+.icon {
+  vertical-align: middle;
+  margin-right: 20px;
+  position : relative !important;
+  margin-top : 0 !important
+}
+
+.icon-information {
+  width: 27px;
+  height: 27px;
+  display: inline-block;
+  float: left;
+}
+
+
+
+.notice strong {
+  display: block;
+  padding-left: 65px;
+  margin-left: -15px;
+  margin-top:-28px;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.calculator-apply-link {
+  padding-top: 7px;
+}
+.lang-select{
+  border-bottom: 0px;
+  float: right;
+  padding: 0.65em 0px;
+  text-align: right;
+  width: 100%;
+  font-size: 16px;
+}
+
+.nowrap{
+  white-space: nowrap
+}
+.align-right{
+  text-align: right;
+  padding-top: 10px;
+}
+.bold-small{
+  font-weight: 400 !important;
+}
+strong {
+  font-size : bold !important
+}
+
+.move-left{
+  margin-bottom: 20px;
+}
+
+br.clear {
+  clear: both;
+}
+
+.width10 {
+  width: 10%;
+}
+.width30 {
+  width: 30%;
+}
+.width60 {
+  width: 60%;
+}
+
+span.block {
+  display: block;
+}
+
+.panel-indent {
+  margin-top:30px;
+  margin-bottom:30px;
+}
+
+.history-page .content__body {
+  width: 100%;
+}
+
+.no-top-margin {
+  margin-top: 0;
+}
+
+.form-date .form-group-day {
+  margin: 0em 1.6em 0em 0em;
+}
+
+.form-date .form-group-month {
+  margin: 0em 1.6em 0em 0em;
+}
+
+.form-date .form-group-year {
+  margin: 0em 1.6em 0em 0em;
+}
+
