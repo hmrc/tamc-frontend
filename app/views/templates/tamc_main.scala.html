@@ -151,6 +151,10 @@
  ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
+@googleTagManager = @{
+ if(ApplicationConfig.isGTMEnabled) Map[String, String]("gtmId" -> ApplicationConfig.gtmId) else Map.empty
+}
+
 @{
 
  val arguments = Map[String, Any](
@@ -179,6 +183,7 @@
   "sidebar" -> sidebar,
   "getHelpForm" -> getHelpForm,
   "googleAnalytics" -> googleAnalytics,
+  "googleTagManager" -> googleTagManager,
 
   "scriptElems" -> Seq(
    Map("url" -> routes.Assets.at("javascripts/tamc.js")),
