@@ -16,9 +16,7 @@
 
 package config
 
-import java.net.URLEncoder
-
-import config.ApplicationConfig.{loadConfig, runModeConfiguration}
+import config.ApplicationConfig.loadConfig
 import org.joda.time.LocalDate
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
@@ -43,11 +41,13 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
-
   override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version") + '/'
 
   override lazy val analyticsToken: Option[String] = runModeConfiguration.getString("google-analytics.token")
   override lazy val analyticsHost: String = runModeConfiguration.getString("google-analytics.host").getOrElse("auto")
+
+  override lazy val isGTMEnabled: Boolean = loadConfig("google-tag-manager.enabled").toBoolean
+  override lazy val gtmId: String = loadConfig("google-tag-manager.id")
 
   override lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
   override lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
@@ -152,7 +152,8 @@ trait ApplicationConfig {
 
   val analyticsToken: Option[String]
   val analyticsHost: String
-
+  val isGTMEnabled: Boolean
+  val gtmId: String
   val frontendTemplatePath: String
 
   val marriageAllowanceUrl: String
