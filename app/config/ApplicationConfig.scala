@@ -23,6 +23,62 @@ import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
+import uk.gov.hmrc.play.frontend.binders.SafeRedirectUrl
+
+trait ApplicationConfig {
+
+  val betaFeedbackUnauthenticatedUrl: String
+  val contactFrontendPartialBaseUrl: String
+  val assetsPrefix: String
+
+  val contactFormServiceIdentifier: String
+  val pageTitle: String
+  val loginUrl: String
+  val logoutUrl: String
+  val logoutCallbackUrl: String
+  val callbackUrl: String
+  val callChargeUrl: String
+  val contactIncomeTaxHelplineUrl: String
+  val marriageAllowanceGuideUrl: String
+  val howItWorksUrl: String
+
+  val analyticsToken: Option[String]
+  val analyticsHost: String
+  val isGTMEnabled: Boolean
+  val gtmId: String
+  val frontendTemplatePath: String
+
+  val marriageAllowanceUrl: String
+  val taiFrontendUrl: String
+  val taxFreeAllowanceUrl: String
+
+  def ivNotAuthorisedUrl: String
+
+  private def createUrl(action: String) =
+    s"$loginUrl/$action?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(callbackUrl)}&failureURL=${encodeQueryStringValue(ivNotAuthorisedUrl)}"
+
+  def ivLoginUrl = createUrl(action = "registration")
+
+  def ivUpliftUrl = createUrl(action = "uplift")
+
+  val ggSignInHost: String
+  val ggSignInUrl: String
+
+  val gdsFinishedUrl: String
+  val ptaFinishedUrl: String
+
+  val LANG_CODE_ENGLISH: String
+  val LANG_CODE_WELSH: String
+  val LANG_LANG_WELSH: String
+  val LANG_LANG_ENGLISH: String
+
+  val isWelshEnabled: Boolean
+  val webchatId: String
+  /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
+  lazy val refreshInterval = 900
+  lazy val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
+  def accessibilityStatementUrl(relativeReferrerPath: String): String
+}
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
@@ -131,58 +187,9 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
   override val isWelshEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
   lazy val webchatId = loadConfig("webchat.id")
-}
 
-trait ApplicationConfig {
-
-  val betaFeedbackUnauthenticatedUrl: String
-  val contactFrontendPartialBaseUrl: String
-  val assetsPrefix: String
-
-  val contactFormServiceIdentifier: String
-  val pageTitle: String
-  val loginUrl: String
-  val logoutUrl: String
-  val logoutCallbackUrl: String
-  val callbackUrl: String
-  val callChargeUrl: String
-  val contactIncomeTaxHelplineUrl: String
-  val marriageAllowanceGuideUrl: String
-  val howItWorksUrl: String
-
-  val analyticsToken: Option[String]
-  val analyticsHost: String
-  val isGTMEnabled: Boolean
-  val gtmId: String
-  val frontendTemplatePath: String
-
-  val marriageAllowanceUrl: String
-  val taiFrontendUrl: String
-  val taxFreeAllowanceUrl: String
-
-  def ivNotAuthorisedUrl: String
-
-  private def createUrl(action: String) =
-    s"$loginUrl/$action?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(callbackUrl)}&failureURL=${encodeQueryStringValue(ivNotAuthorisedUrl)}"
-
-  def ivLoginUrl = createUrl(action = "registration")
-
-  def ivUpliftUrl = createUrl(action = "uplift")
-
-  val ggSignInHost: String
-  val ggSignInUrl: String
-
-  val gdsFinishedUrl: String
-  val ptaFinishedUrl: String
-
-  val LANG_CODE_ENGLISH: String
-  val LANG_CODE_WELSH: String
-  val LANG_LANG_WELSH: String
-  val LANG_LANG_ENGLISH: String
-
-  val isWelshEnabled: Boolean
-  val webchatId: String
-  /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
-  lazy val refreshInterval = 900
-  lazy val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
+  val frontendHost = loadConfig("tamc-frontend.host")
+  val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
+  override def accessibilityStatementUrl(relativeReferrerPath: String): String =
+    accessibilityStatementHost + "/marriage-allowance?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl
 }
