@@ -31,7 +31,7 @@ import scala.util.Try
 
 object DivorceSelectYearForm {
 
-  val DateOfDivorce = "dateOfDivorce"
+  val  DateOfDivorce = "dateOfDivorce"
   val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
   val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE)
 
