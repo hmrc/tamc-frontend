@@ -61,7 +61,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(
-          "http://localhost:9025/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
+          "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
         )
       }
     }

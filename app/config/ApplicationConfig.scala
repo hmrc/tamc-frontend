@@ -115,8 +115,8 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
-  override lazy val ggSignInHost: String = runModeConfiguration.getString("microservice.bas-gateway.host").getOrElse("")
-  override lazy val ggSignInUrl: String = s"$ggSignInHost/gg/sign-in?continue=${encodeQueryStringValue(callbackUrl)}"
+  override lazy val ggSignInHost: String = runModeConfiguration.getString("microservice.bas-gateway-frontend.host").getOrElse("")
+  override lazy val ggSignInUrl: String = s"$ggSignInHost/bas-gateway/sign-in?continue_url=${encodeQueryStringValue(callbackUrl)}"
 
   override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
   override lazy val taiFrontendUrl: String = s"${runModeConfiguration.getString("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
