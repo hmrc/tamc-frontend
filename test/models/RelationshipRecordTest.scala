@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,13 +94,13 @@ class RelationshipRecordTest extends UnitSpec {
       "participant endDate is in PastYear" in {
         val relationshipRecord = relationshipActiveRecordWithPastValidDate
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018)
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2019, 2018)
       }
 
       "participant endDate is in FutureYear" in {
         val relationshipRecord = relationshipActiveRecordWithFutureValidDate
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020)
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2020)
       }
 
       "participant startDate and endDate is in same year" in {

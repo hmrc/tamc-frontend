@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ class TimeServiceTest extends BaseTest {
     }
 
     "return valid list if years > than minim allowed is passed" in {
-      val year = timeService.getCurrentDate.getYear
+      val year = timeService.getCurrentTaxYear
       val from = year - 10
       val to = year + 5
       val list: List[models.TaxYear] = (from to to).map(year => {
