@@ -23,7 +23,7 @@ import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
-import uk.gov.hmrc.play.frontend.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 
 trait ApplicationConfig {
 
@@ -79,6 +79,7 @@ trait ApplicationConfig {
   lazy val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
   def accessibilityStatementUrl(relativeReferrerPath: String): String
 }
+
 
 object ApplicationConfig extends ApplicationConfig with ServicesConfig {
 
