@@ -16,14 +16,14 @@
 
 package services
 
+import com.google.inject.Inject
 import config.ApplicationConfig
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
-import uk.gov.hmrc.time.TaxYear
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import uk.gov.hmrc.time.CurrentTaxYear
 
-object TimeService extends TimeService
-
-trait TimeService {
+//TODO inject appConfig
+class TimeService @Inject()(taxYear: CurrentTaxYear, appConfig: ApplicationConfig) {
 
   def isFutureDate(date: LocalDate): Boolean =
     date.isAfter(getCurrentDate)
@@ -32,19 +32,19 @@ trait TimeService {
     LocalDate.now()
 
   def getCurrentTaxYear: Int =
-    TaxYear.current.startYear
+    taxYear.current.startYear
 
   def getTaxYearForDate(date: LocalDate): Int =
-    TaxYear.taxYearFor(date).startYear
+    taxYear.taxYearFor(date).startYear
 
   def getStartDateForTaxYear(year: Int): LocalDate =
-    TaxYear.firstDayOfTaxYear(year)
+    taxYear.firstDayOfTaxYear(year)
 
   def getPreviousYearDate: LocalDate =
     LocalDate.now().minusYears(1)
 
   def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
-    LocalDate.parse(date, DateTimeFormat.forPattern(format))
+    LocalDate.parse(date, DateTimeFormatter.ofPattern(format))
 
   /**
     * TODO Need to change and call this method right before send list of years

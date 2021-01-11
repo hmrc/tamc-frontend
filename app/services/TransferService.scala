@@ -16,7 +16,8 @@
 
 package services
 
-import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
+import com.google.inject.Inject
+import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors._
 import events._
@@ -33,25 +34,18 @@ import views.helpers.LanguageUtils
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object TransferService extends TransferService {
-  override val marriageAllowanceConnector = MarriageAllowanceConnector
-  override val customAuditConnector = ApplicationAuditConnector
-  override val cachingService = CachingService
-  override val timeService = TimeService
-  override val applicationService = ApplicationService
-}
 
-trait TransferService {
-
-  val marriageAllowanceConnector: MarriageAllowanceConnector
-  val customAuditConnector: AuditConnector
-  val cachingService: CachingService
-  val timeService: TimeService
-  val applicationService: ApplicationService
+class TransferService @Inject()(
+                               marriageAllowanceConnector: MarriageAllowanceConnector,
+                               auditConnector: AuditConnector,
+                               cachingService: CachingService,
+                               timeService: TimeService,
+                               applicationService: ApplicationService
+                               ) {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
-      customAuditConnector.sendEvent(event)
+      auditConnector.sendEvent(event)
     }
 
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)

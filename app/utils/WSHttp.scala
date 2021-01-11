@@ -18,7 +18,6 @@ package utils
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
-import connectors.ApplicationAuditConnector
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.http.{HttpDelete, HttpGet, HttpPost, HttpPut}

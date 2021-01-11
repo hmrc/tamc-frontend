@@ -16,12 +16,14 @@
 
 package services
 
-import org.joda.time.LocalDate
-import uk.gov.hmrc.time.TaxYear
+import java.time.LocalDate
 
-object EndDateForMACeased {
+import com.google.inject.Inject
+import uk.gov.hmrc.time.CurrentTaxYear
 
-  def endDate: LocalDate = TaxYear.current.finishes
-  def personalAllowanceEffectiveDate: LocalDate = TaxYear.current.next.starts
+class EndDateForMACeased @Inject()(taxYear: CurrentTaxYear) {
+
+  def endDate: LocalDate = taxYear.current.finishes
+  def personalAllowanceEffectiveDate: LocalDate = taxYear.current.next.starts
 
 }

@@ -16,9 +16,11 @@
 
 package connectors
 
+import com.google.inject.Inject
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.frontend.config.LoadAuditingConfig
+import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
 
-object ApplicationAuditConnector extends AuditConnector {
-  override lazy val auditingConfig = LoadAuditingConfig("auditing")
+class ApplicationAuditConnector @Inject()(config: Configuration, environment: Environment) extends AuditConnector {
+  override lazy val auditingConfig = LoadAuditingConfig(config, environment.mode,"auditing")
 }

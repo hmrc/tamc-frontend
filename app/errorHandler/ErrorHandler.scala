@@ -26,24 +26,18 @@ import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ErrorHandler @Inject()(
-                                val messagesApi: MessagesApi,
-                                val configuration: Configuration
+                             val messagesApi: MessagesApi,
+                             val configuration: Configuration,
+                             formPartialRetriever: TamcFormPartialRetriever
                             )
                             (implicit
                              templateRender: TemplateRenderer,
                              lang: Lang
                             ) extends FrontendErrorHandler {
 
-  implicit val formPartialRetriever = TamcFormPartialRetriever
-
-  private def lang(implicit request: Request[_]): Lang =
-    Lang(request.cookies.get("PLAY_LANG").fold("en")(_.value))
-
-
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = views.html.templates.error_template(pageTitle, heading, message)
 
   override def notFoundTemplate(implicit request: Request[_]): Html = {
-    implicit val _: Lang = lang
     views.html.templates.page_not_found_template(config.ApplicationConfig, formPartialRetriever)
   }
 }

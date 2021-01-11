@@ -35,9 +35,9 @@ import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import views.helpers.LanguageUtils
 
 import scala.concurrent.Future
 
@@ -76,13 +76,11 @@ class TransferController @Inject()(
   def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
     implicit request =>
       Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
   def dateOfMarriageWithEn: Action[AnyContent] = authenticate {
     implicit request =>
       Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async {
