@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.emailaddress
 
+import java.time.{OffsetDateTime, ZonedDateTime}
+
 import org.joda.time.DateTime
 import play.api.data.Forms.{of, optional, text, tuple}
 import play.api.data.format.Formatter
@@ -102,7 +104,7 @@ object PlayFormFormatter {
   def validDateTuple(missingPartError: String = "error.enter_full_date",
                      allAbsentError: String = "error.enter_a_date",
                      nonNumericError: String = "error.enter_numbers",
-                     invalidError: String = "error.enter_valid_date"): Mapping[DateTime] = {
+                     invalidError: String = "error.enter_valid_date"): Mapping[ZonedDateTime] = {
 
     def verifyDigits(triple: (String, String, String )) =
       triple._1.forall(_.isDigit) && triple._2.forall(_.isDigit) && triple._3.forall(_.isDigit)

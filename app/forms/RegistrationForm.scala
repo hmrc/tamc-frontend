@@ -20,7 +20,8 @@ import java.text.SimpleDateFormat
 
 import config.ApplicationConfig
 import models.{Gender, RegistrationFormInput}
-import java.time.{DateTime, LocalDate}
+import java.time.{LocalDate, OffsetDateTime, ZonedDateTime}
+
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
 import play.api.data.validation.Constraints.pattern
@@ -127,7 +128,7 @@ object RegistrationForm {
       "pages.form.field.dom.error.enter_a_date",
       "pages.form.field.dom.error.enter_numbers",
       "pages.form.field.dom.error.enter_valid_date")
-      .transform[LocalDate](dt => dt.toLocalDate, ld => new DateTime(ld.getYear(), ld.getMonthOfYear(), ld.getDayOfMonth(), 0, 0).withTimeAtStartOfDay())
+      .transform[LocalDate](dt => dt.toLocalDate, ld => new ZonedDateTime()(ld.getYear, ld.getMonth, ld.getDayOfMonth, 0, 0))
       .verifying(error = Messages("pages.form.field.dom.error.min-date", minDate.toString("d MM YYYY")), constraint = _.isAfter(minDate))
       .verifying(error = Messages("pages.form.field.dom.error.max-date", maxDate.toString("d MM YYYY")), constraint = _.isBefore(maxDate))
   }
