@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 
 import config.ApplicationConfig
 import models.{Gender, RegistrationFormInput}
-import org.joda.time.{DateTime, LocalDate}
+import java.time.{DateTime, LocalDate}
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
 import play.api.data.validation.Constraints.pattern

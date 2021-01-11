@@ -17,7 +17,7 @@
 package models
 
 import play.api.libs.json.Json
-import services.TimeService._
+import services.TimeService
 
 case class RelationshipRecord(participant: String,
                               creationTimestamp: String,

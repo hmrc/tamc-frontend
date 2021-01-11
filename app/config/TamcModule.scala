@@ -32,7 +32,7 @@ class TamcModule extends Module {
       bind[AuthConnector].to[TamcAuthConnector],
       bind[HttpClient].to[DefaultHttpClient],
       bind[AuditConnector].to[ApplicationAuditConnector],
-      bind[TimeService].toInstance(TimeService),
+      bind[TimeService].to[TimeService],
       bind[TransferService].to[TransferService],
       bind[UpdateRelationshipService].toInstance(UpdateRelationshipService),
       bind[CachingService].toInstance(CachingService),
