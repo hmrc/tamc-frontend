@@ -16,6 +16,6 @@
 
 package models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 
 case class ChangeRelationship(role: Option[String], endReason: Option[String], historicActiveRecord: Option[Boolean] = Some(false), creationTimestamp: Option[String] = None, dateOfDivorce: Option[LocalDate] = None)

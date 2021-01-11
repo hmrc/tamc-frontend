@@ -17,10 +17,11 @@
 package forms
 
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 
 import config.ApplicationConfig
 import models.{Gender, RegistrationFormInput}
-import java.time.{LocalDate, OffsetDateTime, ZonedDateTime}
+import java.time.{LocalDate, OffsetDateTime, ZoneId, ZonedDateTime}
 
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
@@ -128,9 +129,10 @@ object RegistrationForm {
       "pages.form.field.dom.error.enter_a_date",
       "pages.form.field.dom.error.enter_numbers",
       "pages.form.field.dom.error.enter_valid_date")
-      .transform[LocalDate](dt => dt.toLocalDate, ld => new ZonedDateTime()(ld.getYear, ld.getMonth, ld.getDayOfMonth, 0, 0))
-      .verifying(error = Messages("pages.form.field.dom.error.min-date", minDate.toString("d MM YYYY")), constraint = _.isAfter(minDate))
-      .verifying(error = Messages("pages.form.field.dom.error.max-date", maxDate.toString("d MM YYYY")), constraint = _.isBefore(maxDate))
+      .transform[LocalDate](dt => dt.toLocalDate,
+        ld => ZonedDateTime.of(ld.getYear, ld.getMonthValue, ld.getDayOfMonth, 0, 0, 0, 0, ZoneId.systemDefault()))
+      .verifying(error = Messages("pages.form.field.dom.error.min-date", minDate.format(DateTimeFormatter.ofPattern("d MM YYYY"))), constraint = _.isAfter(minDate))
+      .verifying(error = Messages("pages.form.field.dom.error.max-date", maxDate.format(DateTimeFormatter.ofPattern("d MM YYYY"))), constraint = _.isBefore(maxDate))
   }
 
   def registrationForm(today: LocalDate, transferorNino: Nino)(implicit messages: Messages) = Form[RegistrationFormInput](

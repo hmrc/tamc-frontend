@@ -25,8 +25,8 @@
 @(form: Form[models.CurrentYearInput],
 historicYearsAvailable: Boolean,
 recipientName: String,
-dom: Option[org.joda.time.LocalDate],
-cy: Option[org.joda.time.LocalDate])(
+dom: Option[java.time.LocalDate],
+cy: Option[java.time.LocalDate])(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,

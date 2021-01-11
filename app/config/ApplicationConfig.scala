@@ -17,7 +17,7 @@
 package config
 
 import config.ApplicationConfig.loadConfig
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.Mode.Mode
 import play.api.{Configuration, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -130,7 +130,7 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val TAMC_BEGINNING_YEAR: Int = runModeConfiguration.getInt("tamc-earliest-valid-year")
     .getOrElse(throw new RuntimeException("Cannot find 'tamc-earliest-valid-year' in 'data/tax-rates.conf'!"))
 
-  val TAMC_MIN_DATE: LocalDate = new LocalDate(1900,1 , 1)
+  val TAMC_MIN_DATE: LocalDate = LocalDate.of(1900, 1, 1)
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
   val generalEnquiriesLink = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 

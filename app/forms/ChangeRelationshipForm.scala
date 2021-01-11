@@ -18,14 +18,16 @@ package forms
 
 import config.ApplicationConfig
 import models.ChangeRelationship
-import org.joda.time.LocalDate
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import com.google.inject.Inject
 import play.api.data.Forms._
 import play.api.data._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import services.TimeService
-import uk.gov.hmrc.play.mappers.DateTuple._
 
-object ChangeRelationshipForm {
+class ChangeRelationshipForm @Inject()(timeService: TimeService) {
 
   val changeRelationshipForm = Form[ChangeRelationship](
     mapping(
@@ -37,22 +39,22 @@ object ChangeRelationshipForm {
 
   private def getOptionalLocalDate(day: Option[Int], month: Option[Int], year: Option[Int]): Option[LocalDate] =
     (day, month, year) match {
-      case (Some(d), Some(m), Some(y)) => Some(new LocalDate(y, m, d))
+      case (Some(d), Some(m), Some(y)) => Some(LocalDate.of(y, m, d))
       case _ => None
     }
 
-  private def dateOfDivorce() = dateTuple()
+  private def dateOfDivorce() = optional(localDate)
 
   private def checkDateRange(): Constraint[Option[LocalDate]] = Constraint[Option[LocalDate]]("date.range") { dod =>
     dod match {
       case None => Invalid(ValidationError("pages.form.field.dod.error.required"))
-      case Some(date) if date.isAfter(TimeService.getCurrentDate) => Invalid(ValidationError("pages.form.field.dom.error.max-date", date.toString("dd/MM/yyyy")))
+      case Some(date) if date.isAfter(timeService.getCurrentDate) => Invalid(ValidationError("pages.form.field.dom.error.max-date", date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
       case Some(date) if date.isBefore(ApplicationConfig.TAMC_MIN_DATE) => Invalid(ValidationError("pages.form.field.dom.error.min-date"))
       case _ => Valid
     }
   }
 
-  private def dateOfDivorceValidator() = dateTuple().verifying(checkDateRange())
+  private def dateOfDivorceValidator() = optional(localDate).verifying(checkDateRange())
 
   val updateRelationshipDivorceNoDodForm = Form[ChangeRelationship](
     mapping(

@@ -16,12 +16,12 @@
 
 package models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json.{Format, Json, Reads, Writes}
 
 object DateOfMarriageFormInput {
   private val pattern = "dd/MM/yyyy"
-  implicit val dateFormat = Format[LocalDate](Reads.jodaLocalDateReads(pattern), Writes.jodaLocalDateWrites(pattern))
+  implicit val dateFormat = Format[LocalDate](Reads.DefaultLocalDateReads(pattern), Writes.DefaultLocalDateWrites(pattern))
   implicit val formats = Json.format[DateOfMarriageFormInput]
 }
 
