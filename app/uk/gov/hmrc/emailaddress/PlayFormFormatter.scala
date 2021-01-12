@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.emailaddress
 
-import java.time.{OffsetDateTime, ZonedDateTime}
+import java.time.{OffsetDateTime, ZoneId, ZonedDateTime}
 
 import org.joda.time.DateTime
 import play.api.data.Forms.{of, optional, text, tuple}
@@ -118,7 +118,11 @@ object PlayFormFormatter {
       .transform[(String,String,String)]( x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
       .verifying(invalidError, x => !verifyDigits(x) || Try(new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
-      .transform[DateTime](x => new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0).withTimeAtStartOfDay, x => (x.getYear.toString, x.getMonthOfYear.toString, x.getDayOfMonth.toString))
+      .transform[ZonedDateTime](
+      x => ZonedDateTime.of(
+        x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
+        x => (x.getYear.toString, x.getMonth.toString, x.getDayOfMonth.toString)
+      )
   }
 
   private def datePartsArePresent(name: String = "constraint.datepresent",

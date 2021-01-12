@@ -16,13 +16,13 @@
 
 package services
 
-import com.google.inject.Inject
+import  com.google.inject.Inject
 import config.ApplicationConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import uk.gov.hmrc.time.CurrentTaxYear
 
-//TODO inject appConfig
+//TODO look into making this class a util or deleting
 class TimeService @Inject()(taxYear: CurrentTaxYear, appConfig: ApplicationConfig) {
 
   def isFutureDate(date: LocalDate): Boolean =

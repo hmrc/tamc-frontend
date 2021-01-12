@@ -16,41 +16,33 @@
 
 package services
 
+import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
-import errors.{CacheMapNoFound, CacheMissingRelationshipRecords, TransferorNotFound}
+import errors.{CacheMapNoFound, TransferorNotFound}
 import models._
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.Mode.Mode
 import play.api.libs.json.{Reads, Writes}
-import play.api.{Configuration, Play}
+import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
-import utils.WSHttp
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object CachingService extends CachingService {
-  override lazy val http = WSHttp
+class CachingService @Inject()(marriageAllowanceConnector: MarriageAllowanceConnector, val http: HttpClient, val runModeConfiguration: Configuration, environment: Environment) extends SessionCache with AppName with ServicesConfig {
   override lazy val defaultSource = appName
   override lazy val baseUri = baseUrl("cachable.session-cache")
   override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
-  override def marriageAllowanceConnector: MarriageAllowanceConnector = MarriageAllowanceConnector
 
-}
+  override protected def mode: Mode = environment.mode
 
-trait CachingService extends SessionCache with AppName with ServicesConfig {
-
-  override protected def mode: Mode = Play.current.mode
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
   override protected def appNameConfiguration: Configuration = runModeConfiguration
 
-  def marriageAllowanceConnector: MarriageAllowanceConnector
-
-  def cacheValue[T](key: String, value:T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
+  def cacheValue[T](key: String, value: T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
     cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException(s"Failed to retrieve $key from cache after saving")))
   }
 
@@ -74,6 +66,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     cache[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE, details) map
       (_.getEntry[DateOfMarriageFormInput](ApplicationConfig.CACHE_MARRIAGE_DATE).get)
   }
+
   def saveNotificationRecord(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     cache[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD, notificationRecord) map
       (_.getEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD).get)
@@ -153,7 +146,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
     fetch() map (
       _ map (
         cacheMap =>
-            EligibilityCheckCacheData(
+          EligibilityCheckCacheData(
             loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](ApplicationConfig.CACHE_LOGGEDIN_USER_RECORD),
             roleRecord = cacheMap.getEntry[String](ApplicationConfig.CACHE_ROLE_RECORD),
             activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](ApplicationConfig.CACHE_ACTIVE_RELATION_RECORD),
@@ -163,22 +156,21 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             relationshipUpdated = cacheMap.getEntry[Boolean](ApplicationConfig.CACHE_LOCKED_UPDATE))))
 
 
-
-    def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] = {
+  def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] = {
     fetch() map { optionalCacheMap =>
-      optionalCacheMap.fold(throw CacheMapNoFound()){ cacheMap =>
-          val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
-          val marriageAllowanceEndingDate = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES).map(_.marriageAllowanceEndDate)
-          val endReason = cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
-          val relationshipRecord = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
+      optionalCacheMap.fold(throw CacheMapNoFound()) { cacheMap =>
+        val emailAddress = cacheMap.getEntry[String](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+        val marriageAllowanceEndingDate = cacheMap.getEntry[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES).map(_.marriageAllowanceEndDate)
+        val endReason = cacheMap.getEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+        val relationshipRecord = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
-          UpdateRelationshipCacheData(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDate)
+        UpdateRelationshipCacheData(relationshipRecord, emailAddress, endReason, marriageAllowanceEndingDate)
       }
     }
   }
 
   def getConfirmationAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswersCacheData] = {
-    fetch () map {
+    fetch() map {
       optionalCacheMap =>
         optionalCacheMap.fold(throw CacheMapNoFound()) {
           cacheMap =>
@@ -188,7 +180,7 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             val relationshipRecords = cacheMap.getEntry[RelationshipRecords](ApplicationConfig.CACHE_RELATIONSHIP_RECORDS)
 
             ConfirmationUpdateAnswersCacheData(relationshipRecords, divorceDate, emailAddress, marriageAllowanceEndingDate)
-      }
+        }
     }
   }
 
@@ -204,19 +196,20 @@ trait CachingService extends SessionCache with AppName with ServicesConfig {
             .map(_ => Future.successful(Some(cacheMap)))
             .getOrElse {
               marriageAllowanceConnector.listRelationship(nino) flatMap {
-                data => data.userRecord.map {
-                  loggedInUser =>
-                    val userRecord: UserRecord = UserRecord(
-                      cid = loggedInUser.cid,
-                      timestamp = loggedInUser.timestamp,
-                      has_allowance = None,
-                      name = loggedInUser.name)
+                data =>
+                  data.userRecord.map {
+                    loggedInUser =>
+                      val userRecord: UserRecord = UserRecord(
+                        cid = loggedInUser.cid,
+                        timestamp = loggedInUser.timestamp,
+                        has_allowance = None,
+                        name = loggedInUser.name)
 
-                    cache[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD, userRecord)
-                      .map(Some.apply)
-                }.getOrElse {
-                  throw TransferorNotFound()
-                }
+                      cache[UserRecord](ApplicationConfig.CACHE_TRANSFEROR_RECORD, userRecord)
+                        .map(Some.apply)
+                  }.getOrElse {
+                    throw TransferorNotFound()
+                  }
               }
             }
       }.getOrElse(Future.successful(None))

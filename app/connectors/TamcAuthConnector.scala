@@ -17,10 +17,10 @@
 package connectors
 
 import com.google.inject.Inject
-import config.HttpClient
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.play.config.ServicesConfig
 
 class TamcAuthConnector @Inject()(

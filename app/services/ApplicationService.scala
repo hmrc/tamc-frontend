@@ -16,16 +16,11 @@
 
 package services
 
+import com.google.inject.Inject
 import config.ApplicationConfig
 import models.{DesRelationshipEndReason, RelationshipRecord}
 
-object ApplicationService extends ApplicationService {
-  override val timeService = TimeService
-}
-
-trait ApplicationService {
-
-  val timeService: TimeService
+class ApplicationService @Inject()(timeService: TimeService)  {
 
   def canApplyForMarriageAllowance(
                                     historicRelationships: Option[Seq[RelationshipRecord]],

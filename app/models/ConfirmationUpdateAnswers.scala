@@ -17,7 +17,7 @@
 package models
 
 import errors.{CacheMissingEmail, CacheMissingMAEndingDates, CacheMissingRelationshipRecords}
-import org.joda.time.LocalDate
+import java.time.LocalDate
 
 case class ConfirmationUpdateAnswers(loggedInUserInfo: LoggedInUserInfo, divorceDate: Option[LocalDate], email: String, maEndingDates: MarriageAllowanceEndingDates)
 

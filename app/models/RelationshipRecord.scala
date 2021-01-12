@@ -16,8 +16,10 @@
 
 package models
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import play.api.libs.json.Json
-import services.TimeService
 
 case class RelationshipRecord(participant: String,
                               creationTimestamp: String,
@@ -31,6 +33,28 @@ case class RelationshipRecord(participant: String,
     case None => true
     case Some(date) => isFutureDate(parseDateWithFormat(date))
   }
+
+  def isFutureDate(date: LocalDate): Boolean =
+    date.isAfter(getCurrentDate)
+
+  def getCurrentDate: LocalDate =
+    LocalDate.now()
+
+  def getCurrentTaxYear: Int =
+    uk.gov.hmrc.time.TaxYear.current.startYear
+
+  def getTaxYearForDate(date: LocalDate): Int =
+    uk.gov.hmrc.time.TaxYear.taxYearFor(date).startYear
+
+  def getStartDateForTaxYear(year: Int): LocalDate =
+    uk.gov.hmrc.time.TaxYear.firstDayOfTaxYear(year)
+
+  def getPreviousYearDate: LocalDate =
+    LocalDate.now().minusYears(1)
+
+  def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
+    LocalDate.parse(date, DateTimeFormatter.ofPattern(format))
+
 
   val role: Role = Role(participant)
 

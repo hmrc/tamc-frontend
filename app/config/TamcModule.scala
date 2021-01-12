@@ -30,15 +30,14 @@ class TamcModule extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
-      bind[HttpClient].to[DefaultHttpClient],
       bind[AuditConnector].to[ApplicationAuditConnector],
       bind[TimeService].to[TimeService],
       bind[TransferService].to[TransferService],
-      bind[UpdateRelationshipService].toInstance(UpdateRelationshipService),
-      bind[CachingService].toInstance(CachingService),
+      bind[UpdateRelationshipService].to[UpdateRelationshipService],
+      bind[CachingService].to[CachingService],
       bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService),
-      bind[ApplicationService].toInstance(ApplicationService),
-      bind[TemplateRenderer].toInstance(LocalTemplateRenderer),
+      bind[ApplicationService].to[ApplicationService],
+      bind[TemplateRenderer].to[LocalTemplateRenderer],
       bind[FormPartialRetriever].to[TamcFormPartialRetriever]
     )
 }

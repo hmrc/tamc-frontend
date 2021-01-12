@@ -16,13 +16,16 @@
 
 package services
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
-import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
@@ -35,17 +38,14 @@ import views.helpers.LanguageUtils
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object UpdateRelationshipService extends UpdateRelationshipService {
-  override val marriageAllowanceConnector = MarriageAllowanceConnector
-  override val customAuditConnector = ApplicationAuditConnector
-  override val cachingService = CachingService
-}
-
-trait UpdateRelationshipService {
-
-  val marriageAllowanceConnector: MarriageAllowanceConnector
-  val customAuditConnector: AuditConnector
-  val cachingService: CachingService
+class UpdateRelationshipService @Inject()(
+                                           applicationAuditConnector: ApplicationAuditConnector,
+                                           marriageAllowanceConnector: MarriageAllowanceConnector,
+                                           endDateForMACeased: EndDateForMACeased,
+                                           endDateDivorceCalculator: EndDateDivorceCalculator,
+                                           auditConnector: AuditConnector,
+                                           cachingService: CachingService
+                                         ) {
 
   def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_))
@@ -137,7 +137,7 @@ trait UpdateRelationshipService {
 
     def relationshipInformation(creationTimeStamp: String, relationshipEndReason: String, endDate: LocalDate): RelationshipInformation = {
 
-      val endDateFormatted = endDate.toString("yyyyMMdd")
+      val endDateFormatted = endDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
       val desEnumeration = relationshipEndReason match {
         case "Divorce" => "Divorce/Separation"
         case "Cancel" => "Cancelled by Transferor"
@@ -148,12 +148,12 @@ trait UpdateRelationshipService {
     }
 
     def updateRelationshipNotificationRequest(email: String, primaryRole: Role, loggedInUserInfo: LoggedInUserInfo, isWelsh: Boolean):
-     UpdateRelationshipNotificationRequest = {
-        val role = primaryRole.value
-        val name = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
-        val emailAddress = EmailAddress(email)
+    UpdateRelationshipNotificationRequest = {
+      val role = primaryRole.value
+      val name = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
+      val emailAddress = EmailAddress(email)
 
-        UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)
+      UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)
     }
 
     for {
@@ -170,16 +170,16 @@ trait UpdateRelationshipService {
   }
 
   def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
-    val marriageAllowanceEndDate = EndDateForMACeased.endDate
-    val personalAllowanceEffectiveDate = EndDateForMACeased.personalAllowanceEffectiveDate
+    val marriageAllowanceEndDate = endDateForMACeased.endDate
+    val personalAllowanceEffectiveDate = endDateForMACeased.personalAllowanceEffectiveDate
 
     MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
   }
 
   def getMAEndingDatesForDivorce(role: Role, divorceDate: LocalDate): MarriageAllowanceEndingDates = {
 
-    val marriageAllowanceEndDate = EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
-    val personalAllowanceEffectiveDate = EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
+    val marriageAllowanceEndDate = endDateDivorceCalculator.calculateEndDate(role, divorceDate)
+    val personalAllowanceEffectiveDate = endDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
 
     MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
 
@@ -197,7 +197,7 @@ trait UpdateRelationshipService {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
-      customAuditConnector.sendEvent(event)
+      auditConnector.sendEvent(event)
     }
 
   private def sendUpdateRelationship(transferorNino: Nino,

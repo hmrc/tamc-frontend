@@ -16,7 +16,7 @@
 
 package models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json.Json
 
 case class MarriageAllowanceEndingDates(marriageAllowanceEndDate: LocalDate, personalAllowanceEffectiveDate: LocalDate)
