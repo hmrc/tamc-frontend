@@ -31,7 +31,7 @@ class TamcModule extends Module {
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
       bind[AuditConnector].to[ApplicationAuditConnector],
-      bind[TimeService].to[TimeService],
+      bind[TimeService].toInstance(TimeService),
       bind[TransferService].to[TransferService],
       bind[UpdateRelationshipService].to[UpdateRelationshipService],
       bind[CachingService].to[CachingService],

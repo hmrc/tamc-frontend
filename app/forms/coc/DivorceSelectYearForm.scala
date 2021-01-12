@@ -16,7 +16,6 @@
 
 package forms.coc
 
-import com.google.inject.Inject
 import config.ApplicationConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -30,10 +29,10 @@ import views.helpers.LanguageUtils
 
 import scala.util.Try
 
-class DivorceSelectYearForm @Inject()(timeService: TimeService){
+object DivorceSelectYearForm {
 
   val DateOfDivorce = "dateOfDivorce"
-  val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(timeService.getCurrentDate)
+  val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
   val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE)
 
   def isNonNumericDate(year: String, month: String, day: String): Boolean = !s"$year$month$day".forall(_.isDigit)
@@ -87,7 +86,7 @@ class DivorceSelectYearForm @Inject()(timeService: TimeService){
       LanguageUtils().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
       Invalid(ValidationError("pages.divorce.date.error.max.date",
-        LanguageUtils().ukDateTransformer(timeService.getCurrentDate.plusDays(1))))
+        LanguageUtils().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))
     case _ => Valid
   }
 

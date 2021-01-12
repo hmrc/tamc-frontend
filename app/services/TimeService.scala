@@ -16,14 +16,16 @@
 
 package services
 
-import  com.google.inject.Inject
 import config.ApplicationConfig
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import uk.gov.hmrc.time.CurrentTaxYear
 
-//TODO look into making this class a util or deleting
-class TimeService @Inject()(taxYear: CurrentTaxYear, appConfig: ApplicationConfig) {
+import uk.gov.hmrc.time.TaxYear
+
+//TODO look into making this a util or deleting. It Is Not a Service!
+object TimeService extends TimeService
+
+trait TimeService {
 
   def isFutureDate(date: LocalDate): Boolean =
     date.isAfter(getCurrentDate)
@@ -32,13 +34,13 @@ class TimeService @Inject()(taxYear: CurrentTaxYear, appConfig: ApplicationConfi
     LocalDate.now()
 
   def getCurrentTaxYear: Int =
-    taxYear.current.startYear
+    TaxYear.current.startYear
 
   def getTaxYearForDate(date: LocalDate): Int =
-    taxYear.taxYearFor(date).startYear
+    TaxYear.taxYearFor(date).startYear
 
   def getStartDateForTaxYear(year: Int): LocalDate =
-    taxYear.firstDayOfTaxYear(year)
+    TaxYear.firstDayOfTaxYear(year)
 
   def getPreviousYearDate: LocalDate =
     LocalDate.now().minusYears(1)

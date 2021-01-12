@@ -38,9 +38,7 @@ import scala.util.control.NonFatal
 class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
-                                              updateRelationshipService: UpdateRelationshipService,
-                                              timeService: TimeService,
-                                              divorceSelectYearForm: DivorceSelectYearForm
+                                              updateRelationshipService: UpdateRelationshipService
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
 
@@ -184,18 +182,18 @@ class UpdateRelationshipController @Inject()(
   def divorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getDivorceDate map { optionalDivorceDate =>
-        optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(divorceSelectYearForm.form))){ divorceDate =>
-          Ok(views.html.coc.divorce_select_year(divorceSelectYearForm.form.fill(divorceDate)))
+        optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))){ divorceDate =>
+          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
         }
       } recover {
         case NonFatal(_) =>
-          Ok(views.html.coc.divorce_select_year(divorceSelectYearForm.form))
+          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))
       }
   }
 
   def submitDivorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
-      divorceSelectYearForm.form.bindFromRequest.fold(
+      DivorceSelectYearForm.form.bindFromRequest.fold(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.divorce_select_year(formWithErrors)))
         }, {

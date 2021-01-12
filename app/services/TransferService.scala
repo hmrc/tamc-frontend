@@ -39,7 +39,6 @@ class TransferService @Inject()(
                                marriageAllowanceConnector: MarriageAllowanceConnector,
                                auditConnector: AuditConnector,
                                cachingService: CachingService,
-                               timeService: TimeService,
                                applicationService: ApplicationService
                                ) {
 
@@ -62,7 +61,7 @@ class TransferService @Inject()(
       cache <- cachingService.getCachedDataForEligibilityCheck
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
+      validYears = TimeService.getValidYearsApplyMAPreviousYears(taxYears)
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
 
@@ -70,7 +69,7 @@ class TransferService @Inject()(
                                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
-        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
+        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, TimeService.getTaxYearForDate(dom)) =>
         Future(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()
       case _ => throw CacheMissingTransferor()
