@@ -16,7 +16,7 @@
 
 package services
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
@@ -35,7 +35,7 @@ class TimeServiceTest extends BaseTest {
       val year = 2017
       val month = 4
       val day = 5
-      val expected = new LocalDate(year, month, day)
+      val expected = LocalDate.of(year, month, day)
       timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
 
@@ -44,7 +44,7 @@ class TimeServiceTest extends BaseTest {
       val year = 2017
       val month = 4
       val day = 6
-      val expected = new LocalDate(year, month, day)
+      val expected = LocalDate.of(year, month, day)
       timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
   }
@@ -55,7 +55,7 @@ class TimeServiceTest extends BaseTest {
       val year = 2017
       val month = 10
       val day = 22
-      val expected = new LocalDate(year, month, day)
+      val expected = LocalDate.of(year, month, day)
 
       val date: String = "" + year + month + day
 
@@ -68,7 +68,7 @@ class TimeServiceTest extends BaseTest {
         val year = 2017
         val month = 10
         val day = 22
-        val expected = new LocalDate(year, month, day)
+        val expected = LocalDate.of(year, month, day)
 
         val prefix: String = format.substring(0, 1)
         val date: String = "" + prefix + year + month + day
@@ -94,7 +94,6 @@ class TimeServiceTest extends BaseTest {
       val data = LocalDate.now().plusDays(1)
       timeService.isFutureDate(data) shouldBe true
     }
-
   }
 
   "getCurrentTaxYear" should {
@@ -103,14 +102,13 @@ class TimeServiceTest extends BaseTest {
       val data = TaxYear.current.startYear
       timeService.getCurrentTaxYear shouldBe data
     }
-
   }
 
   "getStartDateForTaxYear" should {
 
     for (year <- years) {
       s"start date of tax year is $year April 6th" in {
-        val expected = new LocalDate(year, 4, 6)
+        val expected = LocalDate.of(year, 4, 6)
         timeService.getStartDateForTaxYear(year) shouldBe expected
       }
     }

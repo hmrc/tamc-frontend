@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import models._
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -41,7 +41,6 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
   val mockRegistrationService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
   val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
   val contactHMRCBereavementText = (messagesApi("general.helpline.enquiries.link.pretext") + " "
     + messagesApi("general.helpline.enquiries.link") + " "
@@ -51,8 +50,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
     new UpdateRelationshipController(
       messagesApi,
       instanceOf[AuthenticatedActionRefiner],
-      updateRelationshipService,
-      mockTimeService
+      updateRelationshipService
     )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
 
   "Update relationship cause - get view" should {
@@ -298,8 +296,8 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
     }
 
     "Transferor and DivorceDate is in PreviousYear" in {
-      val endingDates = MarriageAllowanceEndingDates(new LocalDate(2017, 4, 5), new LocalDate(2017, 4, 6))
-      val divorceDate  = new LocalDate(2017, 4, 5)
+      val endingDates = MarriageAllowanceEndingDates(LocalDate.of(2017, 4, 5), LocalDate.of(2017, 4, 6))
+      val divorceDate  = LocalDate.of(2017, 4, 5)
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful(Transferor, divorceDate))
@@ -320,7 +318,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${new LocalDate(2017, 4, 5).getYear}"),
+        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${LocalDate.of(2017, 4, 5).getYear}"),
         messagesApi("pages.divorce.explanation.adjust.code.bullet")
       ).toArray
 
@@ -371,7 +369,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
 
     "Recipient and DivorceDate is in previous year" in{
       val endingDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
-      val divorceDate = new LocalDate(2017, 4, 5)
+      val divorceDate = LocalDate.of(2017, 4, 5)
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful(Recipient, divorceDate))

@@ -20,7 +20,7 @@ import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import controllers.actions.AuthenticatedActionRefiner
 import models._
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._

@@ -17,7 +17,7 @@
 package test_utils.data
 
 import models._
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import test_utils.TestData.{Cids, Ninos}
 import uk.gov.hmrc.domain.Nino
 

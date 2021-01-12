@@ -17,7 +17,7 @@
 package views.helpers
 
 import forms.EmailForm
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
@@ -65,9 +65,9 @@ class LanguageUtilsSpec extends WordSpec with Matchers with MockitoSugar with Gu
     "ukDateTransformer" must {
 
       val englishList = List(
-        (new LocalDate(2016, 5, 6), "May"),
-        (new LocalDate(1993, 11, 11), "November"),
-        (new LocalDate(2020, 1, 1), "January")
+        (LocalDate.of(2016, 5, 6), "May"),
+        (LocalDate.of(1993, 11, 11), "November"),
+        (LocalDate.of(2020, 1, 1), "January")
       )
 
       englishList.foreach { dateMonthTuple =>
@@ -82,7 +82,7 @@ class LanguageUtilsSpec extends WordSpec with Matchers with MockitoSugar with Gu
 
       for ((month, monthAsInt) <- welshMonthsInOrder.zip(Stream from 1)) {
         s"return month as Welsh $month" in new WelshSetup {
-          LanguageUtils().ukDateTransformer(new LocalDate(2020, monthAsInt, 1)) should include(month)
+          LanguageUtils().ukDateTransformer(LocalDate.of(2020, monthAsInt, 1)) should include(month)
         }
       }
     }
@@ -173,13 +173,13 @@ class LanguageUtilsSpec extends WordSpec with Matchers with MockitoSugar with Gu
 
     "dateTransformer" must {
       "return String from LocalDate" in new EnglishSetup {
-        LanguageUtils().dateTransformer(new LocalDate(2020, 2, 2)) shouldBe
+        LanguageUtils().dateTransformer(LocalDate.of(2020, 2, 2)) shouldBe
           "02/02/2020"
       }
 
       "return LocalDate from String" in new EnglishSetup {
         LanguageUtils().dateTransformer("20200202") shouldBe
-          new LocalDate(2020, 2, 2)
+          LocalDate.of(2020, 2, 2)
       }
     }
 

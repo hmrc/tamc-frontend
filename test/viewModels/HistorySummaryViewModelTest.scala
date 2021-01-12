@@ -18,7 +18,7 @@ package viewModels
 
 import config.ApplicationConfig._
 import models._
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
@@ -35,7 +35,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
   lazy val formattedEndOfYear = LanguageUtils().ukDateTransformer(endOfTaxYear)
 
   val citizenName = CitizenName(Some("Test"), Some("User"))
-  val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = new LocalDate().toString, has_allowance = None, name = Some(citizenName))
+  val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = LocalDate.now().toString, has_allowance = None, name = Some(citizenName))
   val expectedDisplayName = "Test User"
 
 
@@ -107,7 +107,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
 
     "There is no citizen name to allow a display name to be created" in new MarriageAllowanceOnGoingTest {
       val role = Transferor
-      val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = new LocalDate().toString, has_allowance = None, name = None)
+      val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = LocalDate.now().toString, has_allowance = None, name = None)
 
       val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
 

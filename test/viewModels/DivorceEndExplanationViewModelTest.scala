@@ -17,7 +17,7 @@
 package viewModels
 
 import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
 import views.helpers.LanguageUtils
@@ -52,7 +52,6 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDateCurrentTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Recipient, divorceDateCurrentTaxYear) shouldBe expectedViewModel
-
       }
 
       "a Recipient is divorced in a previous tax year" in {
@@ -65,7 +64,6 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDatePreviousTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Recipient, divorceDatePreviousTaxYear) shouldBe expectedViewModel
-
       }
 
       "a transferor is divorced in the current tax year" in {
@@ -78,7 +76,6 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDateCurrentTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Transferor, divorceDateCurrentTaxYear) shouldBe expectedViewModel
-
       }
 
       "a transferor is divorced in a previous tax year" in {
@@ -91,7 +88,6 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDatePreviousTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Transferor, divorceDatePreviousTaxYear) shouldBe expectedViewModel
-
       }
     }
   }

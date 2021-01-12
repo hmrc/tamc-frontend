@@ -17,9 +17,12 @@
 package forms
 
 import config.ApplicationConfig
-import org.joda.time.LocalDate
+
+import java.time.LocalDate
 import play.api.data.FormError
 import utils.BaseTest
+
+import java.time.format.DateTimeFormatter
 
 class RegistrationFormTest extends BaseTest {
 
@@ -32,7 +35,7 @@ class RegistrationFormTest extends BaseTest {
         "year" -> "2019"
       )
       val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
-      res shouldBe Right(new LocalDate(2019, 2, 12))
+      res shouldBe Right(LocalDate.of(2019, 2, 12))
     }
 
     "fail to bind a date which is entirely absent" in {
@@ -64,13 +67,13 @@ class RegistrationFormTest extends BaseTest {
 
       val formInput = Map[String, String](
         "day" -> checkDate.getDayOfMonth.toString,
-        "month" -> checkDate.getMonthOfYear.toString,
+        "month" -> checkDate.getMonth.toString,
         "year" -> checkDate.getYear.toString
       )
       val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messagesApi("pages.form.field.dom.error.min-date", earliestDate.toString("d MM YYYY")), Nil)
+        FormError("", messagesApi("pages.form.field.dom.error.min-date", earliestDate.format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
       ))
     }
 
@@ -81,13 +84,13 @@ class RegistrationFormTest extends BaseTest {
 
       val formInput = Map[String, String](
         "day" -> tooLate.getDayOfMonth.toString,
-        "month" -> tooLate.getMonthOfYear.toString,
+        "month" -> tooLate.getMonth.toString,
         "year" -> tooLate.getYear.toString
       )
       val res = RegistrationForm.dateOfMarriageValidator(today).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messagesApi("pages.form.field.dom.error.max-date", today.plusDays(1).toString("d MM YYYY")), Nil)
+        FormError("", messagesApi("pages.form.field.dom.error.max-date", today.plusDays(1).format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
       ))
     }
 

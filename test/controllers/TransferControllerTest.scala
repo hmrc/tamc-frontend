@@ -20,7 +20,7 @@ import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
 import models.auth.AuthenticatedUserRequest
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -140,7 +140,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
         val request = FakeRequest().withFormUrlEncodedBody(
           "dateOfMarriage.year" -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
-          "dateOfMarriage.month" -> dateOfMarriageInput.dateOfMarriage.getMonthOfYear.toString,
+          "dateOfMarriage.month" -> dateOfMarriageInput.dateOfMarriage.getMonth.toString,
           "dateOfMarriage.day" -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
         )
         val registrationFormInput = RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)

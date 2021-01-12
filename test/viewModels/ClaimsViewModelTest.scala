@@ -21,8 +21,8 @@ import java.util.Locale
 import _root_.config.ApplicationConfig
 import models.DesRelationshipEndReason.{Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
 import models._
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
@@ -34,7 +34,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
-  lazy val formattedEndOfTaxYear: String = endOfTaxYear.toString(DateTimeFormat.forPattern("d MMMM yyyy").withLocale(Locale.UK))
+  lazy val formattedEndOfTaxYear: String = endOfTaxYear.format(DateTimeFormatter.ofPattern("d MMMM yyyy").withLocale(Locale.UK))
 
   lazy val taxFreeHtml: Html =
     Html(
@@ -51,12 +51,12 @@ class ClaimsViewModelTest extends TamcViewModelTest {
                                otherParticipantUpdateTimestamp: LocalDate = now.minusDays(1)): RelationshipRecord = {
     RelationshipRecord(
       Transferor.value,
-      creationTimeStamp.toString(dateInputPattern),
-      participant1StartDate.toString(dateInputPattern),
+      creationTimeStamp.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+      participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
       relationshipEndReason,
-      participant1EndDate.map(_.toString(dateInputPattern)),
+      participant1EndDate.map(_.format(DateTimeFormatter.ofPattern(dateInputPattern))),
       otherParticipantInstanceIdentifier = "1",
-      otherParticipantUpdateTimestamp.toString(dateInputPattern))
+      otherParticipantUpdateTimestamp.format(DateTimeFormatter.ofPattern(dateInputPattern)))
   }
 
   def createExpectedClaimRow(recordStartDate: LocalDate, recordEndDate: LocalDate, relationshipRecord: RelationshipRecord): ClaimsRow = {
@@ -87,8 +87,8 @@ class ClaimsViewModelTest extends TamcViewModelTest {
       val creationTimeStamp = now.minusDays(2)
       val participant1StartDate = now.minusDays(2)
       val participant1EndDate = now.minusDays(1)
-      lazy val dateInterval = LanguageUtils().taxDateIntervalString(participant1StartDate.toString(dateInputPattern),
-        Some(participant1EndDate.toString(dateInputPattern)))
+      lazy val dateInterval = LanguageUtils().taxDateIntervalString(participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+        Some(participant1EndDate.format(DateTimeFormatter.ofPattern(dateInputPattern))))
 
       val endReasons = Set(
         Death, Divorce, InvalidParticipant, Cancelled, Rejected, Hmrc, Closed, Merger, Retrospective, System, Default
@@ -177,7 +177,8 @@ class ClaimsViewModelTest extends TamcViewModelTest {
   }
 
   private def getDateRange(startDate: LocalDate, endDate: LocalDate) = {
-    LanguageUtils().taxDateIntervalString(startDate.toString(dateInputPattern), Some(endDate.toString(dateInputPattern)))
+    LanguageUtils().taxDateIntervalString(startDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+      Some(endDate.format(DateTimeFormatter.ofPattern(dateInputPattern))))
   }
 
 }

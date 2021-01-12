@@ -17,7 +17,7 @@
 package viewModels
 
 import models.{CitizenName, ConfirmationUpdateAnswers, LoggedInUserInfo, MarriageAllowanceEndingDates}
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import utils.TamcViewModelTest
 import views.helpers.LanguageUtils
 
@@ -57,9 +57,7 @@ class ConfirmUpdateViewModelTest extends TamcViewModelTest {
         val expectedEffectiveDate = transformedDate(marriageAllowanceEndingDates.personalAllowanceEffectiveDate)
 
         viewModel shouldBe ConfirmUpdateViewModel(expectedEndDate, expectedEffectiveDate, expectedRows)
-
       }
-
     }
 
     "create a view model with no divorce date claim row" when {

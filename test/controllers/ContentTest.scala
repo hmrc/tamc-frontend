@@ -22,7 +22,7 @@ import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig._
 import controllers.actions.AuthenticatedActionRefiner
 import models._
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
@@ -496,7 +496,7 @@ class ContentTest extends ControllerBaseTest {
 
   "Calling Previous year page " should {
     val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-    val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
+    val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = LocalDate.of(2011, 4, 10))
     val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
     "display dynamic message " in {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
@@ -910,7 +910,7 @@ class ContentTest extends ControllerBaseTest {
         "bar",
         Nino(Ninos.ninoWithLOA1),
         List(TaxYear(2014, Some(false)), TaxYear(2015, Some(false))),
-        DateOfMarriageFormInput(new LocalDate(2015, 1, 1))
+        DateOfMarriageFormInput(LocalDate.of(2015, 1, 1))
       )
       when(mockTransferService.getConfirmationData(any())(any(), any()))
         .thenReturn(confirmData)
