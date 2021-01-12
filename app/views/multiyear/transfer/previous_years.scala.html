@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.extra-years")),
+title = Messages("title.application.pattern", Messages("pages.previousyear.header")),
 langSelectorOverride = Some(
 Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
 "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()

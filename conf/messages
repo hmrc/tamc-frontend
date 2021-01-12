@@ -156,6 +156,7 @@ title.application.pattern={0} - Marriage Allowance application - GOV.UK
 title.dateOfBirth=Were you and your partner born after 5 April 1935?
 title.eligible-years=Apply for the current tax year
 title.extra-years=Apply for earlier tax years
+title.confirm-extra-years=Confirm earlier tax years
 title.transfer-in-place=Transfer in place
 title.transfer=Enter your partner’s details
 title.finished=Application confirmed
@@ -278,8 +279,10 @@ pages.finished.hidden-warning=Warning
 # Registration page - Your spouse details
 #********************************************************************************
 pages.form.h1=Your partner’s details
+pages.form.aria-label=Change your partner’s details
 pages.form.details= As you have the lower income, you can apply to help reduce the amount of tax they pay.
 pages.form.enter-data=Enter your partner’s details
+pages.form.marriage-date.aria-label=Change marriage date
 pages.form.field.name=First name
 pages.form.field.last-name=Last name
 pages.form.field.gender=What is their gender?
@@ -643,6 +646,7 @@ pages.previousyear.para=You told us you married or formed a civil partnership wi
 pages.confirm.lower.earner=Your details (low income)
 pages.confirm.higher.earner=Your partner’s details (high income)
 pages.confirm.current.tax=Current tax year: <span class=nowrap>{0}</span> onwards
+pages.confirm.current.tax.aria-label=Change tax year: {0}
 pages.confirm.current.tax.desc=HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
 pages.confirm.previous.tax=Previous tax year: <span class=nowrap>{0}</span> to <span class=nowrap>{1}</span>
 pages.confirm.previous.tax.desc=HMRC will check the details you have supplied before sending {0} a cheque by post for up to £{1}.

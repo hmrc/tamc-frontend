@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
             <td>
                 <a href="@controllers.routes.TransferController.transfer()"
-                   data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
+                   data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details" aria-label="@Html(Messages("pages.form.aria-label"))">
                     @Html(Messages("generic.change"))
                 </a>
             </td>
@@ -97,7 +97,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             </td>
             <td>
                 <a href="@controllers.routes.TransferController.dateOfMarriage()"
-                   data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
+                   data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date" aria-label="@Html(Messages("pages.form.marriage-date.aria-label"))">
                     @Html(Messages("generic.change"))
                 </a>
             </td>
@@ -121,7 +121,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             </td>
             }
             <td>
-                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">
+                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears" aria-label="@Html(Messages("pages.confirm.current.tax.aria-label", LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts)))">
                     @Html(Messages("generic.change"))
                 </a>
             </td>
