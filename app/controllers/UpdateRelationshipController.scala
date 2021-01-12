@@ -22,13 +22,11 @@ import errors._
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
-import models.auth.{AuthenticatedUserRequest, BaseUserRequest}
-import org.joda.time.LocalDate
+import models.auth.BaseUserRequest
 import play.Logger
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Result}
 import services._
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -41,7 +39,8 @@ class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
                                               updateRelationshipService: UpdateRelationshipService,
-                                              timeService: TimeService
+                                              timeService: TimeService,
+                                              divorceSelectYearForm: DivorceSelectYearForm
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
 
@@ -185,18 +184,18 @@ class UpdateRelationshipController @Inject()(
   def divorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getDivorceDate map { optionalDivorceDate =>
-        optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))){ divorceDate =>
-          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
+        optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(divorceSelectYearForm.form))){ divorceDate =>
+          Ok(views.html.coc.divorce_select_year(divorceSelectYearForm.form.fill(divorceDate)))
         }
       } recover {
         case NonFatal(_) =>
-          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))
+          Ok(views.html.coc.divorce_select_year(divorceSelectYearForm.form))
       }
   }
 
   def submitDivorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
-      DivorceSelectYearForm.form.bindFromRequest.fold(
+      divorceSelectYearForm.form.bindFromRequest.fold(
         formWithErrors => {
           Future.successful(BadRequest(views.html.coc.divorce_select_year(formWithErrors)))
         }, {

@@ -16,9 +16,10 @@
 
 package forms.coc
 
+import com.google.inject.Inject
 import config.ApplicationConfig
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import play.api.data.Forms.{optional, single, text, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, Mapping}
@@ -29,15 +30,15 @@ import views.helpers.LanguageUtils
 
 import scala.util.Try
 
-object DivorceSelectYearForm {
+class DivorceSelectYearForm @Inject()(timeService: TimeService){
 
   val DateOfDivorce = "dateOfDivorce"
-  val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
+  val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(timeService.getCurrentDate)
   val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE)
 
   def isNonNumericDate(year: String, month: String, day: String): Boolean = !s"$year$month$day".forall(_.isDigit)
   def isNonValidDate(year: String, month: String, day: String): Boolean = {
-    if(year.length != 4) true else Try(LocalDate.parse(s"$year-$month-$day", DateTimeFormat.forPattern("yyyy-MM-dd"))).isFailure
+    if(year.length != 4) true else Try(LocalDate.parse(s"$year-$month-$day", DateTimeFormatter.ofPattern("yyyy-MM-dd"))).isFailure
   }
 
   private def divorceDateMapping(implicit messages: Messages): Mapping[LocalDate] = {
@@ -75,7 +76,7 @@ object DivorceSelectYearForm {
   private def transformToTuple(date: LocalDate): (Option[String], Option[String], Option[String]) = {
 
     val year = Some(date.getYear.toString)
-    val month = Some(date.getMonthOfYear.toString)
+    val month = Some(date.getMonthValue.toString)
     val day = Some(date.getDayOfMonth.toString)
 
     (year, month, day)
@@ -86,7 +87,7 @@ object DivorceSelectYearForm {
       LanguageUtils().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
       Invalid(ValidationError("pages.divorce.date.error.max.date",
-        LanguageUtils().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))
+        LanguageUtils().ukDateTransformer(timeService.getCurrentDate.plusDays(1))))
     case _ => Valid
   }
 

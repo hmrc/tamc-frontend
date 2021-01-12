@@ -33,9 +33,11 @@
 package views.helpers
 
 import java.util.Locale
+
 import config.ApplicationConfig
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
@@ -65,10 +67,10 @@ sealed trait LanguageUtils {
       case _ => prefix
     }
 
-  def dateTransformer(date: LocalDate): String = date.toString("dd/MM/yyyy")
+  def dateTransformer(date: LocalDate): String = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
   def dateTransformer(date: String): LocalDate = {
-    LocalDate.parse(date, DateTimeFormat.forPattern("yyyyMMdd"))
+    LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"))
   }
 
   def nonBreakingSpace(text: String): String = text.replace(" ", "\u00A0")
@@ -99,7 +101,7 @@ object EnglishLangaugeUtils extends LanguageUtils {
   override def separator: String = " to "
 
   override def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
-   val formattedDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
+   val formattedDate = date.format(DateTimeFormatter.ofPattern(transformPattern).withLocale(Locale.UK))
 
     nonBreakingSpace(formattedDate)
   }
@@ -115,9 +117,9 @@ object WelshLanguageUtils extends LanguageUtils {
 
   override def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String = {
 
-    val fetchMonthName = (localDate: LocalDate) => localDate.toString(DateTimeFormat.forPattern("MMMM").withLocale(Locale.UK))
+    val fetchMonthName = (localDate: LocalDate) => localDate.format(DateTimeFormatter.ofPattern("MMMM").withLocale(Locale.UK))
     val month = fetchMonthName(date)
-    val endDate = date.toString(DateTimeFormat.forPattern(transformPattern).withLocale(Locale.UK))
+    val endDate = date.format(DateTimeFormatter.ofPattern(transformPattern).withLocale(Locale.UK))
 
     nonBreakingSpace(endDate.replace(month, welshMonths(month)))
   }
