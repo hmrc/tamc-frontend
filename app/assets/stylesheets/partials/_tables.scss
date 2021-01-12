@@ -1,0 +1,29 @@
+.govuk-summary-list {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  margin-bottom: 20px;
+
+  .govuk-summary-list_row {
+    margin-bottom: 15px;
+    border-bottom: 1px solid #b1b4b6;
+    display: table-row;
+    .govuk-summary-list_value, .govuk-summary-list_key, .govuk-summary-list_actions {
+      display: table-cell;
+      padding-top: 10px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #b1b4b6;
+    }
+    .govuk-summary-list_key {
+      width: 30%;
+      font-weight: 700;
+    }
+    .govuk-summary-list_value {
+      width: 60%;
+    }
+    .govuk-summary-list_actions {
+      width: 10%;
+    }
+  }
+}
