@@ -19,10 +19,10 @@ package utils
 import _root_.services.EligibilityCalculatorService
 import config.ApplicationConfig._
 import models._
-import org.scalatestplus.play.OneAppPerSuite
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.play.test.UnitSpec
 
-class BenefitCalculatorHelperTest extends UnitSpec with OneAppPerSuite {
+class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
 
   "BenefitCalculatorHelper" when {
 

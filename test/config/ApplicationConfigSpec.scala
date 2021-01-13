@@ -16,10 +16,9 @@
 
 package config
 
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ApplicationConfigSpec extends UnitSpec with GuiceOneAppPerSuite {
+class ApplicationConfigSpec extends UnitSpec {
 
   "check rates for earliest valid year" when {
     "return valid year" in {

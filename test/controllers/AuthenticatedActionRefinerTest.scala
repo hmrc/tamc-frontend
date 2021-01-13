@@ -21,15 +21,15 @@ import controllers.actions.AuthenticatedActionRefiner
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
-import play.api.mvc.{Action, AnyContent, Controller, Request, Result}
+import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import utils.RetrivalHelper._
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 import utils.ControllerBaseTest
+import utils.RetrivalHelper._
 
 import scala.concurrent.Future
 

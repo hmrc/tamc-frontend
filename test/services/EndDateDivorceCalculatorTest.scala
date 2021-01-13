@@ -23,7 +23,7 @@ import java.time.LocalDate
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYear
 
-class EndDateDivorceCalculatorTest extends UnitSpec with GuiceOneAppPerSuite{
+class EndDateDivorceCalculatorTest extends UnitSpec with GuiceOneAppPerSuite {
 
   val endDateDivorceCalculator = app.injector.instanceOf[EndDateDivorceCalculator]
   val recipientEndDateCalculator = endDateDivorceCalculator.calculateEndDate(Recipient, _: LocalDate)

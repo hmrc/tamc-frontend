@@ -17,17 +17,16 @@
 package views.helpers
 
 import forms.EmailForm
-import java.time.LocalDate
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Matchers, WordSpec}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.emailaddress.EmailAddress
 
+import java.time.LocalDate
 import scala.collection.immutable
 
-class LanguageUtilsSpec extends WordSpec with Matchers with MockitoSugar with GuiceOneAppPerSuite {
+class LanguageUtilsSpec extends WordSpec with Matchers with MockitoSugar {
 
   private val currentYear = LocalDate.now().getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList

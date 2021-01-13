@@ -17,11 +17,10 @@
 package models
 
 import models.DesRelationshipEndReason._
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.libs.json._
 import uk.gov.hmrc.play.test.UnitSpec
 
-class DesRelationshipEndReasonTest extends UnitSpec with GuiceOneAppPerSuite{
+class DesRelationshipEndReasonTest extends UnitSpec {
 
   "RelationshipEndReasonHodsReads" should{
     "read the HODS value for correct RelationshipEndReason" in{
