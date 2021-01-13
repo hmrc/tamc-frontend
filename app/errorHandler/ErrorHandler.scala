@@ -31,8 +31,7 @@ class ErrorHandler @Inject()(
                              formPartialRetriever: TamcFormPartialRetriever
                             )
                             (implicit
-                             templateRender: TemplateRenderer,
-                             lang: Lang
+                             templateRender: TemplateRenderer
                             ) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = views.html.templates.error_template(pageTitle, heading, message)

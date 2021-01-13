@@ -17,22 +17,26 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import views.html.templates._
-@import config.ApplicationConfig._
+@import config.ApplicationConfig
 @import java.text.NumberFormat
 @import models.auth.UserRequest
+
+@this(
+    appConfig: ApplicationConfig
+)
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
     implicit messages: Messages, request: UserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE())))
 ){
 
-    @form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(PERSONAL_ALLOWANCE()))
+    @form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(appConfig.PERSONAL_ALLOWANCE()))
     <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE())))</h1>
+        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE())))</h1>
         <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
     </header>
 
@@ -52,7 +56,7 @@
     </div>
 
     <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
-        @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE()))
+        @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE()))
     </div>
 
     <script>

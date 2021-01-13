@@ -20,7 +20,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
 @import utils.BenefitCalculatorHelper._
-@import config.ApplicationConfig._
+@import config.ApplicationConfig
 @import java.text.NumberFormat
 
 @(earlierYearsForm: Form[models.EarlierYearsInput],
@@ -30,6 +30,10 @@ implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@this(
+    appConfig: ApplicationConfig
+)
 
 @templates.tamc_main(
     title = Messages("title.application.pattern", Messages("title.extra-years")),
@@ -61,21 +65,21 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
                 LanguageUtils().taxDateIntervalShort(availableYears.head.year)))</p>
 
             <ul class="list list-bullet">
-                <li>@Html(Messages("your-income", currencyFormatter(PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
+                <li>@Html(Messages("your-income", currencyFormatter(appConfig.PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
                 @if(MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
-                <li>@Html(Messages("income-between", LanguageUtils().formPossessive(input.name),currencyFormatter(PERSONAL_ALLOWANCE(availableYears.head.year)+1),
-                    currencyFormatter(MAX_LIMIT(availableYears.head.year))))
+                <li>@Html(Messages("income-between", LanguageUtils().formPossessive(input.name),currencyFormatter(appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                    currencyFormatter(appConfig.MAX_LIMIT(availableYears.head.year))))
                 </li>
                 } else {
-                <li>@Html(Messages("income-between-scots", LanguageUtils().formPossessive(input.name),currencyFormatter(PERSONAL_ALLOWANCE(availableYears.head.year)+1),
-                    currencyFormatter(MAX_LIMIT(availableYears.head.year)),
-                    currencyFormatter(MAX_LIMIT_SCOT(availableYears.head.year))))
+                <li>@Html(Messages("income-between-scots", LanguageUtils().formPossessive(input.name),currencyFormatter(appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                    currencyFormatter(appConfig.MAX_LIMIT(availableYears.head.year)),
+                    currencyFormatter(appConfig.MAX_LIMIT_SCOT(availableYears.head.year))))
                 </li>
                 }
             </ul>
             <p>@Html(Messages("pages.multiyear.successful",
                 LanguageUtils().taxDateIntervalShort(availableYears.head.year),
-                input.name, currencyFormatter(MAX_BENEFIT(availableYears.head.year))))</p>
+                input.name, currencyFormatter(appConfig.MAX_BENEFIT(availableYears.head.year))))</p>
 
         <p class="heading-medium">@Html(Messages("pages.multiyear.extrayears"))</p>
         @templates.input_radio_group(

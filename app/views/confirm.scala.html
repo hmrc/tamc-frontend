@@ -18,7 +18,7 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.time.TaxYear
 @import views.helpers.LanguageUtils
-@import config.ApplicationConfig._
+@import config.ApplicationConfig
 @import java.text.NumberFormat
 @import org.joda.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
@@ -28,6 +28,10 @@ implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@this(
+    appConfig: ApplicationConfig
+)
 
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.confirm"))
@@ -111,13 +115,13 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             </td>
             <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
                 LanguageUtils().formPossessive(data.recipientFirstName),
-                data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
+                data.recipientFirstName, NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
                 } else {
             <td id="year-@taxYear.year">
                 @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
             </td>
             <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
-                Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)))))
+                Messages("max-benefit", NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(taxYear.year)))))
             </td>
             }
             <td>

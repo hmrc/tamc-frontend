@@ -24,6 +24,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 
 class TamcModule extends Module {
 
@@ -32,12 +33,8 @@ class TamcModule extends Module {
       bind[AuthConnector].to[TamcAuthConnector],
       bind[AuditConnector].to[ApplicationAuditConnector],
       bind[TimeService].toInstance(TimeService),
-      bind[TransferService].to[TransferService],
-      bind[UpdateRelationshipService].to[UpdateRelationshipService],
-      bind[CachingService].to[CachingService],
-      bind[EligibilityCalculatorService].toInstance(EligibilityCalculatorService),
-      bind[ApplicationService].to[ApplicationService],
       bind[TemplateRenderer].to[LocalTemplateRenderer],
-      bind[FormPartialRetriever].to[TamcFormPartialRetriever]
+      bind[FormPartialRetriever].to[TamcFormPartialRetriever],
+      bind[CurrentTaxYear].toInstance(TaxYear)
     )
 }

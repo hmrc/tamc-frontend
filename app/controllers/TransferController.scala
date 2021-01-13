@@ -37,7 +37,6 @@ import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-import views.helpers.LanguageUtils
 
 import scala.concurrent.Future
 
@@ -46,7 +45,8 @@ class TransferController @Inject()(
                                     authenticate: AuthenticatedActionRefiner,
                                     registrationService: TransferService,
                                     cachingService: CachingService,
-                                    timeService: TimeService
+                                    timeService: TimeService,
+                                    appConfig: ApplicationConfig
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever) extends BaseController {
 
@@ -188,7 +188,7 @@ class TransferController @Inject()(
 
   def confirmYourEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
-      cachingService.fetchAndGetEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD) map {
+      cachingService.fetchAndGetEntry[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD) map {
         case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail)))
         case None => Ok(views.html.multiyear.transfer.email(emailForm))
       }

@@ -25,12 +25,13 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 class AuthorisationController @Inject()(
                                          override val messagesApi: MessagesApi,
-                                         unauthenticatedAction: UnauthenticatedActionTransformer
+                                         unauthenticatedAction: UnauthenticatedActionTransformer,
+                                         appConfig: ApplicationConfig
                                        )(implicit templateRenderer: TemplateRenderer,
                                          formPartialRetriever: FormPartialRetriever) extends BaseController {
 
-  val logoutUrl: String = ApplicationConfig.logoutUrl
-  val logoutCallbackUrl: String = ApplicationConfig.logoutCallbackUrl
+  val logoutUrl: String = appConfig.logoutUrl
+  val logoutCallbackUrl: String = appConfig.logoutCallbackUrl
 
   def notAuthorised = unauthenticatedAction {
     implicit request =>

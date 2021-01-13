@@ -17,6 +17,9 @@
 package services
 
 import java.time.LocalDate
+
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
@@ -25,6 +28,9 @@ import scala.collection.immutable
 class TimeServiceTest extends BaseTest {
 
   def timeService: TimeService = TimeService
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder().build()
+
 
   private val currentYear = timeService.getCurrentDate.getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
@@ -36,6 +42,7 @@ class TimeServiceTest extends BaseTest {
       val month = 4
       val day = 5
       val expected = LocalDate.of(year, month, day)
+
       timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
 
@@ -45,6 +52,7 @@ class TimeServiceTest extends BaseTest {
       val month = 4
       val day = 6
       val expected = LocalDate.of(year, month, day)
+
       timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
   }
@@ -82,16 +90,19 @@ class TimeServiceTest extends BaseTest {
 
     "future date is today" in {
       val data = LocalDate.now()
+
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is yesterday" in {
       val data = LocalDate.now().minusDays(1)
+
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is tomorrow" in {
       val data = LocalDate.now().plusDays(1)
+
       timeService.isFutureDate(data) shouldBe true
     }
   }
@@ -100,6 +111,7 @@ class TimeServiceTest extends BaseTest {
 
     "get current tax year" in {
       val data = TaxYear.current.startYear
+
       timeService.getCurrentTaxYear shouldBe data
     }
   }
@@ -109,6 +121,7 @@ class TimeServiceTest extends BaseTest {
     for (year <- years) {
       s"start date of tax year is $year April 6th" in {
         val expected = LocalDate.of(year, 4, 6)
+
         timeService.getStartDateForTaxYear(year) shouldBe expected
       }
     }
@@ -126,6 +139,7 @@ class TimeServiceTest extends BaseTest {
 
     "return empty list if years < than minim allowed is passed" in {
       val list = List(models.TaxYear(year = 2002))
+
       timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(0)
     }
 
@@ -136,6 +150,7 @@ class TimeServiceTest extends BaseTest {
       val list: List[models.TaxYear] = (from to to).map(year => {
         models.TaxYear(year)
       }).toList
+
       timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(10)
     }
   }

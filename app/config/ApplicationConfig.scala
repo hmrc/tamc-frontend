@@ -16,76 +16,20 @@
 
 package config
 
-import config.ApplicationConfig.loadConfig
 import java.time.LocalDate
+
+import com.google.inject.Inject
 import play.api.Mode.Mode
-import play.api.{Configuration, Play}
+import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 
-trait ApplicationConfig {
+//TODO get rid of vals in here that aren't actually config values!!!!!
+class ApplicationConfig @Inject()(val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
 
-  val betaFeedbackUnauthenticatedUrl: String
-  val contactFrontendPartialBaseUrl: String
-  val assetsPrefix: String
-
-  val contactFormServiceIdentifier: String
-  val pageTitle: String
-  val loginUrl: String
-  val logoutUrl: String
-  val logoutCallbackUrl: String
-  val callbackUrl: String
-  val callChargeUrl: String
-  val contactIncomeTaxHelplineUrl: String
-  val marriageAllowanceGuideUrl: String
-  val howItWorksUrl: String
-
-  val analyticsToken: Option[String]
-  val analyticsHost: String
-  val isGTMEnabled: Boolean
-  val gtmId: String
-  val frontendTemplatePath: String
-
-  val marriageAllowanceUrl: String
-  val taiFrontendUrl: String
-  val taxFreeAllowanceUrl: String
-
-  def ivNotAuthorisedUrl: String
-
-  private def createUrl(action: String) =
-    s"$loginUrl/$action?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(callbackUrl)}&failureURL=${encodeQueryStringValue(ivNotAuthorisedUrl)}"
-
-  def ivLoginUrl = createUrl(action = "registration")
-
-  def ivUpliftUrl = createUrl(action = "uplift")
-
-  val ggSignInHost: String
-  val ggSignInUrl: String
-
-  val gdsFinishedUrl: String
-  val ptaFinishedUrl: String
-
-  val LANG_CODE_ENGLISH: String
-  val LANG_CODE_WELSH: String
-  val LANG_LANG_WELSH: String
-  val LANG_LANG_ENGLISH: String
-
-  val isWelshEnabled: Boolean
-  val webchatId: String
-  /* refreshInterval sets the time in seconds for the session timeout.It is 15 minutes now.*/
-  lazy val refreshInterval = 900
-  lazy val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
-  def accessibilityStatementUrl(relativeReferrerPath: String): String
-}
-
-
-object ApplicationConfig extends ApplicationConfig with ServicesConfig {
-
-  override protected def mode: Mode = Play.current.mode
-
-  override protected def runModeConfiguration: Configuration = Play.current.configuration
+   protected def mode: Mode = environment.mode
 
   private lazy val currentTaxYear: TaxYear = TaxYear.current
 
@@ -95,33 +39,33 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   private val contactFrontendService = baseUrl("contact-frontend")
   val contactFormServiceIdentifier = "TAMC"
   val pageTitle = "Your personal tax account"
-  override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
-  override lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
+  lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
-  override lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version") + '/'
+  lazy val assetsPrefix = loadConfig("assets.url") + loadConfig("assets.version") + '/'
 
-  override lazy val analyticsToken: Option[String] = runModeConfiguration.getString("google-analytics.token")
-  override lazy val analyticsHost: String = runModeConfiguration.getString("google-analytics.host").getOrElse("auto")
+  lazy val analyticsToken: Option[String] = runModeConfiguration.getString("google-analytics.token")
+  lazy val analyticsHost: String = runModeConfiguration.getString("google-analytics.host").getOrElse("auto")
 
-  override lazy val isGTMEnabled: Boolean = loadConfig("google-tag-manager.enabled").toBoolean
-  override lazy val gtmId: String = loadConfig("google-tag-manager.id")
+  lazy val isGTMEnabled: Boolean = loadConfig("google-tag-manager.enabled").toBoolean
+  lazy val gtmId: String = loadConfig("google-tag-manager.id")
 
-  override lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
-  override lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
-  override lazy val logoutCallbackUrl = loadConfig("tamc.external-urls.logout-callback-url")
-  override lazy val callbackUrl: String = loadConfig("tamc.external-urls.callback-url")
-  override lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
-  override lazy val callChargeUrl: String = loadConfig("tamc.external-urls.govuk-call-charges")
-  override lazy val contactIncomeTaxHelplineUrl: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
-  override lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
-  override lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
+  lazy val loginUrl = loadConfig("tamc.external-urls.login-url")
+  lazy val logoutUrl = loadConfig("tamc.external-urls.logout-url")
+  lazy val logoutCallbackUrl = loadConfig("tamc.external-urls.logout-callback-url")
+  lazy val callbackUrl: String = loadConfig("tamc.external-urls.callback-url")
+  lazy val ivNotAuthorisedUrl = loadConfig("tamc.external-urls.not-authorised-url")
+  lazy val callChargeUrl: String = loadConfig("tamc.external-urls.govuk-call-charges")
+  lazy val contactIncomeTaxHelplineUrl: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
+  lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
+  lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
 
-  override lazy val ggSignInHost: String = runModeConfiguration.getString("microservice.bas-gateway.host").getOrElse("")
-  override lazy val ggSignInUrl: String = s"$ggSignInHost/gg/sign-in?continue=${encodeQueryStringValue(callbackUrl)}"
+  lazy val ggSignInHost: String = runModeConfiguration.getString("microservice.bas-gateway.host").getOrElse("")
+  lazy val ggSignInUrl: String = s"$ggSignInHost/gg/sign-in?continue=${encodeQueryStringValue(callbackUrl)}"
 
-  override lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
-  override lazy val taiFrontendUrl: String = s"${runModeConfiguration.getString("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
-  override lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
+  lazy val marriageAllowanceUrl = baseUrl("marriage-allowance")
+  lazy val taiFrontendUrl: String = s"${runModeConfiguration.getString("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
+  lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
 
   lazy val enableRefresh = runModeConfiguration.getBoolean("enableRefresh").getOrElse(true)
   lazy val frontendTemplatePath: String = runModeConfiguration.getString("microservice.services.frontend-template-provider.path")
@@ -176,21 +120,30 @@ object ApplicationConfig extends ApplicationConfig with ServicesConfig {
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
   val SCOTTISH_RESIDENT = "scottish_resident"
 
-  override val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
-  override val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
+  val gdsFinishedUrl = loadConfig("tamc.external-urls.finished-gds")
+  val ptaFinishedUrl = loadConfig("tamc.external-urls.finished-pta")
 
   lazy val urBannerEnabled = runModeConfiguration.getString("feature.ur-banner.enabled").getOrElse("true").toBoolean
 
-  override val LANG_CODE_ENGLISH = "en-GB"
-  override val LANG_CODE_WELSH = "cy-GB"
-  override val LANG_LANG_ENGLISH = "en"
-  override val LANG_LANG_WELSH = "cy"
+  val LANG_CODE_ENGLISH = "en-GB"
+  val LANG_CODE_WELSH = "cy-GB"
+  val LANG_LANG_ENGLISH = "en"
+  val LANG_LANG_WELSH = "cy"
 
-  override val isWelshEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
+  val isWelshEnabled = runModeConfiguration.getBoolean("microservice.services.features.welsh-translation").getOrElse(false)
   lazy val webchatId = loadConfig("webchat.id")
 
   val frontendHost = loadConfig("tamc-frontend.host")
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
-  override def accessibilityStatementUrl(relativeReferrerPath: String): String =
+  def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/marriage-allowance?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl
+
+  val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
+
+  private def createUrl(action: String) =
+    s"$loginUrl/$action?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(callbackUrl)}&failureURL=${encodeQueryStringValue(ivNotAuthorisedUrl)}"
+
+  def ivLoginUrl = createUrl(action = "registration")
+
+  def ivUpliftUrl = createUrl(action = "uplift")
 }
