@@ -23,15 +23,12 @@
 @import org.joda.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 
-@(data: models.ConfirmationModel)(
+@(data: models.ConfirmationModel, appConfig: ApplicationConfig)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@this(
-    appConfig: ApplicationConfig
-)
 
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.confirm"))

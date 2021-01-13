@@ -112,7 +112,7 @@ class TransferController @Inject()(
           if previousYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(registrationInput, previousYears, false))
         case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
           Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(previousYears.nonEmpty), previousYears.nonEmpty, registrationInput.name,
-            Some(registrationInput.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
+            Some(registrationInput.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)), appConfig))
       } recover handleError
   }
 
@@ -128,7 +128,8 @@ class TransferController @Inject()(
                   previousYears.nonEmpty,
                   registrationInput.name,
                   Some(registrationInput.dateOfMarriage),
-                  Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
+                  Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)),
+                  appConfig: ApplicationConfig))
               },
             success => {
 
@@ -155,7 +156,7 @@ class TransferController @Inject()(
     implicit request =>
       registrationService.getCurrentAndPreviousYearsEligibility.map {
         case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
-          Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), registrationInput, previousYears))
+          Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), registrationInput, previousYears, appConfig))
       } recover handleError
   }
 
@@ -171,7 +172,7 @@ class TransferController @Inject()(
           earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
             hasErrors =>
               Future {
-                BadRequest(views.html.multiyear.transfer.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), registrationInput, extraYears))
+                BadRequest(views.html.multiyear.transfer.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), registrationInput, extraYears, appConfig))
               },
             taxYears => {
               registrationService.updateSelectedYears(availableYears, taxYears.selectedYear, taxYears.yearAvailableForSelection).map {
@@ -179,7 +180,7 @@ class TransferController @Inject()(
                   if (taxYears.furtherYears.isEmpty) {
                     Redirect(controllers.routes.TransferController.confirmYourEmail())
                   } else {
-                    Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), registrationInput, toTaxYears(taxYears.furtherYears)))
+                    Ok(views.html.multiyear.transfer.single_year_select(earlierYearsForm(), registrationInput, toTaxYears(taxYears.furtherYears), appConfig))
                   }
               }
             })
@@ -209,7 +210,7 @@ class TransferController @Inject()(
     implicit request =>
       registrationService.getConfirmationData(request.nino) map {
         data =>
-          Ok(views.html.confirm(data = data))
+          Ok(views.html.confirm(data = data, appConfig))
       } recover handleError
   }
 
@@ -226,13 +227,13 @@ class TransferController @Inject()(
       registrationService.getFinishedData(request.nino) map {
         case NotificationRecord(email) =>
           cachingService.remove()
-          Ok(views.html.finished(transferorEmail = email))
+          Ok(views.html.finished(transferorEmail = email, appConfig))
       } recover handleError
   }
 
   def cannotUseService: Action[AnyContent] = authenticate {
     implicit request =>
-      Ok(views.html.errors.transferer_deceased())
+      Ok(views.html.errors.transferer_deceased(appConfig))
   }
 
   def handleError(implicit hc: HeaderCarrier, request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
@@ -251,17 +252,17 @@ class TransferController @Inject()(
         }
 
         throwable match {
-          case _: TransferorNotFound               => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
+          case _: TransferorNotFound               => handle(Logger.warn, Ok(views.html.errors.transferor_not_found(appConfig)))
           case _: RecipientNotFound                => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
           case _: TransferorDeceased               => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: RecipientDeceased                => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-          case _: CacheTransferorInRelationship    => handle(Logger.warn, Ok(views.html.transferor_status()))
+          case _: CacheTransferorInRelationship    => handle(Logger.warn, Ok(views.html.transferor_status(appConfig)))
           case _: CacheMissingRecipient            => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: CacheMissingEmail                => handle(Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
           case _: CacheRelationshipAlreadyCreated  => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: CacheCreateRequestNotSent        => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-          case _: NoTaxYearsSelected               => handle(Logger.info, Ok(views.html.errors.no_year_selected()))
+          case _: NoTaxYearsSelected               => handle(Logger.info, Ok(views.html.errors.no_year_selected(appConfig)))
           case _: NoTaxYearsAvailable              => handle(Logger.info, Ok(views.html.errors.no_eligible_years()))
           case _: NoTaxYearsForTransferor          => handle(Logger.info, Ok(views.html.errors.no_tax_year_transferor()))
           case _: RelationshipMightBeCreated       => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))

@@ -25,15 +25,14 @@
 
 @(earlierYearsForm: Form[models.EarlierYearsInput],
 input: RegistrationFormInput,
-availableYears: List[TaxYear] = List[TaxYear]())(
+availableYears: List[TaxYear] = List[TaxYear](),
+appConfig: ApplicationConfig
+)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@this(
-    appConfig: ApplicationConfig
-)
 
 @templates.tamc_main(
     title = Messages("title.application.pattern", Messages("title.extra-years")),
@@ -66,7 +65,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
             <ul class="list list-bullet">
                 <li>@Html(Messages("your-income", currencyFormatter(appConfig.PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
-                @if(MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
+                @if(appConfig.MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
                 <li>@Html(Messages("income-between", LanguageUtils().formPossessive(input.name),currencyFormatter(appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
                     currencyFormatter(appConfig.MAX_LIMIT(availableYears.head.year))))
                 </li>

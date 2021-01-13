@@ -22,18 +22,19 @@
 @import views.html.templates._
 @import models.auth.UserRequest
 
-@(partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput], scottishResident: Boolean)(
-    implicit messages: Messages, request: UserRequest[_], templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever
+@(
+    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
+    scottishResident: Boolean,
+    appConfig: ApplicationConfig
+)(
+    implicit messages: Messages, request: UserRequest[_],
+    templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever
 )
 
 @maxLimit = @{
     if (scottishResident) appConfig.MAX_LIMIT_SCOT()
     else appConfig.MAX_LIMIT()
 }
-
-@this(
-    appConfig: ApplicationConfig
-)
 
 @tamc_main(title = Messages("title.eligibility.pattern",
     Messages("eligibility.check.partners.income.h1",

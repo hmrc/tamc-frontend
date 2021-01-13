@@ -26,15 +26,14 @@
 historicYearsAvailable: Boolean,
 recipientName: String,
 dom: Option[java.time.LocalDate],
-cy: Option[java.time.LocalDate])(
+cy: Option[java.time.LocalDate],
+appConfig: ApplicationConfig
+)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@this(
-    appConfig: ApplicationConfig
-)
 
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.eligible-years"))

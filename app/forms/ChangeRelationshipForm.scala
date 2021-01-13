@@ -16,18 +16,21 @@
 
 package forms
 
-import config.ApplicationConfig
-import models.ChangeRelationship
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 import com.google.inject.Inject
+import config.ApplicationConfig
+import models.ChangeRelationship
 import play.api.data.Forms._
 import play.api.data._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import services.TimeService
 
-class ChangeRelationshipForm @Inject()(timeService: TimeService) {
+class ChangeRelationshipForm @Inject()(
+                                        timeService: TimeService,
+                                        appConfig: ApplicationConfig
+                                      ) {
 
   val changeRelationshipForm = Form[ChangeRelationship](
     mapping(
@@ -49,7 +52,7 @@ class ChangeRelationshipForm @Inject()(timeService: TimeService) {
     dod match {
       case None => Invalid(ValidationError("pages.form.field.dod.error.required"))
       case Some(date) if date.isAfter(timeService.getCurrentDate) => Invalid(ValidationError("pages.form.field.dom.error.max-date", date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
-      case Some(date) if date.isBefore(ApplicationConfig.TAMC_MIN_DATE) => Invalid(ValidationError("pages.form.field.dom.error.min-date"))
+      case Some(date) if date.isBefore(appConfig.TAMC_MIN_DATE) => Invalid(ValidationError("pages.form.field.dom.error.min-date"))
       case _ => Valid
     }
   }

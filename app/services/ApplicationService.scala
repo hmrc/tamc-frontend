@@ -20,12 +20,15 @@ import com.google.inject.Inject
 import config.ApplicationConfig
 import models.{DesRelationshipEndReason, RelationshipRecord}
 
-class ApplicationService @Inject()(timeService: TimeService)  {
+class ApplicationService @Inject()(
+                                    timeService: TimeService,
+                                    appConfig: ApplicationConfig
+                                  )  {
 
   def canApplyForMarriageAllowance(
                                     historicRelationships: Option[Seq[RelationshipRecord]],
                                     activeRelationship: Option[RelationshipRecord],
-                                    startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean =
+                                    startingFromTaxYear: Int = appConfig.TAMC_BEGINNING_YEAR): Boolean =
     canApplyForPreviousYears(historicRelationships, activeRelationship, startingFromTaxYear) ||
       canApplyForCurrentYears(historicRelationships, activeRelationship)
 
@@ -37,8 +40,8 @@ class ApplicationService @Inject()(timeService: TimeService)  {
   def canApplyForPreviousYears(
                                 historicRelationships: Option[Seq[RelationshipRecord]],
                                 activeRelationship: Option[RelationshipRecord],
-                                startingFromTaxYear: Int = ApplicationConfig.TAMC_BEGINNING_YEAR): Boolean = {
-    val startYear = Math.max(startingFromTaxYear, ApplicationConfig.TAMC_BEGINNING_YEAR)
+                                startingFromTaxYear: Int = appConfig.TAMC_BEGINNING_YEAR): Boolean = {
+    val startYear = Math.max(startingFromTaxYear, appConfig.TAMC_BEGINNING_YEAR)
     val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
     val unavailableYears: Set[Int] = taxYearsThatAreUnavailableForApplication(historicRelationships, activeRelationship)
     (availableYears -- unavailableYears).nonEmpty

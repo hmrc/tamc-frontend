@@ -18,7 +18,7 @@
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
 
-@()(implicit messages: Messages,
+@(appConfig: ApplicationConfig)(implicit messages: Messages,
 request: BaseUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -34,7 +34,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other
 
     <p id="pta-redirect">
         @messages("technical.other-ways.para0.part1")
-        <a href=@ApplicationConfig.ptaFinishedUrl>@messages("technical.other-ways.para0.link-text")</a>
+        <a href=@appConfig.ptaFinishedUrl>@messages("technical.other-ways.para0.link-text")</a>
         @messages("technical.other-ways.para0.part2")
     </p>
     <p id="unable-to-confirm-identity">@messages("technical.other-ways.para1")</p>
@@ -55,7 +55,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other
 <p>@messages("hmrc.contact-details-7") <br>
     @messages("hmrc.contact-details-8")</p>
 }
-<p><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 
 }
 

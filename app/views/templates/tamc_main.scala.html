@@ -22,7 +22,7 @@
 @import models.auth._
 @import config._
 @import play.api.Play
-@import config.ApplicationConfig.webchatId
+@import config.ApplicationConfig
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
@@ -31,7 +31,7 @@
  sidebarLinks: Option[Html] = None,
  sidebarClass: Option[String] = None,
  mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
- appConfig: config.ApplicationConfig = config.ApplicationConfig,
+ appConfig: ApplicationConfig,
  supportLinkEnabled: Boolean = true,
  langSwitch: Option[play.twirl.api.Html] = None,
  scriptElem: Option[Html] = None,
@@ -81,8 +81,8 @@
    });
  </script>
 
- <script type="text/javascript" id="webchat" data-webchat-id="@config.ApplicationConfig.webchatId">
-  var EG_ACT_ID="@config.ApplicationConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="ga";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
+ <script type="text/javascript" id="webchat" data-webchat-id="@appConfig.webchatId">
+  var EG_ACT_ID="@appConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="ga";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
              {c=a.contentWindow.document}
              catch(g)
              {d=e.domain,a.src="javascript:var d=document.open();d.domain='"+d+"';void(0);",c=a.contentWindow.document}
@@ -102,7 +102,7 @@
 }
 
 @commonContentHeader = {
- @if(ApplicationConfig.isWelshEnabled) {
+ @if(appConfig.isWelshEnabled) {
   @langSwitch
  }
 }
@@ -144,15 +144,15 @@
 
 @googleAnalytics = @{
  Map[String, Any](
-  "trackingId" -> ApplicationConfig.analyticsToken,
-  "cookieDomain" -> ApplicationConfig.analyticsHost,
+  "trackingId" -> appConfig.analyticsToken,
+  "cookieDomain" -> appConfig.analyticsHost,
   "confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
   "authProvider" -> request.authProvider
  ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
 @googleTagManager = @{
- if(ApplicationConfig.isGTMEnabled) Map[String, String]("gtmId" -> ApplicationConfig.gtmId) else Map.empty
+ if(appConfig.isGTMEnabled) Map[String, String]("gtmId" -> appConfig.gtmId) else Map.empty
 }
 
 @{
@@ -203,7 +203,7 @@
  )
 
  val templateArguments = {
-  if(!isUserResearchBannerHidden && ApplicationConfig.urBannerEnabled) {
+  if(!isUserResearchBannerHidden && appConfig.urBannerEnabled) {
    arguments ++ Map[String, Any](
     "fullWidthBannerTitle" -> Messages("tamc.banner.recruitment.title"),
     "fullWidthBannerText" -> Messages("tamc.banner.recruitment.link"),

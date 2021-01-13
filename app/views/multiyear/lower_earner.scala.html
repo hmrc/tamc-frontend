@@ -21,11 +21,8 @@
 @import java.text.NumberFormat
 @import models.auth.UserRequest
 
-@this(
-    appConfig: ApplicationConfig
-)
 
-@(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
+@(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)], appConfig: ApplicationConfig)(
     implicit messages: Messages, request: UserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
