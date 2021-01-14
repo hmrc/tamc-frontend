@@ -21,8 +21,10 @@
 @import forms.coc.DivorceSelectYearForm
 @import viewModels.DivorceEndExplanationViewModel
 @import includes.backLink
+@import config.ApplicationConfig
 
-@(viewModel: DivorceEndExplanationViewModel)(implicit messages: Messages,
+@(viewModel: DivorceEndExplanationViewModel,
+applicationConfig: ApplicationConfig)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -30,7 +32,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
     title = messages("title.pattern", messages("pages.divorce.explanation.title")),
     None,
-    mainConfig = views.helpers.MainConfig()) {
+    mainConfig = views.helpers.MainConfig(),
+    appConfig = applicationConfig) {
 
  @backLink()
 

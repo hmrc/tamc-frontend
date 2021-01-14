@@ -185,20 +185,19 @@ class EligibilityController @Inject()(
 
   def ptaCalculator(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.pta.calculator(calculatorForm = calculatorForm))
+      Ok(views.html.pta.calculator(calculatorForm = calculatorForm, applicationConfig = appConfig))
   }
 
   def ptaCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.pta.calculator(calculatorForm = formWithErrors)),
+          BadRequest(views.html.pta.calculator(calculatorForm = formWithErrors, applicationConfig = appConfig)),
         calculatorInput =>
           Ok(views.html.pta.calculator(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
-              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))), applicationConfig = appConfig)))
   }
-
 
 }

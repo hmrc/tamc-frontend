@@ -18,7 +18,7 @@
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
 
-@(appConfig: ApplicationConfig)(implicit messages: Messages,
+@(applicationConfig: ApplicationConfig)(implicit messages: Messages,
 request: BaseUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -26,7 +26,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.other-ways")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways"))),
+appConfig = applicationConfig) {
 
 <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 
@@ -34,6 +35,6 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other
 <div class="panel panel-border-narrow">@Html(Messages("pages.noyears.content1"))</div>
 <p>
  @messages("pages.noyears.findoutmore.part1")
- <a href=@appConfig.howItWorksUrl target="_blank">@messages("pages.noyears.findoutmore.link-text")</a>
+ <a href=@applicationConfig.howItWorksUrl target="_blank">@messages("pages.noyears.findoutmore.link-text")</a>
 </p>
 }

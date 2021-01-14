@@ -52,21 +52,20 @@ class TransferController @Inject()(
 
   def transfer: Action[AnyContent] = authenticate {
     implicit request =>
-      Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)))
+      Ok(views.html.multiyear.transfer.transfer(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino), applicationConfig = appConfig))
   }
 
   def transferAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
         formWithErrors =>
-          Future.successful(BadRequest(views.html.multiyear.transfer.transfer(formWithErrors))),
+          Future.successful(BadRequest(views.html.multiyear.transfer.transfer(formWithErrors, applicationConfig = appConfig))),
         recipientData => {
           cachingService.saveRecipientDetails(recipientData).map { _ =>
             Redirect(controllers.routes.TransferController.dateOfMarriage())
           }
         })
   }
-
 
   def dateOfMarriage: Action[AnyContent] = authenticate {
     implicit request =>
@@ -109,7 +108,7 @@ class TransferController @Inject()(
         case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
           throw new NoTaxYearsAvailable
         case CurrentAndPreviousYearsEligibility(false, previousYears, registrationInput, _)
-          if previousYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(registrationInput, previousYears, false))
+          if previousYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(registrationInput, previousYears, currentYearAvailable = false, applicationConfig = appConfig))
         case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
           Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(previousYears.nonEmpty), previousYears.nonEmpty, registrationInput.name,
             Some(registrationInput.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)), appConfig))
@@ -143,7 +142,7 @@ class TransferController @Inject()(
                 if (previousYears.isEmpty && currentYearAvailable && (!success.applyForCurrentYear.contains(true))) {
                   throw new NoTaxYearsSelected
                 } else if (previousYears.nonEmpty) {
-                  Ok(views.html.multiyear.transfer.previous_years(registrationInput, previousYears, currentYearAvailable))
+                  Ok(views.html.multiyear.transfer.previous_years(registrationInput, previousYears, currentYearAvailable, applicationConfig = appConfig))
                 } else {
                   Redirect(controllers.routes.TransferController.confirmYourEmail())
                 }
@@ -190,8 +189,8 @@ class TransferController @Inject()(
   def confirmYourEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
       cachingService.fetchAndGetEntry[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD) map {
-        case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail), appConfig = appConfig))
-        case None => Ok(views.html.multiyear.transfer.email(emailForm, appConfig = appConfig))
+        case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail), applicationConfig = appConfig))
+        case None => Ok(views.html.multiyear.transfer.email(emailForm, applicationConfig = appConfig))
       }
   }
 
@@ -199,7 +198,7 @@ class TransferController @Inject()(
     implicit request =>
       emailForm.bindFromRequest.fold(
         formWithErrors =>
-          Future.successful(BadRequest(views.html.multiyear.transfer.email(formWithErrors, appConfig = appConfig))),
+          Future.successful(BadRequest(views.html.multiyear.transfer.email(formWithErrors, applicationConfig = appConfig))),
         transferorEmail =>
           registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
             _ => Redirect(controllers.routes.TransferController.confirm())

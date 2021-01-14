@@ -19,8 +19,10 @@
 @import templates.coc.confirmSummary
 @import uk.gov.hmrc.play.views.html._
 @import includes.backLink
+@import config.ApplicationConfig
 
-@(viewModel: ConfirmUpdateViewModel)(implicit messages: Messages,
+@(viewModel: ConfirmUpdateViewModel,
+applicationConfig: ApplicationConfig)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -28,7 +30,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", messages("title.confirm-transferor")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm"))),
+appConfig = applicationConfig
 ) {
 
  @backLink()

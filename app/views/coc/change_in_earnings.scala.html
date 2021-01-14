@@ -19,7 +19,7 @@
 @import includes.backLink
 @import config.ApplicationConfig
 
-@(appConfig: ApplicationConfig)(implicit messages: Messages,
+@(applicationConfig: ApplicationConfig)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -27,7 +27,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = messages("title.pattern", messages("pages.changeOfIncome.title")),
 manageService = true,
-mainConfig = views.helpers.MainConfig()
+mainConfig = views.helpers.MainConfig(),
+appConfig = applicationConfig
 ) {
 
     @backLink()
@@ -36,7 +37,7 @@ mainConfig = views.helpers.MainConfig()
         <h1 class="heading-xlarge">@messages("pages.changeOfIncome.title")</h1>
     </header>
 
-    <p>@messages("general.helpline.enquiries.link.pretext") <a href="@appConfig.generalEnquiriesLink">
+    <p>@messages("general.helpline.enquiries.link.pretext") <a href="@applicationConfig.generalEnquiriesLink">
     @messages("general.helpline.enquiries.link")</a> @messages("pages.changeOfIncome.enquiries.link.paragraph")</p>
 
     <p>@messages("pages.changeOfIncome.paragraph2")</p>

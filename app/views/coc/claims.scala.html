@@ -20,13 +20,16 @@
 @import viewModels.ClaimsViewModel
 @import uk.gov.hmrc.urls.Link
 @import includes.backLink
+@import config.ApplicationConfig
 
-@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
+@(viewModel: ClaimsViewModel,
+applicationConfig: ApplicationConfig)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
 title = messages("title.pattern", messages("pages.claims.title")),
-mainConfig = views.helpers.MainConfig(None)
+mainConfig = views.helpers.MainConfig(None),
+appConfig = applicationConfig
 ){
 
     @backLink()

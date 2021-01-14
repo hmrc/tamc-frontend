@@ -16,20 +16,20 @@
 
 package config
 
-import java.time.LocalDate
-
 import com.google.inject.Inject
 import play.api.Mode.Mode
-import play.api.{Configuration, Environment, Play}
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+
+import java.time.LocalDate
 
 //TODO get rid of vals in here that aren't actually config values!!!!!
 class ApplicationConfig @Inject()(val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
 
-   protected def mode: Mode = environment.mode
+  protected def mode: Mode = environment.mode
 
   private lazy val currentTaxYear: TaxYear = TaxYear.current
 

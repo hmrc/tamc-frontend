@@ -19,7 +19,7 @@
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
-@(appConfig: ApplicationConfig)(implicit messages: Messages,
+@(applicationConfig: ApplicationConfig)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -27,7 +27,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.change.earnings")),
 manageService = true,
-mainConfig = views.helpers.MainConfig()) {
+mainConfig = views.helpers.MainConfig(),
+appConfig = applicationConfig) {
 
 <header class="page-heading">
     <h1 class="heading-large">@Html(Messages("change.status.earnings.h1"))</h1>
@@ -36,10 +37,10 @@ mainConfig = views.helpers.MainConfig()) {
 <h2 class="heading-medium">@Html(Messages("change.status.earnings.h2"))</h2>
 <ul class="list list-bullet">
     <li>@Html(Messages("change.status.earnings.rec.instruction-1",
-        NumberFormat.getIntegerInstance().format(appConfig.MAX_LIMIT())))
+        NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT())))
     </li>
     <li>@Html(Messages("change.status.earnings.rec.instruction-2",
-        NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE())))
+        NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE())))
     </li>
 </ul>
 
@@ -54,5 +55,5 @@ mainConfig = views.helpers.MainConfig()) {
 <p>@messages("hmrc.contact-details-7") <br>
     @messages("hmrc.contact-details-8")</p>
 
-<p><a target="_blank" href=@appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

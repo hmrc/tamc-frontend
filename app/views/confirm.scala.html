@@ -23,15 +23,16 @@
 @import org.joda.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 
-@(data: models.ConfirmationModel, appConfig: ApplicationConfig)(
+@(data: models.ConfirmationModel,
+applicationConfig: ApplicationConfig)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.confirm"))
+title = Messages("title.application.pattern", Messages("title.confirm")),
+appConfig = applicationConfig
 ){
 
 <a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(Messages("generic.back"))</a>
@@ -112,13 +113,13 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             </td>
             <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
                 LanguageUtils().formPossessive(data.recipientFirstName),
-                data.recipientFirstName, NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
+                data.recipientFirstName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
                 } else {
             <td id="year-@taxYear.year">
                 @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
             </td>
             <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
-                Messages("max-benefit", NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(taxYear.year)))))
+                Messages("max-benefit", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)))))
             </td>
             }
             <td>

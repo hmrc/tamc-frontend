@@ -18,14 +18,16 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
-@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress, appConfig: ApplicationConfig)(
+@(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress,
+applicationConfig: ApplicationConfig)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.finished"))
+title = Messages("title.application.pattern", Messages("title.finished")),
+appConfig = applicationConfig
 ){
 
 <div class="highlighted-event govuk-box-highlight" id="govuk-box">
@@ -40,7 +42,7 @@ title = Messages("title.application.pattern", Messages("title.finished"))
 <p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
 
 <p id="paragraph-5">@messages("pages.finished.check-link-para1")
-    <a id="pta-link" href=@appConfig.ptaFinishedUrl data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">@messages("pages.finished.check-link.text")</a>
+    <a id="pta-link" href=@applicationConfig.ptaFinishedUrl data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">@messages("pages.finished.check-link.text")</a>
     @messages("pages.finished.check-link-para2")
 </p>
 }
