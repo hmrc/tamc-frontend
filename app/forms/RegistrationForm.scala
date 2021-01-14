@@ -16,12 +16,11 @@
 
 package forms
 
-import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 
 import config.ApplicationConfig
 import models.{Gender, RegistrationFormInput}
-import java.time.{LocalDate, OffsetDateTime, ZoneId, ZonedDateTime}
+import java.time.{LocalDate, ZoneId, ZonedDateTime}
 
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
@@ -122,7 +121,7 @@ object RegistrationForm {
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
   def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages): Mapping[LocalDate] = {
-    val minDate = ApplicationConfig.TAMC_MIN_DATE
+    val minDate = ApplicationConfig.appConfig.TAMC_MIN_DATE
     val maxDate = today.plusDays(1)
 
     validDateTuple("pages.form.field.dom.error.enter_full_date",

@@ -33,7 +33,7 @@ object DivorceSelectYearForm {
 
   val DateOfDivorce = "dateOfDivorce"
   val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
-  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE)
+  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.appConfig.TAMC_MIN_DATE)
 
   def isNonNumericDate(year: String, month: String, day: String): Boolean = !s"$year$month$day".forall(_.isDigit)
   def isNonValidDate(year: String, month: String, day: String): Boolean = {
@@ -83,7 +83,7 @@ object DivorceSelectYearForm {
 
   private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
     case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date",
-      LanguageUtils().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
+      LanguageUtils().ukDateTransformer(ApplicationConfig.appConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
       Invalid(ValidationError("pages.divorce.date.error.max.date",
         LanguageUtils().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))

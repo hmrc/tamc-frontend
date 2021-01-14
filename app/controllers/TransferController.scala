@@ -69,7 +69,7 @@ class TransferController @Inject()(
 
   def dateOfMarriage: Action[AnyContent] = authenticate {
     implicit request =>
-      Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
+      Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate), applicationConfig = appConfig))
   }
 
   def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
@@ -85,7 +85,7 @@ class TransferController @Inject()(
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
-        formWithErrors => Future.successful(BadRequest(views.html.date_of_marriage(formWithErrors)))
+        formWithErrors => Future.successful(BadRequest(views.html.date_of_marriage(formWithErrors, appConfig)))
         ,
         marriageData => {
           cachingService.saveDateOfMarriage(marriageData)
@@ -252,7 +252,7 @@ class TransferController @Inject()(
 
         throwable match {
           case _: TransferorNotFound               => handle(Logger.warn, Ok(views.html.errors.transferor_not_found(appConfig)))
-          case _: RecipientNotFound                => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
+          case _: RecipientNotFound                => handle(Logger.warn, Ok(views.html.errors.recipient_not_found(appConfig)))
           case _: TransferorDeceased               => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: RecipientDeceased                => handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
           case _: CacheMissingTransferor           => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
@@ -262,12 +262,12 @@ class TransferController @Inject()(
           case _: CacheRelationshipAlreadyCreated  => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: CacheCreateRequestNotSent        => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
           case _: NoTaxYearsSelected               => handle(Logger.info, Ok(views.html.errors.no_year_selected(appConfig)))
-          case _: NoTaxYearsAvailable              => handle(Logger.info, Ok(views.html.errors.no_eligible_years()))
-          case _: NoTaxYearsForTransferor          => handle(Logger.info, Ok(views.html.errors.no_tax_year_transferor()))
+          case _: NoTaxYearsAvailable              => handle(Logger.info, Ok(views.html.errors.no_eligible_years(appConfig)))
+          case _: NoTaxYearsForTransferor          => handle(Logger.info, Ok(views.html.errors.no_tax_year_transferor(appConfig)))
           case _: RelationshipMightBeCreated       => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-          case ex: CannotCreateRelationship        => handleWithException(ex, views.html.errors.relationship_cannot_create())
-          case ex: CacheRecipientInRelationship    => handleWithException(ex, views.html.errors.recipient_relationship_exists())
-          case ex                                  => handleWithException(ex, views.html.errors.try_later())
+          case ex: CannotCreateRelationship        => handleWithException(ex, views.html.errors.relationship_cannot_create(appConfig))
+          case ex: CacheRecipientInRelationship    => handleWithException(ex, views.html.errors.recipient_relationship_exists(appConfig))
+          case ex                                  => handleWithException(ex, views.html.errors.try_later(appConfig))
         }
     }
 

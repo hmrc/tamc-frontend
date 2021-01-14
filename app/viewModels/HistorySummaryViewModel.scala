@@ -18,7 +18,7 @@ package viewModels
 
 import java.text.NumberFormat
 
-import config.ApplicationConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT}
+import config.ApplicationConfig.appConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT}
 import models._
 import play.api.i18n.Messages
 import play.twirl.api.Html

@@ -18,12 +18,11 @@ package config
 
 import com.google.inject.Inject
 import play.api.Mode.Mode
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
-
 import java.time.LocalDate
 
 //TODO get rid of vals in here that aren't actually config values!!!!!
@@ -146,4 +145,8 @@ class ApplicationConfig @Inject()(val runModeConfiguration: Configuration, envir
   def ivLoginUrl = createUrl(action = "registration")
 
   def ivUpliftUrl = createUrl(action = "uplift")
+}
+
+object ApplicationConfig {
+ val appConfig = Play.current.injector.instanceOf[ApplicationConfig]
 }

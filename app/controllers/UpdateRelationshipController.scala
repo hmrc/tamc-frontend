@@ -52,7 +52,7 @@ class UpdateRelationshipController @Inject()(
           val viewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
             relationshipRecords.hasMarriageAllowanceBeenCancelled,
             relationshipRecords.loggedInUserInfo)
-          Ok(views.html.coc.history_summary(viewModel))
+          Ok(views.html.coc.history_summary(viewModel, appConfig))
         }
       } recover handleError
   }
@@ -60,9 +60,9 @@ class UpdateRelationshipController @Inject()(
   def decision: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
-        Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
+        Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision), appConfig))
       } recover {
-        case NonFatal(_) => Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form))
+        case NonFatal(_) => Ok(views.html.coc.decision(CheckClaimOrCancelDecisionForm.form, appConfig))
       }
   }
 
@@ -71,7 +71,7 @@ class UpdateRelationshipController @Inject()(
 
       CheckClaimOrCancelDecisionForm.form.bindFromRequest.fold(
         formWithErrors => {
-          Future.successful(BadRequest(views.html.coc.decision(formWithErrors)))
+          Future.successful(BadRequest(views.html.coc.decision(formWithErrors, appConfig)))
         }, {
           case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) => {
             updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
@@ -90,7 +90,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
         val viewModel = ClaimsViewModel(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
-        Ok(views.html.coc.claims(viewModel))
+        Ok(views.html.coc.claims(viewModel, appConfig))
       }) recover handleError
   }
 
@@ -98,9 +98,9 @@ class UpdateRelationshipController @Inject()(
   def makeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getMakeChangesDecision map { makeChangesData =>
-        Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(makeChangesData.map(_.toString))))
+        Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(makeChangesData.map(_.toString)), appConfig))
       } recover {
-        case NonFatal(_) => Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form))
+        case NonFatal(_) => Ok(views.html.coc.reason_for_change(MakeChangesDecisionForm.form, appConfig))
       }
   }
 
@@ -108,7 +108,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       MakeChangesDecisionForm.form.bindFromRequest.fold(
         formWithErrors => {
-          Future.successful(BadRequest(views.html.coc.reason_for_change(formWithErrors)))
+          Future.successful(BadRequest(views.html.coc.reason_for_change(formWithErrors, appConfig)))
         }, {
           case Some(MakeChangesDecisionForm.Divorce) => {
             updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Divorce) map { _ =>
@@ -157,7 +157,7 @@ class UpdateRelationshipController @Inject()(
 
   def stopAllowance: Action[AnyContent] = authenticate.async {
     implicit request =>
-      Future.successful(Ok(views.html.coc.stopAllowance()))
+      Future.successful(Ok(views.html.coc.stopAllowance(appConfig)))
   }
 
 
@@ -165,7 +165,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       val cancelDates = updateRelationshipService.getMAEndingDatesForCancelation
       updateRelationshipService.saveMarriageAllowanceEndingDates(cancelDates) map { _ =>
-        Ok(views.html.coc.cancel(cancelDates))
+        Ok(views.html.coc.cancel(cancelDates, appConfig))
       } recover handleError
   }
 
@@ -184,12 +184,12 @@ class UpdateRelationshipController @Inject()(
   def divorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getDivorceDate map { optionalDivorceDate =>
-        optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))){ divorceDate =>
-          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate)))
+        optionalDivorceDate.fold(Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form, appConfig))){ divorceDate =>
+          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDate), appConfig))
         }
       } recover {
         case NonFatal(_) =>
-          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form))
+          Ok(views.html.coc.divorce_select_year(DivorceSelectYearForm.form, appConfig))
       }
   }
 
@@ -197,7 +197,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       DivorceSelectYearForm.form.bindFromRequest.fold(
         formWithErrors => {
-          Future.successful(BadRequest(views.html.coc.divorce_select_year(formWithErrors)))
+          Future.successful(BadRequest(views.html.coc.divorce_select_year(formWithErrors, appConfig)))
         }, {
           case divorceDate =>
             updateRelationshipService.saveDivorceDate(divorceDate) map { _ =>
@@ -215,16 +215,16 @@ class UpdateRelationshipController @Inject()(
         _ <- updateRelationshipService.saveMarriageAllowanceEndingDates(datesForDivorce)
       } yield {
        val viewModel = DivorceEndExplanationViewModel(role, divorceDate, datesForDivorce)
-        Ok(views.html.coc.divorce_end_explanation(viewModel))
+        Ok(views.html.coc.divorce_end_explanation(viewModel, appConfig))
       }) recover handleError
   }
 
 
   def confirmEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
-      lazy val emptyEmailView = views.html.coc.email(emailForm)
+      lazy val emptyEmailView = views.html.coc.email(emailForm, appConfig)
       updateRelationshipService.getEmailAddress map {
-        case Some(email) => Ok(views.html.coc.email(emailForm.fill(email)))
+        case Some(email) => Ok(views.html.coc.email(emailForm.fill(email), appConfig))
         case None => Ok(emptyEmailView)
       } recover {
         case NonFatal(_) => Ok(emptyEmailView)
@@ -236,7 +236,7 @@ class UpdateRelationshipController @Inject()(
     implicit request =>
       emailForm.bindFromRequest.fold(
         formWithErrors => {
-          Future.successful(BadRequest(views.html.coc.email(formWithErrors)))
+          Future.successful(BadRequest(views.html.coc.email(formWithErrors, appConfig)))
         },
         email =>
           updateRelationshipService.saveEmailAddress(email) map {
@@ -248,7 +248,7 @@ class UpdateRelationshipController @Inject()(
   def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getConfirmationUpdateAnswers map { confirmationUpdateAnswers =>
-          Ok(views.html.coc.confirmUpdate(ConfirmUpdateViewModel(confirmationUpdateAnswers)))
+          Ok(views.html.coc.confirmUpdate(ConfirmUpdateViewModel(confirmationUpdateAnswers), appConfig))
       } recover handleError
   }
 
@@ -265,7 +265,7 @@ class UpdateRelationshipController @Inject()(
         email <- updateRelationshipService.getEmailAddressForConfirmation
         _ <- updateRelationshipService.removeCache
       } yield {
-        Ok(views.html.coc.finished(email))
+        Ok(views.html.coc.finished(email, appConfig))
       }) recover handleError
   }
 

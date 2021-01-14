@@ -46,7 +46,7 @@ import uk.gov.hmrc.time.TaxYear
 
 object LanguageUtils {
 
-  def isWelsh(messages: Messages): Boolean = messages.lang.language == ApplicationConfig.LANG_LANG_WELSH
+  def isWelsh(messages: Messages): Boolean = messages.lang.language == ApplicationConfig.appConfig.LANG_LANG_WELSH
 
   def apply()(implicit messages: Messages): LanguageUtils = {
     if(isWelsh(messages)) WelshLanguageUtils else EnglishLangaugeUtils

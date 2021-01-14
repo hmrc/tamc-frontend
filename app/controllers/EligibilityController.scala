@@ -73,7 +73,7 @@ class EligibilityController @Inject()(
             if (eligibilityInput.married) {
               Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
             } else {
-              Ok(views.html.multiyear.eligibility_non_eligible_finish(finishUrl(request.isAuthenticated)))
+              Ok(views.html.multiyear.eligibility_non_eligible_finish(finishUrl(request.isAuthenticated), appConfig))
             }
           })
     }
@@ -96,7 +96,7 @@ class EligibilityController @Inject()(
 
   def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
+      Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm, appConfig))
         .withSession(request.session - appConfig.SCOTTISH_RESIDENT)
   }
 
@@ -104,7 +104,7 @@ class EligibilityController @Inject()(
     implicit request =>
       doYouLiveInScotlandForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors)),
+          BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors, appConfig)),
         doYouLiveInScotlandInput => {
           Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
             .withSession(request.session + (appConfig.SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
@@ -143,7 +143,7 @@ class EligibilityController @Inject()(
 
   def doYouWantToApply(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm))
+      Ok(views.html.multiyear.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm, appConfig))
   }
 
   def doYouWantToApplyAction(): Action[AnyContent] = {
@@ -155,7 +155,7 @@ class EligibilityController @Inject()(
       implicit request =>
         doYouWantToApplyForm.bindFromRequest.fold(
           formWithErrors =>
-            BadRequest(views.html.multiyear.do_you_want_to_apply(formWithErrors)),
+            BadRequest(views.html.multiyear.do_you_want_to_apply(formWithErrors, appConfig)),
           doYouWantToApplyInput => {
             if (doYouWantToApplyInput.doYouWantToApply) {
               Redirect(controllers.routes.TransferController.transfer())
@@ -168,14 +168,14 @@ class EligibilityController @Inject()(
 
   def gdsCalculator(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.calculator(calculatorForm = calculatorForm, appConfig = appConfig))
+      Ok(views.html.calculator(calculatorForm = calculatorForm, applicationConfig = appConfig))
   }
 
   def gdsCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.calculator(calculatorForm = formWithErrors, appConfig = appConfig)),
+          BadRequest(views.html.calculator(calculatorForm = formWithErrors, applicationConfig = appConfig)),
         calculatorInput =>
           Ok(views.html.calculator(
             calculatorForm = calculatorForm.fill(calculatorInput),

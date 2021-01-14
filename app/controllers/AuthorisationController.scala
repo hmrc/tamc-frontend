@@ -45,6 +45,6 @@ class AuthorisationController @Inject()(
 
   def sessionTimeout = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.errors.session_timeout())
+      Ok(views.html.errors.session_timeout(appConfig))
   }
 }

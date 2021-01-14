@@ -57,7 +57,7 @@ trait TimeService {
   def getValidYearsApplyMAPreviousYears(years: Option[List[models.TaxYear]]): List[models.TaxYear] = {
     years.fold(List[models.TaxYear]()) {
       actualYears =>
-        actualYears.filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
+        actualYears.filter(year => year.year >= ApplicationConfig.appConfig.TAMC_BEGINNING_YEAR)
     }
   }
 
