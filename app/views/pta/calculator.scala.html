@@ -21,14 +21,16 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 
 @(calculatorForm: Form[models.EligibilityCalculatorInput],
-calculationResult: Option[models.EligibilityCalculatorResult] = None
+calculationResult: Option[models.EligibilityCalculatorResult] = None,
+applicationConfig: ApplicationConfig
 )(implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.eligibility-criteria"))
+title = Messages("title.pattern", Messages("title.eligibility-criteria")),
+appConfig = applicationConfig
 ){
 
 <a href="@controllers.routes.EligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>

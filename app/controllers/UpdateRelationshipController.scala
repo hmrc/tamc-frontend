@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
+import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.EmailForm.emailForm
@@ -38,7 +39,8 @@ import scala.util.control.NonFatal
 class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
-                                              updateRelationshipService: UpdateRelationshipService
+                                              updateRelationshipService: UpdateRelationshipService,
+                                              appConfig: ApplicationConfig
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever) extends BaseController {
 
@@ -169,13 +171,13 @@ class UpdateRelationshipController @Inject()(
 
   def changeOfIncome: Action[AnyContent] = authenticate.async {
     implicit request =>
-      Future.successful(Ok(views.html.coc.change_in_earnings()))
+      Future.successful(Ok(views.html.coc.change_in_earnings(appConfig)))
   }
 
   def bereavement: Action[AnyContent] = authenticate.async {
     implicit request =>
       (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-        Ok(views.html.coc.bereavement(relationshipRecords.primaryRecord.role))
+        Ok(views.html.coc.bereavement(relationshipRecords.primaryRecord.role, appConfig))
       }) recover handleError
   }
 
@@ -285,9 +287,9 @@ class UpdateRelationshipController @Inject()(
           case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
           case _: MultipleActiveRecordError => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
+          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found(appConfig)))
           case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
+          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found(appConfig)))
           case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
           case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
         }

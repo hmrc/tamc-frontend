@@ -21,7 +21,7 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
-@(recipientForm: Form[models.RecipientDetailsFormInput])(
+@(recipientForm: Form[models.RecipientDetailsFormInput], applicationConfig: ApplicationConfig)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
@@ -31,7 +31,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.transfer")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
+maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}"))),
+appConfig = applicationConfig
 ) {
 
     <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>

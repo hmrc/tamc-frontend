@@ -19,14 +19,15 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
-@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None)(
+@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None, applicationConfig: ApplicationConfig)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.confirm-email"))
+title = Messages("title.application.pattern", Messages("title.confirm-email")),
+appConfig = applicationConfig
 ){
 
 <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>

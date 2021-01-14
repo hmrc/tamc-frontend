@@ -24,7 +24,8 @@
 
 @(input:RegistrationFormInput,
 availableYears:List[TaxYear] = List[TaxYear](),
-currentYearAvailable: Boolean)(
+currentYearAvailable: Boolean,
+applicationConfig: ApplicationConfig)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
@@ -35,8 +36,8 @@ title = Messages("title.application.pattern", Messages("title.extra-years")),
 langSelectorOverride = Some(
 Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
 "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
-)
-)){
+)),
+appConfig = applicationConfig){
 
     @if(currentYearAvailable) {
         <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>

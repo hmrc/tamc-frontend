@@ -19,7 +19,7 @@ package errorHandler
 import com.google.inject.Inject
 import config.{ApplicationConfig, TamcFormPartialRetriever}
 import play.api.Configuration
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
@@ -35,9 +35,8 @@ class ErrorHandler @Inject()(
                              templateRender: TemplateRenderer
                             ) extends FrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]) = views.html.templates.error_template(pageTitle, heading, message)
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
+    views.html.templates.error_template(pageTitle, heading, message, appConfig)
 
-  override def notFoundTemplate(implicit request: Request[_]): Html = {
-    views.html.templates.page_not_found_template(appConfig, formPartialRetriever)
-  }
+  override def notFoundTemplate(implicit request: Request[_]): Html = views.html.templates.page_not_found_template(appConfig, formPartialRetriever)
 }

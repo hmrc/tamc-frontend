@@ -190,8 +190,8 @@ class TransferController @Inject()(
   def confirmYourEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
       cachingService.fetchAndGetEntry[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD) map {
-        case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail)))
-        case None => Ok(views.html.multiyear.transfer.email(emailForm))
+        case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail), appConfig = appConfig))
+        case None => Ok(views.html.multiyear.transfer.email(emailForm, appConfig = appConfig))
       }
   }
 
@@ -199,7 +199,7 @@ class TransferController @Inject()(
     implicit request =>
       emailForm.bindFromRequest.fold(
         formWithErrors =>
-          Future.successful(BadRequest(views.html.multiyear.transfer.email(formWithErrors))),
+          Future.successful(BadRequest(views.html.multiyear.transfer.email(formWithErrors, appConfig = appConfig))),
         transferorEmail =>
           registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map {
             _ => Redirect(controllers.routes.TransferController.confirm())

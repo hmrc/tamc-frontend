@@ -27,7 +27,7 @@ historicYearsAvailable: Boolean,
 recipientName: String,
 dom: Option[java.time.LocalDate],
 cy: Option[java.time.LocalDate],
-appConfig: ApplicationConfig
+applicationConfig: ApplicationConfig
 )(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -36,7 +36,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
 @templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.eligible-years"))
+title = Messages("title.application.pattern", Messages("title.eligible-years")),
+appConfig = applicationConfig
 ){
 
 <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
@@ -57,7 +58,7 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
 
     <ul class="list list-bullet">
         <li>@Html(Messages("pages.eligibleyear.li1",recipientName,
-            NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT())))
+            NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT())))
         </li>
         <li>@Html(Messages("pages.eligibleyear.li2",LanguageUtils().formPossessive(recipientName)))
         </li>

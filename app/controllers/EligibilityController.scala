@@ -168,14 +168,14 @@ class EligibilityController @Inject()(
 
   def gdsCalculator(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.calculator(calculatorForm = calculatorForm, appConfig))
+      Ok(views.html.calculator(calculatorForm = calculatorForm, appConfig = appConfig))
   }
 
   def gdsCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.calculator(calculatorForm = formWithErrors, appConfig)),
+          BadRequest(views.html.calculator(calculatorForm = formWithErrors, appConfig = appConfig)),
         calculatorInput =>
           Ok(views.html.calculator(
             calculatorForm = calculatorForm.fill(calculatorInput),
