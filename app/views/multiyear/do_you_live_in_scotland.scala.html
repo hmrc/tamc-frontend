@@ -16,18 +16,15 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig
 @import models.auth.UserRequest
 
-@(doYouLiveInScotlandForm: Form[(MultiYearDoYouLiveInScotlandFormInput)],
-applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@(doYouLiveInScotlandForm: Form[(MultiYearDoYouLiveInScotlandFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1")),
-appConfig = applicationConfig
+title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1"))
 ){
 
 <a href="@controllers.routes.EligibilityController.dateOfBirthCheck"

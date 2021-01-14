@@ -19,21 +19,20 @@
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 
-@(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)], applicationConfig: ApplicationConfig
+@(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)]
 )(implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1")),
-appConfig = applicationConfig
+title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
 ) {
 
 @if(request.isAuthenticated){
     <a href="@controllers.routes.EligibilityController.ptaCalculator" class="link-back">@Html(Messages("generic.back"))</a>
 } else {
-    <a href="@applicationConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@ApplicationConfig.appConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
 }
 
 @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")

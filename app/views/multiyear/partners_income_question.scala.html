@@ -24,38 +24,36 @@
 
 @(
     partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
-    scottishResident: Boolean,
-    applicationConfig: ApplicationConfig
+    scottishResident: Boolean
 )(
     implicit messages: Messages, request: UserRequest[_],
     templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever
 )
 
 @maxLimit = @{
-    if (scottishResident) applicationConfig.MAX_LIMIT_SCOT()
-    else applicationConfig.MAX_LIMIT()
+    if (scottishResident) ApplicationConfig.appConfig.MAX_LIMIT_SCOT()
+    else ApplicationConfig.appConfig.MAX_LIMIT()
 }
 
 @tamc_main(title = Messages("title.eligibility.pattern",
     Messages("eligibility.check.partners.income.h1",
-        NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1),
+        NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
         NumberFormat.getIntegerInstance().format(maxLimit)
     )
-),
-appConfig = applicationConfig) {
+)) {
     <a href="@controllers.routes.EligibilityController.lowerEarnerCheck"
        class="link-back">@Html(Messages("generic.back"))</a>
 
     @form_error_notification(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
-        lowerLimit = Some(applicationConfig.PERSONAL_ALLOWANCE() + 1),
+        lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
         upperLimit = Some(maxLimit)
     )
 
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() +
+        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() +
         1), NumberFormat.getIntegerInstance().format(maxLimit))</h1>
         <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
     </header>

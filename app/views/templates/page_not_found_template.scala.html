@@ -16,7 +16,7 @@
 
 @import config.ApplicationConfig
 
-@(applicationConfig: ApplicationConfig, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 @import uk.gov.hmrc.play.views.html.layouts
@@ -39,7 +39,7 @@
 }
 
 @getHelpForm = {
-    @includes.report_problem(true, formPartialRetriever, applicationConfig)
+    @includes.report_problem(true, formPartialRetriever, ApplicationConfig.appConfig)
 }
 
 @mainContent = {
@@ -50,7 +50,7 @@
 
 
 @{
-    templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
+    templateRenderer.renderDefaultTemplate(ApplicationConfig.appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
     "pageTitle" -> messages("title.pattern", messages("global.page.not.found.error.title")),
     "isWelsh" -> isWelsh,
     "getHelpForm" -> getHelpForm,
@@ -58,11 +58,11 @@
     "langSelector" -> langSelectorMap,
     "signOutUrl" -> Some(routes.AuthorisationController.logout()),
     "googleAnalytics" -> Map(
-    "trackingId" -> applicationConfig.analyticsToken,
-    "cookieDomain" -> applicationConfig.analyticsHost
+    "trackingId" -> ApplicationConfig.appConfig.analyticsToken,
+    "cookieDomain" -> ApplicationConfig.appConfig.analyticsHost
     ),
     "mainContentHeader" -> contentHeader,
     "betaBanner" -> true,
-    "feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier
+    "feedbackIdentifier" -> ApplicationConfig.appConfig.contactFormServiceIdentifier
     ))
 }

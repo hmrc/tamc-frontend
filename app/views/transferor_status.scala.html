@@ -18,7 +18,7 @@
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
 
-@(applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@()(implicit messages: Messages,
 request: BaseUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -26,8 +26,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = messages("title.pattern", messages("title.transfer-in-place")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-rel-exists"))),
-appConfig = applicationConfig
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-rel-exists")))
 ) {
 <p>@Html(messages("transferor.has.relationship"))</p>
 <strong>@Html(messages("hmrc.contact-details"))</strong>
@@ -39,6 +38,6 @@ appConfig = applicationConfig
     <li>@messages("hmrc.contact-details-6")</li>
     <li>@messages("hmrc.contact-details-7")</li>
     <li>@messages("hmrc.contact-details-8")</li>
-    <li><a target="_blank" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
+    <li><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
 </ul>
 }

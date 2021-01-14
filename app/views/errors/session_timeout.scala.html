@@ -15,13 +15,11 @@
  *@
 
 @import models.auth.BaseUserRequest
-@import config.ApplicationConfig
 
-@(applicationConfig: ApplicationConfig)(implicit messages: Messages, request: BaseUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit messages: Messages, request: BaseUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("session.timeout.title")),
-appConfig = applicationConfig
+title = Messages("title.pattern", Messages("session.timeout.title"))
 ){
 
 <h1 class="heading-large">@Html(Messages("session.timeout.statement"))</h1>

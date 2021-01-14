@@ -19,11 +19,9 @@
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 @import models.auth.UserRequest
-@import config.ApplicationConfig
 
 @(
-doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput],
-applicationConfig: ApplicationConfig
+doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
 )(implicit
 messages: Messages,
 request: UserRequest[_],
@@ -32,8 +30,7 @@ formPartialRetriever: FormPartialRetriever
 )
 
 @tamc_main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1")),
-appConfig = applicationConfig
+title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
 
 <a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>

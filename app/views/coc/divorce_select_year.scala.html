@@ -20,10 +20,8 @@
 @import java.time.LocalDate
 @import forms.coc.DivorceSelectYearForm
 @import includes.backLink
-@import config.ApplicationConfig
 
-@(divorceSelectYearForm: Form[LocalDate],
-applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -31,8 +29,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
     title = messages("title.pattern", messages("pages.divorce.title")),
     manageService = true,
-    mainConfig = views.helpers.MainConfig(),
-    appConfig = applicationConfig) {
+    mainConfig = views.helpers.MainConfig()) {
 
     @backLink()
 

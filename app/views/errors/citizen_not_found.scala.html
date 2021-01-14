@@ -18,14 +18,13 @@
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
 
-@(applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@()(implicit messages: Messages,
 request: BaseUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = messages("title.pattern", messages("title.cannot-find-details")),
-appConfig = applicationConfig) {
+title = messages("title.pattern", messages("title.cannot-find-details"))) {
 
 <h1 class="heading-large">@messages("technical.cannot-find-details.h1")</h1>
 
@@ -55,5 +54,5 @@ appConfig = applicationConfig) {
     @messages("hmrc.contact-details-8")
 </p>
 
-<p><a target="_blank" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

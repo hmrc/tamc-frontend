@@ -17,12 +17,10 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.LanguageUtils
-@import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 @import includes.backLink
 
-@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress],
-applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -31,8 +29,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.application.pattern", Messages("title.confirm-email")),
 manageService = true,
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:email", recipientForm)}"))),
-appConfig = applicationConfig
+maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
 ) {
 
 @backLink()

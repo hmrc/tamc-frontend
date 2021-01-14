@@ -16,21 +16,18 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig
 @import models.auth.UserRequest
 @import uk.gov.hmrc.play.views.html.helpers._
 
 @(calculatorForm: Form[models.EligibilityCalculatorInput],
-calculationResult: Option[models.EligibilityCalculatorResult] = None,
-applicationConfig: ApplicationConfig
+calculationResult: Option[models.EligibilityCalculatorResult] = None
 )(implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.eligibility-criteria")),
-appConfig = applicationConfig
+title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
 
 <a href="@controllers.routes.EligibilityController.howItWorks" class="link-back">@Html(Messages("generic.back"))</a>

@@ -16,9 +16,8 @@
 
 @import models.auth.BaseUserRequest
 @import play.twirl.api.Html
-@import config.ApplicationConfig
 
-@(applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@()(implicit messages: Messages,
 request: BaseUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -26,8 +25,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.error")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found"))),
-appConfig = applicationConfig) {
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found")))) {
 
     <p id="error">@Html(Messages("recipient.not.found.para1"))</p>
 

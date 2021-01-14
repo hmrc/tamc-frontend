@@ -18,16 +18,14 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import forms.coc.CheckClaimOrCancelDecisionForm
 @import includes.backLink
-@import config.ApplicationConfig
 
-@(decisionForm: Form[Option[String]],
-applicationConfig: ApplicationConfig)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
+@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
 title = messages("title.pattern", messages("pages.decision.title")),
-mainConfig = views.helpers.MainConfig(),
-appConfig = applicationConfig) {
+mainConfig = views.helpers.MainConfig()
+) {
 
     @backLink()
     @templates.form_error_notification(decisionForm, formErrorMessage = "pages.form.error.mandatory.data")

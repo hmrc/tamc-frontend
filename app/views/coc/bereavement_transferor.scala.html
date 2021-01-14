@@ -18,7 +18,7 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
-@(applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -26,8 +26,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.bereavement")),
 manageService = true,
-mainConfig = views.helpers.MainConfig(),
-appConfig = applicationConfig
+mainConfig = views.helpers.MainConfig()
 ) {
 
 <a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@messages("generic.back")</a>
@@ -56,5 +55,5 @@ appConfig = applicationConfig
 
 <h3 class="heading-small">@messages("hmrc.contact-detials.calling.time")</h3>
 @messages("hmrc.contact-details-8")</p>
-<p><a target="_blank" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

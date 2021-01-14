@@ -35,7 +35,7 @@ class AuthorisationController @Inject()(
 
   def notAuthorised = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.errors.other_ways(appConfig))
+      Ok(views.html.errors.other_ways())
   }
 
   def logout = unauthenticatedAction {
@@ -45,6 +45,6 @@ class AuthorisationController @Inject()(
 
   def sessionTimeout = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.errors.session_timeout(appConfig))
+      Ok(views.html.errors.session_timeout())
   }
 }

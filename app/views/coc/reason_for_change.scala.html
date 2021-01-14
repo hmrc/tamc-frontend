@@ -19,18 +19,15 @@
 @import models.auth.AuthenticatedUserRequest
 @import forms.coc.MakeChangesDecisionForm
 @import includes.backLink
-@import config.ApplicationConfig
 
-@(makeChangesDecisionForm: Form[Option[String]],
-applicationConfig: ApplicationConfig)(implicit messages: Messages,
+@(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
     title = Messages("title.pattern", messages("title.make-a-change")),
     manageService = true,
-    mainConfig = views.helpers.MainConfig(),
-    appConfig = applicationConfig
+    mainConfig = views.helpers.MainConfig()
 ){
 
     @backLink()

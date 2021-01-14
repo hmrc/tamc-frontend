@@ -18,14 +18,12 @@
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.LanguageUtils
 @import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
 @(input:RegistrationFormInput,
 availableYears:List[TaxYear] = List[TaxYear](),
-currentYearAvailable: Boolean,
-applicationConfig: ApplicationConfig)(
+currentYearAvailable: Boolean)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
@@ -36,8 +34,7 @@ title = Messages("title.application.pattern", Messages("title.extra-years")),
 langSelectorOverride = Some(
 Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
 "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
-)),
-appConfig = applicationConfig){
+))){
 
     @if(currentYearAvailable) {
         <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>

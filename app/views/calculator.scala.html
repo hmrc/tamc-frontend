@@ -18,11 +18,9 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.UserRequest
-@import config.ApplicationConfig
 
 @(calculatorForm: Form[models.EligibilityCalculatorInput],
-calculationResult: Option[models.EligibilityCalculatorResult] = None,
-applicationConfig: ApplicationConfig
+calculationResult: Option[models.EligibilityCalculatorResult] = None
 )(
 implicit messages: Messages,
 request: UserRequest[_],
@@ -30,8 +28,7 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
-title = Messages("title.pattern", Messages("title.eligibility-criteria")),
-appConfig = applicationConfig
+title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
 @templates.form_error_notification(calculatorForm)
 

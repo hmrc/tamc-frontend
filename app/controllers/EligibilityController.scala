@@ -46,7 +46,7 @@ class EligibilityController @Inject()(
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.how_it_works(appConfig))
+      Ok(views.html.multiyear.how_it_works())
   }
 
   def home: Action[AnyContent] = unauthenticatedAction {
@@ -56,7 +56,7 @@ class EligibilityController @Inject()(
 
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(eligibility_check(eligibilityCheckForm = eligibilityForm, appConfig))
+      Ok(eligibility_check(eligibilityCheckForm = eligibilityForm))
   }
 
   def eligibilityCheckAction(): Action[AnyContent] = {
@@ -68,12 +68,12 @@ class EligibilityController @Inject()(
       implicit request =>
         eligibilityForm.bindFromRequest.fold(
           formWithErrors =>
-            BadRequest(views.html.multiyear.eligibility_check(formWithErrors, appConfig)),
+            BadRequest(views.html.multiyear.eligibility_check(formWithErrors)),
           eligibilityInput => {
             if (eligibilityInput.married) {
               Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
             } else {
-              Ok(views.html.multiyear.eligibility_non_eligible_finish(finishUrl(request.isAuthenticated), appConfig))
+              Ok(views.html.multiyear.eligibility_non_eligible_finish(finishUrl(request.isAuthenticated)))
             }
           })
     }
@@ -81,14 +81,14 @@ class EligibilityController @Inject()(
 
   def dateOfBirthCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm, appConfig))
+      Ok(views.html.multiyear.date_of_birth_check(dateofBirthCheckForm = dateOfBirthForm))
   }
 
   def dateOfBirthCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       dateOfBirthForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.date_of_birth_check(formWithErrors, appConfig)),
+          BadRequest(views.html.multiyear.date_of_birth_check(formWithErrors)),
         _ => {
           Redirect(controllers.routes.EligibilityController.doYouLiveInScotland())
         })
@@ -96,7 +96,7 @@ class EligibilityController @Inject()(
 
   def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm, appConfig))
+      Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
         .withSession(request.session - appConfig.SCOTTISH_RESIDENT)
   }
 
@@ -104,7 +104,7 @@ class EligibilityController @Inject()(
     implicit request =>
       doYouLiveInScotlandForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors, appConfig)),
+          BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
           Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
             .withSession(request.session + (appConfig.SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
@@ -113,14 +113,14 @@ class EligibilityController @Inject()(
 
   def lowerEarnerCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.lower_earner(lowerEarnerForm, appConfig))
+      Ok(views.html.multiyear.lower_earner(lowerEarnerForm))
   }
 
   def lowerEarnerCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       lowerEarnerForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.lower_earner(formWithErrors, appConfig)),
+          BadRequest(views.html.multiyear.lower_earner(formWithErrors)),
         _ => {
           Redirect(controllers.routes.EligibilityController.partnersIncomeCheck())
         })
@@ -128,14 +128,14 @@ class EligibilityController @Inject()(
 
   def partnersIncomeCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.partners_income_question(partnersIncomeForm, isScottishResident(request), appConfig))
+      Ok(views.html.multiyear.partners_income_question(partnersIncomeForm, isScottishResident(request)))
   }
 
   def partnersIncomeCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       partnersIncomeForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.multiyear.partners_income_question(formWithErrors, isScottishResident(request), appConfig)),
+          BadRequest(views.html.multiyear.partners_income_question(formWithErrors, isScottishResident(request))),
         _ => {
           Redirect(controllers.routes.EligibilityController.doYouWantToApply())
         })
@@ -143,7 +143,7 @@ class EligibilityController @Inject()(
 
   def doYouWantToApply(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.multiyear.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm, appConfig))
+      Ok(views.html.multiyear.do_you_want_to_apply(doYouWantToApplyForm = doYouWantToApplyForm))
   }
 
   def doYouWantToApplyAction(): Action[AnyContent] = {
@@ -155,7 +155,7 @@ class EligibilityController @Inject()(
       implicit request =>
         doYouWantToApplyForm.bindFromRequest.fold(
           formWithErrors =>
-            BadRequest(views.html.multiyear.do_you_want_to_apply(formWithErrors, appConfig)),
+            BadRequest(views.html.multiyear.do_you_want_to_apply(formWithErrors)),
           doYouWantToApplyInput => {
             if (doYouWantToApplyInput.doYouWantToApply) {
               Redirect(controllers.routes.TransferController.transfer())
@@ -168,36 +168,36 @@ class EligibilityController @Inject()(
 
   def gdsCalculator(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.calculator(calculatorForm = calculatorForm, applicationConfig = appConfig))
+      Ok(views.html.calculator(calculatorForm = calculatorForm))
   }
 
   def gdsCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.calculator(calculatorForm = formWithErrors, applicationConfig = appConfig)),
+          BadRequest(views.html.calculator(calculatorForm = formWithErrors)),
         calculatorInput =>
           Ok(views.html.calculator(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
-              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))), appConfig)))
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
   }
 
   def ptaCalculator(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.pta.calculator(calculatorForm = calculatorForm, applicationConfig = appConfig))
+      Ok(views.html.pta.calculator(calculatorForm = calculatorForm))
   }
 
   def ptaCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.pta.calculator(calculatorForm = formWithErrors, applicationConfig = appConfig)),
+          BadRequest(views.html.pta.calculator(calculatorForm = formWithErrors)),
         calculatorInput =>
           Ok(views.html.pta.calculator(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
-              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))), applicationConfig = appConfig)))
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
   }
 
 }
