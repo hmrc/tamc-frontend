@@ -19,10 +19,11 @@ package services
 import connectors.MarriageAllowanceConnector
 import errors.{CacheMissingRecipient, CacheMissingTransferor, NoTaxYearsForTransferor, RecipientNotFound}
 import models._
-import java.time.LocalDate
 
+import java.time.LocalDate
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -37,9 +38,8 @@ import utils.BaseTest
 
 import scala.concurrent.Future
 
-class TransferServiceTest extends BaseTest {
+class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
-  val service: TransferService = app.injector.instanceOf[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockApplicationService: ApplicationService = mock[ApplicationService]
   val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
@@ -58,25 +58,31 @@ class TransferServiceTest extends BaseTest {
   val relationshipRecord: RelationshipRecord = RelationshipRecord("Recipient", "", "19960327", None, None, "", "")
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("SessionId")))
 
+  val service: TransferService = app.injector.instanceOf[TransferService]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockCachingService, mockApplicationService, mockMarriageAllowanceConnector, mockTimeService)
+  }
+
   "isRecipientEligible" should {
     "return true" when {
       "checkRecipientEligible is true" in {
 
         val response = GetRelationshipResponse(Some(RecipientRecordData.userRecord), None, ResponseStatus("OK"))
-        val date = LocalDate.of(2021,1,1)
 
         when(mockCachingService.getCachedDataForEligibilityCheck)
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
-        when(mockApplicationService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
-          .thenReturn(true)
-        when(mockTimeService.getTaxYearForDate(date))
-          .thenReturn(2020)
-        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
-        when(mockTimeService.getValidYearsApplyMAPreviousYears(any()))
-          .thenReturn(Nil)
-        when(mockCachingService.saveRecipientRecord(RecipientRecordData.userRecord, recipientData, Nil))
-          .thenReturn(RecipientRecordData.userRecord)
+//        when(mockApplicationService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
+//          .thenReturn(true)
+//        when(mockTimeService.getTaxYearForDate(recipientData.dateOfMarriage))
+//          .thenReturn(2020)
+//        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
+//          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
+//        when(mockTimeService.getValidYearsApplyMAPreviousYears(any()))
+//          .thenReturn(Nil)
+//        when(mockCachingService.saveRecipientRecord(RecipientRecordData.userRecord, recipientData, Nil))
+//          .thenReturn(RecipientRecordData.userRecord)
 
         val result = service.isRecipientEligible(nino, recipientData)
         await(result) shouldBe true
