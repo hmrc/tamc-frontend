@@ -38,7 +38,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
   lazy val taxFreeHtml: Html =
     Html(
-      s"""${messagesApi("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.taxFreeAllowanceUrl}">
+      s"""${messagesApi("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.appConfig.taxFreeAllowanceUrl}">
          |${messagesApi("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
   val now = LocalDate.now()

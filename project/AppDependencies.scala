@@ -29,6 +29,7 @@ object AppDependencies {
         "org.scalacheck" %% "scalacheck" % "1.14.0",
         "org.mockito" % "mockito-core" % "2.24.5",
         "com.github.tomakehurst" % "wiremock-standalone" % "2.21.0"
+
       ).map(_ % "test")
 
   val all: Seq[ModuleID] = compile ++ test

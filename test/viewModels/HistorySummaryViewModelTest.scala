@@ -16,9 +16,9 @@
 
 package viewModels
 
-import config.ApplicationConfig._
 import models._
 import java.time.LocalDate
+import config.ApplicationConfig
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
@@ -29,9 +29,9 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
-  lazy val maxPATransfer: Int = PERSONAL_ALLOWANCE(currentOfTaxYear)
-  lazy val maxBenefit: Int = MAX_BENEFIT(currentOfTaxYear)
-  lazy val maxPaTransferFormatted: Int = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
+  lazy val maxPATransfer: Int = ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(currentOfTaxYear)
+  lazy val maxBenefit: Int = ApplicationConfig.appConfig.MAX_BENEFIT(currentOfTaxYear)
+  lazy val maxPaTransferFormatted: Int = ApplicationConfig.appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
   lazy val formattedEndOfYear = LanguageUtils().ukDateTransformer(endOfTaxYear)
 
   val citizenName = CitizenName(Some("Test"), Some("User"))
