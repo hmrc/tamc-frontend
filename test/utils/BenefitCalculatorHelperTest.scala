@@ -16,13 +16,15 @@
 
 package utils
 
-import _root_.services.EligibilityCalculatorService
-import config.ApplicationConfig._
+import config.ApplicationConfig.appConfig._
 import models._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import _root_.services.EligibilityCalculatorService
 import uk.gov.hmrc.play.test.UnitSpec
 
 class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
+
+  val eligibilityCalculatorService = app.injector.instanceOf[EligibilityCalculatorService]
 
   "BenefitCalculatorHelper" when {
 
@@ -30,24 +32,24 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
 
       "return the correct total benefit for an English tax payer" in {
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 130
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 130
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 230
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 230
       }
 
       "return the correct total benefit for a Scottish tax payer" in {
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 123
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 123
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 218
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 218
       }
 
       "return the correct total benefit for a Scottish tax payer when hypothetical bands are used" in {
@@ -76,48 +78,48 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
 
       "return the correct total benefit for a Welsh tax payer" in {
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 130
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 130
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 230
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 230
       }
 
       "return the correct total benefit for a Northern Irish tax payer" in {
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 130
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 130
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 230
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 230
       }
 
     }
 
     "getCountryTaxBandsFromFile is called" must {
       "return the correct banded income for an English tax payer" in {
-        EligibilityCalculatorService.getCountryTaxBandsFromFile(England) shouldBe
+        eligibilityCalculatorService.getCountryTaxBandsFromFile(England) shouldBe
           List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT(), 0.20))
       }
 
       "return the correct banded income for a Scottish tax payer" in {
-        EligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland) shouldBe
+        eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland) shouldBe
           List(TaxBand("StarterRate", PERSONAL_ALLOWANCE() + 1, 14549, 0.19),
             TaxBand("BasicRate", 14550, 24944, 0.20),
             TaxBand("IntermediateRate", 24945, MAX_LIMIT_SCOT(), 0.21))
       }
 
       "return the correct banded income for a Welsh tax payer" in {
-        EligibilityCalculatorService.getCountryTaxBandsFromFile(Wales) shouldBe
+        eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales) shouldBe
           List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_WALES(), 0.20))
       }
 
       "return the correct banded income for a Northern Irish tax payer" in {
-        EligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland) shouldBe
+        eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland) shouldBe
           List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_NORTHERN_IRELAND(), 0.20))
       }
     }

@@ -53,13 +53,8 @@ class TransferControllerTest extends ControllerBaseTest {
   val mockTimeService: TimeService = mock[TimeService]
   val notificationRecord = NotificationRecord(EmailAddress("test@test.com"))
 
-  def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): TransferController = new TransferController(
-    messagesApi,
-    authAction,
-    mockTransferService,
-    mockCachingService,
-    mockTimeService
-  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+  def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): TransferController =
+    app.injector.instanceOf[TransferController]
 
   when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear

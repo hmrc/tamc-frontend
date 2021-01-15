@@ -139,7 +139,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
       when(cachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(cachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
 
       val result = await(service.saveRelationshipRecords(relationshipRecords))
@@ -154,7 +154,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
       when(cachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(cachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.failed(exception))
 
       val result = intercept[RuntimeException](await(service.saveRelationshipRecords(relationshipRecords)))

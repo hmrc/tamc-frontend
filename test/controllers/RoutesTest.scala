@@ -17,7 +17,7 @@
 package controllers
 
 import _root_.services.{CachingService, TimeService, TransferService}
-import config.ApplicationConfig._
+import config.ApplicationConfig.appConfig._
 import controllers.actions.AuthenticatedActionRefiner
 import models._
 import java.time.LocalDate
@@ -233,11 +233,5 @@ class RoutesTest extends ControllerBaseTest {
 
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
 
-  def transferController: TransferController = new TransferController(
-    messagesApi,
-    instanceOf[AuthenticatedActionRefiner],
-    mockTransferService,
-    mockCachingService,
-    mockTimeService
-  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+  def transferController: TransferController = app.injector.instanceOf[TransferController]
 }

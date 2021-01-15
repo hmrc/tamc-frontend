@@ -17,7 +17,7 @@
 package controllers
 
 import config.ApplicationConfig
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.actions.UnauthenticatedActionTransformer
 import models.{EligibilityCalculatorResult, England}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -26,8 +26,6 @@ import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.{ControllerBaseTest, MockPermUnauthenticatedAction}
 
 class EligibilityControllerTest extends ControllerBaseTest {
@@ -35,12 +33,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
 
   def controller(unAuthAction: UnauthenticatedActionTransformer = instanceOf[UnauthenticatedActionTransformer]): EligibilityController =
-    new EligibilityController(
-      messagesApi,
-      unAuthAction,
-      instanceOf[AuthenticatedActionRefiner],
-      mockEligibilityCalculatorService
-    )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+    app.injector.instanceOf[EligibilityController]
 
   "howItWorks" should {
     "return success" in {
@@ -83,7 +76,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val result = controller(instanceOf[MockPermUnauthenticatedAction]).eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.ptaFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.appConfig.ptaFinishedUrl
       }
 
       "user is not married with temporary auth state" in {
@@ -93,7 +86,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val result = controller().eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.gdsFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.appConfig.gdsFinishedUrl
       }
     }
 
@@ -268,7 +261,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "do-you-want-to-apply" -> "false")
         val result = controller(instanceOf[MockPermUnauthenticatedAction]).doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.ptaFinishedUrl)
+        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.ptaFinishedUrl)
       }
 
       "the user doesnt want to apply and is not permanently logged in" in {
@@ -276,7 +269,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "do-you-want-to-apply" -> "false")
         val result = controller().doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.gdsFinishedUrl)
+        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.gdsFinishedUrl)
       }
     }
   }

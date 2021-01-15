@@ -19,23 +19,23 @@ package controllers
 import java.text.NumberFormat
 
 import _root_.services.{CachingService, TimeService, TransferService}
-import config.ApplicationConfig._
-import controllers.actions.AuthenticatedActionRefiner
+import config.ApplicationConfig.appConfig._
 import models._
 import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 import utils.ControllerBaseTest
+import play.api.inject.bind
 
 class ContentTest extends ControllerBaseTest {
 
@@ -934,13 +934,14 @@ class ContentTest extends ControllerBaseTest {
 
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
 
-  def transferController: TransferController = new TransferController(
-    messagesApi,
-    instanceOf[AuthenticatedActionRefiner],
-    mockTransferService,
-    mockCachingService,
-    mockTimeService
-  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+  def transferController: TransferController = app.injector.instanceOf[TransferController]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[CachingService].toInstance(mockCachingService),
+      bind[TimeService].toInstance(mockTimeService)
+    ).build()
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
   when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())

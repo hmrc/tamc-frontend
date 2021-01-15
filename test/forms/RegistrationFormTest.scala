@@ -62,7 +62,7 @@ class RegistrationFormTest extends BaseTest {
 
     "fail to bind a date which is earlier the minimum configured date" in {
 
-      val earliestDate = ApplicationConfig.TAMC_MIN_DATE
+      val earliestDate = ApplicationConfig.appConfig.TAMC_MIN_DATE
       val checkDate = earliestDate.minusDays(1)
 
       val formInput = Map[String, String](

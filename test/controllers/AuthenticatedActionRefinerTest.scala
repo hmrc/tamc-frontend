@@ -37,26 +37,35 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
 
   type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val authAction = new AuthenticatedActionRefiner(mockAuthConnector)
+  val authAction = app.injector.instanceOf[AuthenticatedActionRefiner]
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
-  class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
+
+
+  class FakeController extends Controller {
     def onPageLoad(): Action[AnyContent] = authAction {
       implicit request => Ok(request.nino.nino)
     }
-    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
-      .thenReturn(authReturn)
   }
+
 
   "AuthenticatedActionRefiner" should {
     "redirect the user" when {
-      "there is insufficient confidence level" in new FakeController(Future.failed(new InsufficientConfidenceLevel)) {
+      "there is insufficient confidence level" in new FakeController {
+
+        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
+          .thenReturn(Future.failed(new InsufficientConfidenceLevel))
+
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.ivUpliftUrl)
+        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.ivUpliftUrl)
       }
 
-      "there is no active session" in new FakeController(Future.failed(NoActiveSessionException)) {
+      "there is no active session" in new FakeController {
+
+        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
+          .thenReturn(Future.failed(NoActiveSessionException))
+
         val request: Request[AnyContent] = FakeRequest("GET", "/tamc")
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
@@ -67,7 +76,11 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
     }
 
     "throw exception" when {
-      "no nino is found" in new FakeController(Future.successful(noNinoRetrieval)) {
+      "no nino is found" in new FakeController {
+
+        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
+          .thenReturn(Future.successful(noNinoRetrieval))
+
         intercept[Exception] {
           await(onPageLoad()(request))
         }.getMessage shouldBe "Nino not found"
@@ -75,7 +88,11 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
     }
 
     "return success" when {
-      "nino is returned" in new FakeController(Future.successful(withNinoRetrieval)) {
+      "nino is returned" in new FakeController {
+
+        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
+          .thenReturn(Future.successful(withNinoRetrieval))
+
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe OK
         contentAsString(result) shouldBe Ninos.nino1

@@ -22,13 +22,13 @@ class ApplicationConfigSpec extends UnitSpec {
 
   "check rates for earliest valid year" when {
     "return valid year" in {
-      ApplicationConfig.TAMC_BEGINNING_YEAR should be(2016)
+      ApplicationConfig.appConfig.TAMC_BEGINNING_YEAR should be(2016)
     }
   }
 
   "ggSignInUrl" must {
     "build ggSignInUrl and encode continue url" in {
-      ApplicationConfig.ggSignInUrl shouldBe "http://localhost:9025/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
+      ApplicationConfig.appConfig.ggSignInUrl shouldBe "http://localhost:9025/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
     }
   }
 
