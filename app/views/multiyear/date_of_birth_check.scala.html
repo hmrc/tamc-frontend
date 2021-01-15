@@ -55,7 +55,7 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
     )
 </div>
 
-<div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
+<div class="tamc-js-hidden error-inline validation-summary" id="married-js-error" role="status">
     <p>@Messages("eligibility.check.date.of.birth.error.text.before.link") <a href=@ApplicationConfig.marriedCoupleAllowanceLink data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank">@Html(Messages("eligibility.check.date.of.birth.error.link.text")) @Messages("tamc.open.in.new.window")</a>.</p>
     <p>@Messages("eligibility.check.date.of.birth.error.text.after.link")</p>
 </div>
