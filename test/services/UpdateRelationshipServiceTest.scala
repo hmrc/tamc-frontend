@@ -40,6 +40,8 @@ import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends BaseTest {
 
+
+
   val nino: Nino = new Generator().nextNino
   val instanceIdentifier = 1
   val timeStamp = "20130101"
@@ -58,12 +60,16 @@ class UpdateRelationshipServiceTest extends BaseTest {
   def createLoggedInUserInfo(name: Option[CitizenName] = Some(CitizenName(Some(firstName), Some(surname)))): LoggedInUserInfo = {
     LoggedInUserInfo(instanceIdentifier, timeStamp, None, name)
   }
-
-  val service: UpdateRelationshipService = app.injector.instanceOf[UpdateRelationshipService]
       val marriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
       val customAuditConnector: AuditConnector = mock[AuditConnector]
       val cachingService: CachingService = mock[CachingService]
 
+  override fakeApplication: Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[]
+    )
+
+  val service: UpdateRelationshipService = app.injector.instanceOf[UpdateRelationshipService]
 
   class UpdateRelationshipSetup(cacheData: UpdateRelationshipCacheData = createCachedData()) {
 
