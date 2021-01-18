@@ -127,7 +127,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 //
 //  "getCurrentAndPreviousYearsEligibility" should {
 //
-//    "return a CurrentAndPreviousYearsEligibility" in {
+//    "return a CurrentAndPreviousYearsEligibility" in {ApplicationConfigSpec.scala:25
 //      val currentYear = 2019
 //      val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(currentYear)))
 //      when(mockCachingService.getRecipientRecord).thenReturn(Future.successful(Some(recipientRecord)))
