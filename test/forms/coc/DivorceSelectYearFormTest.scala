@@ -73,9 +73,9 @@ class DivorceSelectYearFormTest extends BaseTest {
       "an element of the divorce date has not been provided" when {
 
         val datesWithLeadingTitle = List(
-          ("day", "", today.getMonth, today.getYear),
+          ("day", "", today.getMonthValue, today.getYear),
           ("month", today.getDayOfMonth, "", today.getYear),
-          ("year", today.getDayOfMonth, today.getMonth, "")
+          ("year", today.getDayOfMonth, today.getMonthValue, "")
         )
 
         datesWithLeadingTitle.foreach {

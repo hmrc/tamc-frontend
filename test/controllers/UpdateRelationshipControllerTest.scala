@@ -499,7 +499,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val divorceDateInThePast = LocalDate.now().minusDays(1)
         val request = buildFakePostRequest("dateOfDivorce.year" -> divorceDateInThePast.getYear.toString,
-                                           "dateOfDivorce.month" -> divorceDateInThePast.getMonth.toString,
+                                           "dateOfDivorce.month" -> divorceDateInThePast.getMonthValue.toString,
                                            "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString)
 
         when(mockUpdateRelationshipService.saveDivorceDate(ArgumentMatchers.eq(divorceDateInThePast))(any(), any()))
@@ -535,7 +535,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val divorceDateInThePast = LocalDate.now().minusDays(1)
 
         val request = buildFakePostRequest("dateOfDivorce.year" -> divorceDateInThePast.getYear.toString,
-          "dateOfDivorce.month" -> divorceDateInThePast.getMonth.toString,
+          "dateOfDivorce.month" -> divorceDateInThePast.getMonthValue.toString,
           "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString)
 
         val result = controller.submitDivorceEnterYear(request)
