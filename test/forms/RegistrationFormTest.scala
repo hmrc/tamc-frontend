@@ -67,13 +67,14 @@ class RegistrationFormTest extends BaseTest {
 
       val formInput = Map[String, String](
         "day" -> checkDate.getDayOfMonth.toString,
-        "month" -> checkDate.getMonth.toString,
+        "month" -> checkDate.getMonthValue.toString,
         "year" -> checkDate.getYear.toString
       )
       val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messagesApi("pages.form.field.dom.error.min-date", earliestDate.format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
+        FormError("", messagesApi("pages.form.field.dom.error.min-date",
+          earliestDate.format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
       ))
     }
 
@@ -84,7 +85,7 @@ class RegistrationFormTest extends BaseTest {
 
       val formInput = Map[String, String](
         "day" -> tooLate.getDayOfMonth.toString,
-        "month" -> tooLate.getMonth.toString,
+        "month" -> tooLate.getMonthValue.toString,
         "year" -> tooLate.getYear.toString
       )
       val res = RegistrationForm.dateOfMarriageValidator(today).bind(formInput)

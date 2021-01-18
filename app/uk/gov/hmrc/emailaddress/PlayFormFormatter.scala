@@ -121,7 +121,7 @@ object PlayFormFormatter {
       .transform[ZonedDateTime](
       x => ZonedDateTime.of(
         x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
-        x => (x.getYear.toString, x.getMonth.toString, x.getDayOfMonth.toString)
+        x => (x.getYear.toString, x.getMonthValue.toString, x.getDayOfMonth.toString)
       )
   }
 

@@ -24,23 +24,25 @@ import forms.coc.CheckClaimOrCancelDecisionForm
 import models._
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import test_utils.data.RelationshipRecordData._
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
+import play.api.inject.bind
 
 import scala.concurrent.Future
 
-class UpdateRelationshipServiceTest extends BaseTest {
-
-
+class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
   val nino: Nino = new Generator().nextNino
   val instanceIdentifier = 1
@@ -60,32 +62,34 @@ class UpdateRelationshipServiceTest extends BaseTest {
   def createLoggedInUserInfo(name: Option[CitizenName] = Some(CitizenName(Some(firstName), Some(surname)))): LoggedInUserInfo = {
     LoggedInUserInfo(instanceIdentifier, timeStamp, None, name)
   }
-      val marriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
-      val customAuditConnector: AuditConnector = mock[AuditConnector]
-      val cachingService: CachingService = mock[CachingService]
+      val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
+      val mockCachingService: CachingService = mock[CachingService]
 
-  override fakeApplication: Application = GuiceApplicationBuilder()
+  override def fakeApplication: Application = GuiceApplicationBuilder()
     .overrides(
-      bind[]
-    )
+      bind[MarriageAllowanceConnector].toInstance(mockMarriageAllowanceConnector),
+      bind[CachingService].toInstance(mockCachingService)
+    ).build()
 
   val service: UpdateRelationshipService = app.injector.instanceOf[UpdateRelationshipService]
-
-  class UpdateRelationshipSetup(cacheData: UpdateRelationshipCacheData = createCachedData()) {
 
     val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus("OK")))
     val httpResponse = HttpResponse(OK, Some(json), headers)
 
-    when(cachingService.getUpdateRelationshipCachedData(any(), any()))
-      .thenReturn(Future.successful(cacheData))
-
-    when(marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
-      .thenReturn(Future.successful(httpResponse))
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockCachingService, mockMarriageAllowanceConnector)
   }
+
+//    when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
+//      .thenReturn(Future.successful(createCachedData()))
+//
+//    when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+//      .thenReturn(Future.successful(httpResponse))
 
   "retrieveRelationshipRecords" should {
     "retrive RealtionshipRecord" in {
-      when(marriageAllowanceConnector.listRelationship(any())(any(), any()))
+      when(mockMarriageAllowanceConnector.listRelationship(any())(any(), any()))
         .thenReturn(Future.successful(recordList))
 
      val result = await(service.retrieveRelationshipRecords(nino))
@@ -98,7 +102,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
         val noActiveRecordList = RelationshipRecordList(Seq(inactiveRelationshipRecord1), Some(createLoggedInUserInfo()))
 
-        when(marriageAllowanceConnector.listRelationship(any())(any(), any()))
+        when(mockMarriageAllowanceConnector.listRelationship(any())(any(), any()))
           .thenReturn(Future.successful(noActiveRecordList))
 
         val result = intercept[NoPrimaryRecordError](await(service.retrieveRelationshipRecords(nino)))
@@ -110,7 +114,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
         val multipleActiveRecordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord,
           activeTransferorRelationshipRecord2), Some(createLoggedInUserInfo()))
 
-        when(marriageAllowanceConnector.listRelationship(any())(any(), any()))
+        when(mockMarriageAllowanceConnector.listRelationship(any())(any(), any()))
           .thenReturn(Future.successful(multipleActiveRecordList))
 
         val result = intercept[MultipleActiveRecordError](await(service.retrieveRelationshipRecords(nino)))
@@ -121,7 +125,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
       "a CitizenNotFound error is returned" in {
         val noCitizenDetailsList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord), None)
 
-        when(marriageAllowanceConnector.listRelationship(any())(any(), any()))
+        when(mockMarriageAllowanceConnector.listRelationship(any())(any(), any()))
           .thenReturn(Future.successful(noCitizenDetailsList))
 
         val result = intercept[CitizenNotFound](await(service.retrieveRelationshipRecords(nino)))
@@ -142,10 +146,10 @@ class UpdateRelationshipServiceTest extends BaseTest {
     val userRecord = UserRecord(Some(loggedInUserInfo))
 
     "return the saved RelationRecords" in {
-      when(cachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
-      when(cachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
+      when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
+      when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
 
       val result = await(service.saveRelationshipRecords(relationshipRecords))
@@ -157,10 +161,10 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
       val exception = new RuntimeException("error")
 
-      when(cachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
-      when(cachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
+      when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
+      when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(cachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.failed(exception))
 
       val result = intercept[RuntimeException](await(service.saveRelationshipRecords(relationshipRecords)))
@@ -172,7 +176,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "getCheckClaimOrCancelDecision" should {
     "return a String when value is found in cache" in {
-      when(cachingService.fetchAndGetEntry[String](any())(any(), any(), any())).thenReturn(Future.successful(Some("Check Claim")))
+      when(mockCachingService.fetchAndGetEntry[String](any())(any(), any(), any())).thenReturn(Future.successful(Some("Check Claim")))
 
       val result = await(service.getCheckClaimOrCancelDecision)
 
@@ -180,7 +184,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
     }
 
     "return a None when value is not found in cache" in {
-      when(cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
         .thenReturn(Future.successful(None))
 
       val result = await(service.getCheckClaimOrCancelDecision)
@@ -191,7 +195,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "getMakeChangesDecision" should {
     "return a cache value" in {
-      when(cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
         .thenReturn(Future.successful(Some("Divorce")))
 
       val result = await(service.getMakeChangesDecision)
@@ -200,7 +204,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
     }
 
     "return None when no value returned from cache" in {
-      when(cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
         .thenReturn(Future.successful(None))
 
       val result = await(service.getMakeChangesDecision)
@@ -213,7 +217,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
     "return a value from the cache" in {
       val endReason = "Divorce"
 
-      when(cachingService.cacheValue[String](any(), any())(any(), any(), any(), any()))
+      when(mockCachingService.cacheValue[String](any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful(endReason))
 
       val result = await(service.saveMakeChangeDecision(endReason))
@@ -224,7 +228,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "getDivorceDate" should {
     "return LocalDate when value returned from cache" in {
-      when(cachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
         .thenReturn(Future.successful(Some(date)))
 
       val result = await(service.getDivorceDate)
@@ -233,7 +237,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
     }
 
     "return None when no value returned from cache" in {
-      when(cachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
         .thenReturn(Future.successful(None))
 
       val result = await(service.getDivorceDate)
@@ -244,7 +248,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "getEmailAddress" should {
     "return String when value returned from cache" in {
-      when(cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
         .thenReturn(Future.successful(Some("email@email.com")))
 
       val result = await(service.getEmailAddress)
@@ -253,7 +257,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
     }
 
     "return None when no value returned from cache" in {
-      when(cachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[String](any())(any(), any(), any()))
         .thenReturn(Future.successful(None))
 
       val result = await(service.getEmailAddress)
@@ -264,7 +268,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "saveEmailAddress" should {
     "return a String" in {
-      when(cachingService.cacheValue[EmailAddress](any(), any())(any(), any(), any(), any()))
+      when(mockCachingService.cacheValue[EmailAddress](any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful(EmailAddress("email@email.com")))
 
       val result = await(service.saveEmailAddress(EmailAddress("email@email.com")))
@@ -277,10 +281,10 @@ class UpdateRelationshipServiceTest extends BaseTest {
     "return Role and LocalDate" in {
       val relationshipRecords = RelationshipRecords(recordList)
 
-      when(cachingService.getRelationshipRecords(any(), any()))
+      when(mockCachingService.getRelationshipRecords(any(), any()))
         .thenReturn(Future.successful(Some(relationshipRecords)))
 
-      when(cachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
         .thenReturn(Future.successful(Some(date)))
 
       val result = await(service.getDataForDivorceExplanation)
@@ -292,10 +296,10 @@ class UpdateRelationshipServiceTest extends BaseTest {
     "CacheMissingDivorceDate Error when no value returned from cache" in {
       val relationshipRecords = RelationshipRecords(recordList)
 
-      when(cachingService.getRelationshipRecords(any(), any()))
+      when(mockCachingService.getRelationshipRecords(any(), any()))
         .thenReturn(Future.successful(Some(relationshipRecords)))
 
-      when(cachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
+      when(mockCachingService.fetchAndGetEntry[LocalDate](any())(any(), any(), any()))
         .thenReturn(Future.successful(None))
 
       val result = intercept[CacheMissingDivorceDate](await(service.getDataForDivorceExplanation))
@@ -306,7 +310,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "saveDivorceDate" should {
     "return a LocalDate" in {
-      when(cachingService.cacheValue[LocalDate](any(), any())(any(), any(), any(), any()))
+      when(mockCachingService.cacheValue[LocalDate](any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful(date))
 
       val result = await(service.saveDivorceDate(date))
@@ -317,7 +321,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
   "saveCheckClaimOrCancelDecision" should {
     "return a String" in {
-      when(cachingService.cacheValue[String](any(), any())(any(), any(), any(), any()))
+      when(mockCachingService.cacheValue[String](any(), any())(any(), any(), any(), any()))
         .thenReturn(Future.successful("stopMarriageAllowance"))
 
       val result = await(service.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance))
@@ -330,7 +334,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
     "construct and return the generated UpdateRelationshipRequestHolder" when {
 
-      "valid data is returned from the cache" in new UpdateRelationshipSetup {
+      "valid data is returned from the cache" in {
 
           val expectedUpdateTimeStamp = "20150531235901"
           val expectedRecipientInformation = RecipientInformation(instanceIdentifier.toString, timeStamp)
@@ -345,6 +349,12 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
           val expectedResult = UpdateRelationshipRequestHolder(expectedUpdateRelationshipRequest, expectedUpdateRelationshipNotificationRequest)
 
+            when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
+              .thenReturn(Future.successful(createCachedData()))
+
+            when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+              .thenReturn(Future.successful(httpResponse))
+
           val result = await(service.updateRelationship(nino))
 
           result shouldBe expectedResult
@@ -355,23 +365,37 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
         val endReasonsWithEnumerations = Seq(("Divorce", "Divorce/Separation"), ("Cancel", "Cancelled by Transferor"))
 
-        endReasonsWithEnumerations foreach { reasonAndEnumeration =>
+        endReasonsWithEnumerations foreach { case(reason, enumeration) =>
 
-          val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList)), Some(email), Some(reasonAndEnumeration._1), Some(date))
+          val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList)), Some(email), Some(reason), Some(date))
 
-          s"the reason is ${reasonAndEnumeration._1}" in new UpdateRelationshipSetup(cacheData) {
+          s"the reason is $reason" in  {
+
+            when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
+              .thenReturn(Future.successful(cacheData))
+
+            when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+              .thenReturn(Future.successful(httpResponse))
 
             val result = await(service.updateRelationship(nino))
             val desEndReason = result.request.relationship.relationshipEndReason
 
-            desEndReason shouldBe reasonAndEnumeration._2
+            desEndReason shouldBe enumeration
           }
         }
       }
 
       val recordsWithUnknownUser = RelationshipRecordList(Seq(activeRecipientRelationshipRecord), Some(createLoggedInUserInfo(None)))
 
-      "a users name is not known" in new UpdateRelationshipSetup(createCachedData(recordsWithUnknownUser)){
+      "a users name is not known" in {
+
+        val cacheData = createCachedData(recordsWithUnknownUser)
+
+        when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
+          .thenReturn(Future.successful(cacheData))
+
+        when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+          .thenReturn(Future.successful(httpResponse))
 
         val result = await(service.updateRelationship(nino))
         val userName = result.notification.full_name
@@ -384,7 +408,13 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
       val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList)), Some(email), Some("Earnings"), Some(date))
 
-      "if an unsupported marriage allowance end reason is provided" in new UpdateRelationshipSetup(cacheData){
+      "if an unsupported marriage allowance end reason is provided" in {
+        when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
+          .thenReturn(Future.successful(cacheData))
+
+        when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+          .thenReturn(Future.successful(httpResponse))
+
         a[DesEnumerationNotFound] shouldBe thrownBy(await(service.updateRelationship(nino)))
       }
 
@@ -393,10 +423,10 @@ class UpdateRelationshipServiceTest extends BaseTest {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)))
         val httpResponse = HttpResponse(OK, Some(json), headers)
 
-        when(cachingService.getUpdateRelationshipCachedData(any(), any()))
+        when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
           .thenReturn(Future.successful(createCachedData()))
 
-        when(marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+        when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
           .thenReturn(Future.successful(httpResponse))
 
         val result = intercept[CannotUpdateRelationship](await(service.updateRelationship(nino)))
@@ -408,10 +438,10 @@ class UpdateRelationshipServiceTest extends BaseTest {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)))
         val httpResponse = HttpResponse(OK, Some(json), headers)
 
-        when(cachingService.getUpdateRelationshipCachedData(any(), any()))
+        when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
           .thenReturn(Future.successful(createCachedData()))
 
-        when(marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+        when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
           .thenReturn(Future.successful(httpResponse))
 
         val result = intercept[RecipientNotFound](await(service.updateRelationship(nino)))
@@ -423,10 +453,10 @@ class UpdateRelationshipServiceTest extends BaseTest {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)))
         val httpResponse = HttpResponse(OK, Some(json), headers)
 
-        when(cachingService.getUpdateRelationshipCachedData(any(), any()))
+        when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
           .thenReturn(Future.failed(new RuntimeException("Failed to retrieve cacheMap")))
 
-        when(marriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
+        when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
           .thenReturn(Future.successful(httpResponse))
 
         val result = intercept[RuntimeException](await(service.updateRelationship(nino)))
@@ -441,7 +471,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
         val endDates = MarriageAllowanceEndingDates(TaxYear.current.starts, TaxYear.current.finishes)
         val cacheData = ConfirmationUpdateAnswersCacheData(relationshipRecords, Some(date), Some("email@email.com"), Some(endDates))
 
-        when(cachingService.getConfirmationAnswers(any(), any()))
+        when(mockCachingService.getConfirmationAnswers(any(), any()))
           .thenReturn(Future.successful(cacheData))
 
         val result = await(service.getConfirmationUpdateAnswers)
@@ -450,7 +480,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
       }
 
       "return RuntimeException when cacheMap not found and returns RuntimeException" in {
-        when(cachingService.getConfirmationAnswers(any(), any()))
+        when(mockCachingService.getConfirmationAnswers(any(), any()))
           .thenReturn(Future.failed(new RuntimeException("Failed to retrieve cacheMap")))
 
         val result = intercept[RuntimeException](await(service.getConfirmationUpdateAnswers))
@@ -519,7 +549,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
       "return MarriageAllowanceEndDate" in {
         val endingDates = MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)
 
-        when(cachingService.cacheValue[MarriageAllowanceEndingDates](any(), any())(any(), any(), any(), any()))
+        when(mockCachingService.cacheValue[MarriageAllowanceEndingDates](any(), any())(any(), any(), any(), any()))
           .thenReturn(Future.successful(endingDates))
 
         val result = await(service.saveMarriageAllowanceEndingDates(endingDates))
@@ -530,7 +560,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
 
     "getRelationshipRecords" should {
       "when RelationshipRecords are present return RelationshipRecords" in {
-        when(cachingService.getRelationshipRecords(any(), any()))
+        when(mockCachingService.getRelationshipRecords(any(), any()))
           .thenReturn(Some(RelationshipRecords(recordList)))
 
         val result = await(service.getRelationshipRecords)
@@ -539,7 +569,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
       }
 
       "when RelationshipRecords are not present return CacheMissingRelationshipRecords Error" in {
-        when(cachingService.getRelationshipRecords(any(), any()))
+        when(mockCachingService.getRelationshipRecords(any(), any()))
           .thenReturn(Future.successful(None))
 
         val result = intercept[CacheMissingRelationshipRecords](await(service.getRelationshipRecords))
@@ -552,7 +582,7 @@ class UpdateRelationshipServiceTest extends BaseTest {
       "return the HTTPResponse when the cache has been dropped" in {
 
         val httpResponse = HttpResponse(200, None, Map("" -> Seq("")))
-        when(cachingService.remove()(any(), any())).thenReturn(Future.successful(httpResponse))
+        when(mockCachingService.remove()(any(), any())).thenReturn(Future.successful(httpResponse))
 
         val result = await(service.removeCache)
 
