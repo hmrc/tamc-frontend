@@ -16,24 +16,23 @@
 
 package forms.coc
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.data.FormError
 import utils.BaseTest
 
 class DivorceSelectYearFormTest extends BaseTest {
 
   val today = LocalDate.now()
-  val defaultDate = new LocalDate(2000, 1, 1)
+  val defaultDate = LocalDate.of(2000, 1, 1)
 
   "DivorceSelectYearForm" should {
     "bind" when {
       "Todays date is input as the divorce date" in {
-        val date = LocalDate.now()
-        val formInput = createDivorceDateInput(date)
+        val formInput = createDivorceDateInput(today)
         val form = DivorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
 
-        value shouldBe date
+        value shouldBe today
         form.errors shouldBe empty
       }
 
@@ -49,7 +48,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       }
 
       "the divorce date entered is 1st January 1900" in {
-        val minimumLimit = new LocalDate(1900, 1, 1)
+        val minimumLimit = LocalDate.of(1900, 1, 1)
         val formInput = createDivorceDateInput(minimumLimit)
         val form = DivorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
@@ -74,9 +73,9 @@ class DivorceSelectYearFormTest extends BaseTest {
       "an element of the divorce date has not been provided" when {
 
         val datesWithLeadingTitle = List(
-          ("day", "", today.getMonthOfYear, today.getYear),
+          ("day", "", today.getMonth, today.getYear),
           ("month", today.getDayOfMonth, "", today.getYear),
-          ("year", today.getDayOfMonth, today.getMonthOfYear, "")
+          ("year", today.getDayOfMonth, today.getMonth, "")
         )
 
         datesWithLeadingTitle.foreach {
@@ -104,7 +103,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       }
 
       "divorce date input is before 1st January 1900" in {
-        val nineteenthCentury = new LocalDate(1899, 12, 31)
+        val nineteenthCentury = LocalDate.of(1899, 12, 31)
         val formInput = createDivorceDateInput(nineteenthCentury)
         val form = DivorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
@@ -118,7 +117,7 @@ class DivorceSelectYearFormTest extends BaseTest {
         List("0", "32").foreach { day =>
           s"$day is not valid value" in {
 
-            val formInput = createDivorceDateInput(day, today.getMonthOfYear.toString, today.getYear.toString)
+            val formInput = createDivorceDateInput(day, today.getMonthValue.toString, today.getYear.toString)
             val form = DivorceSelectYearForm.form.bind(formInput)
             val errorMessageKey = extractErrorMessageKey(form.errors)
             errorMessageKey shouldBe "pages.divorce.date.error.invalid"
@@ -138,7 +137,7 @@ class DivorceSelectYearFormTest extends BaseTest {
 
       "year is not a valid value" in {
 
-        val formInput = createDivorceDateInput(today.getDayOfMonth.toString, today.getMonthOfYear.toString, "19")
+        val formInput = createDivorceDateInput(today.getDayOfMonth.toString, today.getMonthValue.toString, "19")
         val form = DivorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
         errorMessageKey shouldBe "pages.divorce.date.error.invalid"
@@ -147,7 +146,7 @@ class DivorceSelectYearFormTest extends BaseTest {
   }
 
   private def createDivorceDateInput(divorceDate: LocalDate): Map[String, String] = {
-    createDivorceDateInput(divorceDate.getDayOfMonth.toString, divorceDate.getMonthOfYear.toString, divorceDate.getYear.toString)
+    createDivorceDateInput(divorceDate.getDayOfMonth.toString, divorceDate.getMonthValue.toString, divorceDate.getYear.toString)
   }
 
   private def createDivorceDateInput(day: String, month: String, year: String): Map[String, String] =

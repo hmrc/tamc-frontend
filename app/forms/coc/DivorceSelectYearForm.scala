@@ -37,7 +37,7 @@ object DivorceSelectYearForm {
 
   def isNonNumericDate(year: String, month: String, day: String): Boolean = !s"$year$month$day".forall(_.isDigit)
   def isNonValidDate(year: String, month: String, day: String): Boolean = {
-    if(year.length != 4) true else Try(LocalDate.parse(s"$year-$month-$day", DateTimeFormatter.ofPattern("yyyy-MM-dd"))).isFailure
+    if(year.length != 4) true else Try(LocalDate.of(year.toInt, month.toInt, day.toInt)).isFailure
   }
 
   private def divorceDateMapping(implicit messages: Messages): Mapping[LocalDate] = {
