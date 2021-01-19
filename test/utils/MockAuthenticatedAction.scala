@@ -28,7 +28,7 @@ import uk.gov.hmrc.domain.Nino
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class MockAuthenticatedAction (override val authConnector: AuthConnector) extends AuthenticatedActionRefiner(authConnector, ApplicationConfig.appConfig) {
+class MockAuthenticatedAction @Inject()(override val authConnector: AuthConnector) extends AuthenticatedActionRefiner(authConnector, ApplicationConfig.appConfig) {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
     Future.successful(

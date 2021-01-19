@@ -35,9 +35,36 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
 import utils.ControllerBaseTest
+import utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 import play.api.inject.bind
+import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 
 class ContentTest extends ControllerBaseTest {
+
+  val mockTransferService: TransferService = mock[TransferService]
+  val mockCachingService: CachingService = mock[CachingService]
+  val mockTimeService: TimeService = mock[TimeService]
+
+  def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+
+  def transferController: TransferController = app.injector.instanceOf[TransferController]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[CachingService].toInstance(mockCachingService),
+      bind[TimeService].toInstance(mockTimeService),
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
+      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
+    ).build()
+
+  val currentTaxYear: Int = time.TaxYear.current.startYear
+  when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
+  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear))).thenReturn(time.TaxYear.current.starts)
+  when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
@@ -54,8 +81,8 @@ class ContentTest extends ControllerBaseTest {
         "nino" -> Ninos.nino1,
         "transferor-email" -> "example@example.com"
       )
+     
       val result = transferController.transferAction()(request)
-
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
@@ -927,24 +954,4 @@ class ContentTest extends ControllerBaseTest {
       marriageDate.ownText() shouldBe "1 January 2015"
     }
   }
-
-  val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
-
-  def eligibilityController: EligibilityController = instanceOf[EligibilityController]
-
-  def transferController: TransferController = app.injector.instanceOf[TransferController]
-
-  override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[TransferService].toInstance(mockTransferService),
-      bind[CachingService].toInstance(mockCachingService),
-      bind[TimeService].toInstance(mockTimeService)
-    ).build()
-
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-  when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
-  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear))).thenReturn(time.TaxYear.current.starts)
-  when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)
 }
