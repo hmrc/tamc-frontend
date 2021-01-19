@@ -17,20 +17,31 @@
 package controllers
 
 import config.ApplicationConfig
-import controllers.actions.UnauthenticatedActionTransformer
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import models.{EligibilityCalculatorResult, England}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.EligibilityCalculatorService
-import utils.{ControllerBaseTest, MockPermUnauthenticatedAction}
+import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
+import play.api.inject.bind
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class EligibilityControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
+      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+    ).build()
 
   def controller(unAuthAction: UnauthenticatedActionTransformer = instanceOf[UnauthenticatedActionTransformer]): EligibilityController =
     app.injector.instanceOf[EligibilityController]
