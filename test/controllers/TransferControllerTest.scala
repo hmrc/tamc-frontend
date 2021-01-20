@@ -21,28 +21,29 @@ import errors._
 import models._
 import models.auth.AuthenticatedUserRequest
 import java.time.LocalDate
+
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
-import test_utils.data.{ConfirmationModelData, RecipientRecordData, RelationshipRecordData}
+import test_utils.data.{ConfirmationModelData, RecipientRecordData}
 import test_utils.TestData
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.ControllerBaseTest
+import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 
-import scala.concurrent.Await
-import scala.concurrent.duration._
 import scala.language.postfixOps
+import play.api.inject.bind
 
 class TransferControllerTest extends ControllerBaseTest {
 
@@ -53,7 +54,16 @@ class TransferControllerTest extends ControllerBaseTest {
   val mockTimeService: TimeService = mock[TimeService]
   val notificationRecord = NotificationRecord(EmailAddress("test@test.com"))
 
-  def controller(authAction: AuthenticatedActionRefiner = instanceOf[AuthenticatedActionRefiner]): TransferController =
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[CachingService].toInstance(mockCachingService),
+      bind[TimeService].toInstance(mockTimeService),
+      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+    ).build()
+
+  def controller: TransferController =
     app.injector.instanceOf[TransferController]
 
   when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
@@ -61,7 +71,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
   "transfer" should {
     "return success" in {
-      val result = controller().transfer()(request)
+      val result = controller.transfer()(request)
       status(result) shouldBe OK
     }
   }
@@ -72,7 +82,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val recipientDetails: RecipientDetailsFormInput = RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
         when(mockCachingService.saveRecipientDetails(ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(recipientDetails)
-        val result = controller().transferAction()(request)
+        val result = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -88,7 +98,7 @@ class TransferControllerTest extends ControllerBaseTest {
         )
         when(mockCachingService.saveRecipientDetails(ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(recipientDetails)
-        val result = controller().transferAction()(request)
+        val result = controller.transferAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
       }
@@ -97,14 +107,14 @@ class TransferControllerTest extends ControllerBaseTest {
 
   "dateOfMarriage" should {
     "return success" in {
-      val result = controller().dateOfMarriage()(request)
+      val result = controller.dateOfMarriage()(request)
       status(result) shouldBe OK
     }
   }
 
   "dateOfMarriageWithCy" should {
     "redirect to dateOfMarriage, with a welsh language setting" in {
-      val result = await(controller().dateOfMarriageWithCy()(request))
+      val result = await(controller.dateOfMarriageWithCy()(request))
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
       result.header.headers.keys should contain("Set-Cookie")
@@ -114,7 +124,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
   "dateOfMarriageWithEn" should {
     "redirect to dateOfMarriage, with an english language setting" in {
-      val result = await(controller().dateOfMarriageWithEn()(request))
+      val result = await(controller.dateOfMarriageWithEn()(request))
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
       result.header.headers.keys should contain("Set-Cookie")
@@ -125,7 +135,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "dateOfMarriageAction" should {
     "return bad request" when {
       "an invalid form is submitted" in {
-        val result = controller().dateOfMarriageAction()(request)
+        val result = controller.dateOfMarriageAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -145,7 +155,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
         when(mockTransferService.isRecipientEligible(ArgumentMatchers.eq(Nino(Ninos.nino1)), ArgumentMatchers.eq(registrationFormInput))(any(), any()))
           .thenReturn(true)
-        val result = controller().dateOfMarriageAction()(request)
+        val result = controller.dateOfMarriageAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.eligibleYears().url)
       }
@@ -157,7 +167,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "there are available tax years not including current year" in {
         when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(false, List(TaxYear(2015)), RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
-        val result = controller().eligibleYears()(request)
+        val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
         document.getElementsByTag("h1").first().text() shouldBe messagesApi("pages.previousyear.header")
@@ -167,7 +177,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(true, List(TaxYear(2015)), RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
         when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(time.TaxYear.current.starts)
-        val result = controller().eligibleYears()(request)
+        val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
         document.getElementsByTag("h1").first().text() shouldBe messagesApi("pages.eligibleyear.currentyear")
@@ -178,7 +188,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "available tax years is empty" in {
         when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(false, Nil, RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
-        val result = controller().eligibleYears()(request)
+        val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
         document.title shouldBe messagesApi("title.pattern", messagesApi("title.error"))
@@ -192,7 +202,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody("applyForCurrentYear" -> "abc")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(false, List(TaxYear(2015)), RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
-        val result = controller().eligibleYearsAction()(request)
+        val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -204,7 +214,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(CurrentAndPreviousYearsEligibility(false, List(TaxYear(2015)), RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any()))
           .thenReturn(List(currentTaxYear))
-        val result = controller().eligibleYearsAction()(request)
+        val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
         val doc = Jsoup.parse(contentAsString(result))
         doc.title shouldBe messagesApi("title.application.pattern", messagesApi("title.extra-years"))
@@ -216,7 +226,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(false, List(TaxYear(2015)), RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
-        val result = controller().eligibleYearsAction()(request)
+        val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
         verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())
       }
@@ -228,7 +238,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(false, Nil, RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
-        val result = controller().eligibleYearsAction()(request)
+        val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
       }
@@ -239,7 +249,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(CurrentAndPreviousYearsEligibility(true, Nil, RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any()))
           .thenReturn(List(currentTaxYear))
-        val result = controller().eligibleYearsAction()(request)
+        val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
       }
@@ -251,7 +261,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(true, Nil, RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
-        val result = controller().eligibleYearsAction()(request)
+        val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
         val doc = Jsoup.parse(contentAsString(result))
         doc.title() shouldBe messagesApi("title.pattern", messagesApi("title.other-ways"))
@@ -264,7 +274,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "a successful call to transfer service is made" in {
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(false, List(TaxYear(2015)), RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
-        val result = controller().previousYears()(request)
+        val result = controller.previousYears()(request)
         status(result) shouldBe OK
       }
     }
@@ -275,7 +285,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(CurrentAndPreviousYearsEligibility(false, List(TaxYear(2015)), RecipientRecordData.recipientRecord.data, RecipientRecordData.recipientRecord.availableTaxYears))
-        val result = controller().extraYearsAction()(request)
+        val result = controller.extraYearsAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -295,7 +305,7 @@ class TransferControllerTest extends ControllerBaseTest {
           ArgumentMatchers.eq(Some(2014))
         )(any(), any()))
           .thenReturn(Nil)
-        val result = controller().extraYearsAction()(request)
+        val result = controller.extraYearsAction()(request)
         status(result) shouldBe OK
       }
     }
@@ -315,7 +325,7 @@ class TransferControllerTest extends ControllerBaseTest {
           ArgumentMatchers.eq(Some(2014))
         )(any(), any()))
           .thenReturn(Nil)
-        val result = controller().extraYearsAction()(request)
+        val result = controller.extraYearsAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
       }
@@ -328,7 +338,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val email = "test@test.com"
         when(mockCachingService.fetchAndGetEntry[NotificationRecord](any())(any(), any(), any()))
           .thenReturn(Some(NotificationRecord(EmailAddress(email))))
-        val result = controller().confirmYourEmail()(request)
+        val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
         document.getElementById("transferor-email").attr("value") shouldBe email
@@ -337,7 +347,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "no email is recovered from the cache" in {
         when(mockCachingService.fetchAndGetEntry[NotificationRecord](any())(any(), any(), any()))
           .thenReturn(None)
-        val result = controller().confirmYourEmail()(request)
+        val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
         document.getElementById("transferor-email").attr("value") shouldBe ""
@@ -349,7 +359,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "return bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "not an email")
-        val result = controller().confirmYourEmailAction()(request)
+        val result = controller.confirmYourEmailAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -359,7 +369,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "test@test.com")
         when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any()))
           .thenReturn(notificationRecord)
-        val result = controller().confirmYourEmailAction()(request)
+        val result = controller.confirmYourEmailAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirm().url)
       }
@@ -371,7 +381,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "successful future is returned from transfer service" in {
         when(mockTransferService.getConfirmationData(any())(any(), any()))
           .thenReturn(ConfirmationModelData.confirmationModelData)
-        val result = controller().confirm()(request)
+        val result = controller.confirm()(request)
         status(result) shouldBe OK
       }
     }
@@ -382,7 +392,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "a user is permanently authenticated" in {
         when(mockTransferService.createRelationship(any())(any(), any(), any()))
           .thenReturn(notificationRecord)
-        val result = controller().confirmAction()(request)
+        val result = controller.confirmAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
         verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any())
@@ -399,7 +409,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(notificationRecord)
 
-        val result = controller().finished()(request)
+        val result = controller.finished()(request)
         status(result) shouldBe OK
 
         verify(mockCachingService, times(1)).remove()(any(), any())
@@ -414,7 +424,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenThrow(new IllegalArgumentException("123"))
 
-        controller().finished()(request)
+        controller.finished()(request)
 
         verify(mockCachingService, times(0)).remove()(any(), any())
       }
@@ -423,7 +433,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
   "cannotUseService" should {
     "return success when call cannotUseService" in {
-      val result = controller().cannotUseService(request)
+      val result = controller.cannotUseService(request)
       status(result) shouldBe OK
     }
   }
@@ -449,7 +459,7 @@ class TransferControllerTest extends ControllerBaseTest {
       )
       for ((error, redirectUrl) <- data) {
         s"a $error has been thrown" in {
-          val result = controller().handleError(HeaderCarrier(), authRequest)(error)
+          val result = controller.handleError(HeaderCarrier(), authRequest)(error)
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(redirectUrl)
         }
@@ -470,7 +480,7 @@ class TransferControllerTest extends ControllerBaseTest {
       )
       for ((error, responseStatus, message) <- data) {
         s"an $error has been thrown" in {
-          val result = controller().handleError(HeaderCarrier(), authRequest)(error)
+          val result = controller.handleError(HeaderCarrier(), authRequest)(error)
           status(result) shouldBe responseStatus
           val doc = Jsoup.parse(contentAsString(result))
           doc.text() should include(messagesApi(message))

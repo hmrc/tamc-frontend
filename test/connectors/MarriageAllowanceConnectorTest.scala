@@ -22,6 +22,9 @@ import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NO
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
 import java.time.LocalDate
+
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import test_utils.TestData.Ninos
 import test_utils._
@@ -32,20 +35,24 @@ import scala.concurrent.Future
 
 class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
 
-  val marriageAllowanceConnector = app.injector.instanceOf[MarriageAllowanceConnector]
+  def serverStub(data: RelationshipRecordStatusWrapper): StubMapping = {
+    server.stubFor(get(urlPathEqualTo(s"/paye/$nino/list-relationship"))
+      .willReturn(
+        aResponse()
+          .withStatus(200)
+          .withBody(Json.toJson(data).toString())
+      )
+    )
+  }
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .configure("microservice.services.marriage-allowance.port" -> server.port())
+    .build()
+
+  lazy val marriageAllowanceConnector = app.injector.instanceOf[MarriageAllowanceConnector]
   val nino = Nino(Ninos.nino1)
 
   "listRelationship" should {
-    def serverStub(data: RelationshipRecordStatusWrapper): StubMapping = {
-      server.stubFor(get(urlPathEqualTo(s"/paye/$nino/list-relationship"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withBody(Json.toJson(data).toString())
-        )
-      )
-    }
-
     "return data" when {
       "success response returned from HOD" in {
         val response = RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus("OK"))

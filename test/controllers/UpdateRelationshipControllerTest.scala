@@ -22,10 +22,14 @@ import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeCha
 import models._
 import models.auth.AuthenticatedUserRequest
 import java.time.LocalDate
+
+import controllers.actions.AuthenticatedActionRefiner
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services._
@@ -35,8 +39,10 @@ import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.RequestBuilder._
-import utils.ControllerBaseTest
+import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 import viewModels._
+import play.api.inject.bind
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import scala.language.postfixOps
@@ -44,7 +50,7 @@ import scala.language.postfixOps
 class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper {
 
   val generatedNino = new Generator().nextNino
-  val mockRegistrationService: TransferService = mock[TransferService]
+  val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
@@ -62,7 +68,17 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     RelationshipRecords(primaryRelationshipRecord, nonPrimaryRecords, loggedInUserInfo)
   }
 
-  val controller = app.injector.instanceOf[UpdateRelationshipController]
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
+      bind[CachingService].toInstance(mockCachingService),
+      bind[TimeService].toInstance(mockTimeService),
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
+      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction]
+    ).build()
+
+  lazy val controller = app.injector.instanceOf[UpdateRelationshipController]
 
   "history" should {
 
