@@ -21,6 +21,8 @@ import controllers.actions.AuthenticatedActionRefiner
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -30,6 +32,7 @@ import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 import utils.ControllerBaseTest
 import utils.RetrivalHelper._
+import play.api.inject.bind
 
 import scala.concurrent.Future
 
@@ -37,10 +40,15 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
 
   type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val authAction = app.injector.instanceOf[AuthenticatedActionRefiner]
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
 
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[AuthConnector].toInstance(mockAuthConnector)
+    ).build()
+
+  val authAction = app.injector.instanceOf[AuthenticatedActionRefiner]
 
   class FakeController extends Controller {
     def onPageLoad(): Action[AnyContent] = authAction {
