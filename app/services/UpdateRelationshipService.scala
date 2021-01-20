@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter
 
 import com.google.inject.Inject
 import config.ApplicationConfig
-import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
+import connectors.{MarriageAllowanceConnector}
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
@@ -39,7 +39,6 @@ import views.helpers.LanguageUtils
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateRelationshipService @Inject()(
-                                           applicationAuditConnector: ApplicationAuditConnector,
                                            marriageAllowanceConnector: MarriageAllowanceConnector,
                                            endDateForMACeased: EndDateForMACeased,
                                            endDateDivorceCalculator: EndDateDivorceCalculator,
