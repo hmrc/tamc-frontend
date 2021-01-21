@@ -17,28 +17,21 @@
 package config
 
 import com.google.inject.Inject
-import play.api.Mode.Mode
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.concurrent.{ExecutionContext, Future}
 
-class LocalTemplateRenderer @Inject()(httpClient: HttpClient, val runModeConfiguration: Configuration, environment: Environment ) extends TemplateRenderer with ServicesConfig {
-  override lazy val templateServiceBaseUrl: String = baseUrl("frontend-template-provider")
-  override val refreshAfter: Duration = 10 minutes
+class LocalTemplateRenderer @Inject()(httpClient: HttpClient, appConfig: ApplicationConfig)(implicit ec: ExecutionContext) extends TemplateRenderer {
+
+  override lazy val templateServiceBaseUrl: String = appConfig.templateServiceURL
+  override val refreshAfter: Duration = appConfig.templateRefreshAfter
 
   private implicit val hc: HeaderCarrier = HeaderCarrier()
-
-  import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
   override def fetchTemplate(path: String): Future[String] = {
     httpClient.GET(path).map(_.body)
   }
-
-  override protected def mode: Mode = environment.mode
 
 }

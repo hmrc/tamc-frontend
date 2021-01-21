@@ -16,11 +16,14 @@
 
 package connectors
 
+import akka.stream.Materializer
 import com.google.inject.Inject
-import play.api.{Configuration, Environment}
+import play.api.inject.ApplicationLifecycle
+import uk.gov.hmrc.play.audit.http.config.AuditingConfig
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
+import uk.gov.hmrc.play.bootstrap.config.AuditingConfigProvider
 
-class ApplicationAuditConnector @Inject()(config: Configuration, environment: Environment) extends AuditConnector {
-  override lazy val auditingConfig = LoadAuditingConfig(config, environment.mode,"auditing")
+class ApplicationAuditConnector @Inject()(auditingConfigProvider: AuditingConfigProvider, val materializer: Materializer,
+                                          val lifecycle: ApplicationLifecycle) extends AuditConnector {
+  override lazy val auditingConfig: AuditingConfig = auditingConfigProvider.get
 }

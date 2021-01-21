@@ -17,7 +17,6 @@
 package controllers
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.EmailForm.emailForm
@@ -33,7 +32,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class UpdateRelationshipController @Inject()(
@@ -41,8 +40,8 @@ class UpdateRelationshipController @Inject()(
                                               authenticate: AuthenticatedActionRefiner,
                                               updateRelationshipService: UpdateRelationshipService
                                             )(implicit templateRenderer: TemplateRenderer,
-                                              formPartialRetriever: FormPartialRetriever) extends BaseController {
-
+                                              formPartialRetriever: FormPartialRetriever,
+                                              ec: ExecutionContext) extends BaseController {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -143,7 +142,6 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-
   private def changeOfIncomeRedirect(implicit hc: HeaderCarrier): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.primaryRecord.role == Recipient){
@@ -229,7 +227,6 @@ class UpdateRelationshipController @Inject()(
         case NonFatal(_) => Ok(emptyEmailView)
       }
   }
-
 
   def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>

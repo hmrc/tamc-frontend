@@ -24,12 +24,13 @@ import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
 import forms.RecipientDetailsForm.recipientDetailsForm
-import javax.inject.Inject
 import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
+import play.api.Play.current
 import play.api.data.FormError
+import play.api.i18n.Messages.Implicits._
 import play.api.i18n.{Lang, MessagesApi}
 import play.api.mvc._
 import play.twirl.api.Html
@@ -38,17 +39,18 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-import scala.concurrent.Future
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-class TransferController @Inject()(
-                                    override val messagesApi: MessagesApi,
-                                    authenticate: AuthenticatedActionRefiner,
-                                    registrationService: TransferService,
-                                    cachingService: CachingService,
-                                    timeService: TimeService,
-                                    appConfig: ApplicationConfig
+class TransferController @Inject()(override val messagesApi: MessagesApi,
+                                   authenticate: AuthenticatedActionRefiner,
+                                   registrationService: TransferService,
+                                   cachingService: CachingService,
+                                   timeService: TimeService,
+                                   appConfig: ApplicationConfig
                                   )(implicit templateRenderer: TemplateRenderer,
-                                    formPartialRetriever: FormPartialRetriever) extends BaseController {
+                                    formPartialRetriever: FormPartialRetriever,
+                                    ec: ExecutionContext) extends BaseController {
 
   def transfer: Action[AnyContent] = authenticate {
     implicit request =>

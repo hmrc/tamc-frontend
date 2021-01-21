@@ -32,9 +32,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticatedActionRefiner @Inject()(
                                             val authConnector: AuthConnector,
-                                            appConfig: ApplicationConfig
-                                          )(implicit ec: ExecutionContext)
-  extends ActionRefiner[Request, AuthenticatedUserRequest] with ActionBuilder[AuthenticatedUserRequest] with AuthorisedFunctions {
+                                            appConfig: ApplicationConfig,
+                                            val parser: BodyParsers.Default
+                                          )(implicit val executionContext: ExecutionContext)
+  extends ActionRefiner[Request, AuthenticatedUserRequest] with ActionBuilder[AuthenticatedUserRequest, AnyContent] with AuthorisedFunctions {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
 
