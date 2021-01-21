@@ -28,7 +28,7 @@ object AppDependencies {
     "org.pegdown" % "pegdown" % "1.6.0",
     "org.scalacheck" %% "scalacheck" % "1.14.0",
     "org.mockito" % "mockito-core" % "2.24.5",
-    "com.github.tomakehurst" % "wiremock-standalone" % "2.21.0"
+    "com.github.tomakehurst"  % "wiremock-jre8" % "2.26.1"
 
   ).map(_ % "test")
 
