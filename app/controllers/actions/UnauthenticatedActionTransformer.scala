@@ -28,10 +28,14 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class UnauthenticatedActionTransformer @Inject()(
-                                                  val authConnector: AuthConnector
+                                                  val authConnector: AuthConnector,
+                                                    cc: MessagesControllerComponents
                                                 )(implicit ec: ExecutionContext)
   extends ActionTransformer[Request, UserRequest]
-    with ActionBuilder[UserRequest] with AuthorisedFunctions {
+    with ActionBuilder[UserRequest, AnyContent] with AuthorisedFunctions {
+
+  override val parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
+  override protected val executionContext: ExecutionContext = cc.executionContext
 
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
 

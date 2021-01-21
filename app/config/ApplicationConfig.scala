@@ -32,6 +32,9 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val templateServiceURL: String = servicesConfig.baseUrl("frontend-template-provider")
   val templateRefreshAfter: Duration = 10 minutes
   val authURL: String = servicesConfig.baseUrl("auth")
+  val cacheUri:String = servicesConfig.baseUrl("cachable.session-cache")
+  val sessionCacheDomain: String = servicesConfig.getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
+
 
   private lazy val currentTaxYear: TaxYear = TaxYear.current
 

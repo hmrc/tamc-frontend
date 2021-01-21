@@ -17,19 +17,20 @@
 package services
 
 import com.google.inject.Inject
-import config.ApplicationConfig
+import config.ApplicationConfig._
 import connectors.MarriageAllowanceConnector
 import errors.{CacheMapNoFound, TransferorNotFound}
 import models._
 import java.time.LocalDate
+
+import com.google.inject.name.Named
+import config.ApplicationConfig
 import play.api.Mode.Mode
 import play.api.libs.json.{Reads, Writes}
 import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.play.config.{AppName, ServicesConfig}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,15 +39,12 @@ class CachingService @Inject()(
                                 val http: HttpClient,
                                 val runModeConfiguration: Configuration,
                                 environment: Environment,
-                                appConfig: ApplicationConfig
-                              ) extends SessionCache with AppName with ServicesConfig {
+                                appConfig: ApplicationConfig,
+                                @Named("appName") appName: String
+                              ) extends SessionCache {
   override lazy val defaultSource = appName
-  override lazy val baseUri = baseUrl("cachable.session-cache")
-  override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
-
-  override protected def mode: Mode = environment.mode
-
-  override protected def appNameConfiguration: Configuration = runModeConfiguration
+  override lazy val baseUri = appConfig.cacheUri
+  override lazy val domain = appConfig.sessionCacheDomain
 
   def cacheValue[T](key: String, value: T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
     cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException(s"Failed to retrieve $key from cache after saving")))

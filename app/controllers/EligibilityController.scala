@@ -28,7 +28,7 @@ import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import javax.inject.Inject
 import models.Country
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Call}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -40,9 +40,10 @@ class EligibilityController @Inject()(
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
                                        authenticatedActionRefiner: AuthenticatedActionRefiner,
                                        eligibilityCalculatorService: EligibilityCalculatorService,
-                                       appConfig: ApplicationConfig
+                                       appConfig: ApplicationConfig,
+                                       cc: MessagesControllerComponents
                                      )(implicit templateRenderer: TemplateRenderer,
-                                       formPartialRetriever: FormPartialRetriever) extends BaseController {
+                                       formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>

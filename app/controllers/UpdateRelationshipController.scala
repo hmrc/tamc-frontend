@@ -25,23 +25,25 @@ import models._
 import models.auth.BaseUserRequest
 import play.Logger
 import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
-
+import play.api.i18n.Lang
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class UpdateRelationshipController @Inject()(
                                               override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
-                                              updateRelationshipService: UpdateRelationshipService
+                                              updateRelationshipService: UpdateRelationshipService,
+                                              cc: MessagesControllerComponents
+
                                             )(implicit templateRenderer: TemplateRenderer,
                                               formPartialRetriever: FormPartialRetriever,
-                                              ec: ExecutionContext) extends BaseController {
+                                              ec: ExecutionContext) extends BaseController(cc) {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>

@@ -28,10 +28,8 @@ import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
-import play.api.Play.current
 import play.api.data.FormError
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.Lang
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
@@ -42,15 +40,15 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TransferController @Inject()(override val messagesApi: MessagesApi,
-                                   authenticate: AuthenticatedActionRefiner,
+class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
                                    registrationService: TransferService,
                                    cachingService: CachingService,
                                    timeService: TimeService,
-                                   appConfig: ApplicationConfig
+                                   appConfig: ApplicationConfig,
+                                   cc: MessagesControllerComponents
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever,
-                                    ec: ExecutionContext) extends BaseController {
+                                    ec: ExecutionContext) extends BaseController(cc) {
 
   def transfer: Action[AnyContent] = authenticate {
     implicit request =>
