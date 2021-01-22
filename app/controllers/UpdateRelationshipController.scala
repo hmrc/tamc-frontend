@@ -36,7 +36,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class UpdateRelationshipController @Inject()(
-                                              override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
                                               updateRelationshipService: UpdateRelationshipService,
                                               cc: MessagesControllerComponents

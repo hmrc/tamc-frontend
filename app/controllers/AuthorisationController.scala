@@ -25,7 +25,6 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class AuthorisationController @Inject()(
-                                         override val messagesApi: MessagesApi,
                                          unauthenticatedAction: UnauthenticatedActionTransformer,
                                          appConfig: ApplicationConfig,
                                          cc: MessagesControllerComponents

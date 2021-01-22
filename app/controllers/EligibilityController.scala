@@ -27,7 +27,6 @@ import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import javax.inject.Inject
 import models.Country
-import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -36,7 +35,6 @@ import utils.isScottishResident
 import views.html.multiyear.eligibility_check
 
 class EligibilityController @Inject()(
-                                       override val messagesApi: MessagesApi,
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
                                        authenticatedActionRefiner: AuthenticatedActionRefiner,
                                        eligibilityCalculatorService: EligibilityCalculatorService,

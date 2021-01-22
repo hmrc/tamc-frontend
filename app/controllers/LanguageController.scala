@@ -29,8 +29,7 @@ class LanguageController @Inject()(
                                     languageUtils: LanguageUtils,
                                     appConfig: ApplicationConfig,
                                     cc: MessagesControllerComponents
-                                  )(implicit val environment: Environment)
-  extends uk.gov.hmrc.play.language.LanguageController(languageUtils, cc) {
+                                  ) extends uk.gov.hmrc.play.language.LanguageController(languageUtils, cc) {
 
   def enGb(): Action[AnyContent] = switchToLanguage(language = "english")
 
