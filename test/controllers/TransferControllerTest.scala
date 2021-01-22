@@ -28,7 +28,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
@@ -48,6 +48,7 @@ import play.api.inject.bind
 class TransferControllerTest extends ControllerBaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
+  implicit val messages = Helpers.stubMessages()
 
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
@@ -170,7 +171,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementsByTag("h1").first().text() shouldBe messagesApi("pages.previousyear.header")
+        document.getElementsByTag("h1").first().text() shouldBe messages("pages.previousyear.header")
       }
 
       "there are available tax years including current year" in {
@@ -180,7 +181,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementsByTag("h1").first().text() shouldBe messagesApi("pages.eligibleyear.currentyear")
+        document.getElementsByTag("h1").first().text() shouldBe messages("pages.eligibleyear.currentyear")
       }
     }
 
@@ -191,7 +192,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.title shouldBe messagesApi("title.pattern", messagesApi("title.error"))
+        document.title shouldBe messages("title.pattern", messages("title.error"))
       }
     }
   }
@@ -217,7 +218,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
         val doc = Jsoup.parse(contentAsString(result))
-        doc.title shouldBe messagesApi("title.application.pattern", messagesApi("title.extra-years"))
+        doc.title shouldBe messages("title.application.pattern", messages("title.extra-years"))
         verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any())
       }
 
@@ -264,7 +265,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
         val doc = Jsoup.parse(contentAsString(result))
-        doc.title() shouldBe messagesApi("title.pattern", messagesApi("title.other-ways"))
+        doc.title() shouldBe messagesApi("title.pattern", messages("title.other-ways"))
       }
     }
   }
@@ -483,7 +484,7 @@ class TransferControllerTest extends ControllerBaseTest {
           val result = controller.handleError(HeaderCarrier(), authRequest)(error)
           status(result) shouldBe responseStatus
           val doc = Jsoup.parse(contentAsString(result))
-          doc.text() should include(messagesApi(message))
+          doc.text() should include(messages(message))
         }
       }
     }
