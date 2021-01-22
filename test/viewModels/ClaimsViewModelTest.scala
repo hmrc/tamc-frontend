@@ -32,14 +32,15 @@ import views.helpers.LanguageUtils
 
 class ClaimsViewModelTest extends TamcViewModelTest {
 
+
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
   lazy val formattedEndOfTaxYear: String = endOfTaxYear.format(DateTimeFormatter.ofPattern("d MMMM yyyy").withLocale(Locale.UK))
 
   lazy val taxFreeHtml: Html =
     Html(
-      s"""${messagesApi("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.appConfig.taxFreeAllowanceUrl}">
-         |${messagesApi("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.appConfig.taxFreeAllowanceUrl}">
+         |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
   val now = LocalDate.now()
   val dateInputPattern = "yyyyMMdd"
@@ -73,7 +74,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
       val primaryActiveRecord = createRelationshipRecord()
       val viewModel = ClaimsViewModel(primaryActiveRecord, Seq.empty[RelationshipRecord])
       val dateInterval = LanguageUtils().taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
-      val activeRow = ClaimsRow(dateInterval, messagesApi("change.status.active"))
+      val activeRow = ClaimsRow(dateInterval, messages("change.status.active"))
 
       viewModel.activeRow shouldBe activeRow
       viewModel.historicRows shouldBe Seq.empty[ClaimsRow]
@@ -160,7 +161,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
           participant1EndDate = Some(cyMinusOneEndDate), relationshipEndReason = None)
 
         val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusOneRecord))
-        val expectedStatus = messagesApi("coc.end-reason.DEFAULT")
+        val expectedStatus = messages("coc.end-reason.DEFAULT")
         val claimsRows = Seq(ClaimsRow(expectedClaimsRowMinusOne , expectedStatus))
 
         viewModel.historicRows shouldBe claimsRows

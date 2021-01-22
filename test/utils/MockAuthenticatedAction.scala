@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import config.ApplicationConfig
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import models.auth._
-import play.api.mvc.{Request, Result}
+import play.api.mvc.{BodyParsers, MessagesControllerComponents, Request, Result}
 import test_utils.TestData
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel}
 import uk.gov.hmrc.domain.Nino
@@ -28,7 +28,11 @@ import uk.gov.hmrc.domain.Nino
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class MockAuthenticatedAction @Inject()(override val authConnector: AuthConnector) extends AuthenticatedActionRefiner(authConnector, ApplicationConfig.appConfig) {
+class MockAuthenticatedAction @Inject()(
+                                         override val authConnector: AuthConnector,
+                                         val parsers: BodyParsers.Default
+                                       )
+  extends AuthenticatedActionRefiner(authConnector, ApplicationConfig.appConfig, parsers) {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
     Future.successful(
@@ -44,14 +48,21 @@ class MockAuthenticatedAction @Inject()(override val authConnector: AuthConnecto
   }
 }
 
-class MockUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
+class MockUnauthenticatedAction @Inject()(
+                                           override val authConnector: AuthConnector,
+                                           val cc: MessagesControllerComponents)
+  extends UnauthenticatedActionTransformer(authConnector, cc) {
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
-    Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = false, authProvider =  None))
+    Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = false, authProvider = None))
   }
 }
 
-class MockPermUnauthenticatedAction @Inject()(override val authConnector: AuthConnector) extends UnauthenticatedActionTransformer(authConnector) {
+class MockPermUnauthenticatedAction @Inject()(
+                                               override val authConnector: AuthConnector,
+                                               val cc: MessagesControllerComponents
+                                             )
+  extends UnauthenticatedActionTransformer(authConnector, cc) {
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
-    Future.successful(UserRequest(request,  None, isSA = false, isAuthenticated = true, authProvider = None))
+    Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = true, authProvider = None))
   }
 }

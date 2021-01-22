@@ -19,54 +19,61 @@ package controllers
 import controllers.actions.AuthenticatedActionRefiner
 import models._
 import java.time.LocalDate
+
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
+import play.api.inject.bind
 import services._
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
-import utils.ControllerBaseTest
+import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 import views.helpers.LanguageUtils
 
 import scala.concurrent.Future
 
-class UpdateRelationshipContentTest extends ControllerBaseTest {
+class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
-  val mockRegistrationService: TransferService = mock[TransferService]
+  val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
-  val contactHMRCBereavementText = (messagesApi("general.helpline.enquiries.link.pretext") + " "
-    + messagesApi("general.helpline.enquiries.link") + " "
-    + messagesApi("pages.bereavement.enquiries.link.paragraph"))
+  val contactHMRCBereavementText: Timestamp = (messages("general.helpline.enquiries.link.pretext") + " "
+    + messages("general.helpline.enquiries.link") + " "
+    + messages("pages.bereavement.enquiries.link.paragraph"))
 
-  def controller(updateRelationshipService: UpdateRelationshipService = mockUpdateRelationshipService): UpdateRelationshipController =
-    new UpdateRelationshipController(
-      messagesApi,
-      instanceOf[AuthenticatedActionRefiner],
-      updateRelationshipService
-    )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
+      bind[CachingService].toInstance(mockCachingService),
+      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+    ).build()
+
+  val controller: UpdateRelationshipController = inject[UpdateRelationshipController]
 
   "Update relationship cause - get view" should {
     "show all appropriate radio buttons" in {
       val expectedRadioButtons = Seq(
-        messagesApi("pages.makeChanges.radio.divorce"),
-        messagesApi("pages.makeChanges.radio.incomeChanges"),
-        messagesApi("pages.makeChanges.radio.noLongerRequired"),
-        messagesApi("pages.makeChanges.radio.bereavement")
+        messages("pages.makeChanges.radio.divorce"),
+        messages("pages.makeChanges.radio.incomeChanges"),
+        messages("pages.makeChanges.radio.noLongerRequired"),
+        messages("pages.makeChanges.radio.bereavement")
       ).toArray
 
       val request = FakeRequest()
       when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any()))
         .thenReturn(Future.successful(None))
 
-      val result = controller().makeChange()(request)
+      val result = controller.makeChange()(request)
       status(result) shouldBe OK
 
       val document = Jsoup.parse(contentAsString(result))
@@ -77,11 +84,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
   }
 
   "Stop Allowance Page" in {
-    val result: Future[Result] = controller().stopAllowance(request)
+    val result: Future[Result] = controller.stopAllowance(request)
 
     val expected = Seq(
-      messagesApi("pages.stopAllowance.paragraph1"),
-      messagesApi("pages.stopAllowance.paragraph2")
+      messages("pages.stopAllowance.paragraph1"),
+      messages("pages.stopAllowance.paragraph2")
     ).toArray
     val parsed = Jsoup.parse(contentAsString(result))
     val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -98,7 +105,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
     when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
       .thenReturn(Future.successful(maEndingDates))
 
-    val result: Future[Result] = controller().cancel(request)
+    val result: Future[Result] = controller.cancel(request)
 
     val currentEndDate =
       LanguageUtils().ukDateTransformer(TaxYear.current.finishes)
@@ -117,15 +124,15 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
   }
 
   "changeOfIncome(text)" in {
-    val result: Future[Result] = controller().changeOfIncome(request)
-    val contactHMRCText = (messagesApi("general.helpline.enquiries.link.pretext") + " "
-      + messagesApi("general.helpline.enquiries.link") + " "
-      + messagesApi("pages.changeOfIncome.enquiries.link.paragraph"))
+    val result: Future[Result] = controller.changeOfIncome(request)
+    val contactHMRCText = (messages("general.helpline.enquiries.link.pretext") + " "
+      + messages("general.helpline.enquiries.link") + " "
+      + messages("pages.changeOfIncome.enquiries.link.paragraph"))
 
 
     val expected = Seq(
       contactHMRCText,
-      messagesApi("pages.changeOfIncome.paragraph2")
+      messages("pages.changeOfIncome.paragraph2")
     ).toArray
     val parsed = Jsoup.parse(contentAsString(result))
     val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -134,11 +141,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
   }
 
   "changeOfIncome(bullet list)" in {
-    val result: Future[Result] = controller().changeOfIncome(request)
+    val result: Future[Result] = controller.changeOfIncome(request)
 
     val expected = Seq(
-      messagesApi("pages.changeOfIncome.bullet1"),
-      messagesApi("pages.changeOfIncome.bullet2")
+      messages("pages.changeOfIncome.bullet1"),
+      messages("pages.changeOfIncome.bullet2")
     ).toArray
     val parsed = Jsoup.parse(contentAsString(result))
     val current = parsed.getElementsByTag("li").eachText().toArray()
@@ -154,11 +161,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
             RelationshipRecords(RelationshipRecord(Recipient.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
-      val result: Future[Result] = controller().bereavement(request)
+      val result: Future[Result] = controller.bereavement(request)
 
       val expected = Seq(
         contactHMRCBereavementText,
-        messagesApi("pages.bereavement.recipient.paragraph")
+        messages("pages.bereavement.recipient.paragraph")
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result))
       val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -173,11 +180,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
             RelationshipRecords(RelationshipRecord(Transferor.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
-      val result: Future[Result] = controller().bereavement(request)
+      val result: Future[Result] = controller.bereavement(request)
 
       val expected = Seq(
         contactHMRCBereavementText,
-        messagesApi("pages.bereavement.transferor.paragraph")
+        messages("pages.bereavement.transferor.paragraph")
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result))
       val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -192,7 +199,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
             RelationshipRecords(RelationshipRecord(Recipient.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
-      val result: Future[Result] = controller().bereavement(request)
+      val result: Future[Result] = controller.bereavement(request)
 
       val expected = Array()
       val parsed = Jsoup.parse(contentAsString(result))
@@ -208,11 +215,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
             RelationshipRecords(RelationshipRecord(Transferor.value, "", "", None, None, "", ""), Seq(), loggedInUser)
           )
         )
-      val result: Future[Result] = controller().bereavement(request)
+      val result: Future[Result] = controller.bereavement(request)
 
       val expected = Seq(
-        messagesApi("pages.bereavement.transferor.point1"),
-        messagesApi("pages.bereavement.transferor.point2")
+        messages("pages.bereavement.transferor.point1"),
+        messages("pages.bereavement.transferor.point2")
       ).toArray
 
       val parsed = Jsoup.parse(contentAsString(result))
@@ -227,12 +234,12 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
      when(mockUpdateRelationshipService.getDivorceDate(any(), any()))
        .thenReturn(Future.successful(None))
 
-     val result: Future[Result] = controller().divorceEnterYear(request)
+     val result: Future[Result] = controller.divorceEnterYear(request)
 
-     val expectedHeading = messagesApi("pages.divorce.title")
+     val expectedHeading = messages("pages.divorce.title")
      val expectedParas = Seq(
-       messagesApi("pages.divorce.paragraph1"),
-       messagesApi("pages.divorce.date.hint")
+       messages("pages.divorce.paragraph1"),
+       messages("pages.divorce.date.hint")
      ).toArray
 
      val expectedLabel = Seq(
@@ -272,16 +279,16 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
-      val result = controller().divorceEndExplanation(request)
-      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val result = controller.divorceEndExplanation(request)
+      val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
-        messagesApi("pages.divorce.explanation.paragraph1", s"6 April ${date.getYear}"),
-        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.current.taxYear"))
+        messages("pages.divorce.explanation.paragraph1", s"6 April ${date.getYear}"),
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear"))
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${TaxYear.current.previous.finishYear}"),
-        messagesApi("pages.divorce.explanation.adjust.code.bullet")
+        messages("pages.divorce.explanation.previous.bullet", s"5 April ${TaxYear.current.previous.finishYear}"),
+        messages("pages.divorce.explanation.adjust.code.bullet")
       )
 
       val view = Jsoup.parse(contentAsString(result))
@@ -308,18 +315,18 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
-      val result =  controller().divorceEndExplanation(request)
+      val result =  controller.divorceEndExplanation(request)
 
       val view = Jsoup.parse(contentAsString(result))
-      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
-        messagesApi("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
-        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.previous.taxYear"))
+        messages("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear"))
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${LocalDate.of(2017, 4, 5).getYear}"),
-        messagesApi("pages.divorce.explanation.adjust.code.bullet")
+        messages("pages.divorce.explanation.previous.bullet", s"5 April ${LocalDate.of(2017, 4, 5).getYear}"),
+        messages("pages.divorce.explanation.adjust.code.bullet")
       ).toArray
 
       val heading = view.getElementsByTag("h1").text
@@ -344,18 +351,18 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
-      val result =  controller().divorceEndExplanation(request)
+      val result =  controller.divorceEndExplanation(request)
 
       val view = Jsoup.parse(contentAsString(result))
-      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
-        messagesApi("pages.divorce.explanation.paragraph1", s"6 April ${divorceDate.getYear}"),
-        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.current.taxYear"))
+        messages("pages.divorce.explanation.paragraph1", s"6 April ${divorceDate.getYear}"),
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear"))
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.current.ma.bullet", s"5 April ${TaxYear.current.finishYear}"),
-        messagesApi("pages.divorce.explanation.current.pa.bullet", s"6 April ${TaxYear.current.next.startYear}")
+        messages("pages.divorce.explanation.current.ma.bullet", s"5 April ${TaxYear.current.finishYear}"),
+        messages("pages.divorce.explanation.current.pa.bullet", s"6 April ${TaxYear.current.next.startYear}")
       ).toArray
 
       val heading = view.getElementsByTag("h1").text
@@ -380,18 +387,18 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
         .thenReturn(endingDates)
 
-      val result =  controller().divorceEndExplanation(request)
+      val result =  controller.divorceEndExplanation(request)
 
       val view = Jsoup.parse(contentAsString(result))
-      val expectedHeading = messagesApi("pages.divorce.explanation.title")
+      val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
-        messagesApi("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
-        messagesApi("pages.divorce.explanation.paragraph2", messagesApi("pages.divorce.explanation.previous.taxYear"))
+        messages("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear"))
       ).toArray
 
       val expectedBullets = Seq(
-        messagesApi("pages.divorce.explanation.previous.bullet", s"5 April ${TaxYear.current.previous.finishYear}"),
-        messagesApi("pages.divorce.explanation.adjust.code.bullet")
+        messages("pages.divorce.explanation.previous.bullet", s"5 April ${TaxYear.current.previous.finishYear}"),
+        messages("pages.divorce.explanation.adjust.code.bullet")
       ).toArray
 
       val heading = view.getElementsByTag("h1").text
@@ -409,14 +416,14 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
     when(mockUpdateRelationshipService.getEmailAddress(any(), any()))
       .thenReturn(Future.successful(None))
 
-    val expectedHeading = messagesApi("pages.form.field.your-confirmation")
+    val expectedHeading = messages("pages.form.field.your-confirmation")
     val expectedParas = Seq(
-      messagesApi("change.status.confirm.info"),
-      messagesApi("change.status.confirm.more.info")
+      messages("change.status.confirm.info"),
+      messages("change.status.confirm.more.info")
     ).toArray
-    val expectedLabel = messagesApi("pages.form.field.transferor-email")
+    val expectedLabel = messages("pages.form.field.transferor-email")
 
-    val result = controller( ).confirmEmail(FakeRequest().withHeaders(("Referer", "referer")))
+    val result = controller.confirmEmail(FakeRequest().withHeaders(("Referer", "referer")))
 
     val view = Jsoup.parse(contentAsString(result))
 
@@ -439,19 +446,19 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
         .thenReturn(Future.successful(
           ConfirmationUpdateAnswers(loggedInUser, Some(LocalDate.now()), "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
-      val expectedHeader = messagesApi("pages.confirm.cancel.heading")
-      val expectedPara = messagesApi("pages.confirm.cancel.message")
+      val expectedHeader = messages("pages.confirm.cancel.heading")
+      val expectedPara = messages("pages.confirm.cancel.message")
       val expectedList = Seq(
-        messagesApi("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
-        messagesApi("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
+        messages("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
+        messages("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
       ).toArray
       val expectedTableHeadings = Seq(
-        messagesApi("pages.confirm.cancel.your-name"),
-        messagesApi("pages.divorce.title"),
-        messagesApi("pages.confirm.cancel.email")
+        messages("pages.confirm.cancel.your-name"),
+        messages("pages.divorce.title"),
+        messages("pages.confirm.cancel.email")
       ).toArray
 
-      val result = controller().confirmUpdate(request)
+      val result = controller.confirmUpdate(request)
 
       val view = Jsoup.parse(contentAsString(result))
 
@@ -472,18 +479,18 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
         .thenReturn(Future.successful(
           ConfirmationUpdateAnswers(loggedInUser, None, "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
-      val expectedHeader = messagesApi("pages.confirm.cancel.heading")
-      val expectedPara = messagesApi("pages.confirm.cancel.message")
+      val expectedHeader = messages("pages.confirm.cancel.heading")
+      val expectedPara = messages("pages.confirm.cancel.message")
       val expectedList = Seq(
-        messagesApi("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
-        messagesApi("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
+        messages("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
+        messages("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
       ).toArray
       val expectedTableHeadings = Seq(
-        messagesApi("pages.confirm.cancel.your-name"),
-        messagesApi("pages.confirm.cancel.email")
+        messages("pages.confirm.cancel.your-name"),
+        messages("pages.confirm.cancel.email")
       ).toArray
 
-      val result = controller().confirmUpdate(request)
+      val result = controller.confirmUpdate(request)
 
       val view = Jsoup.parse(contentAsString(result))
 
@@ -510,15 +517,15 @@ class UpdateRelationshipContentTest extends ControllerBaseTest {
       when(mockUpdateRelationshipService.removeCache(any(), any()))
         .thenReturn(mock[HttpResponse])
 
-      val expectedHeading = messagesApi("pages.coc.finish.header")
+      val expectedHeading = messages("pages.coc.finish.header")
 
       val expectedParas = Seq(
-        messagesApi("pages.coc.finish.acknowledgement", "email@email.com"),
-        messagesApi("pages.coc.finish.junk"),
-        messagesApi("pages.coc.finish.para1")
+        messages("pages.coc.finish.acknowledgement", "email@email.com"),
+        messages("pages.coc.finish.junk"),
+        messages("pages.coc.finish.para1")
       ).toArray
 
-      val result = controller().finishUpdate(request)
+      val result = controller.finishUpdate(request)
 
       val view = Jsoup.parse(contentAsString(result))
 

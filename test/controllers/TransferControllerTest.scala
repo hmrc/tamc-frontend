@@ -48,8 +48,6 @@ import play.api.inject.bind
 class TransferControllerTest extends ControllerBaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
-  implicit val messages = Helpers.stubMessages()
-
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
@@ -265,7 +263,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
         val doc = Jsoup.parse(contentAsString(result))
-        doc.title() shouldBe messagesApi("title.pattern", messages("title.other-ways"))
+        doc.title() shouldBe messages("title.pattern", messages("title.other-ways"))
       }
     }
   }

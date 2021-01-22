@@ -823,7 +823,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           val result = Future.successful(controller.handleError(HeaderCarrier(), auhtRequest)(error))
           status(result) shouldBe INTERNAL_SERVER_ERROR
           val doc = Jsoup.parse(contentAsString(result))
-          doc.getElementById("error").text() shouldBe messagesApi(message)
+          doc.getElementById("error").text() shouldBe messages(message)
         }
       }
     }
@@ -839,7 +839,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           val result = Future.successful(controller.handleError(HeaderCarrier(), auhtRequest)(error))
           status(result) shouldBe OK
           val doc = Jsoup.parse(contentAsString(result))
-          doc.getElementById("error").text() shouldBe messagesApi(message)
+          doc.getElementById("error").text() shouldBe messages(message)
         }
       }
     }

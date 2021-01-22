@@ -31,7 +31,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
-import play.api.i18n.Lang
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 

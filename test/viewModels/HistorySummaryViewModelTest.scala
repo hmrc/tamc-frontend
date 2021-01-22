@@ -41,13 +41,13 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
 
   trait MarriageAllowanceCancelledTest {
     val marriageAllowanceCancelled = true
-    val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", messagesApi("pages.history.historic.button"),
+    val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
       controllers.routes.UpdateRelationshipController.claims().url)
   }
 
   trait MarriageAllowanceOnGoingTest {
     val marriageAllowanceCancelled = false
-    val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messagesApi("pages.history.active.button"),
+    val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
       controllers.routes.UpdateRelationshipController.decision().url)
   }
 
@@ -62,8 +62,8 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
           val role = Recipient
           val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
 
-          val expectedContent = Html(s"<p>${messagesApi("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>" +
-            s"<p>${messagesApi("pages.history.active.recipient.paragraph2", maxBenefit)}</p>")
+          val expectedContent = Html(s"<p>${messages("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>" +
+            s"<p>${messages("pages.history.active.recipient.paragraph2", maxBenefit)}</p>")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
@@ -72,7 +72,7 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
 
           val role = Transferor
           val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
-          val expectedContent = Html(s"<p>${messagesApi("pages.history.active.transferor")}</p>")
+          val expectedContent = Html(s"<p>${messages("pages.history.active.transferor")}</p>")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
@@ -86,8 +86,8 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
           val role = Recipient
           val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
 
-          val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
-            s"<p>${messagesApi("pages.history.historic.recipient", formattedEndOfYear)}</p>")
+          val expectedContent = Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
+            s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</p>")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
@@ -97,8 +97,8 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
           val role = Transferor
           val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
 
-          val expectedContent = Html(s"<p>${messagesApi("pages.history.historic.ended")}</p>" +
-            s"<p>${messagesApi("pages.history.historic.transferor", formattedEndOfYear)}</p>")
+          val expectedContent = Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
+            s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</p>")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }

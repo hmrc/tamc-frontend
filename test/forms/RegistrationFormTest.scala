@@ -73,7 +73,7 @@ class RegistrationFormTest extends BaseTest {
       val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messagesApi("pages.form.field.dom.error.min-date",
+        FormError("", messages("pages.form.field.dom.error.min-date",
           earliestDate.format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
       ))
     }
@@ -91,7 +91,7 @@ class RegistrationFormTest extends BaseTest {
       val res = RegistrationForm.dateOfMarriageValidator(today).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messagesApi("pages.form.field.dom.error.max-date", today.plusDays(1).format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
+        FormError("", messages("pages.form.field.dom.error.max-date", today.plusDays(1).format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
       ))
     }
 
