@@ -30,6 +30,7 @@ import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import play.api.inject.bind
 import services._
+import play.api.i18n.MessagesApi
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -55,7 +56,8 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[CachingService].toInstance(mockCachingService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
+      bind[MessagesApi].toInstance(stubMessagesApi())
     ).build()
 
   val controller: UpdateRelationshipController = inject[UpdateRelationshipController]
@@ -80,6 +82,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val radioButtons = document.getElementsByClass("multiple-choice").eachText().toArray
       radioButtons.length shouldBe expectedRadioButtons.length
       radioButtons shouldBe expectedRadioButtons
+
     }
   }
 
@@ -112,11 +115,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
     val nextStartDate =
       LanguageUtils().ukDateTransformer(TaxYear.current.next.starts)
 
-    val expected = Seq(
-      s"We will cancel your Marriage Allowance, but it will remain in place until 5 April ${TaxYear.current.finishYear}, the end of the current tax year.",
-      s"Your Personal Allowance will not include any Marriage Allowance from 6 April ${TaxYear.current.next.startYear}" +
-        s", the start of the new tax year. Your partner will not have to pay back any tax."
-    ).toArray
+    val expected = Seq(messages("pages.cancel.paragraph1"), messages("pages.cancel.paragraph2")).toArray
     val parsed = Jsoup.parse(contentAsString(result))
     val current = parsed.getElementsByTag("p").eachText().toArray()
 
@@ -243,9 +242,9 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
      ).toArray
 
      val expectedLabel = Seq(
-       "Day",
-       "Month",
-       "Year"
+       messages("date.fields.day"),
+       messages("date.fields.month"),
+       messages("date.fields.year")
      ).toArray
 
      val parsed = Jsoup.parse(contentAsString(result))
