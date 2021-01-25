@@ -29,6 +29,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -75,7 +76,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[TemplateRenderer].toInstance(MockTemplateRenderer),
-      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction]
+      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[MessagesApi].toInstance(stubMessagesApi())
     ).build()
 
   lazy val controller = app.injector.instanceOf[UpdateRelationshipController]

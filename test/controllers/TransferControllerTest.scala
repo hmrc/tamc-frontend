@@ -27,6 +27,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.Application
+import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.{FakeRequest, Helpers}
 import play.api.test.Helpers._
@@ -44,6 +45,7 @@ import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 
 import scala.language.postfixOps
 import play.api.inject.bind
+import play.api.mvc.Cookie
 
 class TransferControllerTest extends ControllerBaseTest {
 
@@ -59,7 +61,8 @@ class TransferControllerTest extends ControllerBaseTest {
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
+      bind[MessagesApi].toInstance(stubMessagesApi())
     ).build()
 
   def controller: TransferController =
@@ -116,8 +119,8 @@ class TransferControllerTest extends ControllerBaseTest {
       val result = await(controller.dateOfMarriageWithCy()(request))
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      result.header.headers.keys should contain("Set-Cookie")
-      result.header.headers("Set-Cookie") should include("PLAY_LANG=cy")
+      result.newCookies.head.name shouldBe "PLAY_LANG"
+      result.newCookies.head.value shouldBe "cy"
     }
   }
 
@@ -126,8 +129,8 @@ class TransferControllerTest extends ControllerBaseTest {
       val result = await(controller.dateOfMarriageWithEn()(request))
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      result.header.headers.keys should contain("Set-Cookie")
-      result.header.headers("Set-Cookie") should include("PLAY_LANG=en")
+      result.newCookies.head.name shouldBe "PLAY_LANG"
+      result.newCookies.head.value shouldBe "en"
     }
   }
 
@@ -473,8 +476,8 @@ class TransferControllerTest extends ControllerBaseTest {
         (new CannotCreateRelationship, INTERNAL_SERVER_ERROR, "create.relationship.failure"),
         (new NoTaxYearsAvailable, OK, "transferor.no-eligible-years"),
         (new NoTaxYearsForTransferor, OK, ""),
-        (new CacheTransferorInRelationship, OK, "title.transfer-in-place"),
-        (new NoTaxYearsSelected, OK, "title.other-ways"),
+        (new CacheTransferorInRelationship, OK, "transferor.has.relationship"),
+        (new NoTaxYearsSelected, OK, "pages.noyears.h1"),
         (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.heading")
       )
       for ((error, responseStatus, message) <- data) {
