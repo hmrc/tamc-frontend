@@ -16,7 +16,7 @@
 
 package config
 
-import connectors.{ApplicationAuditConnector, TamcAuthConnector}
+import connectors.TamcAuthConnector
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import services._
@@ -31,7 +31,6 @@ class TamcModule extends Module {
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
-      bind[AuditConnector].to[ApplicationAuditConnector],
       bind[TimeService].toInstance(TimeService),
       bind[TemplateRenderer].to[LocalTemplateRenderer],
       bind[FormPartialRetriever].to[TamcFormPartialRetriever],

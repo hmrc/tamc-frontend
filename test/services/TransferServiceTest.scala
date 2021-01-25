@@ -19,8 +19,8 @@ package services
 import connectors.MarriageAllowanceConnector
 import errors.{CacheMissingRecipient, CacheMissingTransferor, NoTaxYearsForTransferor, RecipientNotFound}
 import models._
-
 import java.time.LocalDate
+
 import org.mockito.Mockito.{reset, when}
 import org.mockito.ArgumentMatchers.any
 import org.scalatest.BeforeAndAfterEach
@@ -88,62 +88,62 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         await(result) shouldBe true
       }
     }
-//
-//    "throw an error" when {
-//      "recipient is not returned" in {
-//        val response = GetRelationshipResponse(None, None, ResponseStatus("OK"))
-//        when(mockCachingService.getCachedDataForEligibilityCheck)
-//          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
-//        when(mockApplicationService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
-//          .thenReturn(true)
-//        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-//          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
-//
-//        intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
-//      }
-//
-//      "the cache returns no data" in {
-//        when(mockCachingService.getCachedDataForEligibilityCheck)
-//          .thenReturn(None)
-//
-//        intercept[CacheMissingTransferor](await(service.isRecipientEligible(nino, recipientData)))
-//      }
-//
-//      "the active relationship record is not returned" in {
-//        when(mockCachingService.getCachedDataForEligibilityCheck)
-//          .thenReturn(Some(EligibilityCheckCacheData(None, None, None, Some(List(relationshipRecord)), None)))
-//
-//        intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
-//      }
-//
-//      "the historic relationship record is not returned" in {
-//        when(mockCachingService.getCachedDataForEligibilityCheck)
-//          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), None, None)))
-//
-//        intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
-//      }
-//    }
-//  }
-//
-//  "getCurrentAndPreviousYearsEligibility" should {
-//
-//    "return a CurrentAndPreviousYearsEligibility" in {ApplicationConfigSpec.scala:25
-//      val currentYear = 2019
-//      val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(currentYear)))
-//      when(mockCachingService.getRecipientRecord).thenReturn(Future.successful(Some(recipientRecord)))
-//      when(mockTimeService.getCurrentTaxYear).thenReturn(currentYear)
-//
-//      val result = await(service.getCurrentAndPreviousYearsEligibility)
-//      result shouldBe a[CurrentAndPreviousYearsEligibility]
-//    }
-//
-//    "throw an error" when {
-//
-//      "no CurrentAndPreviousYearsEligibility is returned" in {
-//        when(mockCachingService.getRecipientRecord).thenReturn(Future.successful(None))
-//        intercept[CacheMissingRecipient](await(service.getCurrentAndPreviousYearsEligibility))
-//      }
-//    }
+
+    "throw an error" when {
+      "recipient is not returned" in {
+        val response = GetRelationshipResponse(None, None, ResponseStatus("OK"))
+        when(mockCachingService.getCachedDataForEligibilityCheck)
+          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
+        when(mockApplicationService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
+          .thenReturn(true)
+        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
+          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
+
+        intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
+      }
+
+      "the cache returns no data" in {
+        when(mockCachingService.getCachedDataForEligibilityCheck)
+          .thenReturn(None)
+
+        intercept[CacheMissingTransferor](await(service.isRecipientEligible(nino, recipientData)))
+      }
+
+      "the active relationship record is not returned" in {
+        when(mockCachingService.getCachedDataForEligibilityCheck)
+          .thenReturn(Some(EligibilityCheckCacheData(None, None, None, Some(List(relationshipRecord)), None)))
+
+        intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
+      }
+
+      "the historic relationship record is not returned" in {
+        when(mockCachingService.getCachedDataForEligibilityCheck)
+          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), None, None)))
+
+        intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
+      }
+    }
+  }
+
+  "getCurrentAndPreviousYearsEligibility" should {
+
+    "return a CurrentAndPreviousYearsEligibility" in {
+      val currentYear = 2019
+      val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(currentYear)))
+      when(mockCachingService.getRecipientRecord).thenReturn(Future.successful(Some(recipientRecord)))
+      when(mockTimeService.getCurrentTaxYear).thenReturn(currentYear)
+
+      val result = await(service.getCurrentAndPreviousYearsEligibility)
+      result shouldBe a[CurrentAndPreviousYearsEligibility]
+    }
+
+    "throw an error" when {
+
+      "no CurrentAndPreviousYearsEligibility is returned" in {
+        when(mockCachingService.getRecipientRecord).thenReturn(Future.successful(None))
+        intercept[CacheMissingRecipient](await(service.getCurrentAndPreviousYearsEligibility))
+      }
+    }
   }
 
 }

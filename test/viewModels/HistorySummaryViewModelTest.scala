@@ -27,12 +27,12 @@ import views.helpers.LanguageUtils
 
 class HistorySummaryViewModelTest extends TamcViewModelTest {
 
-  lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
-  lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
-  lazy val maxPATransfer: Int = ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(currentOfTaxYear)
-  lazy val maxBenefit: Int = ApplicationConfig.appConfig.MAX_BENEFIT(currentOfTaxYear)
-  lazy val maxPaTransferFormatted: Int = ApplicationConfig.appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
-  lazy val formattedEndOfYear = LanguageUtils().ukDateTransformer(endOfTaxYear)
+  val currentOfTaxYear: Int = TaxYear.current.currentYear
+  val endOfTaxYear: LocalDate = TaxYear.current.finishes
+  val maxPATransfer: Int = ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(currentOfTaxYear)
+  val maxBenefit: Int = ApplicationConfig.appConfig.MAX_BENEFIT(currentOfTaxYear)
+  val maxPaTransferFormatted: Int = ApplicationConfig.appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
+  val formattedEndOfYear = LanguageUtils().ukDateTransformer(endOfTaxYear)
 
   val citizenName = CitizenName(Some("Test"), Some("User"))
   val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = LocalDate.now().toString, has_allowance = None, name = Some(citizenName))
