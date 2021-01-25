@@ -22,7 +22,7 @@ import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
 import views.helpers.LanguageUtils
 
-class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
+class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
 
   val maEndDate = LocalDate.now()
   val paEffectiveDate = LocalDate.now()

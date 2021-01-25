@@ -30,9 +30,10 @@ import scala.concurrent.Future
 
 class MockAuthenticatedAction @Inject()(
                                          override val authConnector: AuthConnector,
-                                         val parsers: BodyParsers.Default
+                                         val parsers: BodyParsers.Default,
+                                         appConfig: ApplicationConfig
                                        )
-  extends AuthenticatedActionRefiner(authConnector, ApplicationConfig.appConfig, parsers) {
+  extends AuthenticatedActionRefiner(authConnector, appConfig, parsers) {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
     Future.successful(

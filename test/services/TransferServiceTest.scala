@@ -17,7 +17,7 @@
 package services
 
 import connectors.MarriageAllowanceConnector
-import errors.{CacheMissingRecipient, CacheMissingTransferor, NoTaxYearsForTransferor, RecipientNotFound}
+import errors.{CacheMissingRecipient, CacheMissingTransferor, ErrorResponseStatus, NoTaxYearsForTransferor, RecipientNotFound, TransferorDeceased}
 import models._
 import java.time.LocalDate
 
@@ -53,8 +53,9 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       bind[TimeService].toInstance(mockTimeService)
     ).build()
 
+  val dom = LocalDate.now()
   val nino: Nino = Nino(Ninos.nino1)
-  val recipientData: RegistrationFormInput = RegistrationFormInput("First", "Last", Gender("F"), nino, LocalDate.now())
+  val recipientData: RegistrationFormInput = RegistrationFormInput("First", "Last", Gender("F"), nino, dom)
   val relationshipRecord: RelationshipRecord = RelationshipRecord("Recipient", "20150531235901", "19960327", None, None, "123456789123", "20150531235901")
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("SessionId")))
 
@@ -91,15 +92,27 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
     "throw an error" when {
       "recipient is not returned" in {
-        val response = GetRelationshipResponse(None, None, ResponseStatus("OK"))
+        val response = GetRelationshipResponse(None, None, ResponseStatus(ErrorResponseStatus.SERVICE_UNAVILABLE))
         when(mockCachingService.getCachedDataForEligibilityCheck)
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
-        when(mockApplicationService.canApplyForMarriageAllowance(Some(List(relationshipRecord)), Some(relationshipRecord)))
+        when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
 
         intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
+      }
+
+      "transferor deceased" in {
+        val response = GetRelationshipResponse(None, None, ResponseStatus(ErrorResponseStatus.TRANSFEROR_DECEASED))
+        when(mockCachingService.getCachedDataForEligibilityCheck)
+          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
+        when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
+          .thenReturn(true)
+        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
+          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
+
+        intercept[TransferorDeceased](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the cache returns no data" in {
