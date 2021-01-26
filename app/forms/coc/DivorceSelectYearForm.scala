@@ -18,7 +18,6 @@ package forms.coc
 
 import config.ApplicationConfig
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import play.api.data.Forms.{optional, single, text, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, Mapping}

@@ -19,7 +19,6 @@ package controllers
 import com.google.inject.Inject
 import config.ApplicationConfig
 import controllers.actions.UnauthenticatedActionTransformer
-import play.api.i18n.MessagesApi
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer

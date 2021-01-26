@@ -17,7 +17,6 @@
 package services
 
 import com.google.inject.Inject
-import config.ApplicationConfig._
 import connectors.MarriageAllowanceConnector
 import errors.{CacheMapNoFound, TransferorNotFound}
 import models._
@@ -25,9 +24,8 @@ import java.time.LocalDate
 
 import com.google.inject.name.Named
 import config.ApplicationConfig
-import play.api.Mode.Mode
 import play.api.libs.json.{Reads, Writes}
-import play.api.{Configuration, Environment, Play}
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
@@ -42,9 +40,9 @@ class CachingService @Inject()(
                                 appConfig: ApplicationConfig,
                                 @Named("appName") appName: String
                               ) extends SessionCache {
-  override lazy val defaultSource = appName
-  override lazy val baseUri = appConfig.cacheUri
-  override lazy val domain = appConfig.sessionCacheDomain
+  override lazy val defaultSource: String = appName
+  override lazy val baseUri: String = appConfig.cacheUri
+  override lazy val domain: String = appConfig.sessionCacheDomain
 
   def cacheValue[T](key: String, value: T)(implicit wts: Writes[T], reads: Reads[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] = {
     cache[T](key, value) map (_.getEntry[T](key).getOrElse(throw new RuntimeException(s"Failed to retrieve $key from cache after saving")))

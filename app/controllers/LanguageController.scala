@@ -19,7 +19,7 @@ package controllers
 
 import config.ApplicationConfig
 import javax.inject.Inject
-import play.api.{Configuration, Environment}
+import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.language.LanguageUtils

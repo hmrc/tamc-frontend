@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object TransferorEligibilityHolder {
-  implicit val formats = Json.format[TransferorEligibilityHolder]
+  implicit val formats: OFormat[TransferorEligibilityHolder] = Json.format[TransferorEligibilityHolder]
 }
 
 case class TransferorEligibilityHolder(eligible: Boolean, name: Option[CitizenName] = None)

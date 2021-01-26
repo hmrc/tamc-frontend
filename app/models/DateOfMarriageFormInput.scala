@@ -19,7 +19,7 @@ package models
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import play.api.libs.json.{Format, JsString, Json, Reads, Writes}
+import play.api.libs.json.{Format, JsString, Json, OFormat, Reads, Writes}
 
 object DateOfMarriageFormInput {
   private val pattern = "dd/MM/yyyy"
@@ -29,8 +29,8 @@ object DateOfMarriageFormInput {
     Writes[LocalDate] { localDate => JsString(localDate.format(datePattern))}
   }
 
-  implicit val dateFormat = Format[LocalDate](Reads.localDateReads(pattern), writes(pattern))
-  implicit val formats = Json.format[DateOfMarriageFormInput]
+  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.localDateReads(pattern), writes(pattern))
+  implicit val formats: OFormat[DateOfMarriageFormInput] = Json.format[DateOfMarriageFormInput]
 }
 
 case class DateOfMarriageFormInput(dateOfMarriage: LocalDate)

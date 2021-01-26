@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object CreateRelationshipRequestHolder {
-  implicit val formats = Json.format[CreateRelationshipRequestHolder]
+  implicit val formats: OFormat[CreateRelationshipRequestHolder] = Json.format[CreateRelationshipRequestHolder]
 }
 
 case class CreateRelationshipRequestHolder(request: CreateRelationshipRequest, notification: CreateRelationshipNotificationRequest)

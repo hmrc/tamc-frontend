@@ -24,7 +24,6 @@ import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeCha
 import models._
 import models.auth.BaseUserRequest
 import play.Logger
-import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier

@@ -17,10 +17,11 @@
 package models
 
 import java.time.LocalDate
-import play.api.libs.json.Json
+
+import play.api.libs.json.{Json, OFormat}
 
 case class MarriageAllowanceEndingDates(marriageAllowanceEndDate: LocalDate, personalAllowanceEffectiveDate: LocalDate)
 
 object MarriageAllowanceEndingDates {
-  implicit val formats = Json.format[MarriageAllowanceEndingDates]
+  implicit val formats: OFormat[MarriageAllowanceEndingDates] = Json.format[MarriageAllowanceEndingDates]
 }

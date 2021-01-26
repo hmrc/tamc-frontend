@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class RelationshipRecordList(relationships: Seq[RelationshipRecord], userRecord: Option[LoggedInUserInfo] = None)
 
 object RelationshipRecordList {
-  implicit val formats = Json.format[RelationshipRecordList]
+  implicit val formats: OFormat[RelationshipRecordList] = Json.format[RelationshipRecordList]
 }
