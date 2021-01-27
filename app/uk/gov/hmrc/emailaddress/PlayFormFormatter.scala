@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.emailaddress
 
-import java.time.{OffsetDateTime, ZoneId, ZonedDateTime}
+import java.time.{ZoneId, ZonedDateTime}
 
 import org.joda.time.DateTime
 import play.api.data.Forms.{of, optional, text, tuple}

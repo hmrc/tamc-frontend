@@ -17,10 +17,10 @@
 package models
 
 import errors.TransferorNotFound
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object UserRecord {
-  implicit val formats = Json.format[UserRecord]
+  implicit val formats: OFormat[UserRecord] = Json.format[UserRecord]
 
   def apply(rec: Option[LoggedInUserInfo]): UserRecord =
         rec.fold(throw TransferorNotFound())(rec => UserRecord(

@@ -23,7 +23,7 @@ import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import uk.gov.hmrc.http.HttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
 

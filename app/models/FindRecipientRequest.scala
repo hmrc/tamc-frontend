@@ -16,11 +16,11 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.domain.Nino
 
 object FindRecipientRequest {
-  implicit val formats = Json.format[FindRecipientRequest]
+  implicit val formats: OFormat[FindRecipientRequest] = Json.format[FindRecipientRequest]
 }
 
 case class FindRecipientRequest(name: String, lastName: String, gender: Gender, nino: Nino)

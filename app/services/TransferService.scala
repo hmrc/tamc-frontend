@@ -93,7 +93,7 @@ class TransferService @Inject()(
     Future {
       cacheData match {
         case Some(CacheData(_, _, Some(notification), Some(true), _, _, _)) => notification
-        case _ => throw new CacheCreateRequestNotSent()
+        case _ => throw CacheCreateRequestNotSent()
       }
     }
 

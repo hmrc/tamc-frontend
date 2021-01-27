@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter
 
 import com.google.inject.Inject
 import config.ApplicationConfig
-import connectors.{MarriageAllowanceConnector}
+import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}

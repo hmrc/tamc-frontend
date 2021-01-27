@@ -17,13 +17,13 @@
 package models
 
 import org.joda.time.LocalDate
-import play.api.libs.json.{Format, Json, Reads, Writes}
+import play.api.libs.json.{Format, Json, OFormat, Reads, Writes}
 import uk.gov.hmrc.domain.Nino
 
 object RecipientDetailsFormInput {
   private val pattern = "dd/MM/yyyy"
-  implicit val dateFormat = Format[LocalDate](Reads.jodaLocalDateReads(pattern), Writes.jodaLocalDateWrites(pattern))
-  implicit val formats = Json.format[RecipientDetailsFormInput]
+  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.jodaLocalDateReads(pattern), Writes.jodaLocalDateWrites(pattern))
+  implicit val formats: OFormat[RecipientDetailsFormInput] = Json.format[RecipientDetailsFormInput]
 }
 
 case class RecipientDetailsFormInput(name: String, lastName: String, gender: Gender, nino: Nino)
