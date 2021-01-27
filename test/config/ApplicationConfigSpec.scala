@@ -28,7 +28,7 @@ class ApplicationConfigSpec extends UnitSpec {
 
   "ggSignInUrl" must {
     "build ggSignInUrl and encode continue url" in {
-      ApplicationConfig.appConfig.ggSignInUrl shouldBe "http://localhost:9025/gg/sign-in?continue=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
+      ApplicationConfig.appConfig.ggSignInUrl shouldBe "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
     }
   }
 

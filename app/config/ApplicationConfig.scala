@@ -64,9 +64,9 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   lazy val contactIncomeTaxHelplineUrl: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
   lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
+  lazy val ggSignInHost: String = configuration.getOptional[String]("microservice.bas-gateway-frontend.host").getOrElse("")
+  lazy val ggSignInUrl: String = s"$ggSignInHost/bas-gateway/sign-in?continue_url=${encodeQueryStringValue(callbackUrl)}"
 
-  lazy val ggSignInHost: String = configuration.getOptional[String]("microservice.bas-gateway.host").getOrElse("")
-  lazy val ggSignInUrl: String = s"$ggSignInHost/gg/sign-in?continue=${encodeQueryStringValue(callbackUrl)}"
 
   lazy val marriageAllowanceUrl: String = servicesConfig.baseUrl("marriage-allowance")
   lazy val taiFrontendUrl: String = s"${configuration.getOptional[String]("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
