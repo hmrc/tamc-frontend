@@ -81,12 +81,6 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     reset(mockCachingService, mockMarriageAllowanceConnector)
   }
 
-//    when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
-//      .thenReturn(Future.successful(createCachedData()))
-//
-//    when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
-//      .thenReturn(Future.successful(httpResponse))
-
   "retrieveRelationshipRecords" should {
     "retrive RealtionshipRecord" in {
       when(mockMarriageAllowanceConnector.listRelationship(any())(any(), any()))

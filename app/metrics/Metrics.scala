@@ -20,7 +20,6 @@ import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.MetricRegistry
 import com.google.inject.{Inject, Singleton}
 
-@Singleton
 class Metrics @Inject()(metrics: com.kenshoo.play.metrics.Metrics) {
 
   val registry: MetricRegistry = metrics.defaultRegistry

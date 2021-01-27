@@ -51,8 +51,10 @@ class MockAuthenticatedAction @Inject()(
 
 class MockUnauthenticatedAction @Inject()(
                                            override val authConnector: AuthConnector,
-                                           val cc: MessagesControllerComponents)
-  extends UnauthenticatedActionTransformer(authConnector, cc) {
+                                           val cc: MessagesControllerComponents,
+                                           parsers: BodyParsers.Default
+                                         )
+  extends UnauthenticatedActionTransformer(authConnector, cc, parsers) {
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
     Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = false, authProvider = None))
   }
@@ -60,9 +62,10 @@ class MockUnauthenticatedAction @Inject()(
 
 class MockPermUnauthenticatedAction @Inject()(
                                                override val authConnector: AuthConnector,
-                                               val cc: MessagesControllerComponents
+                                               val cc: MessagesControllerComponents,
+                                               parsers: BodyParsers.Default
                                              )
-  extends UnauthenticatedActionTransformer(authConnector, cc) {
+  extends UnauthenticatedActionTransformer(authConnector, cc, parsers) {
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
     Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = true, authProvider = None))
   }

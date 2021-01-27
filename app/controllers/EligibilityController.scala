@@ -17,7 +17,7 @@
 package controllers
 
 import config.ApplicationConfig
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.actions.UnauthenticatedActionTransformer
 import forms.EligibilityCalculatorForm.calculatorForm
 import forms.MultiYearDateOfBirthForm.dateOfBirthForm
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
@@ -36,7 +36,6 @@ import views.html.multiyear.eligibility_check
 
 class EligibilityController @Inject()(
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
-                                       authenticatedActionRefiner: AuthenticatedActionRefiner,
                                        eligibilityCalculatorService: EligibilityCalculatorService,
                                        appConfig: ApplicationConfig,
                                        cc: MessagesControllerComponents

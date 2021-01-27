@@ -29,13 +29,11 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UnauthenticatedActionTransformer @Inject()(
                                                   val authConnector: AuthConnector,
-                                                    cc: MessagesControllerComponents
-                                                )(implicit ec: ExecutionContext)
+                                                  cc: MessagesControllerComponents,
+                                                  val parser: BodyParsers.Default
+                                                )(implicit val executionContext: ExecutionContext)
   extends ActionTransformer[Request, UserRequest]
     with ActionBuilder[UserRequest, AnyContent] with AuthorisedFunctions {
-
-  override val parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
-  override protected val executionContext: ExecutionContext = cc.executionContext
 
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
 

@@ -21,10 +21,8 @@ case class CurrentAndPreviousYearsEligibility(currentYearAvailable: Boolean, pre
 
 object CurrentAndPreviousYearsEligibility {
 
-  val taxYear: Int = uk.gov.hmrc.time.TaxYear.current.startYear
-
   def apply(recipient: RecipientRecord): CurrentAndPreviousYearsEligibility = {
-    val currentTaxYear = taxYear
+    val currentTaxYear = uk.gov.hmrc.time.TaxYear.current.startYear
     val currentYearAvailable = recipient.availableTaxYears.exists(_.year == currentTaxYear)
     val previousYears = recipient.availableTaxYears.filterNot(_.year == currentTaxYear)
 

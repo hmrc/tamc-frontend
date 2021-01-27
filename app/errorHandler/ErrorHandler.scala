@@ -18,7 +18,6 @@ package errorHandler
 
 import com.google.inject.Inject
 import config.TamcFormPartialRetriever
-import play.api.Configuration
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
@@ -27,7 +26,6 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ErrorHandler @Inject()(
                              val messagesApi: MessagesApi,
-                             val configuration: Configuration,
                              formPartialRetriever: TamcFormPartialRetriever
                             )
                             (implicit
