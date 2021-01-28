@@ -26,7 +26,7 @@ import scala.concurrent.duration._
 import java.time.LocalDate
 import scala.concurrent.duration.Duration
 
-//TODO get rid of vals in here that aren't actually config values!!!!!
+//TODO[DDCNL-3479] get rid of vals in here that aren't actually config values!!!!!
 class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig) {
 
   val templateServiceURL: String = servicesConfig.baseUrl("frontend-template-provider")
