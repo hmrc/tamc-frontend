@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import uk.gov.hmrc.domain.{SimpleObjectReads, SimpleObjectWrites}
 object Gender {
   private val validValues: List[String] = List("M", "F")
 
-  def isValid(code: String) = validValues.contains(code)
+  def isValid(code: String): Boolean = validValues.contains(code)
 
   implicit val genderWrite: Writes[Gender] = new SimpleObjectWrites[Gender](_.gender)
   implicit val genderRead: Reads[Gender] = new SimpleObjectReads[Gender]("gender", Gender.apply)

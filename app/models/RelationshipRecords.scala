@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import play.api.libs.json.Json
 case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Seq[RelationshipRecord],
                                loggedInUserInfo: LoggedInUserInfo) {
 
-  def hasMarriageAllowanceBeenCancelled = primaryRecord.participant1EndDate.isDefined
+  def hasMarriageAllowanceBeenCancelled: Boolean = primaryRecord.participant1EndDate.isDefined
 
   def recipientInformation: RecipientInformation = {
     primaryRecord.role match {
       case Transferor => RecipientInformation(primaryRecord.otherParticipantInstanceIdentifier, primaryRecord.otherParticipantUpdateTimestamp)
-      case Recipient => RecipientInformation(loggedInUserInfo.cid.toString(), loggedInUserInfo.timestamp)
+      case Recipient => RecipientInformation(loggedInUserInfo.cid.toString, loggedInUserInfo.timestamp)
     }
   }
 

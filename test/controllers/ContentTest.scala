@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +19,52 @@ package controllers
 import java.text.NumberFormat
 
 import _root_.services.{CachingService, TimeService, TransferService}
-import config.ApplicationConfig._
-import controllers.actions.AuthenticatedActionRefiner
+import config.ApplicationConfig.appConfig._
 import models._
-import org.joda.time.{DateTime, LocalDate}
+import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 import utils.ControllerBaseTest
+import utils.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
+import play.api.inject.bind
+import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 
 class ContentTest extends ControllerBaseTest {
+
+  val mockTransferService: TransferService = mock[TransferService]
+  val mockCachingService: CachingService = mock[CachingService]
+  val mockTimeService: TimeService = mock[TimeService]
+
+  def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+
+  def transferController: TransferController = app.injector.instanceOf[TransferController]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[CachingService].toInstance(mockCachingService),
+      bind[TimeService].toInstance(mockTimeService),
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
+      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
+    ).build()
+
+  val currentTaxYear: Int = time.TaxYear.current.startYear
+  when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
+  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear))).thenReturn(time.TaxYear.current.starts)
+  when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
@@ -54,8 +81,8 @@ class ContentTest extends ControllerBaseTest {
         "nino" -> Ninos.nino1,
         "transferor-email" -> "example@example.com"
       )
+     
       val result = transferController.transferAction()(request)
-
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
@@ -496,7 +523,7 @@ class ContentTest extends ControllerBaseTest {
 
   "Calling Previous year page " should {
     val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-    val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = new LocalDate(2011, 4, 10))
+    val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = LocalDate.of(2011, 4, 10))
     val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
     "display dynamic message " in {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
@@ -910,7 +937,7 @@ class ContentTest extends ControllerBaseTest {
         "bar",
         Nino(Ninos.ninoWithLOA1),
         List(TaxYear(2014, Some(false)), TaxYear(2015, Some(false))),
-        DateOfMarriageFormInput(new LocalDate(2015, 1, 1))
+        DateOfMarriageFormInput(LocalDate.of(2015, 1, 1))
       )
       when(mockTransferService.getConfirmationData(any())(any(), any()))
         .thenReturn(confirmData)
@@ -927,23 +954,4 @@ class ContentTest extends ControllerBaseTest {
       marriageDate.ownText() shouldBe "1 January 2015"
     }
   }
-
-  val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
-
-  def eligibilityController: EligibilityController = instanceOf[EligibilityController]
-
-  def transferController: TransferController = new TransferController(
-    messagesApi,
-    instanceOf[AuthenticatedActionRefiner],
-    mockTransferService,
-    mockCachingService,
-    mockTimeService
-  )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
-
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-  when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
-  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear))).thenReturn(time.TaxYear.current.starts)
-  when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)
 }

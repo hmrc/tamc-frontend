@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@ import controllers.actions.UnauthenticatedActionTransformer
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{Action, AnyContent, Controller, Result}
+import play.api.test.Injecting
+import play.api.inject.bind
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
@@ -29,12 +33,18 @@ import utils.RetrivalHelper._
 
 import scala.concurrent.Future
 
-class UnauthenticatedActionTransformerTest extends ControllerBaseTest {
+class UnauthenticatedActionTransformerTest extends ControllerBaseTest with Injecting {
 
   type AuthRetrievals = ConfidenceLevel ~ Option[String] ~ Option[Credentials]
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val authAction = new UnauthenticatedActionTransformer(mockAuthConnector)
+  val authAction: UnauthenticatedActionTransformer = inject[UnauthenticatedActionTransformer]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[AuthConnector].toInstance(mockAuthConnector)
+    ).build()
+
 
   class FakeController(authReturn: Future[AuthRetrievals]) extends Controller {
     def onPageLoad(): Action[AnyContent] = authAction(

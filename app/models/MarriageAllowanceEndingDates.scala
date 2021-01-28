@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package models
 
-import org.joda.time.LocalDate
-import play.api.libs.json.Json
+import java.time.LocalDate
+
+import play.api.libs.json.{Json, OFormat}
 
 case class MarriageAllowanceEndingDates(marriageAllowanceEndDate: LocalDate, personalAllowanceEffectiveDate: LocalDate)
 
 object MarriageAllowanceEndingDates {
-  implicit val formats = Json.format[MarriageAllowanceEndingDates]
+  implicit val formats: OFormat[MarriageAllowanceEndingDates] = Json.format[MarriageAllowanceEndingDates]
 }

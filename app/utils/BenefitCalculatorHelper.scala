@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package utils
 import java.text.NumberFormat
 import java.util.Locale
 
-import config.ApplicationConfig._
+import config.ApplicationConfig.appConfig._
 import models._
 
 object BenefitCalculatorHelper {

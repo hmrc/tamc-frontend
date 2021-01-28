@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
 import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
 
 object CreateRelationshipNotificationRequest {
-  implicit val formats = Json.format[CreateRelationshipNotificationRequest]
+  implicit val formats: OFormat[CreateRelationshipNotificationRequest] = Json.format[CreateRelationshipNotificationRequest]
 }
 
 case class CreateRelationshipNotificationRequest(full_name: String, email: EmailAddress, welsh: Boolean = false)

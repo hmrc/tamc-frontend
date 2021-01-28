@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,21 @@
 
 package services
 
-import config.ApplicationConfig._
+import com.google.inject.Inject
+import config.ApplicationConfig
 import models._
 import play.api.libs.json.Json
 import utils.BenefitCalculatorHelper
 
 import scala.io.Source
 
-object EligibilityCalculatorService extends EligibilityCalculatorService
-
-trait EligibilityCalculatorService {
+class EligibilityCalculatorService @Inject()(appConfig: ApplicationConfig) {
 
   def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country): EligibilityCalculatorResult = {
     val maxBenefitLimit = BenefitCalculatorHelper.maxLimit(countryOfResidence)
 
-    val hasMaxBenefit = transferorIncome < TRANSFEROR_ALLOWANCE && recipientIncome > RECIPIENT_ALLOWANCE
-    val recipientNotEligible = recipientIncome > maxBenefitLimit || recipientIncome < PERSONAL_ALLOWANCE()
+    val hasMaxBenefit = transferorIncome < appConfig.TRANSFEROR_ALLOWANCE && recipientIncome > appConfig.RECIPIENT_ALLOWANCE
+    val recipientNotEligible = recipientIncome > maxBenefitLimit || recipientIncome < appConfig.PERSONAL_ALLOWANCE()
     val bothOverMaxLimit = transferorIncome > maxBenefitLimit && recipientIncome > maxBenefitLimit
 
     if (transferorIncome > recipientIncome)
@@ -43,12 +42,12 @@ trait EligibilityCalculatorService {
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
         messageParam = Some(BenefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "PA")),
         messageParam2 = Some(BenefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "ML")))
-    else if (transferorIncome > PERSONAL_ALLOWANCE()) {
-      val paFormat = BenefitCalculatorHelper.currencyFormatter(PERSONAL_ALLOWANCE())
+    else if (transferorIncome > appConfig.PERSONAL_ALLOWANCE()) {
+      val paFormat = BenefitCalculatorHelper.currencyFormatter(appConfig.PERSONAL_ALLOWANCE())
       EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple", messageParam = Some(paFormat))
     } else if (hasMaxBenefit) {
       val basicRate = getCountryTaxBandsFromFile(countryOfResidence).find(band => band.name == "BasicRate").head.rate
-      val maxBenefit = (MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate).ceil.toInt
+      val maxBenefit = (appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate).ceil.toInt
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(maxBenefit))
     } else {
       partialEligibilityScenario(transferorIncome, recipientIncome, countryOfResidence, getCountryTaxBandsFromFile(countryOfResidence))
@@ -65,10 +64,10 @@ trait EligibilityCalculatorService {
   }
 
   private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
-    val recipientIncomeMinusPA = recipientIncome - PERSONAL_ALLOWANCE()
+    val recipientIncomeMinusPA = recipientIncome - appConfig.PERSONAL_ALLOWANCE()
     val recipientBenefit = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncomeMinusPA, countryTaxBands)
 
-    val transferorDifference = transferorIncome - TRANSFEROR_ALLOWANCE
+    val transferorDifference = transferorIncome - appConfig.TRANSFEROR_ALLOWANCE
     val transferorLoss = if (transferorDifference > 0) BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(transferorDifference, countryTaxBands) else 0
 
     (recipientBenefit - transferorLoss.floor).toInt

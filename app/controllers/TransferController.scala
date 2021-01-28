@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,31 +24,31 @@ import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
 import forms.RecipientDetailsForm.recipientDetailsForm
-import javax.inject.Inject
 import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.Logger
 import play.api.data.FormError
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.Lang
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.language.LanguageUtils
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-import scala.concurrent.Future
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-class TransferController @Inject()(
-                                    override val messagesApi: MessagesApi,
-                                    authenticate: AuthenticatedActionRefiner,
-                                    registrationService: TransferService,
-                                    cachingService: CachingService,
-                                    timeService: TimeService
+class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
+                                   registrationService: TransferService,
+                                   cachingService: CachingService,
+                                   timeService: TimeService,
+                                   appConfig: ApplicationConfig,
+                                   cc: MessagesControllerComponents
                                   )(implicit templateRenderer: TemplateRenderer,
-                                    formPartialRetriever: FormPartialRetriever) extends BaseController {
+                                    formPartialRetriever: FormPartialRetriever,
+                                    ec: ExecutionContext) extends BaseController(cc) {
 
   def transfer: Action[AnyContent] = authenticate {
     implicit request =>
@@ -67,7 +67,6 @@ class TransferController @Inject()(
         })
   }
 
-
   def dateOfMarriage: Action[AnyContent] = authenticate {
     implicit request =>
       Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
@@ -76,13 +75,11 @@ class TransferController @Inject()(
   def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
     implicit request =>
       Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
   def dateOfMarriageWithEn: Action[AnyContent] = authenticate {
     implicit request =>
       Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
-        .flashing(LanguageUtils.FlashWithSwitchIndicator)
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async {
@@ -111,7 +108,7 @@ class TransferController @Inject()(
         case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
           throw new NoTaxYearsAvailable
         case CurrentAndPreviousYearsEligibility(false, previousYears, registrationInput, _)
-          if previousYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(registrationInput, previousYears, false))
+          if previousYears.nonEmpty => Ok(views.html.multiyear.transfer.previous_years(registrationInput, previousYears, currentYearAvailable = false))
         case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
           Ok(views.html.multiyear.transfer.eligible_years(currentYearForm(previousYears.nonEmpty), previousYears.nonEmpty, registrationInput.name,
             Some(registrationInput.dateOfMarriage), Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))))
@@ -190,7 +187,7 @@ class TransferController @Inject()(
 
   def confirmYourEmail: Action[AnyContent] = authenticate.async {
     implicit request =>
-      cachingService.fetchAndGetEntry[NotificationRecord](ApplicationConfig.CACHE_NOTIFICATION_RECORD) map {
+      cachingService.fetchAndGetEntry[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD) map {
         case Some(NotificationRecord(transferorEmail)) => Ok(views.html.multiyear.transfer.email(emailForm.fill(transferorEmail)))
         case None => Ok(views.html.multiyear.transfer.email(emailForm))
       }

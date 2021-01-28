@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,7 @@
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 
-@(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)]
-)(implicit messages: Messages,
+@(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -56,7 +55,7 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 </div>
 
 <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
-    <p>@Messages("eligibility.check.date.of.birth.error.text.before.link") <a href=@ApplicationConfig.marriedCoupleAllowanceLink data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank">@Html(Messages("eligibility.check.date.of.birth.error.link.text")) @Messages("tamc.open.in.new.window")</a>.</p>
+    <p>@Messages("eligibility.check.date.of.birth.error.text.before.link") <a href=@ApplicationConfig.appConfig.marriedCoupleAllowanceLink data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank">@Html(Messages("eligibility.check.date.of.birth.error.link.text")) @Messages("tamc.open.in.new.window")</a>.</p>
     <p>@Messages("eligibility.check.date.of.birth.error.text.after.link")</p>
 </div>
 

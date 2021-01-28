@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,10 +28,12 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class UnauthenticatedActionTransformer @Inject()(
-                                                  val authConnector: AuthConnector
-                                                )(implicit ec: ExecutionContext)
+                                                  val authConnector: AuthConnector,
+                                                  cc: MessagesControllerComponents,
+                                                  val parser: BodyParsers.Default
+                                                )(implicit val executionContext: ExecutionContext)
   extends ActionTransformer[Request, UserRequest]
-    with ActionBuilder[UserRequest] with AuthorisedFunctions {
+    with ActionBuilder[UserRequest, AnyContent] with AuthorisedFunctions {
 
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
 

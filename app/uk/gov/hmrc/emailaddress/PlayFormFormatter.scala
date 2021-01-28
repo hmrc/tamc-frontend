@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 package uk.gov.hmrc.emailaddress
+
+import java.time.{ZoneId, ZonedDateTime}
 
 import org.joda.time.DateTime
 import play.api.data.Forms.{of, optional, text, tuple}
@@ -102,7 +104,7 @@ object PlayFormFormatter {
   def validDateTuple(missingPartError: String = "error.enter_full_date",
                      allAbsentError: String = "error.enter_a_date",
                      nonNumericError: String = "error.enter_numbers",
-                     invalidError: String = "error.enter_valid_date"): Mapping[DateTime] = {
+                     invalidError: String = "error.enter_valid_date"): Mapping[ZonedDateTime] = {
 
     def verifyDigits(triple: (String, String, String )) =
       triple._1.forall(_.isDigit) && triple._2.forall(_.isDigit) && triple._3.forall(_.isDigit)
@@ -116,7 +118,11 @@ object PlayFormFormatter {
       .transform[(String,String,String)]( x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
       .verifying(invalidError, x => !verifyDigits(x) || Try(new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
-      .transform[DateTime](x => new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0).withTimeAtStartOfDay, x => (x.getYear.toString, x.getMonthOfYear.toString, x.getDayOfMonth.toString))
+      .transform[ZonedDateTime](
+      x => ZonedDateTime.of(
+        x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
+        x => (x.getYear.toString, x.getMonthValue.toString, x.getDayOfMonth.toString)
+      )
   }
 
   private def datePartsArePresent(name: String = "constraint.datepresent",

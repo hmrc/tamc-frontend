@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,9 @@
  * limitations under the License.
  *@
 
-@(pageTitle: String, heading: String, message: String, appConfig: config.ApplicationConfig = config.ApplicationConfig)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@import config.ApplicationConfig
+
+@(pageTitle: String, heading: String, message: String)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 
 @import uk.gov.hmrc.play.views.html.layouts
@@ -29,17 +31,17 @@
 
 
 @{
-templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
+templateRenderer.renderDefaultTemplate(ApplicationConfig.appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
 "pageTitle" -> pageTitle,
 "linkElems" -> None,
 "scriptElems" -> None,
 "googleAnalytics" -> Map(
-"trackingId" -> appConfig.analyticsToken,
-"cookieDomain" -> appConfig.analyticsHost
+"trackingId" -> ApplicationConfig.appConfig.analyticsToken,
+"cookieDomain" -> ApplicationConfig.appConfig.analyticsHost
 ),
 "includeHMRCBranding" -> true,
 "mainContentHeader" -> contentHeader,
 "betaBanner" -> true,
-"feedbackIdentifier" -> appConfig.contactFormServiceIdentifier
+"feedbackIdentifier" -> ApplicationConfig.appConfig.contactFormServiceIdentifier
 ))
 }

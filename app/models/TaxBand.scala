@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package models
 import play.api.libs.json._
 
 case class TaxBand(name: String, lowerThreshold: Int, upperThreshold: Int, rate: Double) {
-  val diffBetweenLowerAndUpperThreshold = upperThreshold - lowerThreshold
+  val diffBetweenLowerAndUpperThreshold: Int = upperThreshold - lowerThreshold
 }
 
 object TaxBand {
-  implicit val format = Json.format[TaxBand]
+  implicit val format: OFormat[TaxBand] = Json.format[TaxBand]
 }
 
 case class CountryTaxBands(taxBands: List[TaxBand])

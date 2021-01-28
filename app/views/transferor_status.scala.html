@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = messages("title.pattern", messages("title.transfer-in-place")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-rel-exists")))) {
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-rel-exists")))
+) {
 <p>@Html(messages("transferor.has.relationship"))</p>
 <strong>@Html(messages("hmrc.contact-details"))</strong>
 <ul>
@@ -37,6 +38,6 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:trans
     <li>@messages("hmrc.contact-details-6")</li>
     <li>@messages("hmrc.contact-details-7")</li>
     <li>@messages("hmrc.contact-details-8")</li>
-    <li><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
+    <li><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
 </ul>
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package models
 
 import org.joda.time.LocalDate
-import play.api.libs.json.{Format, Json, Reads, Writes}
+import play.api.libs.json._
 
 object EndRelationshipReason {
   private val pattern = "dd/MM/yyyy"
-  implicit val dateFormat = Format[LocalDate](Reads.jodaLocalDateReads(pattern), Writes.jodaLocalDateWrites(pattern))
-  implicit val formats = Json.format[EndRelationshipReason]
+  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.jodaLocalDateReads(pattern), Writes.jodaLocalDateWrites(pattern))
+  implicit val formats: OFormat[EndRelationshipReason] = Json.format[EndRelationshipReason]
 }
 
 case class EndRelationshipReason(endReason: String, dateOfDivorce: Option[LocalDate] = None, timestamp: Option[String] = None)

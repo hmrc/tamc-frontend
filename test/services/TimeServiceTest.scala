@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,10 @@
 
 package services
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
+
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
@@ -25,6 +28,9 @@ import scala.collection.immutable
 class TimeServiceTest extends BaseTest {
 
   def timeService: TimeService = TimeService
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder().build()
+
 
   private val currentYear = timeService.getCurrentDate.getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
@@ -35,7 +41,8 @@ class TimeServiceTest extends BaseTest {
       val year = 2017
       val month = 4
       val day = 5
-      val expected = new LocalDate(year, month, day)
+      val expected = LocalDate.of(year, month, day)
+
       timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
 
@@ -44,7 +51,8 @@ class TimeServiceTest extends BaseTest {
       val year = 2017
       val month = 4
       val day = 6
-      val expected = new LocalDate(year, month, day)
+      val expected = LocalDate.of(year, month, day)
+
       timeService.getTaxYearForDate(expected) shouldBe expectedYear
     }
   }
@@ -55,7 +63,7 @@ class TimeServiceTest extends BaseTest {
       val year = 2017
       val month = 10
       val day = 22
-      val expected = new LocalDate(year, month, day)
+      val expected = LocalDate.of(year, month, day)
 
       val date: String = "" + year + month + day
 
@@ -68,7 +76,7 @@ class TimeServiceTest extends BaseTest {
         val year = 2017
         val month = 10
         val day = 22
-        val expected = new LocalDate(year, month, day)
+        val expected = LocalDate.of(year, month, day)
 
         val prefix: String = format.substring(0, 1)
         val date: String = "" + prefix + year + month + day
@@ -82,35 +90,38 @@ class TimeServiceTest extends BaseTest {
 
     "future date is today" in {
       val data = LocalDate.now()
+
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is yesterday" in {
       val data = LocalDate.now().minusDays(1)
+
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is tomorrow" in {
       val data = LocalDate.now().plusDays(1)
+
       timeService.isFutureDate(data) shouldBe true
     }
-
   }
 
   "getCurrentTaxYear" should {
 
     "get current tax year" in {
       val data = TaxYear.current.startYear
+
       timeService.getCurrentTaxYear shouldBe data
     }
-
   }
 
   "getStartDateForTaxYear" should {
 
     for (year <- years) {
       s"start date of tax year is $year April 6th" in {
-        val expected = new LocalDate(year, 4, 6)
+        val expected = LocalDate.of(year, 4, 6)
+
         timeService.getStartDateForTaxYear(year) shouldBe expected
       }
     }
@@ -128,16 +139,18 @@ class TimeServiceTest extends BaseTest {
 
     "return empty list if years < than minim allowed is passed" in {
       val list = List(models.TaxYear(year = 2002))
+
       timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(0)
     }
 
     "return valid list if years > than minim allowed is passed" in {
-      val year = timeService.getCurrentDate.getYear
+      val year = timeService.getCurrentTaxYear
       val from = year - 10
       val to = year + 5
       val list: List[models.TaxYear] = (from to to).map(year => {
         models.TaxYear(year)
       }).toList
+
       timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(10)
     }
   }

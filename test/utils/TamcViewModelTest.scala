@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 package utils
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.Messages
+import play.api.test.Helpers
 import uk.gov.hmrc.play.test.UnitSpec
 
-trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite {
+trait TamcViewModelTest extends UnitSpec with GuiceOneAppPerSuite {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messages: Messages = Helpers.stubMessages()
 
 }

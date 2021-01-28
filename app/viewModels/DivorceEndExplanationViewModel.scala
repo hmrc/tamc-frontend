@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package viewModels
 
-import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
-import org.joda.time.LocalDate
+import models.{MarriageAllowanceEndingDates, Recipient, Role}
+import java.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
 import views.helpers.LanguageUtils

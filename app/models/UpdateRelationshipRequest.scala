@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object UpdateRelationshipRequest {
-  implicit val formats = Json.format[UpdateRelationshipRequest]
+  implicit val formats: OFormat[UpdateRelationshipRequest] = Json.format[UpdateRelationshipRequest]
 }
 
 case class UpdateRelationshipRequest(participant1: RecipientInformation, participant2: TransferorInformation, relationship: RelationshipInformation)

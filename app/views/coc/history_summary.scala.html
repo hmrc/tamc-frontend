@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,8 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig._
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.HistorySummaryViewModel
-
 
 @(viewModel: HistorySummaryViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],

@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,29 @@
  *@
 
 @import java.text.NumberFormat
-@import config.ApplicationConfig._
+@import config.ApplicationConfig
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 @import models.auth.UserRequest
 
-@(partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput], scottishResident: Boolean)(
-    implicit messages: Messages, request: UserRequest[_], templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever
+@(
+    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
+    scottishResident: Boolean
+)(
+    implicit messages: Messages, request: UserRequest[_],
+    templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever
 )
 
 @maxLimit = @{
-    if (scottishResident) MAX_LIMIT_SCOT()
-    else MAX_LIMIT()
+    if (scottishResident) ApplicationConfig.appConfig.MAX_LIMIT_SCOT()
+    else ApplicationConfig.appConfig.MAX_LIMIT()
 }
 
 @tamc_main(title = Messages("title.eligibility.pattern",
     Messages("eligibility.check.partners.income.h1",
-        NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1),
+        NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
         NumberFormat.getIntegerInstance().format(maxLimit)
     )
 )) {
@@ -43,13 +47,13 @@
     @form_error_notification(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
-        lowerLimit = Some(PERSONAL_ALLOWANCE() + 1),
+        lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
         upperLimit = Some(maxLimit)
     )
 
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() +
+        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() +
         1), NumberFormat.getIntegerInstance().format(maxLimit))</h1>
         <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
     </header>

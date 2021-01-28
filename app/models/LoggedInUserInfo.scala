@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object LoggedInUserInfo {
-  implicit val formats = Json.format[LoggedInUserInfo]
+  implicit val formats: OFormat[LoggedInUserInfo] = Json.format[LoggedInUserInfo]
 }
 
 case class LoggedInUserInfo(cid: Cid, timestamp: Timestamp, has_allowance: Option[Boolean] = None, name: Option[CitizenName] = None)

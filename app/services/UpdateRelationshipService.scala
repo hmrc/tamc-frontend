@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,16 @@
 
 package services
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import com.google.inject.Inject
 import config.ApplicationConfig
-import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
+import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors.{RecipientNotFound, _}
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
-import org.joda.time.LocalDate
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
@@ -35,17 +38,14 @@ import views.helpers.LanguageUtils
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object UpdateRelationshipService extends UpdateRelationshipService {
-  override val marriageAllowanceConnector = MarriageAllowanceConnector
-  override val customAuditConnector = ApplicationAuditConnector
-  override val cachingService = CachingService
-}
-
-trait UpdateRelationshipService {
-
-  val marriageAllowanceConnector: MarriageAllowanceConnector
-  val customAuditConnector: AuditConnector
-  val cachingService: CachingService
+class UpdateRelationshipService @Inject()(
+                                           marriageAllowanceConnector: MarriageAllowanceConnector,
+                                           endDateForMACeased: EndDateForMACeased,
+                                           endDateDivorceCalculator: EndDateDivorceCalculator,
+                                           auditConnector: AuditConnector,
+                                           cachingService: CachingService,
+                                           appConfig: ApplicationConfig
+                                         ) {
 
   def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_))
@@ -59,7 +59,7 @@ trait UpdateRelationshipService {
     val transferorRec = UserRecord(Some(relationshipRecords.loggedInUserInfo))
     val checkCreateActionLockFuture = checkCreateActionLock(transferorRec)
     val saveTransferorRecordFuture = cachingService.saveTransferorRecord(transferorRec)
-    val cacheRelationshipRecordFuture = cachingService.cacheValue(ApplicationConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
+    val cacheRelationshipRecordFuture = cachingService.cacheValue(appConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
 
     for {
       _ <- cacheRelationshipRecordFuture
@@ -69,31 +69,31 @@ trait UpdateRelationshipService {
   }
 
   def getCheckClaimOrCancelDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
-    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
+    cachingService.fetchAndGetEntry[String](appConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
   }
 
   def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
-    cachingService.fetchAndGetEntry[String](ApplicationConfig.CACHE_MAKE_CHANGES_DECISION)
+    cachingService.fetchAndGetEntry[String](appConfig.CACHE_MAKE_CHANGES_DECISION)
   }
 
   def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
-    cachingService.cacheValue(ApplicationConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
+    cachingService.cacheValue(appConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
   }
 
   def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {
-    cachingService.fetchAndGetEntry[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE)
+    cachingService.fetchAndGetEntry[LocalDate](appConfig.CACHE_DIVORCE_DATE)
   }
 
   def getEmailAddress(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EmailAddress]] = {
-    cachingService.fetchAndGetEntry[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS)
+    cachingService.fetchAndGetEntry[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS)
   }
 
   def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
-    cachingService.fetchAndGetEntry[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw CacheMissingEmail()))
+    cachingService.fetchAndGetEntry[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw CacheMissingEmail()))
   }
 
   def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
-    cachingService.cacheValue[EmailAddress](ApplicationConfig.CACHE_EMAIL_ADDRESS, emailAddress)
+    cachingService.cacheValue[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS, emailAddress)
   }
 
   def getDataForDivorceExplanation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {
@@ -112,11 +112,11 @@ trait UpdateRelationshipService {
   }
 
   def saveDivorceDate(dateOfDivorce: LocalDate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[LocalDate] =
-    cachingService.cacheValue[LocalDate](ApplicationConfig.CACHE_DIVORCE_DATE, dateOfDivorce)
+    cachingService.cacheValue[LocalDate](appConfig.CACHE_DIVORCE_DATE, dateOfDivorce)
 
 
   def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
-    cachingService.cacheValue[String](ApplicationConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
+    cachingService.cacheValue[String](appConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
 
   def updateRelationship(nino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] = {
 
@@ -137,7 +137,7 @@ trait UpdateRelationshipService {
 
     def relationshipInformation(creationTimeStamp: String, relationshipEndReason: String, endDate: LocalDate): RelationshipInformation = {
 
-      val endDateFormatted = endDate.toString("yyyyMMdd")
+      val endDateFormatted = endDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
       val desEnumeration = relationshipEndReason match {
         case "Divorce" => "Divorce/Separation"
         case "Cancel" => "Cancelled by Transferor"
@@ -148,12 +148,12 @@ trait UpdateRelationshipService {
     }
 
     def updateRelationshipNotificationRequest(email: String, primaryRole: Role, loggedInUserInfo: LoggedInUserInfo, isWelsh: Boolean):
-     UpdateRelationshipNotificationRequest = {
-        val role = primaryRole.value
-        val name = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
-        val emailAddress = EmailAddress(email)
+    UpdateRelationshipNotificationRequest = {
+      val role = primaryRole.value
+      val name = loggedInUserInfo.name.flatMap(_.fullName).getOrElse("Unknown")
+      val emailAddress = EmailAddress(email)
 
-        UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)
+      UpdateRelationshipNotificationRequest(name, emailAddress, role, isWelsh)
     }
 
     for {
@@ -170,16 +170,16 @@ trait UpdateRelationshipService {
   }
 
   def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
-    val marriageAllowanceEndDate = EndDateForMACeased.endDate
-    val personalAllowanceEffectiveDate = EndDateForMACeased.personalAllowanceEffectiveDate
+    val marriageAllowanceEndDate = endDateForMACeased.endDate
+    val personalAllowanceEffectiveDate = endDateForMACeased.personalAllowanceEffectiveDate
 
     MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
   }
 
   def getMAEndingDatesForDivorce(role: Role, divorceDate: LocalDate): MarriageAllowanceEndingDates = {
 
-    val marriageAllowanceEndDate = EndDateDivorceCalculator.calculateEndDate(role, divorceDate)
-    val personalAllowanceEffectiveDate = EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
+    val marriageAllowanceEndDate = endDateDivorceCalculator.calculateEndDate(role, divorceDate)
+    val personalAllowanceEffectiveDate = endDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate)
 
     MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
 
@@ -187,7 +187,7 @@ trait UpdateRelationshipService {
 
   def saveMarriageAllowanceEndingDates(maEndingDates: MarriageAllowanceEndingDates)(implicit hc: HeaderCarrier, ec: ExecutionContext):
   Future[MarriageAllowanceEndingDates] =
-    cachingService.cacheValue[MarriageAllowanceEndingDates](ApplicationConfig.CACHE_MA_ENDING_DATES, maEndingDates)
+    cachingService.cacheValue[MarriageAllowanceEndingDates](appConfig.CACHE_MA_ENDING_DATES, maEndingDates)
 
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
@@ -197,7 +197,7 @@ trait UpdateRelationshipService {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
-      customAuditConnector.sendEvent(event)
+      auditConnector.sendEvent(event)
     }
 
   private def sendUpdateRelationship(transferorNino: Nino,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.domain.Nino
 
 object FindRecipientRequest {
-  implicit val formats = Json.format[FindRecipientRequest]
+  implicit val formats: OFormat[FindRecipientRequest] = Json.format[FindRecipientRequest]
 }
 
 case class FindRecipientRequest(name: String, lastName: String, gender: Gender, nino: Nino)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,22 @@
 
 package models
 
-import org.joda.time.LocalDate
-import play.api.libs.json.{Format, Json, Reads, Writes}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+import play.api.libs.json.{Format, JsString, Json, OFormat, Reads, Writes}
 import uk.gov.hmrc.domain.Nino
 
 object RegistrationFormInput {
   private val pattern = "dd/MM/yyyy"
-  implicit val dateFormat = Format[LocalDate](Reads.jodaLocalDateReads(pattern), Writes.jodaLocalDateWrites(pattern))
-  implicit val formats = Json.format[RegistrationFormInput]
+  private def writes(pattern: String): Writes[LocalDate] = {
+    val datePattern = DateTimeFormatter.ofPattern(pattern)
+
+    Writes[LocalDate] { localDate => JsString(localDate.format(datePattern))}
+  }
+
+  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.localDateReads(pattern), writes(pattern))
+  implicit val formats: OFormat[RegistrationFormInput] = Json.format[RegistrationFormInput]
 }
 
 case class RegistrationFormInput(name: String, lastName: String, gender: Gender, nino: Nino, dateOfMarriage: LocalDate)

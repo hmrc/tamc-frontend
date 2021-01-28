@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.LanguageUtils
 @import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
@@ -35,8 +34,7 @@ title = Messages("title.application.pattern", Messages("title.extra-years")),
 langSelectorOverride = Some(
 Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
 "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
-)
-)){
+))){
 
     @if(currentYearAvailable) {
         <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,14 +17,17 @@
 package services
 
 import models.{Recipient, Transferor}
-import org.joda.time.LocalDate
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
+import java.time.LocalDate
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYear
 
-class EndDateDivorceCalculatorTest extends UnitSpec {
+class EndDateDivorceCalculatorTest extends UnitSpec with GuiceOneAppPerSuite {
 
-  val recipientEndDateCalculator = EndDateDivorceCalculator.calculateEndDate(Recipient, _: LocalDate)
-  val transferorEndDateCalculator = EndDateDivorceCalculator.calculateEndDate(Transferor, _:LocalDate)
+  val endDateDivorceCalculator = app.injector.instanceOf[EndDateDivorceCalculator]
+  val recipientEndDateCalculator = endDateDivorceCalculator.calculateEndDate(Recipient, _: LocalDate)
+  val transferorEndDateCalculator = endDateDivorceCalculator.calculateEndDate(Transferor, _:LocalDate)
   val currentTaxYear = TaxYear.current
   val currentTaxYearDate = currentTaxYear.starts
   val previousTaxYearDate = currentTaxYear.previous.finishes
@@ -65,13 +68,13 @@ class EndDateDivorceCalculatorTest extends UnitSpec {
     "return the correct marriageAllowance personal allowance effective date" when {
       "the marriage allowance end date is in the current tax year" in {
 
-        val marriageAllowanceEndingDate = EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(currentTaxYearDate)
+        val marriageAllowanceEndingDate = endDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(currentTaxYearDate)
         marriageAllowanceEndingDate shouldBe startOfNextGivenTaxYear(currentTaxYearDate)
       }
 
       "the marriage allowance end date is in the previous tax year" in {
 
-        val marriageAllowanceEndingDate =EndDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(previousTaxYearDate)
+        val marriageAllowanceEndingDate =endDateDivorceCalculator.calculatePersonalAllowanceEffectiveDate(previousTaxYearDate)
         marriageAllowanceEndingDate shouldBe startOfNextGivenTaxYear(previousTaxYearDate)
       }
     }

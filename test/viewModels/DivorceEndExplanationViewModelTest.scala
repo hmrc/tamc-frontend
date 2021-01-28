@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package viewModels
 
 import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
 import views.helpers.LanguageUtils
 
-class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
+class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
 
   val maEndDate = LocalDate.now()
   val paEffectiveDate = LocalDate.now()
@@ -44,54 +44,50 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest{
 
       "a Recipient is divorced in the current tax year" in {
 
-        val bulletStatement1 = messagesApi("pages.divorce.explanation.current.ma.bullet", formatDate(maEndDate))
-        val bulletStatement2 = messagesApi("pages.divorce.explanation.current.pa.bullet", formatDate(paEffectiveDate))
+        val bulletStatement1 = messages("pages.divorce.explanation.current.ma.bullet", formatDate(maEndDate))
+        val bulletStatement2 = messages("pages.divorce.explanation.current.pa.bullet", formatDate(paEffectiveDate))
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
-        val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
+        val expectedTaxYearStatus = messages("pages.divorce.explanation.current.taxYear")
 
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDateCurrentTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Recipient, divorceDateCurrentTaxYear) shouldBe expectedViewModel
-
       }
 
       "a Recipient is divorced in a previous tax year" in {
 
-        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
-        val bulletStatement2 = messagesApi("pages.divorce.explanation.adjust.code.bullet")
+        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
+        val bulletStatement2 = messages("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
-        val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
+        val expectedTaxYearStatus = messages("pages.divorce.explanation.previous.taxYear")
 
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDatePreviousTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Recipient, divorceDatePreviousTaxYear) shouldBe expectedViewModel
-
       }
 
       "a transferor is divorced in the current tax year" in {
 
-        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
-        val bulletStatement2 = messagesApi("pages.divorce.explanation.adjust.code.bullet")
+        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
+        val bulletStatement2 = messages("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
-        val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.current.taxYear")
+        val expectedTaxYearStatus = messages("pages.divorce.explanation.current.taxYear")
 
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDateCurrentTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Transferor, divorceDateCurrentTaxYear) shouldBe expectedViewModel
-
       }
 
       "a transferor is divorced in a previous tax year" in {
 
-        val bulletStatement1 = messagesApi("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
-        val bulletStatement2 = messagesApi("pages.divorce.explanation.adjust.code.bullet")
+        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
+        val bulletStatement2 = messages("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
-        val expectedTaxYearStatus = messagesApi("pages.divorce.explanation.previous.taxYear")
+        val expectedTaxYearStatus = messages("pages.divorce.explanation.previous.taxYear")
 
         val expectedViewModel = DivorceEndExplanationViewModel(formatDate(divorceDatePreviousTaxYear), expectedTaxYearStatus, expectedBulletStatements)
 
         createViewModel(Transferor, divorceDatePreviousTaxYear) shouldBe expectedViewModel
-
       }
     }
   }

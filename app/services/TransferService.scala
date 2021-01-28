@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,8 @@
 
 package services
 
-import connectors.{ApplicationAuditConnector, MarriageAllowanceConnector}
+import com.google.inject.Inject
+import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors._
 import events._
@@ -33,25 +34,17 @@ import views.helpers.LanguageUtils
 
 import scala.concurrent.{ExecutionContext, Future}
 
-object TransferService extends TransferService {
-  override val marriageAllowanceConnector = MarriageAllowanceConnector
-  override val customAuditConnector = ApplicationAuditConnector
-  override val cachingService = CachingService
-  override val timeService = TimeService
-  override val applicationService = ApplicationService
-}
 
-trait TransferService {
-
-  val marriageAllowanceConnector: MarriageAllowanceConnector
-  val customAuditConnector: AuditConnector
-  val cachingService: CachingService
-  val timeService: TimeService
-  val applicationService: ApplicationService
+class TransferService @Inject()(
+                               marriageAllowanceConnector: MarriageAllowanceConnector,
+                               auditConnector: AuditConnector,
+                               cachingService: CachingService,
+                               applicationService: ApplicationService
+                               ) {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
-      customAuditConnector.sendEvent(event)
+      auditConnector.sendEvent(event)
     }
 
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
@@ -68,7 +61,7 @@ trait TransferService {
       cache <- cachingService.getCachedDataForEligibilityCheck
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
+      validYears = TimeService.getValidYearsApplyMAPreviousYears(taxYears)
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
 
@@ -76,7 +69,7 @@ trait TransferService {
                                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
-        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
+        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, TimeService.getTaxYearForDate(dom)) =>
         Future(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()
       case _ => throw CacheMissingTransferor()
@@ -100,7 +93,7 @@ trait TransferService {
     Future {
       cacheData match {
         case Some(CacheData(_, _, Some(notification), Some(true), _, _, _)) => notification
-        case _ => throw new CacheCreateRequestNotSent()
+        case _ => throw CacheCreateRequestNotSent()
       }
     }
 

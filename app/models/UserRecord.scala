@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package models
 
 import errors.TransferorNotFound
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object UserRecord {
-  implicit val formats = Json.format[UserRecord]
+  implicit val formats: OFormat[UserRecord] = Json.format[UserRecord]
 
   def apply(rec: Option[LoggedInUserInfo]): UserRecord =
         rec.fold(throw TransferorNotFound())(rec => UserRecord(

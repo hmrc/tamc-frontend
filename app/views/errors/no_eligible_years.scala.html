@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @templates.tamc_main(
 title = Messages("title.pattern", Messages("title.error")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:no-eligible-years")))) {
+maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:no-eligible-years")))
+) {
 <a href="@controllers.routes.UpdateRelationshipController.history" id="back" class="link-back">
     @Html(Messages("generic.back"))
 </a>

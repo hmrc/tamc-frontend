@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,41 +17,54 @@
 package controllers
 
 import config.ApplicationConfig
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.actions.UnauthenticatedActionTransformer
 import models.{EligibilityCalculatorResult, England}
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
+import play.api.inject.{Injector, bind}
 import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.{ControllerBaseTest, MockPermUnauthenticatedAction}
 
 class EligibilityControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
 
-  def controller(unAuthAction: UnauthenticatedActionTransformer = instanceOf[UnauthenticatedActionTransformer]): EligibilityController =
-    new EligibilityController(
-      messagesApi,
-      unAuthAction,
-      instanceOf[AuthenticatedActionRefiner],
-      mockEligibilityCalculatorService
-    )(instanceOf[TemplateRenderer], instanceOf[FormPartialRetriever])
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
+      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
+      bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+    ).build()
+
+
+  def permAuthInjector: Injector = GuiceApplicationBuilder()
+    .overrides(
+        bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
+        bind[UnauthenticatedActionTransformer].to[MockPermUnauthenticatedAction],
+        bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+      ).injector()
+
+  val authController = permAuthInjector.instanceOf[EligibilityController]
+
+  val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
 
   "howItWorks" should {
     "return success" in {
-      val result = controller().howItWorks()(request)
+      val result = controller.howItWorks()(request)
       status(result) shouldBe OK
     }
   }
 
   "home" should {
     "redirect the user" in {
-      val result = controller().home()(request)
+      val result = controller.home()(request)
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.eligibilityCheck().url)
     }
@@ -59,7 +72,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   "eligibilityCheck" should {
     "return success" in {
-      val result = controller().eligibilityCheck()(request)
+      val result = controller.eligibilityCheck()(request)
       status(result) shouldBe OK
     }
   }
@@ -70,7 +83,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "marriage-criteria" -> "not a boolean"
         )
-        val result = controller().eligibilityCheckAction()(request)
+        val result = controller.eligibilityCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -80,20 +93,20 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "marriage-criteria" -> "false"
         )
-        val result = controller(instanceOf[MockPermUnauthenticatedAction]).eligibilityCheckAction()(request)
+        val result = authController.eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.ptaFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.appConfig.ptaFinishedUrl
       }
 
       "user is not married with temporary auth state" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "marriage-criteria" -> "false"
         )
-        val result = controller().eligibilityCheckAction()(request)
+        val result = controller.eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.gdsFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.appConfig.gdsFinishedUrl
       }
     }
 
@@ -102,7 +115,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "marriage-criteria" -> "true"
         )
-        val result = controller().eligibilityCheckAction()(request)
+        val result = controller.eligibilityCheckAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.dateOfBirthCheck().url)
       }
@@ -111,7 +124,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   "dateOfBirthCheck" should {
     "return success" in {
-      val result = controller().dateOfBirthCheck()(request)
+      val result = controller.dateOfBirthCheck()(request)
       status(result) shouldBe OK
     }
   }
@@ -121,7 +134,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "date-of-birth" -> "not bool")
-        val result = controller().dateOfBirthCheckAction()(request)
+        val result = controller.dateOfBirthCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -131,7 +144,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "date-of-birth" -> "true"
         )
-        val result = controller().dateOfBirthCheckAction()(request)
+        val result = controller.dateOfBirthCheckAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouLiveInScotland().url)
       }
@@ -140,7 +153,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   "doYouLiveInScotland" should {
     "return success" in {
-      val result = controller().doYouLiveInScotland()(request)
+      val result = controller.doYouLiveInScotland()(request)
       status(result) shouldBe OK
     }
   }
@@ -150,7 +163,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "do-you-live-in-scotland" -> "not bool")
-        val result = controller().doYouLiveInScotlandAction()(request)
+        val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -159,7 +172,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "a valid form is submitted who lives in scotland" in {
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(
           "do-you-live-in-scotland" -> "true")
-        val result = controller().doYouLiveInScotlandAction()(request)
+        val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck().url)
         result.session.data("scottish_resident") shouldBe "true"
@@ -168,7 +181,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "a valid form is submitted who does not live in scotland" in {
         implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(
           "do-you-live-in-scotland" -> "false")
-        val result = controller().doYouLiveInScotlandAction()(request)
+        val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck().url)
         result.session.data("scottish_resident") shouldBe "false"
@@ -178,7 +191,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   "lowerEarnerCheck" should {
     "return success" in {
-      val result = controller().lowerEarnerCheck()(request)
+      val result = controller.lowerEarnerCheck()(request)
       status(result) shouldBe OK
     }
   }
@@ -189,7 +202,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "lower-earner" -> "not a bool"
         )
-        val result = controller().lowerEarnerCheckAction()(request)
+        val result = controller.lowerEarnerCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
 
@@ -198,7 +211,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           val request = FakeRequest().withFormUrlEncodedBody(
             "lower-earner" -> "true"
           )
-          val result = controller().lowerEarnerCheckAction()(request)
+          val result = controller.lowerEarnerCheckAction()(request)
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.partnersIncomeCheck().url)
         }
@@ -208,7 +221,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   "partnersIncomeCheck" should {
     "return success " in {
-      val result = controller().partnersIncomeCheck()(request)
+      val result = controller.partnersIncomeCheck()(request)
       status(result) shouldBe OK
     }
   }
@@ -218,7 +231,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "partners-income" -> "not bool")
-        val result = controller().partnersIncomeCheckAction()(request)
+        val result = controller.partnersIncomeCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -228,7 +241,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "partners-income" -> "true",
           "is-scottish" -> "true")
-        val result = controller().partnersIncomeCheckAction()(request)
+        val result = controller.partnersIncomeCheckAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouWantToApply().url)
       }
@@ -237,7 +250,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   "doYouWantToApply" should {
     "return success" in {
-      val result = controller().doYouWantToApply()(request)
+      val result = controller.doYouWantToApply()(request)
       status(result) shouldBe OK
     }
   }
@@ -247,7 +260,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "not a bool")
-        val result = controller().doYouWantToApplyAction()(request)
+        val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -256,7 +269,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "the user wants to apply" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "true")
-        val result = controller().doYouWantToApplyAction()(request)
+        val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
       }
@@ -266,24 +279,24 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "the user doesnt want to apply and is permanently logged in" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "false")
-        val result = controller(instanceOf[MockPermUnauthenticatedAction]).doYouWantToApplyAction()(request)
+        val result = authController.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.ptaFinishedUrl)
+        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.ptaFinishedUrl)
       }
 
       "the user doesnt want to apply and is not permanently logged in" in {
         val request = FakeRequest().withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "false")
-        val result = controller().doYouWantToApplyAction()(request)
+        val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.gdsFinishedUrl)
+        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.gdsFinishedUrl)
       }
     }
   }
 
   "gdsCalculator" should {
     "return success" in {
-      val result = controller().gdsCalculator()(request)
+      val result = controller.gdsCalculator()(request)
       status(result) shouldBe OK
     }
   }
@@ -294,7 +307,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "transferor-income" -> "not some income",
           "recipient-income" -> "not some income")
-        val result = controller().gdsCalculatorAction()(request)
+        val result = controller.gdsCalculatorAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -309,7 +322,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
           ArgumentMatchers.eq(England))
         ).thenReturn(EligibilityCalculatorResult("test_key"))
-        val result = controller().gdsCalculatorAction()(request)
+        val result = controller.gdsCalculatorAction()(request)
         status(result) shouldBe OK
       }
     }
@@ -317,7 +330,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   "ptaCalculator" should {
     "return success" in {
-      val result = controller().ptaCalculator()(request)
+      val result = controller.ptaCalculator()(request)
       status(result) shouldBe OK
     }
   }
@@ -328,7 +341,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withFormUrlEncodedBody(
           "transferor-income" -> "not some income",
           "recipient-income" -> "not some income")
-        val result = controller().ptaCalculatorAction()(request)
+        val result = controller.ptaCalculatorAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -343,7 +356,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
           ArgumentMatchers.eq(England))
         ).thenReturn(EligibilityCalculatorResult("test_key"))
-        val result = controller().ptaCalculatorAction()(request)
+        val result = controller.ptaCalculatorAction()(request)
         status(result) shouldBe OK
       }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
 
 package services
 
-import org.joda.time.LocalDate
-import uk.gov.hmrc.time.TaxYear
+import java.time.LocalDate
 
-object EndDateForMACeased {
+import com.google.inject.Inject
+import uk.gov.hmrc.time.CurrentTaxYear
 
-  def endDate: LocalDate = TaxYear.current.finishes
-  def personalAllowanceEffectiveDate: LocalDate = TaxYear.current.next.starts
+class EndDateForMACeased @Inject()(taxYear: CurrentTaxYear) {
+
+  def endDate: LocalDate = taxYear.current.finishes
+  def personalAllowanceEffectiveDate: LocalDate = taxYear.current.next.starts
 
 }

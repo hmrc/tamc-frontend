@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@
 @import forms.coc.CheckClaimOrCancelDecisionForm
 @import includes.backLink
 
-
 @(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @templates.tamc_main(
 title = messages("title.pattern", messages("pages.decision.title")),
-mainConfig = views.helpers.MainConfig()) {
+mainConfig = views.helpers.MainConfig()
+) {
 
     @backLink()
     @templates.form_error_notification(decisionForm, formErrorMessage = "pages.form.error.mandatory.data")

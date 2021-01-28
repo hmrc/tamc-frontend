@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,8 +42,8 @@ class AuthorisationControllerTest extends ControllerBaseTest {
     "redirect" in {
       val result = await(controller.logout()(request))
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(ApplicationConfig.logoutUrl)
-      result.session(request).data("postLogoutPage") shouldBe ApplicationConfig.logoutCallbackUrl
+      redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.logoutUrl)
+      result.session(request).data("postLogoutPage") shouldBe ApplicationConfig.appConfig.logoutCallbackUrl
     }
   }
 

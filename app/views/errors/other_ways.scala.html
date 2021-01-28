@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other
 
     <p id="pta-redirect">
         @messages("technical.other-ways.para0.part1")
-        <a href=@ApplicationConfig.ptaFinishedUrl>@messages("technical.other-ways.para0.link-text")</a>
+        <a href=@ApplicationConfig.appConfig.ptaFinishedUrl>@messages("technical.other-ways.para0.link-text")</a>
         @messages("technical.other-ways.para0.part2")
     </p>
     <p id="unable-to-confirm-identity">@messages("technical.other-ways.para1")</p>
@@ -55,7 +55,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other
 <p>@messages("hmrc.contact-details-7") <br>
     @messages("hmrc.contact-details-8")</p>
 }
-<p><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 
 }
 

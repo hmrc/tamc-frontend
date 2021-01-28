@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,29 +22,25 @@ import errors._
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
-import models.auth.{AuthenticatedUserRequest, BaseUserRequest}
-import org.joda.time.LocalDate
+import models.auth.BaseUserRequest
 import play.Logger
-import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
-
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class UpdateRelationshipController @Inject()(
-                                              override val messagesApi: MessagesApi,
                                               authenticate: AuthenticatedActionRefiner,
                                               updateRelationshipService: UpdateRelationshipService,
-                                              timeService: TimeService
-                                            )(implicit templateRenderer: TemplateRenderer,
-                                              formPartialRetriever: FormPartialRetriever) extends BaseController {
+                                              cc: MessagesControllerComponents
 
+                                            )(implicit templateRenderer: TemplateRenderer,
+                                              formPartialRetriever: FormPartialRetriever,
+                                              ec: ExecutionContext) extends BaseController(cc) {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -145,7 +141,6 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-
   private def changeOfIncomeRedirect(implicit hc: HeaderCarrier): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.primaryRecord.role == Recipient){
@@ -231,7 +226,6 @@ class UpdateRelationshipController @Inject()(
         case NonFatal(_) => Ok(emptyEmailView)
       }
   }
-
 
   def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>

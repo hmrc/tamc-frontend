@@ -1,5 +1,5 @@
 @*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,21 @@
 @import uk.gov.hmrc.play.views.html._
 @import views.helpers.LanguageUtils
 @import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig._
+@import config.ApplicationConfig
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
 @(form: Form[models.CurrentYearInput],
 historicYearsAvailable: Boolean,
 recipientName: String,
-dom: Option[org.joda.time.LocalDate],
-cy: Option[org.joda.time.LocalDate])(
+dom: Option[java.time.LocalDate],
+cy: Option[java.time.LocalDate]
+)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
 
 @templates.tamc_main(
 title = Messages("title.application.pattern", Messages("title.eligible-years"))
@@ -54,7 +56,7 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
 
     <ul class="list list-bullet">
         <li>@Html(Messages("pages.eligibleyear.li1",recipientName,
-            NumberFormat.getIntegerInstance().format(MAX_BENEFIT())))
+            NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT())))
         </li>
         <li>@Html(Messages("pages.eligibleyear.li2",LanguageUtils().formPossessive(recipientName)))
         </li>
