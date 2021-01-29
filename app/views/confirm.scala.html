@@ -40,105 +40,95 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
     </header>
 
     <h2 class="heading-medium">@Html(Messages("pages.confirm.lower.earner"))</h2>
-    <table>
-        <col class="width30">
-        <col class="width60">
-        <col class="width10">
-        <tr>
-            @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
-            <td>@Html(Messages("generic.name"))</td>
-            <td id="transferor-name">@name</td>
-            <td>&nbsp;</td>
-        </tr>
-        <tr class="grey-underline-large-thick">
-            }.getOrElse("")
-            <td>@Html(Messages("generic.email"))</td>
-            <td id="transferor-email">@data.transferorEmail</td>
-            <td>
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list_row">
+        @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
+        <dt class="govuk-summary-list_key">@Html(Messages("generic.name"))</dt>
+        <dd class="govuk-summary-list_value" id="transferor-name">@name</dd>
+        <dd class="govuk-summary-list_actions"></dd>
+        </div>
+        <div class="govuk-summary-list_row grey-underline-large-thick">
+        }.getOrElse("")
+            <dt class="govuk-summary-list_key">@Html(Messages("generic.email"))</dt>
+            <dd class="govuk-summary-list_value"id="transferor-email">@data.transferorEmail</dd>
+            <dd class="govuk-summary-list_actions">
                 <a href="@controllers.routes.TransferController.confirmYourEmail()" aria-label="@Html(messages("pages.confirm.change.email"))"
-                   data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
-                    @Html(Messages("generic.change"))
+                data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
+                @Html(Messages("generic.change"))
                 </a>
-            </td>
-        </tr>
-    </table>
+            </dd>
+        </div>
+    </dl>
 
     <h2 class="heading-medium">@Html(Messages("pages.confirm.higher.earner"))</h2>
-    <table class="grey-underline-large-thick">
-        <col class="width30">
-        <col class="width60">
-        <col class="width10">
-
-        <tr>
-            <td>@Html(Messages("generic.name"))</td>
-            <td id="recipient-name">@data.recipientFirstName @data.recipientLastName</td>
-            <td>
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list_row">
+            <dt class="govuk-summary-list_key">@Html(Messages("generic.name"))</dt>
+            <dd class="govuk-summary-list_value" id="recipient-name">@data.recipientFirstName @data.recipientLastName</dd>
+            <dd class="govuk-summary-list_actions">
                 <a href="@controllers.routes.TransferController.transfer()"
-                   data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details">
-                    @Html(Messages("generic.change"))
+                data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details" aria-label="@Html(Messages("pages.form.aria-label"))">
+                @Html(Messages("generic.change"))
                 </a>
-            </td>
-        </tr>
-        <tr class="grey-underline-large-thick">
-            <td>@Html(Messages("generic.nino-full"))</td>
-            <td id="recipient-nino">@templates.ninoRenderer(data.recipientNino)</td>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
+            </dd>
+        </div>
+        <div class="govuk-summary-list_row grey-underline-large-thick">
+            <dt class="govuk-summary-list_key">@Html(Messages("generic.nino-full"))</dt>
+            <dd class="govuk-summary-list_value" id="recipient-nino">@templates.ninoRenderer(data.recipientNino)</dd>
+            <dd class="govuk-summary-list_actions">&nbsp;</dd>
+        </div>
+    </dl>
 
     <h2 class="heading-medium">@Html(Messages("pages.confirm.marriage.details"))</h2>
-    <table class="grey-underline-large-thick">
-        <col class="width30">
-        <col class="width60">
-        <col class="width10">
-        <tr>
-            <td>@Html(Messages("pages.confirm.date.of.marriage"))</td>
-            <td id="marriage-date">@LanguageUtils().ukDateTransformer(data.dateOfMarriage.dateOfMarriage)
-            </td>
-            <td>
+    <dl class="govuk-summary-list">
+        <div class="govuk-summary-list_row">
+            <dt class="govuk-summary-list_key">@Html(Messages("pages.confirm.date.of.marriage"))</dt>
+            <dd class="govuk-summary-list_value" id="marriage-date">@LanguageUtils().ukDateTransformer(data.dateOfMarriage.dateOfMarriage) </dd>
+            <dd class="govuk-summary-list_actions">
                 <a href="@controllers.routes.TransferController.dateOfMarriage()"
-                   data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date">
-                    @Html(Messages("generic.change"))
+                data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date" aria-label="@Html(Messages("pages.form.marriage-date.aria-label"))">
+                @Html(Messages("generic.change"))
                 </a>
-            </td>
-        </tr>
-        @for(taxYear <- data.availableYears) {
-        <tr>
-            @if(taxYear.isCurrent) {
-
-            <td id="year-@taxYear.year">
-                @Html(Messages("pages.confirm.current.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts)))
-            </td>
-            <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
-                LanguageUtils().formPossessive(data.recipientFirstName),
-                data.recipientFirstName, NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
+            </dd>
+        </div>
+    </dl>
+    @for(taxYear <- data.availableYears) {
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list_row">
+                @if(taxYear.isCurrent) {
+                    <dt class="govuk-summary-list_key" id="year-@taxYear.year">
+                    @Html(Messages("pages.confirm.current.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts)))
+                    </dt>
+                    <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
+                        LanguageUtils().formPossessive(data.recipientFirstName),
+                        data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
+                    </dd>
                 } else {
-            <td id="year-@taxYear.year">
-                @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
-            </td>
-            <td id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
-                Messages("max-benefit", NumberFormat.getIntegerInstance().format(MAX_BENEFIT(taxYear.year)))))
-            </td>
-            }
-            <td>
-                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears">
-                    @Html(Messages("generic.change"))
+                    <dt class="govuk-summary-list_key" id="year-@taxYear.year">
+                    @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
+                    </dt>
+                    <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
+                        Messages("max-benefit", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT(taxYear.year)))))
+                    </dd>
+                }
+            <dd class="govuk-summary-list_actions">
+                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears" aria-label="@Html(Messages("pages.confirm.current.tax.aria-label", LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts)))">
+                @Html(Messages("generic.change"))
                 </a>
-            </td>
-        </tr>
-        }
-    </table>
+            </dd>
+            </div>
+        </dl>
+    }
 
-    <div class="panel panel-border-wide">
-       <p>@Html(Messages("pages.confirm.warning"))</p>
+    <div class="govuk-summary-list_row panel panel-border-wide">
+        <p>@Html(Messages("pages.confirm.warning"))</p>
     </div>
 
     @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
 
-    <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit">
+        <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit">
         @Html(Messages("pages.confirm.button"))
-    </button>
+        </button>
 
-}
-<br>
+    }
 }
