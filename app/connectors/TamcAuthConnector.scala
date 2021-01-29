@@ -17,19 +17,12 @@
 package connectors
 
 import com.google.inject.Inject
-import config.HttpClient
-import play.api.Mode.Mode
-import play.api.{Configuration, Environment}
+import config.ApplicationConfig
 import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.http.HttpClient
 
-class TamcAuthConnector @Inject()(
-                                   override val runModeConfiguration: Configuration,
-                                   val http: HttpClient,
-                                   environment: Environment
-                                 ) extends PlayAuthConnector with ServicesConfig {
+class TamcAuthConnector @Inject()(val http: HttpClient, applicationConfig: ApplicationConfig) extends PlayAuthConnector {
 
-  override val serviceUrl: String = baseUrl("auth")
+  override val serviceUrl: String = applicationConfig.authURL
 
-  override protected def mode: Mode = environment.mode
 }

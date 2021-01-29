@@ -16,8 +16,8 @@
 
 package viewModels
 
-import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
-import org.joda.time.LocalDate
+import models.{MarriageAllowanceEndingDates, Recipient, Role}
+import java.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
 import views.helpers.LanguageUtils

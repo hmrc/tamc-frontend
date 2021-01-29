@@ -23,12 +23,12 @@ import play.api.libs.json.Json
 case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Seq[RelationshipRecord],
                                loggedInUserInfo: LoggedInUserInfo) {
 
-  def hasMarriageAllowanceBeenCancelled = primaryRecord.participant1EndDate.isDefined
+  def hasMarriageAllowanceBeenCancelled: Boolean = primaryRecord.participant1EndDate.isDefined
 
   def recipientInformation: RecipientInformation = {
     primaryRecord.role match {
       case Transferor => RecipientInformation(primaryRecord.otherParticipantInstanceIdentifier, primaryRecord.otherParticipantUpdateTimestamp)
-      case Recipient => RecipientInformation(loggedInUserInfo.cid.toString(), loggedInUserInfo.timestamp)
+      case Recipient => RecipientInformation(loggedInUserInfo.cid.toString, loggedInUserInfo.timestamp)
     }
   }
 

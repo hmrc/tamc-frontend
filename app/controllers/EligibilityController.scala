@@ -16,8 +16,8 @@
 
 package controllers
 
-import config.ApplicationConfig.{SCOTTISH_RESIDENT, gdsFinishedUrl, ptaFinishedUrl}
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import config.ApplicationConfig
+import controllers.actions.UnauthenticatedActionTransformer
 import forms.EligibilityCalculatorForm.calculatorForm
 import forms.MultiYearDateOfBirthForm.dateOfBirthForm
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
@@ -27,8 +27,7 @@ import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
 import javax.inject.Inject
 import models.Country
-import play.api.i18n.MessagesApi
-import play.api.mvc.{Action, AnyContent, Call}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
@@ -36,12 +35,12 @@ import utils.isScottishResident
 import views.html.multiyear.eligibility_check
 
 class EligibilityController @Inject()(
-                                       override val messagesApi: MessagesApi,
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
-                                       authenticatedActionRefiner: AuthenticatedActionRefiner,
-                                       eligibilityCalculatorService: EligibilityCalculatorService
+                                       eligibilityCalculatorService: EligibilityCalculatorService,
+                                       appConfig: ApplicationConfig,
+                                       cc: MessagesControllerComponents
                                      )(implicit templateRenderer: TemplateRenderer,
-                                       formPartialRetriever: FormPartialRetriever) extends BaseController {
+                                       formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
@@ -61,7 +60,7 @@ class EligibilityController @Inject()(
   def eligibilityCheckAction(): Action[AnyContent] = {
 
     def finishUrl(isLoggedIn: Boolean): String =
-      if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
+      if (isLoggedIn) appConfig.ptaFinishedUrl else appConfig.gdsFinishedUrl
 
     unauthenticatedAction {
       implicit request =>
@@ -96,7 +95,7 @@ class EligibilityController @Inject()(
   def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(views.html.multiyear.do_you_live_in_scotland(doYouLiveInScotlandForm = doYouLiveInScotlandForm))
-        .withSession(request.session - SCOTTISH_RESIDENT)
+        .withSession(request.session - appConfig.SCOTTISH_RESIDENT)
   }
 
   def doYouLiveInScotlandAction(): Action[AnyContent] = unauthenticatedAction {
@@ -106,7 +105,7 @@ class EligibilityController @Inject()(
           BadRequest(views.html.multiyear.do_you_live_in_scotland(formWithErrors)),
         doYouLiveInScotlandInput => {
           Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
-            .withSession(request.session + (SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
+            .withSession(request.session + (appConfig.SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
 
@@ -148,7 +147,7 @@ class EligibilityController @Inject()(
   def doYouWantToApplyAction(): Action[AnyContent] = {
 
     def finishUrl(isLoggedIn: Boolean): String =
-      if (isLoggedIn) ptaFinishedUrl else gdsFinishedUrl
+      if (isLoggedIn) appConfig.ptaFinishedUrl else appConfig.gdsFinishedUrl
 
     unauthenticatedAction {
       implicit request =>
@@ -198,6 +197,5 @@ class EligibilityController @Inject()(
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
               calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
   }
-
 
 }

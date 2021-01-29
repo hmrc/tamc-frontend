@@ -20,7 +20,8 @@
 @import models.auth.UserRequest
 
 @(calculatorForm: Form[models.EligibilityCalculatorInput],
-calculationResult: Option[models.EligibilityCalculatorResult] = None)(
+calculationResult: Option[models.EligibilityCalculatorResult] = None
+)(
 implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,

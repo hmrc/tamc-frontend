@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object UpdateRelationshipResponse {
-  implicit val formats = Json.format[UpdateRelationshipResponse]
+  implicit val formats: OFormat[UpdateRelationshipResponse] = Json.format[UpdateRelationshipResponse]
 }
 
 case class UpdateRelationshipResponse(status: ResponseStatus)

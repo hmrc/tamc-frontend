@@ -16,7 +16,7 @@
 
 package events
 
-import models.{CacheData, EligibilityCheckCacheData, UpdateRelationshipCacheData, UpdateRelationshipRequestHolder}
+import models.{CacheData, UpdateRelationshipRequestHolder}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.model.DataEvent

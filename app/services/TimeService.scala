@@ -17,10 +17,12 @@
 package services
 
 import config.ApplicationConfig
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import uk.gov.hmrc.time.TaxYear
 
+//TODO[DDCNL-3479] look into making this a util or deleting. It Is Not a Service!
 object TimeService extends TimeService
 
 trait TimeService {
@@ -44,7 +46,7 @@ trait TimeService {
     LocalDate.now().minusYears(1)
 
   def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
-    LocalDate.parse(date, DateTimeFormat.forPattern(format))
+    LocalDate.parse(date, DateTimeFormatter.ofPattern(format))
 
   /**
     * TODO Need to change and call this method right before send list of years
@@ -55,7 +57,7 @@ trait TimeService {
   def getValidYearsApplyMAPreviousYears(years: Option[List[models.TaxYear]]): List[models.TaxYear] = {
     years.fold(List[models.TaxYear]()) {
       actualYears =>
-        actualYears.filter(year => year.year >= ApplicationConfig.TAMC_BEGINNING_YEAR)
+        actualYears.filter(year => year.year >= ApplicationConfig.appConfig.TAMC_BEGINNING_YEAR)
     }
   }
 

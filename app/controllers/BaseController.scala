@@ -16,7 +16,9 @@
 
 package controllers
 
+import com.google.inject.Inject
 import play.api.i18n.I18nSupport
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import play.api.mvc.MessagesControllerComponents
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
-trait BaseController extends FrontendController with I18nSupport
+class BaseController @Inject()(cc: MessagesControllerComponents) extends FrontendController(cc) with I18nSupport

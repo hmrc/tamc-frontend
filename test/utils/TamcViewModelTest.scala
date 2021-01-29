@@ -17,11 +17,12 @@
 package utils
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.i18n.{I18nSupport, MessagesApi}
+import play.api.i18n.Messages
+import play.api.test.Helpers
 import uk.gov.hmrc.play.test.UnitSpec
 
-trait TamcViewModelTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite {
+trait TamcViewModelTest extends UnitSpec with GuiceOneAppPerSuite {
 
-  implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
+  implicit val messages: Messages = Helpers.stubMessages()
 
 }

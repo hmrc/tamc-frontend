@@ -31,9 +31,11 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthenticatedActionRefiner @Inject()(
-                                            val authConnector: AuthConnector
-                                          )(implicit ec: ExecutionContext)
-  extends ActionRefiner[Request, AuthenticatedUserRequest] with ActionBuilder[AuthenticatedUserRequest] with AuthorisedFunctions {
+                                            val authConnector: AuthConnector,
+                                            appConfig: ApplicationConfig,
+                                            val parser: BodyParsers.Default
+                                          )(implicit val executionContext: ExecutionContext)
+  extends ActionRefiner[Request, AuthenticatedUserRequest] with ActionBuilder[AuthenticatedUserRequest, AnyContent] with AuthorisedFunctions {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
 
@@ -52,9 +54,9 @@ class AuthenticatedActionRefiner @Inject()(
         throw new Exception("Nino not found")
     } recover {
       case _: InsufficientConfidenceLevel =>
-        Left(Redirect(ApplicationConfig.ivUpliftUrl))
+        Left(Redirect(appConfig.ivUpliftUrl))
       case _: NoActiveSession =>
-        Left(Redirect(ApplicationConfig.ggSignInUrl))
+        Left(Redirect(appConfig.ggSignInUrl))
     }
   }
 }

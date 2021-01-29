@@ -25,16 +25,17 @@ request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main( title = messages("title.pattern", messages("pages.bereavement.title")),
-  mainConfig = views.helpers.MainConfig()) {
-
+@templates.tamc_main(
+title = messages("title.pattern", messages("pages.bereavement.title")),
+mainConfig = views.helpers.MainConfig()
+) {
   @backLink()
 
   <header class="page-heading">
     <h1 class="heading-xlarge" id="bereavement">@messages("pages.bereavement.title")</h1>
   </header>
 
-    <p>@messages("general.helpline.enquiries.link.pretext") <a href="@ApplicationConfig.generalEnquiriesLink">
+    <p>@messages("general.helpline.enquiries.link.pretext") <a href="@ApplicationConfig.appConfig.generalEnquiriesLink">
         @messages("general.helpline.enquiries.link")</a> @messages("pages.bereavement.enquiries.link.paragraph")
     </p>
 

@@ -44,7 +44,7 @@ object ClaimsViewModel {
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.taxFreeAllowanceUrl}">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.appConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 

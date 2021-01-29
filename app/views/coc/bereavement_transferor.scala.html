@@ -45,15 +45,15 @@ mainConfig = views.helpers.MainConfig()
 <h2 class="heading-medium">@messages("change.status.bereavement.notify-hmrc")</h2>
 
 <p>@messages("hmrc.contact-details-2") <br>
-@messages("hmrc.contact-details-3") <br>
-@messages("hmrc.contact-details-4")</p>
+    @messages("hmrc.contact-details-3") <br>
+    @messages("hmrc.contact-details-4")</p>
 
 <h3 class="heading-small">@messages("hmrc.contact-detials.time")</h3>
 <p>@messages("hmrc.contact-details-5") <br>
-@messages("hmrc.contact-details-6")</p>
+    @messages("hmrc.contact-details-6")</p>
 <p>@messages("hmrc.contact-details-7")</p>
 
 <h3 class="heading-small">@messages("hmrc.contact-detials.calling.time")</h3>
 @messages("hmrc.contact-details-8")</p>
-<p><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

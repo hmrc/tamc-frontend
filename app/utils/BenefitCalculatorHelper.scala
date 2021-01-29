@@ -19,7 +19,7 @@ package utils
 import java.text.NumberFormat
 import java.util.Locale
 
-import config.ApplicationConfig._
+import config.ApplicationConfig.appConfig._
 import models._
 
 object BenefitCalculatorHelper {

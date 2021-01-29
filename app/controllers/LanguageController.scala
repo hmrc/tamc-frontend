@@ -16,21 +16,26 @@
 
 package controllers
 
-import config.ApplicationConfig.callbackUrl
-import javax.inject.Inject
-import play.api.Environment
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{I18nSupport, Lang}
-import play.api.mvc.{Action, AnyContent}
 
-class LanguageController @Inject()(implicit val environment: Environment) extends uk.gov.hmrc.play.language.LanguageController with I18nSupport with BaseController {
+import config.ApplicationConfig
+import javax.inject.Inject
+import play.api.Configuration
+import play.api.i18n.Lang
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.language.LanguageUtils
+
+class LanguageController @Inject()(
+                                    configuration: Configuration,
+                                    languageUtils: LanguageUtils,
+                                    appConfig: ApplicationConfig,
+                                    cc: MessagesControllerComponents
+                                  ) extends uk.gov.hmrc.play.language.LanguageController(languageUtils, cc) {
 
   def enGb(): Action[AnyContent] = switchToLanguage(language = "english")
 
   def cyGb(): Action[AnyContent] = switchToLanguage(language = "cymraeg")
 
-  def fallbackURL: String = callbackUrl
+  def fallbackURL: String = appConfig.callbackUrl
 
   def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),

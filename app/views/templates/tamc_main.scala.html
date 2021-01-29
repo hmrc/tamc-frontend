@@ -18,11 +18,11 @@
 @import play.twirl.api.HtmlFormat
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.play.views.html.helpers
-@import uk.gov.hmrc.play.frontend.auth.AuthContext
+
 @import models.auth._
 @import config._
 @import play.api.Play
-@import config.ApplicationConfig.webchatId
+@import config.ApplicationConfig
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
@@ -31,7 +31,6 @@
  sidebarLinks: Option[Html] = None,
  sidebarClass: Option[String] = None,
  mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
- appConfig: config.ApplicationConfig = config.ApplicationConfig,
  supportLinkEnabled: Boolean = true,
  langSwitch: Option[play.twirl.api.Html] = None,
  scriptElem: Option[Html] = None,
@@ -81,8 +80,8 @@
    });
  </script>
 
- <script type="text/javascript" id="webchat" data-webchat-id="@config.ApplicationConfig.webchatId">
-  var EG_ACT_ID="@config.ApplicationConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="ga";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
+ <script type="text/javascript" id="webchat" data-webchat-id="@ApplicationConfig.appConfig.webchatId">
+  var EG_ACT_ID="@ApplicationConfig.appConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="ga";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
              {c=a.contentWindow.document}
              catch(g)
              {d=e.domain,a.src="javascript:var d=document.open();d.domain='"+d+"';void(0);",c=a.contentWindow.document}
@@ -98,11 +97,11 @@
 }
 
 @getHelpForm = {
- @includes.report_problem(supportLinkEnabled, formPartialRetriever, appConfig)
+ @includes.report_problem(supportLinkEnabled, formPartialRetriever, ApplicationConfig.appConfig)
 }
 
 @commonContentHeader = {
- @if(ApplicationConfig.isWelshEnabled) {
+ @if(ApplicationConfig.appConfig.isWelshEnabled) {
   @langSwitch
  }
 }
@@ -144,15 +143,15 @@
 
 @googleAnalytics = @{
  Map[String, Any](
-  "trackingId" -> ApplicationConfig.analyticsToken,
-  "cookieDomain" -> ApplicationConfig.analyticsHost,
+  "trackingId" -> ApplicationConfig.appConfig.analyticsToken,
+  "cookieDomain" -> ApplicationConfig.appConfig.analyticsHost,
   "confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
   "authProvider" -> request.authProvider
  ) ++ gaDimensions.getOrElse(Map.empty)
 }
 
 @googleTagManager = @{
- if(ApplicationConfig.isGTMEnabled) Map[String, String]("gtmId" -> ApplicationConfig.gtmId) else Map.empty
+ if(ApplicationConfig.appConfig.isGTMEnabled) Map[String, String]("gtmId" -> ApplicationConfig.appConfig.gtmId) else Map.empty
 }
 
 @{
@@ -167,12 +166,12 @@
   "removeServiceInfo" -> false,
 
   "betaBanner" -> true,
-  "feedbackIdentifier" -> appConfig.contactFormServiceIdentifier,
+  "feedbackIdentifier" -> ApplicationConfig.appConfig.contactFormServiceIdentifier,
   "includeHMRCBranding" -> true,
-  "accessibilityFooterUrl" -> appConfig.accessibilityStatementUrl(request.uri),
+  "accessibilityFooterUrl" -> ApplicationConfig.appConfig.accessibilityStatementUrl(request.uri),
 
   "hideAccountMenu" -> !request.isAuthenticated,
-  "assetsPath" -> appConfig.assetsPrefix,
+  "assetsPath" -> ApplicationConfig.appConfig.assetsPrefix,
 
   "isGovernmentGateway" -> request.authProvider.contains("GovernmentGateway"),
   "isVerify" -> request.authProvider.contains("Verify"),
@@ -203,7 +202,7 @@
  )
 
  val templateArguments = {
-  if(!isUserResearchBannerHidden && ApplicationConfig.urBannerEnabled) {
+  if(!isUserResearchBannerHidden && ApplicationConfig.appConfig.urBannerEnabled) {
    arguments ++ Map[String, Any](
     "fullWidthBannerTitle" -> Messages("tamc.banner.recruitment.title"),
     "fullWidthBannerText" -> Messages("tamc.banner.recruitment.link"),
@@ -214,7 +213,7 @@
   } else arguments
  }
 
- templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath, layouts.article(mainContent, false, None), templateArguments)
+ templateRenderer.renderDefaultTemplate(ApplicationConfig.appConfig.frontendTemplatePath, layouts.article(mainContent, false, None), templateArguments)
 
 }
 

@@ -17,7 +17,7 @@
 package forms
 
 import models.DateOfMarriageFormInput
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.data.Form
 import play.api.data.Forms.mapping
 import play.api.i18n.Messages

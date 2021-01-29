@@ -17,7 +17,7 @@
 package models
 
 import errors.{CacheMissingEmail, CacheMissingEndReason, CacheMissingMAEndingDates, CacheMissingRelationshipRecords}
-import org.joda.time.LocalDate
+import java.time.LocalDate
 
 case class UpdateRelationshipCacheData(relationshipRecords: Option[RelationshipRecords], email: Option[String], endMaReason: Option[String], marriageEndDate: Option[LocalDate])
 

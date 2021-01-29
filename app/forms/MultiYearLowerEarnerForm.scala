@@ -34,7 +34,7 @@ object MultiYearLowerEarnerForm {
       Right(data.getOrElse(key, "")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.PERSONAL_ALLOWANCE()))))
+        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))))
       }
     }
 

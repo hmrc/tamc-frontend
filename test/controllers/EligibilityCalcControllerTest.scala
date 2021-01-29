@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.ApplicationConfig._
+import config.ApplicationConfig.appConfig._
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}

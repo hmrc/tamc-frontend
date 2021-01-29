@@ -16,24 +16,27 @@
 
 package services
 
-import org.joda.time.LocalDate
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+
+import java.time.LocalDate
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.TaxYear
 
-class EndDateForMACeasedTest extends UnitSpec {
+class EndDateForMACeasedTest extends UnitSpec with GuiceOneAppPerSuite{
 
-val currentTaxYear = TaxYear.current
+  val endDateForMACeased = app.injector.instanceOf[EndDateForMACeased]
+  val currentTaxYear = TaxYear.current
 
   def startOfNextGivenTaxYear(taxYear: LocalDate) = TaxYear.taxYearFor(taxYear).next.starts
 
   "EndDateMACeasedCalculatorTest" should {
 
     "return a marriage allowance end date" in {
-      EndDateForMACeased.endDate shouldBe currentTaxYear.finishes
+      endDateForMACeased.endDate shouldBe currentTaxYear.finishes
     }
 
     "return a personal allowance effective date" in {
-      EndDateForMACeased.personalAllowanceEffectiveDate shouldBe currentTaxYear.next.starts
+      endDateForMACeased.personalAllowanceEffectiveDate shouldBe currentTaxYear.next.starts
     }
   }
 }

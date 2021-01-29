@@ -35,11 +35,11 @@ object MultiYearPartnersIncomeQuestionForm {
         case _ => false
       }
 
-      val maxLimit = if(isScottish) ApplicationConfig.MAX_LIMIT_SCOT() else ApplicationConfig.MAX_LIMIT()
+      val maxLimit = if(isScottish) ApplicationConfig.appConfig.MAX_LIMIT_SCOT() else ApplicationConfig.appConfig.MAX_LIMIT()
       Right(data.getOrElse(key, "")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.PERSONAL_ALLOWANCE() + 1,
+        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1,
             maxLimit))))
       }
     }

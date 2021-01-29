@@ -16,7 +16,6 @@
 
 import java.net.URLEncoder
 
-import config.ApplicationConfig._
 import play.api.mvc.Request
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.SessionKeys
@@ -39,5 +38,5 @@ package object utils {
     request.session.get(SessionKeys.sessionId).getOrElse("")
 
   def isScottishResident(request: Request[_]): Boolean =
-    request.session.get(SCOTTISH_RESIDENT).map(_.toBoolean).fold(false)(identity)
+    request.session.get("scottish_resident").map(_.toBoolean).fold(false)(identity)
 }

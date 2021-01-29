@@ -17,7 +17,7 @@
 package models
 
 import errors._
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import test_utils.data.RelationshipRecordData.activeRecipientRelationshipRecord
 import uk.gov.hmrc.play.test.UnitSpec
 

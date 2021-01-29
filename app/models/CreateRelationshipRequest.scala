@@ -16,10 +16,10 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 object CreateRelationshipRequest {
-  implicit val formats = Json.format[CreateRelationshipRequest]
+  implicit val formats: OFormat[CreateRelationshipRequest] = Json.format[CreateRelationshipRequest]
 }
 
 case class CreateRelationshipRequest(transferor_cid: Cid, transferor_timestamp: Timestamp, recipient_cid: Cid, recipient_timestamp: Timestamp, taxYears: List[Int])

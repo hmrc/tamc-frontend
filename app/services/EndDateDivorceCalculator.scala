@@ -16,23 +16,25 @@
 
 package services
 
+import com.google.inject.Inject
 import models.{Recipient, Role, Transferor}
-import org.joda.time.LocalDate
-import uk.gov.hmrc.time.TaxYear
+import java.time.LocalDate
 
-object EndDateDivorceCalculator {
+import uk.gov.hmrc.time.CurrentTaxYear
+
+class EndDateDivorceCalculator @Inject()(taxYear: CurrentTaxYear) {
 
   def calculateEndDate(role: Role, divorceDate: LocalDate): LocalDate = {
 
-    val isDivorceDateInTaxYear: Boolean = TaxYear.current.contains(divorceDate)
+    val isDivorceDateInTaxYear: Boolean = taxYear.current.contains(divorceDate)
 
     (role, isDivorceDateInTaxYear) match {
-      case(Recipient, true) => TaxYear.current.finishes
-      case(Recipient, false) => TaxYear.current.previous.finishes
-      case(Transferor, true) => TaxYear.current.previous.finishes
-      case(Transferor, false) => TaxYear.taxYearFor(divorceDate).finishes
+      case(Recipient, true) => taxYear.current.finishes
+      case(Recipient, false) => taxYear.current.previous.finishes
+      case(Transferor, true) => taxYear.current.previous.finishes
+      case(Transferor, false) => taxYear.taxYearFor(divorceDate).finishes
     }
   }
 
-  def calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate: LocalDate): LocalDate = TaxYear.taxYearFor(marriageAllowanceEndDate).next.starts
+  def calculatePersonalAllowanceEffectiveDate(marriageAllowanceEndDate: LocalDate): LocalDate = taxYear.taxYearFor(marriageAllowanceEndDate).next.starts
 }

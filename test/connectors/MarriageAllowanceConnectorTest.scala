@@ -21,7 +21,10 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
-import org.joda.time.LocalDate
+import java.time.LocalDate
+
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import test_utils.TestData.Ninos
 import test_utils._
@@ -32,24 +35,29 @@ import scala.concurrent.Future
 
 class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
 
+  def serverStub(data: RelationshipRecordStatusWrapper): StubMapping = {
+    server.stubFor(get(urlPathEqualTo(s"/paye/$nino/list-relationship"))
+      .willReturn(
+        aResponse()
+          .withStatus(200)
+          .withBody(Json.toJson(data).toString())
+      )
+    )
+  }
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .configure("microservice.services.marriage-allowance.port" -> server.port())
+    .build()
+
+  lazy val marriageAllowanceConnector = app.injector.instanceOf[MarriageAllowanceConnector]
   val nino = Nino(Ninos.nino1)
 
   "listRelationship" should {
-    def serverStub(data: RelationshipRecordStatusWrapper): StubMapping = {
-      server.stubFor(get(urlPathEqualTo(s"/paye/$nino/list-relationship"))
-        .willReturn(
-          aResponse()
-            .withStatus(200)
-            .withBody(Json.toJson(data).toString())
-        )
-      )
-    }
-
     "return data" when {
       "success response returned from HOD" in {
         val response = RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus("OK"))
         serverStub(response)
-        val result: Future[RelationshipRecordList] = MarriageAllowanceConnector.listRelationship(nino)
+        val result: Future[RelationshipRecordList] = marriageAllowanceConnector.listRelationship(nino)
         await(result) shouldBe RelationshipRecordList(Nil, None)
       }
     }
@@ -58,17 +66,17 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
 
       "TRANSFEROR_NOT_FOUND is returned" in {
         serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(TRANSFEROR_NOT_FOUND)))
-        intercept[TransferorNotFound](await(MarriageAllowanceConnector.listRelationship(nino)))
+        intercept[TransferorNotFound](await(marriageAllowanceConnector.listRelationship(nino)))
       }
 
       "CITIZEN_NOT_FOUND is returned" in {
         serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(CITIZEN_NOT_FOUND)))
-        intercept[CitizenNotFound](await(MarriageAllowanceConnector.listRelationship(nino)))
+        intercept[CitizenNotFound](await(marriageAllowanceConnector.listRelationship(nino)))
       }
 
       "BAD_REQUEST is returned" in {
         serverStub(RelationshipRecordStatusWrapper(RelationshipRecordList(Nil, None), ResponseStatus(BAD_REQUEST)))
-        intercept[BadFetchRequest](await(MarriageAllowanceConnector.listRelationship(nino)))
+        intercept[BadFetchRequest](await(marriageAllowanceConnector.listRelationship(nino)))
       }
     }
   }
@@ -82,7 +90,7 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
         ))
       val data = RegistrationFormInput("", "", Gender("M"), nino, LocalDate.now())
 
-      await(MarriageAllowanceConnector.getRecipientRelationship(nino, data))
+      await(marriageAllowanceConnector.getRecipientRelationship(nino, data))
       verify(1,
         postRequestedFor(urlEqualTo(s"/paye/$nino/get-recipient-relationship"))
           .withRequestBody(equalToJson(Json.toJson(data).toString()))
@@ -99,7 +107,7 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
         ))
       val data = MarriageAllowanceConnectorTestData.relationshipRequestHolder
 
-      await(MarriageAllowanceConnector.createRelationship(nino, data))
+      await(marriageAllowanceConnector.createRelationship(nino, data))
       verify(1,
         putRequestedFor(urlEqualTo(s"/paye/$nino/create-multi-year-relationship/pta"))
           .withRequestBody(equalToJson(Json.toJson(data).toString()))
@@ -117,7 +125,7 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
 
       val data = MarriageAllowanceConnectorTestData.updateRelationshipRequestHolder
 
-      await(MarriageAllowanceConnector.updateRelationship(nino, data))
+      await(marriageAllowanceConnector.updateRelationship(nino, data))
       verify(1,
         putRequestedFor(urlEqualTo(s"/paye/$nino/update-relationship"))
           .withRequestBody(equalToJson(Json.toJson(data).toString()))

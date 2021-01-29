@@ -16,10 +16,8 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import config.ApplicationConfig._
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.HistorySummaryViewModel
-
 
 @(viewModel: HistorySummaryViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],

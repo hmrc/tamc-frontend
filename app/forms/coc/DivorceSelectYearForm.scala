@@ -17,8 +17,7 @@
 package forms.coc
 
 import config.ApplicationConfig
-import org.joda.time.LocalDate
-import org.joda.time.format.DateTimeFormat
+import java.time.LocalDate
 import play.api.data.Forms.{optional, single, text, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, Mapping}
@@ -33,11 +32,11 @@ object DivorceSelectYearForm {
 
   val  DateOfDivorce = "dateOfDivorce"
   val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
-  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.TAMC_MIN_DATE)
+  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.appConfig.TAMC_MIN_DATE)
 
   def isNonNumericDate(year: String, month: String, day: String): Boolean = !s"$year$month$day".forall(_.isDigit)
   def isNonValidDate(year: String, month: String, day: String): Boolean = {
-    if(year.length != 4) true else Try(LocalDate.parse(s"$year-$month-$day", DateTimeFormat.forPattern("yyyy-MM-dd"))).isFailure
+    if(year.length != 4) true else Try(LocalDate.of(year.toInt, month.toInt, day.toInt)).isFailure
   }
 
   private def divorceDateMapping(implicit messages: Messages): Mapping[LocalDate] = {
@@ -68,14 +67,14 @@ object DivorceSelectYearForm {
 
   private def transformToDate(dateTuple: (Option[String], Option[String], Option[String])): LocalDate = {
     dateTuple match {
-      case (Some(year), Some(month), Some(day)) =>  new LocalDate(year.toInt, month.toInt, day.toInt)
+      case (Some(year), Some(month), Some(day)) =>  LocalDate.of(year.toInt, month.toInt, day.toInt)
     }
   }
 
   private def transformToTuple(date: LocalDate): (Option[String], Option[String], Option[String]) = {
 
     val year = Some(date.getYear.toString)
-    val month = Some(date.getMonthOfYear.toString)
+    val month = Some(date.getMonthValue.toString)
     val day = Some(date.getDayOfMonth.toString)
 
     (year, month, day)
@@ -83,7 +82,7 @@ object DivorceSelectYearForm {
 
   private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
     case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date",
-      LanguageUtils().ukDateTransformer(ApplicationConfig.TAMC_MIN_DATE)))
+      LanguageUtils().ukDateTransformer(ApplicationConfig.appConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
       Invalid(ValidationError("pages.divorce.date.error.max.date",
         LanguageUtils().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))

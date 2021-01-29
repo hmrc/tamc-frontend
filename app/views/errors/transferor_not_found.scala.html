@@ -25,7 +25,8 @@
 
 @templates.tamc_main(title = messages("title.pattern", messages("title.error")),
                      mainConfig = views.helpers.MainConfig(
-                     maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-not-found")))) {
+                     maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-not-found")))
+) {
 
     <p id="error">@Html(messages("transferor.not.found"))</p>
 
@@ -39,6 +40,6 @@
         <li>@messages("hmrc.contact-details-6")</li>
         <li>@messages("hmrc.contact-details-7")</li>
         <li>@messages("hmrc.contact-details-8")</li>
-        <li><a target="_blank" href=@ApplicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
+        <li><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
     </ul>
 }
