@@ -553,7 +553,6 @@ class ContentTest extends ControllerBaseTest {
       document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
       val form = document.getElementById("eligible-years-form")
       form shouldNot be(null)
-      println("\n\n\n\n\n\n here" + document)
       val labelName = form.select("fieldset[id=selectedYear]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
       labelName.getElementsByClass("error-notification").first().text() shouldBe "Select yes whether you would like to apply for earlier tax years"
