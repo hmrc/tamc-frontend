@@ -49,8 +49,8 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         </div>
         <div class="govuk-summary-list_row grey-underline-large-thick">
         }.getOrElse("")
-            <dt class="govuk-summary-list_key">@Html(Messages("generic.email"))</dt>
-            <dd class="govuk-summary-list_value"id="transferor-email">@data.transferorEmail</dd>
+            <dt class="govuk-summary-list_key" id="email-label">@Html(Messages("generic.email"))</dt>
+            <dd class="govuk-summary-list_value" id="transferor-email">@data.transferorEmail</dd>
             <dd class="govuk-summary-list_actions">
                 <a href="@controllers.routes.TransferController.confirmYourEmail()" aria-label="@Html(messages("pages.confirm.change.email"))"
                 data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
