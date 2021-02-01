@@ -41,7 +41,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
 
     <h2 class="heading-medium">@Html(Messages("pages.confirm.lower.earner"))</h2>
     <dl class="govuk-summary-list">
-        <div class="govuk-summary-list_row">
+        <div class="govuk-summary-list_row" id="transfer-name">
         @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
         <dt class="govuk-summary-list_key" id="name-label">@Html(Messages("generic.name"))</dt>
         <dd class="govuk-summary-list_value" id="transferor-name">@name</dd>
@@ -121,7 +121,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
     }
 
     <div class="govuk-summary-list_row panel panel-border-wide">
-        <p>@Html(Messages("pages.confirm.warning"))</p>
+        <p id="warning-message">@Html(Messages("pages.confirm.warning"))</p>
     </div>
 
     @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
