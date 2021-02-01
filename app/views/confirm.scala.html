@@ -43,7 +43,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list_row">
         @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
-        <dt class="govuk-summary-list_key">@Html(Messages("generic.name"))</dt>
+        <dt class="govuk-summary-list_key" id="name-label">@Html(Messages("generic.name"))</dt>
         <dd class="govuk-summary-list_value" id="transferor-name">@name</dd>
         <dd class="govuk-summary-list_actions"></dd>
         </div>
