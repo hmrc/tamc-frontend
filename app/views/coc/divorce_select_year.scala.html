@@ -49,8 +49,10 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
             DivorceSelectYearForm.DateOfDivorce,
             Html(""),
             None,
+            '_legend -> messages("pages.divorce.title"),
+            '_legendClass -> "visuallyhidden",
             '_hintText -> Messages("pages.divorce.date.hint"),
-            '_label -> Messages("collect_user_data.dod.error"),
+            '_label -> Html(messages("collect_user_data.dod.error")),
             '_labelTextClass -> "client-error-notification")
         </div>
 

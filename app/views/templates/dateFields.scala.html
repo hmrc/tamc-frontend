@@ -26,19 +26,23 @@ new FieldElements(formItem(fieldName).id, formItem(fieldName), null, args.toMap,
 
 <fieldset class="@elements.args.get('_groupClass) touch @if(elements.hasErrors) {form-field--error}"
           id="@fieldName.replaceAll(" [.]", "_")">
-<legend class="form-label-bold">@label</legend>
-<div class="form-date">
-    @if(elements.args.get('_hintText).isDefined) {
-    <p class="form-hint">@elements.args.get('_hintText)</p>
+    <legend @if(elements.args.contains('_legendClass)) { class="@elements.args.get('_legendClass)}">
+    @if(elements.args.get('_legend).isDefined) {
+        @elements.args.get('_legend)
     }
+    </legend>
+    <div class="form-date">
+        @if(elements.args.get('_hintText).isDefined) {
+            <p class="form-hint">@elements.args.get('_hintText)</p>
+        }
 
-    @elements.errors.map { error => <span class="error-notification">@Messages(error)</span>}
-    <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
-    @elements.label
-    </span>
-    <div class="no-touch native-date-picker form-date" id="date-fields">
-        @dateFieldsContent(formItem, fieldName)
+        @elements.errors.map { error => <span class="error-notification">@Messages(error)</span>}
+        <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
+            @elements.label
+        </span>
+        <div class="no-touch native-date-picker form-date" id="date-fields">
+            @dateFieldsContent(formItem, fieldName)
+        </div>
     </div>
-</div>
 </fieldset>
     

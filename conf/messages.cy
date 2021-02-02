@@ -153,6 +153,7 @@ title.application.pattern={0} – Cais am Lwfans Priodasol – GOV.UK
 title.dateOfBirth=Eich dyddiad geni
 title.eligible-years=Gwneud cais ar gyfer y flwyddyn dreth bresennol
 title.extra-years=Gwneud cais ar gyfer blynyddoedd treth cynharach
+title.confirm-extra-years=Cadarnhau blynyddoedd treth cynharach
 title.transfer-in-place=Trosglwyddiad yn barod
 title.transfer=Nodwch fanylion eich partner
 title.finished=Cais wedi’i gadarnhau
@@ -271,6 +272,8 @@ pages.finished.backdated-payments=Gall taliadau sydd wedi’u hôl-ddyddio gymry
 # Registration page - Your spouse details
 #********************************************************************************
 pages.form.h1=Manylion eich partner
+pages.form.aria-label=Wedi newid manylion eich partner
+pages.form.marriage-date.aria-label=Newid dyddiad priodas
 pages.form.details=Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i helpu gostwng swm y dreth y mae ef/hi’n ei dalu.
 pages.form.enter-data=Nodwch fanylion eich partner:
 pages.form.field.name=Enw cyntaf
@@ -283,7 +286,7 @@ pages.form.field.nino=Beth yw rhif Yswiriant Gwladol eich partner?
 pages.form.field.warning=Er mwyn gwneud cais, rhaid mai chi sydd â'r incwm isaf. Os mai chi sydd â'r incwm uchaf, ni fyddwch yn talu digon o dreth os byddwch yn parhau.
 pages.form.field.warning-hidden=Gwybodaeth bwysig
 pages.form.field-helper.nino-example=Er enghraifft, QQ 12 34 56 C
-pages.form.field-helper.nino-where=Ble y gallaf ddod o hyd i hwn?
+pages.form.field-helper.nino-where=Ble i ddod o hyd i’w rif Yswiriant Gwladol
 pages.form.field-helper.nino.expand=cliciwch i ehangu
 pages.form.field-helper.nino-found=Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.
 pages.form.field-helper.dom=Er enghraifft, 31 3 1980
@@ -649,6 +652,7 @@ pages.previousyear.para=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneria
 pages.confirm.lower.earner=Eich manylion (incwm isel)
 pages.confirm.higher.earner=Manylion eich partner (incwm uchel)
 pages.confirm.current.tax=Blwyddyn dreth bresennol: <span class=nowrap>{0}</span> ymlaen
+pages.confirm.current.tax.aria-label=Newid blwyddyn dreth: {0}
 pages.confirm.current.tax.desc=Bydd CThEM yn newid codau treth chi a {0} er mwyn arbed {1} hyd at £{2}. Bydd eich Lwfans Priodasol yn parhau’n awtomatig oni bai’ch bod chi neu {3} yn ei ganslo, neu nad ydych bellach yn gymwys fel p&#226;r.
 pages.confirm.previous.tax=Blwyddyn dreth flaenorol: <span class=nowrap>{0}</span> i <span class=nowrap>{1}</span>
 pages.confirm.previous.tax.desc=Bydd CThEM yn gwirio’r manylion yr ydych wedi’u rhoi cyn anfon siec at {0} drwy’r post am hyd at £{1}.

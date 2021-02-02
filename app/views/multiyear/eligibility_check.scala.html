@@ -49,6 +49,8 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
     @templates.input_radio_group(
     eligibilityCheckForm("marriage-criteria"),
     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
+    '_legend -> Messages("eligibility.check.h1"),
+    '_legendClass -> "visuallyhidden",
     '_labelClass -> "block-label",
     '_labelAfter -> true,
     '_fieldsetAttributes -> "data-inline-error=married-js-error",

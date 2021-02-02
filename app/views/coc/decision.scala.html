@@ -43,11 +43,12 @@ mainConfig = views.helpers.MainConfig()
             Seq((CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim, messages("pages.decision.radio.check")),
             (CheckClaimOrCancelDecisionForm.StopMarriageAllowance, messages("pages.decision.radio.stop"))),
             '_labelClass -> "block-label",
+            '_legend -> Messages("pages.decision.title"),
+            '_legendClass -> "visuallyhidden",
             '_labelAfter -> true,
             '_fieldsetAttributes -> "data-inline-error=update-marriage-criteria-js-error",
             '_groupClass -> "inline spacingBottom"
             )
-
         </div>
 
         <button class="button" type="submit">

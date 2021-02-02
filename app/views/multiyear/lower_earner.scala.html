@@ -43,7 +43,7 @@
         @input_radio_group(
         lowerEarnerFormInput("lower-earner"),
         Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-        '_legend -> Html(Messages("eligibility.check.lower.earner.h1")),
+        '_legend -> Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))),
         '_legendClass -> "visuallyhidden",
         '_labelClass -> "block-label",
         '_labelAfter -> true,

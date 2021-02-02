@@ -170,7 +170,7 @@ class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
           earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
             hasErrors =>
               Future {
-                BadRequest(views.html.multiyear.transfer.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("generic.select.answer"), List()))), registrationInput, extraYears))
+                BadRequest(views.html.multiyear.transfer.single_year_select(hasErrors.copy(errors = Seq(FormError("selectedYear", List("pages.form.field-required.applyForHistoricYears"), List()))), registrationInput, extraYears))
               },
             taxYears => {
               registrationService.updateSelectedYears(availableYears, taxYears.selectedYear, taxYears.yearAvailableForSelection).map {
