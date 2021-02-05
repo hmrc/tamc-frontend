@@ -22,6 +22,12 @@
 @import java.text.NumberFormat
 @import java.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
+@import views.html.templates.tamc_main
+
+@this(
+    tamc_main: tamc_main,
+    appConfig: ApplicationConfig
+)
 
 @(data: models.ConfirmationModel)(
 implicit messages: Messages,
@@ -29,7 +35,7 @@ request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@tamc_main(
 title = Messages("title.application.pattern", Messages("title.confirm"))
 ){
 
@@ -101,14 +107,14 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
                     </dt>
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
                         LanguageUtils().formPossessive(data.recipientFirstName),
-                        data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
+                        data.recipientFirstName, NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
                     </dd>
                 } else {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
                     @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
                     </dt>
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
-                        Messages("max-benefit", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT(taxYear.year)))))
+                        Messages("max-benefit", NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(taxYear.year)))))
                     </dd>
                 }
             <dd class="govuk-summary-list_actions">

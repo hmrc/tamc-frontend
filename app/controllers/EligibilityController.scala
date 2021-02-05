@@ -30,15 +30,18 @@ import models.Country
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.views.html.layouts.HeadWithTrackingConsent
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.isScottishResident
+import views.html.calculator
 import views.html.multiyear.eligibility_check
 
 class EligibilityController @Inject()(
                                        unauthenticatedAction: UnauthenticatedActionTransformer,
                                        eligibilityCalculatorService: EligibilityCalculatorService,
                                        appConfig: ApplicationConfig,
-                                       cc: MessagesControllerComponents
+                                       cc: MessagesControllerComponents,
+                                       calculatorView: calculator
                                      )(implicit templateRenderer: TemplateRenderer,
                                        formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
@@ -166,16 +169,16 @@ class EligibilityController @Inject()(
 
   def gdsCalculator(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.calculator(calculatorForm = calculatorForm))
+      Ok(calculatorView(calculatorForm = calculatorForm))
   }
 
   def gdsCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(views.html.calculator(calculatorForm = formWithErrors)),
+          BadRequest(calculatorView(calculatorForm = formWithErrors)),
         calculatorInput =>
-          Ok(views.html.calculator(
+          Ok(calculatorView(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
               calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))

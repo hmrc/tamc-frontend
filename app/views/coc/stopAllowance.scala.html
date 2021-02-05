@@ -17,11 +17,16 @@
 @import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
 @import includes.backLink
+@import views.html.templates.tamc_main
+
+@this(
+   tamc_main: tamc_main
+)
 
 @()(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@tamc_main(
 title = messages("title.pattern", messages("pages.stopAllowance.title")),
 mainConfig = views.helpers.MainConfig()
 ) {

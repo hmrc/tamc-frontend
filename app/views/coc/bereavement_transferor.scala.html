@@ -18,12 +18,19 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
+@import views.html.templates.tamc_main
+
+@this(
+    tamc_main: tamc_main,
+    appConfig: ApplicationConfig
+)
+
 @()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@tamc_main(
 title = Messages("title.pattern", Messages("title.bereavement")),
 manageService = true,
 mainConfig = views.helpers.MainConfig()
@@ -55,5 +62,5 @@ mainConfig = views.helpers.MainConfig()
 
 <h3 class="heading-small">@messages("hmrc.contact-detials.calling.time")</h3>
 @messages("hmrc.contact-details-8")</p>
-<p><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

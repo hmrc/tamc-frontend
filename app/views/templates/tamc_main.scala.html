@@ -18,6 +18,7 @@
 @import play.twirl.api.HtmlFormat
 @import uk.gov.hmrc.play.views.html.layouts
 @import uk.gov.hmrc.play.views.html.helpers
+@import uk.gov.hmrc.play.views.html.layouts.HeadWithTrackingConsent
 
 @import models.auth._
 @import config._
@@ -26,12 +27,18 @@
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
+@this(
+  appConfig: ApplicationConfig,
+  uiHead: HeadWithTrackingConsent
+)
+
 @(title: String,
  manageService: Boolean = false,
  sidebarLinks: Option[Html] = None,
  sidebarClass: Option[String] = None,
  mainConfig: views.helpers.MainConfig = views.helpers.MainConfig(),
  supportLinkEnabled: Boolean = true,
+ linkElement : Option[Html] = None,
  langSwitch: Option[play.twirl.api.Html] = None,
  scriptElem: Option[Html] = None,
  langSelectorOverride: Option[Map[String, Call]] = None)(mainContent: Html)(implicit messages: Messages,
@@ -49,7 +56,6 @@
  )
 }
 
-
 @scriptElement = {
 
  <script type="text/javascript">
@@ -59,6 +65,11 @@
     }
     ga('require', 'displayfeatures');
  </script>
+
+  @uiHead(
+    linkElem = linkElement,
+    headScripts = None
+  )
 
  <script type="text/javascript">
      function initCobrowse() {
@@ -130,13 +141,6 @@
  }
 }
 
-@* user.fold(HtmlFormat.empty) {
-*  authContext =>
-*      authContext.authContext.attorney.fold(HtmlFormat.empty) {
-*        _ =>  layouts.attorney_banner(authContext.authContext.principal.name, authContext.authContext.attorney.get.returnLink.url, standAlone, Some(Messages("attorney.banner.link")))
-*   }
-*}
-*@
 @actingAttorneyBanner = @{
  HtmlFormat.empty
 }
@@ -148,10 +152,6 @@
   "confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
   "authProvider" -> request.authProvider
  ) ++ gaDimensions.getOrElse(Map.empty)
-}
-
-@googleTagManager = @{
- if(ApplicationConfig.appConfig.isGTMEnabled) Map[String, String]("gtmId" -> ApplicationConfig.appConfig.gtmId) else Map.empty
 }
 
 @{
@@ -183,7 +183,6 @@
   "sidebar" -> sidebar,
   "getHelpForm" -> getHelpForm,
   "googleAnalytics" -> googleAnalytics,
-  "googleTagManager" -> googleTagManager,
 
   "scriptElems" -> Seq(
    Map("url" -> routes.Assets.at("javascripts/tamc.js")),

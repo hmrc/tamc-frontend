@@ -18,16 +18,20 @@
 @import uk.gov.hmrc.play.views.html._
 @import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.UserRequest
+@import views.html.templates.tamc_main
 
-@(calculatorForm: Form[models.EligibilityCalculatorInput],
-calculationResult: Option[models.EligibilityCalculatorResult] = None
-)(
+@this(
+  tamc_main: tamc_main
+)
+
+@(calculatorForm: Form[models.EligibilityCalculatorInput], calculationResult: Option[models.EligibilityCalculatorResult] = None)(
 implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
+)
 
-@templates.tamc_main(
+@tamc_main(
 title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
 @templates.form_error_notification(calculatorForm)

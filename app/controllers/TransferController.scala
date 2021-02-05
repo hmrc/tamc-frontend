@@ -36,8 +36,9 @@ import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
-
 import javax.inject.Inject
+import views.html.{confirm, date_of_marriage}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
@@ -45,7 +46,9 @@ class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
                                    cachingService: CachingService,
                                    timeService: TimeService,
                                    appConfig: ApplicationConfig,
-                                   cc: MessagesControllerComponents
+                                   cc: MessagesControllerComponents,
+                                   confirmView: confirm,
+                                   dateOfMarriageView: date_of_marriage
                                   )(implicit templateRenderer: TemplateRenderer,
                                     formPartialRetriever: FormPartialRetriever,
                                     ec: ExecutionContext) extends BaseController(cc) {
@@ -69,7 +72,7 @@ class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
 
   def dateOfMarriage: Action[AnyContent] = authenticate {
     implicit request =>
-      Ok(views.html.date_of_marriage(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
+      Ok(dateOfMarriageView(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
   def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
@@ -85,7 +88,7 @@ class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async {
     implicit request =>
       dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
-        formWithErrors => Future.successful(BadRequest(views.html.date_of_marriage(formWithErrors)))
+        formWithErrors => Future.successful(BadRequest(dateOfMarriageView(formWithErrors)))
         ,
         marriageData => {
           cachingService.saveDateOfMarriage(marriageData)
@@ -208,7 +211,7 @@ class TransferController @Inject()(authenticate: AuthenticatedActionRefiner,
     implicit request =>
       registrationService.getConfirmationData(request.nino) map {
         data =>
-          Ok(views.html.confirm(data = data))
+          Ok(confirmView(data = data))
       } recover handleError
   }
 

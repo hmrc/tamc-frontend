@@ -19,12 +19,19 @@
 @import models.auth.AuthenticatedUserRequest
 @import forms.coc.MakeChangesDecisionForm
 @import includes.backLink
+@import views.html.templates.tamc_main
+@import views.html.templates.input_radio_group
+
+@this(
+  tamc_main: tamc_main,
+  inputRadioGroup: input_radio_group
+)
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@tamc_main(
     title = Messages("title.pattern", messages("title.make-a-change")),
     manageService = true,
     mainConfig = views.helpers.MainConfig()
@@ -40,7 +47,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     @helpers.form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
 
       <div class="form-group">
-        @templates.input_radio_group(
+        @inputRadioGroup(
           makeChangesDecisionForm(MakeChangesDecisionForm.StopMAChoice),
           Seq((MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
                (MakeChangesDecisionForm.Earnings, messages("pages.makeChanges.radio.incomeChanges")),
