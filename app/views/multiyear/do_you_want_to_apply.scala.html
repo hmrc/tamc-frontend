@@ -19,6 +19,13 @@
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 @import models.auth.UserRequest
+@import views.html.templates.tamc_main
+@import views.html.templates.input_radio_group
+
+@this(
+  tamc_main: tamc_main,
+  inputRadio: input_radio_group
+)
 
 @(
 doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
@@ -30,24 +37,24 @@ formPartialRetriever: FormPartialRetriever
 )
 
 @tamc_main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
+title = messages("title.eligibility.pattern", messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
 
-<a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(messages("generic.back"))</a>
 
 @form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Messages("eligibility.check.do.you.want.to.apply.h1")</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
+        <h1 class="heading-xlarge">@messages("eligibility.check.do.you.want.to.apply.h1")</h1>
+        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(messages("eligibility.check.span.h1"))</p>
     </header>
 
 @helpers.form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
 <div class="form-group inline">
-    @input_radio_group(
+    @inputRadio(
     doYouWantToApplyForm("do-you-want-to-apply"),
-    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-    '_legend -> Messages("eligibility.check.do.you.want.to.apply.h1"),
+    Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
+    '_legend -> messages("eligibility.check.do.you.want.to.apply.h1"),
     '_legendClass -> "visuallyhidden",
     '_labelClass -> "block-label",
     '_groupClass -> "inline spacingBottom"
@@ -57,7 +64,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
 <div class="form-group">
     <button class="button" data-journey-click="marriage-allowance:button:doYouWantToApply_continue"
             id="continue" type="submit">
-        @Messages("generic.continue")
+        @messages("generic.continue")
     </button>
 </div>
 }

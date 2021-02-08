@@ -17,6 +17,11 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
+@import views.html.templates.tamc_main
+
+@this(
+  tamc_main: tamc_main
+)
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None)(
 implicit messages: Messages,
@@ -24,22 +29,22 @@ request: AuthenticatedUserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.confirm-email"))
+@tamc_main(
+title = messages("title.application.pattern", messages("title.confirm-email"))
 ){
 
-<a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+<a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(messages("generic.back"))</a>
 
 @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
 @templates.form_error_notification(recipientForm)
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
+        <h1 class="heading-xlarge">@Html(messages("pages.form.field.your-confirmation"))</h1>
     </header>
-    <p>@Html(Messages("pages.form.field.yourDetails"))</p>
+    <p>@Html(messages("pages.form.field.yourDetails"))</p>
 
     <div class="form-group">
         @templates.input(recipientForm("transferor-email"),
-        '_label -> Html(Messages("pages.form.field.transferor-email")),
+        '_label -> Html(messages("pages.form.field.transferor-email")),
         '_labelClass -> "form-label",
         '_inputClass -> "form-control",
         '_dataAttributes -> "autocomplete=off"
@@ -47,7 +52,7 @@ title = Messages("title.application.pattern", Messages("title.confirm-email"))
     </div>
 
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:email_continue">
-        @Html(Messages("generic.continue"))
+        @Html(messages("generic.continue"))
     </button>
 
 }

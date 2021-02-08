@@ -15,22 +15,27 @@
  *@
 
 @import models.auth.BaseUserRequest
+@import views.html.templates.tamc_main
+
+@this(
+  tamc_main: tamc_main
+)
 
 @()(implicit messages: Messages, request: BaseUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
-title = Messages("title.pattern", Messages("session.timeout.title"))
+@tamc_main(
+title = messages("title.pattern", messages("session.timeout.title"))
 ){
 
-<h1 class="heading-large">@Html(Messages("session.timeout.statement"))</h1>
+<h1 class="heading-large">@Html(messages("session.timeout.statement"))</h1>
 
-<p>@Html(Messages("session.timeout.verbose-statement"))</p>
+<p>@Html(messages("session.timeout.verbose-statement"))</p>
 <p></p>
-<p>@Html(Messages("session.timeout.verbose-statement2"))</p>
+<p>@Html(messages("session.timeout.verbose-statement2"))</p>
 <p class="get-started group" id="continue-to-application">
     <a href="@controllers.routes.EligibilityController.home()" class="button" role="button" id="timed-out"
        data-journey-click="button - click:Signed out - Marriage Allowance - GOV.UK:start again">
-        @Html(Messages("session.timeout.button"))
+        @Html(messages("session.timeout.button"))
     </a>
 </p>
 }

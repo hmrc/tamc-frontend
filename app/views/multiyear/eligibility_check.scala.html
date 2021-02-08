@@ -18,6 +18,14 @@
 @import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import models.auth.UserRequest
+@import views.html.templates.tamc_main
+@import views.html.templates.input_radio_group
+
+@this(
+  tamc_main: tamc_main,
+  inputRadio: input_radio_group,
+  appConfig: ApplicationConfig
+)
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)]
 )(implicit messages: Messages,
@@ -25,31 +33,31 @@ request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
+@tamc_main(
+title = messages("title.eligibility.pattern", messages("eligibility.check.h1"))
 ) {
 
 @if(request.isAuthenticated){
-    <a href="@controllers.routes.EligibilityController.ptaCalculator" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.EligibilityController.ptaCalculator" class="link-back">@Html(messages("generic.back"))</a>
 } else {
-    <a href="@ApplicationConfig.appConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@appConfig.applyMarriageAllowanceUrl" class="link-back">@Html(messages("generic.back"))</a>
 }
 
 @templates.form_error_notification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
+        <h1 class="heading-xlarge">@Html(messages("eligibility.check.h1"))</h1>
+        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(messages("eligibility.check.span.h1"))</p>
     </header>
 
 
 
 @helpers.form(action = routes.EligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
 <div class="form-group inline">
-    @templates.input_radio_group(
+    @inputRadio(
     eligibilityCheckForm("marriage-criteria"),
-    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-    '_legend -> Messages("eligibility.check.h1"),
+    Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
+    '_legend -> messages("eligibility.check.h1"),
     '_legendClass -> "visuallyhidden",
     '_labelClass -> "block-label",
     '_labelAfter -> true,
@@ -58,8 +66,8 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
     )
 </div>
 <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
-    <p>@Html(Messages("eligibility.check.married.error1"))</p>
-    <p>@Html(Messages("eligibility.check.married.error2"))</p>
+    <p>@Html(messages("eligibility.check.married.error1"))</p>
+    <p>@Html(messages("eligibility.check.married.error2"))</p>
 </div>
 
 <script>
@@ -70,7 +78,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
     <button class="button button-calculate"
             data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
             type="submit">
-        @Html(Messages("generic.continue"))
+        @Html(messages("generic.continue"))
     </button>
 </div>
 }

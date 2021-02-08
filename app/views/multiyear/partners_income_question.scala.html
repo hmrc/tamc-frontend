@@ -21,6 +21,14 @@
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 @import models.auth.UserRequest
+@import views.html.templates.tamc_main
+@import views.html.templates.input_radio_group
+
+@this(
+    tamc_main: tamc_main,
+    inputRadio: input_radio_group,
+    appConfig: ApplicationConfig
+)
 
 @(
     partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
@@ -31,44 +39,44 @@
 )
 
 @maxLimit = @{
-    if (scottishResident) ApplicationConfig.appConfig.MAX_LIMIT_SCOT()
-    else ApplicationConfig.appConfig.MAX_LIMIT()
+    if (scottishResident) appConfig.MAX_LIMIT_SCOT()
+    else appConfig.MAX_LIMIT()
 }
 
-@tamc_main(title = Messages("title.eligibility.pattern",
-    Messages("eligibility.check.partners.income.h1",
-        NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
+@tamc_main(title = messages("title.eligibility.pattern",
+    messages("eligibility.check.partners.income.h1",
+        NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE() + 1),
         NumberFormat.getIntegerInstance().format(maxLimit)
     )
 )) {
     <a href="@controllers.routes.EligibilityController.lowerEarnerCheck"
-       class="link-back">@Html(Messages("generic.back"))</a>
+       class="link-back">@Html(messages("generic.back"))</a>
 
     @form_error_notification(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
-        lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
+        lowerLimit = Some(appConfig.PERSONAL_ALLOWANCE() + 1),
         upperLimit = Some(maxLimit)
     )
 
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() +
+        <h1 class="heading-xlarge">@messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() +
         1), NumberFormat.getIntegerInstance().format(maxLimit))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
+        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(messages("eligibility.check.span.h1"))</p>
     </header>
 
 
 
-    <p class="bold-small">@Messages("eligibility.check.partners.income.information1")</p>
+    <p class="bold-small">@messages("eligibility.check.partners.income.information1")</p>
 
     @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
         <div class="form-group inline">
-            @input_radio_group(
+            @inputRadio(
             partnersIncomeFormInput("partners-income"),
-            Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-            '_legend -> Messages("multiyear.check.income"),
+            Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
+            '_legend -> messages("multiyear.check.income"),
             '_legendClass -> "visuallyhidden",
             '_labelClass -> "block-label",
             '_labelAfter -> true,
@@ -78,7 +86,7 @@
         </div>
 
         <div class="tamc-js-hidden error-inline validation-summary partners-inc-error" id="inline-partners-income-error">
-            @Messages("eligibility.check.partners.income.error")
+            @messages("eligibility.check.partners.income.error")
         </div>
 
         <script>
@@ -90,7 +98,7 @@
             <button class="button"
                     data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
                     type="submit">
-                @Messages("generic.continue")
+                @messages("generic.continue")
             </button>
         </div>
     }

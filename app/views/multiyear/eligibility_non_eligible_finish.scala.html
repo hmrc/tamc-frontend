@@ -16,6 +16,11 @@
 
 @import play.twirl.api.Html
 @import models.auth.UserRequest
+@import views.html.templates.tamc_main
+
+@this(
+  tamc_main: tamc_main
+)
 
 @(finishedUrl: String
 )(implicit messages: Messages,
@@ -23,22 +28,22 @@ request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
-title = Messages("title.eligibility.pattern", Messages("title.non-eligible"))
+@tamc_main(
+title = messages("title.eligibility.pattern", messages("title.non-eligible"))
 ){
 
 <a href="@controllers.routes.EligibilityController.eligibilityCheck"
-   class="link-back">@Html(Messages("generic.back"))</a>
+   class="link-back">@Html(messages("generic.back"))</a>
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.header"))</h1>
+        <h1 class="heading-xlarge">@Html(messages("eligibility.check.header"))</h1>
     </header>
 
-    <p>@Html(Messages("eligibility.check.non-eligible"))</p>
+    <p>@Html(messages("eligibility.check.non-eligible"))</p>
 
 <p>
     <a id="button-finished" class="button" role="button" href="@finishedUrl">
-        @Html(Messages("generic.finish"))
+        @Html(messages("generic.finish"))
     </a>
 </p>
 

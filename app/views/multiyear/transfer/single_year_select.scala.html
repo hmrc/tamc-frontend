@@ -22,6 +22,15 @@
 @import utils.BenefitCalculatorHelper._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
+@import views.html.templates.tamc_main
+@import forms.EligibilityCalculatorForm.currencyFormatter
+@import views.html.templates.input_radio_group
+
+@this(
+  tamc_main: tamc_main,
+  appConfig: ApplicationConfig,
+  inputRadio: input_radio_group
+)
 
 @(earlierYearsForm: Form[models.EarlierYearsInput],
 input: RegistrationFormInput,
@@ -33,8 +42,8 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.confirm-extra-years")),
+@tamc_main(
+    title = messages("title.application.pattern", messages("title.confirm-extra-years")),
     langSelectorOverride = Some(
         Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
             "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
@@ -44,48 +53,48 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
 <a href="@controllers.routes.TransferController.eligibleYearsAction"
-   class="link-back">@Html(Messages("generic.back"))</a>
+   class="link-back">@Html(messages("generic.back"))</a>
 
     @templates.form_error_notification(earlierYearsForm)
 
     <header class="page-heading">
-        <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
+        <h1 class="heading-xlarge" id="heading">@Html(messages("pages.multi-year-select.heading"))</h1>
     </header>
 
 @helpers.form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
 <fieldset class="inline spacingBottom" id="earlierYears">
     <div class="form-group" id="year-@availableYears.head.year">
-        <h2 class="heading-medium"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", LanguageUtils().taxDateIntervalShort(availableYears.head.year)))</span>
+        <h2 class="heading-medium"><span style="color: grey">@Html(messages("pages.multiyear.taxyear", LanguageUtils().taxDateIntervalShort(availableYears.head.year)))</span>
             <br>@LanguageUtils().taxDateInterval(availableYears.head.year)</h2>
 
 
-            <p>@Html(Messages("pages.multiyear.canclaim", input.name,
+            <p>@Html(messages("pages.multiyear.canclaim", input.name,
                 LanguageUtils().taxDateIntervalShort(availableYears.head.year)))</p>
 
             <ul class="list list-bullet">
-                <li>@Html(Messages("your-income", currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
-                @if(ApplicationConfig.appConfig.MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
-                <li>@Html(Messages("income-between", LanguageUtils().formPossessive(input.name),currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                <li>@Html(messages("your-income", currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
+                @if(appConfig.MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
+                <li>@Html(messages("income-between", LanguageUtils().formPossessive(input.name),currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
                     currencyFormatter(ApplicationConfig.appConfig.MAX_LIMIT(availableYears.head.year))))
                 </li>
                 } else {
-                <li>@Html(Messages("income-between-scots", LanguageUtils().formPossessive(input.name),currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                <li>@Html(messages("income-between-scots", LanguageUtils().formPossessive(input.name),currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
                     currencyFormatter(ApplicationConfig.appConfig.MAX_LIMIT(availableYears.head.year)),
                     currencyFormatter(ApplicationConfig.appConfig.MAX_LIMIT_SCOT(availableYears.head.year))))
                 </li>
                 }
             </ul>
-            <p>@Html(Messages("pages.multiyear.successful",
+            <p>@Html(messages("pages.multiyear.successful",
                 LanguageUtils().taxDateIntervalShort(availableYears.head.year),
                 input.name, currencyFormatter(ApplicationConfig.appConfig.MAX_BENEFIT(availableYears.head.year))))</p>
 
-        <p class="heading-medium">@Html(Messages("pages.multiyear.extrayears"))</p>
-        @templates.input_radio_group(
+        <p class="heading-medium">@Html(messages("pages.multiyear.extrayears"))</p>
+        @inputRadio(
             earlierYearsForm("selectedYear"),
-            Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
+            Seq((availableYears.head.year.toString, messages("radio.yes")), ("0", messages("radio.no"))),
             '_labelClass -> "block-label",
             '_labelAfter -> true,
-            '_legend -> Messages("pages.multiyear.extrayears"),
+            '_legend -> messages("pages.multiyear.extrayears"),
             '_legendClass -> "visuallyhidden",
             '_groupClass -> "inline spacingBottom"
         )
@@ -95,7 +104,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 </fieldset>
 
     <button class="button" type="submit" data-journey-click="marriage-allowance:button:previousyear_continue">
-        @Html(Messages("generic.continue"))
+        @Html(messages("generic.continue"))
     </button>
 
 }

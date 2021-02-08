@@ -34,6 +34,7 @@ import viewModels._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 import views.html.coc.{bereavement, cancel, change_in_earnings, claims, confirmUpdate, decision, divorce_end_explanation, divorce_select_year, email, finished, history_summary, reason_for_change, stopAllowance}
+import views.html.errors.{citizen_not_found, recipient_not_found, transferor_not_found, try_later}
 
 class UpdateRelationshipController @Inject()(
                                               authenticate: AuthenticatedActionRefiner,
@@ -51,7 +52,11 @@ class UpdateRelationshipController @Inject()(
                                               emailView: email,
                                               confirmUpdateView: confirmUpdate,
                                               finishedView: finished,
-                                              cancelView: cancel
+                                              cancelView: cancel,
+                                              tryLaterView: try_later,
+                                              citizenNotFoundView: citizen_not_found,
+                                              transferorNotFoundView: transferor_not_found,
+                                              recipientNotFoundView: recipient_not_found
 
 
                                             )(implicit templateRenderer: TemplateRenderer,
@@ -294,15 +299,15 @@ class UpdateRelationshipController @Inject()(
         throwable match {
           case _: NoPrimaryRecordError => Redirect(controllers.routes.EligibilityController.howItWorks())
           case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: MultipleActiveRecordError => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(views.html.errors.citizen_not_found()))
-          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(views.html.errors.try_later()))
-          case _: TransferorNotFound => handle(Logger.warn, Ok(views.html.errors.transferor_not_found()))
-          case _: RecipientNotFound => handle(Logger.warn, Ok(views.html.errors.recipient_not_found()))
-          case _ => handle(Logger.error, InternalServerError(views.html.errors.try_later()))
+          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(tryLaterView()))
+          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(tryLaterView()))
+          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(tryLaterView()))
+          case _: MultipleActiveRecordError => handle(Logger.warn, InternalServerError(tryLaterView()))
+          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(citizenNotFoundView()))
+          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(tryLaterView()))
+          case _: TransferorNotFound => handle(Logger.warn, Ok(transferorNotFoundView()))
+          case _: RecipientNotFound => handle(Logger.warn, Ok(recipientNotFoundView()))
+          case _ => handle(Logger.error, InternalServerError(tryLaterView()))
         }
     }
 

@@ -19,6 +19,13 @@
 @import views.helpers.LanguageUtils
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
+@import views.html.templates.tamc_main
+@import views.html.templates.input_radio_group
+
+@this(
+    tamc_main: tamc_main,
+    inputRadio: input_radio_group
+)
 
 @(recipientForm: Form[models.RecipientDetailsFormInput])(
 implicit messages: Messages,
@@ -27,25 +34,25 @@ templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@templates.tamc_main(
-title = Messages("title.application.pattern", Messages("title.transfer")),
+@tamc_main(
+title = messages("title.application.pattern", messages("title.transfer")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
 ) {
 
-    <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(messages("generic.back"))</a>
 
     @templates.form_error_notification(recipientForm)
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
+        <h1 class="heading-xlarge">@Html(messages("pages.form.h1"))</h1>
     </header>
-    <p>@Html(Messages("pages.form.details"))</p>
+    <p>@Html(messages("pages.form.details"))</p>
 
     @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
         <fieldset>
             <div class="form-group">
                 @templates.input(recipientForm("name"),
-                '_label -> Html(Messages("pages.form.field.name")),
+                '_label -> Html(messages("pages.form.field.name")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",
                 '_dataAttributes -> "autocomplete=off"
@@ -53,53 +60,53 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
             </div>
             <div class="form-group">
                 @templates.input(recipientForm("last-name"),
-                '_label -> Html(Messages("pages.form.field.last-name")),
+                '_label -> Html(messages("pages.form.field.last-name")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",
                 '_dataAttributes -> "autocomplete=off"
                 )
             </div>
             <div class="form-group">
-                @templates.input_radio_group(
+                @inputRadio(
                 recipientForm("gender"),
-                Seq((Gender("M").gender, Messages("pages.form.field.gender.male")), (Gender("F").gender,
-                Messages("pages.form.field.gender.female"))),
-                '_legend -> Html(Messages("pages.form.field.gender")),
+                Seq((Gender("M").gender, messages("pages.form.field.gender.male")), (Gender("F").gender,
+                messages("pages.form.field.gender.female"))),
+                '_legend -> Html(messages("pages.form.field.gender")),
                 '_labelClass -> "block-label",
                 '_labelAfter -> true,
-                '_fieldHelper -> Html(Messages("pages.form.field-helper.gender")),
+                '_fieldHelper -> Html(messages("pages.form.field-helper.gender")),
                 '_groupClass -> "inline spacingBottom"
                 )
             </div>
             <div class="form-group">
                 @templates.input(recipientForm("nino"),
-                '_label -> Html(Messages("pages.form.field.nino")),
+                '_label -> Html(messages("pages.form.field.nino")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",
-                '_fieldHelper -> Html(Messages("pages.form.field-helper.nino-example")),
+                '_fieldHelper -> Html(messages("pages.form.field-helper.nino-example")),
                 '_dataAttributes -> "autocomplete=off"
                 )
             </div>
         </fieldset>
 
         <details role="group">
-            <summary><span class="summary">@Html(Messages("pages.form.field-helper.nino-where"))</span></summary>
+            <summary><span class="summary">@Html(messages("pages.form.field-helper.nino-where"))</span></summary>
             <div class="panel-indent">
-                <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
+                <p>@Html(messages("pages.form.field-helper.nino-found"))</p>
             </div>
         </details>
 
         <div class="form-group">
             <div class="notice">
                 <i class="icon icon-important">
-                    <span class="visually-hidden">@Html(Messages("pages.form.field.warning-hidden"))</span>
+                    <span class="visually-hidden">@Html(messages("pages.form.field.warning-hidden"))</span>
                 </i>
-                <p class="icon-important-text ">@Html(Messages("pages.form.field.warning"))</p>
+                <p class="icon-important-text ">@Html(messages("pages.form.field.warning"))</p>
             </div>
         </div>
 
         <button class="button" type="submit" data-journey-click="marriage-allowance:button:recipient_continue">
-            @Html(Messages("generic.continue"))
+            @Html(messages("generic.continue"))
         </button>
 
     }

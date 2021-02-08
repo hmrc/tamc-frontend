@@ -22,11 +22,14 @@ import controllers.actions.UnauthenticatedActionTransformer
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import views.html.errors.{other_ways, session_timeout}
 
 class AuthorisationController @Inject()(
                                          unauthenticatedAction: UnauthenticatedActionTransformer,
                                          appConfig: ApplicationConfig,
-                                         cc: MessagesControllerComponents
+                                         cc: MessagesControllerComponents,
+                                         otherWaysView: other_ways,
+                                         sessionTimeoutView: session_timeout
                                        )(implicit templateRenderer: TemplateRenderer,
                                          formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
@@ -35,7 +38,7 @@ class AuthorisationController @Inject()(
 
   def notAuthorised = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.errors.other_ways())
+      Ok(otherWaysView())
   }
 
   def logout = unauthenticatedAction {
@@ -45,6 +48,6 @@ class AuthorisationController @Inject()(
 
   def sessionTimeout = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.errors.session_timeout())
+      Ok(sessionTimeoutView())
   }
 }

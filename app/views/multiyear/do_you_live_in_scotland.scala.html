@@ -17,13 +17,20 @@
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.UserRequest
+@import views.html.templates.tamc_main
+@import views.html.templates.input_radio_group
+
+@this(
+    tamc_main: tamc_main,
+    inputRadio: input_radio_group
+)
 
 @(doYouLiveInScotlandForm: Form[(MultiYearDoYouLiveInScotlandFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@tamc_main(
 title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1"))
 ){
 
@@ -33,14 +40,14 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
 @templates.form_error_notification(doYouLiveInScotlandForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.do.you.live.in.scotland.h1"))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
+        <h1 class="heading-xlarge">@Html(messages("eligibility.check.do.you.live.in.scotland.h1"))</h1>
+        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(messages("eligibility.check.span.h1"))</p>
     </header>
 
     @helpers.form(action = routes.EligibilityController.doYouLiveInScotlandAction, args = ('id -> "doYouLiveInScotland-form")) {
 
     <div class="form-group inline">
-        @templates.input_radio_group(
+        @inputRadio(
         doYouLiveInScotlandForm("do-you-live-in-scotland"),
         Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
         '_legend -> Html(messages("eligibility.check.do.you.live.in.scotland.h1")),
@@ -54,7 +61,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
     <div class="form-group">
         <button class="button" data-journey-click="marriage-allowance:button:doYouLiveInScotland_continue"
             id="continue" type="submit">
-            @Html(Messages("generic.continue"))
+            @Html(messages("generic.continue"))
         </button>
     </div>
 }

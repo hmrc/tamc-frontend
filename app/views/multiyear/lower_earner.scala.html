@@ -20,30 +20,37 @@
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 @import models.auth.UserRequest
+@import views.html.templates.tamc_main
+@import views.html.templates.input_radio_group
 
+@this(
+  tamc_main: tamc_main,
+  inputRadio: input_radio_group,
+  appConfig: ApplicationConfig
+)
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
     implicit messages: Messages, request: UserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE())))
+@tamc_main(
+    title = messages("title.eligibility.pattern", messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE())))
 ){
 
-    @form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))
-    <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
+    @form_error_notification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(appConfig.PERSONAL_ALLOWANCE()))
+    <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(messages("generic.back"))</a>
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE())))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
+        <h1 class="heading-xlarge">@Html(messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE())))</h1>
+        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(messages("eligibility.check.span.h1"))</p>
     </header>
 
     @helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
     <div class="form-group inline">
-        <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>
-        @input_radio_group(
+        <p class="bold-small">@Html(messages("eligibility.check.lower.earner.information2"))</p>
+        @inputRadio(
         lowerEarnerFormInput("lower-earner"),
-        Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-        '_legend -> Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))),
+        Seq(("true", messages("radio.yes")), ("false", messages("radio.no"))),
+        '_legend -> Html(messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE()))),
         '_legendClass -> "visuallyhidden",
         '_labelClass -> "block-label",
         '_labelAfter -> true,
@@ -53,7 +60,7 @@
     </div>
 
     <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
-        @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))
+        @messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(appConfig.PERSONAL_ALLOWANCE()))
     </div>
 
     <script>
@@ -63,7 +70,7 @@
         <button class="button"
                 data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
                 type="submit">
-            @Html(Messages("generic.continue"))
+            @Html(messages("generic.continue"))
         </button>
     </div>
 
