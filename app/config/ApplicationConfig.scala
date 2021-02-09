@@ -52,9 +52,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   lazy val analyticsToken: Option[String] = configuration.getOptional[String]("google-analytics.token")
   lazy val analyticsHost: String = configuration.getOptional[String]("google-analytics.host").getOrElse("auto")
 
-  lazy val isGTMEnabled: Boolean = loadConfig("google-tag-manager.enabled").toBoolean
-  lazy val gtmId: String = loadConfig("google-tag-manager.id")
-
   lazy val loginUrl: String = loadConfig("tamc.external-urls.login-url")
   lazy val logoutUrl: String = loadConfig("tamc.external-urls.logout-url")
   lazy val logoutCallbackUrl: String = loadConfig("tamc.external-urls.logout-callback-url")

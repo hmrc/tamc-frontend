@@ -23,6 +23,7 @@
 @import config._
 @import play.api.Play
 @import config.ApplicationConfig
+@import utils.TrackingConsentSnippetProvider
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
@@ -51,6 +52,7 @@
 
 
 @scriptElement = {
+  @TrackingConsentSnippetProvider.get(None)
 
  <script type="text/javascript">
     ga('require', 'linker');
@@ -130,28 +132,8 @@
  }
 }
 
-@* user.fold(HtmlFormat.empty) {
-*  authContext =>
-*      authContext.authContext.attorney.fold(HtmlFormat.empty) {
-*        _ =>  layouts.attorney_banner(authContext.authContext.principal.name, authContext.authContext.attorney.get.returnLink.url, standAlone, Some(Messages("attorney.banner.link")))
-*   }
-*}
-*@
 @actingAttorneyBanner = @{
  HtmlFormat.empty
-}
-
-@googleAnalytics = @{
- Map[String, Any](
-  "trackingId" -> ApplicationConfig.appConfig.analyticsToken,
-  "cookieDomain" -> ApplicationConfig.appConfig.analyticsHost,
-  "confidenceLevel" -> request.confidenceLevel.fold(false)(_.toString),
-  "authProvider" -> request.authProvider
- ) ++ gaDimensions.getOrElse(Map.empty)
-}
-
-@googleTagManager = @{
- if(ApplicationConfig.appConfig.isGTMEnabled) Map[String, String]("gtmId" -> ApplicationConfig.appConfig.gtmId) else Map.empty
 }
 
 @{
@@ -182,8 +164,6 @@
   "mainContentHeader" -> commonContentHeader,
   "sidebar" -> sidebar,
   "getHelpForm" -> getHelpForm,
-  "googleAnalytics" -> googleAnalytics,
-  "googleTagManager" -> googleTagManager,
 
   "scriptElems" -> Seq(
    Map("url" -> routes.Assets.at("javascripts/tamc.js")),
