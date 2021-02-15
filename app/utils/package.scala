@@ -39,4 +39,5 @@ package object utils {
 
   def isScottishResident(request: Request[_]): Boolean =
     request.session.get("scottish_resident").map(_.toBoolean).fold(false)(identity)
+
 }
