@@ -27,6 +27,7 @@
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
+
 @(title: String,
  manageService: Boolean = false,
  sidebarLinks: Option[Html] = None,
@@ -37,7 +38,6 @@
  scriptElem: Option[Html] = None,
  langSelectorOverride: Option[Map[String, Call]] = None)(mainContent: Html)(implicit messages: Messages,
  request: BaseUserRequest[_],
- gaDimensions: Option[Map[String, String]] = None,
  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
@@ -53,14 +53,6 @@
 
 @scriptElement = {
   @TrackingConsentSnippetProvider.get(None)
-
- <script type="text/javascript">
-    ga('require', 'linker');
-    if(document.referrer === "https://www.gov.uk/marriage-allowance"){
-        ga('set', 'referrer', '');
-    }
-    ga('require', 'displayfeatures');
- </script>
 
  <script type="text/javascript">
      function initCobrowse() {
