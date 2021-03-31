@@ -2,8 +2,8 @@
   "taxBands": [
     {
       "name": "BasicRate",
-      "lowerThreshold": 12501,
-      "upperThreshold": 50000,
+      "lowerThreshold": 12571,
+      "upperThreshold": 50270,
       "rate": 0.20
     }
   ]
