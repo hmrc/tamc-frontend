@@ -62,6 +62,8 @@ pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a ywâ
 pages.form.field-required.applyForHistoricYears=Dewiswch Iawn a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
 
 pages.form.extra-year.field-required=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}
+pages.form.field-required.year-2015-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2015 i 2016
+pages.form.field-required.year-2016-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2016 i 2017
 pages.form.field-required.year-2017-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2017 i 2018
 pages.form.field-required.year-2018-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2018 i 2019
 pages.form.field-required.year-2019-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2019 i 2020
