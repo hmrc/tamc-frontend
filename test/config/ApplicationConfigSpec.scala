@@ -22,7 +22,7 @@ class ApplicationConfigSpec extends UnitSpec {
 
   "check rates for earliest valid year" when {
     "return valid year" in {
-      ApplicationConfig.appConfig.TAMC_BEGINNING_YEAR should be(2016)
+      ApplicationConfig.appConfig.TAMC_BEGINNING_YEAR should be(2017)
     }
   }
 
