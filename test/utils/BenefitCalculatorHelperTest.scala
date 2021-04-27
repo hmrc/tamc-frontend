@@ -35,10 +35,10 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
           eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 130
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 116
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 230
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 216
       }
 
       "return the correct total benefit for a Scottish tax payer" in {
@@ -46,22 +46,22 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
           eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 123
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 110
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 218
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 205
       }
 
       "return the correct total benefit for a Scottish tax payer when hypothetical bands are used" in {
         val hypotheticalBandsOne = List(
           TaxBand("StarterRate", 11851, 12050, 0.19), TaxBand("BasicRate", 12051, 24000, 0.20), TaxBand("IntermediateRate", 24001, 43430, 0.21))
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(), hypotheticalBandsOne) shouldBe 128
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(), hypotheticalBandsOne) shouldBe 114
 
         val hypotheticalBandsTwo = List(
           TaxBand("StarterRate", 11851, 13850, 0.10), TaxBand("BasicRate", 13851, 24000, 0.21), TaxBand("IntermediateRate", 24001, 43430, 0.22))
 
-        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(), hypotheticalBandsTwo) shouldBe 65
+        BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(), hypotheticalBandsTwo) shouldBe 58
 
         val hypotheticalBandsThree = List(
           TaxBand("StarterRate", 11851, 12050, 0.10), TaxBand("BasicRate", 12051, 22050, 0.15), TaxBand("FakeRate1", 22051, 27050, 0.20),
@@ -69,11 +69,11 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
 
         val personOne = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - PERSONAL_ALLOWANCE(), hypotheticalBandsThree)
         val personTwo = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(11650 - TRANSFEROR_ALLOWANCE, hypotheticalBandsThree)
-        personOne - personTwo shouldBe 137
+        personOne - personTwo shouldBe 148
 
         val personThree = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(), hypotheticalBandsThree)
         val personFour = BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(11650 - TRANSFEROR_ALLOWANCE, hypotheticalBandsThree)
-        personThree - personFour shouldBe 37
+        personThree - personFour shouldBe 36
       }
 
       "return the correct total benefit for a Welsh tax payer" in {
@@ -81,10 +81,10 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
           eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 130
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 116
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 230
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 216
       }
 
       "return the correct total benefit for a Northern Irish tax payer" in {
@@ -92,10 +92,10 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
           eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe MAX_BENEFIT()
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 130
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 116
 
         BenefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 230
+          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 216
       }
 
     }
