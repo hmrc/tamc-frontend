@@ -115,7 +115,7 @@ class RelationshipRecordTest extends UnitSpec {
       "particpantEndDate is not set" in {
         val relationshipRecord = relationshipActiveRecordWithNoEndDate
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020)
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021)
       }
 
       "Return a set of years that ends with the start year of the previous tax year when a participant endReason is Divorce" in {

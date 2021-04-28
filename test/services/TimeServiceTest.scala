@@ -151,7 +151,7 @@ class TimeServiceTest extends BaseTest {
         models.TaxYear(year)
       }).toList
 
-      timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(9)
+      timeService.getValidYearsApplyMAPreviousYears(Some(list)) should have size(10)
     }
   }
 

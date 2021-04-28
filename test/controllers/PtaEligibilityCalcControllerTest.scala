@@ -229,11 +229,11 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
 
-    "be displayed if transferor income=9000 (< 9540) and recipient income=50001" in {
+    "be displayed if transferor income=9000 (< 9540) and recipient income=50271" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
       val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
       val higherThreshold = formatter.format(MAX_LIMIT())
-      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "50001"))
+      val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "50271"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
     }
