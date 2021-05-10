@@ -35,32 +35,29 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 
 @templates.form_error_notification(marriageForm)
 
-<header class="page-heading">
-    <h1 class="heading-xlarge">@Html(messages("pages.date-of-marriage.heading"))</h1>
-</header>
+<h1 class="heading-xlarge">@Html(messages("pages.date-of-marriage.heading"))</h1>
 
 <p>@Html(messages("pages.date-of-marriage.para1"))</p>
 <p>@Html(messages("pages.date-of-marriage.para2"))</p>
 
 @helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
-<fieldset>
-    <div class="form-group">
-        @templates.dateFields(
-        marriageForm,
-        "dateOfMarriage",
-        Html(messages("pages.date-of-marriage.h2")),
-        None,
-        '_hintText -> messages("pages.form.field-helper.dom"),
-        '_label -> messages("collect_user_data.dob.error"),
-        '_labelTextClass -> "client-error-notification")
-    </div>
-</fieldset>
 
+<div class="form-group">
+  @templates.dateFields(
+    marriageForm,
+    "dateOfMarriage",
+    Html(messages("pages.date-of-marriage.h2")),
+    None,
+    '_legend -> messages("pages.date-of-marriage.heading"),
+    '_legendClass -> "visuallyhidden",
+    '_hintText -> messages("pages.form.field-helper.dom"),
+    '_label -> messages("collect_user_data.dob.error"),
+    '_labelTextClass -> "client-error-notification"
+  )
+</div>
 
-    <button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofmarriage_continue">
-        @Html(messages("generic.continue"))
-    </button>
-
+<button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofmarriage_continue">
+  @Html(messages("generic.continue"))
+</button>
 }
-<br>
 }
