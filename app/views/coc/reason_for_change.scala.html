@@ -34,7 +34,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     @templates.form_error_notification(makeChangesDecisionForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@messages("pages.makeChanges.title")</h1>
+        <h1 class="heading-xlarge">@messages("pages.makeChanges.heading")</h1>
     </header>
 
     @helpers.form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {

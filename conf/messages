@@ -172,7 +172,7 @@ title.change.complete=Marriage Allowance cancelled
 title.change.reason=Cancelling your Marriage Allowance
 title.error=Error
 title.history=Your Marriage Allowance summary
-title.make-a-change=Cancelling your Marriage Allowance
+title.make-a-change=Why do you need to stop your Marriage Allowance?
 title.bereavement=Tell us about a bereavement
 title.divorce=Date of divorce or end of civil partnership
 title.date-of-marriage=Date of marriage or civil partnership
@@ -544,7 +544,7 @@ pages.decision.error.mandatory.value=Select if you want to check or stop your ma
 #********************************************************************************
 # Make Changes page
 #********************************************************************************
-pages.makeChanges.title=Why do you need to stop your Marriage Allowance?
+pages.makeChanges.heading=Why do you need to stop your Marriage Allowance?
 pages.makeChanges.radio.divorce=Divorce, end of civil partnership or legally separated
 pages.makeChanges.radio.incomeChanges=Household income changes
 pages.makeChanges.radio.noLongerRequired=Do not want Marriage Allowance anymore
