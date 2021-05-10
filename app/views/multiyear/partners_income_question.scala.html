@@ -68,7 +68,9 @@
             @input_radio_group(
             partnersIncomeFormInput("partners-income"),
             Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-            '_legend -> Messages("multiyear.check.income"),
+            '_legend -> Html(Messages("eligibility.check.partners.income.h1",
+            NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() +
+            1), NumberFormat.getIntegerInstance().format(maxLimit))),
             '_legendClass -> "visuallyhidden",
             '_labelClass -> "block-label",
             '_labelAfter -> true,
