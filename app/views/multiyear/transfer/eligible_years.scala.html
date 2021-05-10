@@ -42,9 +42,7 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
 
 @templates.form_error_notification(form)
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("title.eligible-years"))</h1>
-    </header>
+    <h1 class="heading-xlarge">@Html(Messages("title.eligible-years"))</h1>
 
     <p>@Html(Messages("pages.eligibleyear.toldus",recipientName)) <span id="marriageDate">@LanguageUtils().ukDateTransformer(dom.get).</span></p>
 
