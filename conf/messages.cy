@@ -172,7 +172,7 @@ title.change.earnings=Newid mewn incwm
 title.change.reason=Dileu cais blaenorol
 title.error=Gwall
 title.history=Crynodeb o’ch Lwfans Priodasol
-title.make-a-change=Canslo’ch Lwfans Priodasol
+title.make-a-change=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
 title.bereavement=Profedigaeth
 title.divorce=Dyddiad ysgaru neu ddod &#226;’r bartneriaeth sifil i ben
 title.date-of-marriage=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
@@ -550,7 +550,7 @@ pages.decision.error.mandatory.value=Dewiswch os ydych am wirio’ch hawliad am 
 #********************************************************************************
 # Make Changes page
 #********************************************************************************
-pages.makeChanges.title=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
+pages.makeChanges.heading=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
 pages.makeChanges.radio.divorce=Ysgaru, dod â phartneriaeth sifil i ben neu wahanu’n gyfreithiol
 pages.makeChanges.radio.incomeChanges=Newidiadau yn incwm yr aelwyd
 pages.makeChanges.radio.noLongerRequired=Ddim eisiau Lwfans Priodasol mwyach
