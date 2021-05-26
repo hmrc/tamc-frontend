@@ -59,11 +59,13 @@ class ContentTest extends ControllerBaseTest {
       bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
       bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
-    ).build()
+    )
+    .build()
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
   when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
-  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear))).thenReturn(time.TaxYear.current.starts)
+  when(mockTimeService.getStartDateForTaxYear(ArgumentMatchers.eq(currentTaxYear)))
+    .thenReturn(time.TaxYear.current.starts)
   when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)
 
   private val lowerEarnerHelpText =
@@ -77,18 +79,18 @@ class ContentTest extends ControllerBaseTest {
 
     "display form error message (first name and last name missing from request)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "gender" -> "M",
-        "nino" -> Ninos.nino1,
+        "gender"           -> "M",
+        "nino"             -> Ninos.nino1,
         "transferor-email" -> "example@example.com"
       )
-     
+
       val result = transferController.transferAction()(request)
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("name-error").text() shouldBe "Enter your partner’s first name"
+      document.getElementById("name-error").text()         shouldBe "Enter your partner’s first name"
     }
 
     "display form error message (request body missing form data)" in {
@@ -99,7 +101,7 @@ class ContentTest extends ControllerBaseTest {
       val form = document.getElementById("register-form")
       form shouldNot be(null)
       document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("nino-error").text() shouldBe "Enter your partner’s National Insurance number"
+      document.getElementById("nino-error").text()         shouldBe "Enter your partner’s National Insurance number"
     }
   }
 
@@ -107,8 +109,8 @@ class ContentTest extends ControllerBaseTest {
     "display form error message (first name missing from request)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -119,16 +121,16 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s first name"
-      document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("name-error").text() shouldBe "Enter your partner’s first name"
+      document.getElementById("form-error-heading").text()         shouldBe "There is a problem"
+      document.getElementById("name-error").text()                 shouldBe "Enter your partner’s first name"
     }
 
     "display form error message (first name is empty)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "",
+        "name"      -> "",
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -139,15 +141,15 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s first name"
-      document.getElementById("name-error").text() shouldBe "Enter your partner’s first name"
+      document.getElementById("name-error").text()                 shouldBe "Enter your partner’s first name"
     }
 
     "display form error message (first name is blank)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> " ",
+        "name"      -> " ",
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -158,15 +160,15 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s first name"
-      document.getElementById("name-error").text() shouldBe "Enter your partner’s first name"
+      document.getElementById("name-error").text()                 shouldBe "Enter your partner’s first name"
     }
 
     "display form error message (first name contains more than 35 characters)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "a" * 36,
+        "name"      -> "a" * 36,
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -176,16 +178,19 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s first name must be 35 characters or less"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text()                                    shouldBe "Your partner’s first name must be 35 characters or less"
       document.getElementById("name-error").text() shouldBe "Your partner’s first name must be 35 characters or less"
     }
 
     "display form error message (first name contains numbers)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "12345",
+        "name"      -> "12345",
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -195,16 +200,21 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
-      document.getElementById("name-error").text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
+      document
+        .getElementById("name-error")
+        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (first name contains letters and numbers)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "abc123",
+        "name"      -> "abc123",
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -214,15 +224,20 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
-      document.getElementById("name-error").text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
+      document
+        .getElementById("name-error")
+        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name missing from request)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"   -> "foo",
         "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "nino"   -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -233,15 +248,15 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s last name"
-      document.getElementById("last-name-error").text() shouldBe "Enter your partner’s last name"
+      document.getElementById("last-name-error").text()            shouldBe "Enter your partner’s last name"
     }
 
     "display form error message (last name is empty)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -252,15 +267,15 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s last name"
-      document.getElementById("last-name-error").text() shouldBe "Enter your partner’s last name"
+      document.getElementById("last-name-error").text()            shouldBe "Enter your partner’s last name"
     }
 
     "display form error message (last name is blank)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> " ",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -271,15 +286,15 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s last name"
-      document.getElementById("last-name-error").text() shouldBe "Enter your partner’s last name"
+      document.getElementById("last-name-error").text()            shouldBe "Enter your partner’s last name"
     }
 
     "display form error message (last name contains more than 35 characters)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "a" * 36,
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -289,16 +304,21 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s last name must be 35 characters or less"
-      document.getElementById("last-name-error").text() shouldBe "Your partner’s last name must be 35 characters or less"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Your partner’s last name must be 35 characters or less"
+      document
+        .getElementById("last-name-error")
+        .text() shouldBe "Your partner’s last name must be 35 characters or less"
     }
 
     "display form error message (last name contains numbers)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "12345",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -308,16 +328,21 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
-      document.getElementById("last-name-error").text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
+      document
+        .getElementById("last-name-error")
+        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name contains letters and numbers)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "abc123",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -327,16 +352,21 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=last-name]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
-      document.getElementById("last-name-error").text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
+      document
+        .getElementById("last-name-error")
+        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
     }
 
     "display form error message when recipient nino equals transferor nino" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "abc",
+        "name"      -> "abc",
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> Ninos.nino1
+        "gender"    -> "M",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -347,16 +377,16 @@ class ContentTest extends ControllerBaseTest {
       val labelNino = form.select("label[for=nino]").first()
       labelNino.getElementsByClass("error-message").first() shouldNot be(null)
       labelNino.getElementsByClass("error-message").first().text() shouldBe "You cannot enter your own details"
-      document.getElementById("nino-error").text() shouldBe "You cannot enter your own details"
+      document.getElementById("nino-error").text()                 shouldBe "You cannot enter your own details"
     }
   }
 
   "Calling Transfer Submit page with error in gender field" should {
     "display form error message (gender missing from request)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "bar",
-        "nino" -> Ninos.nino1
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -367,15 +397,15 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("fieldset[id=gender]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
       labelName.getElementsByClass("error-notification").first().text() shouldBe "Select your partner’s gender"
-      document.getElementById("gender-error").text() shouldBe "Select your partner’s gender"
+      document.getElementById("gender-error").text()                    shouldBe "Select your partner’s gender"
     }
 
     "display form error message (gender code is invalid)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "bar",
-        "gender" -> "X",
-        "nino" -> Ninos.nino1
+        "gender"    -> "X",
+        "nino"      -> Ninos.nino1
       )
       val result = transferController.transferAction(request)
 
@@ -386,16 +416,16 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("fieldset[id=gender]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
       labelName.getElementsByClass("error-notification").first().text() shouldBe "Select your partner’s gender"
-      document.getElementById("gender-error").text() shouldBe "Select your partner’s gender"
+      document.getElementById("gender-error").text()                    shouldBe "Select your partner’s gender"
     }
   }
 
   "Calling Transfer Submit page with error in NINO field" should {
     "display form error message (NINO missing from request)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "bar",
-        "gender" -> "M"
+        "gender"    -> "M"
       )
       val result = transferController.transferAction(request)
 
@@ -405,16 +435,19 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s National Insurance number"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text()                                    shouldBe "Enter your partner’s National Insurance number"
       document.getElementById("nino-error").text() shouldBe "Enter your partner’s National Insurance number"
     }
 
     "display form error message (NINO is empty)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> ""
+        "gender"    -> "M",
+        "nino"      -> ""
       )
       val result = transferController.transferAction(request)
 
@@ -424,16 +457,19 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s National Insurance number"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text()                                    shouldBe "Enter your partner’s National Insurance number"
       document.getElementById("nino-error").text() shouldBe "Enter your partner’s National Insurance number"
     }
 
     "display form error message (NINO is invalid)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "name" -> "foo",
+        "name"      -> "foo",
         "last-name" -> "bar",
-        "gender" -> "M",
-        "nino" -> "ZZ"
+        "gender"    -> "M",
+        "nino"      -> "ZZ"
       )
       val result = transferController.transferAction(request)
 
@@ -444,7 +480,7 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=nino]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter a real National Insurance number"
-      document.getElementById("nino-error").text() shouldBe "Enter a real National Insurance number"
+      document.getElementById("nino-error").text()                 shouldBe "Enter a real National Insurance number"
     }
   }
 
@@ -452,9 +488,9 @@ class ContentTest extends ControllerBaseTest {
 
     "display form error message (date of marriage is before 1900)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "dateOfMarriage.day" -> "1",
+        "dateOfMarriage.day"   -> "1",
         "dateOfMarriage.month" -> "1",
-        "dateOfMarriage.year" -> "1899"
+        "dateOfMarriage.year"  -> "1899"
       )
       val result = transferController.dateOfMarriageAction(request)
 
@@ -477,11 +513,9 @@ class ContentTest extends ControllerBaseTest {
     "display form error message (date of marriage is after today’s date)" in {
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withFormUrlEncodedBody(
-
-        "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.day"   -> s"${localDate.getDayOfMonth}",
         "dateOfMarriage.month" -> s"${localDate.getDayOfMonth}",
-        "dateOfMarriage.year" -> s"${localDate.getYear}"
-
+        "dateOfMarriage.year"  -> s"${localDate.getYear}"
       )
       val result = transferController.dateOfMarriageAction(request)
 
@@ -499,9 +533,9 @@ class ContentTest extends ControllerBaseTest {
 
     "display form error message (date of marriage is left empty)" in {
       val request = FakeRequest().withFormUrlEncodedBody(
-        "dateOfMarriage.day" -> "",
+        "dateOfMarriage.day"   -> "",
         "dateOfMarriage.month" -> "",
-        "dateOfMarriage.year" -> ""
+        "dateOfMarriage.year"  -> ""
       )
       val result = transferController.dateOfMarriageAction(request)
 
@@ -516,19 +550,43 @@ class ContentTest extends ControllerBaseTest {
       val err = field.getElementsByClass("client-error-notification")
       val labelName = form.select("fieldset[id=dateOfMarriage]").first()
       err.size() shouldBe 1
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Enter the date of your marriage or civil partnership"
-      document.getElementById("dateOfMarriage-error").text() shouldBe "Enter the date of your marriage or civil partnership"
+      labelName
+        .getElementsByClass("error-notification")
+        .first()
+        .text() shouldBe "Enter the date of your marriage or civil partnership"
+      document
+        .getElementById("dateOfMarriage-error")
+        .text() shouldBe "Enter the date of your marriage or civil partnership"
     }
   }
 
   "Calling Previous year page " should {
     val rcrec = UserRecord(cid = 123456, timestamp = "2015")
-    val rcdata = RegistrationFormInput(name = "foo", lastName = "bar", gender = Gender("M"), nino = Nino(Ninos.ninoWithLOA1), dateOfMarriage = LocalDate.of(2011, 4, 10))
-    val recrecord = RecipientRecord(record = rcrec, data = rcdata, availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016)))
+    val rcdata = RegistrationFormInput(
+      name = "foo",
+      lastName = "bar",
+      gender = Gender("M"),
+      nino = Nino(Ninos.ninoWithLOA1),
+      dateOfMarriage = LocalDate.of(2011, 4, 10)
+    )
+    val recrecord = RecipientRecord(
+      record = rcrec,
+      data = rcdata,
+      availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016))
+    )
     "display dynamic message " in {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
-        .thenReturn(CurrentAndPreviousYearsEligibility(true, recrecord.availableTaxYears, recrecord.data, recrecord.availableTaxYears))
-      when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any()))
+        .thenReturn(
+          CurrentAndPreviousYearsEligibility(
+            true,
+            recrecord.availableTaxYears,
+            recrecord.data,
+            recrecord.availableTaxYears
+          )
+        )
+      when(
+        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any())
+      )
         .thenReturn(Nil)
       val request = FakeRequest().withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
       val result = transferController.eligibleYearsAction(request)
@@ -536,7 +594,7 @@ class ContentTest extends ControllerBaseTest {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("firstNameOnly").text() shouldBe "foo"
-      document.getElementById("marriageDate").text() shouldBe "10 April 2011"
+      document.getElementById("marriageDate").text()  shouldBe "10 April 2011"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
       back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears().url
@@ -544,7 +602,14 @@ class ContentTest extends ControllerBaseTest {
 
     "display form error message (no year choice made )" in {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
-        .thenReturn(CurrentAndPreviousYearsEligibility(true, recrecord.availableTaxYears, recrecord.data, recrecord.availableTaxYears))
+        .thenReturn(
+          CurrentAndPreviousYearsEligibility(
+            true,
+            recrecord.availableTaxYears,
+            recrecord.data,
+            recrecord.availableTaxYears
+          )
+        )
       val request = FakeRequest().withFormUrlEncodedBody(data = "year" -> "List(0)")
       val result = transferController.extraYearsAction(request)
 
@@ -555,8 +620,13 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("fieldset[id=selectedYear]").first()
       labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Select yes whether you would like to apply for earlier tax years"
-      document.getElementById("selectedYear-error").text() shouldBe "Select yes whether you would like to apply for earlier tax years"
+      labelName
+        .getElementsByClass("error-notification")
+        .first()
+        .text() shouldBe "Select yes if you would like to apply for earlier tax years"
+      document
+        .getElementById("selectedYear-error")
+        .text() shouldBe "Select yes if you would like to apply for earlier tax years"
     }
   }
 
@@ -571,7 +641,7 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your email address"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text()     shouldBe "Enter your email address"
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
@@ -589,7 +659,7 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your email address"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text()     shouldBe "Enter your email address"
     }
 
     "display form error message (transferor email contains only spaces)" in {
@@ -603,7 +673,7 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your email address"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter your email address"
+      document.getElementById("transferor-email-error").text()     shouldBe "Enter your email address"
     }
 
     "display form error message (transferor email contains more than 100 characters)" in {
@@ -617,7 +687,7 @@ class ContentTest extends ControllerBaseTest {
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
       labelName.getElementsByClass("error-message").first().text() shouldBe "Enter no more than 100 characters"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter no more than 100 characters"
+      document.getElementById("transferor-email-error").text()     shouldBe "Enter no more than 100 characters"
     }
 
     "display form error message (transferor email is invalid)" in {
@@ -630,8 +700,13 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+      document
+        .getElementById("transferor-email-error")
+        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
     }
 
     "display form error message (transferor email has consequent dots)" in {
@@ -644,8 +719,13 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+      document
+        .getElementById("transferor-email-error")
+        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
     }
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
@@ -658,8 +738,13 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
-      document.getElementById("transferor-email-error").text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
+      document
+        .getElementById("transferor-email-error")
+        .text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
     }
 
     "display form error message (transferor email does not include TLD)" in {
@@ -672,8 +757,13 @@ class ContentTest extends ControllerBaseTest {
       form shouldNot be(null)
       val labelName = form.select("label[for=transferor-email]").first()
       labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
-      document.getElementById("transferor-email-error").text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+      labelName
+        .getElementsByClass("error-message")
+        .first()
+        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+      document
+        .getElementById("transferor-email-error")
+        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
     }
   }
 
@@ -687,9 +777,11 @@ class ContentTest extends ControllerBaseTest {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
-      document.title() shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
+      document.title()                                  shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
       document.getElementsByClass("heading-large").text shouldBe "Marriage Allowance application successful"
-      document.getElementById("paragraph-1").text shouldBe "An email with full details acknowledging your application will be " +
+      document
+        .getElementById("paragraph-1")
+        .text shouldBe "An email with full details acknowledging your application will be " +
         "sent to you at example@example.com from noreply@tax.service.gov.uk within 24 hours."
     }
   }
@@ -745,11 +837,15 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a civil partnership"
+      document
+        .getElementById("marriage-criteria-error")
+        .text() shouldBe "Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Select yes if you are married or in a civil partnership"
+      marriageFieldset
+        .getElementsByClass("error-notification")
+        .text() shouldBe "Select yes if you are married or in a civil partnership"
 
     }
   }
@@ -773,11 +869,15 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
 
-      document.getElementById("marriage-criteria-error").text() shouldBe "Select yes if you are married or in a civil partnership"
+      document
+        .getElementById("marriage-criteria-error")
+        .text() shouldBe "Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset.getElementsByClass("error-notification").text() shouldBe "Select yes if you are married or in a civil partnership"
+      marriageFieldset
+        .getElementsByClass("error-notification")
+        .text() shouldBe "Select yes if you are married or in a civil partnership"
 
     }
   }
@@ -790,7 +890,8 @@ class ContentTest extends ControllerBaseTest {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
-      document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
     }
   }
 
@@ -803,7 +904,8 @@ class ContentTest extends ControllerBaseTest {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
 
       document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
     }
@@ -819,9 +921,14 @@ class ContentTest extends ControllerBaseTest {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementsByClass("bold-small")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementsByClass("heading-xlarge")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
 
     }
 
@@ -834,9 +941,14 @@ class ContentTest extends ControllerBaseTest {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementsByClass("bold-small")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementsByClass("heading-xlarge")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
 
     }
   }
@@ -857,7 +969,8 @@ class ContentTest extends ControllerBaseTest {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
     }
   }
 
@@ -892,7 +1005,8 @@ class ContentTest extends ControllerBaseTest {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .title()                                     shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
     }
   }
@@ -906,9 +1020,14 @@ class ContentTest extends ControllerBaseTest {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementsByClass("bold-small")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementsByClass("heading-xlarge")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
 
     }
 
@@ -921,9 +1040,14 @@ class ContentTest extends ControllerBaseTest {
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
-      document.title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
-      document.getElementsByClass("heading-xlarge").text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementsByClass("bold-small")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementsByClass("heading-xlarge")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
 
     }
   }
@@ -951,7 +1075,7 @@ class ContentTest extends ControllerBaseTest {
       val marriageDate = document.getElementById("marriage-date")
       applicantName.ownText() shouldBe "Jim Ferguson"
       recipientName.ownText() shouldBe "foo bar"
-      marriageDate.ownText() shouldBe "1 January 2015"
+      marriageDate.ownText()  shouldBe "1 January 2015"
     }
   }
 }

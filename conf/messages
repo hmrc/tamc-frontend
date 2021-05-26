@@ -59,7 +59,7 @@ pages.form.field-required.do-you-want-to-apply=Select yes if you want to apply f
 pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
 pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2017 was at or below the Personal Allowance level?
 pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2017?
-pages.form.field-required.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
+pages.form.field-required.applyForHistoricYears=Select yes if you would like to apply for earlier tax years
 
 error.end-reason.required=Select a reason for changing your Marriage Allowance below.
 pages.form.field-required.endReason=Select a reason for changing your Marriage Allowance below
