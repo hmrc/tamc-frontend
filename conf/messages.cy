@@ -59,7 +59,7 @@ pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud c
 pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2017 ar lefel y Lwfans Personol neu’n is.
 pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2017?
-pages.form.field-required.applyForHistoricYears=Dewiswch Iawn a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
+pages.form.field-required.applyForHistoricYears=Dewiswch Iawn os hoffech wneud cais ar gyfer blwyddyn dreth gynharach
 
 pages.form.extra-year.field-required=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}
 pages.form.field-required.year-2016-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2016 i 2017
