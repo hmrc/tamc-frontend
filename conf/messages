@@ -59,7 +59,7 @@ pages.form.field-required.do-you-want-to-apply=Select yes if you want to apply f
 pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
 pages.form.field-required.multiyear-transferor-income-criteria=Tell us if your annual income since 6 April 2017 was at or below the Personal Allowance level?
 pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2017?
-pages.form.field-required.applyForHistoricYears=Select yes whether you would like to apply for earlier tax years
+pages.form.field-required.applyForHistoricYears=Select yes if you would like to apply for earlier tax years
 
 error.end-reason.required=Select a reason for changing your Marriage Allowance below.
 pages.form.field-required.endReason=Select a reason for changing your Marriage Allowance below
@@ -154,7 +154,7 @@ title.application.pattern={0} - Marriage Allowance application - GOV.UK
 title.dateOfBirth=Were you and your partner born after 5 April 1935?
 title.eligible-years=Apply for the current tax year
 title.extra-years=Apply for earlier tax years
-title.confirm-extra-years=Confirm earlier tax years
+title.confirm-extra-years=Confirm you want to apply for the {0} tax year
 title.transfer-in-place=Transfer in place
 title.transfer=Enter your partner’s details
 title.finished=Application confirmed
@@ -172,7 +172,7 @@ title.change.complete=Marriage Allowance cancelled
 title.change.reason=Cancelling your Marriage Allowance
 title.error=Error
 title.history=Your Marriage Allowance summary
-title.make-a-change=Cancelling your Marriage Allowance
+title.make-a-change=Why do you need to stop your Marriage Allowance?
 title.bereavement=Tell us about a bereavement
 title.divorce=Date of divorce or end of civil partnership
 title.date-of-marriage=Date of marriage or civil partnership
@@ -544,7 +544,7 @@ pages.decision.error.mandatory.value=Select if you want to check or stop your ma
 #********************************************************************************
 # Make Changes page
 #********************************************************************************
-pages.makeChanges.title=Why do you need to stop your Marriage Allowance?
+pages.makeChanges.heading=Why do you need to stop your Marriage Allowance?
 pages.makeChanges.radio.divorce=Divorce, end of civil partnership or legally separated
 pages.makeChanges.radio.incomeChanges=Household income changes
 pages.makeChanges.radio.noLongerRequired=Do not want Marriage Allowance anymore
@@ -630,7 +630,7 @@ pages.eligibleyear.notice=You can apply for earlier years if you continue.
 pages.multiyear.taxyear={0} tax year
 pages.multiyear.canclaim=You and <span id="firstNameOnly">{0}</span> can claim Marriage Allowance for the {1} tax year if:
 pages.multiyear.successful=If your application is successful, Marriage Allowance will be backdated for the {0} tax year and <span id="firstNameOnly3"> {1} </span> will receive a cheque for up to {2}.
-pages.multiyear.extrayears=Do you want to apply for this extra tax year too?
+pages.multiyear.extrayears.from.to=Do you want to apply for {0} too?
 
 #********************************************************************************
 # previous-years

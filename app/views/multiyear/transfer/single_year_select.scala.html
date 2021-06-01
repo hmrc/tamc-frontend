@@ -34,17 +34,18 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
 @templates.tamc_main(
-    title = Messages("title.application.pattern", Messages("title.confirm-extra-years")),
-    langSelectorOverride = Some(
-        Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
-            "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
-        )
+  title = Messages("title.application.pattern",
+    Messages("title.confirm-extra-years", LanguageUtils().taxDateIntervalShort(availableYears.head.year))
+  ),
+  langSelectorOverride = Some(
+    Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
+      "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
     )
-){
-
+  )
+) {
 
 <a href="@controllers.routes.TransferController.eligibleYearsAction"
-   class="link-back">@Html(Messages("generic.back"))</a>
+  class="link-back">@Html(Messages("generic.back"))</a>
 
     @templates.form_error_notification(earlierYearsForm)
 
@@ -79,14 +80,13 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
                 LanguageUtils().taxDateIntervalShort(availableYears.head.year),
                 input.name, currencyFormatter(ApplicationConfig.appConfig.MAX_BENEFIT(availableYears.head.year))))</p>
 
-        <p class="heading-medium">@Html(Messages("pages.multiyear.extrayears"))</p>
         @templates.input_radio_group(
             earlierYearsForm("selectedYear"),
             Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
             '_labelClass -> "block-label",
             '_labelAfter -> true,
-            '_legend -> Messages("pages.multiyear.extrayears"),
-            '_legendClass -> "visuallyhidden",
+            '_legend -> Html(Messages("pages.multiyear.extrayears.from.to", LanguageUtils().taxDateIntervalShort(availableYears.head.year))),
+            '_legendClass -> "heading-medium",
             '_groupClass -> "inline spacingBottom"
         )
         <input type="hidden" name="furtherYears" value="@availableYears.tail.map(_.year).mkString(" ,")" />

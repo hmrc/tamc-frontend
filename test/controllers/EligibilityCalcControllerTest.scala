@@ -22,7 +22,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 import utils.ControllerBaseTest
 
-
+//TODO: Update values in test names
 class EligibilityCalcControllerTest extends ControllerBaseTest {
 
   "Check eligibility benefit" should {
@@ -51,9 +51,8 @@ class EligibilityCalcControllerTest extends ControllerBaseTest {
       document.getElementById("calculator-result").text() should include("Based on the information you have given us, as a couple you would benefit by around")
     }
 
-    "be negative (12) if transferor income=10000 (9540-10600) and recipient income=11000 (10600-11660)" in {
-      val formatter = java.text.NumberFormat.getIntegerInstance
-      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "11000", "recipient-income" -> "12501")
+    "be negative (12) if transferor income=11000 (11313-12570) and recipient income=12571 (12570-13827)" in {
+      val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "11000", "recipient-income" -> "12571")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple."

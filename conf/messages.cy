@@ -59,7 +59,7 @@ pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud c
 pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2017 ar lefel y Lwfans Personol neu’n is.
 pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2017?
-pages.form.field-required.applyForHistoricYears=Dewiswch Iawn a hoffech wneud cais ar gyfer blynyddoedd treth cynharach
+pages.form.field-required.applyForHistoricYears=Dewiswch Iawn os hoffech wneud cais ar gyfer blwyddyn dreth gynharach
 
 pages.form.extra-year.field-required=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}
 pages.form.field-required.year-2016-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2016 i 2017
@@ -152,7 +152,7 @@ title.application.pattern={0} – Cais am Lwfans Priodasol – GOV.UK
 title.dateOfBirth=Eich dyddiad geni
 title.eligible-years=Gwneud cais ar gyfer y flwyddyn dreth bresennol
 title.extra-years=Gwneud cais ar gyfer blynyddoedd treth cynharach
-title.confirm-extra-years=Cadarnhau blynyddoedd treth cynharach
+title.confirm-extra-years=Cadarnhewch eich bod am wneud cais ar gyfer blwyddyn dreth {0}
 title.transfer-in-place=Trosglwyddiad yn barod
 title.transfer=Nodwch fanylion eich partner
 title.finished=Cais wedi’i gadarnhau
@@ -172,7 +172,7 @@ title.change.earnings=Newid mewn incwm
 title.change.reason=Dileu cais blaenorol
 title.error=Gwall
 title.history=Crynodeb o’ch Lwfans Priodasol
-title.make-a-change=Canslo’ch Lwfans Priodasol
+title.make-a-change=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
 title.bereavement=Profedigaeth
 title.divorce=Dyddiad ysgaru neu ddod &#226;’r bartneriaeth sifil i ben
 title.date-of-marriage=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
@@ -550,7 +550,7 @@ pages.decision.error.mandatory.value=Dewiswch os ydych am wirio’ch hawliad am 
 #********************************************************************************
 # Make Changes page
 #********************************************************************************
-pages.makeChanges.title=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
+pages.makeChanges.heading=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
 pages.makeChanges.radio.divorce=Ysgaru, dod â phartneriaeth sifil i ben neu wahanu’n gyfreithiol
 pages.makeChanges.radio.incomeChanges=Newidiadau yn incwm yr aelwyd
 pages.makeChanges.radio.noLongerRequired=Ddim eisiau Lwfans Priodasol mwyach
@@ -637,7 +637,7 @@ pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os y
 pages.multiyear.taxyear=Blwyddyn dreth {0}
 pages.multiyear.canclaim=Gallwch chi a <span id="firstNameOnly">{0}</span> wneud cais am Lwfans Priodasol ar gyfer blwyddyn dreth {1}:
 pages.multiyear.successful=Os yw’ch cais yn llwyddiannus, bydd Lwfans Priodasol yn cael ei &#244;l-ddyddio ar gyfer blwyddyn dreth {0} a bydd <span id="firstNameOnly3"> {1} </span> yn cael siec am hyd at {2}.
-pages.multiyear.extrayears=A hoffech wneud cais ar gyfer y flwyddyn dreth ychwanegol hon hefyd?
+pages.multiyear.extrayears.from.to=A ydych am wneud cais ar gyfer {0} hefyd?
 
 #********************************************************************************
 # previous-years
