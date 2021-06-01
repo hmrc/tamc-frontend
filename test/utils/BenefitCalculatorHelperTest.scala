@@ -103,33 +103,24 @@ class BenefitCalculatorHelperTest extends UnitSpec with GuiceOneAppPerSuite {
     "getCountryTaxBandsFromFile is called" must {
       "return the correct banded income for an English tax payer" in {
         eligibilityCalculatorService.getCountryTaxBandsFromFile(England) shouldBe
-        //TODO remove hard coded and repace with dynamic after new tax year 2021/22 started
-        // List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT(), 0.20))
-        List(TaxBand("BasicRate", 12570 + 1, 50270, 0.20))
+        List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT(), 0.20))
       }
 
       "return the correct banded income for a Scottish tax payer" in {
         eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland) shouldBe
-        //TODO add the dynamic values back in after 2021/22 tax year starts & remove the hard coded values
-          //List(TaxBand("StarterRate", PERSONAL_ALLOWANCE() + 1, 14667, 0.19),
-          List(TaxBand("StarterRate", 12570 + 1, 14667, 0.19),
+          List(TaxBand("StarterRate", PERSONAL_ALLOWANCE() + 1, 14667, 0.19),
             TaxBand("BasicRate", 14668, 25296, 0.20),
-            //TaxBand("IntermediateRate", 25297, MAX_LIMIT_SCOT(), 0.21))
-            TaxBand("IntermediateRate", 25297, 43662 , 0.21))
+            TaxBand("IntermediateRate", 25297, MAX_LIMIT_SCOT(), 0.21))
       }
 
       "return the correct banded income for a Welsh tax payer" in {
         eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales) shouldBe
-          //TODO add the dynamic values back in after 2021/22 tax year starts & remove the hard coded values
-          //List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_WALES(), 0.20))
-          List(TaxBand("BasicRate", 12570 + 1, 50270, 0.20))
+          List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_WALES(), 0.20))
       }
 
       "return the correct banded income for a Northern Irish tax payer" in {
         eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland) shouldBe
-          //TODO add the dynamic values back in after 2021/22 tax year starts & remove the hard coded values
-          //List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_NORTHERN_IRELAND(), 0.20))
-          List(TaxBand("BasicRate", 12570  + 1, 50270, 0.20))
+          List(TaxBand("BasicRate", PERSONAL_ALLOWANCE() + 1, MAX_LIMIT_NORTHERN_IRELAND(), 0.20))
       }
     }
   }
