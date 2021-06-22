@@ -16,17 +16,19 @@
 
 package utils
 
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import uk.gov.hmrc.http.CoreGet
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.play.partials.{FormPartialRetrieverImpl, HeaderCarrierForPartialsConverter}
 
-object MockFormPartialRetriever extends FormPartialRetriever {
-  override val crypto: String => String = s => s
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
-  override def httpGet: CoreGet = ???
+class MockFormPartialRetriever @Inject()(httpGet: HttpClient, headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter)
+  extends FormPartialRetrieverImpl(httpGet, headerCarrierForPartialsConverter) with MockitoSugar {
 
-  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html = {
-    Html("")
-  }
+  override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)
+                                (implicit ec: ExecutionContext, request: RequestHeader): Html = (Html("reportAProblem"))
+
 }

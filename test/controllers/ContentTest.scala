@@ -34,8 +34,6 @@ import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
-import utils.ControllerBaseTest
-import utils.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
 import play.api.inject.bind
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
@@ -710,7 +708,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email has consequent dots)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "ex..ample@example.com")
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "ex...ample@example.com")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST

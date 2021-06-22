@@ -33,7 +33,7 @@ object EmailForm {
       }
       .transform[EmailAddress](EmailAddress(_), _.value)
       .verifying {
-        emailPattern(regex = """^([a-zA-Z0-9\-\_]+[\.]*)+@[a-zA-Z0-9-\.]{2,}$""".r, error = messageCustomizer("error.email"))
+        emailPattern(regex = """^([a-zA-Z0-9\-\_]+[\.]?)+@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]{2,})+)$""".r, error = messageCustomizer("error.email"))
       }
       .verifying {
         emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))

@@ -29,7 +29,7 @@ import org.mockito.Mockito._
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
@@ -45,7 +45,6 @@ import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 
 import scala.language.postfixOps
 import play.api.inject.bind
-import play.api.mvc.Cookie
 
 class TransferControllerTest extends ControllerBaseTest {
 
@@ -53,7 +52,7 @@ class TransferControllerTest extends ControllerBaseTest {
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
-  val notificationRecord = NotificationRecord(EmailAddress("test@test.com"))
+  val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(

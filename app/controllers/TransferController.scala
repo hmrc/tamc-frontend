@@ -207,10 +207,11 @@ class TransferController @Inject() (
   def confirmYourEmailAction: Action[AnyContent] = authenticate.async { implicit request =>
     emailForm.bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(views.html.multiyear.transfer.email(formWithErrors))),
-      transferorEmail =>
+      transferorEmail => {
         registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map { _ =>
           Redirect(controllers.routes.TransferController.confirm())
         }
+      }
     ) recover handleError
   }
 

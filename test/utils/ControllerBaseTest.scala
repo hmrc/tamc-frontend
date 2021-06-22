@@ -31,7 +31,7 @@ trait ControllerBaseTest extends BaseTest {
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
     .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
     .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))
-    .overrides(bind[FormPartialRetriever].toInstance(MockFormPartialRetriever)
+    .overrides(bind[FormPartialRetriever].to[MockFormPartialRetriever]
     ).configure(
     "metrics.jvm" -> false,
     "metrics.enabled" -> false
