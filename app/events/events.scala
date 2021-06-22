@@ -18,7 +18,7 @@ package events
 
 import models.{CacheData, UpdateRelationshipRequestHolder}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 object CreateRelationshipSuccessEvent {
@@ -26,8 +26,10 @@ object CreateRelationshipSuccessEvent {
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(
-        "event" -> ("create-relationship-pta"),
-        "data" -> cacheData.toString()))
+        "event" -> "create-relationship-pta",
+        "data" -> cacheData.toString
+      )
+    )
 }
 
 object UpdateRelationshipSuccessEvent {
@@ -36,7 +38,9 @@ object UpdateRelationshipSuccessEvent {
       AuditType.Tx_SUCCESSFUL,
       Map(
         "event" -> "update-relationship",
-        "data" -> updateData.toString))
+        "data" -> updateData.toString
+      )
+    )
 }
 
 object CreateRelationshipFailureEvent {
@@ -45,8 +49,10 @@ object CreateRelationshipFailureEvent {
       AuditType.Tx_FAILED,
       Map(
         "event" -> ("create-relationship-pta"),
-        "error" -> error.toString(),
-        "data" -> cacheData.toString()))
+        "error" -> error.toString,
+        "data" -> cacheData.toString
+      )
+    )
 }
 
 object RelationshipAlreadyCreatedEvent {
@@ -55,7 +61,9 @@ object RelationshipAlreadyCreatedEvent {
       AuditType.Tx_FAILED,
       Map(
         "event" -> "relationship-exists",
-        "data" -> cacheData.toString()))
+        "data" -> cacheData.toString
+      )
+    )
 }
 
 object UpdateRelationshipFailureEvent {
@@ -65,7 +73,9 @@ object UpdateRelationshipFailureEvent {
       Map(
         "event" -> "update-relationship",
         "error" -> error.toString,
-        "data" -> cacheData.toString))
+        "data" -> cacheData.toString
+      )
+    )
 }
 
 object CreateRelationshipCacheFailureEvent {
@@ -74,7 +84,9 @@ object CreateRelationshipCacheFailureEvent {
       AuditType.Tx_FAILED,
       Map(
         "event" -> "create-relationship",
-        "error" -> error.toString()))
+        "error" -> error.toString
+      )
+    )
 }
 
 object UpdateRelationshipCacheFailureEvent {
@@ -83,21 +95,10 @@ object UpdateRelationshipCacheFailureEvent {
       AuditType.Tx_FAILED,
       Map(
         "event" -> "update-relationship",
-        "error" -> error.toString()))
+        "error" -> error.toString
+      )
+    )
 }
-
-/*
-object TransferorRelationshipDataInconsistent {
-  def apply(transferorRecord: UserRecord, cache: Option[CacheData])(implicit hc: HeaderCarrier) =
-    new BusinessEvent(
-      AuditType.Tx_FAILED,
-      Map(
-        "event" -> "transferor-data-inconsistent",
-        "error" -> "TransferorRelationshipDataInconsistent",
-        "transferor" -> transferorRecord.toString(),
-        "cache" -> cache.toString()))
-}
-*/
 
 object RecipientFailureEvent {
   def apply(nino: Nino, error: Throwable)(implicit hc: HeaderCarrier) =
@@ -105,8 +106,10 @@ object RecipientFailureEvent {
       AuditType.Tx_FAILED,
       Map(
         "event" -> "recipient-error",
-        "error" -> error.toString(),
-        "data" -> nino.value))
+        "error" -> error.toString,
+        "data" -> nino.value
+      )
+    )
 }
 
 object RiskTriageRedirectEvent {
@@ -115,7 +118,9 @@ object RiskTriageRedirectEvent {
       AuditType.Tx_SUCCESSFUL,
       Map(
         "event" -> "authorisation-attempt",
-        "data" -> "TRIAGE"))
+        "data" -> "TRIAGE"
+      )
+    )
 }
 
 private object AuditType {
@@ -124,4 +129,9 @@ private object AuditType {
 }
 
 class BusinessEvent(auditType: String, detail: Map[String, String])(implicit hc: HeaderCarrier)
-  extends DataEvent(auditSource = "tamc-frontend", auditType = auditType, detail = detail, tags = hc.headers.toMap)
+  extends DataEvent(
+    auditSource = "tamc-frontend",
+    auditType = auditType,
+    detail = detail,
+    tags = (hc.headers(HeaderNames.explicitlyIncludedHeaders) ++ hc.extraHeaders ++ hc.otherHeaders).toMap
+  )

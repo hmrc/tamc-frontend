@@ -14,14 +14,10 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.HeaderCarrierConverter
-@import connectors._
-@import scala.concurrent.Await
-@import scala.concurrent.duration._
-@import config._
+@import scala.concurrent.ExecutionContext.Implicits.global
 
-@(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig : config.ApplicationConfig)(implicit request: Request[_])
+@(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: config.ApplicationConfig)(implicit request: Request[_])
 
 @if(supportLinkEnabled) {
-@formPartialRetriever.getPartialContent(s"${appConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
+  @formPartialRetriever.getPartialContent(s"${appConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
 }
