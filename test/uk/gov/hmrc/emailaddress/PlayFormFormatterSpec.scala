@@ -135,8 +135,8 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks {
       Map("email" -> "test"),
       Map("email" -> "test@"),
       Map("email" -> "@test"),
-      Map("email" -> "test@test"), // FIXME: does not fail validation
-      Map("email" -> "a@b"), // FIXME: does not fail validation
+      Map("email" -> "test@test"),
+      Map("email" -> "a@b"),
       Map("email" -> "test@example.comtest@example.com"),
       Map("email" -> "test@example..com"),
       Map("email" -> "test@example...com"),

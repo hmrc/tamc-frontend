@@ -60,8 +60,8 @@ object PlayFormFormatter {
     */
   def emailAddress(errorRequired: String = "error.required", errorEmail: String = "error.email"): Mapping[EmailAddress] = {
     nonEmptyTrimmer(error = errorRequired).
-      verifying(error = errorEmail, constraint = EmailAddress.isValid).
-      transform[EmailAddress](EmailAddress(_), _.value)
+      verifying(error = errorEmail, constraint = EmailAddress.isValid)
+      .transform[EmailAddress](EmailAddress(_), _.value)
   }
 
   /**
