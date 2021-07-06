@@ -32,7 +32,6 @@ class TamcModule extends Module {
       bind[AuthConnector].to[TamcAuthConnector],
       bind[TimeService].toInstance(TimeService),
       bind[TemplateRenderer].to[LocalTemplateRenderer],
-      bind[FormPartialRetriever].to[TamcFormPartialRetriever],
       bind[CurrentTaxYear].toInstance(TaxYear)
     )
 }
