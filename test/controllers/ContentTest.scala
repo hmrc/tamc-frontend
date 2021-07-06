@@ -708,7 +708,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email has consequent dots)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "ex...ample@example.com")
+      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "ex..ample@example.com")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
