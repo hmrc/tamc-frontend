@@ -7,7 +7,7 @@ val appName = "tamc-frontend"
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*;connectors.ApplicationAuditConnector;connectors.ApplicationAuthConnector;services.CachingService;metrics.Metrics;utils.WSHttp;events",
-    ScoverageKeys.coverageMinimum := 80,
+    ScoverageKeys.coverageMinimum := 92.48,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
