@@ -70,7 +70,7 @@ class TransferService @Inject()(
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
         if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, TimeService.getTaxYearForDate(dom)) =>
-        Future(cache)
+        Future.successful(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()
       case _ => throw CacheMissingTransferor()
     }

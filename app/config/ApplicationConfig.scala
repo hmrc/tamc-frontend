@@ -35,7 +35,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val cacheUri:String = servicesConfig.baseUrl("cachable.session-cache")
   val sessionCacheDomain: String = servicesConfig.getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
 
-
   private lazy val currentTaxYear: TaxYear = TaxYear.current
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))

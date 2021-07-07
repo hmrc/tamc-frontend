@@ -17,16 +17,19 @@
 package errorHandler
 
 import com.google.inject.Inject
-import config.TamcFormPartialRetriever
 import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
+import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import uk.gov.hmrc.play.partials.{FormPartialRetriever, HeaderCarrierForPartialsConverter}
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ErrorHandler @Inject()(
-                             val messagesApi: MessagesApi,
-                             formPartialRetriever: TamcFormPartialRetriever
+                              val messagesApi: MessagesApi,
+                              formPartialRetriever: FormPartialRetriever,
+                              val httpGet: HttpClient,
+                              val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter
                             )
                             (implicit
                              templateRender: TemplateRenderer

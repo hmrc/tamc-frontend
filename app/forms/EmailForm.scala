@@ -23,8 +23,8 @@ import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, emailPattern,
 
 object EmailForm {
 
-  val emailForm = Form("transferor-email" -> email)
-  private val initialCharCheckRegexStr = """^[a-zA-Z0-9\-\_\.\@]+"""
+  val emailForm: Form[EmailAddress] = Form("transferor-email" -> email)
+  private val initialCharCheckRegexStr: String = """^[a-zA-Z0-9\-\_\.\@]+"""
 
   private def email: Mapping[EmailAddress] =
     valueIsPresent(errorRequired = messageCustomizer("error.required"))
@@ -33,7 +33,7 @@ object EmailForm {
       }
       .transform[EmailAddress](EmailAddress(_), _.value)
       .verifying {
-        emailPattern(regex = """^([a-zA-Z0-9\-\_]+[\.]*)+@[a-zA-Z0-9-\.]{2,}$""".r, error = messageCustomizer("error.email"))
+        emailPattern(regex = """^([a-zA-Z0-9\-\_]+[\.]?)+([a-zA-Z0-9\-\_]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9]{2,})+)$""".r, error = messageCustomizer("error.email"))
       }
       .verifying {
         emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))

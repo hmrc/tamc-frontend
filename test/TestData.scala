@@ -55,9 +55,8 @@ object TestData {
     val ninoWithHistoricActiveRelationship: String = ninos(19)
     val ninoCitizenNotFound: String = ninos(20)
     val ninoForBadRequest: String = ninos(21)
-    val ninoWithCL100: String = ninos(22)
-    val ninoWithConflict: String = ninos(23)
-    val ninoWithLTM000503: String = ninos(24)
+    val ninoWithConflict: String = ninos(22)
+    val ninoWithLTM000503: String = ninos(23)
   }
 
 

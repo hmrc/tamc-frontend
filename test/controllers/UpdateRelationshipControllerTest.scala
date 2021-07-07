@@ -46,11 +46,10 @@ import play.api.inject.bind
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
-import scala.language.postfixOps
 
 class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper {
 
-  val generatedNino = new Generator().nextNino
+  val generatedNino: Nino = new Generator().nextNino
   val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]

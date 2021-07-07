@@ -26,7 +26,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -44,15 +44,14 @@ class AuthenticatedActionRefiner @Inject()(
 
     authorised(ConfidenceLevel.L200)
       .retrieve(Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr) {
-      case credentials ~ Some(nino) ~ confidenceLevel ~ saUtr =>
-        Future.successful(
-          Right(
-            AuthenticatedUserRequest(request, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
+        case credentials ~ Some(nino) ~ confidenceLevel ~ saUtr =>
+          Future.successful(
+            Right(
+              AuthenticatedUserRequest(request, Some(confidenceLevel), saUtr.isDefined, credentials.map(_.providerType), Nino(nino))
+            )
           )
-        )
-      case _ =>
-        throw new Exception("Nino not found")
-    } recover {
+        case _ => throw new Exception("Nino not found")
+      } recover {
       case _: InsufficientConfidenceLevel =>
         Left(Redirect(appConfig.ivUpliftUrl))
       case _: NoActiveSession =>

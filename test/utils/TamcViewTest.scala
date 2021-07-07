@@ -19,6 +19,7 @@ package utils
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.scalatestplus.mockito.MockitoSugar.mock
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{AnyContent, Request}
@@ -33,8 +34,8 @@ import utils.viewHelpers.JSoupMatchers
 trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with JSoupMatchers {
 
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
-  implicit val templateRenderer = MockTemplateRenderer
-  implicit val partialRetriever = MockFormPartialRetriever
+  implicit val templateRenderer: MockTemplateRenderer.type = MockTemplateRenderer
+  implicit val partialRetriever: MockFormPartialRetriever = mock[MockFormPartialRetriever]
   implicit val request: Request[AnyContent] = FakeRequest()
   implicit val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
     request,

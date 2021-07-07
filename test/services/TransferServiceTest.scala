@@ -17,12 +17,10 @@
 package services
 
 import connectors.MarriageAllowanceConnector
-import errors.{CacheMissingRecipient, CacheMissingTransferor, ErrorResponseStatus, NoTaxYearsForTransferor, RecipientNotFound, TransferorDeceased}
+import errors._
 import models._
-import java.time.LocalDate
-
-import org.mockito.Mockito.{reset, when}
 import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.inject.bind
@@ -32,10 +30,10 @@ import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId}
 import utils.BaseTest
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
@@ -53,9 +51,9 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       bind[TimeService].toInstance(mockTimeService)
     ).build()
 
-  val dom = LocalDate.now()
+  val dateOfMarriage: LocalDate = LocalDate.now()
   val nino: Nino = Nino(Ninos.nino1)
-  val recipientData: RegistrationFormInput = RegistrationFormInput("First", "Last", Gender("F"), nino, dom)
+  val recipientData: RegistrationFormInput = RegistrationFormInput("First", "Last", Gender("F"), nino, dateOfMarriage)
   val relationshipRecord: RelationshipRecord = RelationshipRecord("Recipient", "20150531235901", "19960327", None, None, "123456789123", "20150531235901")
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("SessionId")))
 

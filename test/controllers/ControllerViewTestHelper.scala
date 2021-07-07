@@ -32,7 +32,7 @@ import scala.concurrent.Future
 
 trait ControllerViewTestHelper extends UnitSpec with MockitoSugar {
 
-  implicit val authRequest = {
+  implicit val authRequest: AuthenticatedUserRequest[AnyContent] = {
     val request: Request[AnyContent] = FakeRequest()
     val nino = new Generator().nextNino
 
@@ -40,7 +40,7 @@ trait ControllerViewTestHelper extends UnitSpec with MockitoSugar {
   }
 
   implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-  implicit val partialRetriever: FormPartialRetriever = MockFormPartialRetriever
+  implicit val partialRetriever: FormPartialRetriever = mock[MockFormPartialRetriever]
 
   implicit class ViewMatcherHelper(result: Future[Result]) {
 

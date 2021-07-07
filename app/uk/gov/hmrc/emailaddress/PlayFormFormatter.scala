@@ -60,8 +60,8 @@ object PlayFormFormatter {
     */
   def emailAddress(errorRequired: String = "error.required", errorEmail: String = "error.email"): Mapping[EmailAddress] = {
     nonEmptyTrimmer(error = errorRequired).
-      verifying(error = errorEmail, constraint = EmailAddress.isValid(_)).
-      transform[EmailAddress](EmailAddress(_), _.value)
+      verifying(error = errorEmail, constraint = EmailAddress.isValid)
+      .transform[EmailAddress](EmailAddress(_), _.value)
   }
 
   /**
@@ -97,7 +97,7 @@ object PlayFormFormatter {
     Constraint[EmailAddress](name, maxLength) {
       email =>
         if (email == null) Invalid(ValidationError(error, maxLength))
-        else if (email.value.size <= maxLength) Valid
+        else if (email.value.length <= maxLength) Valid
         else Invalid(ValidationError(error, maxLength))
     }
 
@@ -106,7 +106,7 @@ object PlayFormFormatter {
                      nonNumericError: String = "error.enter_numbers",
                      invalidError: String = "error.enter_valid_date"): Mapping[ZonedDateTime] = {
 
-    def verifyDigits(triple: (String, String, String )) =
+    def verifyDigits(triple: (String, String, String)): Boolean =
       triple._1.forall(_.isDigit) && triple._2.forall(_.isDigit) && triple._3.forall(_.isDigit)
 
     tuple(
@@ -115,12 +115,12 @@ object PlayFormFormatter {
       "day" -> optional(text)
     )
       .verifying(datePartsArePresent(allAbsentError = allAbsentError, missingPartError = missingPartError))
-      .transform[(String,String,String)]( x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
+      .transform[(String, String, String)](x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
       .verifying(invalidError, x => !verifyDigits(x) || Try(new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
       .transform[ZonedDateTime](
-      x => ZonedDateTime.of(
-        x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
+        x => ZonedDateTime.of(
+          x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
         x => (x.getYear.toString, x.getMonthValue.toString, x.getDayOfMonth.toString)
       )
   }
