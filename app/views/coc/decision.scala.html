@@ -19,10 +19,11 @@
 @import forms.coc.CheckClaimOrCancelDecisionForm
 @import includes.backLink
 
-@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@templates.tamc_main(
+@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@main(
 title = messages("title.pattern", messages("pages.decision.title")),
 mainConfig = views.helpers.MainConfig()
 ) {

@@ -21,12 +21,13 @@
 @import forms.coc.DivorceSelectYearForm
 @import includes.backLink
 
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 @(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
     title = messages("title.pattern", messages("pages.divorce.title")),
     manageService = true,
     mainConfig = views.helpers.MainConfig()) {

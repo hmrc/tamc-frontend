@@ -20,16 +20,17 @@
 @import views.html.templates._
 @import models.auth.UserRequest
 
+@this(implicit main: templates.tamc_main, templateRenderer: TemplateRenderer)
+
 @(
 doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
 )(implicit
 messages: Messages,
 request: UserRequest[_],
-templateRenderer: TemplateRenderer,
 formPartialRetriever: FormPartialRetriever
 )
 
-@tamc_main(
+@main(
 title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
 

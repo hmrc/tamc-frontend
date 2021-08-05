@@ -22,6 +22,8 @@
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 @(form: Form[models.CurrentYearInput],
 historicYearsAvailable: Boolean,
 recipientName: String,
@@ -30,11 +32,10 @@ cy: Option[java.time.LocalDate]
 )(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@templates.tamc_main(
+@main(
 title = Messages("title.application.pattern", Messages("title.eligible-years"))
 ){
 

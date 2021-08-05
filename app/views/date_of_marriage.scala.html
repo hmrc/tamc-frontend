@@ -19,13 +19,14 @@
 @import views.helpers.LanguageUtils
 @import models.auth.AuthenticatedUserRequest
 
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = messages("title.application.pattern", messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))

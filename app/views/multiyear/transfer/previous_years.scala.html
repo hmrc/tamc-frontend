@@ -21,15 +21,16 @@
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 @(input:RegistrationFormInput,
 availableYears:List[TaxYear] = List[TaxYear](),
 currentYearAvailable: Boolean)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.application.pattern", Messages("pages.previousyear.header")),
 langSelectorOverride = Some(
 Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),

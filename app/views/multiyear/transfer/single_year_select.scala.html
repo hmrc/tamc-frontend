@@ -23,17 +23,18 @@
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 @(earlierYearsForm: Form[models.EarlierYearsInput],
 input: RegistrationFormInput,
 availableYears: List[TaxYear] = List[TaxYear]()
 )(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@templates.tamc_main(
+@main(
   title = Messages("title.application.pattern",
     Messages("title.confirm-extra-years", LanguageUtils().taxDateIntervalShort(availableYears.head.year))
   ),

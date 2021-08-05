@@ -23,13 +23,14 @@
 @import java.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 @(data: models.ConfirmationModel)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.application.pattern", Messages("title.confirm"))
 ){
 

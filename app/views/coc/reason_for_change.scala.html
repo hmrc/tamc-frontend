@@ -20,11 +20,12 @@
 @import forms.coc.MakeChangesDecisionForm
 @import includes.backLink
 
-@(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@templates.tamc_main(
+@(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
+request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@main(
     title = Messages("title.pattern", messages("title.make-a-change")),
     manageService = true,
     mainConfig = views.helpers.MainConfig()

@@ -21,10 +21,11 @@
 @import uk.gov.hmrc.urls.Link
 @import includes.backLink
 
-@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@templates.tamc_main(
+@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@main(
 title = messages("title.pattern", messages("pages.claims.title")),
 mainConfig = views.helpers.MainConfig(None)
 ){

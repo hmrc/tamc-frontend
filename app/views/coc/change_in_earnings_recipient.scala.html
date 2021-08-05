@@ -19,12 +19,13 @@
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
 @()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.pattern", Messages("title.change.earnings")),
 manageService = true,
 mainConfig = views.helpers.MainConfig()

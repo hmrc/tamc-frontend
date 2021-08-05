@@ -22,8 +22,9 @@
 @import models.MarriageAllowanceEndingDates
 @import includes.backLink
 
-@(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
+@(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @maDate = @{
  LanguageUtils().ukDateTransformer(cancelDates.marriageAllowanceEndDate)
@@ -33,7 +34,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
  LanguageUtils().ukDateTransformer(cancelDates.personalAllowanceEffectiveDate)
 }
 
-@templates.tamc_main(
+@main(
 title = messages("title.pattern", messages("pages.cancel.title")),
 mainConfig = views.helpers.MainConfig()
 ) {

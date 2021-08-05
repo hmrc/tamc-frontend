@@ -16,7 +16,9 @@
 
 @import config.ApplicationConfig
 
-@(formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)(implicit messages: Messages, request: Request[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(implicit templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
+@(formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)(implicit messages: Messages, request: Request[_])
 
 
 @import uk.gov.hmrc.play.views.html.layouts

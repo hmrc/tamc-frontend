@@ -24,18 +24,18 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class AuthorisationController @Inject()(
-                                         unauthenticatedAction: UnauthenticatedActionTransformer,
-                                         appConfig: ApplicationConfig,
-                                         cc: MessagesControllerComponents
-                                       )(implicit templateRenderer: TemplateRenderer,
-                                         formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  unauthenticatedAction: UnauthenticatedActionTransformer,
+  appConfig: ApplicationConfig,
+  cc: MessagesControllerComponents,
+  otherWays: views.html.errors.other_ways,
+  sessionTimeoutV: views.html.errors.session_timeout)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   val logoutUrl: String = appConfig.logoutUrl
   val logoutCallbackUrl: String = appConfig.logoutCallbackUrl
 
   def notAuthorised = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.errors.other_ways())
+      Ok(otherWays())
   }
 
   def logout = unauthenticatedAction {
@@ -45,6 +45,6 @@ class AuthorisationController @Inject()(
 
   def sessionTimeout = unauthenticatedAction {
     implicit request =>
-      Ok(views.html.errors.session_timeout())
+      Ok(sessionTimeoutV())
   }
 }
