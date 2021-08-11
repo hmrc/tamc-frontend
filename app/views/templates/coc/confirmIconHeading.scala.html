@@ -14,9 +14,12 @@
  * limitations under the License.
  *@
 
+@import views.helpers.LanguageUtils
+
+@this()
+
 @(messageKey: String, relevantDate: Option[java.time.LocalDate] = None)(implicit messages: Messages)
 
-@import views.helpers.LanguageUtils
 
 <p>
     @relevantDate match {

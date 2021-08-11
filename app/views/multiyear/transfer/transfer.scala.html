@@ -20,9 +20,14 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
 
-@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(
+main: templates.tamc_main,
+formErrorNotification: templates.form_error_notification,
+recipientForm: Form[models.RecipientDetailsFormInput],
+inputV: templates.input,
+inputRadioGroupV: templates.input_radio_group)
 
-@(recipientForm: Form[models.RecipientDetailsFormInput])(
+@()(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -36,7 +41,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 
     <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>
 
-    @templates.form_error_notification(recipientForm)
+    @formErrorNotification(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
     </header>
@@ -45,7 +50,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
     @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
         <fieldset>
             <div class="form-group">
-                @templates.input(recipientForm("name"),
+                @inputV(recipientForm("name"),
                 '_label -> Html(Messages("pages.form.field.name")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",
@@ -53,7 +58,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
                 )
             </div>
             <div class="form-group">
-                @templates.input(recipientForm("last-name"),
+                @inputV(recipientForm("last-name"),
                 '_label -> Html(Messages("pages.form.field.last-name")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",
@@ -61,7 +66,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
                 )
             </div>
             <div class="form-group">
-                @templates.input_radio_group(
+                @inputRadioGroupV(
                 recipientForm("gender"),
                 Seq((Gender("M").gender, Messages("pages.form.field.gender.male")), (Gender("F").gender,
                 Messages("pages.form.field.gender.female"))),
@@ -73,7 +78,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
                 )
             </div>
             <div class="form-group">
-                @templates.input(recipientForm("nino"),
+                @inputV(recipientForm("nino"),
                 '_label -> Html(Messages("pages.form.field.nino")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",

@@ -22,10 +22,9 @@
 @import views.html.templates._
 @import models.auth.UserRequest
 
-@this(implicit main: templates.tamc_main, templateRenderer: TemplateRenderer)
+@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput], inputRadioGroupV: templates.input_radio_group)
 
 @(
-    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
     scottishResident: Boolean
 )(
     implicit messages: Messages, request: UserRequest[_], formPartialRetriever: FormPartialRetriever
@@ -45,7 +44,7 @@
     <a href="@controllers.routes.EligibilityController.lowerEarnerCheck"
        class="link-back">@Html(Messages("generic.back"))</a>
 
-    @form_error_notification(
+    @formErrorNotification(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
         lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
@@ -66,7 +65,7 @@
     @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
         <div class="form-group inline">
-            @input_radio_group(
+            @inputRadioGroupV(
             partnersIncomeFormInput("partners-income"),
             Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
             '_legend -> Html(Messages("eligibility.check.partners.income.h1",

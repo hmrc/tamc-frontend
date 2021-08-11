@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *@
-
-@(formItem: Form[_], fieldName: String, label: Html, extraClass: Option[String], args: (Symbol, Any)*)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
-
 @import play.api.i18n._
 @import views.html.helper.FieldElements
+
+@this(dateFieldsContentV: dateFieldsContent)
+
+@(formItem: Form[_], fieldName: String, label: Html, extraClass: Option[String], args: (Symbol, Any)*)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+
 
 @elements = @{
 new FieldElements(formItem(fieldName).id, formItem(fieldName), null, args.toMap, messages)
@@ -41,7 +43,7 @@ new FieldElements(formItem(fieldName).id, formItem(fieldName), null, args.toMap,
             @elements.label
         </span>
         <div class="no-touch native-date-picker form-date" id="date-fields">
-            @dateFieldsContent(formItem, fieldName)
+            @dateFieldsContentV(formItem, fieldName)
         </div>
     </div>
 </fieldset>

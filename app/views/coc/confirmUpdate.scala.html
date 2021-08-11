@@ -16,11 +16,10 @@
 
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.ConfirmUpdateViewModel
-@import templates.coc.confirmSummary
 @import uk.gov.hmrc.play.views.html._
 @import includes.backLink
 
-@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(main: templates.tamc_main, confirmSummaryV: templates.coc.confirmSummary)
 
 @(viewModel: ConfirmUpdateViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -38,7 +37,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confi
      <h1 class="heading-xlarge">@messages("pages.confirm.cancel.heading")</h1>
  </header>
 
- @confirmSummary(viewModel.rows)
+ @confirmSummaryV(viewModel.rows)
 
  <p>@messages("pages.confirm.cancel.message")</p>
 

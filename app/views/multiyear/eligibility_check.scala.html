@@ -19,10 +19,9 @@
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 
-@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification,inputRadioGroupV: templates.input_radio_group, eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])
 
-@(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)]
-)(implicit messages: Messages,
+@()(implicit messages: Messages,
 request: UserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -36,7 +35,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
     <a href="@ApplicationConfig.appConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
 }
 
-@templates.form_error_notification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+@formErrorNotification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
@@ -47,7 +46,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
 
 @helpers.form(action = routes.EligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
 <div class="form-group inline">
-    @templates.input_radio_group(
+    @inputRadioGroupV(
     eligibilityCheckForm("marriage-criteria"),
     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
     '_legend -> Messages("eligibility.check.h1"),

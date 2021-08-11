@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.UserRequest
 
-@this(implicit main: templates.tamc_main, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, inputRadioGroupV: templates.input_radio_group)
 
 @(doYouLiveInScotlandForm: Form[(MultiYearDoYouLiveInScotlandFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
@@ -31,7 +31,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
 <a href="@controllers.routes.EligibilityController.dateOfBirthCheck"
    class="link-back">@Html(Messages("generic.back"))</a>
 
-@templates.form_error_notification(doYouLiveInScotlandForm, formErrorMessage = "pages.form.error.mandatory.data")
+@formErrorNotification(doYouLiveInScotlandForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.do.you.live.in.scotland.h1"))</h1>
@@ -41,7 +41,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
     @helpers.form(action = routes.EligibilityController.doYouLiveInScotlandAction, args = ('id -> "doYouLiveInScotland-form")) {
 
     <div class="form-group inline">
-        @templates.input_radio_group(
+        @inputRadioGroupV(
         doYouLiveInScotlandForm("do-you-live-in-scotland"),
         Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
         '_legend -> Html(messages("eligibility.check.do.you.live.in.scotland.h1")),
