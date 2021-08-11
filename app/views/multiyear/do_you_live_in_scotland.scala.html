@@ -18,7 +18,10 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.UserRequest
 
-@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, inputRadioGroupV: templates.input_radio_group)
+@this(
+main: templates.tamc_main,
+formErrorNotification: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
 
 @(doYouLiveInScotlandForm: Form[(MultiYearDoYouLiveInScotlandFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
@@ -41,7 +44,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
     @helpers.form(action = routes.EligibilityController.doYouLiveInScotlandAction, args = ('id -> "doYouLiveInScotland-form")) {
 
     <div class="form-group inline">
-        @inputRadioGroupV(
+        @inputRadioGroupView(
         doYouLiveInScotlandForm("do-you-live-in-scotland"),
         Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
         '_legend -> Html(messages("eligibility.check.do.you.live.in.scotland.h1")),

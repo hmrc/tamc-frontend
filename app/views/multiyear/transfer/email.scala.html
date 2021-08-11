@@ -21,11 +21,12 @@
 @this(
 main: templates.tamc_main,
 formErrorNotification: templates.form_error_notification,
-inputV: templates.input,
-recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])
+inputV: templates.input)
 
-@(name: Option[models.CitizenName] = None)(
-implicit messages: Messages,
+@(
+recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress],
+name: Option[models.CitizenName] = None)(implicit
+messages: Messages,
 request: AuthenticatedUserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 

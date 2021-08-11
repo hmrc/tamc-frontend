@@ -22,10 +22,9 @@
 @this(
 main: templates.tamc_main,
 formErrorNotification: templates.form_error_notification,
-dateFieldsV: templates.dateFields,
-marriageForm: Form[models.DateOfMarriageFormInput])
+dateFieldsV: templates.dateFields)
 
-@()(
+@(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)

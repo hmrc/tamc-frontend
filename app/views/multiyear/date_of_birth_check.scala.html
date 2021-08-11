@@ -19,7 +19,10 @@
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 
-@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, inputRadioGroupV: templates.input_radio_group)
+@this(
+main: templates.tamc_main,
+formErrorNotification: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
 
 @(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -41,7 +44,7 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 
 @helpers.form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
 <div class="form-group inline">
-    @inputRadioGroupV(
+    @inputRadioGroupView(
     dateofBirthCheckForm("date-of-birth"),
     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
     '_legend -> Html(Messages("eligibility.check.date.of.birth.legend")),

@@ -22,9 +22,13 @@
 @import views.html.templates._
 @import models.auth.UserRequest
 
-@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput], inputRadioGroupV: templates.input_radio_group)
+@this(
+main: templates.tamc_main,
+formErrorNotification: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
 
 @(
+    partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
     scottishResident: Boolean
 )(
     implicit messages: Messages, request: UserRequest[_], formPartialRetriever: FormPartialRetriever
@@ -65,7 +69,7 @@
     @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
         <div class="form-group inline">
-            @inputRadioGroupV(
+            @inputRadioGroupView(
             partnersIncomeFormInput("partners-income"),
             Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
             '_legend -> Html(Messages("eligibility.check.partners.income.h1",

@@ -23,11 +23,10 @@
 @this(
 main: templates.tamc_main,
 formErrorNotification: templates.form_error_notification,
-recipientForm: Form[models.RecipientDetailsFormInput],
 inputV: templates.input,
-inputRadioGroupV: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group)
 
-@()(
+@(recipientForm: Form[models.RecipientDetailsFormInput])(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -66,7 +65,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
                 )
             </div>
             <div class="form-group">
-                @inputRadioGroupV(
+                @inputRadioGroupView(
                 recipientForm("gender"),
                 Seq((Gender("M").gender, Messages("pages.form.field.gender.male")), (Gender("F").gender,
                 Messages("pages.form.field.gender.female"))),

@@ -23,7 +23,7 @@
 @import java.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 
-@this(main: templates.tamc_main)
+@this(main: templates.tamc_main, ninoRendererView: templates.ninoRenderer)
 
 @(data: models.ConfirmationModel)(
 implicit messages: Messages,
@@ -75,7 +75,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         </div>
         <div class="govuk-summary-list_row grey-underline-large-thick">
             <dt class="govuk-summary-list_key">@Html(Messages("generic.nino-full"))</dt>
-            <dd class="govuk-summary-list_value" id="recipient-nino">@templates.ninoRenderer(data.recipientNino)</dd>
+            <dd class="govuk-summary-list_value" id="recipient-nino">@ninoRendererView(data.recipientNino)</dd>
             <dd class="govuk-summary-list_actions">&nbsp;</dd>
         </div>
     </dl>

@@ -22,7 +22,7 @@
 @this(
 main: templates.tamc_main,
 formErrorNotification: templates.form_error_notification,
-inputRadioGroupV: templates.input_radio_group,
+inputRadioGroupView: templates.input_radio_group,
 inputV: templates.input,
 calculatorResultV: templates.calculator_result,
 calculatorForm: Form[models.EligibilityCalculatorInput])
@@ -55,7 +55,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
 
     <div class="form-group">
-        @inputRadioGroupV(
+        @inputRadioGroupView(
         calculatorForm("country"),
         Seq(
         "england" -> Messages("label.england"),

@@ -22,7 +22,7 @@
 @this(
 main: templates.tamc_main,
 formErrorNotification: templates.form_error_notification,
-inputRadioGroupV: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group)
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
@@ -49,7 +49,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
 
 @helpers.form(action = routes.EligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
 <div class="form-group inline">
-    @inputRadioGroupV(
+    @inputRadioGroupView(
     eligibilityCheckForm("marriage-criteria"),
     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
     '_legend -> Messages("eligibility.check.h1"),

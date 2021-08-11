@@ -20,7 +20,10 @@
 @import forms.coc.MakeChangesDecisionForm
 @import includes.backLink
 
-@this(main: templates.tamc_main)
+@this(
+main: templates.tamc_main,
+formErrorMessageView: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -32,7 +35,7 @@ request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.par
 ){
 
     @backLink()
-    @templates.form_error_notification(makeChangesDecisionForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @formErrorMessageView(makeChangesDecisionForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.makeChanges.heading")</h1>
@@ -41,7 +44,7 @@ request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.par
     @helpers.form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
 
       <div class="form-group">
-        @templates.input_radio_group(
+        @inputRadioGroupView(
           makeChangesDecisionForm(MakeChangesDecisionForm.StopMAChoice),
           Seq((MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
                (MakeChangesDecisionForm.Earnings, messages("pages.makeChanges.radio.incomeChanges")),

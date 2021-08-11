@@ -23,7 +23,10 @@
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 
-@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, inputRadioGroupV: templates.input_radio_group)
+@this(
+main: templates.tamc_main,
+formErrorNotification: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
 
 @(earlierYearsForm: Form[models.EarlierYearsInput],
 input: RegistrationFormInput,
@@ -81,7 +84,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
                 LanguageUtils().taxDateIntervalShort(availableYears.head.year),
                 input.name, currencyFormatter(ApplicationConfig.appConfig.MAX_BENEFIT(availableYears.head.year))))</p>
 
-        @inputRadioGroupV(
+        @inputRadioGroupView(
             earlierYearsForm("selectedYear"),
             Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
             '_labelClass -> "block-label",
