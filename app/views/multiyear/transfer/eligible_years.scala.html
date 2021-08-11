@@ -24,7 +24,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group)
 
 @(
@@ -45,7 +45,7 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
 
 <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
 
-@formErrorNotification(form)
+@formErrorNotificationView(form)
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("title.eligible-years"))</h1>

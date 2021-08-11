@@ -21,7 +21,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group)
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])(implicit messages: Messages,
@@ -38,7 +38,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
     <a href="@ApplicationConfig.appConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
 }
 
-@formErrorNotification(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+@formErrorNotificationView(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>

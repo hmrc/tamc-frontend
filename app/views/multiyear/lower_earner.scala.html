@@ -23,7 +23,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group)
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
@@ -33,7 +33,7 @@ inputRadioGroupView: templates.input_radio_group)
     title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE())))
 ){
 
-    @formErrorNotification(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))
+    @formErrorNotificationView(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))
     <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
 
     <header class="page-heading">

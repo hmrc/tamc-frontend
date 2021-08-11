@@ -20,8 +20,8 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
-inputV: templates.input)
+formErrorNotificationView: templates.form_error_notification,
+inputView: templates.input)
 
 @(
 recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress],
@@ -37,14 +37,14 @@ title = Messages("title.application.pattern", Messages("title.confirm-email"))
 <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 
 @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
-@formErrorNotification(recipientForm)
+@formErrorNotificationView(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
     </header>
     <p>@Html(Messages("pages.form.field.yourDetails"))</p>
 
     <div class="form-group">
-        @inputV(recipientForm("transferor-email"),
+        @inputView(recipientForm("transferor-email"),
         '_label -> Html(Messages("pages.form.field.transferor-email")),
         '_labelClass -> "form-label",
         '_inputClass -> "form-control",

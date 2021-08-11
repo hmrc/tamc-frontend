@@ -23,7 +23,9 @@
 @import java.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
 
-@this(main: templates.tamc_main, ninoRendererView: templates.ninoRenderer)
+@this(
+main: templates.tamc_main,
+ninoRendererView: templates.ninoRenderer)
 
 @(data: models.ConfirmationModel)(
 implicit messages: Messages,

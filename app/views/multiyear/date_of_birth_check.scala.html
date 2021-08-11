@@ -21,7 +21,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group)
 
 @(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -34,7 +34,7 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 <a href="@controllers.routes.EligibilityController.eligibilityCheck"
    class="link-back">@Html(Messages("generic.back"))</a>
 
-@formErrorNotification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+@formErrorNotificationView(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.date.of.birth.h1"))</h1>

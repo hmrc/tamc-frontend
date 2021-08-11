@@ -22,8 +22,8 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
-inputV: templates.input,
+formErrorNotificationView: templates.form_error_notification,
+inputView: templates.input,
 inputRadioGroupView: templates.input_radio_group)
 
 @(recipientForm: Form[models.RecipientDetailsFormInput])(
@@ -40,7 +40,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 
     <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>
 
-    @formErrorNotification(recipientForm)
+    @formErrorNotificationView(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
     </header>
@@ -49,7 +49,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
     @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
         <fieldset>
             <div class="form-group">
-                @inputV(recipientForm("name"),
+                @inputView(recipientForm("name"),
                 '_label -> Html(Messages("pages.form.field.name")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",
@@ -57,7 +57,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
                 )
             </div>
             <div class="form-group">
-                @inputV(recipientForm("last-name"),
+                @inputView(recipientForm("last-name"),
                 '_label -> Html(Messages("pages.form.field.last-name")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",
@@ -77,7 +77,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
                 )
             </div>
             <div class="form-group">
-                @inputV(recipientForm("nino"),
+                @inputView(recipientForm("nino"),
                 '_label -> Html(Messages("pages.form.field.nino")),
                 '_labelClass -> "form-label",
                 '_inputClass -> "form-control",

@@ -25,7 +25,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group)
 
 @(earlierYearsForm: Form[models.EarlierYearsInput],
@@ -51,7 +51,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 <a href="@controllers.routes.TransferController.eligibleYearsAction"
   class="link-back">@Html(Messages("generic.back"))</a>
 
-    @formErrorNotification(earlierYearsForm)
+    @formErrorNotificationView(earlierYearsForm)
 
     <header class="page-heading">
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>

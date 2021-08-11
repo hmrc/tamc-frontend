@@ -21,7 +21,10 @@
 @import forms.coc.DivorceSelectYearForm
 @import includes.backLink
 
-@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, dateFieldV: templates.dateFields)
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+dateFieldView: templates.dateFields)
 
 @(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -34,7 +37,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     @backLink()
 
-    @formErrorNotification(divorceSelectYearForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @formErrorNotificationView(divorceSelectYearForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.divorce.title")</h1>
@@ -45,7 +48,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     @helpers.form(action = routes.UpdateRelationshipController.submitDivorceEnterYear, args = ('id -> "")) {
 
         <div class="form-group">
-            @dateFieldV(
+            @dateFieldView(
             divorceSelectYearForm,
             DivorceSelectYearForm.DateOfDivorce,
             Html(""),

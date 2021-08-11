@@ -20,7 +20,10 @@
 @import models.auth.AuthenticatedUserRequest
 @import includes.backLink
 
-@this(main: templates.tamc_main, inputV: templates.input, formErrorNotification: templates.form_error_notification)
+@this(
+main: templates.tamc_main,
+inputView: templates.input,
+formErrorNotificationView: templates.form_error_notification)
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -36,7 +39,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 @backLink()
 
 @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
-@formErrorNotification(recipientForm)
+@formErrorNotificationView(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.form.field.your-confirmation")</h1>
     </header>
@@ -45,7 +48,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
     <p>@messages("change.status.confirm.more.info")</p>
 
     <div class="form-group">
-        @inputV(recipientForm("transferor-email"),
+        @inputView(recipientForm("transferor-email"),
         '_label -> Html(messages("pages.form.field.transferor-email")),
         '_labelClass -> "form-label",
         '_inputClass -> "form-control",

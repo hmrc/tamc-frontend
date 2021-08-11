@@ -19,7 +19,10 @@
 @import forms.coc.CheckClaimOrCancelDecisionForm
 @import includes.backLink
 
-@this(main: templates.tamc_main, inputRadioGroupView: templates.input_radio_group, formErrorNotification: templates.form_error_notification)
+@this(
+main: templates.tamc_main,
+inputRadioGroupView: templates.input_radio_group,
+formErrorNotificationView: templates.form_error_notification)
 
 @(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -29,7 +32,7 @@ mainConfig = views.helpers.MainConfig()
 ) {
 
     @backLink()
-    @formErrorNotification(decisionForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @formErrorNotificationView(decisionForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.decision.title")</h1>

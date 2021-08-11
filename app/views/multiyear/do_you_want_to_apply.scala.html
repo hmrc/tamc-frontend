@@ -22,7 +22,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group)
 
 @(doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput])(implicit
@@ -37,7 +37,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
 
 <a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
 
-@formErrorNotification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
+@formErrorNotificationView(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Messages("eligibility.check.do.you.want.to.apply.h1")</h1>

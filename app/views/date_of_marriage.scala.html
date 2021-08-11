@@ -21,7 +21,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 dateFieldsV: templates.dateFields)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
@@ -37,7 +37,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 
 <a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(messages("generic.back"))</a>
 
-@formErrorNotification(marriageForm)
+@formErrorNotificationView(marriageForm)
 
 <h1 class="heading-xlarge">@Html(messages("pages.date-of-marriage.heading"))</h1>
 

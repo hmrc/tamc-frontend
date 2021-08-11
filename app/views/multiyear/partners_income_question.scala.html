@@ -24,7 +24,7 @@
 
 @this(
 main: templates.tamc_main,
-formErrorNotification: templates.form_error_notification,
+formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group)
 
 @(
@@ -48,7 +48,7 @@ inputRadioGroupView: templates.input_radio_group)
     <a href="@controllers.routes.EligibilityController.lowerEarnerCheck"
        class="link-back">@Html(Messages("generic.back"))</a>
 
-    @formErrorNotification(
+    @formErrorNotificationView(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
         lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
