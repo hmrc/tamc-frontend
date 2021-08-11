@@ -21,9 +21,12 @@
 @import java.text.NumberFormat
 @import models.auth.UserRequest
 
-@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification, inputRadioGroupV: templates.input_radio_group,lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])
+@this(
+main: templates.tamc_main,
+formErrorNotification: templates.form_error_notification,
+inputRadioGroupV: templates.input_radio_group)
 
-@()(
+@(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
     implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(

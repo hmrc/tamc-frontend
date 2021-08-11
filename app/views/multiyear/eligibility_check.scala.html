@@ -19,9 +19,12 @@
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 
-@this(main: templates.tamc_main, formErrorNotification: templates.form_error_notification,inputRadioGroupV: templates.input_radio_group, eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])
+@this(
+main: templates.tamc_main,
+formErrorNotification: templates.form_error_notification,
+inputRadioGroupV: templates.input_radio_group)
 
-@()(implicit messages: Messages,
+@(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
