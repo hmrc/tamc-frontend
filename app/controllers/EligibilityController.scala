@@ -47,7 +47,7 @@ class EligibilityController @Inject()(
   lowerEarner: views.html.multiyear.lower_earner,
   partnersIncomeQuestion: views.html.multiyear.partners_income_question,
   doYouWantToApplyV: views.html.multiyear.do_you_want_to_apply,
-  calculator: views.html.pta.calculator)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  calculator: views.html.calculator)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>

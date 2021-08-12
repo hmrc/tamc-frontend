@@ -64,6 +64,9 @@ class RoutesTest extends ControllerBaseTest {
       status(result) shouldBe OK
 
       val document = Jsoup.parse(contentAsString(result))
+
+      println(contentAsString(result))
+
       val previous = document.getElementById("previous")
       previous shouldNot be(null)
       previous.attr("href") shouldBe "https://www.gov.uk/marriage-allowance-guide/how-it-works"
