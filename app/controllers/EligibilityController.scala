@@ -25,14 +25,14 @@ import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
 import forms.MultiYearLowerEarnerForm.lowerEarnerForm
 import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
-import javax.inject.Inject
 import models.Country
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.isScottishResident
-import views.html.multiyear.eligibility_check
+
+import javax.inject.Inject
 
 class EligibilityController @Inject()(
   unauthenticatedAction: UnauthenticatedActionTransformer,
@@ -47,7 +47,8 @@ class EligibilityController @Inject()(
   lowerEarner: views.html.multiyear.lower_earner,
   partnersIncomeQuestion: views.html.multiyear.partners_income_question,
   doYouWantToApplyV: views.html.multiyear.do_you_want_to_apply,
-  calculator: views.html.calculator)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  calculator: views.html.calculator,
+  ptaCalculator: views.html.pta.calculator)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
@@ -190,16 +191,16 @@ class EligibilityController @Inject()(
 
   def ptaCalculator(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(calculator(calculatorForm = calculatorForm))
+      Ok(ptaCalculator(calculatorForm = calculatorForm))
   }
 
   def ptaCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       calculatorForm.bindFromRequest.fold(
         formWithErrors =>
-          BadRequest(calculator(calculatorForm = formWithErrors)),
+          BadRequest(ptaCalculator(calculatorForm = formWithErrors)),
         calculatorInput =>
-          Ok(calculator(
+          Ok(ptaCalculator(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
               calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
