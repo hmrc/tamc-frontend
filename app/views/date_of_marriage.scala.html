@@ -22,7 +22,7 @@
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-dateFieldsV: templates.dateFields)
+dateFieldsView: templates.dateFields)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
@@ -47,7 +47,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 @helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 
 <div class="form-group">
-  @dateFieldsV(
+  @dateFieldsView(
     marriageForm,
     "dateOfMarriage",
     Html(messages("pages.date-of-marriage.h2")),

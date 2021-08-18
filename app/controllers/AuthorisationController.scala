@@ -27,15 +27,15 @@ class AuthorisationController @Inject()(
   unauthenticatedAction: UnauthenticatedActionTransformer,
   appConfig: ApplicationConfig,
   cc: MessagesControllerComponents,
-  otherWays: views.html.errors.other_ways,
-  sessionTimeoutV: views.html.errors.session_timeout)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  otherWaysView: views.html.errors.other_ways,
+  sessionTimeoutView: views.html.errors.session_timeout)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   val logoutUrl: String = appConfig.logoutUrl
   val logoutCallbackUrl: String = appConfig.logoutCallbackUrl
 
   def notAuthorised = unauthenticatedAction {
     implicit request =>
-      Ok(otherWays())
+      Ok(otherWaysView())
   }
 
   def logout = unauthenticatedAction {
@@ -45,6 +45,6 @@ class AuthorisationController @Inject()(
 
   def sessionTimeout = unauthenticatedAction {
     implicit request =>
-      Ok(sessionTimeoutV())
+      Ok(sessionTimeoutView())
   }
 }
