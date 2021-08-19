@@ -19,13 +19,17 @@
 @import views.helpers.LanguageUtils
 @import models.auth.AuthenticatedUserRequest
 
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+dateFieldsView: templates.dateFields)
+
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = messages("title.application.pattern", messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
@@ -33,7 +37,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 
 <a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(messages("generic.back"))</a>
 
-@templates.form_error_notification(marriageForm)
+@formErrorNotificationView(marriageForm)
 
 <h1 class="heading-xlarge">@Html(messages("pages.date-of-marriage.heading"))</h1>
 
@@ -43,7 +47,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 @helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 
 <div class="form-group">
-  @templates.dateFields(
+  @dateFieldsView(
     marriageForm,
     "dateOfMarriage",
     Html(messages("pages.date-of-marriage.h2")),

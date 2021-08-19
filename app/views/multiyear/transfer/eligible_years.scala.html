@@ -22,7 +22,13 @@
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
-@(form: Form[models.CurrentYearInput],
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
+
+@(
+form: Form[models.CurrentYearInput],
 historicYearsAvailable: Boolean,
 recipientName: String,
 dom: Option[java.time.LocalDate],
@@ -30,17 +36,16 @@ cy: Option[java.time.LocalDate]
 )(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@templates.tamc_main(
+@main(
 title = Messages("title.application.pattern", Messages("title.eligible-years"))
 ){
 
 <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
 
-@templates.form_error_notification(form)
+@formErrorNotificationView(form)
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("title.eligible-years"))</h1>
@@ -66,7 +71,7 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
     @helpers.form(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
     <div @if(historicYearsAvailable) {class="form-group" } id="apply-For-CurrentYear">
         <h3 class="heading-small">@Html(Messages("pages.eligibleyear.doyou.want"))</h3>
-        @templates.input_radio_group(
+        @inputRadioGroupView(
         form("applyForCurrentYear"),
         Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
         '_labelClass -> "block-label",

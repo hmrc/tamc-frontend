@@ -17,10 +17,11 @@
 @import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
 
-@(userEmailAddress: String)(implicit messages: Messages, request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@this(main: templates.tamc_main)
 
-@templates.tamc_main(
+@(userEmailAddress: String)(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@main(
 title = messages("title.pattern", messages("title.change.complete")),
 manageService = true,
 mainConfig = views.helpers.MainConfig(maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))) {

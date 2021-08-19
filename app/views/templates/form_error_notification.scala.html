@@ -14,10 +14,13 @@
  * limitations under the License.
  *@
 
-@(form: Form[_], formErrorMessage: String = "pages.form.error.confirm.data",
-    lowerLimit: Option[Int] = None,
-    upperLimit: Option[Int] = None)(implicit messages: Messages)
 @import play.twirl.api.Html
+
+@this()
+
+@(form: Form[_], formErrorMessage: String = "pages.form.error.confirm.data",
+lowerLimit: Option[Int] = None,
+upperLimit: Option[Int] = None)(implicit messages: Messages)
 
 @if(form.hasErrors) {
 <div id="errors" tabindex="-1" role="group" aria-labelledby="form-error-heading"

@@ -16,9 +16,9 @@
 
 package metrics
 
-import com.codahale.metrics.Timer.Context
 import com.codahale.metrics.MetricRegistry
-import com.google.inject.{Inject, Singleton}
+import com.codahale.metrics.Timer.Context
+import com.google.inject.Inject
 
 class Metrics @Inject()(metrics: com.kenshoo.play.metrics.Metrics) {
 

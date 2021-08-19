@@ -18,12 +18,13 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
+@this(main: templates.tamc_main)
+
 @()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.pattern", Messages("title.bereavement")),
 manageService = true,
 mainConfig = views.helpers.MainConfig()

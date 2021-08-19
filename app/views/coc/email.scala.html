@@ -20,12 +20,16 @@
 @import models.auth.AuthenticatedUserRequest
 @import includes.backLink
 
+@this(
+main: templates.tamc_main,
+inputView: templates.input,
+formErrorNotificationView: templates.form_error_notification)
+
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.application.pattern", Messages("title.confirm-email")),
 manageService = true,
 mainConfig = views.helpers.MainConfig(
@@ -35,7 +39,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 @backLink()
 
 @helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
-@templates.form_error_notification(recipientForm)
+@formErrorNotificationView(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.form.field.your-confirmation")</h1>
     </header>
@@ -44,7 +48,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
     <p>@messages("change.status.confirm.more.info")</p>
 
     <div class="form-group">
-        @templates.input(recipientForm("transferor-email"),
+        @inputView(recipientForm("transferor-email"),
         '_label -> Html(messages("pages.form.field.transferor-email")),
         '_labelClass -> "form-label",
         '_inputClass -> "form-control",

@@ -19,18 +19,25 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.UserRequest
 
-@(calculatorForm: Form[models.EligibilityCalculatorInput],
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group,
+inputView: templates.input,
+calculatorResultView: templates.calculator_result)
+
+@(
+calculatorForm: Form[models.EligibilityCalculatorInput],
 calculationResult: Option[models.EligibilityCalculatorResult] = None
 )(
 implicit messages: Messages,
 request: UserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 ){
-@templates.form_error_notification(calculatorForm)
+@formErrorNotificationView(calculatorForm)
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
@@ -48,7 +55,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
 
     <div class="form-group">
-        @input_radio_group(
+        @inputRadioGroupView(
         calculatorForm("country"),
         Seq(
         "england" -> Messages("label.england"),
@@ -62,7 +69,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
     </div>
 
     <div class="form-group">
-        @templates.input(calculatorForm("transferor-income"),
+        @inputView(calculatorForm("transferor-income"),
         '_label -> Html(Messages("pages.form.field.income")),
         '_labelClass -> "form-label-bold",
         '_inputClass -> "form-control",
@@ -71,7 +78,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
         )
     </div>
     <div class="form-group">
-        @templates.input(calculatorForm("recipient-income"),
+        @inputView(calculatorForm("recipient-income"),
         '_label -> Html(Messages("pages.form.field.recipient-income")),
         '_labelClass -> "form-label-bold",
         '_inputClass -> "form-control",
@@ -82,7 +89,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 </fieldset>
 
 
-@templates.calculator_result(calculationResult)
+@calculatorResultView(calculationResult)
 
 
     <button class="button button-calculate" data-journey-click="marriage-allowance:button:calculate" id="calculate"

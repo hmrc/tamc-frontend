@@ -21,8 +21,8 @@ import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
 import models.auth.AuthenticatedUserRequest
-import java.time.LocalDate
 
+import java.time.LocalDate
 import controllers.actions.AuthenticatedActionRefiner
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -31,7 +31,7 @@ import org.mockito.Mockito._
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
+import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
 import services._
 import test_utils._
@@ -47,7 +47,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
-class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper {
+class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
   val generatedNino: Nino = new Generator().nextNino
   val mockTransferService: TransferService = mock[TransferService]
@@ -81,6 +81,23 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
   lazy val controller = app.injector.instanceOf[UpdateRelationshipController]
 
+  val tryLaterView = inject[views.html.errors.try_later]
+  val historySummaryView = inject[views.html.coc.history_summary]
+  val transferNotFoundView = inject[views.html.errors.transferor_not_found]
+  val citizenNotFoundView = inject[views.html.errors.citizen_not_found]
+  val decisionView = inject[views.html.coc.decision]
+  val claimsView = inject[views.html.coc.claims]
+  val reasonForChangeView = inject[views.html.coc.reason_for_change]
+  val stopAllowanceView = inject[views.html.coc.stopAllowance]
+  val bereavementView = inject[views.html.coc.bereavement]
+  val changeInEarningsView = inject[views.html.coc.change_in_earnings]
+  val cancelView = inject[views.html.coc.cancel]
+  val divorceSelectYearView = inject[views.html.coc.divorce_select_year]
+  val divorceEndExplanationView = inject[views.html.coc.divorce_end_explanation]
+  val emailView = inject[views.html.coc.email]
+  val confirmUpdateView = inject[views.html.coc.confirmUpdate]
+  val finishedView = inject[views.html.coc.finished]
+
   "history" should {
 
     "display the history summary page with a status of OK" in {
@@ -99,7 +116,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.history()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.history_summary(historySummaryViewModel)
+      result rendersTheSameViewAs historySummaryView(historySummaryViewModel)
     }
   }
   "History" should {
@@ -121,7 +138,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs views.html.errors.transferor_not_found()
+        result rendersTheSameViewAs transferNotFoundView()
       }
 
       "a BadFetchRequest error is returned " in {
@@ -130,7 +147,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
 
       "a CitizenNotFound error is returned " in {
@@ -139,7 +156,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs views.html.errors.citizen_not_found()
+        result rendersTheSameViewAs citizenNotFoundView()
       }
 
       "a MultipleActiveRecordError error is returned " in {
@@ -148,7 +165,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
   }
@@ -161,7 +178,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val result = controller.decision(request)
       status(result) shouldBe OK
-      result rendersTheSameViewAs views.html.coc.decision(validFormWithData)
+      result rendersTheSameViewAs decisionView(validFormWithData)
 
     }
 
@@ -173,7 +190,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.decision(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs views.html.coc.decision(validForm)
+        result rendersTheSameViewAs decisionView(validForm)
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -184,7 +201,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val validForm = CheckClaimOrCancelDecisionForm.form
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs views.html.coc.decision(validForm)
+        result rendersTheSameViewAs decisionView(validForm)
       }
     }
   }
@@ -247,7 +264,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.claims(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.claims(claimsViewModel)
+      result rendersTheSameViewAs claimsView(claimsViewModel)
     }
 
     "display an error page" when {
@@ -257,7 +274,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
 
@@ -271,7 +288,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form.fill(Some(userAnswer)))
+        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form.fill(Some(userAnswer)))
       }
 
       "there is no data in the cache" in {
@@ -279,7 +296,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
+        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form)
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -287,7 +304,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
+        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form)
       }
     }
   }
@@ -408,7 +425,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.stopAllowance(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.stopAllowance()
+      result rendersTheSameViewAs stopAllowanceView()
     }
   }
 
@@ -425,7 +442,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.cancel(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.cancel(marriageAllowanceEndingDates)
+      result rendersTheSameViewAs cancelView(marriageAllowanceEndingDates)
     }
 
     "display an error page" when {
@@ -435,7 +452,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
   }
@@ -445,7 +462,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result  = controller.changeOfIncome(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.change_in_earnings()
+      result rendersTheSameViewAs changeInEarningsView()
     }
   }
 
@@ -458,7 +475,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.bereavement(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs views.html.coc.bereavement(relationshipRecords.primaryRecord.role)
+        result rendersTheSameViewAs bereavementView(relationshipRecords.primaryRecord.role)
 
       }
 
@@ -469,7 +486,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           val result = controller.bereavement(request)
           status(result) shouldBe INTERNAL_SERVER_ERROR
 
-          result rendersTheSameViewAs views.html.errors.try_later()
+          result rendersTheSameViewAs tryLaterView()
         }
       }
     }
@@ -486,7 +503,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.divorceEnterYear(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs views.html.coc.divorce_select_year(DivorceSelectYearForm.form.fill(divorceDateInThePast))
+        result rendersTheSameViewAs divorceSelectYearView(DivorceSelectYearForm.form.fill(divorceDateInThePast))
       }
 
       "there is no data in the cache" in {
@@ -496,7 +513,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.divorceEnterYear(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs views.html.coc.divorce_select_year(DivorceSelectYearForm.form)
+        result rendersTheSameViewAs divorceSelectYearView(DivorceSelectYearForm.form)
       }
 
     }
@@ -506,7 +523,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
-      result rendersTheSameViewAs views.html.coc.reason_for_change(MakeChangesDecisionForm.form)
+      result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form)
     }
   }
 
@@ -557,7 +574,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitDivorceEnterYear(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
   }
@@ -587,7 +604,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.divorceEndExplanation()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.divorce_end_explanation(viewModel)
+      result rendersTheSameViewAs divorceEndExplanationView(viewModel)
 
     }
 
@@ -601,7 +618,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.divorceEndExplanation()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
 
       "an error has occurred whilst saving cache data" in {
@@ -625,7 +642,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.divorceEndExplanation()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
 
@@ -644,7 +661,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val populatedForm = emailForm.fill(EmailAddress(email))
 
-        result rendersTheSameViewAs views.html.coc.email(populatedForm)
+        result rendersTheSameViewAs emailView(populatedForm)
 
       }
 
@@ -654,7 +671,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.confirmEmail(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs views.html.coc.email(emailForm)
+        result rendersTheSameViewAs emailView(emailForm)
       }
 
       "fail to get data from cache" in {
@@ -663,7 +680,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.confirmEmail(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs views.html.coc.email(emailForm)
+        result rendersTheSameViewAs emailView(emailForm)
 
       }
     }
@@ -699,7 +716,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
   }
@@ -724,7 +741,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.confirmUpdate()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.confirmUpdate(ConfirmUpdateViewModel(confirmUpdateAnswers))
+      result rendersTheSameViewAs confirmUpdateView(ConfirmUpdateViewModel(confirmUpdateAnswers))
 
     }
 
@@ -764,7 +781,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.submitConfirmUpdate(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
   }
@@ -783,7 +800,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.finishUpdate()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs views.html.coc.finished(email)
+      result rendersTheSameViewAs finishedView(email)
 
     }
 
@@ -795,7 +812,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.submitConfirmUpdate(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
 
-        result rendersTheSameViewAs views.html.errors.try_later()
+        result rendersTheSameViewAs tryLaterView()
       }
     }
   }

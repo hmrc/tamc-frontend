@@ -14,10 +14,13 @@
  * limitations under the License.
  *@
 
-@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import play.api.i18n._
 @import views.html.helper._
+
+@this()
+
+@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
 
 @elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
 @parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}

@@ -18,27 +18,33 @@
 @import uk.gov.hmrc.play.views.html._
 @import models.auth.AuthenticatedUserRequest
 
-@(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress], name: Option[models.CitizenName] = None)(
-implicit messages: Messages,
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+inputView: templates.input)
+
+@(
+recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress],
+name: Option[models.CitizenName] = None)(implicit
+messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.application.pattern", Messages("title.confirm-email"))
 ){
 
 <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 
 @helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
-@templates.form_error_notification(recipientForm)
+@formErrorNotificationView(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
     </header>
     <p>@Html(Messages("pages.form.field.yourDetails"))</p>
 
     <div class="form-group">
-        @templates.input(recipientForm("transferor-email"),
+        @inputView(recipientForm("transferor-email"),
         '_label -> Html(Messages("pages.form.field.transferor-email")),
         '_labelClass -> "form-label",
         '_inputClass -> "form-control",

@@ -20,12 +20,13 @@
 @import views.helpers.LanguageUtils
 @import models.auth.UserRequest
 
+@this(main: templates.tamc_main)
+
 @()(implicit messages: Messages,
 request: UserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = Messages("title.pattern", Messages("title.how-it-works"))
 ){
 

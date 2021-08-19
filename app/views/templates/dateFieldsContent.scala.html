@@ -14,17 +14,20 @@
  * limitations under the License.
  *@
 
-@(formItem:Form[_], fieldName: String)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
-
 @import uk.gov.hmrc.play.mappers.DateFields._
 @import play.api.i18n._
 @import views.html.helper._
 @import uk.gov.hmrc.play.mappers.DateFormatSymbols
 
+@this(dateInputTextView: templates.dateInputText)
+
+@(formItem:Form[_], fieldName: String)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+
 @dayElem = @{ fieldName + "." + day }
 @dayInputId = @{ fieldName + "." + day }
 
-@dateInputText(
+@dateInputTextView(
 formItem(dayElem),
 '_inputId -> dayInputId,
 '_label -> Messages("date.fields.day"),
@@ -36,7 +39,7 @@ formItem(dayElem),
 @monthElem = @{ fieldName + "." + month }
 @monthInputId = @{ fieldName + "." + month }
 
-@dateInputText(
+@dateInputTextView(
 formItem(monthElem),
 '_inputId -> monthInputId,
 '_label -> Messages("date.fields.month"),
@@ -48,7 +51,7 @@ formItem(monthElem),
 @yearElem = @{ fieldName + "." + year }
 @yearInputId = @{ fieldName + "." + year }
 
-@dateInputText(
+@dateInputTextView(
 formItem(yearElem),
 '_inputId -> yearInputId,
 '_label -> Messages("date.fields.year"),

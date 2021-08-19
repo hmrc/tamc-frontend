@@ -16,6 +16,8 @@
 
 @import scala.concurrent.ExecutionContext.Implicits.global
 
+@this()
+
 @(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: config.ApplicationConfig)(implicit request: Request[_])
 
 @if(supportLinkEnabled) {

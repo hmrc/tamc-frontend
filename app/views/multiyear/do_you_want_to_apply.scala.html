@@ -20,22 +20,24 @@
 @import views.html.templates._
 @import models.auth.UserRequest
 
-@(
-doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput]
-)(implicit
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
+
+@(doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput])(implicit
 messages: Messages,
 request: UserRequest[_],
-templateRenderer: TemplateRenderer,
 formPartialRetriever: FormPartialRetriever
 )
 
-@tamc_main(
+@main(
 title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
 ){
 
 <a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
 
-@form_error_notification(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
+@formErrorNotificationView(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Messages("eligibility.check.do.you.want.to.apply.h1")</h1>
@@ -44,7 +46,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
 
 @helpers.form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
 <div class="form-group inline">
-    @input_radio_group(
+    @inputRadioGroupView(
     doYouWantToApplyForm("do-you-want-to-apply"),
     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
     '_legend -> Messages("eligibility.check.do.you.want.to.apply.h1"),

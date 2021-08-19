@@ -27,6 +27,9 @@
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 
+@this(
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+reportProblemV :includes.report_problem)
 
 @(title: String,
  manageService: Boolean = false,
@@ -38,7 +41,6 @@
  scriptElem: Option[Html] = None,
  langSelectorOverride: Option[Map[String, Call]] = None)(mainContent: Html)(implicit messages: Messages,
  request: BaseUserRequest[_],
- templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
  formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever
 )
 
@@ -91,7 +93,7 @@
 }
 
 @getHelpForm = {
- @includes.report_problem(supportLinkEnabled, formPartialRetriever, ApplicationConfig.appConfig)
+ @reportProblemV(supportLinkEnabled, formPartialRetriever, ApplicationConfig.appConfig)
 }
 
 @commonContentHeader = {

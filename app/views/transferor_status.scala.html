@@ -18,12 +18,13 @@
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
 
+@this(main: templates.tamc_main)
+
 @()(implicit messages: Messages,
 request: BaseUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = messages("title.pattern", messages("title.transfer-in-place")),
 mainConfig = views.helpers.MainConfig(
 maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-rel-exists")))

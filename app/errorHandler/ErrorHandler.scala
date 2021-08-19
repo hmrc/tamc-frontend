@@ -26,17 +26,15 @@ import uk.gov.hmrc.play.partials.{FormPartialRetriever, HeaderCarrierForPartials
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ErrorHandler @Inject()(
-                              val messagesApi: MessagesApi,
-                              formPartialRetriever: FormPartialRetriever,
-                              val httpGet: HttpClient,
-                              val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter
-                            )
-                            (implicit
-                             templateRender: TemplateRenderer
-                            ) extends FrontendErrorHandler {
+  val messagesApi: MessagesApi,
+  formPartialRetriever: FormPartialRetriever,
+  val httpGet: HttpClient,
+  val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter,
+  errorTemplate: views.html.templates.error_template,
+  pageNotFoundTemplate: views.html.templates.page_not_found_template) (implicit templateRender: TemplateRenderer) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-    views.html.templates.error_template(pageTitle, heading, message)
+    errorTemplate(pageTitle, heading, message)
 
-  override def notFoundTemplate(implicit request: Request[_]): Html = views.html.templates.page_not_found_template(formPartialRetriever)
+  override def notFoundTemplate(implicit request: Request[_]): Html = pageNotFoundTemplate(formPartialRetriever)
 }

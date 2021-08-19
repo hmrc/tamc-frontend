@@ -23,17 +23,21 @@
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
+
 @(earlierYearsForm: Form[models.EarlierYearsInput],
 input: RegistrationFormInput,
 availableYears: List[TaxYear] = List[TaxYear]()
 )(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@templates.tamc_main(
+@main(
   title = Messages("title.application.pattern",
     Messages("title.confirm-extra-years", LanguageUtils().taxDateIntervalShort(availableYears.head.year))
   ),
@@ -47,7 +51,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 <a href="@controllers.routes.TransferController.eligibleYearsAction"
   class="link-back">@Html(Messages("generic.back"))</a>
 
-    @templates.form_error_notification(earlierYearsForm)
+    @formErrorNotificationView(earlierYearsForm)
 
     <header class="page-heading">
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
@@ -80,7 +84,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
                 LanguageUtils().taxDateIntervalShort(availableYears.head.year),
                 input.name, currencyFormatter(ApplicationConfig.appConfig.MAX_BENEFIT(availableYears.head.year))))</p>
 
-        @templates.input_radio_group(
+        @inputRadioGroupView(
             earlierYearsForm("selectedYear"),
             Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
             '_labelClass -> "block-label",

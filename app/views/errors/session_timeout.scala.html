@@ -16,9 +16,11 @@
 
 @import models.auth.BaseUserRequest
 
-@()(implicit messages: Messages, request: BaseUserRequest[_], templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@this(main: templates.tamc_main)
 
-@templates.tamc_main(
+@()(implicit messages: Messages, request: BaseUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@main(
 title = Messages("title.pattern", Messages("session.timeout.title"))
 ){
 

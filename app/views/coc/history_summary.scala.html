@@ -19,12 +19,13 @@
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.HistorySummaryViewModel
 
+@this(main: templates.tamc_main)
+
 @(viewModel: HistorySummaryViewModel)(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
-@templates.tamc_main(
+@main(
 title = messages("title.pattern", messages("title.history")),
 mainConfig = views.helpers.MainConfig(None)
 ){

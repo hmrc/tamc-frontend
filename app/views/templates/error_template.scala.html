@@ -16,7 +16,9 @@
 
 @import config.ApplicationConfig
 
-@(pageTitle: String, heading: String, message: String)(implicit messages: Messages, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+
+@(pageTitle: String, heading: String, message: String)(implicit messages: Messages)
 
 
 @import uk.gov.hmrc.play.views.html.layouts

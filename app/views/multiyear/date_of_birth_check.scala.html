@@ -19,20 +19,22 @@
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 
-@(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages,
-request: UserRequest[_],
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@this(
+main: templates.tamc_main,
+formErrorNotificationView: templates.form_error_notification,
+inputRadioGroupView: templates.input_radio_group)
+
+@(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
-@templates.tamc_main(
+@main(
 title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 ) {
 
 <a href="@controllers.routes.EligibilityController.eligibilityCheck"
    class="link-back">@Html(Messages("generic.back"))</a>
 
-@templates.form_error_notification(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
+@formErrorNotificationView(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
 
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
@@ -42,7 +44,7 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 
 @helpers.form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
 <div class="form-group inline">
-    @templates.input_radio_group(
+    @inputRadioGroupView(
     dateofBirthCheckForm("date-of-birth"),
     Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
     '_legend -> Html(Messages("eligibility.check.date.of.birth.legend")),
