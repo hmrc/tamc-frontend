@@ -57,7 +57,7 @@ class EligibilityController @Inject()(
 
   def home: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Redirect(controllers.routes.EligibilityController.eligibilityCheck())
+      Redirect(controllers.routes.EligibilityController.eligibilityCheck)
   }
 
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
@@ -77,7 +77,7 @@ class EligibilityController @Inject()(
             BadRequest(eligibilityCheckView(formWithErrors)),
           eligibilityInput => {
             if (eligibilityInput.married) {
-              Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
+              Redirect(controllers.routes.EligibilityController.dateOfBirthCheck)
             } else {
               Ok(eligibilityNonEligibleFinishView(finishUrl(request.isAuthenticated)))
             }
@@ -96,7 +96,7 @@ class EligibilityController @Inject()(
         formWithErrors =>
           BadRequest(dateOfBirthCheckView(formWithErrors)),
         _ => {
-          Redirect(controllers.routes.EligibilityController.doYouLiveInScotland())
+          Redirect(controllers.routes.EligibilityController.doYouLiveInScotland)
         })
   }
 
@@ -112,7 +112,7 @@ class EligibilityController @Inject()(
         formWithErrors =>
           BadRequest(doYouLiveInScotlandView(formWithErrors)),
         doYouLiveInScotlandInput => {
-          Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
+          Redirect(controllers.routes.EligibilityController.lowerEarnerCheck)
             .withSession(request.session + (appConfig.SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
@@ -128,7 +128,7 @@ class EligibilityController @Inject()(
         formWithErrors =>
           BadRequest(lowerEarnerView(formWithErrors)),
         _ => {
-          Redirect(controllers.routes.EligibilityController.partnersIncomeCheck())
+          Redirect(controllers.routes.EligibilityController.partnersIncomeCheck)
         })
   }
 
@@ -143,7 +143,7 @@ class EligibilityController @Inject()(
         formWithErrors =>
           BadRequest(partnersIncomeQuestionView(formWithErrors, isScottishResident(request))),
         _ => {
-          Redirect(controllers.routes.EligibilityController.doYouWantToApply())
+          Redirect(controllers.routes.EligibilityController.doYouWantToApply)
         })
   }
 
@@ -164,7 +164,7 @@ class EligibilityController @Inject()(
             BadRequest(doYouWantToApplyView(formWithErrors)),
           doYouWantToApplyInput => {
             if (doYouWantToApplyInput.doYouWantToApply) {
-              Redirect(controllers.routes.TransferController.transfer())
+              Redirect(controllers.routes.TransferController.transfer)
             } else {
               Redirect(Call("GET", finishUrl(request.isAuthenticated)))
             }

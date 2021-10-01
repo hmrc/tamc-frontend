@@ -85,12 +85,12 @@ class UpdateRelationshipController @Inject()(
         }, {
           case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) => {
             updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
-              Redirect(controllers.routes.UpdateRelationshipController.claims())
+              Redirect(controllers.routes.UpdateRelationshipController.claims)
             }
           }
           case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) => {
             updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) map { _ =>
-              Redirect(controllers.routes.UpdateRelationshipController.makeChange())
+              Redirect(controllers.routes.UpdateRelationshipController.makeChange)
             }
           }
         })
@@ -122,7 +122,7 @@ class UpdateRelationshipController @Inject()(
         }, {
           case Some(MakeChangesDecisionForm.Divorce) => {
             updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Divorce) map { _ =>
-              Redirect(controllers.routes.UpdateRelationshipController.divorceEnterYear())
+              Redirect(controllers.routes.UpdateRelationshipController.divorceEnterYear)
             }
           }
           case Some(MakeChangesDecisionForm.Earnings) => {
@@ -138,7 +138,7 @@ class UpdateRelationshipController @Inject()(
           }
           case Some(MakeChangesDecisionForm.Bereavement) => {
             updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Bereavement) map { _ =>
-              Redirect(controllers.routes.UpdateRelationshipController.bereavement())
+              Redirect(controllers.routes.UpdateRelationshipController.bereavement)
             }
           }
         })
@@ -147,9 +147,9 @@ class UpdateRelationshipController @Inject()(
   private def noLongerWantMarriageAllowanceRedirect(implicit hc: HeaderCarrier): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.primaryRecord.role == Recipient){
-        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
+        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance)
       } else {
-        Redirect(controllers.routes.UpdateRelationshipController.cancel())
+        Redirect(controllers.routes.UpdateRelationshipController.cancel)
       }
     }
   }
@@ -157,9 +157,9 @@ class UpdateRelationshipController @Inject()(
   private def changeOfIncomeRedirect(implicit hc: HeaderCarrier): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.primaryRecord.role == Recipient){
-        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())
+        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance)
       } else {
-        Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome())
+        Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome)
       }
     }
   }
@@ -210,7 +210,7 @@ class UpdateRelationshipController @Inject()(
         }, {
           case divorceDate =>
             updateRelationshipService.saveDivorceDate(divorceDate) map { _ =>
-              Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation())
+              Redirect(controllers.routes.UpdateRelationshipController.divorceEndExplanation)
           }
         }
       ) recover handleError
@@ -248,7 +248,7 @@ class UpdateRelationshipController @Inject()(
         },
         email =>
           updateRelationshipService.saveEmailAddress(email) map {
-            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate())
+            _ => Redirect(controllers.routes.UpdateRelationshipController.confirmUpdate)
           }
       ) recover handleError
   }
@@ -263,7 +263,7 @@ class UpdateRelationshipController @Inject()(
   def submitConfirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.updateRelationship(request.nino) map {
-        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate())
+        _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate)
       } recover handleError
   }
 
@@ -289,8 +289,8 @@ class UpdateRelationshipController @Inject()(
         }
 
         throwable match {
-          case _: NoPrimaryRecordError => Redirect(controllers.routes.EligibilityController.howItWorks())
-          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+          case _: NoPrimaryRecordError => Redirect(controllers.routes.EligibilityController.howItWorks)
+          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate))
           case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(tryLater()))
           case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(tryLater()))
           case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(tryLater()))

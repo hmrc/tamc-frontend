@@ -19,7 +19,7 @@ package utils
 import play.api.Play
 import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
-object TrackingConsentSnippetProvider {
-  lazy val get =
-    Play.current.injector.instanceOf[TrackingConsentSnippet]
-}
+//object TrackingConsentSnippetProvider {
+//  lazy val get =
+//    Play.current.injector.instanceOf[TrackingConsentSnippet]
+//}
