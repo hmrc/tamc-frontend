@@ -55,7 +55,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             <dt class="govuk-summary-list_key" id="email-label">@Html(Messages("generic.email"))</dt>
             <dd class="govuk-summary-list_value" id="transferor-email">@data.transferorEmail</dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.confirmYourEmail()" aria-label="@Html(messages("pages.confirm.change.email"))"
+                <a href="@controllers.routes.TransferController.confirmYourEmail" aria-label="@Html(messages("pages.confirm.change.email"))"
                 data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                 @Html(Messages("generic.change"))
                 </a>
@@ -69,7 +69,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             <dt class="govuk-summary-list_key">@Html(Messages("generic.name"))</dt>
             <dd class="govuk-summary-list_value" id="recipient-name">@data.recipientFirstName @data.recipientLastName</dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.transfer()"
+                <a href="@controllers.routes.TransferController.transfer"
                 data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details" aria-label="@Html(Messages("pages.form.aria-label"))">
                 @Html(Messages("generic.change"))
                 </a>
@@ -88,7 +88,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             <dt class="govuk-summary-list_key">@Html(Messages("pages.confirm.date.of.marriage"))</dt>
             <dd class="govuk-summary-list_value" id="marriage-date">@LanguageUtils().ukDateTransformer(data.dateOfMarriage.dateOfMarriage) </dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.dateOfMarriage()"
+                <a href="@controllers.routes.TransferController.dateOfMarriage"
                 data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date" aria-label="@Html(Messages("pages.form.marriage-date.aria-label"))">
                 @Html(Messages("generic.change"))
                 </a>

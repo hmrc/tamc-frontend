@@ -16,14 +16,14 @@
 
 package models
 
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json._
 
 sealed trait DesRelationshipEndReason {
   def value: String
 }
 
-object DesRelationshipEndReason {
+object DesRelationshipEndReason extends Logging {
 
   case object Death extends DesRelationshipEndReason {
     val value = "DEATH"
@@ -90,7 +90,7 @@ object DesRelationshipEndReason {
       Enumeration.withValue(reason) match {
         case Some(r) => JsSuccess(r)
         case None =>
-          Logger.warn(s"Invalid relationship end status has been received: $reason. Treating it as Default status.")
+          logger.warn(s"Invalid relationship end status has been received: $reason. Treating it as Default status.")
           JsSuccess(Default)
       }
     }

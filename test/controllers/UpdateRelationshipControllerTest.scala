@@ -126,7 +126,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks.url)
       }
     }
 
@@ -217,7 +217,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitDecision(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.claims().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.claims.url)
       }
 
     }
@@ -238,7 +238,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitDecision(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.makeChange().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.makeChange.url)
       }
     }
 
@@ -320,7 +320,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitMakeChange()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEnterYear.url)
 
       }
 
@@ -340,7 +340,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
             val result = controller.submitMakeChange()(request)
             status(result) shouldBe SEE_OTHER
-            redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance().url)
+            redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance.url)
 
           }
 
@@ -363,7 +363,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
           val result = controller.submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.cancel().url)
+          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.cancel.url)
 
         }
       }
@@ -380,7 +380,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
           val result = controller.submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.bereavement().url)
+          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.bereavement.url)
 
         }
       }
@@ -506,7 +506,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitDivorceEnterYear()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEndExplanation().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEndExplanation.url)
 
       }
 
@@ -661,7 +661,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val request = buildFakePostRequest("transferor-email" -> emailAddress)
       val result = controller.confirmYourEmailActionUpdate()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate().url)
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate.url)
 
     }
 
@@ -734,7 +734,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.submitConfirmUpdate(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate.url)
 
     }
 
@@ -831,7 +831,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
         val result = Future.successful(controller.handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated))
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate.url)
       }
     }
   }

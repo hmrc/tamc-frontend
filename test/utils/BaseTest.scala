@@ -16,15 +16,13 @@
 
 package utils
 
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.test.Helpers
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.ExecutionContext
 
-trait BaseTest extends UnitSpec with GuiceOneAppPerSuite with MockitoSugar {
+trait BaseTest extends UnitSpec with GuiceOneAppPerSuite {
 
   implicit lazy val messages = Helpers.stubMessages()
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()

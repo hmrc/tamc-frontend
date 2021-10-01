@@ -60,7 +60,7 @@ reportProblemView: includes.report_problem )
     "getHelpForm" -> getHelpForm,
     "showPropositionLinks" -> true,
     "langSelector" -> langSelectorMap,
-    "signOutUrl" -> Some(routes.AuthorisationController.logout()),
+    "signOutUrl" -> Some(routes.AuthorisationController.logout),
     "googleAnalytics" -> Map(
     "trackingId" -> ApplicationConfig.appConfig.analyticsToken,
     "cookieDomain" -> ApplicationConfig.appConfig.analyticsHost

@@ -77,7 +77,7 @@ class TransferController @Inject() (
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
         cachingService.saveRecipientDetails(recipientData).map { _ =>
-          Redirect(controllers.routes.TransferController.dateOfMarriage())
+          Redirect(controllers.routes.TransferController.dateOfMarriage)
         }
     )
   }
@@ -87,11 +87,11 @@ class TransferController @Inject() (
   }
 
   def dateOfMarriageWithCy: Action[AnyContent] = authenticate { implicit request =>
-    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
+    Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("cy"))
   }
 
   def dateOfMarriageWithEn: Action[AnyContent] = authenticate { implicit request =>
-    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
+    Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("en"))
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async { implicit request =>
@@ -104,7 +104,7 @@ class TransferController @Inject() (
           case RecipientDetailsFormInput(name, lastName, gender, nino) =>
             val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
             registrationService.isRecipientEligible(request.nino, dataToSend) map { _ =>
-              Redirect(controllers.routes.TransferController.eligibleYears())
+              Redirect(controllers.routes.TransferController.eligibleYears)
             }
         }
       }
@@ -160,7 +160,7 @@ class TransferController @Inject() (
               } else if (previousYears.nonEmpty) {
                 Ok(previousYearsV(registrationInput, previousYears, currentYearAvailable))
               } else {
-                Redirect(controllers.routes.TransferController.confirmYourEmail())
+                Redirect(controllers.routes.TransferController.confirmYourEmail)
               }
             }
           }
@@ -199,7 +199,7 @@ class TransferController @Inject() (
               .updateSelectedYears(availableYears, taxYears.selectedYear, taxYears.yearAvailableForSelection)
               .map { _ =>
                 if (taxYears.furtherYears.isEmpty) {
-                  Redirect(controllers.routes.TransferController.confirmYourEmail())
+                  Redirect(controllers.routes.TransferController.confirmYourEmail)
                 } else {
                   Ok(
                     singleYearSelect(earlierYearsForm(), registrationInput, toTaxYears(taxYears.furtherYears))
@@ -223,7 +223,7 @@ class TransferController @Inject() (
       formWithErrors => Future.successful(BadRequest(email(formWithErrors))),
       transferorEmail =>
         registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map { _ =>
-          Redirect(controllers.routes.TransferController.confirm())
+          Redirect(controllers.routes.TransferController.confirm)
         }
     ) recover handleError
   }
@@ -236,7 +236,7 @@ class TransferController @Inject() (
 
   def confirmAction: Action[AnyContent] = authenticate.async { implicit request =>
     registrationService.createRelationship(request.nino) map { _ =>
-      Redirect(controllers.routes.TransferController.finished())
+      Redirect(controllers.routes.TransferController.finished)
     } recover handleError
   }
 
@@ -271,25 +271,25 @@ class TransferController @Inject() (
         case _: TransferorNotFound => handle(Logger.warn, Ok(transferorNotFound()))
         case _: RecipientNotFound  => handle(Logger.warn, Ok(recipientNotFound()))
         case _: TransferorDeceased =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
+          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService))
         case _: RecipientDeceased =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
+          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService))
         case _: CacheMissingTransferor =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: CacheTransferorInRelationship => handle(Logger.warn, Ok(transferorStatus()))
         case _: CacheMissingRecipient =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: CacheMissingEmail =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
+          handle(Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail))
         case _: CacheRelationshipAlreadyCreated =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: CacheCreateRequestNotSent =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: NoTaxYearsSelected      => handle(Logger.info, Ok(noYearSelected()))
         case _: NoTaxYearsAvailable     => handle(Logger.info, Ok(noEligibleYears()))
         case _: NoTaxYearsForTransferor => handle(Logger.info, Ok(noTaxYearTransferor()))
         case _: RelationshipMightBeCreated =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case ex: CannotCreateRelationship => handleWithException(ex, relationshipCannotCreate())
         case ex: CacheRecipientInRelationship =>
           handleWithException(ex, recipientRelationshipExists())

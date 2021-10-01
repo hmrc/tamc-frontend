@@ -42,8 +42,8 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
     Messages("title.confirm-extra-years", LanguageUtils().taxDateIntervalShort(availableYears.head.year))
   ),
   langSelectorOverride = Some(
-    Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
-      "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
+    Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn,
+      "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy
     )
   )
 ) {

@@ -152,7 +152,7 @@ reportProblemV :includes.report_problem)
   "isGovernmentGateway" -> request.authProvider.contains("GovernmentGateway"),
   "isVerify" -> request.authProvider.contains("Verify"),
   "isSa" -> request.isSA,
-  "signOutUrl" -> (if(request.isAuthenticated) Some(routes.AuthorisationController.logout()) else None),
+  "signOutUrl" -> (if(request.isAuthenticated) Some(routes.AuthorisationController.logout) else None),
 
   "actingAttorneyBanner" -> actingAttorneyBanner,
   "mainContentHeader" -> commonContentHeader,
