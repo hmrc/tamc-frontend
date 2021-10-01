@@ -17,11 +17,10 @@
 package forms
 
 import java.time.format.DateTimeFormatter
-
 import config.ApplicationConfig
 import models.{Gender, RegistrationFormInput}
-import java.time.{LocalDate, ZoneId, ZonedDateTime}
 
+import java.time.{LocalDate, ZoneId, ZonedDateTime}
 import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
 import play.api.data.validation.Constraints.pattern
@@ -31,7 +30,9 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.PlayFormFormatter.validDateTuple
 
-object RegistrationForm {
+import javax.inject.Inject
+
+class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
 
   private def maxLengthWithError(maxLength: Int, error: String = "error.maxLength"): Constraint[String] = Constraint[String]("constraint.maxLength", maxLength) { o =>
     if (o == null) Invalid(ValidationError(error, maxLength)) else if (o.length <= maxLength) Valid else Invalid(ValidationError(error, maxLength))
@@ -121,7 +122,7 @@ object RegistrationForm {
       errorInvalid = ninoMessageCustomizer("error.invalid"))
 
   def dateOfMarriageValidator(today: LocalDate)(implicit messages: Messages): Mapping[LocalDate] = {
-    val minDate = ApplicationConfig.appConfig.TAMC_MIN_DATE
+    val minDate = applicationConfig.TAMC_MIN_DATE
     val maxDate = today.plusDays(1)
 
     validDateTuple("pages.form.field.dom.error.enter_full_date",

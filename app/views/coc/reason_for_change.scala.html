@@ -15,7 +15,7 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
 @import forms.coc.MakeChangesDecisionForm
 @import includes.backLink
@@ -23,7 +23,8 @@
 @this(
 main: templates.tamc_main,
 formErrorMessageView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+form: FormWithCSRF)
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
@@ -41,7 +42,7 @@ request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.par
         <h1 class="heading-xlarge">@messages("pages.makeChanges.heading")</h1>
     </header>
 
-    @helpers.form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
+    @form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
 
       <div class="form-group">
         @inputRadioGroupView(

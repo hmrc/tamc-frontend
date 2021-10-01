@@ -18,7 +18,9 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
-@this(main: templates.tamc_main)
+@this(
+main: templates.tamc_main,
+applicationConfig: ApplicationConfig)
 
 @()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -56,5 +58,5 @@ mainConfig = views.helpers.MainConfig()
 
 <h3 class="heading-small">@messages("hmrc.contact-detials.calling.time")</h3>
 @messages("hmrc.contact-details-8")</p>
-<p><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

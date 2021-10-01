@@ -18,7 +18,8 @@
 
 @this(
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-reportProblemView: includes.report_problem )
+reportProblemView: includes.report_problem,
+applicationConfig: ApplicationConfig)
 
 @(formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)(implicit messages: Messages, request: Request[_])
 
@@ -43,7 +44,7 @@ reportProblemView: includes.report_problem )
 }
 
 @getHelpForm = {
-    @reportProblemView(true, formPartialRetriever, ApplicationConfig.appConfig)
+    @reportProblemView(true, formPartialRetriever, applicationConfig)
 }
 
 @mainContent = {
@@ -54,7 +55,7 @@ reportProblemView: includes.report_problem )
 
 
 @{
-    templateRenderer.renderDefaultTemplate(ApplicationConfig.appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
+    templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
     "pageTitle" -> messages("title.pattern", messages("global.page.not.found.error.title")),
     "isWelsh" -> isWelsh,
     "getHelpForm" -> getHelpForm,
@@ -62,11 +63,11 @@ reportProblemView: includes.report_problem )
     "langSelector" -> langSelectorMap,
     "signOutUrl" -> Some(routes.AuthorisationController.logout),
     "googleAnalytics" -> Map(
-    "trackingId" -> ApplicationConfig.appConfig.analyticsToken,
-    "cookieDomain" -> ApplicationConfig.appConfig.analyticsHost
+    "trackingId" -> applicationConfig.analyticsToken,
+    "cookieDomain" -> applicationConfig.analyticsHost
     ),
     "mainContentHeader" -> contentHeader,
     "betaBanner" -> true,
-    "feedbackIdentifier" -> ApplicationConfig.appConfig.contactFormServiceIdentifier
+    "feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier
     ))
 }

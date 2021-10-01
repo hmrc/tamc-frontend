@@ -16,7 +16,9 @@
 
 @import config.ApplicationConfig
 
-@this(templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+applicationConfig: ApplicationConfig)
 
 @(pageTitle: String, heading: String, message: String)(implicit messages: Messages)
 
@@ -33,17 +35,17 @@
 
 
 @{
-templateRenderer.renderDefaultTemplate(ApplicationConfig.appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
+templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
 "pageTitle" -> pageTitle,
 "linkElems" -> None,
 "scriptElems" -> None,
 "googleAnalytics" -> Map(
-"trackingId" -> ApplicationConfig.appConfig.analyticsToken,
-"cookieDomain" -> ApplicationConfig.appConfig.analyticsHost
+"trackingId" -> applicationConfig.analyticsToken,
+"cookieDomain" -> applicationConfig.analyticsHost
 ),
 "includeHMRCBranding" -> true,
 "mainContentHeader" -> contentHeader,
 "betaBanner" -> true,
-"feedbackIdentifier" -> ApplicationConfig.appConfig.contactFormServiceIdentifier
+"feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier
 ))
 }

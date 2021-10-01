@@ -24,7 +24,8 @@
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-dateFieldView: templates.dateFields)
+dateFieldView: templates.dateFields,
+form: FormWithCSRF)
 
 @(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -45,7 +46,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
     <p>@messages("pages.divorce.paragraph1")</p>
 
-    @helpers.form(action = routes.UpdateRelationshipController.submitDivorceEnterYear, args = ('id -> "")) {
+    @form(action = routes.UpdateRelationshipController.submitDivorceEnterYear, args = ('id -> "")) {
 
         <div class="form-group">
             @dateFieldView(

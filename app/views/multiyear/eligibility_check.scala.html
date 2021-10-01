@@ -22,7 +22,8 @@
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+applicationConfig: ApplicationConfig)
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
@@ -35,7 +36,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
 @if(request.isAuthenticated){
     <a href="@controllers.routes.EligibilityController.ptaCalculator" class="link-back">@Html(Messages("generic.back"))</a>
 } else {
-    <a href="@ApplicationConfig.appConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
+    <a href="@applicationConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
 }
 
 @formErrorNotificationView(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")

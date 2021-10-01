@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import play.twirl.api.Html
 @import uk.gov.hmrc.time.TaxYear
 @import views.helpers.LanguageUtils
@@ -25,7 +25,9 @@
 
 @this(
 main: templates.tamc_main,
-ninoRendererView: templates.ninoRenderer)
+ninoRendererView: templates.ninoRenderer,
+form: FormWithCSRF,
+applicationConfig: ApplicationConfig)
 
 @(data: models.ConfirmationModel)(
 implicit messages: Messages,
@@ -104,14 +106,14 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
                     </dt>
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
                         LanguageUtils().formPossessive(data.recipientFirstName),
-                        data.recipientFirstName, NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
+                        data.recipientFirstName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
                     </dd>
                 } else {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
                     @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
                     </dt>
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
-                        Messages("max-benefit", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT(taxYear.year)))))
+                        Messages("max-benefit", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)))))
                     </dd>
                 }
             <dd class="govuk-summary-list_actions">
@@ -127,7 +129,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         <p id="warning-message">@Html(Messages("pages.confirm.warning"))</p>
     </div>
 
-    @helpers.form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
+    @form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
 
         <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit">
         @Html(Messages("pages.confirm.button"))

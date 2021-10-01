@@ -18,7 +18,8 @@
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
 
-@this(main: templates.tamc_main)
+@this(main: templates.tamc_main,
+applicationConfig: ApplicationConfig)
 
 @()(implicit messages: Messages,
 request: BaseUserRequest[_],
@@ -39,6 +40,6 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:trans
     <li>@messages("hmrc.contact-details-6")</li>
     <li>@messages("hmrc.contact-details-7")</li>
     <li>@messages("hmrc.contact-details-8")</li>
-    <li><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
+    <li><a target="_blank" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
 </ul>
 }

@@ -148,7 +148,3 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   def ivUpliftUrl: String = createUrl(action = "uplift")
 }
-
-object ApplicationConfig {
- val appConfig: ApplicationConfig = Play.current.injector.instanceOf[ApplicationConfig]
-}

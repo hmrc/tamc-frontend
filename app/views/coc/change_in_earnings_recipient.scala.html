@@ -19,7 +19,9 @@
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
-@this(main: templates.tamc_main)
+@this(
+main: templates.tamc_main,
+applicationConfig: ApplicationConfig)
 
 @()(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -38,10 +40,10 @@ mainConfig = views.helpers.MainConfig()
 <h2 class="heading-medium">@Html(Messages("change.status.earnings.h2"))</h2>
 <ul class="list list-bullet">
     <li>@Html(Messages("change.status.earnings.rec.instruction-1",
-        NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_LIMIT())))
+        NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT())))
     </li>
     <li>@Html(Messages("change.status.earnings.rec.instruction-2",
-        NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE())))
+        NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE())))
     </li>
 </ul>
 
@@ -56,5 +58,5 @@ mainConfig = views.helpers.MainConfig()
 <p>@messages("hmrc.contact-details-7") <br>
     @messages("hmrc.contact-details-8")</p>
 
-<p><a target="_blank" href=@ApplicationConfig.appConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+<p><a target="_blank" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
 }

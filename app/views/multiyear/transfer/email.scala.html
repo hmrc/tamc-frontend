@@ -15,13 +15,14 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
 
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-inputView: templates.input)
+inputView: templates.input,
+form: FormWithCSRF)
 
 @(
 recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress],
@@ -36,7 +37,7 @@ title = Messages("title.application.pattern", Messages("title.confirm-email"))
 
 <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
 
-@helpers.form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
+@form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
 @formErrorNotificationView(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
