@@ -15,7 +15,7 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import views.html.templates._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
@@ -24,30 +24,32 @@
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+form: FormWithCSRF,
+applicationConfig: ApplicationConfig)
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
     implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(
-    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE())))
+    title = Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE())))
 ){
 
-    @formErrorNotificationView(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))
+    @formErrorNotificationView(lowerEarnerFormInput, formErrorMessage = "pages.form.error.mandatory.data", lowerLimit = Some(applicationConfig.PERSONAL_ALLOWANCE()))
     <a href="@controllers.routes.EligibilityController.doYouLiveInScotland" class="link-back">@Html(Messages("generic.back"))</a>
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE())))</h1>
+        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE())))</h1>
         <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
     </header>
 
-    @helpers.form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
+    @form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
     <div class="form-group inline">
         <p class="bold-small">@Html(Messages("eligibility.check.lower.earner.information2"))</p>
         @inputRadioGroupView(
         lowerEarnerFormInput("lower-earner"),
         Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-        '_legend -> Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))),
+        '_legend -> Html(Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))),
         '_legendClass -> "visuallyhidden",
         '_labelClass -> "block-label",
         '_labelAfter -> true,
@@ -57,7 +59,7 @@ inputRadioGroupView: templates.input_radio_group)
     </div>
 
     <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
-        @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))
+        @Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))
     </div>
 
     <script>

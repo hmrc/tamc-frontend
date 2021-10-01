@@ -22,7 +22,8 @@
 @this(
 main: templates.tamc_main,
 inputRadioGroupView: templates.input_radio_group,
-formErrorNotificationView: templates.form_error_notification)
+formErrorNotificationView: templates.form_error_notification,
+form: FormWithCSRF)
 
 @(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 

@@ -23,7 +23,7 @@ import forms.CurrentYearForm.currentYearForm
 import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
-import forms.RecipientDetailsForm.recipientDetailsForm
+import forms.RecipientDetailsForm
 import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
@@ -64,16 +64,17 @@ class TransferController @Inject() (
   noTaxYearTransferor: views.html.errors.no_tax_year_transferor,
   relationshipCannotCreate: views.html.errors.relationship_cannot_create,
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
-  tryLater: views.html.errors.try_later)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  tryLater: views.html.errors.try_later,
+  recipientDetailsForm: RecipientDetailsForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
-      transferV(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino))
+      transferV(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
     )
   }
 
   def transferAction: Action[AnyContent] = authenticate.async { implicit request =>
-    recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
+    recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
         cachingService.saveRecipientDetails(recipientData).map { _ =>

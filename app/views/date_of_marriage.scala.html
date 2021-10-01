@@ -15,14 +15,15 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import views.helpers.LanguageUtils
 @import models.auth.AuthenticatedUserRequest
 
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-dateFieldsView: templates.dateFields)
+dateFieldsView: templates.dateFields,
+form: FormWithCSRF)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
@@ -44,7 +45,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
 <p>@Html(messages("pages.date-of-marriage.para1"))</p>
 <p>@Html(messages("pages.date-of-marriage.para2"))</p>
 
-@helpers.form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
+@form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 
 <div class="form-group">
   @dateFieldsView(

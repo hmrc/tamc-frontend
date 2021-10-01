@@ -18,7 +18,9 @@
 @import play.twirl.api.Html
 @import config.ApplicationConfig
 
-@this(main: templates.tamc_main)
+@this(
+main: templates.tamc_main,
+applicationConfig: ApplicationConfig)
 
 @()(implicit messages: Messages,
 request: BaseUserRequest[_],

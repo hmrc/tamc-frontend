@@ -17,17 +17,20 @@
 package forms
 
 import models.RecipientDetailsFormInput
+
 import java.time.LocalDate
 import play.api.data.Forms.mapping
 import play.api.data.Form
 import uk.gov.hmrc.domain.Nino
 
-object RecipientDetailsForm {
+import javax.inject.Inject
+
+class RecipientDetailsForm@Inject()(registrationForm: RegistrationForm) {
 
   def recipientDetailsForm(today: LocalDate, transferorNino: Nino) = Form[RecipientDetailsFormInput](
     mapping(
-      "name" -> RegistrationForm.firstName,
-      "last-name" -> RegistrationForm.lastName,
-      "gender" -> RegistrationForm.gender,
-      "nino" -> RegistrationForm.nino.verifying("pages.form.field.nino.error.self", recipientNino => !utils.areEqual(transferorNino, recipientNino)))(RecipientDetailsFormInput.apply)(RecipientDetailsFormInput.unapply))
+      "name" -> registrationForm.firstName,
+      "last-name" -> registrationForm.lastName,
+      "gender" -> registrationForm.gender,
+      "nino" -> registrationForm.nino.verifying("pages.form.field.nino.error.self", recipientNino => !utils.areEqual(transferorNino, recipientNino)))(RecipientDetailsFormInput.apply)(RecipientDetailsFormInput.unapply))
 }
