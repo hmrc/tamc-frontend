@@ -32,7 +32,7 @@ case class HistorySummaryButton(id: String, content: String, href: String)
 
 case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummaryButton, displayName: String)
 
-object HistorySummaryViewModel{
+class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig) {
 
   def apply(role: Role, hasMarriageAllowanceBeenCancelled: Boolean, loggedInUserInfo: LoggedInUserInfo)(implicit messages: Messages): HistorySummaryViewModel = {
 
