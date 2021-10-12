@@ -38,7 +38,7 @@ title = Messages("title.pattern", Messages("title.how-it-works"))
         @if(LanguageUtils.isWelsh(messages)) {
         messages("pages.how-it-works.lede-pre1.part1")
         }
-        <a href=@ApplicationConfig.appConfig.marriageAllowanceGuideUrl target="_blank">@messages("pages.how-it-works.lede-pre1.link-text")</a>
+        <a href=@ApplicationConfig.appConfig.marriageAllowanceGuideUrl target="_blank" rel="noopener noreferrer">@messages("pages.how-it-works.lede-pre1.link-text")</a>
         @messages("pages.how-it-works.lede-pre1.part2",
     NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()))</p>
     <p>@Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.MAX_BENEFIT())))</p>
