@@ -54,13 +54,14 @@ class UpdateRelationshipController @Inject()(
   citizenNotFound: views.html.errors.citizen_not_found,
   transferorNotFound: views.html.errors.transferor_not_found,
   recipientNotFound: views.html.errors.recipient_not_found,
-  divorceSelectYearForm: DivorceSelectYearForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  divorceSelectYearForm: DivorceSelectYearForm,
+  historySummaryViewModelImpl: HistorySummaryViewModelImpl)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
         updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
-          val viewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
+          val viewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
             relationshipRecords.hasMarriageAllowanceBeenCancelled,
             relationshipRecords.loggedInUserInfo)
           Ok(historySummary(viewModel))
