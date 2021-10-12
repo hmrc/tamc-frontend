@@ -22,7 +22,9 @@ import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 
-object MultiYearLowerEarnerForm {
+import javax.inject.Inject
+
+class MultiYearLowerEarnerForm@Inject()(applicationConfig: ApplicationConfig) {
 
   private val PRE_ERROR_KEY = "pages.form.field-required."
 
@@ -34,7 +36,7 @@ object MultiYearLowerEarnerForm {
       Right(data.getOrElse(key, "")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE()))))
+        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(applicationConfig.PERSONAL_ALLOWANCE()))))
       }
     }
 

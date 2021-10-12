@@ -17,14 +17,17 @@
 package forms
 
 import models.DateOfMarriageFormInput
+
 import java.time.LocalDate
 import play.api.data.Form
 import play.api.data.Forms.mapping
 import play.api.i18n.Messages
 
-object DateOfMarriageForm {
+import javax.inject.Inject
+
+class DateOfMarriageForm@Inject()(registrationForm: RegistrationForm) {
 
   def dateOfMarriageForm(today: LocalDate)(implicit messages: Messages) = Form[DateOfMarriageFormInput](
     mapping(
-      "dateOfMarriage" -> RegistrationForm.dateOfMarriageValidator(today))(DateOfMarriageFormInput.apply)(DateOfMarriageFormInput.unapply))
+      "dateOfMarriage" -> registrationForm.dateOfMarriageValidator(today))(DateOfMarriageFormInput.apply)(DateOfMarriageFormInput.unapply))
 }

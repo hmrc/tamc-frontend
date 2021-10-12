@@ -22,7 +22,9 @@ import play.api.data.Forms.{mapping, of}
 import play.api.data.format.Formatter
 import play.api.data.{Form, FormError}
 
-object MultiYearPartnersIncomeQuestionForm {
+import javax.inject.Inject
+
+class MultiYearPartnersIncomeQuestionForm@Inject()(applicationConfig: ApplicationConfig) {
 
   private val PRE_ERROR_KEY = "pages.form.field-required."
 
@@ -35,11 +37,11 @@ object MultiYearPartnersIncomeQuestionForm {
         case _ => false
       }
 
-      val maxLimit = if(isScottish) ApplicationConfig.appConfig.MAX_LIMIT_SCOT() else ApplicationConfig.appConfig.MAX_LIMIT()
+      val maxLimit = if(isScottish) applicationConfig.MAX_LIMIT_SCOT() else applicationConfig.MAX_LIMIT()
       Right(data.getOrElse(key, "")).right.flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
-        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1,
+        case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(applicationConfig.PERSONAL_ALLOWANCE() + 1,
             maxLimit))))
       }
     }

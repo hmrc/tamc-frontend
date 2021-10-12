@@ -30,6 +30,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
@@ -53,7 +54,8 @@ class UpdateRelationshipController @Inject()(
   tryLater: views.html.errors.try_later,
   citizenNotFound: views.html.errors.citizen_not_found,
   transferorNotFound: views.html.errors.transferor_not_found,
-  recipientNotFound: views.html.errors.recipient_not_found)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  recipientNotFound: views.html.errors.recipient_not_found,
+  divorceSelectYearForm: DivorceSelectYearForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -193,18 +195,18 @@ class UpdateRelationshipController @Inject()(
   def divorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getDivorceDate map { optionalDivorceDate =>
-        optionalDivorceDate.fold(Ok(divorceSelectYearV(DivorceSelectYearForm.form))){ divorceDate =>
-          Ok(divorceSelectYearV(DivorceSelectYearForm.form.fill(divorceDate)))
+        optionalDivorceDate.fold(Ok(divorceSelectYearV(divorceSelectYearForm.form))){ divorceDate =>
+          Ok(divorceSelectYearV(divorceSelectYearForm.form.fill(divorceDate)))
         }
       } recover {
         case NonFatal(_) =>
-          Ok(divorceSelectYearV(DivorceSelectYearForm.form))
+          Ok(divorceSelectYearV(divorceSelectYearForm.form))
       }
   }
 
   def submitDivorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
-      DivorceSelectYearForm.form.bindFromRequest.fold(
+      divorceSelectYearForm.form.bindFromRequest.fold(
         formWithErrors => {
           Future.successful(BadRequest(divorceSelectYearV(formWithErrors)))
         }, {
