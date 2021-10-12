@@ -23,8 +23,7 @@ import forms.MultiYearDateOfBirthForm.dateOfBirthForm
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
-import forms.MultiYearLowerEarnerForm.lowerEarnerForm
-import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
+import forms._
 import models.Country
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
@@ -48,7 +47,9 @@ class EligibilityController @Inject()(
   partnersIncomeQuestionView: views.html.multiyear.partners_income_question,
   doYouWantToApplyView: views.html.multiyear.do_you_want_to_apply,
   calculatorView: views.html.calculator,
-  ptaCalculatorView: views.html.pta.calculator)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  ptaCalculatorView: views.html.pta.calculator,
+  multiYearPartnersIncomeQuestionForm: MultiYearPartnersIncomeQuestionForm,
+  multiYearLowerEarnerForm: MultiYearLowerEarnerForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
@@ -119,12 +120,12 @@ class EligibilityController @Inject()(
 
   def lowerEarnerCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(lowerEarnerView(lowerEarnerForm))
+      Ok(lowerEarnerView(multiYearLowerEarnerForm.lowerEarnerForm))
   }
 
   def lowerEarnerCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      lowerEarnerForm.bindFromRequest.fold(
+      multiYearLowerEarnerForm.lowerEarnerForm.bindFromRequest.fold(
         formWithErrors =>
           BadRequest(lowerEarnerView(formWithErrors)),
         _ => {
@@ -134,12 +135,12 @@ class EligibilityController @Inject()(
 
   def partnersIncomeCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(partnersIncomeQuestionView(partnersIncomeForm, isScottishResident(request)))
+      Ok(partnersIncomeQuestionView(multiYearPartnersIncomeQuestionForm.partnersIncomeForm, isScottishResident(request)))
   }
 
   def partnersIncomeCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      partnersIncomeForm.bindFromRequest.fold(
+      multiYearPartnersIncomeQuestionForm.partnersIncomeForm.bindFromRequest.fold(
         formWithErrors =>
           BadRequest(partnersIncomeQuestionView(formWithErrors, isScottishResident(request))),
         _ => {

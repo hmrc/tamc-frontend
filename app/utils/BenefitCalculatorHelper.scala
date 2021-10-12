@@ -16,18 +16,20 @@
 
 package utils
 
+import config.ApplicationConfig
+
 import java.text.NumberFormat
 import java.util.Locale
-
-import config.ApplicationConfig.appConfig._
 import models._
 
-object BenefitCalculatorHelper {
+import javax.inject.Inject
+
+class BenefitCalculatorHelper@Inject()(applicationConfig: ApplicationConfig) {
 
   def calculateTotalBenefitAcrossBands(income: Int, countryTaxBands: List[TaxBand]): Int = {
     val rates = countryTaxBands.map(band => band.name -> band.rate).toMap
     val basicRate = countryTaxBands.find(band => band.name == "BasicRate").head.rate
-    val maxBenefit = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate
+    val maxBenefit = applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate
 
     val benefitsFromBandedIncome = dividedIncome(countryTaxBands, income).map(
       i => i._2 * rates(i._1)).filterNot(_ < 0).sum.toInt
@@ -53,15 +55,15 @@ object BenefitCalculatorHelper {
   }
 
   def maxLimit(country: Country): Int = country match {
-    case England => MAX_LIMIT()
-    case Scotland => MAX_LIMIT_SCOT()
-    case Wales => MAX_LIMIT_WALES()
-    case NorthernIreland => MAX_LIMIT_NORTHERN_IRELAND()
+    case England => applicationConfig.MAX_LIMIT()
+    case Scotland => applicationConfig.MAX_LIMIT_SCOT()
+    case Wales => applicationConfig.MAX_LIMIT_WALES()
+    case NorthernIreland => applicationConfig.MAX_LIMIT_NORTHERN_IRELAND()
   }
 
   def setCurrencyFormat(country: Country, allowanceType: String): String = {
     val limit: Int = if (allowanceType == "PA") {
-      PERSONAL_ALLOWANCE() + 1
+      applicationConfig.PERSONAL_ALLOWANCE() + 1
     } else {
       maxLimit(country)
     }

@@ -16,20 +16,23 @@
 
 package viewModels
 
+import config.ApplicationConfig
+
 import java.text.NumberFormat
 
-import config.ApplicationConfig.appConfig.{MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER, MAX_BENEFIT}
 import models._
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import views.helpers.LanguageUtils
 
+import javax.inject.Inject
+
 case class HistorySummaryButton(id: String, content: String, href: String)
 
 case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummaryButton, displayName: String)
 
-object HistorySummaryViewModel {
+object HistorySummaryViewModel{
 
   def apply(role: Role, hasMarriageAllowanceBeenCancelled: Boolean, loggedInUserInfo: LoggedInUserInfo)(implicit messages: Messages): HistorySummaryViewModel = {
 
@@ -45,8 +48,8 @@ object HistorySummaryViewModel {
   }
 
   private def activeRecordContent(role: Role)(implicit messages: Messages): (Html, HistorySummaryButton) = {
-    lazy val maxPersonalAllowanceTransfer = MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(TaxYear.current.currentYear)
-    lazy val maxPersonalBenefit = MAX_BENEFIT(TaxYear.current.currentYear)
+    lazy val maxPersonalAllowanceTransfer = applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(TaxYear.current.currentYear)
+    lazy val maxPersonalBenefit = applicationConfig.MAX_BENEFIT(TaxYear.current.currentYear)
 
     lazy val formattedMaxPATransfer = NumberFormat.getIntegerInstance().format(maxPersonalAllowanceTransfer)
     lazy val formattedMaxBenefit = NumberFormat.getIntegerInstance().format(maxPersonalBenefit)

@@ -20,7 +20,7 @@ import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.CurrentYearForm.currentYearForm
-import forms.DateOfMarriageForm.dateOfMarriageForm
+import forms.DateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
 import forms.RecipientDetailsForm
@@ -65,7 +65,8 @@ class TransferController @Inject() (
   relationshipCannotCreate: views.html.errors.relationship_cannot_create,
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
-  recipientDetailsForm: RecipientDetailsForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  recipientDetailsForm: RecipientDetailsForm,
+  dateOfMarriageForm: DateOfMarriageForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
@@ -84,7 +85,7 @@ class TransferController @Inject() (
   }
 
   def dateOfMarriage: Action[AnyContent] = authenticate { implicit request =>
-    Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
+    Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
   def dateOfMarriageWithCy: Action[AnyContent] = authenticate { implicit request =>
@@ -96,7 +97,7 @@ class TransferController @Inject() (
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async { implicit request =>
-    dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
+    dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
       marriageData => {
         cachingService.saveDateOfMarriage(marriageData)
