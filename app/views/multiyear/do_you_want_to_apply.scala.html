@@ -16,6 +16,7 @@
 
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 @import models.auth.UserRequest
@@ -23,7 +24,8 @@
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+form: FormWithCSRF)
 
 @(doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput])(implicit
 messages: Messages,
@@ -44,7 +46,7 @@ title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you
         <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
     </header>
 
-@helpers.form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
+@form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
 <div class="form-group inline">
     @inputRadioGroupView(
     doYouWantToApplyForm("do-you-want-to-apply"),

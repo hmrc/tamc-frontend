@@ -16,11 +16,13 @@
 
 package forms.coc
 
-import java.time.LocalDate
 import play.api.data.FormError
-import utils.BaseTest
+import utils.UnitSpec
 
-class DivorceSelectYearFormTest extends BaseTest {
+import java.time.LocalDate
+import javax.inject.Inject
+
+class DivorceSelectYearFormTest@Inject()(divorceSelectYearForm: DivorceSelectYearForm) extends UnitSpec {
 
   val today = LocalDate.now()
   val defaultDate = LocalDate.of(2000, 1, 1)
@@ -29,7 +31,7 @@ class DivorceSelectYearFormTest extends BaseTest {
     "bind" when {
       "Todays date is input as the divorce date" in {
         val formInput = createDivorceDateInput(today)
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
 
         value shouldBe today
@@ -39,7 +41,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       "the divorce date entered is yesterday" in {
         val yesterday = LocalDate.now().minusDays(1)
         val formInput = createDivorceDateInput(yesterday)
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
 
         value shouldBe yesterday
@@ -50,7 +52,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       "the divorce date entered is 1st January 1900" in {
         val minimumLimit = LocalDate.of(1900, 1, 1)
         val formInput = createDivorceDateInput(minimumLimit)
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
 
         value shouldBe minimumLimit
@@ -63,7 +65,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       "the divorce date entered is in the future" in {
         val tomorrow = LocalDate.now().plusDays(1)
         val formInput = createDivorceDateInput(tomorrow)
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
 
        errorMessageKey shouldBe "pages.divorce.date.error.max.date"
@@ -83,7 +85,7 @@ class DivorceSelectYearFormTest extends BaseTest {
             s"${date._1} is not provided" in {
 
               val formInput = createDivorceDateInput(date._2.toString, date._3.toString, date._4.toString)
-              val form = DivorceSelectYearForm.form.bind(formInput)
+              val form = divorceSelectYearForm.form.bind(formInput)
               val errorMessageKey = extractErrorMessageKey(form.errors)
 
               errorMessageKey shouldBe "pages.divorce.date.error.mandatory"
@@ -95,7 +97,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       "Invalid characters are input" in {
 
         val formInput = createDivorceDateInput("as", ".!", "Ωå∑π")
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
 
         errorMessageKey shouldBe "pages.divorce.date.error.non.numeric"
@@ -105,7 +107,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       "divorce date input is before 1st January 1900" in {
         val nineteenthCentury = LocalDate.of(1899, 12, 31)
         val formInput = createDivorceDateInput(nineteenthCentury)
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
         errorMessageKey shouldBe "pages.divorce.date.error.min.date"
 
@@ -118,7 +120,7 @@ class DivorceSelectYearFormTest extends BaseTest {
           s"$day is not valid value" in {
 
             val formInput = createDivorceDateInput(day, today.getMonthValue.toString, today.getYear.toString)
-            val form = DivorceSelectYearForm.form.bind(formInput)
+            val form = divorceSelectYearForm.form.bind(formInput)
             val errorMessageKey = extractErrorMessageKey(form.errors)
             errorMessageKey shouldBe "pages.divorce.date.error.invalid"
 
@@ -129,7 +131,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       "month is not a valid value" in {
 
         val formInput = createDivorceDateInput(today.getDayOfMonth.toString, "13", today.getYear.toString)
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
         errorMessageKey shouldBe "pages.divorce.date.error.invalid"
 
@@ -138,7 +140,7 @@ class DivorceSelectYearFormTest extends BaseTest {
       "year is not a valid value" in {
 
         val formInput = createDivorceDateInput(today.getDayOfMonth.toString, today.getMonthValue.toString, "19")
-        val form = DivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
         errorMessageKey shouldBe "pages.divorce.date.error.invalid"
       }

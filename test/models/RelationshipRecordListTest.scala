@@ -16,8 +16,8 @@
 
 package models
 
-import uk.gov.hmrc.play.test.UnitSpec
 import test_utils.data.RelationshipRecordData._
+import utils.UnitSpec
 
 class RelationshipRecordListTest extends UnitSpec {
 

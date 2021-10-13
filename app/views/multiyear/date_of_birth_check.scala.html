@@ -23,6 +23,7 @@
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group,
+applicationConfig: ApplicationConfig,
 form: FormWithCSRF)
 
 @(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)

@@ -17,14 +17,14 @@
 package forms
 
 import config.ApplicationConfig
+import play.api.data.FormError
+import utils.UnitSpec
 
 import java.time.LocalDate
-import play.api.data.FormError
-import utils.BaseTest
-
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class RegistrationFormTest extends BaseTest {
+class RegistrationFormTest@Inject()(appConfig: ApplicationConfig, registrationForm: RegistrationForm) extends UnitSpec {
 
   ".dateOfMarriageValidator" should {
 
@@ -34,14 +34,14 @@ class RegistrationFormTest extends BaseTest {
         "month" -> "02",
         "year" -> "2019"
       )
-      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+      val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
       res shouldBe Right(LocalDate.of(2019, 2, 12))
     }
 
     "fail to bind a date which is entirely absent" in {
 
       val formInput = Map.empty[String, String]
-      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+      val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
         FormError("", "pages.form.field.dom.error.enter_a_date", Nil)
@@ -53,7 +53,7 @@ class RegistrationFormTest extends BaseTest {
         "day" -> "12",
         "year" -> "2019"
       )
-      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+      val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
         FormError("", "pages.form.field.dom.error.enter_full_date", Nil)
@@ -62,7 +62,7 @@ class RegistrationFormTest extends BaseTest {
 
     "fail to bind a date which is earlier the minimum configured date" in {
 
-      val earliestDate = ApplicationConfig.appConfig.TAMC_MIN_DATE
+      val earliestDate = appConfig.TAMC_MIN_DATE
       val checkDate = earliestDate.minusDays(1)
 
       val formInput = Map[String, String](
@@ -70,7 +70,7 @@ class RegistrationFormTest extends BaseTest {
         "month" -> checkDate.getMonthValue.toString,
         "year" -> checkDate.getYear.toString
       )
-      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+      val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
         FormError("", messages("pages.form.field.dom.error.min-date",
@@ -88,7 +88,7 @@ class RegistrationFormTest extends BaseTest {
         "month" -> tooLate.getMonthValue.toString,
         "year" -> tooLate.getYear.toString
       )
-      val res = RegistrationForm.dateOfMarriageValidator(today).bind(formInput)
+      val res = registrationForm.dateOfMarriageValidator(today).bind(formInput)
 
       res shouldBe Left(Seq(
         FormError("", messages("pages.form.field.dom.error.max-date", today.plusDays(1).format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
@@ -102,7 +102,7 @@ class RegistrationFormTest extends BaseTest {
         "month" -> "12",
         "year" -> "2o19"
       )
-      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+      val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
         FormError("", "pages.form.field.dom.error.enter_numbers", Nil)
@@ -116,7 +116,7 @@ class RegistrationFormTest extends BaseTest {
         "month" -> "02",
         "year" -> "2018"
       )
-      val res = RegistrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+      val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
         FormError("", "pages.form.field.dom.error.enter_valid_date", Nil)

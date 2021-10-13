@@ -17,17 +17,17 @@
 package services
 
 import java.time.LocalDate
-
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
+import javax.inject.Inject
 import scala.collection.immutable
 
-class TimeServiceTest extends BaseTest {
+class TimeServiceTest@Inject()(timeServiceImpl: TimeService) extends BaseTest {
 
-  def timeService: TimeService = TimeService
+  def timeService: TimeService = timeServiceImpl
 
   override def fakeApplication(): Application = GuiceApplicationBuilder().build()
 

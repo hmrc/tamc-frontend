@@ -16,12 +16,14 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
-@import views.helpers.LanguageUtils
+@import views.helpers.LanguageUtilsImpl
 @import uk.gov.hmrc.play.views.html._
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
 
-@this(main: templates.tamc_main)
+@this(
+main: templates.tamc_main,
+languageUtilsImpl: LanguageUtilsImpl)
 
 @(input:RegistrationFormInput,
 availableYears:List[TaxYear] = List[TaxYear](),
@@ -47,7 +49,7 @@ Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn,
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
     </header>
 
-    <p>@Html(Messages("pages.previousyear.para", input.name, LanguageUtils().ukDateTransformer(input.dateOfMarriage)))</p>
+    <p>@Html(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage)))</p>
 
     <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" role="button"
        data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>

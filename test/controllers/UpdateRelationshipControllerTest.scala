@@ -45,9 +45,13 @@ import viewModels._
 import play.api.inject.bind
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
-class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: HistorySummaryViewModelImpl,
+                                                claimsViewModelImpl: ClaimsViewModelImpl,
+                                                divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
+                                                confirmUpdateViewModeImpl: ConfirmUpdateViewModelImpl) extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
   val generatedNino: Nino = new Generator().nextNino
   val mockTransferService: TransferService = mock[TransferService]
@@ -102,7 +106,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     "display the history summary page with a status of OK" in {
 
       val relationshipRecords = createRelationshipRecords()
-      val historySummaryViewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
+      val historySummaryViewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
         relationshipRecords.hasMarriageAllowanceBeenCancelled,
         relationshipRecords.loggedInUserInfo)
 
@@ -259,7 +263,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
 
-      val claimsViewModel = ClaimsViewModel(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
+      val claimsViewModel = claimsViewModelImpl(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
       val result = controller.claims(request)
       status(result) shouldBe OK
 
@@ -564,7 +568,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any(), any()))
         .thenReturn(Future.successful(maEndingDates))
 
-      val viewModel = DivorceEndExplanationViewModel(role, divorceDate, maEndingDates)
+      val viewModel = divorceEndExplanationViewModelImpl(role, divorceDate, maEndingDates)
 
       val result = controller.divorceEndExplanation()(request)
       status(result) shouldBe OK
@@ -706,7 +710,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.confirmUpdate()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs confirmUpdateView(ConfirmUpdateViewModel(confirmUpdateAnswers))
+      result rendersTheSameViewAs confirmUpdateView(confirmUpdateViewModeImpl(confirmUpdateAnswers))
 
     }
 

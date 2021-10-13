@@ -17,10 +17,10 @@
 package viewModels
 
 import java.util.Locale
-
 import _root_.config.ApplicationConfig
 import models.DesRelationshipEndReason.{Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
 import models._
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import play.api.i18n.Messages
@@ -29,8 +29,10 @@ import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
 import views.helpers.LanguageUtils
 
+import javax.inject.Inject
 
-class ClaimsViewModelTest extends TamcViewModelTest {
+
+class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig, languageUtils: LanguageUtils) extends TamcViewModelTest {
 
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
@@ -39,7 +41,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
   lazy val taxFreeHtml: Html =
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.appConfig.taxFreeAllowanceUrl}">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${appConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
   val now = LocalDate.now()
@@ -73,7 +75,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
       val primaryActiveRecord = createRelationshipRecord()
       val viewModel = ClaimsViewModel(primaryActiveRecord, Seq.empty[RelationshipRecord])
-      val dateInterval = LanguageUtils().taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
+      val dateInterval = languageUtils.taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
       val activeRow = ClaimsRow(dateInterval, messages("change.status.active"))
 
       viewModel.activeRow shouldBe activeRow
@@ -88,7 +90,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
       val creationTimeStamp = now.minusDays(2)
       val participant1StartDate = now.minusDays(2)
       val participant1EndDate = now.minusDays(1)
-      lazy val dateInterval = LanguageUtils().taxDateIntervalString(participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+      lazy val dateInterval = languageUtils.taxDateIntervalString(participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
         Some(participant1EndDate.format(DateTimeFormatter.ofPattern(dateInputPattern))))
 
       val endReasons = Set(
@@ -178,7 +180,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
   }
 
   private def getDateRange(startDate: LocalDate, endDate: LocalDate) = {
-    LanguageUtils().taxDateIntervalString(startDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+    languageUtils.taxDateIntervalString(startDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
       Some(endDate.format(DateTimeFormatter.ofPattern(dateInputPattern))))
   }
 

@@ -17,7 +17,6 @@
 package helpers
 
 import com.google.inject.Inject
-import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.http.HttpClient
@@ -28,7 +27,7 @@ import scala.concurrent.ExecutionContext
 class FakePartialRetriever @Inject()(
                                       override val httpGet: HttpClient,
                                       override val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter
-                                    ) extends FormPartialRetriever with MockitoSugar {
+                                    ) extends FormPartialRetriever {
 
   override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)
                                 (implicit ec: ExecutionContext, request: RequestHeader): Html = Html("")

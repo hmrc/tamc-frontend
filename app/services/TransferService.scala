@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
-import views.helpers.LanguageUtils
+import views.helpers.LanguageUtilsImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +39,9 @@ class TransferService @Inject()(
                                marriageAllowanceConnector: MarriageAllowanceConnector,
                                auditConnector: AuditConnector,
                                cachingService: CachingService,
-                               applicationService: ApplicationService
+                               applicationService: ApplicationService,
+                               timeService: TimeService,
+                               languageUtilsImpl: LanguageUtilsImpl
                                ) {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
@@ -61,7 +63,7 @@ class TransferService @Inject()(
       cache <- cachingService.getCachedDataForEligibilityCheck
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      validYears = TimeService.getValidYearsApplyMAPreviousYears(taxYears)
+      validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
 
@@ -69,7 +71,7 @@ class TransferService @Inject()(
                                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
-        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, TimeService.getTaxYearForDate(dom)) =>
+        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
         Future.successful(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()
       case _ => throw CacheMissingTransferor()
@@ -225,7 +227,7 @@ class TransferService @Inject()(
       recipient_cid = recipient.cid,
       recipient_timestamp = recipient.timestamp,
       taxYears = sessionData.selectedYears.get.sortWith(_ < _))
-    val sendNotificationData = CreateRelationshipNotificationRequest(full_name = "UNKNOWN", email = email, welsh = LanguageUtils.isWelsh(messages))
+    val sendNotificationData = CreateRelationshipNotificationRequest(full_name = "UNKNOWN", email = email, welsh = languageUtilsImpl.isWelsh(messages))
     CreateRelationshipRequestHolder(request = createRelationshipreq, notification = sendNotificationData)
   }
 

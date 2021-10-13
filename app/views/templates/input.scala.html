@@ -57,7 +57,7 @@ elements.args.get('_labelHighlight).getOrElse(false).asInstanceOf[Boolean]
 @elements.args.get(
 '_labelDataAttributes)}>
 @if(parentElements.isDefined) {
-@parentElements.get.errors.map { error => <span class="error-notification">@Messages(error)</span> }
+@parentElements.get.errors.map { error => <span class="error-notification">@Messages(error.toString)</span> }
 }
 @if(labelHighlight) {
 <strong>}
@@ -70,7 +70,7 @@ elements.args.get('_labelHighlight).getOrElse(false).asInstanceOf[Boolean]
     <br>
     }
     @elements.errors.map { error =>
-    <span class="error-message">@Messages(error)</span> <br/>
+    <span class="error-message">@Messages(error.toString)</span> <br/>
     }
     @{
     elements.args.get('_inputPrefix).getOrElse("").asInstanceOf[String]

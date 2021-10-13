@@ -24,7 +24,8 @@ main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group,
 inputView: templates.input,
-calculatorResultView: templates.calculator_result)
+calculatorResultView: templates.calculator_result,
+form: FormWithCSRF)
 
 @(
 calculationResult: Option[models.EligibilityCalculatorResult] = None,
@@ -50,7 +51,7 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
 
 <p>@Html(Messages("pages.calc.para1"))</p>
 
-@helpers.form(action = routes.EligibilityController.ptaCalculatorAction(), args = ('id -> "calculator")) {
+@form(action = routes.EligibilityController.ptaCalculatorAction, args = ('id -> "calculator")) {
 <fieldset>
     <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
     <div class="form-group">

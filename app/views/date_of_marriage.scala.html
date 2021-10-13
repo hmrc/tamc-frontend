@@ -16,14 +16,15 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html.helpers._
-@import views.helpers.LanguageUtils
+@import views.helpers.LanguageUtilsImpl
 @import models.auth.AuthenticatedUserRequest
 
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
 dateFieldsView: templates.dateFields,
-form: FormWithCSRF)
+form: FormWithCSRF,
+languageUtilsImpl: LanguageUtilsImpl)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
@@ -33,7 +34,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @main(
 title = messages("title.application.pattern", messages("title.date-of-marriage")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
+maybeMainDataAttributes = Some(Html(s"data-journey=${languageUtilsImpl().formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
 ){
 
 <a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(messages("generic.back"))</a>

@@ -33,10 +33,12 @@ import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfid
 import utils.ControllerBaseTest
 import utils.RetrivalHelper._
 import play.api.inject.bind
+import play.mvc.Controller
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
-class AuthenticatedActionRefinerTest extends ControllerBaseTest {
+class AuthenticatedActionRefinerTest@Inject()(applicationConfig: ApplicationConfig) extends ControllerBaseTest {
 
   type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
@@ -66,7 +68,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
 
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.ivUpliftUrl)
+        redirectLocation(result) shouldBe Some(applicationConfig.ivUpliftUrl)
       }
 
       "there is no active session" in new FakeController {

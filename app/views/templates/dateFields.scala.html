@@ -38,7 +38,7 @@ new FieldElements(formItem(fieldName).id, formItem(fieldName), null, args.toMap,
             <p class="form-hint">@elements.args.get('_hintText)</p>
         }
 
-        @elements.errors.map { error => <span class="error-notification">@Messages(error)</span>}
+        @elements.errors.map { error => <span class="error-notification">@Messages(error.toString)</span>}
         <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
             @elements.label
         </span>

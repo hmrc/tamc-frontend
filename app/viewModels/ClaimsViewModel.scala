@@ -21,7 +21,9 @@ import models.DesRelationshipEndReason.Default
 import models.RelationshipRecord
 import play.api.i18n.Messages
 import play.twirl.api.Html
-import views.helpers.LanguageUtils
+import views.helpers.LanguageUtilsImpl
+
+import javax.inject.Inject
 
 case class ClaimsRow(dateInterval: String, status: String)
 
@@ -29,7 +31,7 @@ case class ClaimsViewModel(activeRow: ClaimsRow,
                            historicRows: Seq[ClaimsRow],
                            taxFreeAllowanceLink: Html)
 
-object ClaimsViewModel {
+class ClaimsViewModelImpl@Inject()(applicationConfig: ApplicationConfig,  languageUtilsImpl: LanguageUtilsImpl) {
 
   implicit val historicOrdering: Ordering[RelationshipRecord] = Ordering.by((_:RelationshipRecord).creationTimestamp).reverse
 
@@ -44,13 +46,13 @@ object ClaimsViewModel {
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.appConfig.taxFreeAllowanceUrl}">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${applicationConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 
   private def activeClaimsRow(primaryRelationshipRecord: RelationshipRecord)(implicit messages: Messages): ClaimsRow = {
 
-    val activeDateInterval = LanguageUtils().taxDateIntervalString(
+    val activeDateInterval = languageUtilsImpl().taxDateIntervalString(
       primaryRelationshipRecord.participant1StartDate,
       primaryRelationshipRecord.participant1EndDate)
 
@@ -62,7 +64,7 @@ object ClaimsViewModel {
 
   private def historicClaimsRow(nonPrimaryRelation: RelationshipRecord)(implicit messages: Messages): ClaimsRow = {
 
-    val historicDateInterval = LanguageUtils().taxDateIntervalString(
+    val historicDateInterval = languageUtilsImpl().taxDateIntervalString(
       nonPrimaryRelation.participant1StartDate,
       nonPrimaryRelation.participant1EndDate)
 

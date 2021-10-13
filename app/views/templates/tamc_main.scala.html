@@ -26,11 +26,15 @@
 @import utils.TrackingConsentSnippetProvider
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
+@import uk.gov.hmrc.play.views.html.layouts._
 
 @this(
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
 reportProblemV :includes.report_problem,
-applicationConfig: ApplicationConfig)
+applicationConfig: ApplicationConfig,
+article: Article,
+layoutSidebar: Sidebar,
+trackingConsentSnippetProvider: TrackingConsentSnippetProvider)
 
 @(title: String,
  manageService: Boolean = false,
@@ -55,7 +59,7 @@ applicationConfig: ApplicationConfig)
 
 
 @scriptElement = {
-  @TrackingConsentSnippetProvider.get(None)
+  @trackingConsentSnippetProvider.get(None)
 
  <script type="text/javascript">
      function initCobrowse() {
@@ -111,7 +115,7 @@ applicationConfig: ApplicationConfig)
 
 @sidebar = {
  @if(sidebarLinks.isDefined) {
-  @layouts.sidebar(sidebarLinks.get, sidebarClass)
+  @layoutSidebar(sidebarLinks.get, sidebarClass)
  }
 }
 
@@ -188,7 +192,7 @@ applicationConfig: ApplicationConfig)
   } else arguments
  }
 
- templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, layouts.article(mainContent, false, None), templateArguments)
+ templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent, false, None), templateArguments)
 
 }
 
