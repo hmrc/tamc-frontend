@@ -16,6 +16,7 @@
 
 @import play.twirl.api.Html
 @import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
 @import java.time.LocalDate
 @import forms.coc.DivorceSelectYearForm
@@ -25,7 +26,8 @@
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
 dateFieldView: templates.dateFields,
-form: FormWithCSRF)
+form: FormWithCSRF,
+divorceYearForm: DivorceSelectYearForm)
 
 @(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -51,7 +53,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         <div class="form-group">
             @dateFieldView(
             divorceSelectYearForm,
-            DivorceSelectYearForm.DateOfDivorce,
+            divorceYearForm.DateOfDivorce,
             Html(""),
             None,
             '_legend -> messages("pages.divorce.title"),

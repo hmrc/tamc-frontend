@@ -17,15 +17,14 @@
 package controllers
 
 import _root_.services.{CachingService, TimeService, TransferService}
-import config.ApplicationConfig.appConfig._
+import config.ApplicationConfig
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import models._
-import java.time.LocalDate
-
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
@@ -34,9 +33,11 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
-import play.api.inject.bind
 
-class RoutesTest extends ControllerBaseTest {
+import java.time.LocalDate
+import javax.inject.Inject
+
+class RoutesTest@Inject()(appConfig: ApplicationConfig) extends ControllerBaseTest {
 
   val ERROR_HEADING = "There is a problem"
 
@@ -86,7 +87,7 @@ class RoutesTest extends ControllerBaseTest {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.TransferController.confirmYourEmail().url
+      back.attr("href") shouldBe controllers.routes.TransferController.confirmYourEmail.url
     }
 
 
@@ -176,7 +177,7 @@ class RoutesTest extends ControllerBaseTest {
       document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.EligibilityController.eligibilityCheck().url
+      back.attr("href") shouldBe controllers.routes.EligibilityController.eligibilityCheck.url
     }
   }
 
@@ -184,8 +185,8 @@ class RoutesTest extends ControllerBaseTest {
 
     "display errors as no radio buttons is selected for English resident" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
-      val higherThreshold = formatter.format(MAX_LIMIT())
+      val lowerThreshold = formatter.format(appConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(appConfig.MAX_LIMIT())
       val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
@@ -195,14 +196,14 @@ class RoutesTest extends ControllerBaseTest {
       document.getElementById("partners-income-error").text() shouldBe s"Select yes if your partner’s income is between £$lowerThreshold and £$higherThreshold a year"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck().url
+      back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck.url
     }
 
     "display errors as no radio buttons is selected for Scottish resident" in {
       val request = FakeRequest().withSession("scottish_resident" -> "true")
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE() + 1)
-      val higherScotThreshold = formatter.format(MAX_LIMIT_SCOT())
+      val lowerThreshold = formatter.format(appConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherScotThreshold = formatter.format(appConfig.MAX_LIMIT_SCOT())
       val result = eligibilityController.partnersIncomeCheckAction()(request)
       status(result) shouldBe BAD_REQUEST
 
@@ -212,7 +213,7 @@ class RoutesTest extends ControllerBaseTest {
       document.getElementById("partners-income-error").text() shouldBe s"Select yes if your partner’s income is between £$lowerThreshold and £$higherScotThreshold a year"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck().url
+      back.attr("href") shouldBe controllers.routes.EligibilityController.lowerEarnerCheck.url
     }
   }
 

@@ -17,14 +17,14 @@
 package forms
 
 import models.{Gender, RecipientDetailsFormInput}
-import java.time.LocalDate
 import play.api.data.FormError
 import uk.gov.hmrc.domain.Generator
-import utils.BaseTest
+import utils.UnitSpec
 
+import java.time.LocalDate
 import scala.util.Random
 
-class RecipientDetailsFormTest extends BaseTest {
+class RecipientDetailsFormTest extends UnitSpec {
 
   ".recipientDetailsForm nino mapping" should {
 

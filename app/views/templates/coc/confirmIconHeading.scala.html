@@ -14,9 +14,9 @@
  * limitations under the License.
  *@
 
-@import views.helpers.LanguageUtils
+@import views.helpers.LanguageUtilsImpl
 
-@this()
+@this(languageUtils: LanguageUtilsImpl)
 
 @(messageKey: String, relevantDate: Option[java.time.LocalDate] = None)(implicit messages: Messages)
 
@@ -24,7 +24,7 @@
 <p>
     @relevantDate match {
     case Some(date) => {@Html(Messages(messageKey,
-        LanguageUtils().ukDateTransformer(date)))}
+    languageUtils().ukDateTransformer(date)))}
     case _ => {@Html(Messages(messageKey))}
     }
 </p>

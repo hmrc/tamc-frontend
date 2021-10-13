@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.emailaddress
 
-import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
 import play.api.data.FormError
 import play.api.data.Forms.optional

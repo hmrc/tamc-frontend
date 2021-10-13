@@ -17,10 +17,10 @@
 package controllers
 
 import java.text.NumberFormat
-
 import _root_.services.{CachingService, TimeService, TransferService}
-import config.ApplicationConfig.appConfig._
+import config.ApplicationConfig
 import models._
+
 import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
@@ -39,7 +39,9 @@ import play.api.inject.bind
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 
-class ContentTest extends ControllerBaseTest {
+import javax.inject.Inject
+
+class ContentTest@Inject()(applicationConfig: ApplicationConfig) extends ControllerBaseTest {
 
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
@@ -505,7 +507,7 @@ class ContentTest extends ControllerBaseTest {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.TransferController.transfer().url
+      back.attr("href") shouldBe controllers.routes.TransferController.transfer.url
     }
 
     "display form error message (date of marriage is after today’s date)" in {
@@ -595,7 +597,7 @@ class ContentTest extends ControllerBaseTest {
       document.getElementById("marriageDate").text()  shouldBe "10 April 2011"
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears().url
+      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
     }
 
     "display form error message (no year choice made )" in {
@@ -643,7 +645,7 @@ class ContentTest extends ControllerBaseTest {
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears().url
+      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
     }
 
     "display form error message (transferor email is empty)" in {
@@ -897,7 +899,7 @@ class ContentTest extends ControllerBaseTest {
 
     "successfully authenticate the user and have income-check page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE())
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE())
       val result = eligibilityController.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
@@ -914,8 +916,8 @@ class ContentTest extends ControllerBaseTest {
     "have partners-income page and content for English resident" in {
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
-      val higherThreshold = NumberFormat.getIntegerInstance().format(MAX_LIMIT())
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -934,8 +936,8 @@ class ContentTest extends ControllerBaseTest {
       val request = FakeRequest().withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
-      val higherThresholdScot = NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT_SCOT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -998,7 +1000,7 @@ class ContentTest extends ControllerBaseTest {
 
     "successfully authenticate the user and have lower earner page and content" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(PERSONAL_ALLOWANCE())
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE())
       val result = eligibilityController.lowerEarnerCheck()(request)
 
       status(result) shouldBe OK
@@ -1013,8 +1015,8 @@ class ContentTest extends ControllerBaseTest {
     "have partners-income page and content for English resident" in {
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
-      val higherThreshold = NumberFormat.getIntegerInstance().format(MAX_LIMIT())
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
@@ -1033,8 +1035,8 @@ class ContentTest extends ControllerBaseTest {
       val request = FakeRequest().withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
-      val lowerThreshold = NumberFormat.getIntegerInstance().format(PERSONAL_ALLOWANCE() + 1)
-      val higherThresholdScot = NumberFormat.getIntegerInstance().format(MAX_LIMIT_SCOT())
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT_SCOT())
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))

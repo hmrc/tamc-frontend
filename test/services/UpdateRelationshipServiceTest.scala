@@ -22,9 +22,9 @@ import errors.ErrorResponseStatus._
 import errors._
 import forms.coc.CheckClaimOrCancelDecisionForm
 import models._
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
@@ -40,9 +40,10 @@ import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 import play.api.inject.bind
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
-class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
+class UpdateRelationshipServiceTest@Inject()(appConfig: ApplicationConfig) extends BaseTest with BeforeAndAfterEach {
 
   val nino: Nino = new Generator().nextNino
   val instanceIdentifier = 1
@@ -143,7 +144,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(appConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
 
       val result = await(service.saveRelationshipRecords(relationshipRecords))
@@ -158,7 +159,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(appConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.failed(exception))
 
       val result = intercept[RuntimeException](await(service.saveRelationshipRecords(relationshipRecords)))

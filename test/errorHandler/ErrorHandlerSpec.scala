@@ -20,7 +20,6 @@ import config.ApplicationConfig
 import helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
@@ -30,12 +29,12 @@ import play.api.mvc.Request
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.UnitSpec
 
 import java.util.Locale
 
-class ErrorHandlerSpec extends UnitSpec with MockitoSugar with GuiceOneAppPerSuite with Injecting{
+class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
 
   implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
   implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer

@@ -16,15 +16,18 @@
 
 @import models.Gender
 @import play.twirl.api.Html
-@import views.helpers.LanguageUtils
+@import views.helpers.LanguageUtilsImpl
 @import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
 
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
 inputView: templates.input,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+form: FormWithCSRF,
+languageUtilsImpl: LanguageUtilsImpl)
 
 @(recipientForm: Form[models.RecipientDetailsFormInput])(
 implicit messages: Messages,
@@ -35,7 +38,7 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 @main(
 title = Messages("title.application.pattern", Messages("title.transfer")),
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
+maybeMainDataAttributes = Some(Html(s"data-journey=${languageUtilsImpl().formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
 ) {
 
     <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>
@@ -46,7 +49,7 @@ maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDat
     </header>
     <p>@Html(Messages("pages.form.details"))</p>
 
-    @helpers.form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
+    @form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
         <fieldset>
             <div class="form-group">
                 @inputView(recipientForm("name"),

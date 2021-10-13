@@ -18,8 +18,8 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import models._
-import java.time.LocalDate
 
+import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -38,9 +38,10 @@ import uk.gov.hmrc.time.TaxYear
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 import views.helpers.LanguageUtils
 
+import javax.inject.Inject
 import scala.concurrent.Future
 
-class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
+class UpdateRelationshipContentTest@Inject()(languageUtils: LanguageUtils) extends ControllerBaseTest with Injecting {
 
   val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
@@ -111,9 +112,9 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
     val result: Future[Result] = controller.cancel(request)
 
     val currentEndDate =
-      LanguageUtils().ukDateTransformer(TaxYear.current.finishes)
+      languageUtils.ukDateTransformer(TaxYear.current.finishes)
     val nextStartDate =
-      LanguageUtils().ukDateTransformer(TaxYear.current.next.starts)
+      languageUtils.ukDateTransformer(TaxYear.current.next.starts)
 
     val expected = Seq(messages("pages.cancel.paragraph1"), messages("pages.cancel.paragraph2")).toArray
     val parsed = Jsoup.parse(contentAsString(result))

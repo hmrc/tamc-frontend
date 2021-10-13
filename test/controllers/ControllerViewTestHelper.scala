@@ -17,20 +17,18 @@
 package controllers
 
 import models.auth.AuthenticatedUserRequest
-import org.scalatest.mockito.MockitoSugar
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.{MockFormPartialRetriever, MockTemplateRenderer}
+import utils.{MockFormPartialRetriever, MockTemplateRenderer, UnitSpec}
 
 import scala.concurrent.Future
 
-trait ControllerViewTestHelper extends UnitSpec with MockitoSugar {
+trait ControllerViewTestHelper extends UnitSpec {
 
   implicit val authRequest: AuthenticatedUserRequest[AnyContent] = {
     val request: Request[AnyContent] = FakeRequest()

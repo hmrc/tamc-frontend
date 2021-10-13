@@ -24,12 +24,14 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 
-class TamcModule extends Module {
+import javax.inject.Inject
+
+class TamcModule@Inject()(timeService: TimeService) extends Module {
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
-      bind[TimeService].toInstance(TimeService),
+      bind[TimeService].toInstance(timeService),
       bind[TemplateRenderer].to[LocalTemplateRenderer],
       bind[CurrentTaxYear].toInstance(TaxYear)
     )

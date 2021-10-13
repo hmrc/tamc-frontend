@@ -19,7 +19,6 @@ package utils
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.Messages
 import play.api.test.Helpers
-import uk.gov.hmrc.play.test.UnitSpec
 
 trait TamcViewModelTest extends UnitSpec with GuiceOneAppPerSuite {
 

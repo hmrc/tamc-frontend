@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.play.views.html.helpers._
 @import play.twirl.api.Html
 @import uk.gov.hmrc.time.TaxYear
-@import views.helpers.LanguageUtils
+@import views.helpers.LanguageUtilsImpl
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 @import java.time.LocalDate
@@ -27,7 +27,8 @@
 main: templates.tamc_main,
 ninoRendererView: templates.ninoRenderer,
 form: FormWithCSRF,
-applicationConfig: ApplicationConfig)
+applicationConfig: ApplicationConfig,
+languageUtilsImpl: LanguageUtilsImpl)
 
 @(data: models.ConfirmationModel)(
 implicit messages: Messages,
@@ -88,7 +89,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list_row">
             <dt class="govuk-summary-list_key">@Html(Messages("pages.confirm.date.of.marriage"))</dt>
-            <dd class="govuk-summary-list_value" id="marriage-date">@LanguageUtils().ukDateTransformer(data.dateOfMarriage.dateOfMarriage) </dd>
+            <dd class="govuk-summary-list_value" id="marriage-date">@languageUtilsImpl().ukDateTransformer(data.dateOfMarriage.dateOfMarriage) </dd>
             <dd class="govuk-summary-list_actions">
                 <a href="@controllers.routes.TransferController.dateOfMarriage"
                 data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date" aria-label="@Html(Messages("pages.form.marriage-date.aria-label"))">
@@ -102,22 +103,22 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
             <div class="govuk-summary-list_row">
                 @if(taxYear.isCurrent) {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
-                    @Html(Messages("pages.confirm.current.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts)))
+                    @Html(Messages("pages.confirm.current.tax",languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))
                     </dt>
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.current.tax.desc",
-                        LanguageUtils().formPossessive(data.recipientFirstName),
+                        languageUtilsImpl().formPossessive(data.recipientFirstName),
                         data.recipientFirstName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
                     </dd>
                 } else {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
-                    @Html(Messages("pages.confirm.previous.tax",LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts), LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).finishes)))
+                    @Html(Messages("pages.confirm.previous.tax",languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts), languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).finishes)))
                     </dt>
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(Messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
                         Messages("max-benefit", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)))))
                     </dd>
                 }
             <dd class="govuk-summary-list_actions">
-                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears" aria-label="@Html(Messages("pages.confirm.current.tax.aria-label", LanguageUtils().ukDateTransformer(TaxYear(taxYear.year).starts)))">
+                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears" aria-label="@Html(Messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
                 @Html(Messages("generic.change"))
                 </a>
             </dd>
@@ -129,7 +130,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         <p id="warning-message">@Html(Messages("pages.confirm.warning"))</p>
     </div>
 
-    @form(action = routes.TransferController.confirmAction(), args = ('id -> "create-form")) {
+    @form(action = routes.TransferController.confirmAction, args = ('id -> "create-form")) {
 
         <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit">
         @Html(Messages("pages.confirm.button"))

@@ -104,7 +104,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage.url)
       }
     }
   }
@@ -120,7 +120,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "redirect to dateOfMarriage, with a welsh language setting" in {
       val result = await(controller.dateOfMarriageWithCy()(request))
       status(result)               shouldBe SEE_OTHER
-      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
+      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage.url)
       result.newCookies.head.name  shouldBe "PLAY_LANG"
       result.newCookies.head.value shouldBe "cy"
     }
@@ -130,7 +130,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "redirect to dateOfMarriage, with an english language setting" in {
       val result = await(controller.dateOfMarriageWithEn()(request))
       status(result)               shouldBe SEE_OTHER
-      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
+      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage.url)
       result.newCookies.head.name  shouldBe "PLAY_LANG"
       result.newCookies.head.value shouldBe "en"
     }
@@ -167,7 +167,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(true)
         val result = controller.dateOfMarriageAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.eligibleYears().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.eligibleYears.url)
       }
     }
   }
@@ -299,7 +299,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail.url)
       }
 
       "extra years is empty, current year is available but applyForCurrentYear is true" in {
@@ -317,7 +317,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(List(currentTaxYear))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail.url)
       }
     }
 
@@ -432,7 +432,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail.url)
       }
     }
   }
@@ -476,7 +476,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(notificationRecord)
         val result = controller.confirmYourEmailAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirm().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirm.url)
       }
     }
   }
@@ -499,7 +499,7 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(notificationRecord)
         val result = controller.confirmAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished.url)
         verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any())
       }
     }

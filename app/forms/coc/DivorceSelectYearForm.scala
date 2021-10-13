@@ -25,12 +25,12 @@ import play.api.data.{Form, Mapping}
 import play.api.i18n.Messages
 import services.TimeService
 import uk.gov.hmrc.play.mappers.DateFields.{day, month, year}
-import views.helpers.LanguageUtils
+import views.helpers.LanguageUtilsImpl
 
 import javax.inject.Inject
 import scala.util.Try
 
-class DivorceSelectYearForm@Inject()(applicationConfig: ApplicationConfig, timeService: TimeService) {
+class DivorceSelectYearForm@Inject()(applicationConfig: ApplicationConfig, timeService: TimeService, languageUtilsImpl: LanguageUtilsImpl) {
 
   val DateOfDivorce = "dateOfDivorce"
   val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(timeService.getCurrentDate)
@@ -84,10 +84,10 @@ class DivorceSelectYearForm@Inject()(applicationConfig: ApplicationConfig, timeS
 
   private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
     case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date",
-      LanguageUtils().ukDateTransformer(applicationConfig.TAMC_MIN_DATE)))
+      languageUtilsImpl().ukDateTransformer(applicationConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
       Invalid(ValidationError("pages.divorce.date.error.max.date",
-        LanguageUtils().ukDateTransformer(timeService.getCurrentDate.plusDays(1))))
+        languageUtilsImpl().ukDateTransformer(timeService.getCurrentDate.plusDays(1))))
     case _ => Valid
   }
 

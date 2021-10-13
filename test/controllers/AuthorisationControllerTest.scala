@@ -20,7 +20,9 @@ import config.ApplicationConfig
 import play.api.test.Helpers._
 import utils.ControllerBaseTest
 
-class AuthorisationControllerTest extends ControllerBaseTest {
+import javax.inject.Inject
+
+class AuthorisationControllerTest@Inject()(applicationConfig: ApplicationConfig) extends ControllerBaseTest {
 
   lazy val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
 
@@ -42,8 +44,8 @@ class AuthorisationControllerTest extends ControllerBaseTest {
     "redirect" in {
       val result = await(controller.logout()(request))
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.logoutUrl)
-      result.session(request).data("postLogoutPage") shouldBe ApplicationConfig.appConfig.logoutCallbackUrl
+      redirectLocation(result) shouldBe Some(applicationConfig.logoutUrl)
+      result.session(request).data("postLogoutPage") shouldBe applicationConfig.logoutCallbackUrl
     }
   }
 

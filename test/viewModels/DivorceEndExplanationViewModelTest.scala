@@ -17,12 +17,15 @@
 package viewModels
 
 import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
+
 import java.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
 import utils.TamcViewModelTest
 import views.helpers.LanguageUtils
 
-class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
+import javax.inject.Inject
+
+class DivorceEndExplanationViewModelTest@Inject()(languageUtils: LanguageUtils, divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl) extends TamcViewModelTest {
 
   val maEndDate = LocalDate.now()
   val paEffectiveDate = LocalDate.now()
@@ -32,10 +35,10 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
   val divorceDatePreviousTaxYear = currentTaxYear.previous.starts
 
   def createViewModel(role: Role, divorceDate: LocalDate): DivorceEndExplanationViewModel = {
-    DivorceEndExplanationViewModel(role, divorceDate, MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
+    divorceEndExplanationViewModelImpl(role, divorceDate, MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))
   }
 
-  def formatDate(date: LocalDate): String = LanguageUtils().ukDateTransformer(date)
+  def formatDate(date: LocalDate): String = languageUtils.ukDateTransformer(date)
 
 
   "DivorceEndExplanationViewModel" should {
@@ -56,7 +59,7 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
 
       "a Recipient is divorced in a previous tax year" in {
 
-        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
+        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", languageUtils.ukDateTransformer(maEndDate))
         val bulletStatement2 = messages("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
         val expectedTaxYearStatus = messages("pages.divorce.explanation.previous.taxYear")
@@ -68,7 +71,7 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
 
       "a transferor is divorced in the current tax year" in {
 
-        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
+        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", languageUtils.ukDateTransformer(maEndDate))
         val bulletStatement2 = messages("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
         val expectedTaxYearStatus = messages("pages.divorce.explanation.current.taxYear")
@@ -80,7 +83,7 @@ class DivorceEndExplanationViewModelTest extends TamcViewModelTest {
 
       "a transferor is divorced in a previous tax year" in {
 
-        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", LanguageUtils().ukDateTransformer(maEndDate))
+        val bulletStatement1 = messages("pages.divorce.explanation.previous.bullet", languageUtils.ukDateTransformer(maEndDate))
         val bulletStatement2 = messages("pages.divorce.explanation.adjust.code.bullet")
         val expectedBulletStatements = (bulletStatement1, bulletStatement2)
         val expectedTaxYearStatus = messages("pages.divorce.explanation.previous.taxYear")

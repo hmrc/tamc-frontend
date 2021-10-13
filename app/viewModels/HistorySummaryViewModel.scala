@@ -24,7 +24,7 @@ import models._
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
-import views.helpers.LanguageUtils
+import views.helpers.LanguageUtilsImpl
 
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ case class HistorySummaryButton(id: String, content: String, href: String)
 
 case class HistorySummaryViewModel(paragraphContent: Html, button: HistorySummaryButton, displayName: String)
 
-class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig) {
+class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig, languageUtilsImpl: LanguageUtilsImpl) {
 
   def apply(role: Role, hasMarriageAllowanceBeenCancelled: Boolean, loggedInUserInfo: LoggedInUserInfo)(implicit messages: Messages): HistorySummaryViewModel = {
 
@@ -72,7 +72,7 @@ class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig
 
 
   private def marriageAllowanceCancelledContent(role: Role)(implicit messages: Messages): (Html, HistorySummaryButton) = {
-    val formattedEndOfYear = LanguageUtils().ukDateTransformer(TaxYear.current.finishes)
+    val formattedEndOfYear = languageUtilsImpl().ukDateTransformer(TaxYear.current.finishes)
 
     val paragraphContent = if (role == Transferor) {
       Html(s"<p>${messages("pages.history.historic.ended")}</p>" +

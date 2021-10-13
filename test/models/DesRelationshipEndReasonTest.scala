@@ -18,7 +18,7 @@ package models
 
 import models.DesRelationshipEndReason._
 import play.api.libs.json._
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.UnitSpec
 
 class DesRelationshipEndReasonTest extends UnitSpec {
 
@@ -50,8 +50,8 @@ class DesRelationshipEndReasonTest extends UnitSpec {
   }
   "writes" should{
     "write the value to the Json correctly" in{
-      Json.toJson(Death) shouldBe JsString(Death.value)
-      Json.toJson(InvalidParticipant) shouldBe JsString(InvalidParticipant.value)
+      Json.toJson[DesRelationshipEndReason](Death) shouldBe JsString(Death.value)
+      Json.toJson[DesRelationshipEndReason](InvalidParticipant) shouldBe JsString(InvalidParticipant.value)
     }
   }
 }

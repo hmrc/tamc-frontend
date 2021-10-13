@@ -30,6 +30,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
 import viewModels._
+import viewModels.DivorceEndExplanationViewModelImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
@@ -56,7 +57,10 @@ class UpdateRelationshipController @Inject()(
   transferorNotFound: views.html.errors.transferor_not_found,
   recipientNotFound: views.html.errors.recipient_not_found,
   divorceSelectYearForm: DivorceSelectYearForm,
-  historySummaryViewModelImpl: HistorySummaryViewModelImpl)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  historySummaryViewModelImpl: HistorySummaryViewModelImpl,
+  claimsViewModelImpl: ClaimsViewModelImpl,
+  divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
+  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -102,7 +106,7 @@ class UpdateRelationshipController @Inject()(
   def claims: Action[AnyContent] = authenticate.async {
     implicit request =>
       (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-        val viewModel = ClaimsViewModel(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
+        val viewModel = claimsViewModelImpl(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
         Ok(claimsV(viewModel))
       }) recover handleError
   }
@@ -226,7 +230,7 @@ class UpdateRelationshipController @Inject()(
         datesForDivorce = updateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate)
         _ <- updateRelationshipService.saveMarriageAllowanceEndingDates(datesForDivorce)
       } yield {
-       val viewModel = DivorceEndExplanationViewModel(role, divorceDate, datesForDivorce)
+       val viewModel = divorceEndExplanationViewModelImpl(role, divorceDate, datesForDivorce)
         Ok(divorceEndExplanationV(viewModel))
       }) recover handleError
   }
@@ -259,7 +263,7 @@ class UpdateRelationshipController @Inject()(
   def confirmUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getConfirmationUpdateAnswers map { confirmationUpdateAnswers =>
-          Ok(confirmUpdateV(ConfirmUpdateViewModel(confirmationUpdateAnswers)))
+          Ok(confirmUpdateV(confirmUpdateViewModelImpl(confirmationUpdateAnswers)))
       } recover handleError
   }
 

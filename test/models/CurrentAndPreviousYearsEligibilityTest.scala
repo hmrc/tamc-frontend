@@ -16,14 +16,15 @@
 
 package models
 
-import org.scalatest.mockito.MockitoSugar
-import services.TimeService
-import uk.gov.hmrc.play.test.UnitSpec
 import org.mockito.Mockito._
+import services.TimeService
+import utils.UnitSpec
 
-class CurrentAndPreviousYearsEligibilityTest extends UnitSpec with MockitoSugar {
+import javax.inject.Inject
 
-  val currentYear: Int = TimeService.getCurrentTaxYear
+class CurrentAndPreviousYearsEligibilityTest@Inject()(timeService: TimeService) extends UnitSpec {
+
+  val currentYear: Int = timeService.getCurrentTaxYear
   val previousTaxYear: TaxYear = TaxYear(currentYear - 1)
   val mockData: RegistrationFormInput = mock[RegistrationFormInput]
   val mockTimeService: TimeService = mock[TimeService]
