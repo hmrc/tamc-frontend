@@ -51,7 +51,8 @@ import scala.concurrent.Future
 class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: HistorySummaryViewModelImpl,
                                                 claimsViewModelImpl: ClaimsViewModelImpl,
                                                 divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
-                                                confirmUpdateViewModeImpl: ConfirmUpdateViewModelImpl) extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+                                                confirmUpdateViewModeImpl: ConfirmUpdateViewModelImpl,
+                                                divorceSelectYearForm: DivorceSelectYearForm) extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
   val generatedNino: Nino = new Generator().nextNino
   val mockTransferService: TransferService = mock[TransferService]
@@ -472,7 +473,7 @@ class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: His
         val result = controller.divorceEnterYear(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs divorceSelectYearView(DivorceSelectYearForm.form.fill(divorceDateInThePast))
+        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form.fill(divorceDateInThePast))
       }
 
       "there is no data in the cache" in {
@@ -482,7 +483,7 @@ class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: His
         val result = controller.divorceEnterYear(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs divorceSelectYearView(DivorceSelectYearForm.form)
+        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)
       }
 
     }

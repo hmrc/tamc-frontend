@@ -33,6 +33,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfid
 import utils.ControllerBaseTest
 import utils.RetrivalHelper._
 import play.api.inject.bind
+import play.api.mvc.Results.Ok
 import play.mvc.Controller
 
 import javax.inject.Inject

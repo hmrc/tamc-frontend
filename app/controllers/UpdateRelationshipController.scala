@@ -23,14 +23,13 @@ import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
 import models.auth.BaseUserRequest
-import play.Logger
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.LoggerHelper
 import viewModels._
-import viewModels.DivorceEndExplanationViewModelImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
@@ -59,7 +58,7 @@ class UpdateRelationshipController @Inject()(
   historySummaryViewModelImpl: HistorySummaryViewModelImpl,
   claimsViewModelImpl: ClaimsViewModelImpl,
   divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
-  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -286,16 +285,16 @@ class UpdateRelationshipController @Inject()(
 
         throwable match {
           case _: NoPrimaryRecordError => Redirect(controllers.routes.EligibilityController.howItWorks)
-          case _: CacheRelationshipAlreadyUpdated => handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate))
-          case _: CacheMissingUpdateRecord => handle(Logger.warn, InternalServerError(tryLater()))
-          case _: CacheUpdateRequestNotSent => handle(Logger.warn, InternalServerError(tryLater()))
-          case _: CannotUpdateRelationship => handle(Logger.warn, InternalServerError(tryLater()))
-          case _: MultipleActiveRecordError => handle(Logger.warn, InternalServerError(tryLater()))
-          case _: CitizenNotFound => handle(Logger.warn, InternalServerError(citizenNotFound()))
-          case _: BadFetchRequest => handle(Logger.warn, InternalServerError(tryLater()))
-          case _: TransferorNotFound => handle(Logger.warn, Ok(transferorNotFound()))
-          case _: RecipientNotFound => handle(Logger.warn, Ok(recipientNotFound()))
-          case _ => handle(Logger.error, InternalServerError(tryLater()))
+          case _: CacheRelationshipAlreadyUpdated => handle(warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate))
+          case _: CacheMissingUpdateRecord => handle(warn, InternalServerError(tryLater()))
+          case _: CacheUpdateRequestNotSent => handle(warn, InternalServerError(tryLater()))
+          case _: CannotUpdateRelationship => handle(warn, InternalServerError(tryLater()))
+          case _: MultipleActiveRecordError => handle(warn, InternalServerError(tryLater()))
+          case _: CitizenNotFound => handle(warn, InternalServerError(citizenNotFound()))
+          case _: BadFetchRequest => handle(warn, InternalServerError(tryLater()))
+          case _: TransferorNotFound => handle(warn, Ok(transferorNotFound()))
+          case _: RecipientNotFound => handle(warn, Ok(recipientNotFound()))
+          case _ => handle(error, InternalServerError(tryLater()))
         }
     }
 

@@ -17,7 +17,7 @@
 package models
 
 import errors._
-import play.api.Logger
+import play.api.Logging
 import play.api.libs.json.Json
 
 case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Seq[RelationshipRecord],
@@ -41,11 +41,9 @@ case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryReco
 
 }
 
-object RelationshipRecords {
+object RelationshipRecords extends Logging  {
 
   implicit val formats = Json.format[RelationshipRecords]
-
-  val logger = Logger(this.getClass)
 
   def apply(relationshipRecordList: RelationshipRecordList): RelationshipRecords = {
 
