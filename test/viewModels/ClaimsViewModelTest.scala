@@ -32,7 +32,9 @@ import views.helpers.LanguageUtils
 import javax.inject.Inject
 
 
-class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig, languageUtils: LanguageUtils) extends TamcViewModelTest {
+class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig,
+                                   languageUtils: LanguageUtils,
+                                   claimsViewModelImpl: ClaimsViewModelImpl) extends TamcViewModelTest {
 
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
@@ -74,7 +76,7 @@ class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig, languageUtils: 
     "create a ClaimsViewModel with active claims rows" in {
 
       val primaryActiveRecord = createRelationshipRecord()
-      val viewModel = ClaimsViewModel(primaryActiveRecord, Seq.empty[RelationshipRecord])
+      val viewModel = claimsViewModelImpl(primaryActiveRecord, Seq.empty[RelationshipRecord])
       val dateInterval = languageUtils.taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
       val activeRow = ClaimsRow(dateInterval, messages("change.status.active"))
 
@@ -103,7 +105,7 @@ class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig, languageUtils: 
           val historicNonPrimaryRecord = createRelationshipRecord(creationTimeStamp, participant1StartDate,
             Some(endReason), Some(participant1EndDate))
 
-          val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(historicNonPrimaryRecord))
+          val viewModel = claimsViewModelImpl(primaryActiveRecord, Seq(historicNonPrimaryRecord))
           val expectedStatus = getReason(historicNonPrimaryRecord)
           val expectedHistoricClaimsRow = ClaimsRow(dateInterval, expectedStatus)
 
@@ -147,7 +149,7 @@ class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig, languageUtils: 
 
       val orderedClaimRows = Seq(expectedClaimsRow1, expectedClaimsRow2, expectedClaimsRow3)
 
-      ClaimsViewModel(primaryActiveRecord, historicSequenceUnordered).historicRows shouldBe orderedClaimRows
+      claimsViewModelImpl(primaryActiveRecord, historicSequenceUnordered).historicRows shouldBe orderedClaimRows
     }
 
     "create a historic claims row" when {
@@ -162,7 +164,7 @@ class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig, languageUtils: 
         val cyMinusOneRecord = createRelationshipRecord(participant1StartDate = cyMinusOneStartDate,
           participant1EndDate = Some(cyMinusOneEndDate), relationshipEndReason = None)
 
-        val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusOneRecord))
+        val viewModel = claimsViewModelImpl(primaryActiveRecord, Seq(cyMinusOneRecord))
         val expectedStatus = messages("coc.end-reason.DEFAULT")
         val claimsRows = Seq(ClaimsRow(expectedClaimsRowMinusOne , expectedStatus))
 

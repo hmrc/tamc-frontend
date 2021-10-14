@@ -20,14 +20,12 @@ import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.CurrentYearForm.currentYearForm
-import forms.DateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
-import forms.RecipientDetailsForm
+import forms.{DateOfMarriageForm, RecipientDetailsForm}
 import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
-import play.Logger
 import play.api.data.FormError
 import play.api.i18n.Lang
 import play.api.mvc._
@@ -36,6 +34,7 @@ import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.LoggerHelper
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -66,7 +65,7 @@ class TransferController @Inject() (
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
   recipientDetailsForm: RecipientDetailsForm,
-  dateOfMarriageForm: DateOfMarriageForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  dateOfMarriageForm: DateOfMarriageForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
@@ -265,33 +264,33 @@ class TransferController @Inject() (
       }
 
       def handleWithException(ex: Throwable, view: Html): Result = {
-        Logger.error(ex.getMessage(), ex)
+        error(ex.getMessage(), ex)
         InternalServerError(view)
       }
 
       throwable match {
-        case _: TransferorNotFound => handle(Logger.warn, Ok(transferorNotFound()))
-        case _: RecipientNotFound  => handle(Logger.warn, Ok(recipientNotFound()))
+        case _: TransferorNotFound => handle(warn, Ok(transferorNotFound()))
+        case _: RecipientNotFound  => handle(warn, Ok(recipientNotFound()))
         case _: TransferorDeceased =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService))
+          handle(warn, Redirect(controllers.routes.TransferController.cannotUseService))
         case _: RecipientDeceased =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService))
+          handle(warn, Redirect(controllers.routes.TransferController.cannotUseService))
         case _: CacheMissingTransferor =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
-        case _: CacheTransferorInRelationship => handle(Logger.warn, Ok(transferorStatus()))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case _: CacheTransferorInRelationship => handle(warn, Ok(transferorStatus()))
         case _: CacheMissingRecipient =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: CacheMissingEmail =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail))
+          handle(warn, Redirect(controllers.routes.TransferController.confirmYourEmail))
         case _: CacheRelationshipAlreadyCreated =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: CacheCreateRequestNotSent =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
-        case _: NoTaxYearsSelected      => handle(Logger.info, Ok(noYearSelected()))
-        case _: NoTaxYearsAvailable     => handle(Logger.info, Ok(noEligibleYears()))
-        case _: NoTaxYearsForTransferor => handle(Logger.info, Ok(noTaxYearTransferor()))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case _: NoTaxYearsSelected      => handle(info, Ok(noYearSelected()))
+        case _: NoTaxYearsAvailable     => handle(info, Ok(noEligibleYears()))
+        case _: NoTaxYearsForTransferor => handle(info, Ok(noTaxYearTransferor()))
         case _: RelationshipMightBeCreated =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case ex: CannotCreateRelationship => handleWithException(ex, relationshipCannotCreate())
         case ex: CacheRecipientInRelationship =>
           handleWithException(ex, recipientRelationshipExists())

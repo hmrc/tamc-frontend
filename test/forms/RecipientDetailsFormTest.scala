@@ -22,14 +22,15 @@ import uk.gov.hmrc.domain.Generator
 import utils.UnitSpec
 
 import java.time.LocalDate
+import javax.inject.Inject
 import scala.util.Random
 
-class RecipientDetailsFormTest extends UnitSpec {
+class RecipientDetailsFormTest@Inject()(recipientDetailsForm: RecipientDetailsForm) extends UnitSpec {
 
   ".recipientDetailsForm nino mapping" should {
 
     val validNino = new Generator(new Random).nextNino
-    val form = RecipientDetailsForm.recipientDetailsForm(LocalDate.now(), validNino)
+    val form = recipientDetailsForm.recipientDetailsForm(LocalDate.now(), validNino)
 
     "fail to bind a nino containing invalid chars, with a explicit invalid char error" in {
       val formInput = Map[String, String](

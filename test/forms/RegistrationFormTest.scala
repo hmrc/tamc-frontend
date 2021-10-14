@@ -17,14 +17,20 @@
 package forms
 
 import config.ApplicationConfig
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.data.FormError
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesProvider}
 import utils.UnitSpec
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class RegistrationFormTest@Inject()(appConfig: ApplicationConfig, registrationForm: RegistrationForm) extends UnitSpec {
+class RegistrationFormTest@Inject()(appConfig: ApplicationConfig, registrationForm: RegistrationForm) extends UnitSpec with GuiceOneServerPerSuite {
+
+  implicit lazy val provider: MessagesProvider = app.injector.instanceOf[MessagesProvider]
+  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
+  implicit lazy val messages: Messages = messagesApi.preferred(Seq(Lang("en")))
 
   ".dateOfMarriageValidator" should {
 

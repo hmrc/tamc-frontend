@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package config
+package utils
 
-import utils.UnitSpec
+import play.api.Logging
 
-import javax.inject.Inject
+trait LoggerHelper extends Logging {
 
-class ApplicationConfigSpec@Inject()(applicationConfig: ApplicationConfig) extends UnitSpec {
-
-  "check rates for earliest valid year" when {
-    "return valid year" in {
-      applicationConfig.TAMC_BEGINNING_YEAR should be(2017)
-    }
+  def warn(message: String, throwable: Throwable): Unit = {
+    logger.warn(message, throwable)
   }
 
-  "ggSignInUrl" must {
-    "build ggSignInUrl and encode continue url" in {
-      applicationConfig.ggSignInUrl shouldBe "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
-    }
+  def warn(message: String): Unit = {
+    logger.warn(message)
   }
 
+  def error(message: String, throwable: Throwable): Unit = {
+    logger.error(message, throwable)
+  }
+
+  def info(message: String): Unit = {
+    logger.info(message)
+  }
 }

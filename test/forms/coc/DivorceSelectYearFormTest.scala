@@ -16,16 +16,20 @@
 
 package forms.coc
 
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.data.FormError
+import play.api.i18n.MessagesProvider
+import play.api.test.Injecting
 import utils.UnitSpec
 
 import java.time.LocalDate
 import javax.inject.Inject
 
-class DivorceSelectYearFormTest@Inject()(divorceSelectYearForm: DivorceSelectYearForm) extends UnitSpec {
+class DivorceSelectYearFormTest@Inject()(divorceSelectYearForm: DivorceSelectYearForm) extends UnitSpec with GuiceOneServerPerSuite {
 
   val today = LocalDate.now()
   val defaultDate = LocalDate.of(2000, 1, 1)
+  implicit lazy val provider: MessagesProvider = app.injector.instanceOf[MessagesProvider]
 
   "DivorceSelectYearForm" should {
     "bind" when {
