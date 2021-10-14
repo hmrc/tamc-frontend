@@ -68,7 +68,7 @@ title = Messages("title.application.pattern", Messages("title.eligible-years"))
         </li>
         <li>@Html(Messages("pages.eligibleyear.li2",languageUtilsImpl().formPossessive(recipientName)))
         </li>
-        <li>@Html(Messages("pages.eligibleyear.li3",recipientName)) <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change" target="_blank">@Messages("pages.eligibleyear.li3.link.text") @Messages("tamc.open.in.new.window")</a></li>
+        <li>@Html(Messages("pages.eligibleyear.li3",recipientName)) <a href="https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change" target="_blank" rel="noopener noreferrer">@Messages("pages.eligibleyear.li3.link.text") @Messages("tamc.open.in.new.window")</a></li>
     </ul>
 
     @formCSRF(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
