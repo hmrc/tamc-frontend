@@ -17,46 +17,20 @@
 package forms
 
 import play.api.data.{Form, Mapping}
-import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, emailPattern, valueIsPresent}
+import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, emailAddress}
+
 
 object EmailForm {
 
   val emailForm: Form[EmailAddress] = Form("transferor-email" -> email)
-  private val initialCharCheckRegexStr: String = """^[a-zA-Z0-9\-\_\.\@]+"""
 
   private def email: Mapping[EmailAddress] =
-    valueIsPresent(errorRequired = messageCustomizer("error.required"))
-      .verifying {
-        emailIsValidFormat(formatError = messageCustomizer("error.email"), charError = messageCustomizer("error.character"))
-      }
-      .transform[EmailAddress](EmailAddress(_), _.value)
-      .verifying {
-        emailPattern(regex = """^([a-zA-Z0-9\-\_]+[\.]?)+([a-zA-Z0-9\-\_]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9]{2,})+)$""".r, error = messageCustomizer("error.email"))
-      }
+    emailAddress(messageCustomizer("error.required"), messageCustomizer("error.email"))
       .verifying {
         emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))
       }
 
   private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
 
-  private def emailIsValidFormat(name: String = "constraint.emailFormat",
-                                 formatError: String,
-                                 charError: String): Constraint[String] =
-    Constraint[String](name) {
-      email =>
-        if (EmailAddress.isValid(email) && email.matches(initialCharCheckRegexStr)) {
-          try {
-            EmailAddress(email)
-            Valid
-          } catch {
-            case _: IllegalArgumentException => Invalid(ValidationError(formatError))
-          }
-        } else if (!email.matches(initialCharCheckRegexStr)) {
-          Invalid(ValidationError(charError))
-        } else {
-          Invalid(ValidationError(formatError))
-        }
-    }
 }

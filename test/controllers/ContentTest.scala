@@ -701,10 +701,10 @@ class ContentTest extends ControllerBaseTest {
       labelName
         .getElementsByClass("error-message")
         .first()
-        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
       document
         .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email has consequent dots)" in {
@@ -720,14 +720,14 @@ class ContentTest extends ControllerBaseTest {
       labelName
         .getElementsByClass("error-message")
         .first()
-        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
       document
         .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "check$%^&&@example.com")
+      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "check[example.com")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -739,10 +739,10 @@ class ContentTest extends ControllerBaseTest {
       labelName
         .getElementsByClass("error-message")
         .first()
-        .text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
       document
         .getElementById("transferor-email-error")
-        .text() shouldBe "Your email address must only include letters a to z, numbers 0 to 9, full stops, hyphens and underscores"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email does not include TLD)" in {
@@ -758,10 +758,10 @@ class ContentTest extends ControllerBaseTest {
       labelName
         .getElementsByClass("error-message")
         .first()
-        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+        .text() shouldBe "Enter an email address in the correct form, like name@example.com"
       document
         .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address with a name, @ symbol and a domain name, like yourname@example.com"
+        .text() shouldBe "Enter an email address in the correct form, like name@example.com"
     }
   }
 
