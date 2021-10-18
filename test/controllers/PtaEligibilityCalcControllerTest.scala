@@ -19,12 +19,13 @@ package controllers
 import config.ApplicationConfig
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
+import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 import utils.ControllerBaseTest
 
-import javax.inject.Inject
+class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
 
-class PtaEligibilityCalcControllerTest@Inject()(appConfig: ApplicationConfig) extends ControllerBaseTest {
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   private def calculatorRequestAction(income: Map[String, String] = null) = {
     val controller = app.injector.instanceOf[EligibilityController]
@@ -83,8 +84,8 @@ class PtaEligibilityCalcControllerTest@Inject()(appConfig: ApplicationConfig) ex
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income<11001" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(appConfig.PERSONAL_ALLOWANCE() + 1)
-      val higherThreshold = formatter.format(appConfig.MAX_LIMIT())
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(applicationConfig.MAX_LIMIT())
       val result = calculatorRequestAction(Map("transferor-income" -> "9540", "recipient-income" -> "11000"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. " +
@@ -93,9 +94,9 @@ class PtaEligibilityCalcControllerTest@Inject()(appConfig: ApplicationConfig) ex
 
     "show ’recipient is not eligible’ if transferor income=9540  and recipient income>45000" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(appConfig.PERSONAL_ALLOWANCE() + 1)
-      val higherThreshold = formatter.format(appConfig.MAX_LIMIT())
-      val overHigherThreshold = formatter.format(appConfig.MAX_LIMIT() + 10)
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(applicationConfig.MAX_LIMIT())
+      val overHigherThreshold = formatter.format(applicationConfig.MAX_LIMIT() + 10)
       val result = calculatorRequestAction(Map("transferor-income" -> "9540", "recipient-income" -> overHigherThreshold))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. " +
@@ -218,8 +219,8 @@ class PtaEligibilityCalcControllerTest@Inject()(appConfig: ApplicationConfig) ex
 
     "be displayed if transferor income=0 (< 9540) and recipient income=0 (10600-11660)" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(appConfig.PERSONAL_ALLOWANCE() + 1)
-      val higherThreshold = formatter.format(appConfig.MAX_LIMIT())
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(applicationConfig.MAX_LIMIT())
       val result = calculatorRequestAction(Map("transferor-income" -> "0", "recipient-income" -> "0"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
@@ -233,8 +234,8 @@ class PtaEligibilityCalcControllerTest@Inject()(appConfig: ApplicationConfig) ex
 
     "be displayed if transferor income=9000 (< 9540) and recipient income=50271" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(appConfig.PERSONAL_ALLOWANCE() + 1)
-      val higherThreshold = formatter.format(appConfig.MAX_LIMIT())
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = formatter.format(applicationConfig.MAX_LIMIT())
       val result = calculatorRequestAction(Map("transferor-income" -> "9000", "recipient-income" -> "50271"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You are not eligible for Marriage Allowance. Your partner’s annual income must be between £$lowerThreshold and £$higherThreshold."
@@ -242,7 +243,7 @@ class PtaEligibilityCalcControllerTest@Inject()(appConfig: ApplicationConfig) ex
 
     "be displayed if transferor income=12600 and recipient income=20000" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val lowerThreshold = formatter.format(appConfig.PERSONAL_ALLOWANCE())
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE())
       val result = calculatorRequestAction(Map("transferor-income" -> "12600", "recipient-income" -> "20000"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe s"You will not benefit as a couple because your income is over £$lowerThreshold."

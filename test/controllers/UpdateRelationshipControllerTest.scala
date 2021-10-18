@@ -16,49 +16,50 @@
 
 package controllers
 
+import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.EmailForm.emailForm
-import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
+import forms.coc._
 import models._
 import models.auth.AuthenticatedUserRequest
-
-import java.time.LocalDate
-import controllers.actions.AuthenticatedActionRefiner
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.i18n.MessagesApi
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Injecting}
 import services._
 import test_utils._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.RequestBuilder._
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 import viewModels._
-import play.api.inject.bind
-import uk.gov.hmrc.renderer.TemplateRenderer
 
-import javax.inject.Inject
+import java.time.LocalDate
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
-class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: HistorySummaryViewModelImpl,
-                                                claimsViewModelImpl: ClaimsViewModelImpl,
-                                                divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
-                                                confirmUpdateViewModeImpl: ConfirmUpdateViewModelImpl,
-                                                divorceSelectYearForm: DivorceSelectYearForm) extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
   val generatedNino: Nino = new Generator().nextNino
   val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+
+  val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
+  val divorceSelectYearForm: DivorceSelectYearForm = instanceOf[DivorceSelectYearForm]
+  val divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl = instanceOf[DivorceEndExplanationViewModelImpl]
+  val confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl = instanceOf[ConfirmUpdateViewModelImpl]
+  val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
 
   val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
@@ -102,6 +103,11 @@ class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: His
   val emailView = inject[views.html.coc.email]
   val confirmUpdateView = inject[views.html.coc.confirmUpdate]
   val finishedView = inject[views.html.coc.finished]
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockTransferService, mockCachingService, mockUpdateRelationshipService, mockTimeService)
+  }
 
   "history" should {
 
@@ -524,7 +530,7 @@ class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: His
     }
 
     "a non fatal error has occurred when trying to get cached data" in {
-      when(mockUpdateRelationshipService.getDivorceDate(any(), any())).thenReturn(failedFuture)
+      when(mockUpdateRelationshipService.getMakeChangesDecision).thenReturn(Future.failed(new Exception("exception has been thrown")))
 
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
@@ -543,6 +549,9 @@ class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: His
 
         when(mockUpdateRelationshipService.saveDivorceDate(ArgumentMatchers.eq(divorceDateInThePast))(any(), any()))
           .thenReturn(Future.successful(divorceDateInThePast))
+
+        when(mockTimeService.getCurrentDate)
+          .thenReturn(LocalDate.now())
 
         val result = controller.submitDivorceEnterYear()(request)
         status(result) shouldBe SEE_OTHER
@@ -576,6 +585,9 @@ class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: His
         val request = buildFakePostRequest("dateOfDivorce.year" -> divorceDateInThePast.getYear.toString,
           "dateOfDivorce.month" -> divorceDateInThePast.getMonthValue.toString,
           "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString)
+
+        when(mockTimeService.getCurrentDate)
+          .thenReturn(LocalDate.now())
 
         val result = controller.submitDivorceEnterYear(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -746,7 +758,7 @@ class UpdateRelationshipControllerTest@Inject()(historySummaryViewModelImpl: His
       val result = controller.confirmUpdate()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs confirmUpdateView(confirmUpdateViewModeImpl(confirmUpdateAnswers))
+      result rendersTheSameViewAs confirmUpdateView(confirmUpdateViewModelImpl(confirmUpdateAnswers))
 
     }
 

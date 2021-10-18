@@ -18,13 +18,13 @@ package controllers
 
 import config.ApplicationConfig
 import play.api.test.Helpers._
+import play.api.test.Helpers.baseApplicationBuilder.injector
 import utils.ControllerBaseTest
 
-import javax.inject.Inject
-
-class AuthorisationControllerTest@Inject()(applicationConfig: ApplicationConfig) extends ControllerBaseTest {
+class AuthorisationControllerTest extends ControllerBaseTest {
 
   lazy val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   "Calling notAuthorised" should {
     "return OK" in {

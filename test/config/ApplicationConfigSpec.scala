@@ -16,11 +16,12 @@
 
 package config
 
+import play.api.test.Helpers.baseApplicationBuilder.injector
 import utils.UnitSpec
 
-import javax.inject.Inject
+class ApplicationConfigSpec extends UnitSpec {
 
-class ApplicationConfigSpec@Inject()(applicationConfig: ApplicationConfig) extends UnitSpec {
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   "check rates for earliest valid year" when {
     "return valid year" in {

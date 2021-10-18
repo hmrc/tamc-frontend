@@ -16,36 +16,37 @@
 
 package controllers
 
-import java.text.NumberFormat
 import _root_.services.{CachingService, TimeService, TransferService}
 import config.ApplicationConfig
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import models._
-
-import java.time.LocalDate
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.time
 import uk.gov.hmrc.renderer.TemplateRenderer
-import play.api.inject.bind
+import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 
-import javax.inject.Inject
+import java.text.NumberFormat
+import java.time.LocalDate
 
-class ContentTest@Inject()(applicationConfig: ApplicationConfig) extends ControllerBaseTest {
+class ContentTest extends ControllerBaseTest {
 
   val mockTransferService: TransferService = mock[TransferService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
 
