@@ -85,39 +85,6 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks {
       }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
         List(FormError("email", List("error.maxLength"), List(10)))
     }
-
-    "reject too long email address (when using 'emailMaxLength' constraint and custom error)" in {
-      emailAddressMapping.verifying {
-        maxLengthConstraintWithError
-      }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
-        List(FormError("email", List("field.exceeds"), List(10)))
-    }
-
-    "reject email address which does not match given regex" in {
-      val errors: Seq[FormError] = emailAddressMapping.verifying {
-        patternConstraint
-      }.bind(Map("email" -> "example@example.com-asd")).left.get
-      errors.size shouldBe 1
-      val headError = errors.head
-      headError.key shouldBe "email"
-      headError.messages.size shouldBe 1
-      headError.messages.head shouldBe "error.pattern"
-      headError.args.size shouldBe 1
-      headError.args.head.toString shouldBe """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$"""
-    }
-
-    "reject email address which does not match given regex (with custom error)" in {
-      val errors: Seq[FormError] = emailAddressMapping.verifying {
-        patternConstraintWithError
-      }.bind(Map("email" -> "example@example.com-asd")).left.get
-      errors.size shouldBe 1
-      val headError = errors.head
-      headError.key shouldBe "email"
-      headError.messages.size shouldBe 1
-      headError.messages.head shouldBe "field.pattern"
-      headError.args.size shouldBe 1
-      headError.args.head.toString shouldBe """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$"""
-    }
   }
 
   private def emptyEmailInputData: Seq[Map[String, String]] =

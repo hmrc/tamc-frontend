@@ -16,21 +16,41 @@
 
 package forms
 
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, Mapping}
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, emailAddress}
+import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, valueIsPresent}
+
+import scala.util.{Success, Try}
 
 
 object EmailForm {
 
   val emailForm: Form[EmailAddress] = Form("transferor-email" -> email)
 
+  private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
+
+
+  private val initialCharCheckRegexStr: String = """^[a-zA-Z0-9\-\_\.\@]+"""
+  private val formatPatternRegex: String = """^([a-zA-Z0-9!#$git %&’'*+/=?^_`{|}~-]+[\.]?)+([a-zA-Z0-9!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9]{2,})+)$"""
+
   private def email: Mapping[EmailAddress] =
-    emailAddress(messageCustomizer("error.required"), messageCustomizer("error.email"))
+    valueIsPresent(errorRequired = messageCustomizer("error.required"))
+      .verifying {
+        validEmail(formatError = messageCustomizer("error.email"))
+      }
+      .transform[EmailAddress](EmailAddress(_), _.value)
       .verifying {
         emailMaxLength(maxLength = 100, error = messageCustomizer("error.maxLength"))
       }
 
-  private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
-
+  private def validEmail(formatError: String,
+                         name: String = "constraint.emailFormat"): Constraint[String] =
+    Constraint[String](name) {
+      email =>
+        Try(EmailAddress(email)) match {
+          case Success(string) if string.matches(formatPatternRegex)  => Valid
+          case _ => Invalid(ValidationError(formatError))
+        }
+    }
 }

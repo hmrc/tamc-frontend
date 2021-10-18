@@ -758,10 +758,10 @@ class ContentTest extends ControllerBaseTest {
       labelName
         .getElementsByClass("error-message")
         .first()
-        .text() shouldBe "Enter an email address in the correct form, like name@example.com"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
       document
         .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address in the correct form, like name@example.com"
+        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
     }
   }
 
