@@ -24,19 +24,19 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.Helpers.baseApplicationBuilder.injector
 import services.EligibilityCalculatorService
-import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
-import play.api.inject.{Injector, bind}
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
 
-import javax.inject.Inject
-
-class EligibilityControllerTest@Inject()(appConfig: ApplicationConfig) extends ControllerBaseTest {
+class EligibilityControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -98,7 +98,7 @@ class EligibilityControllerTest@Inject()(appConfig: ApplicationConfig) extends C
         val result = authController.eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe appConfig.ptaFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe applicationConfig.ptaFinishedUrl
       }
 
       "user is not married with temporary auth state" in {
@@ -108,7 +108,7 @@ class EligibilityControllerTest@Inject()(appConfig: ApplicationConfig) extends C
         val result = controller.eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe appConfig.gdsFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe applicationConfig.gdsFinishedUrl
       }
     }
 
@@ -283,7 +283,7 @@ class EligibilityControllerTest@Inject()(appConfig: ApplicationConfig) extends C
           "do-you-want-to-apply" -> "false")
         val result = authController.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(appConfig.ptaFinishedUrl)
+        redirectLocation(result) shouldBe Some(applicationConfig.ptaFinishedUrl)
       }
 
       "the user doesnt want to apply and is not permanently logged in" in {
@@ -291,7 +291,7 @@ class EligibilityControllerTest@Inject()(appConfig: ApplicationConfig) extends C
           "do-you-want-to-apply" -> "false")
         val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(appConfig.gdsFinishedUrl)
+        redirectLocation(result) shouldBe Some(applicationConfig.gdsFinishedUrl)
       }
     }
   }
