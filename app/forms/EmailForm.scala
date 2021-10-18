@@ -31,8 +31,8 @@ object EmailForm {
   private def messageCustomizer(messageKey: String): String = s"pages.form.field.transferor-email.${messageKey}"
 
 
-  private val initialCharCheckRegexStr: String = """^[a-zA-Z0-9\-\_\.\@]+"""
-  private val formatPatternRegex: String = """^([a-zA-Z0-9!#$git %&’'*+/=?^_`{|}~-]+[\.]?)+([a-zA-Z0-9!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9]{2,})+)$"""
+  private val formatPatternRegex: String =
+    """^([a-zA-Z0-9!#$git %&’'*+/=?^_`{|}~-]+[\.]?)+([a-zA-Z0-9!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9]{2,})+)$"""
 
   private def email: Mapping[EmailAddress] =
     valueIsPresent(errorRequired = messageCustomizer("error.required"))

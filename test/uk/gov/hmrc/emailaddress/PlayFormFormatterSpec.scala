@@ -19,7 +19,6 @@ package uk.gov.hmrc.emailaddress
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
 import play.api.data.FormError
-import play.api.data.Forms.optional
 
 class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks {
 
@@ -61,12 +60,6 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks {
           emailAddressCustomErrorsMapping.bind(data = address).left.get shouldBe List(FormError("email", List("field.required"), List())))
     }
 
-    "allow optional emailAddress mapping" in {
-      optionalEmailAddressMapping.bind(data = Map()).right.get shouldBe None
-      optionalEmailAddressMapping.bind(data = Map("email" -> "")).right.get shouldBe None
-      optionalEmailAddressMapping.bind(data = Map("email" -> "example@example.com")).right.get shouldBe Some(EmailAddress("example@example.com"))
-    }
-
     invalidEmailInputData foreach { email =>
       s"$email reject invalid email" in {
         emailAddressMapping.bind(data = email).left.get shouldBe List(FormError("email", List("error.email"), List()))
@@ -81,11 +74,11 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks {
 
     "reject too long email address (when using 'emailMaxLength' constraint)" in {
       emailAddressMapping.verifying {
-        maxLengthConstraint
+       maxLengthConstraint
       }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
-        List(FormError("email", List("error.maxLength"), List(10)))
+          List(FormError("email", List("error.maxLength"), List(10)))
+      }
     }
-  }
 
   private def emptyEmailInputData: Seq[Map[String, String]] =
     Seq(
@@ -102,8 +95,6 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks {
       Map("email" -> "test"),
       Map("email" -> "test@"),
       Map("email" -> "@test"),
-      Map("email" -> "test@test"),
-      Map("email" -> "a@b"),
       Map("email" -> "test@example.comtest@example.com"),
       Map("email" -> "test@example..com"),
       Map("email" -> "test@example...com"),
@@ -112,19 +103,20 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with PropertyChecks {
     )
 
   private def emailAddressMapping =
-    PlayFormFormatter.emailAddress.withPrefix("email")
+    PlayFormFormatter.valueIsPresent()
+      .verifying(error = "error.email", constraint = EmailAddress.isValid)
+      .transform[EmailAddress](EmailAddress(_), _.value).withPrefix("email")
 
   private def emailAddressCustomErrorsMapping =
-    PlayFormFormatter.emailAddress(errorRequired = "field.required", errorEmail = "field.invalid").withPrefix("email")
+    PlayFormFormatter.valueIsPresent(errorRequired = "field.required")
+      .verifying(error = "field.invalid", constraint = EmailAddress.isValid)
+      .transform[EmailAddress](EmailAddress(_), _.value).withPrefix("email")
 
   private def maxLengthConstraint =
     PlayFormFormatter.emailMaxLength(maxLength = 10)
 
   private def maxLengthConstraintWithError =
     PlayFormFormatter.emailMaxLength(maxLength = 10, error = "field.exceeds")
-
-  private def optionalEmailAddressMapping =
-    optional[EmailAddress](PlayFormFormatter.emailAddress.withPrefix("email"))
 
   private def patternConstraint = {
     val HAS_TLD = """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$""".r
