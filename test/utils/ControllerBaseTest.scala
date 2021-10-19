@@ -38,8 +38,6 @@ trait ControllerBaseTest extends BaseTest with BeforeAndAfterEach {
     "metrics.enabled" -> false
   ).build()
 
-  def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]
-
   implicit val request: Request[AnyContent] = FakeRequest()
 
 }

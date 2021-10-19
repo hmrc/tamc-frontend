@@ -27,4 +27,7 @@ trait BaseTest extends UnitSpec with GuiceOneAppPerSuite {
   implicit lazy val messages = Helpers.stubMessages()
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+
+  def instanceOf[T](implicit evidence: scala.reflect.ClassTag[T]): T = app.injector.instanceOf[T]
+
 }

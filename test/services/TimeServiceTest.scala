@@ -25,9 +25,9 @@ import utils.BaseTest
 import javax.inject.Inject
 import scala.collection.immutable
 
-class TimeServiceTest@Inject()(timeServiceImpl: TimeService) extends BaseTest {
+class TimeServiceTest extends BaseTest {
 
-  def timeService: TimeService = timeServiceImpl
+  val timeService: TimeService = instanceOf[TimeService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder().build()
 
