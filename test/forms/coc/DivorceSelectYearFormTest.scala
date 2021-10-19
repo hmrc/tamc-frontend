@@ -17,11 +17,8 @@
 package forms.coc
 
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.Application
 import play.api.data.FormError
-import play.api.i18n.MessagesProvider
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
 import utils.UnitSpec
 
 import java.time.LocalDate
@@ -30,20 +27,15 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
 
   val today = LocalDate.now()
   val defaultDate = LocalDate.of(2000, 1, 1)
-  implicit lazy val provider: MessagesProvider = app.injector.instanceOf[MessagesProvider]
+  implicit lazy val provider: MessagesProvider = MessagesImpl(Lang("en"), app.injector.instanceOf[MessagesApi])
 
-  val mockDivorceSelectYearForm = mock[DivorceSelectYearForm]
-
-  override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[DivorceSelectYearForm].toInstance(mockDivorceSelectYearForm)
-    ).build()
+  val divorceSelectYearForm = app.injector.instanceOf[DivorceSelectYearForm]
 
   "DivorceSelectYearForm" should {
     "bind" when {
       "Todays date is input as the divorce date" in {
         val formInput = createDivorceDateInput(today)
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
 
         value shouldBe today
@@ -53,7 +45,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
       "the divorce date entered is yesterday" in {
         val yesterday = LocalDate.now().minusDays(1)
         val formInput = createDivorceDateInput(yesterday)
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
 
         value shouldBe yesterday
@@ -64,7 +56,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
       "the divorce date entered is 1st January 1900" in {
         val minimumLimit = LocalDate.of(1900, 1, 1)
         val formInput = createDivorceDateInput(minimumLimit)
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val value = form.value.getOrElse(defaultDate)
 
         value shouldBe minimumLimit
@@ -77,7 +69,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
       "the divorce date entered is in the future" in {
         val tomorrow = LocalDate.now().plusDays(1)
         val formInput = createDivorceDateInput(tomorrow)
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
 
        errorMessageKey shouldBe "pages.divorce.date.error.max.date"
@@ -97,7 +89,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
             s"${date._1} is not provided" in {
 
               val formInput = createDivorceDateInput(date._2.toString, date._3.toString, date._4.toString)
-              val form = mockDivorceSelectYearForm.form.bind(formInput)
+              val form = divorceSelectYearForm.form.bind(formInput)
               val errorMessageKey = extractErrorMessageKey(form.errors)
 
               errorMessageKey shouldBe "pages.divorce.date.error.mandatory"
@@ -109,7 +101,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
       "Invalid characters are input" in {
 
         val formInput = createDivorceDateInput("as", ".!", "Ωå∑π")
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
 
         errorMessageKey shouldBe "pages.divorce.date.error.non.numeric"
@@ -119,7 +111,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
       "divorce date input is before 1st January 1900" in {
         val nineteenthCentury = LocalDate.of(1899, 12, 31)
         val formInput = createDivorceDateInput(nineteenthCentury)
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
         errorMessageKey shouldBe "pages.divorce.date.error.min.date"
 
@@ -132,7 +124,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
           s"$day is not valid value" in {
 
             val formInput = createDivorceDateInput(day, today.getMonthValue.toString, today.getYear.toString)
-            val form = mockDivorceSelectYearForm.form.bind(formInput)
+            val form = divorceSelectYearForm.form.bind(formInput)
             val errorMessageKey = extractErrorMessageKey(form.errors)
             errorMessageKey shouldBe "pages.divorce.date.error.invalid"
 
@@ -143,7 +135,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
       "month is not a valid value" in {
 
         val formInput = createDivorceDateInput(today.getDayOfMonth.toString, "13", today.getYear.toString)
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
         errorMessageKey shouldBe "pages.divorce.date.error.invalid"
 
@@ -152,7 +144,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
       "year is not a valid value" in {
 
         val formInput = createDivorceDateInput(today.getDayOfMonth.toString, today.getMonthValue.toString, "19")
-        val form = mockDivorceSelectYearForm.form.bind(formInput)
+        val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
         errorMessageKey shouldBe "pages.divorce.date.error.invalid"
       }

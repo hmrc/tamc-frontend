@@ -45,7 +45,6 @@ import viewModels._
 
 import java.time.LocalDate
 import scala.concurrent.Future
-import scala.util.control.NonFatal
 
 class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
@@ -530,7 +529,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     }
 
     "a non fatal error has occurred when trying to get cached data" in {
-      when(mockUpdateRelationshipService.getMakeChangesDecision).thenReturn(Future.failed(new Exception("exception has been thrown")))
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any())).thenReturn(Future.failed(new Exception("exception has been thrown")))
 
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
@@ -728,7 +727,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.saveEmailAddress(any())(any(), any())).thenReturn(failedFuture)
+        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(failedFuture)
 
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -823,7 +822,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
+        when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any()))
           .thenReturn(Future.failed(CacheMissingEmail()))
 
         val result = controller.submitConfirmUpdate(request)

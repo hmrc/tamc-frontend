@@ -19,18 +19,17 @@ package forms
 import config.ApplicationConfig
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.data.FormError
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesProvider}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import utils.UnitSpec
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
-class RegistrationFormTest@Inject()(appConfig: ApplicationConfig, registrationForm: RegistrationForm) extends UnitSpec with GuiceOneServerPerSuite {
+class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
 
-  implicit lazy val provider: MessagesProvider = app.injector.instanceOf[MessagesProvider]
-  implicit val messagesApi = app.injector.instanceOf[MessagesApi]
-  implicit lazy val messages: Messages = messagesApi.preferred(Seq(Lang("en")))
+  val applicationConfig = app.injector.instanceOf[ApplicationConfig]
+  lazy val registrationForm: RegistrationForm = app.injector.instanceOf[RegistrationForm]
+  implicit val messages = MessagesImpl(Lang("en"), app.injector.instanceOf[MessagesApi])
 
   ".dateOfMarriageValidator" should {
 
@@ -68,7 +67,7 @@ class RegistrationFormTest@Inject()(appConfig: ApplicationConfig, registrationFo
 
     "fail to bind a date which is earlier the minimum configured date" in {
 
-      val earliestDate = appConfig.TAMC_MIN_DATE
+      val earliestDate = applicationConfig.TAMC_MIN_DATE
       val checkDate = earliestDate.minusDays(1)
 
       val formInput = Map[String, String](
