@@ -43,7 +43,9 @@ import play.api.inject.bind
 import javax.inject.Inject
 import scala.concurrent.Future
 
-class UpdateRelationshipServiceTest@Inject()(appConfig: ApplicationConfig) extends BaseTest with BeforeAndAfterEach {
+class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
+
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
 
   val nino: Nino = new Generator().nextNino
   val instanceIdentifier = 1
@@ -144,7 +146,7 @@ class UpdateRelationshipServiceTest@Inject()(appConfig: ApplicationConfig) exten
       when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(applicationConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
 
       val result = await(service.saveRelationshipRecords(relationshipRecords))
@@ -159,7 +161,7 @@ class UpdateRelationshipServiceTest@Inject()(appConfig: ApplicationConfig) exten
       when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(applicationConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.failed(exception))
 
       val result = intercept[RuntimeException](await(service.saveRelationshipRecords(relationshipRecords)))
