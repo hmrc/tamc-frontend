@@ -21,23 +21,28 @@ import org.mockito.Mockito.when
 import org.scalatest.Matchers
 import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.emailaddress.EmailAddress
-import utils.UnitSpec
+import utils.{BaseTest, UnitSpec}
 
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.collection.immutable
 
-class LanguageUtilsSpec@Inject()(languageUtils: LanguageUtils,languageUtilsImpl: LanguageUtilsImpl) extends UnitSpec with Matchers {
+class LanguageUtilsSpec extends BaseTest with Matchers {
+
+  val languageUtilsImpl: LanguageUtilsImpl = instanceOf[LanguageUtilsImpl]
+
 
   private val currentYear = LocalDate.now().getYear
   private val years: immutable.Seq[Int] = (currentYear - 2 to currentYear + 3).toList
 
   trait EnglishSetup {
+    val languageUtils: LanguageUtils = EnglishLangaugeUtils
     implicit val englishMessage: Messages = mock[Messages]
     when(englishMessage.lang).thenReturn(Lang("en"))
   }
 
   trait WelshSetup {
+    val languageUtils: LanguageUtils = WelshLanguageUtils
     implicit val welshMessage: Messages = mock[Messages]
     when(welshMessage.lang).thenReturn(Lang("cy"))
   }
@@ -102,10 +107,10 @@ class LanguageUtilsSpec@Inject()(languageUtils: LanguageUtils,languageUtilsImpl:
         val start = year
         val finish = year + 1
         s"return the beginning and end dates of $year tax year(UK)" in new EnglishSetup {
-          languageUtils.taxDateInterval(year) shouldBe s"6 April $start to 5 April $finish"
+          languageUtils.taxDateInterval(year)(englishMessage) shouldBe s"6 April $start to 5 April $finish"
         }
         s"return the beginning and end dates of $year tax year(CY)" in new WelshSetup {
-          languageUtils.taxDateInterval(year) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
+          languageUtils.taxDateInterval(year)(welshMessage) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
         }
       }
     }

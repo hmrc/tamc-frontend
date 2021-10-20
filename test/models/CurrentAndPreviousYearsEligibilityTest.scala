@@ -17,25 +17,35 @@
 package models
 
 import org.mockito.Mockito._
+import play.api.Application
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import services.TimeService
-import utils.UnitSpec
+import utils.{BaseTest, UnitSpec}
+import org.scalatest.BeforeAndAfterEach
 
-import javax.inject.Inject
+class CurrentAndPreviousYearsEligibilityTest extends BaseTest with BeforeAndAfterEach {
 
-class CurrentAndPreviousYearsEligibilityTest@Inject()(timeService: TimeService) extends UnitSpec {
-
+  val timeService: TimeService = instanceOf[TimeService]
   val currentYear: Int = timeService.getCurrentTaxYear
   val previousTaxYear: TaxYear = TaxYear(currentYear - 1)
   val mockData: RegistrationFormInput = mock[RegistrationFormInput]
-  val mockTimeService: TimeService = mock[TimeService]
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[RegistrationFormInput].toInstance(mockData)
+    ).build()
 
   def createRecipientRecord(availableTaxYears: List[TaxYear]): RecipientRecord = {
     RecipientRecord(mock[UserRecord], mockData, availableTaxYears)
   }
 
-  "CurrentAndPreviousYearsEligibility" should {
-    when(mockTimeService.getCurrentTaxYear).thenReturn(currentYear)
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockData)
+  }
 
+  "CurrentAndPreviousYearsEligibility" should {
     "contain a true value if there is a currentTaxYear present" in {
       val availableTaxYears = List(TaxYear(currentYear), previousTaxYear)
       val recipientRecord = createRecipientRecord(availableTaxYears)

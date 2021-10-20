@@ -16,15 +16,14 @@
 
 package views.helpers
 
-import java.util.Locale
 import config.ApplicationConfig
-
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
 //TODO[DDCNL-3479] we may be able to delete this
