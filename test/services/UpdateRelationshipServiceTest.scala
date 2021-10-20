@@ -45,9 +45,8 @@ import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
-  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
-
   val nino: Nino = new Generator().nextNino
+
   val instanceIdentifier = 1
   val timeStamp = "20130101"
   val firstName = "First"
@@ -57,7 +56,6 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
   val OK = 200
   val headers = Map("headers" -> Seq(""))
   val email = "email@email.com"
-
   def createCachedData(records: RelationshipRecordList = recordList): UpdateRelationshipCacheData = {
     UpdateRelationshipCacheData(Some(RelationshipRecords(records)), Some(email), Some("Divorce"), Some(date))
   }
@@ -65,20 +63,21 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
   def createLoggedInUserInfo(name: Option[CitizenName] = Some(CitizenName(Some(firstName), Some(surname)))): LoggedInUserInfo = {
     LoggedInUserInfo(instanceIdentifier, timeStamp, None, name)
   }
-      val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
-      val mockCachingService: CachingService = mock[CachingService]
 
+  val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
+  val mockCachingService: CachingService = mock[CachingService]
   override def fakeApplication: Application = GuiceApplicationBuilder()
     .overrides(
       bind[MarriageAllowanceConnector].toInstance(mockMarriageAllowanceConnector),
       bind[CachingService].toInstance(mockCachingService)
     ).build()
 
-  val service: UpdateRelationshipService = app.injector.instanceOf[UpdateRelationshipService]
+  val service: UpdateRelationshipService = instanceOf[UpdateRelationshipService]
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
 
     val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus("OK")))
-    val httpResponse = HttpResponse(OK, Some(json), headers)
 
+  val httpResponse = HttpResponse(OK, Some(json), headers)
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockCachingService, mockMarriageAllowanceConnector)
