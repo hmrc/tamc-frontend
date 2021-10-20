@@ -16,26 +16,25 @@
 
 package viewModels
 
-import java.util.Locale
 import _root_.config.ApplicationConfig
 import models.DesRelationshipEndReason.{Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
 import models._
-
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
-import utils.{BaseTest, TamcViewModelTest}
-import views.helpers.LanguageUtils
+import utils.BaseTest
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils, WelshLanguageUtils}
 
-import javax.inject.Inject
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 class ClaimsViewModelTest extends BaseTest {
 
+  val languageUtils: LanguageUtils = EnglishLangaugeUtils
+
   val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  val languageUtils : LanguageUtils = instanceOf[LanguageUtils]
   val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear

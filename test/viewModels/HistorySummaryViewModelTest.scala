@@ -16,25 +16,28 @@
 
 package viewModels
 
-import models._
-
-import java.time.LocalDate
 import config.ApplicationConfig
+import models._
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
-import utils.TamcViewModelTest
-import views.helpers.LanguageUtils
+import utils.BaseTest
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
+import java.time.LocalDate
 import javax.inject.Inject
 
 
-class HistorySummaryViewModelTest@Inject()(appConfig: ApplicationConfig, languageUtils: LanguageUtils, historySummaryViewModelImpl: HistorySummaryViewModelImpl) extends TamcViewModelTest {
+class HistorySummaryViewModelTest extends BaseTest {
+
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  val languageUtils: LanguageUtils = EnglishLangaugeUtils
+  val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
 
   val currentOfTaxYear: Int = TaxYear.current.currentYear
   val endOfTaxYear: LocalDate = TaxYear.current.finishes
-  val maxPATransfer: Int = appConfig.PERSONAL_ALLOWANCE(currentOfTaxYear)
-  val maxBenefit: Int = appConfig.MAX_BENEFIT(currentOfTaxYear)
-  val maxPaTransferFormatted: Int = appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
+  val maxPATransfer: Int = applicationConfig.PERSONAL_ALLOWANCE(currentOfTaxYear)
+  val maxBenefit: Int = applicationConfig.MAX_BENEFIT(currentOfTaxYear)
+  val maxPaTransferFormatted: Int = applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
   val formattedEndOfYear = languageUtils.ukDateTransformer(endOfTaxYear)
 
   val citizenName = CitizenName(Some("Test"), Some("User"))

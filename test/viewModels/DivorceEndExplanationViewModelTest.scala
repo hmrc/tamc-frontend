@@ -20,12 +20,12 @@ import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
 
 import java.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
-import utils.TamcViewModelTest
-import views.helpers.LanguageUtils
+import utils.{BaseTest, TamcViewModelTest}
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
 import javax.inject.Inject
 
-class DivorceEndExplanationViewModelTest@Inject()(languageUtils: LanguageUtils, divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl) extends TamcViewModelTest {
+class DivorceEndExplanationViewModelTest extends BaseTest {
 
   val maEndDate = LocalDate.now()
   val paEffectiveDate = LocalDate.now()
@@ -33,6 +33,9 @@ class DivorceEndExplanationViewModelTest@Inject()(languageUtils: LanguageUtils, 
   val currentTaxYear = TaxYear.current
   val divorceDateCurrentTaxYear = currentTaxYear.starts
   val divorceDatePreviousTaxYear = currentTaxYear.previous.starts
+
+  val languageUtils: LanguageUtils = EnglishLangaugeUtils
+  val divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl = instanceOf[DivorceEndExplanationViewModelImpl]
 
   def createViewModel(role: Role, divorceDate: LocalDate): DivorceEndExplanationViewModel = {
     divorceEndExplanationViewModelImpl(role, divorceDate, MarriageAllowanceEndingDates(maEndDate, paEffectiveDate))

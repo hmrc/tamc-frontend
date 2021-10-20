@@ -19,13 +19,15 @@ package forms
 import models.{Gender, RecipientDetailsFormInput}
 import play.api.data.FormError
 import uk.gov.hmrc.domain.Generator
-import utils.UnitSpec
+import utils.{BaseTest, UnitSpec}
 
 import java.time.LocalDate
 import javax.inject.Inject
 import scala.util.Random
 
-class RecipientDetailsFormTest@Inject()(recipientDetailsForm: RecipientDetailsForm) extends UnitSpec {
+class RecipientDetailsFormTest extends BaseTest {
+
+  val recipientDetailsForm: RecipientDetailsForm = instanceOf[RecipientDetailsForm]
 
   ".recipientDetailsForm nino mapping" should {
 

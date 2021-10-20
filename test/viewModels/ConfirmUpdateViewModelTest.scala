@@ -19,12 +19,16 @@ package viewModels
 import models.{CitizenName, ConfirmationUpdateAnswers, LoggedInUserInfo, MarriageAllowanceEndingDates}
 
 import java.time.LocalDate
-import utils.TamcViewModelTest
-import views.helpers.LanguageUtils
+import utils.{BaseTest, TamcViewModelTest}
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils, WelshLanguageUtils}
 
 import javax.inject.Inject
 
-class ConfirmUpdateViewModelTest@Inject()(languageUtils: LanguageUtils, confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl) extends TamcViewModelTest {
+class ConfirmUpdateViewModelTest extends BaseTest {
+
+  val languageUtils: LanguageUtils = EnglishLangaugeUtils
+
+  val confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl = instanceOf[ConfirmUpdateViewModelImpl]
 
   val firstName = "Firstname"
   val surname = "Surname"
