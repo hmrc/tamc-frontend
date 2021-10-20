@@ -26,16 +26,17 @@ import java.time.format.DateTimeFormatter
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
-import utils.TamcViewModelTest
+import utils.{BaseTest, TamcViewModelTest}
 import views.helpers.LanguageUtils
 
 import javax.inject.Inject
 
 
-class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig,
-                                   languageUtils: LanguageUtils,
-                                   claimsViewModelImpl: ClaimsViewModelImpl) extends TamcViewModelTest {
+class ClaimsViewModelTest extends BaseTest {
 
+  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
+  val languageUtils : LanguageUtils = instanceOf[LanguageUtils]
+  val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
@@ -43,11 +44,12 @@ class ClaimsViewModelTest@Inject()(appConfig: ApplicationConfig,
 
   lazy val taxFreeHtml: Html =
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${appConfig.taxFreeAllowanceUrl}">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${applicationConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
   val now = LocalDate.now()
   val dateInputPattern = "yyyyMMdd"
+
 
   def createRelationshipRecord(creationTimeStamp: LocalDate = now.minusDays(1),
                                participant1StartDate: LocalDate = now.minusDays(1),
