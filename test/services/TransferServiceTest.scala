@@ -30,7 +30,10 @@ import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId}
+import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.model.DataEvent
 import utils.BaseTest
 
 import java.time.LocalDate
@@ -42,13 +45,15 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
   val mockApplicationService: ApplicationService = mock[ApplicationService]
   val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
   val mockTimeService: TimeService = mock[TimeService]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
   override def fakeApplication: Application = GuiceApplicationBuilder()
     .overrides(
       bind[CachingService].toInstance(mockCachingService),
       bind[ApplicationService].toInstance(mockApplicationService),
       bind[MarriageAllowanceConnector].toInstance(mockMarriageAllowanceConnector),
-      bind[TimeService].toInstance(mockTimeService)
+      bind[TimeService].toInstance(mockTimeService),
+      bind[AuditConnector].toInstance(mockAuditConnector)
     ).build()
 
   val dateOfMarriage: LocalDate = LocalDate.now()
@@ -61,7 +66,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockCachingService, mockApplicationService, mockMarriageAllowanceConnector, mockTimeService)
+    reset(mockCachingService, mockApplicationService, mockMarriageAllowanceConnector, mockTimeService, mockAuditConnector)
   }
 
   "isRecipientEligible" should {
@@ -154,6 +159,30 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockCachingService.getRecipientRecord).thenReturn(Future.successful(None))
         intercept[CacheMissingRecipient](await(service.getCurrentAndPreviousYearsEligibility))
       }
+    }
+  }
+
+  "createRelationship" should {
+    "return a notificationRecord" in {
+      val userRecord = UserRecord(11111111L,"timestamp")
+
+      when(mockCachingService.getCachedData(any(), any()))
+        .thenReturn(Future.successful(Some(CacheData(
+            Some(userRecord),
+            Some(RecipientRecord(userRecord, RegistrationFormInput("firstName", "surname", Gender("M"),nino,LocalDate.now))),
+            Some(NotificationRecord(EmailAddress("email@email.com"))), selectedYears = Some(List(2020, 2021))))))
+
+      when(mockCachingService.lockCreateRelationship).thenReturn(Future.successful(true))
+
+      when(mockAuditConnector.sendEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
+
+      when(mockMarriageAllowanceConnector.createRelationship(any(), any())(any(), any()))
+        .thenReturn(Future.successful(HttpResponse(200, Json.toJson(CreateRelationshipResponse(ResponseStatus("OK"))).toString)))
+
+      val result = await(service.createRelationship(nino))
+
+      result shouldBe NotificationRecord(EmailAddress("email@email.com"))
+
     }
   }
 
