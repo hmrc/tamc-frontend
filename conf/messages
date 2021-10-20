@@ -546,8 +546,7 @@ pages.decision.error.mandatory.value=Select if you want to check or stop your ma
 #********************************************************************************
 pages.makeChanges.heading=Why do you need to stop your Marriage Allowance?
 pages.makeChanges.radio.divorce=Divorce, end of civil partnership or legally separated
-pages.makeChanges.radio.incomeChanges=Household income changes
-pages.makeChanges.radio.noLongerRequired=Do not want Marriage Allowance anymore
+pages.makeChanges.radio.noLongerRequired=Do not need Marriage Allowance any more
 pages.makeChanges.radio.bereavement=Bereavement
 pages.makeChanges.error.mandatory.value=Select the reason you want to stop your marriage allowance
 

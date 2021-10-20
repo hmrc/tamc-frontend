@@ -25,7 +25,6 @@ object MakeChangesDecisionForm {
   val StopMAChoice = "stopMAChoice"
 
   val Divorce = "Divorce"
-  val Earnings = "Earnings"
   val Cancel = "Cancel"
   val Bereavement = "Bereavement"
 

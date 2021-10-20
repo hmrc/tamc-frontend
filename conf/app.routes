@@ -40,7 +40,6 @@ GET    /make-changes                               controllers.UpdateRelationshi
 POST   /make-changes                               controllers.UpdateRelationshipController.submitMakeChange
 GET    /stop-allowance                             controllers.UpdateRelationshipController.stopAllowance
 GET    /cancel                                     controllers.UpdateRelationshipController.cancel
-GET    /change-of-income                           controllers.UpdateRelationshipController.changeOfIncome
 GET    /bereavement                                controllers.UpdateRelationshipController.bereavement
 GET    /divorce-enter-year                         controllers.UpdateRelationshipController.divorceEnterYear
 POST   /divorce-enter-year                         controllers.UpdateRelationshipController.submitDivorceEnterYear

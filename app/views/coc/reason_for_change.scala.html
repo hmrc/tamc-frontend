@@ -46,10 +46,9 @@ request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.par
       <div class="form-group">
         @inputRadioGroupView(
           makeChangesDecisionForm(MakeChangesDecisionForm.StopMAChoice),
-          Seq((MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
-               (MakeChangesDecisionForm.Earnings, messages("pages.makeChanges.radio.incomeChanges")),
-               (MakeChangesDecisionForm.Cancel, messages("pages.makeChanges.radio.noLongerRequired")),
-               (MakeChangesDecisionForm.Bereavement, messages("pages.makeChanges.radio.bereavement"))
+            Seq((MakeChangesDecisionForm.Cancel, messages("pages.makeChanges.radio.noLongerRequired")),
+                (MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
+                (MakeChangesDecisionForm.Bereavement, messages("pages.makeChanges.radio.bereavement"))
           ),
           '_legend -> Html(messages("title.change.reason")),
           '_legendClass -> "visuallyhidden",

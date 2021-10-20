@@ -25,7 +25,6 @@ class MakeChangesDecisionFormTest extends BaseTest {
   "MakeChangesDecisionForm" should {
     val decisions = Seq(
       MakeChangesDecisionForm.Divorce,
-      MakeChangesDecisionForm.Earnings,
       MakeChangesDecisionForm.Bereavement,
       MakeChangesDecisionForm.Cancel
     )
