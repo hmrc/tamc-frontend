@@ -48,13 +48,13 @@ class EmailFormTest extends BaseTest {
       res shouldBe Right(new EmailAddress("example.c@email.com"))
     }
 
-    "fail to bind, with a specific valid character failure for am email address containing invalid characters" in {
+    "fail to bind, with a specific valid character failure for an email address containing invalid characters" in {
       val formInput = Map[String, String](
         "transferor-email" -> """example"@email.com"""
       )
       val res = EmailForm.emailForm.mapping.bind(formInput)
       res shouldBe Left(Seq(
-        FormError("transferor-email", Seq("pages.form.field.transferor-email.error.character"), Nil)
+        FormError("transferor-email", Seq("pages.form.field.transferor-email.error.email"), Nil)
       ))
     }
 

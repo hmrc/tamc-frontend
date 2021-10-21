@@ -3,7 +3,7 @@ import sbt._
 
 object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc" %% "emailaddress" % "3.4.0",
+    "uk.gov.hmrc" %% "emailaddress" % "3.5.0",
     "uk.gov.hmrc" %% "bootstrap-frontend-play-26" % "5.4.0",
     "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % "9.5.0-play-26",
@@ -15,7 +15,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "tax-year" % "1.3.0",
     "uk.gov.hmrc" %% "play-language" % "5.1.0-play-26",
     "uk.gov.hmrc" %% "govuk-template" % "5.68.0-play-26",
-    "uk.gov.hmrc" %% "play-ui" % "9.6.0-play-26"
+    "uk.gov.hmrc" %% "play-ui" % "9.6.0-play-26",
   )
 
   val test: Seq[ModuleID] = Seq(
