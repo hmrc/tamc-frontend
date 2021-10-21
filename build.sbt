@@ -7,7 +7,7 @@ val appName = "tamc-frontend"
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*;connectors.ApplicationAuditConnector;connectors.ApplicationAuthConnector;services.CachingService;metrics.Metrics;utils.WSHttp;events",
-    ScoverageKeys.coverageMinimum := 92.48,
+    ScoverageKeys.coverageMinimumStmtTotal := 92.48,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -24,8 +24,8 @@ lazy val microservice: Project = Project(appName, file("."))
     scalaVersion := "2.12.13",
     PlayKeys.playDefaultPort := 9900,
     libraryDependencies ++= AppDependencies.all,
-    parallelExecution in Test := false,
-    fork in Test := false,
+    Test / parallelExecution := false,
+    Test / fork := false,
     retrieveManaged := true,
     resolvers ++= Seq(
       Resolver.jcenterRepo,
