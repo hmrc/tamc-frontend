@@ -34,7 +34,7 @@ import viewModels._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class UpdateRelationshipController @Inject()(
+class   UpdateRelationshipController @Inject()(
   authenticate: AuthenticatedActionRefiner,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
@@ -153,15 +153,6 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-  private def changeOfIncomeRedirect(implicit hc: HeaderCarrier): Future[Result] = {
-    updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-      if(relationshipRecords.primaryRecord.role == Recipient){
-        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance)
-      } else {
-        Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome)
-      }
-    }
-  }
 
   def stopAllowance: Action[AnyContent] = authenticate.async {
     implicit request =>
