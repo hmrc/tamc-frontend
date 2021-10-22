@@ -19,10 +19,9 @@ package forms
 import models.{Gender, RecipientDetailsFormInput}
 import play.api.data.FormError
 import uk.gov.hmrc.domain.Generator
-import utils.{BaseTest, UnitSpec}
+import utils.BaseTest
 
 import java.time.LocalDate
-import javax.inject.Inject
 import scala.util.Random
 
 class RecipientDetailsFormTest extends BaseTest {

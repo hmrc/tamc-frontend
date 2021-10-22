@@ -17,12 +17,10 @@
 package viewModels
 
 import models.{CitizenName, ConfirmationUpdateAnswers, LoggedInUserInfo, MarriageAllowanceEndingDates}
+import utils.BaseTest
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
 import java.time.LocalDate
-import utils.{BaseTest, TamcViewModelTest}
-import views.helpers.{EnglishLangaugeUtils, LanguageUtils, WelshLanguageUtils}
-
-import javax.inject.Inject
 
 class ConfirmUpdateViewModelTest extends BaseTest {
 

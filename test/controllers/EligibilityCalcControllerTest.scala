@@ -23,8 +23,6 @@ import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 import utils.ControllerBaseTest
 
-import javax.inject.Inject
-
 //TODO: Update values in test names
 class EligibilityCalcControllerTest extends ControllerBaseTest {
 

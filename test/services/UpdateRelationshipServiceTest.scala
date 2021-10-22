@@ -22,14 +22,12 @@ import errors.ErrorResponseStatus._
 import errors._
 import forms.coc.CheckClaimOrCancelDecisionForm
 import models._
-
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import test_utils.data.RelationshipRecordData._
@@ -38,9 +36,9 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
-import play.api.inject.bind
 
-import javax.inject.Inject
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {

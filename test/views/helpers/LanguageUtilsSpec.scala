@@ -21,10 +21,9 @@ import org.mockito.Mockito.when
 import org.scalatest.Matchers
 import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.emailaddress.EmailAddress
-import utils.{BaseTest, UnitSpec}
+import utils.BaseTest
 
 import java.time.LocalDate
-import javax.inject.Inject
 import scala.collection.immutable
 
 class LanguageUtilsSpec extends BaseTest with Matchers {

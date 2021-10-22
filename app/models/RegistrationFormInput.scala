@@ -19,7 +19,7 @@ package models
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import play.api.libs.json.{Format, JsString, Json, OFormat, Reads, Writes}
+import play.api.libs.json._
 import uk.gov.hmrc.domain.Nino
 
 object RegistrationFormInput {

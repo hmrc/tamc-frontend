@@ -24,8 +24,6 @@ import utils.BaseTest
 import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
 import java.time.LocalDate
-import javax.inject.Inject
-
 
 class HistorySummaryViewModelTest extends BaseTest {
 

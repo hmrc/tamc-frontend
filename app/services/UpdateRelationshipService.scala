@@ -16,14 +16,11 @@
 
 package services
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
-import errors.{RecipientNotFound, _}
+import errors._
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
 import play.api.i18n.Messages
@@ -36,6 +33,8 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import views.helpers.LanguageUtilsImpl
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateRelationshipService @Inject()(

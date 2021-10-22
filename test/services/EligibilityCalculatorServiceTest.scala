@@ -23,7 +23,6 @@ import utils.BaseTest
 
 import java.text.NumberFormat
 import java.util.Locale
-import javax.inject.Inject
 
 class EligibilityCalculatorServiceTest extends BaseTest {
 

@@ -21,8 +21,6 @@ import config.ApplicationConfig
 import models._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 
-import javax.inject.Inject
-
 class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
 
 

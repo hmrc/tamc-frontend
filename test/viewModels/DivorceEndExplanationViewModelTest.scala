@@ -17,13 +17,11 @@
 package viewModels
 
 import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
-
-import java.time.LocalDate
 import uk.gov.hmrc.time.TaxYear
-import utils.{BaseTest, TamcViewModelTest}
+import utils.BaseTest
 import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
-import javax.inject.Inject
+import java.time.LocalDate
 
 class DivorceEndExplanationViewModelTest extends BaseTest {
 

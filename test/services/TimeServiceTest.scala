@@ -16,13 +16,12 @@
 
 package services
 
-import java.time.LocalDate
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
-import javax.inject.Inject
+import java.time.LocalDate
 import scala.collection.immutable
 
 class TimeServiceTest extends BaseTest {
