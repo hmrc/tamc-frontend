@@ -25,6 +25,7 @@ import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
 import java.time.LocalDate
 
+
 class HistorySummaryViewModelTest extends BaseTest {
 
   val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]

@@ -21,15 +21,17 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
+
+import java.time.LocalDate
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import test_utils.TestData.Ninos
+import test_utils._
 import test_utils.data.MarriageAllowanceConnectorTestData
 import uk.gov.hmrc.domain.Nino
 import utils.ConnectorBaseTest
 
-import java.time.LocalDate
 import scala.concurrent.Future
 
 class MarriageAllowanceConnectorTest extends ConnectorBaseTest {

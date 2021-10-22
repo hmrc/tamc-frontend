@@ -95,7 +95,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   val reasonForChangeView = inject[views.html.coc.reason_for_change]
   val stopAllowanceView = inject[views.html.coc.stopAllowance]
   val bereavementView = inject[views.html.coc.bereavement]
-  val changeInEarningsView = inject[views.html.coc.change_in_earnings]
   val cancelView = inject[views.html.coc.cancel]
   val divorceSelectYearView = inject[views.html.coc.divorce_select_year]
   val divorceEndExplanationView = inject[views.html.coc.divorce_end_explanation]
@@ -338,16 +337,13 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "redirect to the stop allowance page" when {
 
         val relationshipRecords = createRelationshipRecords("Recipient")
-        val userAnswers = List("Earnings", "Cancel")
 
-        userAnswers.foreach { userAnswer =>
+          s"a recipient selects Cancel" in {
 
-          s"a recipient selects $userAnswer" in {
+            val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> "Cancel")
 
-            val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
-
-            when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-              .thenReturn(Future.successful(userAnswer))
+            when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq("Cancel"))(any(), any()))
+              .thenReturn(Future.successful("Cancel"))
 
             when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
               .thenReturn(Future.successful(relationshipRecords))
@@ -357,26 +353,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
             redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance.url)
 
           }
-
-        }
-      }
-
-      "redirect to the change of income page" when {
-        "a transferor selects Household Income changes" in {
-
-          val userAnswer = "Earnings"
-          val relationshipRecords = createRelationshipRecords()
-          val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
-
-          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
-            .thenReturn(Future.successful(userAnswer))
-
-          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
-            .thenReturn(Future.successful(relationshipRecords))
-
-          val result = controller.submitMakeChange()(request)
-          status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.changeOfIncome.url)
 
         }
       }
@@ -426,9 +402,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           status(result) shouldBe BAD_REQUEST
         }
       }
-
     }
-  }
 
   "stopAllowance" should {
     "display the stop allowance page" in {
@@ -464,15 +438,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         result rendersTheSameViewAs tryLaterView()
       }
-    }
-  }
-
-  "changeOfIncome" should {
-    "display the changeOfIncome page" in {
-      val result  = controller.changeOfIncome(request)
-      status(result) shouldBe OK
-
-      result rendersTheSameViewAs changeInEarningsView()
     }
   }
 

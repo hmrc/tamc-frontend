@@ -34,7 +34,7 @@ import viewModels._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
-class UpdateRelationshipController @Inject()(
+class   UpdateRelationshipController @Inject()(
   authenticate: AuthenticatedActionRefiner,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
@@ -44,7 +44,6 @@ class UpdateRelationshipController @Inject()(
   reasonForChange: views.html.coc.reason_for_change,
   stopAllowanceV: views.html.coc.stopAllowance,
   cancelV: views.html.coc.cancel,
-  changeInEarnings: views.html.coc.change_in_earnings,
   confirmUpdateV: views.html.coc.confirmUpdate,
   bereavementV: views.html.coc.bereavement,
   divorceSelectYearV: views.html.coc.divorce_select_year,
@@ -131,12 +130,6 @@ class UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.divorceEnterYear)
             }
           }
-          case Some(MakeChangesDecisionForm.Earnings) => {
-            updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Earnings) flatMap { _ =>
-             changeOfIncomeRedirect
-            }
-
-          }
           case Some(MakeChangesDecisionForm.Cancel) => {
             updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Cancel) flatMap { _ =>
               noLongerWantMarriageAllowanceRedirect
@@ -160,15 +153,6 @@ class UpdateRelationshipController @Inject()(
     }
   }
 
-  private def changeOfIncomeRedirect(implicit hc: HeaderCarrier): Future[Result] = {
-    updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-      if(relationshipRecords.primaryRecord.role == Recipient){
-        Redirect(controllers.routes.UpdateRelationshipController.stopAllowance)
-      } else {
-        Redirect(controllers.routes.UpdateRelationshipController.changeOfIncome)
-      }
-    }
-  }
 
   def stopAllowance: Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -184,10 +168,6 @@ class UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def changeOfIncome: Action[AnyContent] = authenticate.async {
-    implicit request =>
-      Future.successful(Ok(changeInEarnings()))
-  }
 
   def bereavement: Action[AnyContent] = authenticate.async {
     implicit request =>

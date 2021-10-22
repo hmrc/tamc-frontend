@@ -552,8 +552,7 @@ pages.decision.error.mandatory.value=Dewiswch os ydych am wirio’ch hawliad am 
 #********************************************************************************
 pages.makeChanges.heading=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
 pages.makeChanges.radio.divorce=Ysgaru, dod â phartneriaeth sifil i ben neu wahanu’n gyfreithiol
-pages.makeChanges.radio.incomeChanges=Newidiadau yn incwm yr aelwyd
-pages.makeChanges.radio.noLongerRequired=Ddim eisiau Lwfans Priodasol mwyach
+pages.makeChanges.radio.noLongerRequired=Ddim angen Lwfans Priodasol mwyach
 pages.makeChanges.radio.bereavement=Profedigaeth
 pages.makeChanges.error.mandatory.value=Dewiswch y rheswm yr ydych am ddod â’ch Lwfans Priodasol i ben
 

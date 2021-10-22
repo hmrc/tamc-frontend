@@ -63,9 +63,8 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
   "Update relationship cause - get view" should {
     "show all appropriate radio buttons" in {
       val expectedRadioButtons = Seq(
-        messages("pages.makeChanges.radio.divorce"),
-        messages("pages.makeChanges.radio.incomeChanges"),
         messages("pages.makeChanges.radio.noLongerRequired"),
+        messages("pages.makeChanges.radio.divorce"),
         messages("pages.makeChanges.radio.bereavement")
       ).toArray
 
@@ -111,36 +110,6 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
     val expected = Seq(messages("pages.cancel.paragraph1"), messages("pages.cancel.paragraph2")).toArray
     val parsed = Jsoup.parse(contentAsString(result))
     val current = parsed.getElementsByTag("p").eachText().toArray()
-
-    current shouldBe expected
-  }
-
-  "changeOfIncome(text)" in {
-    val result: Future[Result] = controller.changeOfIncome(request)
-    val contactHMRCText = (messages("general.helpline.enquiries.link.pretext") + " "
-      + messages("general.helpline.enquiries.link") + " "
-      + messages("pages.changeOfIncome.enquiries.link.paragraph"))
-
-
-    val expected = Seq(
-      contactHMRCText,
-      messages("pages.changeOfIncome.paragraph2")
-    ).toArray
-    val parsed = Jsoup.parse(contentAsString(result))
-    val current = parsed.getElementsByTag("p").eachText().toArray()
-
-    current shouldBe expected
-  }
-
-  "changeOfIncome(bullet list)" in {
-    val result: Future[Result] = controller.changeOfIncome(request)
-
-    val expected = Seq(
-      messages("pages.changeOfIncome.bullet1"),
-      messages("pages.changeOfIncome.bullet2")
-    ).toArray
-    val parsed = Jsoup.parse(contentAsString(result))
-    val current = parsed.getElementsByTag("li").eachText().toArray()
 
     current shouldBe expected
   }

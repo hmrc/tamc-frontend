@@ -18,7 +18,6 @@ package uk.gov.hmrc.emailaddress
 
 import org.scalatest.{Matchers, WordSpec}
 import play.api.data.FormError
-import play.api.data.Forms.optional
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class PlayFormFormatterSpec extends WordSpec with Matchers with ScalaCheckPropertyChecks {
@@ -61,12 +60,6 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with ScalaCheckProper
           emailAddressCustomErrorsMapping.bind(data = address).left.get shouldBe List(FormError("email", List("field.required"), List())))
     }
 
-    "allow optional emailAddress mapping" in {
-      optionalEmailAddressMapping.bind(data = Map()).right.get shouldBe None
-      optionalEmailAddressMapping.bind(data = Map("email" -> "")).right.get shouldBe None
-      optionalEmailAddressMapping.bind(data = Map("email" -> "example@example.com")).right.get shouldBe Some(EmailAddress("example@example.com"))
-    }
-
     invalidEmailInputData foreach { email =>
       s"$email reject invalid email" in {
         emailAddressMapping.bind(data = email).left.get shouldBe List(FormError("email", List("error.email"), List()))
@@ -81,44 +74,11 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with ScalaCheckProper
 
     "reject too long email address (when using 'emailMaxLength' constraint)" in {
       emailAddressMapping.verifying {
-        maxLengthConstraint
+       maxLengthConstraint
       }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
-        List(FormError("email", List("error.maxLength"), List(10)))
+          List(FormError("email", List("error.maxLength"), List(10)))
+      }
     }
-
-    "reject too long email address (when using 'emailMaxLength' constraint and custom error)" in {
-      emailAddressMapping.verifying {
-        maxLengthConstraintWithError
-      }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
-        List(FormError("email", List("field.exceeds"), List(10)))
-    }
-
-    "reject email address which does not match given regex" in {
-      val errors: Seq[FormError] = emailAddressMapping.verifying {
-        patternConstraint
-      }.bind(Map("email" -> "example@example.com-asd")).left.get
-      errors.size shouldBe 1
-      val headError = errors.head
-      headError.key shouldBe "email"
-      headError.messages.size shouldBe 1
-      headError.messages.head shouldBe "error.pattern"
-      headError.args.size shouldBe 1
-      headError.args.head.toString shouldBe """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$"""
-    }
-
-    "reject email address which does not match given regex (with custom error)" in {
-      val errors: Seq[FormError] = emailAddressMapping.verifying {
-        patternConstraintWithError
-      }.bind(Map("email" -> "example@example.com-asd")).left.get
-      errors.size shouldBe 1
-      val headError = errors.head
-      headError.key shouldBe "email"
-      headError.messages.size shouldBe 1
-      headError.messages.head shouldBe "field.pattern"
-      headError.args.size shouldBe 1
-      headError.args.head.toString shouldBe """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$"""
-    }
-  }
 
   private def emptyEmailInputData: Seq[Map[String, String]] =
     Seq(
@@ -135,8 +95,6 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with ScalaCheckProper
       Map("email" -> "test"),
       Map("email" -> "test@"),
       Map("email" -> "@test"),
-      Map("email" -> "test@test"),
-      Map("email" -> "a@b"),
       Map("email" -> "test@example.comtest@example.com"),
       Map("email" -> "test@example..com"),
       Map("email" -> "test@example...com"),
@@ -145,19 +103,20 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with ScalaCheckProper
     )
 
   private def emailAddressMapping =
-    PlayFormFormatter.emailAddress.withPrefix("email")
+    PlayFormFormatter.valueIsPresent()
+      .verifying(error = "error.email", constraint = EmailAddress.isValid)
+      .transform[EmailAddress](EmailAddress(_), _.value).withPrefix("email")
 
   private def emailAddressCustomErrorsMapping =
-    PlayFormFormatter.emailAddress(errorRequired = "field.required", errorEmail = "field.invalid").withPrefix("email")
+    PlayFormFormatter.valueIsPresent(errorRequired = "field.required")
+      .verifying(error = "field.invalid", constraint = EmailAddress.isValid)
+      .transform[EmailAddress](EmailAddress(_), _.value).withPrefix("email")
 
   private def maxLengthConstraint =
     PlayFormFormatter.emailMaxLength(maxLength = 10)
 
   private def maxLengthConstraintWithError =
     PlayFormFormatter.emailMaxLength(maxLength = 10, error = "field.exceeds")
-
-  private def optionalEmailAddressMapping =
-    optional[EmailAddress](PlayFormFormatter.emailAddress.withPrefix("email"))
 
   private def patternConstraint = {
     val HAS_TLD = """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$""".r

@@ -46,36 +46,6 @@ object PlayFormFormatter {
     nonEmptyTrimmer(error = errorRequired)
 
   /**
-    * Constructs a simple mapping for email address field (using a [[uk.gov.hmrc.emailaddress.EmailAddress]] type behind).
-    *
-    * @example
-    * {{{
-    * Form("email" ->
-    *   emailAddress(
-    *     errorRequired = <optional custom error message>,
-    *     errorEmail    = <optional custom error message>))
-    * }}}
-    * @param errorEmail    'this field has invalid format' error message with default value `"error.email"`
-    * @param errorRequired 'this field is required' error message with default value `"error.required"`
-    */
-  def emailAddress(errorRequired: String = "error.required", errorEmail: String = "error.email"): Mapping[EmailAddress] = {
-    nonEmptyTrimmer(error = errorRequired).
-      verifying(error = errorEmail, constraint = EmailAddress.isValid)
-      .transform[EmailAddress](EmailAddress(_), _.value)
-  }
-
-  /**
-    * Constructs a simple mapping for email address field (using a [[uk.gov.hmrc.emailaddress.EmailAddress]] type behind).
-    *
-    * @example
-    * {{{
-    * Form("email" -> emailAddress)
-    * }}}
-    * @see [[uk.gov.hmrc.emailaddress.PlayFormFormatter.emailAddress(String,String)]]
-    */
-  def emailAddress: Mapping[EmailAddress] = emailAddress()
-
-  /**
     * Defines a regular expression constraint for [[uk.gov.hmrc.emailaddress.EmailAddress]] values
     *
     * @param error error message with default value `"error.pattern"`

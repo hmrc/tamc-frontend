@@ -17,12 +17,12 @@
 package models
 
 import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import services.TimeService
-import utils.BaseTest
+import utils.{BaseTest, UnitSpec}
+import org.scalatest.BeforeAndAfterEach
 
 class CurrentAndPreviousYearsEligibilityTest extends BaseTest with BeforeAndAfterEach {
 

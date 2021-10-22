@@ -33,7 +33,7 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recip
 ) {
 <h1 id="error">@messages("title.cannot-use-service")</h1>
 <p class="get-started group" id="contact-helpline">
-    <a href=@applicationConfig.contactIncomeTaxHelplineUrl target="_blank" role="button"
+    <a href=@applicationConfig.contactIncomeTaxHelplineUrl target="_blank" role="button" rel="noopener noreferrer"
        data-journey-click='click - link:@Messages("technical.transferor-dead-p1"):@Messages("title.pattern", Messages("title.cannot-use-service"))'>
         @messages("technical.transferor-dead-p1") @messages("tamc.open.in.new.window")
     </a>

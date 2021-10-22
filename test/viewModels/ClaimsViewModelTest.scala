@@ -17,13 +17,13 @@
 package viewModels
 
 import _root_.config.ApplicationConfig
-import models.DesRelationshipEndReason._
+import models.DesRelationshipEndReason.{Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
 import models._
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
-import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils, WelshLanguageUtils}
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
