@@ -21,7 +21,4 @@ import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
 import javax.inject.Inject
 
-class TrackingConsentSnippetProvider@Inject()(injector: Injector) {
-  lazy val get =
-    injector.instanceOf[TrackingConsentSnippet]
-}
+class TrackingConsentSnippetProvider @Inject()(val trackingConsentSnippet: TrackingConsentSnippet)

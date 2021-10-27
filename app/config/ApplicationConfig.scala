@@ -24,7 +24,7 @@ import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
 
 import java.time.LocalDate
-import scala.concurrent.duration.{Duration, _}
+import scala.concurrent.duration._
 
 //TODO[DDCNL-3479] get rid of vals in here that aren't actually config values!!!!!
 class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig) {
