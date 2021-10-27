@@ -17,21 +17,23 @@
 @import play.twirl.api.Html
 @import org.joda.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
-@import views.helpers.LanguageUtils
+@import views.helpers.LanguageUtilsImpl
 @import uk.gov.hmrc.time.TaxYear
 @import models.MarriageAllowanceEndingDates
 @import includes.backLink
 
-@this(main: templates.tamc_main)
+@this(
+main: templates.tamc_main,
+languageUtilsImpl: LanguageUtilsImpl)
 
 @(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @maDate = @{
- LanguageUtils().ukDateTransformer(cancelDates.marriageAllowanceEndDate)
+languageUtilsImpl().ukDateTransformer(cancelDates.marriageAllowanceEndDate)
 }
 
 @paDate = @{
- LanguageUtils().ukDateTransformer(cancelDates.personalAllowanceEffectiveDate)
+languageUtilsImpl().ukDateTransformer(cancelDates.personalAllowanceEffectiveDate)
 }
 
 @main(

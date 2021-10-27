@@ -15,15 +15,17 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-@import views.helpers.LanguageUtils
+@import uk.gov.hmrc.play.views.html.helpers._
+@import views.helpers.LanguageUtilsImpl
 @import models.auth.AuthenticatedUserRequest
 @import includes.backLink
 
 @this(
 main: templates.tamc_main,
 inputView: templates.input,
-formErrorNotificationView: templates.form_error_notification)
+formErrorNotificationView: templates.form_error_notification,
+form: FormWithCSRF,
+languageUtilsImpl: LanguageUtilsImpl)
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_],
@@ -33,12 +35,12 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 title = Messages("title.application.pattern", Messages("title.confirm-email")),
 manageService = true,
 mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${LanguageUtils().formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
+maybeMainDataAttributes = Some(Html(s"data-journey=${languageUtilsImpl().formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
 ) {
 
 @backLink()
 
-@helpers.form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
+@form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
 @formErrorNotificationView(recipientForm)
     <header class="page-heading">
         <h1 class="heading-xlarge">@messages("pages.form.field.your-confirmation")</h1>

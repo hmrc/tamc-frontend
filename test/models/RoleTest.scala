@@ -17,7 +17,7 @@
 package models
 
 import errors.UnknownParticipant
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.UnitSpec
 
 class RoleTest extends UnitSpec {
 

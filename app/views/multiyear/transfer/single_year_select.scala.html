@@ -15,18 +15,22 @@
  *@
 
 @import play.twirl.api.Html
-@import views.helpers.LanguageUtils
+@import views.helpers.LanguageUtilsImpl
 @import models.Gender
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
-@import utils.BenefitCalculatorHelper._
+@import utils.BenefitCalculatorHelper
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+form: FormWithCSRF,
+applicationConfig: ApplicationConfig,
+benefitCalculatorHelper: BenefitCalculatorHelper,
+languageUtilsImpl: LanguageUtilsImpl)
 
 @(earlierYearsForm: Form[models.EarlierYearsInput],
 input: RegistrationFormInput,
@@ -39,11 +43,11 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(
   title = Messages("title.application.pattern",
-    Messages("title.confirm-extra-years", LanguageUtils().taxDateIntervalShort(availableYears.head.year))
+    Messages("title.confirm-extra-years", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year))
   ),
   langSelectorOverride = Some(
-    Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn(),
-      "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy()
+    Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn,
+      "cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy
     )
   )
 ) {
@@ -57,39 +61,39 @@ formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
         <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.multi-year-select.heading"))</h1>
     </header>
 
-@helpers.form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
+@form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
 <fieldset class="inline spacingBottom" id="earlierYears">
     <div class="form-group" id="year-@availableYears.head.year">
-        <h2 class="heading-medium"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", LanguageUtils().taxDateIntervalShort(availableYears.head.year)))</span>
-            <br>@LanguageUtils().taxDateInterval(availableYears.head.year)</h2>
+        <h2 class="heading-medium"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year)))</span>
+            <br>@languageUtilsImpl().taxDateInterval(availableYears.head.year)</h2>
 
 
             <p>@Html(Messages("pages.multiyear.canclaim", input.name,
-                LanguageUtils().taxDateIntervalShort(availableYears.head.year)))</p>
+                languageUtilsImpl().taxDateIntervalShort(availableYears.head.year)))</p>
 
             <ul class="list list-bullet">
-                <li>@Html(Messages("your-income", currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
-                @if(ApplicationConfig.appConfig.MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
-                <li>@Html(Messages("income-between", LanguageUtils().formPossessive(input.name),currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
-                    currencyFormatter(ApplicationConfig.appConfig.MAX_LIMIT(availableYears.head.year))))
+                <li>@Html(Messages("your-income", benefitCalculatorHelper.currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE(availableYears.head.year))))</li>
+                @if(applicationConfig.MAX_LIMIT_SCOT(availableYears.head.year) == 0) {
+                <li>@Html(Messages("income-between", languageUtilsImpl().formPossessive(input.name),benefitCalculatorHelper.currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                    benefitCalculatorHelper.currencyFormatter(applicationConfig.MAX_LIMIT(availableYears.head.year))))
                 </li>
                 } else {
-                <li>@Html(Messages("income-between-scots", LanguageUtils().formPossessive(input.name),currencyFormatter(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
-                    currencyFormatter(ApplicationConfig.appConfig.MAX_LIMIT(availableYears.head.year)),
-                    currencyFormatter(ApplicationConfig.appConfig.MAX_LIMIT_SCOT(availableYears.head.year))))
+                <li>@Html(Messages("income-between-scots", languageUtilsImpl().formPossessive(input.name),benefitCalculatorHelper.currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE(availableYears.head.year)+1),
+                    benefitCalculatorHelper.currencyFormatter(applicationConfig.MAX_LIMIT(availableYears.head.year)),
+                    benefitCalculatorHelper.currencyFormatter(applicationConfig.MAX_LIMIT_SCOT(availableYears.head.year))))
                 </li>
                 }
             </ul>
             <p>@Html(Messages("pages.multiyear.successful",
-                LanguageUtils().taxDateIntervalShort(availableYears.head.year),
-                input.name, currencyFormatter(ApplicationConfig.appConfig.MAX_BENEFIT(availableYears.head.year))))</p>
+                languageUtilsImpl().taxDateIntervalShort(availableYears.head.year),
+                input.name, benefitCalculatorHelper.currencyFormatter(applicationConfig.MAX_BENEFIT(availableYears.head.year))))</p>
 
         @inputRadioGroupView(
             earlierYearsForm("selectedYear"),
             Seq((availableYears.head.year.toString, Messages("radio.yes")), ("0", Messages("radio.no"))),
             '_labelClass -> "block-label",
             '_labelAfter -> true,
-            '_legend -> Html(Messages("pages.multiyear.extrayears.from.to", LanguageUtils().taxDateIntervalShort(availableYears.head.year))),
+            '_legend -> Html(Messages("pages.multiyear.extrayears.from.to", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year))),
             '_legendClass -> "heading-medium",
             '_groupClass -> "inline spacingBottom"
         )

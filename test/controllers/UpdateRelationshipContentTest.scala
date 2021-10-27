@@ -18,26 +18,24 @@ package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
 import models._
-import java.time.LocalDate
-
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.Application
+import play.api.i18n.MessagesApi
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Result
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
-import play.api.inject.bind
+import play.api.test.{FakeRequest, Injecting}
 import services._
-import play.api.i18n.MessagesApi
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
-import views.helpers.LanguageUtils
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {

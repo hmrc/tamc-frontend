@@ -18,7 +18,7 @@ package models
 
 import errors.{CitizenNotFound, MultipleActiveRecordError, NoPrimaryRecordError}
 import test_utils.data.RelationshipRecordData._
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.UnitSpec
 
 class RelationshipRecordsTest extends UnitSpec {
 

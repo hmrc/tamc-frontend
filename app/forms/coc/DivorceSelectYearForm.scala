@@ -17,6 +17,7 @@
 package forms.coc
 
 import config.ApplicationConfig
+
 import java.time.LocalDate
 import play.api.data.Forms.{optional, single, text, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
@@ -24,15 +25,16 @@ import play.api.data.{Form, Mapping}
 import play.api.i18n.Messages
 import services.TimeService
 import uk.gov.hmrc.play.mappers.DateFields.{day, month, year}
-import views.helpers.LanguageUtils
+import views.helpers.LanguageUtilsImpl
 
+import javax.inject.Inject
 import scala.util.Try
 
-object DivorceSelectYearForm {
+class DivorceSelectYearForm@Inject()(applicationConfig: ApplicationConfig, timeService: TimeService, languageUtilsImpl: LanguageUtilsImpl) {
 
   val DateOfDivorce = "dateOfDivorce"
-  val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(TimeService.getCurrentDate)
-  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(ApplicationConfig.appConfig.TAMC_MIN_DATE)
+  val divorceDateInTheFutureError: LocalDate => Boolean = _.isAfter(timeService.getCurrentDate)
+  val divorceDateAfterMinDateError: LocalDate => Boolean = _.isBefore(applicationConfig.TAMC_MIN_DATE)
 
   def isNonNumericDate(year: String, month: String, day: String): Boolean = !s"$year$month$day".forall(_.isDigit)
   def isNonValidDate(year: String, month: String, day: String): Boolean = {
@@ -82,10 +84,10 @@ object DivorceSelectYearForm {
 
   private def checkDateRange(implicit messages: Messages): Constraint[LocalDate] = Constraint[LocalDate]("date.range") {
     case(date) if divorceDateAfterMinDateError(date) => Invalid(ValidationError("pages.divorce.date.error.min.date",
-      LanguageUtils().ukDateTransformer(ApplicationConfig.appConfig.TAMC_MIN_DATE)))
+      languageUtilsImpl().ukDateTransformer(applicationConfig.TAMC_MIN_DATE)))
     case(date) if divorceDateInTheFutureError(date) =>
       Invalid(ValidationError("pages.divorce.date.error.max.date",
-        LanguageUtils().ukDateTransformer(TimeService.getCurrentDate.plusDays(1))))
+        languageUtilsImpl().ukDateTransformer(timeService.getCurrentDate.plusDays(1))))
     case _ => Valid
   }
 

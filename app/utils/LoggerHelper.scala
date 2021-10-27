@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,19 +12,27 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import views.helpers.LanguageUtilsImpl
+package utils
 
-@this(languageUtils: LanguageUtilsImpl)
+import play.api.Logging
 
-@(messageKey: String, relevantDate: Option[java.time.LocalDate] = None)(implicit messages: Messages)
+trait LoggerHelper extends Logging {
 
+  def warn(message: String, throwable: Throwable): Unit = {
+    logger.warn(message, throwable)
+  }
 
-<p>
-    @relevantDate match {
-    case Some(date) => {@Html(Messages(messageKey,
-    languageUtils().ukDateTransformer(date)))}
-    case _ => {@Html(Messages(messageKey))}
-    }
-</p>
+  def warn(message: String): Unit = {
+    logger.warn(message)
+  }
+
+  def error(message: String, throwable: Throwable): Unit = {
+    logger.error(message, throwable)
+  }
+
+  def info(message: String): Unit = {
+    logger.info(message)
+  }
+}

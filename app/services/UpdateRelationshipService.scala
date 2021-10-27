@@ -16,14 +16,11 @@
 
 package services
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import com.google.inject.Inject
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
-import errors.{RecipientNotFound, _}
+import errors._
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
 import play.api.i18n.Messages
@@ -34,8 +31,10 @@ import uk.gov.hmrc.emailaddress.PlayJsonFormats._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import views.helpers.LanguageUtils
+import views.helpers.LanguageUtilsImpl
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateRelationshipService @Inject()(
@@ -44,7 +43,8 @@ class UpdateRelationshipService @Inject()(
                                            endDateDivorceCalculator: EndDateDivorceCalculator,
                                            auditConnector: AuditConnector,
                                            cachingService: CachingService,
-                                           appConfig: ApplicationConfig
+                                           appConfig: ApplicationConfig,
+                                           languageUtilsImpl: LanguageUtilsImpl
                                          ) {
 
   def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
@@ -130,7 +130,7 @@ class UpdateRelationshipService @Inject()(
       val transferor = relationshipRecords.transferorInformation
       val updateRelationshipRequest = UpdateRelationshipRequest(recipient, transferor, relationshipInfo)
       val emailNotificationData = updateRelationshipNotificationRequest(updateRelationshipData.email, primaryRecord.role,
-        relationshipRecords.loggedInUserInfo, LanguageUtils.isWelsh(messages))
+        relationshipRecords.loggedInUserInfo, languageUtilsImpl.isWelsh(messages))
 
       UpdateRelationshipRequestHolder(updateRelationshipRequest, emailNotificationData)
     }

@@ -17,7 +17,7 @@
 @import java.text.NumberFormat
 @import config.ApplicationConfig
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 @import models.auth.UserRequest
@@ -25,7 +25,9 @@
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+form: FormWithCSRF,
+applicationConfig: ApplicationConfig)
 
 @(
     partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
@@ -35,13 +37,13 @@ inputRadioGroupView: templates.input_radio_group)
 )
 
 @maxLimit = @{
-    if (scottishResident) ApplicationConfig.appConfig.MAX_LIMIT_SCOT()
-    else ApplicationConfig.appConfig.MAX_LIMIT()
+    if (scottishResident) applicationConfig.MAX_LIMIT_SCOT()
+    else applicationConfig.MAX_LIMIT()
 }
 
 @main(title = Messages("title.eligibility.pattern",
     Messages("eligibility.check.partners.income.h1",
-        NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
+        NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1),
         NumberFormat.getIntegerInstance().format(maxLimit)
     )
 )) {
@@ -51,13 +53,13 @@ inputRadioGroupView: templates.input_radio_group)
     @formErrorNotificationView(
         partnersIncomeFormInput,
         formErrorMessage = "pages.form.error.mandatory.data",
-        lowerLimit = Some(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() + 1),
+        lowerLimit = Some(applicationConfig.PERSONAL_ALLOWANCE() + 1),
         upperLimit = Some(maxLimit)
     )
 
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() +
+        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() +
         1), NumberFormat.getIntegerInstance().format(maxLimit))</h1>
         <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
     </header>
@@ -66,14 +68,14 @@ inputRadioGroupView: templates.input_radio_group)
 
     <p class="bold-small">@Messages("eligibility.check.partners.income.information1")</p>
 
-    @helpers.form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
+    @form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
         <div class="form-group inline">
             @inputRadioGroupView(
             partnersIncomeFormInput("partners-income"),
             Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
             '_legend -> Html(Messages("eligibility.check.partners.income.h1",
-            NumberFormat.getIntegerInstance().format(ApplicationConfig.appConfig.PERSONAL_ALLOWANCE() +
+            NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() +
             1), NumberFormat.getIntegerInstance().format(maxLimit))),
             '_legendClass -> "visuallyhidden",
             '_labelClass -> "block-label",

@@ -26,10 +26,15 @@
 @import utils.TrackingConsentSnippetProvider
 @import uk.gov.hmrc.play.views.formatting.Dates._
 @import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
+@import uk.gov.hmrc.play.views.html.layouts._
 
 @this(
 templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-reportProblemV :includes.report_problem)
+reportProblemV :includes.report_problem,
+applicationConfig: ApplicationConfig,
+article: Article,
+layoutSidebar: Sidebar,
+trackingConsentSnippetProvider: TrackingConsentSnippetProvider)
 
 @(title: String,
  manageService: Boolean = false,
@@ -54,7 +59,7 @@ reportProblemV :includes.report_problem)
 
 
 @scriptElement = {
-  @TrackingConsentSnippetProvider.get(None)
+  @trackingConsentSnippetProvider.trackingConsentSnippet(None)
 
  <script type="text/javascript">
      function initCobrowse() {
@@ -76,8 +81,8 @@ reportProblemV :includes.report_problem)
    });
  </script>
 
- <script type="text/javascript" id="webchat" data-webchat-id="@ApplicationConfig.appConfig.webchatId">
-  var EG_ACT_ID="@ApplicationConfig.appConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="ga";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
+ <script type="text/javascript" id="webchat" data-webchat-id="@applicationConfig.webchatId">
+  var EG_ACT_ID="@applicationConfig.webchatId"; (function(e,f){var d,c,b,a=e.createElement("iframe");a.src="about:blank";a.title="ga";a.id="egot_iframe";(a.frameElement||a).style.cssText="width:0;height:0;border:0";b=e.getElementsByTagName("script");b=b[b.length-1];b.parentNode.insertBefore(a,b);try
              {c=a.contentWindow.document}
              catch(g)
              {d=e.domain,a.src="javascript:var d=document.open();d.domain='"+d+"';void(0);",c=a.contentWindow.document}
@@ -93,11 +98,11 @@ reportProblemV :includes.report_problem)
 }
 
 @getHelpForm = {
- @reportProblemV(supportLinkEnabled, formPartialRetriever, ApplicationConfig.appConfig)
+ @reportProblemV(supportLinkEnabled, formPartialRetriever, applicationConfig)
 }
 
 @commonContentHeader = {
- @if(ApplicationConfig.appConfig.isWelshEnabled) {
+ @if(applicationConfig.isWelshEnabled) {
   @langSwitch
  }
 }
@@ -110,7 +115,7 @@ reportProblemV :includes.report_problem)
 
 @sidebar = {
  @if(sidebarLinks.isDefined) {
-  @layouts.sidebar(sidebarLinks.get, sidebarClass)
+  @layoutSidebar(sidebarLinks.get, sidebarClass)
  }
 }
 
@@ -142,17 +147,17 @@ reportProblemV :includes.report_problem)
   "removeServiceInfo" -> false,
 
   "betaBanner" -> true,
-  "feedbackIdentifier" -> ApplicationConfig.appConfig.contactFormServiceIdentifier,
+  "feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier,
   "includeHMRCBranding" -> true,
-  "accessibilityFooterUrl" -> ApplicationConfig.appConfig.accessibilityStatementUrl(request.uri),
+  "accessibilityFooterUrl" -> applicationConfig.accessibilityStatementUrl(request.uri),
 
   "hideAccountMenu" -> !request.isAuthenticated,
-  "assetsPath" -> ApplicationConfig.appConfig.assetsPrefix,
+  "assetsPath" -> applicationConfig.assetsPrefix,
 
   "isGovernmentGateway" -> request.authProvider.contains("GovernmentGateway"),
   "isVerify" -> request.authProvider.contains("Verify"),
   "isSa" -> request.isSA,
-  "signOutUrl" -> (if(request.isAuthenticated) Some(routes.AuthorisationController.logout()) else None),
+  "signOutUrl" -> (if(request.isAuthenticated) Some(routes.AuthorisationController.logout) else None),
 
   "actingAttorneyBanner" -> actingAttorneyBanner,
   "mainContentHeader" -> commonContentHeader,
@@ -176,7 +181,7 @@ reportProblemV :includes.report_problem)
  )
 
  val templateArguments = {
-  if(!isUserResearchBannerHidden && ApplicationConfig.appConfig.urBannerEnabled) {
+  if(!isUserResearchBannerHidden && applicationConfig.urBannerEnabled) {
    arguments ++ Map[String, Any](
     "fullWidthBannerTitle" -> Messages("tamc.banner.recruitment.title"),
     "fullWidthBannerText" -> Messages("tamc.banner.recruitment.link"),
@@ -187,7 +192,7 @@ reportProblemV :includes.report_problem)
   } else arguments
  }
 
- templateRenderer.renderDefaultTemplate(ApplicationConfig.appConfig.frontendTemplatePath, layouts.article(mainContent, false, None), templateArguments)
+ templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent, false, None), templateArguments)
 
 }
 

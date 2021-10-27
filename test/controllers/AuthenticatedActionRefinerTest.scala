@@ -22,17 +22,20 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.Results.Ok
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.Helpers.baseApplicationBuilder.injector
+import play.mvc.Controller
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
 import utils.ControllerBaseTest
 import utils.RetrivalHelper._
-import play.api.inject.bind
 
 import scala.concurrent.Future
 
@@ -42,6 +45,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -66,7 +70,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
 
         val result: Future[Result] = onPageLoad()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.ivUpliftUrl)
+        redirectLocation(result) shouldBe Some(applicationConfig.ivUpliftUrl)
       }
 
       "there is no active session" in new FakeController {

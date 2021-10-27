@@ -17,19 +17,21 @@
 package forms
 
 import models.{Gender, RecipientDetailsFormInput}
-import java.time.LocalDate
 import play.api.data.FormError
 import uk.gov.hmrc.domain.Generator
 import utils.BaseTest
 
+import java.time.LocalDate
 import scala.util.Random
 
 class RecipientDetailsFormTest extends BaseTest {
 
+  val recipientDetailsForm: RecipientDetailsForm = instanceOf[RecipientDetailsForm]
+
   ".recipientDetailsForm nino mapping" should {
 
     val validNino = new Generator(new Random).nextNino
-    val form = RecipientDetailsForm.recipientDetailsForm(LocalDate.now(), validNino)
+    val form = recipientDetailsForm.recipientDetailsForm(LocalDate.now(), validNino)
 
     "fail to bind a nino containing invalid chars, with a explicit invalid char error" in {
       val formInput = Map[String, String](

@@ -16,24 +16,28 @@
 
 package viewModels
 
-import models._
-import java.time.LocalDate
-
 import config.ApplicationConfig
+import models._
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
-import utils.TamcViewModelTest
-import views.helpers.LanguageUtils
+import utils.BaseTest
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
+
+import java.time.LocalDate
 
 
-class HistorySummaryViewModelTest extends TamcViewModelTest {
+class HistorySummaryViewModelTest extends BaseTest {
+
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  val languageUtils: LanguageUtils = EnglishLangaugeUtils
+  val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
 
   val currentOfTaxYear: Int = TaxYear.current.currentYear
   val endOfTaxYear: LocalDate = TaxYear.current.finishes
-  val maxPATransfer: Int = ApplicationConfig.appConfig.PERSONAL_ALLOWANCE(currentOfTaxYear)
-  val maxBenefit: Int = ApplicationConfig.appConfig.MAX_BENEFIT(currentOfTaxYear)
-  val maxPaTransferFormatted: Int = ApplicationConfig.appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
-  val formattedEndOfYear = LanguageUtils().ukDateTransformer(endOfTaxYear)
+  val maxPATransfer: Int = applicationConfig.PERSONAL_ALLOWANCE(currentOfTaxYear)
+  val maxBenefit: Int = applicationConfig.MAX_BENEFIT(currentOfTaxYear)
+  val maxPaTransferFormatted: Int = applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(currentOfTaxYear)
+  val formattedEndOfYear = languageUtils.ukDateTransformer(endOfTaxYear)
 
   val citizenName = CitizenName(Some("Test"), Some("User"))
   val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = LocalDate.now().toString, has_allowance = None, name = Some(citizenName))
@@ -49,10 +53,10 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
         "the person is a recipient " in {
           val marriageAllowanceCancelled = false
           val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
-            controllers.routes.UpdateRelationshipController.decision().url)
+            controllers.routes.UpdateRelationshipController.decision.url)
 
           val role = Recipient
-          val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
 
           val expectedContent = Html(s"<p>${messages("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>" +
             s"<p>${messages("pages.history.active.recipient.paragraph2", maxBenefit)}</p>")
@@ -63,10 +67,10 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
         "The person is a transferor" in {
           val marriageAllowanceCancelled = false
           val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
-            controllers.routes.UpdateRelationshipController.decision().url)
+            controllers.routes.UpdateRelationshipController.decision.url)
 
           val role = Transferor
-          val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
           val expectedContent = Html(s"<p>${messages("pages.history.active.transferor")}</p>")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
@@ -79,10 +83,10 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
         "the person is a recipient" in {
           val marriageAllowanceCancelled = true
           val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
-            controllers.routes.UpdateRelationshipController.claims().url)
+            controllers.routes.UpdateRelationshipController.claims.url)
 
           val role = Recipient
-          val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
 
           val expectedContent = Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
             s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</p>")
@@ -93,10 +97,10 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
         "the person is a transferor" in {
           val marriageAllowanceCancelled = true
           val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
-            controllers.routes.UpdateRelationshipController.claims().url)
+            controllers.routes.UpdateRelationshipController.claims.url)
 
           val role = Transferor
-          val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
 
           val expectedContent = Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
             s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</p>")
@@ -109,11 +113,11 @@ class HistorySummaryViewModelTest extends TamcViewModelTest {
     "There is no citizen name to allow a display name to be created" in  {
       val marriageAllowanceCancelled = false
       val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
-        controllers.routes.UpdateRelationshipController.decision().url)
+        controllers.routes.UpdateRelationshipController.decision.url)
       val role = Transferor
       val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = LocalDate.now().toString, has_allowance = None, name = None)
 
-      val viewModel = HistorySummaryViewModel(role, marriageAllowanceCancelled, loggedInUserInfo)
+      val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
 
       viewModel.displayName shouldBe ""
     }

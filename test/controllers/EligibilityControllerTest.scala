@@ -24,17 +24,19 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.inject.{Injector, bind}
 import play.api.mvc.AnyContentAsFormUrlEncoded
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.test.Helpers.baseApplicationBuilder.injector
 import services.EligibilityCalculatorService
-import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
-import play.api.inject.{Injector, bind}
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
 
 class EligibilityControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -66,7 +68,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
     "redirect the user" in {
       val result = controller.home()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.eligibilityCheck().url)
+      redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.eligibilityCheck.url)
     }
   }
 
@@ -96,7 +98,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val result = authController.eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.appConfig.ptaFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe applicationConfig.ptaFinishedUrl
       }
 
       "user is not married with temporary auth state" in {
@@ -106,7 +108,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         val result = controller.eligibilityCheckAction()(request)
         status(result) shouldBe OK
         val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("button-finished").attr("href") shouldBe ApplicationConfig.appConfig.gdsFinishedUrl
+        document.getElementById("button-finished").attr("href") shouldBe applicationConfig.gdsFinishedUrl
       }
     }
 
@@ -117,7 +119,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         )
         val result = controller.eligibilityCheckAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.dateOfBirthCheck().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.dateOfBirthCheck.url)
       }
     }
   }
@@ -146,7 +148,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
         )
         val result = controller.dateOfBirthCheckAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouLiveInScotland().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouLiveInScotland.url)
       }
     }
   }
@@ -174,7 +176,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "do-you-live-in-scotland" -> "true")
         val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck.url)
         result.session.data("scottish_resident") shouldBe "true"
       }
 
@@ -183,7 +185,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "do-you-live-in-scotland" -> "false")
         val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.lowerEarnerCheck.url)
         result.session.data("scottish_resident") shouldBe "false"
       }
     }
@@ -213,7 +215,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           )
           val result = controller.lowerEarnerCheckAction()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.partnersIncomeCheck().url)
+          redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.partnersIncomeCheck.url)
         }
       }
     }
@@ -243,7 +245,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "is-scottish" -> "true")
         val result = controller.partnersIncomeCheckAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouWantToApply().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.doYouWantToApply.url)
       }
     }
   }
@@ -271,7 +273,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "do-you-want-to-apply" -> "true")
         val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer.url)
       }
     }
 
@@ -281,7 +283,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "do-you-want-to-apply" -> "false")
         val result = authController.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.ptaFinishedUrl)
+        redirectLocation(result) shouldBe Some(applicationConfig.ptaFinishedUrl)
       }
 
       "the user doesnt want to apply and is not permanently logged in" in {
@@ -289,7 +291,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "do-you-want-to-apply" -> "false")
         val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(ApplicationConfig.appConfig.gdsFinishedUrl)
+        redirectLocation(result) shouldBe Some(applicationConfig.gdsFinishedUrl)
       }
     }
   }

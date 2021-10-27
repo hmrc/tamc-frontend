@@ -16,10 +16,10 @@
 
 package models
 
-import java.time.LocalDate
-
 import org.joda.time.DateTime
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.UnitSpec
+
+import java.time.LocalDate
 
 class RelationshipRecordTest extends UnitSpec {
 

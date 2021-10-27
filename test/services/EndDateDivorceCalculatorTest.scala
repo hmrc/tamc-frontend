@@ -18,10 +18,10 @@ package services
 
 import models.{Recipient, Transferor}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import uk.gov.hmrc.time.TaxYear
+import utils.UnitSpec
 
 import java.time.LocalDate
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.time.TaxYear
 
 class EndDateDivorceCalculatorTest extends UnitSpec with GuiceOneAppPerSuite {
 

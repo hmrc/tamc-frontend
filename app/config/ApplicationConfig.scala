@@ -17,14 +17,14 @@
 package config
 
 import com.google.inject.Inject
-import play.api.{Configuration, Play}
+import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
-import scala.concurrent.duration._
+
 import java.time.LocalDate
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
 
 //TODO[DDCNL-3479] get rid of vals in here that aren't actually config values!!!!!
 class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig) {
@@ -147,8 +147,4 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   def ivLoginUrl: String = createUrl(action = "registration")
 
   def ivUpliftUrl: String = createUrl(action = "uplift")
-}
-
-object ApplicationConfig {
- val appConfig: ApplicationConfig = Play.current.injector.instanceOf[ApplicationConfig]
 }

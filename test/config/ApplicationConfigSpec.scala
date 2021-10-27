@@ -16,19 +16,22 @@
 
 package config
 
-import uk.gov.hmrc.play.test.UnitSpec
+import play.api.test.Helpers.baseApplicationBuilder.injector
+import utils.UnitSpec
 
 class ApplicationConfigSpec extends UnitSpec {
 
+  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+
   "check rates for earliest valid year" when {
     "return valid year" in {
-      ApplicationConfig.appConfig.TAMC_BEGINNING_YEAR should be(2017)
+      applicationConfig.TAMC_BEGINNING_YEAR should be(2017)
     }
   }
 
   "ggSignInUrl" must {
     "build ggSignInUrl and encode continue url" in {
-      ApplicationConfig.appConfig.ggSignInUrl shouldBe "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
+      applicationConfig.ggSignInUrl shouldBe "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
     }
   }
 

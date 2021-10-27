@@ -20,14 +20,12 @@ import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.CurrentYearForm.currentYearForm
-import forms.DateOfMarriageForm.dateOfMarriageForm
 import forms.EarlierYearForm.earlierYearsForm
 import forms.EmailForm.emailForm
-import forms.RecipientDetailsForm.recipientDetailsForm
+import forms.{DateOfMarriageForm, RecipientDetailsForm}
 import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
-import play.Logger
 import play.api.data.FormError
 import play.api.i18n.Lang
 import play.api.mvc._
@@ -36,6 +34,7 @@ import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import utils.LoggerHelper
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -64,38 +63,40 @@ class TransferController @Inject() (
   noTaxYearTransferor: views.html.errors.no_tax_year_transferor,
   relationshipCannotCreate: views.html.errors.relationship_cannot_create,
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
-  tryLater: views.html.errors.try_later)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) {
+  tryLater: views.html.errors.try_later,
+  recipientDetailsForm: RecipientDetailsForm,
+  dateOfMarriageForm: DateOfMarriageForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
-      transferV(recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino))
+      transferV(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
     )
   }
 
   def transferAction: Action[AnyContent] = authenticate.async { implicit request =>
-    recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
+    recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
         cachingService.saveRecipientDetails(recipientData).map { _ =>
-          Redirect(controllers.routes.TransferController.dateOfMarriage())
+          Redirect(controllers.routes.TransferController.dateOfMarriage)
         }
     )
   }
 
   def dateOfMarriage: Action[AnyContent] = authenticate { implicit request =>
-    Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm(today = timeService.getCurrentDate)))
+    Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
   def dateOfMarriageWithCy: Action[AnyContent] = authenticate { implicit request =>
-    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
+    Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("cy"))
   }
 
   def dateOfMarriageWithEn: Action[AnyContent] = authenticate { implicit request =>
-    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
+    Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("en"))
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async { implicit request =>
-    dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
+    dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
       formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
       marriageData => {
         cachingService.saveDateOfMarriage(marriageData)
@@ -104,7 +105,7 @@ class TransferController @Inject() (
           case RecipientDetailsFormInput(name, lastName, gender, nino) =>
             val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
             registrationService.isRecipientEligible(request.nino, dataToSend) map { _ =>
-              Redirect(controllers.routes.TransferController.eligibleYears())
+              Redirect(controllers.routes.TransferController.eligibleYears)
             }
         }
       }
@@ -160,7 +161,7 @@ class TransferController @Inject() (
               } else if (previousYears.nonEmpty) {
                 Ok(previousYearsV(registrationInput, previousYears, currentYearAvailable))
               } else {
-                Redirect(controllers.routes.TransferController.confirmYourEmail())
+                Redirect(controllers.routes.TransferController.confirmYourEmail)
               }
             }
           }
@@ -199,7 +200,7 @@ class TransferController @Inject() (
               .updateSelectedYears(availableYears, taxYears.selectedYear, taxYears.yearAvailableForSelection)
               .map { _ =>
                 if (taxYears.furtherYears.isEmpty) {
-                  Redirect(controllers.routes.TransferController.confirmYourEmail())
+                  Redirect(controllers.routes.TransferController.confirmYourEmail)
                 } else {
                   Ok(
                     singleYearSelect(earlierYearsForm(), registrationInput, toTaxYears(taxYears.furtherYears))
@@ -223,7 +224,7 @@ class TransferController @Inject() (
       formWithErrors => Future.successful(BadRequest(email(formWithErrors))),
       transferorEmail =>
         registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map { _ =>
-          Redirect(controllers.routes.TransferController.confirm())
+          Redirect(controllers.routes.TransferController.confirm)
         }
     ) recover handleError
   }
@@ -236,7 +237,7 @@ class TransferController @Inject() (
 
   def confirmAction: Action[AnyContent] = authenticate.async { implicit request =>
     registrationService.createRelationship(request.nino) map { _ =>
-      Redirect(controllers.routes.TransferController.finished())
+      Redirect(controllers.routes.TransferController.finished)
     } recover handleError
   }
 
@@ -263,33 +264,33 @@ class TransferController @Inject() (
       }
 
       def handleWithException(ex: Throwable, view: Html): Result = {
-        Logger.error(ex.getMessage(), ex)
+        error(ex.getMessage(), ex)
         InternalServerError(view)
       }
 
       throwable match {
-        case _: TransferorNotFound => handle(Logger.warn, Ok(transferorNotFound()))
-        case _: RecipientNotFound  => handle(Logger.warn, Ok(recipientNotFound()))
+        case _: TransferorNotFound => handle(warn, Ok(transferorNotFound()))
+        case _: RecipientNotFound  => handle(warn, Ok(recipientNotFound()))
         case _: TransferorDeceased =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
+          handle(warn, Redirect(controllers.routes.TransferController.cannotUseService))
         case _: RecipientDeceased =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.cannotUseService()))
+          handle(warn, Redirect(controllers.routes.TransferController.cannotUseService))
         case _: CacheMissingTransferor =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-        case _: CacheTransferorInRelationship => handle(Logger.warn, Ok(transferorStatus()))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case _: CacheTransferorInRelationship => handle(warn, Ok(transferorStatus()))
         case _: CacheMissingRecipient =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: CacheMissingEmail =>
-          handle(Logger.warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
+          handle(warn, Redirect(controllers.routes.TransferController.confirmYourEmail))
         case _: CacheRelationshipAlreadyCreated =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case _: CacheCreateRequestNotSent =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-        case _: NoTaxYearsSelected      => handle(Logger.info, Ok(noYearSelected()))
-        case _: NoTaxYearsAvailable     => handle(Logger.info, Ok(noEligibleYears()))
-        case _: NoTaxYearsForTransferor => handle(Logger.info, Ok(noTaxYearTransferor()))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case _: NoTaxYearsSelected      => handle(info, Ok(noYearSelected()))
+        case _: NoTaxYearsAvailable     => handle(info, Ok(noEligibleYears()))
+        case _: NoTaxYearsForTransferor => handle(info, Ok(noTaxYearTransferor()))
         case _: RelationshipMightBeCreated =>
-          handle(Logger.warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case ex: CannotCreateRelationship => handleWithException(ex, relationshipCannotCreate())
         case ex: CacheRecipientInRelationship =>
           handleWithException(ex, recipientRelationshipExists())

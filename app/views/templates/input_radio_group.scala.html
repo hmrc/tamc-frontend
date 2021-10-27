@@ -41,7 +41,7 @@ args: (Symbol, Any)*
         <span class="form-hint">@elements.args.get('_fieldHelper).getOrElse("")</span>
     }
     @elements.errors.map{ error =>
-        <span class="error-notification">@Messages(error)</span>
+        <span class="error-notification">@Messages(error.toString)</span>
     }
     @radioOptions.map { case (value, label) =>
         @defining(s"${elements.field.name}-${value.toLowerCase.replace(" ","_")}")  { inputId =>

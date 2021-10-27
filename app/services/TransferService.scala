@@ -22,7 +22,7 @@ import errors.ErrorResponseStatus._
 import errors._
 import events._
 import models._
-import play.Logger
+import play.api.Logging
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
@@ -30,7 +30,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
-import views.helpers.LanguageUtils
+import views.helpers.LanguageUtilsImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,8 +39,10 @@ class TransferService @Inject()(
                                marriageAllowanceConnector: MarriageAllowanceConnector,
                                auditConnector: AuditConnector,
                                cachingService: CachingService,
-                               applicationService: ApplicationService
-                               ) {
+                               applicationService: ApplicationService,
+                               timeService: TimeService,
+                               languageUtilsImpl: LanguageUtilsImpl
+                               ) extends Logging {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
@@ -61,7 +63,7 @@ class TransferService @Inject()(
       cache <- cachingService.getCachedDataForEligibilityCheck
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (recipientRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
-      validYears = TimeService.getValidYearsApplyMAPreviousYears(taxYears)
+      validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
       _ <- cachingService.saveRecipientRecord(recipientRecord, recipientData, validYears)
     } yield true
 
@@ -69,7 +71,7 @@ class TransferService @Inject()(
                                                 (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
-        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, TimeService.getTaxYearForDate(dom)) =>
+        if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
         Future.successful(cache)
       case (_, Some(_)) => throw NoTaxYearsForTransferor()
       case _ => throw CacheMissingTransferor()
@@ -108,7 +110,7 @@ class TransferService @Inject()(
   }
 
   private def lockCreateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
-    Logger.info("lockCreateRelationship has been called.")
+    logger.info("lockCreateRelationship has been called.")
     cachingService.lockCreateRelationship
   }
 
@@ -133,12 +135,12 @@ class TransferService @Inject()(
   }
 
   def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
-    Logger.info("upsertTransferorNotification has been called.")
+    logger.info("upsertTransferorNotification has been called.")
     cachingService.saveNotificationRecord(notificationRecord)
   }
 
   def getConfirmationData(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] = {
-    Logger.info("getConfirmationData has been called.")
+    logger.info("getConfirmationData has been called.")
     for {
       cache <- cachingService.getCachedData(nino)
       validated <- validateCompleteCache(cache)
@@ -147,7 +149,7 @@ class TransferService @Inject()(
   }
 
   private def validateCompleteCache(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CacheData] = {
-    Logger.info("validateCompleteCache has been called.")
+    logger.info("validateCompleteCache has been called.")
     cacheData match {
       case Some(CacheData(_, _, _, Some(true), _, _, _)) => {
         handleAudit(RelationshipAlreadyCreatedEvent(cacheData.get))
@@ -225,7 +227,7 @@ class TransferService @Inject()(
       recipient_cid = recipient.cid,
       recipient_timestamp = recipient.timestamp,
       taxYears = sessionData.selectedYears.get.sortWith(_ < _))
-    val sendNotificationData = CreateRelationshipNotificationRequest(full_name = "UNKNOWN", email = email, welsh = LanguageUtils.isWelsh(messages))
+    val sendNotificationData = CreateRelationshipNotificationRequest(full_name = "UNKNOWN", email = email, welsh = languageUtilsImpl.isWelsh(messages))
     CreateRelationshipRequestHolder(request = createRelationshipreq, notification = sendNotificationData)
   }
 

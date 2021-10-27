@@ -15,13 +15,16 @@
  *@
 
 @import config.ApplicationConfig
+@import uk.gov.hmrc.play.views.html.layouts.Article
 
-@this(templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@this(
+templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+applicationConfig: ApplicationConfig,
+article: Article)
 
 @(pageTitle: String, heading: String, message: String)(implicit messages: Messages)
 
 
-@import uk.gov.hmrc.play.views.html.layouts
 
 @contentHeader = {
 <h1>@heading</h1>
@@ -33,17 +36,17 @@
 
 
 @{
-templateRenderer.renderDefaultTemplate(ApplicationConfig.appConfig.frontendTemplatePath, layouts.article(mainContent), Map[String, Any](
+templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent), Map[String, Any](
 "pageTitle" -> pageTitle,
 "linkElems" -> None,
 "scriptElems" -> None,
 "googleAnalytics" -> Map(
-"trackingId" -> ApplicationConfig.appConfig.analyticsToken,
-"cookieDomain" -> ApplicationConfig.appConfig.analyticsHost
+"trackingId" -> applicationConfig.analyticsToken,
+"cookieDomain" -> applicationConfig.analyticsHost
 ),
 "includeHMRCBranding" -> true,
 "mainContentHeader" -> contentHeader,
 "betaBanner" -> true,
-"feedbackIdentifier" -> ApplicationConfig.appConfig.contactFormServiceIdentifier
+"feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier
 ))
 }

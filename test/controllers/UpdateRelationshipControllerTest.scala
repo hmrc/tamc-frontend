@@ -16,35 +16,34 @@
 
 package controllers
 
+import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import forms.EmailForm.emailForm
-import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
+import forms.coc._
 import models._
 import models.auth.AuthenticatedUserRequest
-
-import java.time.LocalDate
-import controllers.actions.AuthenticatedActionRefiner
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.i18n.MessagesApi
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{FakeRequest, Injecting}
 import play.api.test.Helpers._
+import play.api.test.{FakeRequest, Injecting}
 import services._
 import test_utils._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.RequestBuilder._
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 import viewModels._
-import play.api.inject.bind
-import uk.gov.hmrc.renderer.TemplateRenderer
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
@@ -54,6 +53,12 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
+
+  val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
+  val divorceSelectYearForm: DivorceSelectYearForm = instanceOf[DivorceSelectYearForm]
+  val divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl = instanceOf[DivorceEndExplanationViewModelImpl]
+  val confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl = instanceOf[ConfirmUpdateViewModelImpl]
+  val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
 
   val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
@@ -97,12 +102,17 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   val confirmUpdateView = inject[views.html.coc.confirmUpdate]
   val finishedView = inject[views.html.coc.finished]
 
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    reset(mockTransferService, mockCachingService, mockUpdateRelationshipService, mockTimeService)
+  }
+
   "history" should {
 
     "display the history summary page with a status of OK" in {
 
       val relationshipRecords = createRelationshipRecords()
-      val historySummaryViewModel = HistorySummaryViewModel(relationshipRecords.primaryRecord.role,
+      val historySummaryViewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
         relationshipRecords.hasMarriageAllowanceBeenCancelled,
         relationshipRecords.loggedInUserInfo)
 
@@ -126,7 +136,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks.url)
       }
     }
 
@@ -217,7 +227,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitDecision(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.claims().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.claims.url)
       }
 
     }
@@ -238,7 +248,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitDecision(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.makeChange().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.makeChange.url)
       }
     }
 
@@ -259,7 +269,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
 
-      val claimsViewModel = ClaimsViewModel(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
+      val claimsViewModel = claimsViewModelImpl(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
       val result = controller.claims(request)
       status(result) shouldBe OK
 
@@ -320,7 +330,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.submitMakeChange()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEnterYear.url)
 
       }
 
@@ -340,7 +350,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
             val result = controller.submitMakeChange()(request)
             status(result) shouldBe SEE_OTHER
-            redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance().url)
+            redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.stopAllowance.url)
 
           }
 
@@ -363,7 +373,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
           val result = controller.submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.cancel().url)
+          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.cancel.url)
 
         }
       }
@@ -380,7 +390,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
           val result = controller.submitMakeChange()(request)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.bereavement().url)
+          redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.bereavement.url)
 
         }
       }
@@ -468,7 +478,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.divorceEnterYear(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs divorceSelectYearView(DivorceSelectYearForm.form.fill(divorceDateInThePast))
+        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form.fill(divorceDateInThePast))
       }
 
       "there is no data in the cache" in {
@@ -478,13 +488,13 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.divorceEnterYear(request)
         status(result) shouldBe OK
 
-        result rendersTheSameViewAs divorceSelectYearView(DivorceSelectYearForm.form)
+        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)
       }
 
     }
 
     "a non fatal error has occurred when trying to get cached data" in {
-      when(mockUpdateRelationshipService.getDivorceDate(any(), any())).thenReturn(failedFuture)
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any())).thenReturn(Future.failed(new Exception("exception has been thrown")))
 
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
@@ -504,9 +514,12 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         when(mockUpdateRelationshipService.saveDivorceDate(ArgumentMatchers.eq(divorceDateInThePast))(any(), any()))
           .thenReturn(Future.successful(divorceDateInThePast))
 
+        when(mockTimeService.getCurrentDate)
+          .thenReturn(LocalDate.now())
+
         val result = controller.submitDivorceEnterYear()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEndExplanation().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.divorceEndExplanation.url)
 
       }
 
@@ -537,6 +550,9 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           "dateOfDivorce.month" -> divorceDateInThePast.getMonthValue.toString,
           "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString)
 
+        when(mockTimeService.getCurrentDate)
+          .thenReturn(LocalDate.now())
+
         val result = controller.submitDivorceEnterYear(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
         result rendersTheSameViewAs tryLaterView()
@@ -564,7 +580,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any(), any()))
         .thenReturn(Future.successful(maEndingDates))
 
-      val viewModel = DivorceEndExplanationViewModel(role, divorceDate, maEndingDates)
+      val viewModel = divorceEndExplanationViewModelImpl(role, divorceDate, maEndingDates)
 
       val result = controller.divorceEndExplanation()(request)
       status(result) shouldBe OK
@@ -661,7 +677,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val request = buildFakePostRequest("transferor-email" -> emailAddress)
       val result = controller.confirmYourEmailActionUpdate()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate().url)
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.confirmUpdate.url)
 
     }
 
@@ -676,7 +692,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.saveEmailAddress(any())(any(), any())).thenReturn(failedFuture)
+        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(failedFuture)
 
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -706,7 +722,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.confirmUpdate()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs confirmUpdateView(ConfirmUpdateViewModel(confirmUpdateAnswers))
+      result rendersTheSameViewAs confirmUpdateView(confirmUpdateViewModelImpl(confirmUpdateAnswers))
 
     }
 
@@ -734,7 +750,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.submitConfirmUpdate(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
+      redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate.url)
 
     }
 
@@ -771,7 +787,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
+        when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any()))
           .thenReturn(Future.failed(CacheMissingEmail()))
 
         val result = controller.submitConfirmUpdate(request)
@@ -831,7 +847,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
         val result = Future.successful(controller.handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated))
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate.url)
       }
     }
   }

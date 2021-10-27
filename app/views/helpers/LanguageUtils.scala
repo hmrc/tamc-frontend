@@ -16,21 +16,21 @@
 
 package views.helpers
 
-import java.util.Locale
-
 import config.ApplicationConfig
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import play.api.data.Form
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import javax.inject.Inject
+
 //TODO[DDCNL-3479] we may be able to delete this
 
-object LanguageUtils {
+class LanguageUtilsImpl@Inject()(applicationConfig: ApplicationConfig) {
 
-  def isWelsh(messages: Messages): Boolean = messages.lang.language == ApplicationConfig.appConfig.LANG_LANG_WELSH
+  def isWelsh(messages: Messages): Boolean = messages.lang.language == applicationConfig.LANG_LANG_WELSH
 
   def apply()(implicit messages: Messages): LanguageUtils = {
     if(isWelsh(messages)) WelshLanguageUtils else EnglishLangaugeUtils

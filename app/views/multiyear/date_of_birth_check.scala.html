@@ -15,14 +15,16 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
+@import uk.gov.hmrc.play.views.html.helpers._
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 
 @this(
 main: templates.tamc_main,
 formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group)
+inputRadioGroupView: templates.input_radio_group,
+applicationConfig: ApplicationConfig,
+form: FormWithCSRF)
 
 @(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
@@ -42,7 +44,7 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
     </header>
 
 
-@helpers.form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
+@form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
 <div class="form-group inline">
     @inputRadioGroupView(
     dateofBirthCheckForm("date-of-birth"),
@@ -57,7 +59,7 @@ title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
 </div>
 
 <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
-    <p>@Messages("eligibility.check.date.of.birth.error.text.before.link") <a href=@ApplicationConfig.appConfig.marriedCoupleAllowanceLink data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank" rel="noopener noreferrer">@Html(Messages("eligibility.check.date.of.birth.error.link.text")) @Messages("tamc.open.in.new.window")</a>.</p>
+    <p>@Messages("eligibility.check.date.of.birth.error.text.before.link") <a href=@applicationConfig.marriedCoupleAllowanceLink data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank" rel="noopener noreferrer">@Html(Messages("eligibility.check.date.of.birth.error.link.text")) @Messages("tamc.open.in.new.window")</a>.</p>
     <p>@Messages("eligibility.check.date.of.birth.error.text.after.link")</p>
 </div>
 

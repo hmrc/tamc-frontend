@@ -19,7 +19,6 @@ package utils
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.scalatestplus.mockito.MockitoSugar.mock
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{AnyContent, Request}
@@ -28,7 +27,6 @@ import play.twirl.api.Html
 import test_utils.TestData
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.test.UnitSpec
 import utils.viewHelpers.JSoupMatchers
 
 trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite with JSoupMatchers {

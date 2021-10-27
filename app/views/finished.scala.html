@@ -18,7 +18,9 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 
-@this(main: templates.tamc_main)
+@this(
+main: templates.tamc_main,
+applicationConfig: ApplicationConfig)
 
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(
 implicit messages: Messages,
@@ -41,7 +43,7 @@ title = Messages("title.application.pattern", Messages("title.finished"))
 <p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
 
 <p id="paragraph-5">@messages("pages.finished.check-link-para1")
-    <a id="pta-link" href=@ApplicationConfig.appConfig.ptaFinishedUrl data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">@messages("pages.finished.check-link.text")</a>
+    <a id="pta-link" href=@applicationConfig.ptaFinishedUrl data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">@messages("pages.finished.check-link.text")</a>
     @messages("pages.finished.check-link-para2")
 </p>
 }

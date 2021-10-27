@@ -17,9 +17,10 @@
 package models
 
 import errors._
-import java.time.LocalDate
 import test_utils.data.RelationshipRecordData.activeRecipientRelationshipRecord
-import uk.gov.hmrc.play.test.UnitSpec
+import utils.UnitSpec
+
+import java.time.LocalDate
 
 class UpdateRelationshipDataTest extends UnitSpec {
 

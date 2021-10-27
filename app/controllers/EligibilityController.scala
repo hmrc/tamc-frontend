@@ -23,8 +23,7 @@ import forms.MultiYearDateOfBirthForm.dateOfBirthForm
 import forms.MultiYearDoYouLiveInScotlandForm.doYouLiveInScotlandForm
 import forms.MultiYearDoYouWantToApplyForm.doYouWantToApplyForm
 import forms.MultiYearEligibilityCheckForm.eligibilityForm
-import forms.MultiYearLowerEarnerForm.lowerEarnerForm
-import forms.MultiYearPartnersIncomeQuestionForm.partnersIncomeForm
+import forms._
 import models.Country
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
@@ -48,7 +47,9 @@ class EligibilityController @Inject()(
   partnersIncomeQuestionView: views.html.multiyear.partners_income_question,
   doYouWantToApplyView: views.html.multiyear.do_you_want_to_apply,
   calculatorView: views.html.calculator,
-  ptaCalculatorView: views.html.pta.calculator)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  ptaCalculatorView: views.html.pta.calculator,
+  multiYearPartnersIncomeQuestionForm: MultiYearPartnersIncomeQuestionForm,
+  multiYearLowerEarnerForm: MultiYearLowerEarnerForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
@@ -57,7 +58,7 @@ class EligibilityController @Inject()(
 
   def home: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Redirect(controllers.routes.EligibilityController.eligibilityCheck())
+      Redirect(controllers.routes.EligibilityController.eligibilityCheck)
   }
 
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
@@ -77,7 +78,7 @@ class EligibilityController @Inject()(
             BadRequest(eligibilityCheckView(formWithErrors)),
           eligibilityInput => {
             if (eligibilityInput.married) {
-              Redirect(controllers.routes.EligibilityController.dateOfBirthCheck())
+              Redirect(controllers.routes.EligibilityController.dateOfBirthCheck)
             } else {
               Ok(eligibilityNonEligibleFinishView(finishUrl(request.isAuthenticated)))
             }
@@ -96,7 +97,7 @@ class EligibilityController @Inject()(
         formWithErrors =>
           BadRequest(dateOfBirthCheckView(formWithErrors)),
         _ => {
-          Redirect(controllers.routes.EligibilityController.doYouLiveInScotland())
+          Redirect(controllers.routes.EligibilityController.doYouLiveInScotland)
         })
   }
 
@@ -112,38 +113,38 @@ class EligibilityController @Inject()(
         formWithErrors =>
           BadRequest(doYouLiveInScotlandView(formWithErrors)),
         doYouLiveInScotlandInput => {
-          Redirect(controllers.routes.EligibilityController.lowerEarnerCheck())
+          Redirect(controllers.routes.EligibilityController.lowerEarnerCheck)
             .withSession(request.session + (appConfig.SCOTTISH_RESIDENT -> doYouLiveInScotlandInput.doYouLiveInScotland.toString))
         })
   }
 
   def lowerEarnerCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(lowerEarnerView(lowerEarnerForm))
+      Ok(lowerEarnerView(multiYearLowerEarnerForm.lowerEarnerForm))
   }
 
   def lowerEarnerCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      lowerEarnerForm.bindFromRequest.fold(
+      multiYearLowerEarnerForm.lowerEarnerForm.bindFromRequest.fold(
         formWithErrors =>
           BadRequest(lowerEarnerView(formWithErrors)),
         _ => {
-          Redirect(controllers.routes.EligibilityController.partnersIncomeCheck())
+          Redirect(controllers.routes.EligibilityController.partnersIncomeCheck)
         })
   }
 
   def partnersIncomeCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(partnersIncomeQuestionView(partnersIncomeForm, isScottishResident(request)))
+      Ok(partnersIncomeQuestionView(multiYearPartnersIncomeQuestionForm.partnersIncomeForm, isScottishResident(request)))
   }
 
   def partnersIncomeCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      partnersIncomeForm.bindFromRequest.fold(
+      multiYearPartnersIncomeQuestionForm.partnersIncomeForm.bindFromRequest.fold(
         formWithErrors =>
           BadRequest(partnersIncomeQuestionView(formWithErrors, isScottishResident(request))),
         _ => {
-          Redirect(controllers.routes.EligibilityController.doYouWantToApply())
+          Redirect(controllers.routes.EligibilityController.doYouWantToApply)
         })
   }
 
@@ -164,7 +165,7 @@ class EligibilityController @Inject()(
             BadRequest(doYouWantToApplyView(formWithErrors)),
           doYouWantToApplyInput => {
             if (doYouWantToApplyInput.doYouWantToApply) {
-              Redirect(controllers.routes.TransferController.transfer())
+              Redirect(controllers.routes.TransferController.transfer)
             } else {
               Redirect(Call("GET", finishUrl(request.isAuthenticated)))
             }

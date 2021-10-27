@@ -17,15 +17,16 @@
 package services
 
 import config.ApplicationConfig
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 import uk.gov.hmrc.time.TaxYear
 
-//TODO[DDCNL-3479] look into making this a util or deleting. It Is Not a Service!
-object TimeService extends TimeService
+import javax.inject.Inject
 
-trait TimeService {
+//TODO[DDCNL-3479] look into making this a util or deleting. It Is Not a Service!
+
+class TimeService@Inject()(applicationConfig: ApplicationConfig) {
 
   def isFutureDate(date: LocalDate): Boolean =
     date.isAfter(getCurrentDate)
@@ -57,7 +58,7 @@ trait TimeService {
   def getValidYearsApplyMAPreviousYears(years: Option[List[models.TaxYear]]): List[models.TaxYear] = {
     years.fold(List[models.TaxYear]()) {
       actualYears =>
-        actualYears.filter(year => year.year >= ApplicationConfig.appConfig.TAMC_BEGINNING_YEAR)
+        actualYears.filter(year => year.year >= applicationConfig.TAMC_BEGINNING_YEAR)
     }
   }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test_utils
+package test_utils.data
 
 
 import models._

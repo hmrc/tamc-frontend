@@ -21,10 +21,13 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.Application
+import play.api.http.Status.OK
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.{Action, AnyContent, Controller, Result}
+import play.api.mvc.{Action, AnyContent, Result}
 import play.api.test.Injecting
 import play.api.inject.bind
+import play.api.mvc.Results.Ok
+import play.mvc.Controller
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}

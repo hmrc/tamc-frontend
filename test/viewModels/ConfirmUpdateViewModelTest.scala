@@ -17,11 +17,16 @@
 package viewModels
 
 import models.{CitizenName, ConfirmationUpdateAnswers, LoggedInUserInfo, MarriageAllowanceEndingDates}
-import java.time.LocalDate
-import utils.TamcViewModelTest
-import views.helpers.LanguageUtils
+import utils.BaseTest
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
-class ConfirmUpdateViewModelTest extends TamcViewModelTest {
+import java.time.LocalDate
+
+class ConfirmUpdateViewModelTest extends BaseTest {
+
+  val languageUtils: LanguageUtils = EnglishLangaugeUtils
+
+  val confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl = instanceOf[ConfirmUpdateViewModelImpl]
 
   val firstName = "Firstname"
   val surname = "Surname"
@@ -39,18 +44,18 @@ class ConfirmUpdateViewModelTest extends TamcViewModelTest {
   }
 
   def transformedDate(dateToTransform: LocalDate): String = {
-    LanguageUtils().ukDateTransformer(dateToTransform)
+    languageUtils.ukDateTransformer(dateToTransform)
   }
 
   "ConfirmationUpdateViewModel" should {
     "create a view model" when {
       "a valid confirmationUpdateAnswers object is provided" in {
         val confirmationUpdateAnswers = createConfirmationUpdateAnswers()
-        val viewModel = ConfirmUpdateViewModel(confirmationUpdateAnswers)
+        val viewModel = confirmUpdateViewModelImpl(confirmationUpdateAnswers)
 
         val divorceDate = transformedDate(LocalDate.now().minusDays(1))
         val divorceDateRow = SummaryRow(messages("pages.divorce.title"), "change-link-date", "change date", divorceDate,
-          Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2)
+          Some(controllers.routes.UpdateRelationshipController.divorceEnterYear.url), 2)
 
         val expectedRows = Seq(nameRow, divorceDateRow, emailRow)
         val expectedEndDate = transformedDate(marriageAllowanceEndingDates.marriageAllowanceEndDate)
@@ -63,7 +68,7 @@ class ConfirmUpdateViewModelTest extends TamcViewModelTest {
     "create a view model with no divorce date claim row" when {
       "no divorce date has been provided" in {
         val confirmationUpdateAnswers = createConfirmationUpdateAnswers(dateOfDivorce = None)
-        val viewModel = ConfirmUpdateViewModel(confirmationUpdateAnswers)
+        val viewModel = confirmUpdateViewModelImpl(confirmationUpdateAnswers)
 
         viewModel.rows shouldBe Seq(nameRow, emailRow)
       }
@@ -73,7 +78,7 @@ class ConfirmUpdateViewModelTest extends TamcViewModelTest {
       val loggedInUserInfo = LoggedInUserInfo(1, "20200304", None, None)
       val confirmationUpdateAnswers = createConfirmationUpdateAnswers(loggedInUser = loggedInUserInfo)
 
-      val viewModel = ConfirmUpdateViewModel(confirmationUpdateAnswers)
+      val viewModel = confirmUpdateViewModelImpl(confirmationUpdateAnswers)
 
       val nameRow = viewModel.rows.filter(_.title == messages("pages.confirm.cancel.your-name"))
       nameRow.head.userAnswer shouldBe ""

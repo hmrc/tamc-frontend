@@ -52,12 +52,12 @@ GET    /finished-change                            controllers.UpdateRelationshi
 POST   /confirm-email                              controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
 
 GET    /how-it-works                               controllers.EligibilityController.howItWorks
-GET    /eligibility-check-pta                      controllers.Default.redirect(to = controllers.routes.EligibilityController.eligibilityCheck().url)
-GET    /lower-earner-pta                           controllers.Default.redirect(to = controllers.routes.EligibilityController.lowerEarnerCheck().url)
-GET    /partners-income-pta                        controllers.Default.redirect(to = controllers.routes.EligibilityController.partnersIncomeCheck().url)
-GET    /date-of-birth-check-pta                    controllers.Default.redirect(to = controllers.routes.EligibilityController.dateOfBirthCheck().url)
-GET    /do-you-live-in-scotland-pta                controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouLiveInScotland().url)
-GET    /do-you-want-to-apply-pta                   controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouWantToApply().url)
+GET    /eligibility-check-pta                      controllers.Default.redirect(to = controllers.routes.EligibilityController.eligibilityCheck.url)
+GET    /lower-earner-pta                           controllers.Default.redirect(to = controllers.routes.EligibilityController.lowerEarnerCheck.url)
+GET    /partners-income-pta                        controllers.Default.redirect(to = controllers.routes.EligibilityController.partnersIncomeCheck.url)
+GET    /date-of-birth-check-pta                    controllers.Default.redirect(to = controllers.routes.EligibilityController.dateOfBirthCheck.url)
+GET    /do-you-live-in-scotland-pta                controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouLiveInScotland.url)
+GET    /do-you-want-to-apply-pta                   controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouWantToApply.url)
 
 GET    /                                           controllers.EligibilityController.home
 GET    /eligibility-check                          controllers.EligibilityController.eligibilityCheck

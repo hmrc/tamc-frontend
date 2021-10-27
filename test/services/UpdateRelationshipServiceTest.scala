@@ -22,14 +22,12 @@ import errors.ErrorResponseStatus._
 import errors._
 import forms.coc.CheckClaimOrCancelDecisionForm
 import models._
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import test_utils.data.RelationshipRecordData._
@@ -38,13 +36,15 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
-import play.api.inject.bind
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
   val nino: Nino = new Generator().nextNino
+
   val instanceIdentifier = 1
   val timeStamp = "20130101"
   val firstName = "First"
@@ -54,7 +54,6 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
   val OK = 200
   val headers = Map("headers" -> Seq(""))
   val email = "email@email.com"
-
   def createCachedData(records: RelationshipRecordList = recordList): UpdateRelationshipCacheData = {
     UpdateRelationshipCacheData(Some(RelationshipRecords(records)), Some(email), Some("Divorce"), Some(date))
   }
@@ -62,20 +61,21 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
   def createLoggedInUserInfo(name: Option[CitizenName] = Some(CitizenName(Some(firstName), Some(surname)))): LoggedInUserInfo = {
     LoggedInUserInfo(instanceIdentifier, timeStamp, None, name)
   }
-      val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
-      val mockCachingService: CachingService = mock[CachingService]
 
+  val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
+  val mockCachingService: CachingService = mock[CachingService]
   override def fakeApplication: Application = GuiceApplicationBuilder()
     .overrides(
       bind[MarriageAllowanceConnector].toInstance(mockMarriageAllowanceConnector),
       bind[CachingService].toInstance(mockCachingService)
     ).build()
 
-  val service: UpdateRelationshipService = app.injector.instanceOf[UpdateRelationshipService]
+  val service: UpdateRelationshipService = instanceOf[UpdateRelationshipService]
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
 
     val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus("OK")))
-    val httpResponse = HttpResponse(OK, Some(json), headers)
 
+  val httpResponse = HttpResponse(OK, Some(json), headers)
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockCachingService, mockMarriageAllowanceConnector)
@@ -143,7 +143,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(applicationConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
 
       val result = await(service.saveRelationshipRecords(relationshipRecords))
@@ -158,7 +158,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       when(mockCachingService.unlockCreateRelationship()(any(), any())).thenReturn(Future.successful(false))
       when(mockCachingService.saveTransferorRecord(ArgumentMatchers.eq(userRecord))(any(), any())).
         thenReturn(Future.successful(userRecord))
-      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(ApplicationConfig.appConfig.CACHE_RELATIONSHIP_RECORDS),
+      when(mockCachingService.cacheValue[RelationshipRecords](ArgumentMatchers.eq(applicationConfig.CACHE_RELATIONSHIP_RECORDS),
         ArgumentMatchers.eq(relationshipRecords))(any(), any(), any(), any())).thenReturn(Future.failed(exception))
 
       val result = intercept[RuntimeException](await(service.saveRelationshipRecords(relationshipRecords)))

@@ -16,22 +16,26 @@
 
 package viewModels
 
-import java.util.Locale
-
 import _root_.config.ApplicationConfig
 import models.DesRelationshipEndReason.{Cancelled, Closed, Death, Default, Divorce, Hmrc, InvalidParticipant, Merger, Rejected, Retrospective, System}
 import models._
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
-import utils.TamcViewModelTest
-import views.helpers.LanguageUtils
+import utils.BaseTest
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils, WelshLanguageUtils}
+
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
-class ClaimsViewModelTest extends TamcViewModelTest {
+class ClaimsViewModelTest extends BaseTest {
 
+  val languageUtils: LanguageUtils = EnglishLangaugeUtils
+
+  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
+  val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
 
   lazy val currentOfTaxYear: Int = TaxYear.current.currentYear
   lazy val endOfTaxYear: LocalDate = TaxYear.current.finishes
@@ -39,11 +43,12 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
   lazy val taxFreeHtml: Html =
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${ApplicationConfig.appConfig.taxFreeAllowanceUrl}">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${applicationConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
   val now = LocalDate.now()
   val dateInputPattern = "yyyyMMdd"
+
 
   def createRelationshipRecord(creationTimeStamp: LocalDate = now.minusDays(1),
                                participant1StartDate: LocalDate = now.minusDays(1),
@@ -72,8 +77,8 @@ class ClaimsViewModelTest extends TamcViewModelTest {
     "create a ClaimsViewModel with active claims rows" in {
 
       val primaryActiveRecord = createRelationshipRecord()
-      val viewModel = ClaimsViewModel(primaryActiveRecord, Seq.empty[RelationshipRecord])
-      val dateInterval = LanguageUtils().taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
+      val viewModel = claimsViewModelImpl(primaryActiveRecord, Seq.empty[RelationshipRecord])
+      val dateInterval = languageUtils.taxDateIntervalString(primaryActiveRecord.participant1StartDate, None)
       val activeRow = ClaimsRow(dateInterval, messages("change.status.active"))
 
       viewModel.activeRow shouldBe activeRow
@@ -88,7 +93,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
       val creationTimeStamp = now.minusDays(2)
       val participant1StartDate = now.minusDays(2)
       val participant1EndDate = now.minusDays(1)
-      lazy val dateInterval = LanguageUtils().taxDateIntervalString(participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+      lazy val dateInterval = languageUtils.taxDateIntervalString(participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
         Some(participant1EndDate.format(DateTimeFormatter.ofPattern(dateInputPattern))))
 
       val endReasons = Set(
@@ -101,7 +106,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
           val historicNonPrimaryRecord = createRelationshipRecord(creationTimeStamp, participant1StartDate,
             Some(endReason), Some(participant1EndDate))
 
-          val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(historicNonPrimaryRecord))
+          val viewModel = claimsViewModelImpl(primaryActiveRecord, Seq(historicNonPrimaryRecord))
           val expectedStatus = getReason(historicNonPrimaryRecord)
           val expectedHistoricClaimsRow = ClaimsRow(dateInterval, expectedStatus)
 
@@ -145,7 +150,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
 
       val orderedClaimRows = Seq(expectedClaimsRow1, expectedClaimsRow2, expectedClaimsRow3)
 
-      ClaimsViewModel(primaryActiveRecord, historicSequenceUnordered).historicRows shouldBe orderedClaimRows
+      claimsViewModelImpl(primaryActiveRecord, historicSequenceUnordered).historicRows shouldBe orderedClaimRows
     }
 
     "create a historic claims row" when {
@@ -160,7 +165,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
         val cyMinusOneRecord = createRelationshipRecord(participant1StartDate = cyMinusOneStartDate,
           participant1EndDate = Some(cyMinusOneEndDate), relationshipEndReason = None)
 
-        val viewModel = ClaimsViewModel(primaryActiveRecord, Seq(cyMinusOneRecord))
+        val viewModel = claimsViewModelImpl(primaryActiveRecord, Seq(cyMinusOneRecord))
         val expectedStatus = messages("coc.end-reason.DEFAULT")
         val claimsRows = Seq(ClaimsRow(expectedClaimsRowMinusOne , expectedStatus))
 
@@ -178,7 +183,7 @@ class ClaimsViewModelTest extends TamcViewModelTest {
   }
 
   private def getDateRange(startDate: LocalDate, endDate: LocalDate) = {
-    LanguageUtils().taxDateIntervalString(startDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+    languageUtils.taxDateIntervalString(startDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
       Some(endDate.format(DateTimeFormatter.ofPattern(dateInputPattern))))
   }
 
