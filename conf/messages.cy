@@ -301,7 +301,7 @@ pages.form.field.dod.question=Pryd y gwnaethoch ddod &#226;’ch priodas neu bar
 #********************************************************************************
 pages.date-of-marriage.heading=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
 pages.date-of-marriage.para1=Mae hyn er mwyn sicrhau’n bod yn caniat&#225;u i chi elwa o Lwfans Priodasol am y maint cywir o amser.
-pages.date-of-marriage.para2=Gallwch hawlio am hyd at 5 blwyddyn flaenorol.
+pages.date-of-marriage.para2=Gallwch hawlio ar gyfer hyd at y 4 blynedd blaenorol, yn ogystal ag ar gyfer y flwyddyn dreth bresennol.
 pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda’ch partner?
 #********************************************************************************
 # How it works
