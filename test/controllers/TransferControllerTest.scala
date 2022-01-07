@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,20 @@ import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
 import models.auth.AuthenticatedUserRequest
-import java.time.LocalDate
-
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.i18n.MessagesApi
+import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
+import test_utils.TestData
 import test_utils.TestData.Ninos
 import test_utils.data.{ConfirmationModelData, RecipientRecordData}
-import test_utils.TestData
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -43,8 +42,8 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
 
+import java.time.LocalDate
 import scala.language.postfixOps
-import play.api.inject.bind
 
 class TransferControllerTest extends ControllerBaseTest {
 

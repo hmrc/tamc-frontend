@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
-import views.helpers.{EnglishLangaugeUtils, LanguageUtils, WelshLanguageUtils}
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
