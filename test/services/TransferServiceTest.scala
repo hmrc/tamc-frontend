@@ -33,9 +33,11 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
+import uk.gov.hmrc.play.audit.model.DataEvent
 import utils.BaseTest
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 

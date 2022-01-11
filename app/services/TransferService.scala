@@ -219,7 +219,6 @@ class TransferService @Inject()(
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
     val transferor: UserRecord = sessionData.transferor.get
     val recipient = sessionData.recipient.get.record
-    val formData = sessionData.recipient.get.data
     val email = sessionData.notification.get.transferor_email
     val createRelationshipreq = CreateRelationshipRequest(
       transferor_cid = transferor.cid,

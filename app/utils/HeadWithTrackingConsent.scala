@@ -16,7 +16,6 @@
 
 package utils
 
-import play.api.inject.Injector
 import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
 
 import javax.inject.Inject
