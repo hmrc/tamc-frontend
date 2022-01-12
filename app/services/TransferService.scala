@@ -68,7 +68,7 @@ class TransferService @Inject()(
     } yield true
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[EligibilityCheckCacheData])
-                                                (implicit ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]] =
+                                                : Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
         if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
@@ -91,7 +91,7 @@ class TransferService @Inject()(
       notification <- validateFinishedData(cacheData)
     } yield notification
 
-  private def validateFinishedData(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
+  private def validateFinishedData(cacheData: Option[CacheData])(implicit ec: ExecutionContext): Future[NotificationRecord] =
     Future {
       cacheData match {
         case Some(CacheData(_, _, Some(notification), Some(true), _, _, _)) => notification
@@ -121,7 +121,7 @@ class TransferService @Inject()(
       registrationData <- validateRegistrationData(cacheData)
     } yield registrationData
 
-  private def validateRegistrationData(cacheData: Option[CacheData])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientDetailsFormInput] =
+  private def validateRegistrationData(cacheData: Option[CacheData])(implicit ec: ExecutionContext): Future[RecipientDetailsFormInput] =
     Future {
       cacheData match {
         case Some(CacheData(_, _, _, _, _, Some(registrationData), _)) => registrationData
@@ -171,7 +171,7 @@ class TransferService @Inject()(
     }
   }
 
-  private def transformCache(cacheData: CacheData)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] =
+  private def transformCache(cacheData: CacheData)(implicit ec: ExecutionContext): Future[ConfirmationModel] =
     Future {
       ConfirmationModel(
         transferorFullName = cacheData.transferor.flatMap(_.name),
@@ -261,7 +261,7 @@ class TransferService @Inject()(
       savedYears <- cachingService.saveSelectedYears(validatedSelectedYears)
     } yield savedYears
 
-  def validateSelectedYears(availableTaxYears: List[TaxYear], selectedYears: List[Int], yearAvailableForSelection: Option[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  def validateSelectedYears(availableTaxYears: List[TaxYear], selectedYears: List[Int], yearAvailableForSelection: Option[Int])(implicit ec: ExecutionContext): Future[List[Int]] =
     if (selectedYears.isEmpty && yearAvailableForSelection.isDefined && availableTaxYears.nonEmpty && yearAvailableForSelection.get == availableTaxYears.last.year) {
       throw new NoTaxYearsSelected
     } else if (selectedYears.isEmpty) {
@@ -280,7 +280,7 @@ class TransferService @Inject()(
       Future.failed(new IllegalArgumentException(s"$selectedYears is not a subset of $availableTaxYears"))
     }
 
-  private def updateSelectedYears(cy: Option[List[Int]], extraYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
+  private def updateSelectedYears(cy: Option[List[Int]], extraYears: List[Int])(implicit ec: ExecutionContext): Future[List[Int]] =
     Future {
       cy.getOrElse(List[Int]()).union(extraYears).distinct
     }

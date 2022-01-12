@@ -19,11 +19,8 @@
 
 @import models.auth._
 @import config._
-@import play.api.Play
 @import config.ApplicationConfig
 @import utils.TrackingConsentSnippetProvider
-@import uk.gov.hmrc.play.views.formatting.Dates._
-@import uk.gov.hmrc.play.views.helpers.AttorneyRegime.standAlone
 @import uk.gov.hmrc.play.views.html.layouts._
 
 @this(
@@ -54,7 +51,6 @@ trackingConsentSnippetProvider: TrackingConsentSnippetProvider)
   )
  )
 }
-
 
 @scriptElement = {
   @trackingConsentSnippetProvider.trackingConsentSnippet(None)
@@ -90,7 +86,6 @@ trackingConsentSnippetProvider: TrackingConsentSnippetProvider)
  </script>
 }
 
-
 @isWelsh = @{
  messages.lang.code == "cy"
 }
@@ -107,9 +102,6 @@ trackingConsentSnippetProvider: TrackingConsentSnippetProvider)
 
 @isUserResearchBannerHidden = @{request.cookies.exists((x: Cookie) => x.name == "mdtpurr")}
 
-@mustacheCheck(str: String) = @{
- if(str.trim=="") false else str
-}
 
 @sidebar = {
  @if(sidebarLinks.isDefined) {
@@ -191,6 +183,4 @@ trackingConsentSnippetProvider: TrackingConsentSnippetProvider)
  }
 
  templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent, false, None), templateArguments)
-
 }
-

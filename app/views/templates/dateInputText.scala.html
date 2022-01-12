@@ -19,7 +19,7 @@
 
 @this()
 
-@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(field: play.api.data.Field, args: (Symbol,Any)*)(implicit messages: Messages)
 
 
 @elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
