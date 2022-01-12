@@ -21,14 +21,13 @@ import config.ApplicationConfig
 import controllers.actions.UnauthenticatedActionTransformer
 import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class AuthorisationController @Inject()(
   unauthenticatedAction: UnauthenticatedActionTransformer,
   appConfig: ApplicationConfig,
   cc: MessagesControllerComponents,
   otherWaysView: views.html.errors.other_ways,
-  sessionTimeoutView: views.html.errors.session_timeout)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  sessionTimeoutView: views.html.errors.session_timeout)(implicit formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
 
   val logoutUrl: String = appConfig.logoutUrl
   val logoutCallbackUrl: String = appConfig.logoutCallbackUrl

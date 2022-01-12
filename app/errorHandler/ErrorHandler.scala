@@ -23,7 +23,6 @@ import play.twirl.api.Html
 import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.play.partials.{FormPartialRetriever, HeaderCarrierForPartialsConverter}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ErrorHandler @Inject()(
   val messagesApi: MessagesApi,
@@ -31,7 +30,7 @@ class ErrorHandler @Inject()(
   val httpGet: HttpClient,
   val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter,
   errorTemplate: views.html.templates.error_template,
-  pageNotFoundTemplate: views.html.templates.page_not_found_template) (implicit templateRender: TemplateRenderer) extends FrontendErrorHandler {
+  pageNotFoundTemplate: views.html.templates.page_not_found_template) extends FrontendErrorHandler {
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     errorTemplate(pageTitle, heading, message)

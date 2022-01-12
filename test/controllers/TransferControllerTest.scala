@@ -37,7 +37,6 @@ import test_utils.data.{ConfirmationModelData, RecipientRecordData}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
@@ -563,7 +562,7 @@ class TransferControllerTest extends ControllerBaseTest {
       )
       for ((error, redirectUrl) <- data)
         s"a $error has been thrown" in {
-          val result = controller.handleError(HeaderCarrier(), authRequest)(error)
+          val result = controller.handleError(authRequest)(error)
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(redirectUrl)
         }
@@ -583,7 +582,7 @@ class TransferControllerTest extends ControllerBaseTest {
       )
       for ((error, responseStatus, message) <- data)
         s"an $error has been thrown" in {
-          val result = controller.handleError(HeaderCarrier(), authRequest)(error)
+          val result = controller.handleError(authRequest)(error)
           status(result) shouldBe responseStatus
           val doc = Jsoup.parse(contentAsString(result))
           doc.text() should include(messages(message))

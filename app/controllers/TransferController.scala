@@ -31,9 +31,7 @@ import play.api.i18n.Lang
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.LoggerHelper
 
 import javax.inject.Inject
@@ -65,7 +63,7 @@ class TransferController @Inject() (
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
   recipientDetailsForm: RecipientDetailsForm,
-  dateOfMarriageForm: DateOfMarriageForm)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  dateOfMarriageForm: DateOfMarriageForm)(implicit formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
@@ -87,11 +85,11 @@ class TransferController @Inject() (
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
-  def dateOfMarriageWithCy: Action[AnyContent] = authenticate { implicit request =>
+  def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
     Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("cy"))
   }
 
-  def dateOfMarriageWithEn: Action[AnyContent] = authenticate { implicit request =>
+  def dateOfMarriageWithEn: Action[AnyContent] = authenticate {
     Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("en"))
   }
 
@@ -252,7 +250,7 @@ class TransferController @Inject() (
     Ok(transfererDeceased())
   }
 
-  def handleError(implicit hc: HeaderCarrier, request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
+  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] { throwable: Throwable =>
       val message: String =
         s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils
