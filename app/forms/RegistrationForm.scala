@@ -34,11 +34,11 @@ import javax.inject.Inject
 
 class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
 
-  private def maxLengthWithError(maxLength: Int, error: String = "error.maxLength"): Constraint[String] = Constraint[String]("constraint.maxLength", maxLength) { o =>
+  private def maxLengthWithError(maxLength: Int, error: String): Constraint[String] = Constraint[String]("constraint.maxLength", maxLength) { o =>
     if (o == null) Invalid(ValidationError(error, maxLength)) else if (o.length <= maxLength) Valid else Invalid(ValidationError(error, maxLength))
   }
 
-  private def nonEmptyTrimmer(error: String = "error.required"): Mapping[String] =
+  private def nonEmptyTrimmer(error: String): Mapping[String] =
     of(new Formatter[String] {
       def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
 
@@ -60,15 +60,15 @@ class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
       errorMaxLength = messageCustomizer.apply("error.maxLength"),
       errorPattern = messageCustomizer.apply("error.pattern"))
 
-  private def genderMapping(errorRequired: String = "error.required", errorInvalid: String = "error.invalid"): Mapping[Gender] =
+  private def genderMapping(errorRequired: String, errorInvalid: String): Mapping[Gender] =
     nonEmptyTrimmer(error = errorRequired).
       verifying(error = errorInvalid, constraint = Gender.isValid(_)).
       transform[Gender](Gender(_), _.gender)
 
-  private def ninoMapping(errorRequired: String = "error.required",
-                          errorMaxLength: String = "error.maxLength",
-                          errorInvalidChars: String = "error.invalid.chars",
-                          errorInvalid: String = "error.invalid"): Mapping[Nino] =
+  private def ninoMapping(errorRequired: String,
+                          errorMaxLength: String,
+                          errorInvalidChars: String,
+                          errorInvalid: String): Mapping[Nino] =
     nonEmptyTrimmer(error = errorRequired).
       transform[String](utils.normaliseNino(_), _.toString()).
       verifying(ninoIsValidFormat(formatError = errorInvalid, charError = errorInvalidChars, maxLengthError = errorMaxLength)).

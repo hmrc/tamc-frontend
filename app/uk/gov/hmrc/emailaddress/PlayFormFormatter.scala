@@ -29,7 +29,7 @@ import scala.util.matching.Regex
 
 object PlayFormFormatter {
 
-  private def nonEmptyTrimmer(error: String = "error.required"): Mapping[String] =
+  private def nonEmptyTrimmer(error: String): Mapping[String] =
     of(new Formatter[String] {
       def unbind(key: String, value: String): Map[String, String] = Map(key -> value)
 

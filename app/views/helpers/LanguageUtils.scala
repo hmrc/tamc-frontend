@@ -59,7 +59,7 @@ sealed trait LanguageUtils {
 
   def nonBreakingSpace(text: String): String = text.replace(" ", "\u00A0")
 
-  def taxDateInterval(taxYear: Int)(implicit messages: Messages): String = {
+  def taxDateInterval(taxYear: Int): String = {
     ukDateTransformer(TaxYear(taxYear).starts) + separator + ukDateTransformer(TaxYear(taxYear).finishes)
   }
 
