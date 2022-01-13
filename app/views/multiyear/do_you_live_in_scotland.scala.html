@@ -15,52 +15,58 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.UserRequest
+@import includes.{InputRadios, Button, ErrorSummary, PageHeading}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group,
-form: FormWithCSRF)
+main: main,
+errorSummary: ErrorSummary,
+inputRadios: InputRadios,
+form: FormWithCSRF,
+pageHeading: PageHeading,
+button: Button)
 
 @(doYouLiveInScotlandForm: Form[(MultiYearDoYouLiveInScotlandFormInput)])(implicit messages: Messages,
 request: UserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1"))
+pageTitle = Some(Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1"))),
+backLinkHref = Some(controllers.routes.EligibilityController.dateOfBirthCheck.url)
 ){
 
-<a href="@controllers.routes.EligibilityController.dateOfBirthCheck"
-   class="link-back">@Html(Messages("generic.back"))</a>
+@errorSummary(doYouLiveInScotlandForm, Some("do-you-live-in-scotland-true"))
 
-@formErrorNotificationView(doYouLiveInScotlandForm, formErrorMessage = "pages.form.error.mandatory.data")
-
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.do.you.live.in.scotland.h1"))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
-    </header>
+    @pageHeading(classes=Some("govuk-!-margin-bottom-3 govuk-heading-xl"),
+        context = "This section is ",
+        section = "eligibility.check.span.h1",
+        text = "eligibility.check.do.you.live.in.scotland.h1"
+    )
 
     @form(action = routes.EligibilityController.doYouLiveInScotlandAction, args = ('id -> "doYouLiveInScotland-form")) {
 
     <div class="form-group inline">
-        @inputRadioGroupView(
-        doYouLiveInScotlandForm("do-you-live-in-scotland"),
-        Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-        '_legend -> Html(messages("eligibility.check.do.you.live.in.scotland.h1")),
-        '_legendClass -> "visuallyhidden",
-        '_labelClass -> "block-label",
-        '_labelAfter -> true,
-        '_groupClass -> "inline spacingBottom"
+        @inputRadios(
+            form = doYouLiveInScotlandForm,
+            legend = "eligibility.check.do.you.live.in.scotland.h1",
+            id = Some("do-you-live-in-scotland"),
+            name = "do-you-live-in-scotland",
+            items = Seq(RadioItem(
+                            content = Text(messages("radio.yes")),
+                            value = Some("true"),
+                            id = Some("do-you-live-in-scotland-true")
+                        ), RadioItem(
+                            content = Text(messages("radio.no")),
+                            value = Some("false"),
+                            id = Some("do-you-live-scotland-false")
+                        )),
+            legendAsHeading = false,
+            legendClasses = "govuk-visually-hidden"
         )
     </div>
 
     <div class="form-group">
-        <button class="button" data-journey-click="marriage-allowance:button:doYouLiveInScotland_continue"
-            id="continue" type="submit">
-            @Html(Messages("generic.continue"))
-        </button>
+        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:doYouLiveInScotland_continue"))
     </div>
 }
 

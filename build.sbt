@@ -38,3 +38,9 @@ scalacOptions ++= Seq(
   "-Xmaxerrs", "1000", // Maximum errors to print
   "-Xmaxwarns", "1000" // Maximum warnings to print
 )
+
+TwirlKeys.templateImports ++= Seq(
+  "uk.gov.hmrc.govukfrontend.views.html.components._",
+  "uk.gov.hmrc.hmrcfrontend.views.html.components._",
+  "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
+)

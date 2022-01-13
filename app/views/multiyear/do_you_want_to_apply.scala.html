@@ -16,15 +16,16 @@
 
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
-@import uk.gov.hmrc.renderer.TemplateRenderer
 @import views.html.templates._
 @import models.auth.UserRequest
+@import includes.{PageHeading, ErrorSummary, InputRadios, Button}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group,
+main: main,
+errorSummary: ErrorSummary,
+inputRadios: InputRadios,
+pageHeading: PageHeading,
+button: Button,
 form: FormWithCSRF)
 
 @(doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput])(implicit
@@ -34,36 +35,42 @@ formPartialRetriever: FormPartialRetriever
 )
 
 @main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))
+pageTitle = Some(Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.want.to.apply.h1"))),
+backLinkHref = Some(controllers.routes.EligibilityController.partnersIncomeCheck.url)
 ){
 
-<a href="@controllers.routes.EligibilityController.partnersIncomeCheck" class="link-back">@Html(Messages("generic.back"))</a>
+    @errorSummary(doYouWantToApplyForm, Some("do-you-want-to-apply-true"))
 
-@formErrorNotificationView(doYouWantToApplyForm, formErrorMessage = "pages.form.error.mandatory.data")
+        @pageHeading(classes=Some("govuk-!-margin-bottom-3 govuk-heading-xl"),
+                    context = "This section is ",
+                    section = "eligibility.check.span.h1",
+                    text = "eligibility.check.do.you.want.to.apply.h1"
+        )
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Messages("eligibility.check.do.you.want.to.apply.h1")</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
-    </header>
+    @form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
+        <div class="form-group inline">
+            @inputRadios(
+                form = doYouWantToApplyForm,
+                legend = "eligibility.check.do.you.want.to.apply.h1",
+                id = Some("do-you-want-to-apply"),
+                name = "do-you-want-to-apply",
+                items = Seq(RadioItem(
+                                content = Text(messages("radio.yes")),
+                                value = Some("true"),
+                                id = Some("do-you-want-to-apply-true")
+                            ), RadioItem(
+                                content = Text(messages("radio.no")),
+                                value = Some("false"),
+                                id = Some("do-you-want-to-apply-false")    
+                            )),
+                legendAsHeading = false,
+                legendClasses = "govuk-visually-hidden"
+            )
+        </div>
 
-@form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
-<div class="form-group inline">
-    @inputRadioGroupView(
-    doYouWantToApplyForm("do-you-want-to-apply"),
-    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-    '_legend -> Messages("eligibility.check.do.you.want.to.apply.h1"),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_groupClass -> "inline spacingBottom"
-    )
-</div>
-
-<div class="form-group">
-    <button class="button" data-journey-click="marriage-allowance:button:doYouWantToApply_continue"
-            id="continue" type="submit">
-        @Messages("generic.continue")
-    </button>
-</div>
-}
+        <div class="form-group">
+            @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:doYouWantToApply_continue"))
+        </div>
+    }
 
 }

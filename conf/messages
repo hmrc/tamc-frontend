@@ -250,7 +250,7 @@ eligibility.check.partners.income.error=You are not eligible for Marriage Allowa
 eligibility.check.date.of.birth.h1=Were you and your partner born after 5 April 1935?
 eligibility.check.date.of.birth.legend=Were you and your partner born after 5 April 1935?
 eligibility.check.date.of.birth.span.married=Does this apply to you and your partner?
-eligibility.check.date.of.birth.error.text.before.link=You might benefit more as a couple if you apply for
+eligibility.check.date.of.birth.error.text.before.link=You might benefit more as a couple if you apply for {0}
 eligibility.check.date.of.birth.error.link.text=Married Couple’s Allowance
 eligibility.check.date.of.birth.error.text.after.link=You can still apply for Marriage Allowance but you cannot receive Marriage Allowance and Married Couple’s Allowance at the same time.
 eligibility.check.do.you.live.in.scotland.h1 = Do you live in Scotland?
@@ -701,3 +701,9 @@ global.page.not.found.error.check.web.address.full=If you pasted the web address
 global.page.not.found.error.contact=If the web address is correct or you selected a link or button, {0} if you need to speak to someone about your Marriage Allowance application.
 global.page.not.found.error.contact.link.text=contact the Income Tax helpline
 global.page.not.found.error.contact.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees
+
+#*************************************************************
+# Beta Banner Text
+#*************************************************************
+betaBanner.message=This is a new service ‐ your {0} will help us to improve it.
+betaBanner.linkText=feedback

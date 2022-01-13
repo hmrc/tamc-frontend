@@ -45,6 +45,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val pageTitle = "Your personal tax account"
   lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  val reportAProblemPartialUrl = s"$contactFrontendService/contact/problem_reports"
 
   lazy val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + '/'
 

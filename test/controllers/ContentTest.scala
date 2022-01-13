@@ -836,17 +836,17 @@ class ContentTest extends ControllerBaseTest {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
+      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
 
       document
         .getElementById("marriage-criteria-error")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset
-        .getElementsByClass("error-notification")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .getElementsByClass("govuk-error-message")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
     }
   }
@@ -868,17 +868,17 @@ class ContentTest extends ControllerBaseTest {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
+      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
 
       document
         .getElementById("marriage-criteria-error")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset
-        .getElementsByClass("error-notification")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .getElementsByClass("govuk-error-message")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
     }
   }
@@ -908,7 +908,7 @@ class ContentTest extends ControllerBaseTest {
       document
         .title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
 
-      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
+      document.getElementById("lower-earner-information").text shouldBe lowerEarnerHelpText
     }
   }
 
@@ -1008,7 +1008,7 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       document
         .title()                                     shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
+      document.getElementById("lower-earner-information").text shouldBe lowerEarnerHelpText
     }
   }
 
