@@ -32,5 +32,10 @@ object AppDependencies {
     "com.vladsch.flexmark" % "flexmark-all" % "0.35.10"
   ).map(_ % "test")
 
-  val all: Seq[ModuleID] = compile ++ test
+  private val silencerDependencies: Seq[ModuleID] = Seq(
+    compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
+    "com.github.ghik" % "silencer-lib" % "1.7.0" % Provided cross CrossVersion.full
+  )
+
+  val all: Seq[ModuleID] = compile ++ test ++ silencerDependencies
 }

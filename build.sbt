@@ -4,6 +4,20 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "tamc-frontend"
 
+val suppressedImports = Seq("-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlFeatureImports._",
+  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.TwirlHelperImports._",
+  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Html",
+  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.JavaScript",
+  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Txt",
+  "-P:silencer:lineContentFilters=import _root_.play.twirl.api.Xml",
+  "-P:silencer:lineContentFilters=import models._",
+  "-P:silencer:lineContentFilters=import controllers._",
+  "-P:silencer:lineContentFilters=import play.api.i18n._",
+  "-P:silencer:lineContentFilters=import views.html._",
+  "-P:silencer:lineContentFilters=import play.api.templates.PlayMagic._",
+  "-P:silencer:lineContentFilters=import play.api.mvc._",
+  "-P:silencer:lineContentFilters=import play.api.data._")
+
 lazy val scoverageSettings = {
   Seq(
     ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*;connectors.ApplicationAuditConnector;connectors.ApplicationAuthConnector;services.CachingService;metrics.Metrics;utils.WSHttp;events",
@@ -34,6 +48,7 @@ lazy val microservice: Project = Project(appName, file("."))
     majorVersion := 7
   )
 
+scalacOptions ++= suppressedImports
 scalacOptions ++= Seq(
   "-Xmaxerrs", "1000", // Maximum errors to print
   "-Xmaxwarns", "1000", // Maximum warnings to print
