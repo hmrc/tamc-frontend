@@ -14,8 +14,6 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.play.views.html._
 @import views.html.templates._
 @import models.auth.UserRequest
 @import includes.{PageHeading, ErrorSummary, InputRadios, Button}
@@ -30,8 +28,7 @@ form: FormWithCSRF)
 
 @(doYouWantToApplyForm: Form[MultiYearDoYouWantToApplyFormInput])(implicit
 messages: Messages,
-request: UserRequest[_],
-formPartialRetriever: FormPartialRetriever
+request: UserRequest[_]
 )
 
 @main(

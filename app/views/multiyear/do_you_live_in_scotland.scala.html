@@ -27,8 +27,7 @@ pageHeading: PageHeading,
 button: Button)
 
 @(doYouLiveInScotlandForm: Form[(MultiYearDoYouLiveInScotlandFormInput)])(implicit messages: Messages,
-request: UserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.eligibility.pattern", Messages("eligibility.check.do.you.live.in.scotland.h1"))),

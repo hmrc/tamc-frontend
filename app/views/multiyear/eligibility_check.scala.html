@@ -15,7 +15,6 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
 @import config.ApplicationConfig
 @import models.auth.UserRequest
 @import includes.{P, InputRadios, Button, ErrorSummary, PageHeading}
@@ -32,8 +31,7 @@ pageHeading: PageHeading
 )
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])(implicit messages: Messages,
-request: UserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_])
 
 @backLinkHref = @{
     if(request.isAuthenticated){

@@ -18,13 +18,19 @@
 
 @import views.helpers.LanguageUtilsImpl
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H1, P, Button, ErrorSummary, InputDate}
 
 @this(
-main: templates.tamc_main,
+main: main,
 formErrorNotificationView: templates.form_error_notification,
 dateFieldsView: templates.dateFields,
 form: FormWithCSRF,
-languageUtilsImpl: LanguageUtilsImpl)
+languageUtilsImpl: LanguageUtilsImpl,
+h1: H1,
+p: P,
+button: Button,
+errorSummary: ErrorSummary,
+inputDate: InputDate)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
@@ -32,38 +38,30 @@ request: AuthenticatedUserRequest[_],
 formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @main(
-title = messages("title.application.pattern", messages("title.date-of-marriage")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${languageUtilsImpl().formPageDataJourney("marriage-allowance:stage:transfer", marriageForm)}")))
+pageTitle = Some(messages("title.application.pattern", messages("title.date-of-marriage"))),
+backLinkHref = Some(controllers.routes.TransferController.transfer.url),
+ptaMenu = true
 ){
 
-<a href="@controllers.routes.TransferController.transfer" class="link-back">@Html(messages("generic.back"))</a>
+@errorSummary(marriageForm, Some("dateOfMarriage.day"))
 
-@formErrorNotificationView(marriageForm)
+@h1("pages.date-of-marriage.heading")
 
-<h1 class="heading-xlarge">@Html(messages("pages.date-of-marriage.heading"))</h1>
-
-<p>@Html(messages("pages.date-of-marriage.para1"))</p>
-<p>@Html(messages("pages.date-of-marriage.para2"))</p>
+@p(Text(messages("pages.date-of-marriage.para1")))
+@p(Text(messages("pages.date-of-marriage.para2")))
 
 @form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 
 <div class="form-group">
-  @dateFieldsView(
-    marriageForm,
-    "dateOfMarriage",
-    Html(messages("pages.date-of-marriage.h2")),
-    None,
-    '_legend -> messages("pages.date-of-marriage.heading"),
-    '_legendClass -> "visuallyhidden",
-    '_hintText -> messages("pages.form.field-helper.dom"),
-    '_label -> messages("collect_user_data.dob.error"),
-    '_labelTextClass -> "client-error-notification"
-  )
+  @inputDate(
+  fieldName = "dateOfMarriage",
+  form = marriageForm,
+    legendKey = "pages.date-of-marriage.h2",
+    hint = Some(Text(messages("pages.form.field-helper.dom"))),
+  legendClasses = "govuk-visually-hidden",
+  fieldSetAttrs = Map("id" -> "dateOfMarriage"))
 </div>
 
-<button class="button" type="submit" data-journey-click="marriage-allowance:button:dateofmarriage_continue">
-  @Html(messages("generic.continue"))
-</button>
+@button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:dateofmarriage_continue"))
 }
 }

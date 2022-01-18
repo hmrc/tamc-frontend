@@ -15,7 +15,6 @@
  *@
 
 @import play.twirl.api.Html
-@import views.html.templates._
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 @import models.auth.UserRequest
@@ -32,7 +31,7 @@ form: FormWithCSRF,
 applicationConfig: ApplicationConfig)
 
 @(lowerEarnerFormInput: Form[(MultiYearLowerEarnerFormInput)])(
-    implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+    implicit messages: Messages, request: UserRequest[_])
 
 @main(
     pageTitle = Some(Messages("title.eligibility.pattern", Messages("eligibility.check.lower.earner.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE())))),

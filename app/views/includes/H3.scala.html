@@ -14,8 +14,8 @@
  * limitations under the License.
  *@
 
-@this(govukButton: GovukButton)
+@this()
 
-@(msg: String, href: Option[String] = None, classes: Option[String] = None, name: Option[String] = None, id: String = "submit", attrs: Map[String, String] = Map.empty, isStartButton: Boolean = false)(implicit messages: Messages)
+@(msg: String, classes: Option[String] = None, elmId: Option[String] = None, args: Seq[String] = Seq.empty)(implicit messages: Messages)
 
-@govukButton(Button(content = Text(messages(msg)), href = href, classes = classes.getOrElse(""), name = name, attributes = attrs ++ Map("id" -> id, "type" -> "submit"), isStartButton = isStartButton))
+<h3 @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-heading-s")">@messages(msg, args)</h3>

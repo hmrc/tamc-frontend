@@ -19,14 +19,14 @@
 @(
   classes: Option[String] = None,
   context: String,
-  elmId: Option[String] = None,
+  elmId: String = "pageHeading",
   section: String,
   specId: Option[String] = None,
   text: String,
 )(implicit messages: Messages)
 
 <header class="hmrc-page-heading" data-component="tamc_page_heading"@if(specId){ data-spec="@specId"}>
-  <h1 class="@classes.getOrElse("govuk-heading-xl")" data-component="tamc_page_heading__h1" @elmId.map { i => id="@{i}"}>
+  <h1 class="@classes.getOrElse("govuk-heading-xl")" data-component="tamc_page_heading__h1" id=@elmId>
     @messages(text)
   </h1>
   <p class="govuk-caption-xl hmrc-caption-xl" data-component="tamc_page_heading__p">

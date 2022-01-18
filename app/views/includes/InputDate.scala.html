@@ -1,0 +1,23 @@
+@*
+ * Copyright 2022 HM Revenue & Customs
+ *
+ *@
+
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits._
+
+@this(govukDateInput: GovukDateInput)
+
+@(fieldName: String, form: Form[_], legendKey: String, hint: Option[Content], isPageHeading: Boolean = true, legendClasses: String = "govuk-fieldset__legend--l", fieldSetAttrs: Map[String, String] = Map.empty)(implicit messages: Messages)
+
+@govukDateInput(DateInput(
+    hint = hint.map(hintHtml => Hint(
+                content = hintHtml
+            )),
+    fieldset = Some(Fieldset(
+        legend = Some(Legend(
+            content = Text(messages(legendKey)),
+            classes = legendClasses,
+            isPageHeading = isPageHeading)),
+            attributes = fieldSetAttrs)
+    )
+).withFormField(form(fieldName)))

@@ -17,6 +17,9 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import config.ApplicationConfig
 @import includes.{back, Link}
+@import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut, _}
 
 @this(
     hmrcLayout: HmrcLayout,
@@ -28,8 +31,9 @@
     appConfig: ApplicationConfig,
     govukPhaseBanner : GovukPhaseBanner,
     backLink: back,
-    link: Link
-)
+    link: Link,
+    hmrcAccountMenu: HmrcAccountMenu
+)(implicit accountMenuConfig: AccountMenuConfig)
 
 @(
     pageTitle: Option[String],
@@ -38,7 +42,8 @@
     sessionExpiredPage: Boolean = false,
     additionalScripts: Option[Html] = None,
     urBanner: Boolean = false,
-    signedOut: Boolean = false
+    signedOut: Boolean = false,
+    ptaMenu: Boolean = false
 )(content: Html)(implicit request: Request[_], messages: Messages)
 
 @headBlock = {
@@ -81,6 +86,12 @@
 }
 
 @beforeContent = {
+    @if(ptaMenu){
+        @hmrcAccountMenu(AccountMenu(
+                signOut = SignOut(href = controllers.routes.AuthorisationController.logout.url),
+                language = if(messages.lang.code == "cy") Cy else En
+            ).withUrlsFromConfig())
+    }
     @if(backLinkHref.isDefined) {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
