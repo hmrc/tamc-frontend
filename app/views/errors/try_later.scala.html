@@ -16,17 +16,18 @@
 
 @import play.twirl.api.Html
 @import models.auth.BaseUserRequest
+@import includes.{H1, P}
 
-@this(main: templates.tamc_main)
+@this(main: main,
+h1: H1,
+p: P)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("technical.issue.heading")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:technical-issue")))) {
-  <h1 class="heading-xlarge" id="error">@Messages("technical.issue.heading")</h1>
-  <p>@Messages("technical.issue.try.later")</p>
+pageTitle = Some(Messages("title.pattern", Messages("technical.issue.heading")))
+) {
+  @h1("technical.issue.heading", elmId = Some("error"))
+  @p(Text(Messages("technical.issue.try.later")))
 }

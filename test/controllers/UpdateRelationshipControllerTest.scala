@@ -622,7 +622,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.divorceEndExplanation()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-
         result rendersTheSameViewAs tryLaterView()
       }
     }

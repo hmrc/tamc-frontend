@@ -43,7 +43,8 @@
     additionalScripts: Option[Html] = None,
     urBanner: Boolean = false,
     signedOut: Boolean = false,
-    ptaMenu: Boolean = false
+    ptaMenu: Boolean = false,
+    backLinkAttrs: Map[String, String] = Map.empty
 )(content: Html)(implicit request: Request[_], messages: Messages)
 
 @headBlock = {
@@ -95,7 +96,7 @@
     @if(backLinkHref.isDefined) {
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-            @backLink(backLinkHref.get)
+            @backLink(backLinkHref.get, backLinkAttrs)
             </div>
             <div class="govuk-grid-column-one-half">
             @hmrcLanguageSelectHelper()

@@ -17,48 +17,55 @@
 @import play.twirl.api.Html
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
+@import includes.{H1, P, Link}
 
 @this(
-main: templates.tamc_main,
-applicationConfig: ApplicationConfig)
+main: main,
+applicationConfig: ApplicationConfig,
+h1: H1,
+p: P,
+link: Link
+)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.other-ways")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
+pageTitle = Some(Messages("title.pattern", Messages("title.other-ways")))
+) {
 
     <header class="page-heading">
-        <h1 class="heading-xlarge">@messages("technical.other-ways.h1")</h1>
+        @h1("technical.other-ways.h1")
     </header>
 
-    <p id="pta-redirect">
-        @messages("technical.other-ways.para0.part1")
-        <a href=@applicationConfig.ptaFinishedUrl>@messages("technical.other-ways.para0.link-text")</a>
-        @messages("technical.other-ways.para0.part2")
-    </p>
-    <p id="unable-to-confirm-identity">@messages("technical.other-ways.para1")</p>
-    <p id="need-nino">@messages("technical.other-ways.para2")</p>
-    <p>@messages("hmrc.contact-details")</p>
+    @p(HtmlContent(
+        messages("technical.other-ways.para0.part1") +
+        link(link = applicationConfig.ptaFinishedUrl, messageKey = "technical.other-ways.para0.link-text", inParagraph = true) +
+        messages("technical.other-ways.para0.part2")
+    ))
 
-    <p>@messages("hmrc.contact-details-2") <br>
+    @p(Text(messages("technical.other-ways.para1")), elmId = Some("unable-to-confirm-identity"))
 
+    @p(Text(messages("technical.other-ways.para2")), elmId = Some("need-nino"))
+
+    @p(Text(messages("hmrc.contact-details")))
+
+    @p(HtmlContent(contactDetails2Content))
+
+@if(messages.lang.code == "en"){
+
+@p(HtmlContent(messages("hmrc.contact-details-5") + "<br>" + messages("hmrc.contact-details-6")))
+
+@p(HtmlContent(messages("hmrc.contact-details-7") + "<br>" + messages("hmrc.contact-details-8")))
+}
+
+@link(link = applicationConfig.callChargeUrl, messageKey = "hmrc.contact-details-9", inParagraph = false, attrTarget = true)
+}
+
+@contactDetails2Content = {
+    @messages("hmrc.contact-details-2") <br>
     @if(messages.lang.code == "en"){@messages("hmrc.contact-details-3") <br>
     @messages("hmrc.contact-details-4")}else{
     @messages("hmrc.contact-details-5")
     }
-</p>
-
-@if(messages.lang.code == "en"){
-<p>@messages("hmrc.contact-details-5") <br>
-    @messages("hmrc.contact-details-6")</p>
-<p>@messages("hmrc.contact-details-7") <br>
-    @messages("hmrc.contact-details-8")</p>
 }
-<p><a target="_blank" rel="noopener noreferrer" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
-
-}
-
