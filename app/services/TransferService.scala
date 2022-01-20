@@ -233,11 +233,12 @@ class TransferService @Inject()(
   private def sendCreateRelationship(transferorNino: Nino, data: CacheData)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[CacheData] = {
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, messages)) map {
       httpResponse =>
-        Json.fromJson[CreateRelationshipResponse](httpResponse.json).get match {
-          case CreateRelationshipResponse(ResponseStatus("OK")) => data
-          case CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP)) => throw CannotCreateRelationship()
-          case CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED)) => throw RelationshipMightBeCreated()
-          case CreateRelationshipResponse(ResponseStatus(RECIPIENT_DECEASED)) => throw RecipientDeceased()
+        Json.fromJson[CreateRelationshipResponse](httpResponse.json).asOpt match {
+          case Some(CreateRelationshipResponse(ResponseStatus("OK"))) => data
+          case Some(CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP))) => throw CannotCreateRelationship()
+          case Some(CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED))) => throw RelationshipMightBeCreated()
+          case Some(CreateRelationshipResponse(ResponseStatus(RECIPIENT_DECEASED))) => throw RecipientDeceased()
+          case _ => throw new UnsupportedOperationException("Unable to handle request")
         }
     } recover {
       case error =>
