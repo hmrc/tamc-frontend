@@ -238,7 +238,7 @@ class TransferService @Inject()(
           case Some(CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP))) => throw CannotCreateRelationship()
           case Some(CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED))) => throw RelationshipMightBeCreated()
           case Some(CreateRelationshipResponse(ResponseStatus(RECIPIENT_DECEASED))) => throw RecipientDeceased()
-          case _ => throw new UnsupportedOperationException("Unable to handle request")
+          case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
     } recover {
       case error =>

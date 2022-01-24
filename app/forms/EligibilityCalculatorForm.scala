@@ -41,7 +41,6 @@ object EligibilityCalculatorForm {
 
   val currencyFormatter = new Formatter[Int] {
     private def messageCustomizer(fieldKey: String, messageKey: String): String = s"pages.form.$messageKey.$fieldKey"
-//    private def messageCustomizer(fieldKey: String, messageKey: String): String = s"pages.form.field.${fieldKey}.error.${messageKey}"
 
     override def unbind(key: String, value: Int): Map[String, String] =
       Map(key -> MoneyPounds(value, 0).quantity)

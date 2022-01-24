@@ -265,7 +265,7 @@ class TransferController @Inject() (
         InternalServerError(view)
       }
 
-      val pf: PartialFunction[Throwable, Result] = {
+    val pf: PartialFunction[Throwable, Result] = {
         case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
         case t: RecipientNotFound  => handle(t, warn, Ok(recipientNotFound()))
         case t: TransferorDeceased =>
@@ -292,8 +292,7 @@ class TransferController @Inject() (
         case ex: CacheRecipientInRelationship =>
           handleWithException(ex, recipientRelationshipExists())
         case ex => handleWithException(ex, tryLater())
-      }
+    }
     pf
   }
-  }
-
+}

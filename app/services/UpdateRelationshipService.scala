@@ -208,7 +208,7 @@ class UpdateRelationshipService @Inject()(
           case Some(UpdateRelationshipResponse(ResponseStatus("OK"))) => data
           case Some(UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP))) => throw CannotUpdateRelationship()
           case Some(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))) => throw RecipientNotFound()
-          case _ => throw new UnsupportedOperationException("Unable to handle request")
+          case _ => throw new UnsupportedOperationException("Unable to send relationship update request")
         }
     } recover {
       case error =>

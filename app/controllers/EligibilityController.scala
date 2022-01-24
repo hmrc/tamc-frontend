@@ -56,7 +56,6 @@ class EligibilityController @Inject()(
   }
 
   def home: Action[AnyContent] = unauthenticatedAction {
-    //implicit request =>
       Redirect(controllers.routes.EligibilityController.eligibilityCheck)
   }
 
