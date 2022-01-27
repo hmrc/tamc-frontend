@@ -282,7 +282,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-
         result rendersTheSameViewAs tryLaterView()
       }
     }
@@ -546,7 +545,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val divorceDateInThePast = LocalDate.now().minusDays(1)
 
-        val request = buildFakePostRequest("dateOfDivorce.year" -> divorceDateInThePast.getYear.toString,
+        val request = FakeRequest().withFormUrlEncodedBody("dateOfDivorce.year" -> divorceDateInThePast.getYear.toString,
           "dateOfDivorce.month" -> divorceDateInThePast.getMonthValue.toString,
           "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString)
 

@@ -112,7 +112,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
       form shouldNot be(null)
-      document.getElementById("form-error-heading").text() shouldBe "There is a problem"
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
     }
 
     "display form error message (multiple errors)" in {
@@ -120,101 +120,87 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
       form shouldNot be(null)
-      document.getElementById("form-error-heading").text() shouldBe "There is a problem"
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
     }
 
     "be displayed if transferor income is not provided (None)" in {
       val result = calculatorRequestAction(Map("recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=transferor-income]").first()
-      document.getElementById("transferor-income-error").text shouldBe "Enter your income (low), before tax is taken off"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your income (low), before tax is taken off"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("transferor-income-error").text shouldBe "Error: Enter your income (low), before tax is taken off"
     }
 
     "be displayed if transferor income is not provided (Empty)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=transferor-income]").first()
-      document.getElementById("transferor-income-error").text shouldBe "Enter your income (low), before tax is taken off"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your income (low), before tax is taken off"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("transferor-income-error").text shouldBe "Error: Enter your income (low), before tax is taken off"
     }
 
     "be displayed if transferor income contains letters" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "abc", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your income (low), before tax is taken off must only include numbers 0 to 9"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("transferor-income-error").text shouldBe "Error: Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if transferor income contains negative number" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "-1", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your income (low), before tax is taken off must only include numbers 0 to 9"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("transferor-income-error").text shouldBe "Error: Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if transferor income exceeds max Int" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "2147483648", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=transferor-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your income (low), before tax is taken off must only include numbers 0 to 9"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("transferor-income-error").text shouldBe "Error: Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if recipient income is not provided (None)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Enter your partner’s income (high), before tax is taken off"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s income (high), before tax is taken off"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("recipient-income-error").text shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
     "be displayed if recipient income is not provided (Empty)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> ""))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=recipient-income]").first()
-      document.getElementById("recipient-income-error").text shouldBe "Enter your partner’s income (high), before tax is taken off"
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s income (high), before tax is taken off"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("recipient-income-error").text shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
     "be displayed if recipient income contains letters" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> "abc"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("recipient-income-error").text shouldBe "Error: Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if recipient income contains negative number" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> "-1"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("recipient-income-error").text shouldBe "Error: Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if recipient income exceeds max Int" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> "2147483648"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("error-message").first() shouldNot be(null)
-      val yourIncome = form.select("label[for=recipient-income]").first()
-      yourIncome.getElementsByClass("error-message").first().text() shouldBe "Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
+      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      document.getElementById("recipient-income-error").text shouldBe "Error: Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
     "be displayed if transferor income=0 (< 9540) and recipient income=0 (10600-11660)" in {

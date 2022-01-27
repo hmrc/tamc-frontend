@@ -694,7 +694,7 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
 
       document.title()                                  shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
-      document.getElementsByClass("heading-large").text shouldBe "Marriage Allowance application successful"
+      document.getElementById("govuk-box").text shouldBe "Marriage Allowance application successful"
       document
         .getElementById("paragraph-1")
         .text shouldBe "An email with full details acknowledging your application will be " +
@@ -711,7 +711,7 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Eligibility Criteria - Marriage Allowance - GOV.UK"
 
-      val heading = document.getElementsByClass("heading-xlarge").text
+      val heading = document.getElementById("pageHeading").text
       heading shouldBe "Marriage Allowance calculator"
     }
   }

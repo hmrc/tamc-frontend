@@ -17,46 +17,49 @@
 @import play.twirl.api.Html
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H1, H2, H3, P, Link}
 
 @this(
-main: templates.tamc_main,
-applicationConfig: ApplicationConfig)
+main: main,
+applicationConfig: ApplicationConfig,
+h1: H1,
+h2: H2,
+h3: H3,
+p: P,
+link: Link)
 
 @()(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.bereavement")),
-manageService = true,
-mainConfig = views.helpers.MainConfig()
+pageTitle = Some(Messages("title.pattern", Messages("title.bereavement"))),
+backLinkHref = Some(controllers.routes.UpdateRelationshipController.history.url)
 ) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history" class="link-back">@messages("generic.back")</a>
-
 <header class="page-heading">
-    <h1 class="heading-xlarge" id="bereavement-transferor">@messages("change.status.bereavement.sorry")</h1>
+    @h1("change.status.bereavement.sorry", elmId = Some("bereavement-transferor"))
 </header>
 
-<p>@messages("change.status.bereavement.tr.instruction")</p>
+@p(Text(messages("change.status.bereavement.tr.instruction")))
 
-<ul class="list list-bullet">
+<ul class="govuk-list govuk-list--bullet">
     <li>@messages("change.status.bereavement.tr.instruction-1")</li>
     <li>@messages("change.status.bereavement.tr.instruction-2")</li>
 </ul>
 
-<h2 class="heading-medium">@messages("change.status.bereavement.notify-hmrc")</h2>
+@h2("change.status.bereavement.notify-hmrc")
 
-<p>@messages("hmrc.contact-details-2") <br>
-    @messages("hmrc.contact-details-3") <br>
-    @messages("hmrc.contact-details-4")</p>
+@p(HtmlContent(messages("hmrc.contact-details-2") + "<br>" +
+    messages("hmrc.contact-details-3") + "<br>" +
+    messages("hmrc.contact-details-4")))
 
-<h3 class="heading-small">@messages("hmrc.contact-detials.time")</h3>
-<p>@messages("hmrc.contact-details-5") <br>
-    @messages("hmrc.contact-details-6")</p>
-<p>@messages("hmrc.contact-details-7")</p>
+@h2("hmrc.contact-detials.time")
+@p(HtmlContent(messages("hmrc.contact-details-5") + "<br>" + messages("hmrc.contact-details-6")))
+@p(Text(messages("hmrc.contact-details-7")))
 
-<h3 class="heading-small">@messages("hmrc.contact-detials.calling.time")</h3>
-@messages("hmrc.contact-details-8")</p>
-<p><a target="_blank" rel="noopener noreferrer" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+@h3("hmrc.contact-detials.calling.time")
+@p(Text(messages("hmrc.contact-details-8")))
+
+@link(link = applicationConfig.callChargeUrl, messageKey = "hmrc.contact-details-9", attrTarget = true)
+
 }

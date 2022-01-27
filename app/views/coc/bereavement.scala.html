@@ -17,37 +17,39 @@
 @import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
 @import models.Role
-@import includes.backLink
+@import includes.{H1, P, Link}
 @import config.ApplicationConfig
 
 @this(
-main: templates.tamc_main,
-applicationConfig: ApplicationConfig)
+main: main,
+applicationConfig: ApplicationConfig,
+h1: H1,
+p: P,
+link: Link)
 
 @(role: Role)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = messages("title.pattern", messages("pages.bereavement.title")),
-mainConfig = views.helpers.MainConfig()
+pageTitle = Some(messages("title.pattern", messages("pages.bereavement.title")))
 ) {
-  @backLink()
 
   <header class="page-heading">
-    <h1 class="heading-xlarge" id="bereavement">@messages("pages.bereavement.title")</h1>
+    @h1("pages.bereavement.title", elmId = Some("bereavement"))
   </header>
 
-    <p>@messages("general.helpline.enquiries.link.pretext") <a href="@applicationConfig.generalEnquiriesLink">
-        @messages("general.helpline.enquiries.link")</a> @messages("pages.bereavement.enquiries.link.paragraph")
-    </p>
+
+    @p(HtmlContent( messages("general.helpline.enquiries.link.pretext") + 
+                    link(link = applicationConfig.generalEnquiriesLink, messageKey = "general.helpline.enquiries.link", inParagraph = true) +
+                    messages("pages.bereavement.enquiries.link.paragraph")
+    ))
 
   @if(role == Recipient){
-    <p>@messages("pages.bereavement.recipient.paragraph")</p>
+    @p(Text(messages("pages.bereavement.recipient.paragraph")))
   }else{
-    <p>@messages("pages.bereavement.transferor.paragraph")</p>
+    @p(Text(messages("pages.bereavement.transferor.paragraph")))
 
-    <ul class="bullets">
+    <ul class="govuk-list govuk-list--bullet">
         <li>@messages("pages.bereavement.transferor.point1")</li>
         <li>@messages("pages.bereavement.transferor.point2")</li>
     </ul>

@@ -18,50 +18,49 @@
 
 @import views.helpers.LanguageUtilsImpl
 @import models.auth.AuthenticatedUserRequest
-@import includes.backLink
+@import includes.{H1, P, ErrorSummary, InputValue, Button}
 
 @this(
-main: templates.tamc_main,
+main: main,
 inputView: templates.input,
 formErrorNotificationView: templates.form_error_notification,
 form: FormWithCSRF,
-languageUtilsImpl: LanguageUtilsImpl)
+languageUtilsImpl: LanguageUtilsImpl,
+h1: H1,
+p: P,
+errorSummary: ErrorSummary,
+inputValue: InputValue,
+button: Button)
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = Messages("title.application.pattern", Messages("title.confirm-email")),
-manageService = true,
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${languageUtilsImpl().formPageDataJourney("marriage-allowance:stage:email", recipientForm)}")))
+pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm-email"))),
+serviceName = Some("tamc.manage")
 ) {
-
-@backLink()
 
 @form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
 @formErrorNotificationView(recipientForm)
     <header class="page-heading">
-        <h1 class="heading-xlarge">@messages("pages.form.field.your-confirmation")</h1>
+        @h1("pages.form.field.your-confirmation")
     </header>
 
-    <p>@messages("change.status.confirm.info")</p>
-    <p>@messages("change.status.confirm.more.info")</p>
+    @p(Text(messages("change.status.confirm.info")))
+    @p(Text(messages("change.status.confirm.more.info")))
 
     <div class="form-group">
-        @inputView(recipientForm("transferor-email"),
-        '_label -> Html(messages("pages.form.field.transferor-email")),
-        '_labelClass -> "form-label",
-        '_inputClass -> "form-control",
-        '_dataAttributes -> "autocomplete=on"
+        @inputValue(
+            form = recipientForm,
+            id = "transferor-email",
+            name = "transferor-email",
+            labelKey = "pages.form.field.transferor-email",
+            isPageHeading = false,
+            classes = Some("govuk-label"),
+            autocomplete = Some("email")
         )
     </div>
 
-
-    <button class="button" type="submit" data-journey-click="marriage-allowance:click:advance-from-email">
-        @messages("generic.continue")
-    </button>
-
+    @button("generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-email"))
 }
 }

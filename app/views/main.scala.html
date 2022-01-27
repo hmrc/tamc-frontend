@@ -20,6 +20,7 @@
 @import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut, _}
+@import views.html.helper.CSPNonce
 
 @this(
     hmrcLayout: HmrcLayout,
@@ -37,7 +38,7 @@
 
 @(
     pageTitle: Option[String],
-    serviceName: Option[String] = None,
+    serviceName: Option[String] = Some("tamc.apply"),
     backLinkHref: Option[String] = None,
     sessionExpiredPage: Boolean = false,
     additionalScripts: Option[Html] = None,
@@ -132,6 +133,7 @@
 @hmrcLayout(
     pageTitle = pageTitle,
     serviceName = serviceName.map(messages(_)),
+    nonce = CSPNonce.get,
     isWelshTranslationAvailable = true,
     accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),
     displayHmrcBanner = false,

@@ -28,7 +28,7 @@
         hint: Option[Content] = None,
         hintClasses: String = "",
         legendClasses: String = "govuk-fieldset__legend--l",
-        inline: Boolean = false
+        inline: Boolean = true
 )(implicit messages: Messages)
 
 @govukRadios(Radios(
@@ -48,5 +48,5 @@
     )},
     items = items,
     errorMessage = form(name).error.map(err => ErrorMessage(content = Text(messages(err.message, err.args:_*)))),
-    classes = "govuk-radios--inline",
+    classes = if(inline){"govuk-radios--inline"}else{"govuk-radios"}
 ))
