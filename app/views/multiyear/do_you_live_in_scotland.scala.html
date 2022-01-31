@@ -44,29 +44,25 @@ backLinkHref = Some(controllers.routes.EligibilityController.dateOfBirthCheck.ur
 
     @form(action = routes.EligibilityController.doYouLiveInScotlandAction, args = ('id -> "doYouLiveInScotland-form")) {
 
-    <div class="form-group inline">
-        @inputRadios(
-            form = doYouLiveInScotlandForm,
-            legend = "eligibility.check.do.you.live.in.scotland.h1",
-            id = Some("do-you-live-in-scotland"),
-            name = "do-you-live-in-scotland",
-            items = Seq(RadioItem(
-                            content = Text(messages("radio.yes")),
-                            value = Some("true"),
-                            id = Some("do-you-live-in-scotland-true")
-                        ), RadioItem(
-                            content = Text(messages("radio.no")),
-                            value = Some("false"),
-                            id = Some("do-you-live-scotland-false")
-                        )),
-            legendAsHeading = false,
-            legendClasses = "govuk-visually-hidden"
-        )
-    </div>
+    @inputRadios(
+        form = doYouLiveInScotlandForm,
+        legend = "eligibility.check.do.you.live.in.scotland.h1",
+        id = Some("do-you-live-in-scotland"),
+        name = "do-you-live-in-scotland",
+        items = Seq(RadioItem(
+                        content = Text(messages("radio.yes")),
+                        value = Some("true"),
+                        id = Some("do-you-live-in-scotland-true")
+                    ), RadioItem(
+                        content = Text(messages("radio.no")),
+                        value = Some("false"),
+                        id = Some("do-you-live-scotland-false")
+                    )),
+        legendAsHeading = false,
+        legendClasses = "govuk-visually-hidden"
+    )
 
-    <div class="form-group">
-        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:doYouLiveInScotland_continue"))
-    </div>
+    @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:doYouLiveInScotland_continue"))
 }
 
 }

@@ -29,13 +29,11 @@ link: Link)
 pageTitle = Some(messages("title.pattern", messages("pages.stopAllowance.title")))
 ) {
 
-<header class="page-heading">
     @h1("pages.stopAllowance.title")
-</header>
 
-@p(Text(messages("pages.stopAllowance.paragraph1")))
-@p(Text(messages("pages.stopAllowance.paragraph2")))
+    @p(Text(messages("pages.stopAllowance.paragraph1")))
+    @p(Text(messages("pages.stopAllowance.paragraph2")))
 
-@link(link = controllers.routes.UpdateRelationshipController.history.url, messageKey = "claim.summary.link", id= Some("backToSummary"))
+    @link(link = controllers.routes.UpdateRelationshipController.history.url, messageKey = "claim.summary.link", id= Some("backToSummary"))
 
 }

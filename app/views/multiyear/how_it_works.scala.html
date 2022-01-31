@@ -39,9 +39,7 @@ request: UserRequest[_])
 pageTitle = Some(Messages("title.pattern", Messages("title.how-it-works")))
 ){
 
-    <header class="page-heading">
-        @h1("generic.ma.apply")
-    </header>
+    @h1("generic.ma.apply")
 
     @p(HtmlContent(ledeContent))
     @p(Text(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT()))))

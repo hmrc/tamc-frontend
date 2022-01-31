@@ -43,25 +43,23 @@ backLinkHref = Some(controllers.routes.TransferController.transfer.url),
 ptaMenu = true
 ){
 
-@errorSummary(marriageForm, Some("dateOfMarriage.day"))
+  @errorSummary(marriageForm, Some("dateOfMarriage.day"))
 
-@h1("pages.date-of-marriage.heading")
+  @h1("pages.date-of-marriage.heading")
 
-@p(Text(messages("pages.date-of-marriage.para1")))
-@p(Text(messages("pages.date-of-marriage.para2")))
+  @p(Text(messages("pages.date-of-marriage.para1")))
+  @p(Text(messages("pages.date-of-marriage.para2")))
 
-@form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
+  @form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
 
-<div class="form-group">
-  @inputDate(
-  fieldName = "dateOfMarriage",
-  form = marriageForm,
-    legendKey = "pages.date-of-marriage.h2",
-    hint = Some(Text(messages("pages.form.field-helper.dom"))),
-  legendClasses = "govuk-visually-hidden",
-  fieldSetAttrs = Map("id" -> "dateOfMarriage"))
-</div>
+    @inputDate(
+      fieldName = "dateOfMarriage",
+      form = marriageForm,
+        legendKey = "pages.date-of-marriage.h2",
+        hint = Some(Text(messages("pages.form.field-helper.dom"))),
+      legendClasses = "govuk-visually-hidden",
+      fieldSetAttrs = Map("id" -> "dateOfMarriage"))
 
-@button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:dateofmarriage_continue"))
-}
+    @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:dateofmarriage_continue"))
+  }
 }

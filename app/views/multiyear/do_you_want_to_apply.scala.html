@@ -45,29 +45,24 @@ backLinkHref = Some(controllers.routes.EligibilityController.partnersIncomeCheck
         )
 
     @form(action = routes.EligibilityController.doYouWantToApplyAction, args = 'id -> "doYouWantToApply-form") {
-        <div class="form-group inline">
-            @inputRadios(
-                form = doYouWantToApplyForm,
-                legend = "eligibility.check.do.you.want.to.apply.h1",
-                id = Some("do-you-want-to-apply"),
-                name = "do-you-want-to-apply",
-                items = Seq(RadioItem(
-                                content = Text(messages("radio.yes")),
-                                value = Some("true"),
-                                id = Some("do-you-want-to-apply-true")
-                            ), RadioItem(
-                                content = Text(messages("radio.no")),
-                                value = Some("false"),
-                                id = Some("do-you-want-to-apply-false")    
-                            )),
-                legendAsHeading = false,
-                legendClasses = "govuk-visually-hidden"
-            )
-        </div>
-
-        <div class="form-group">
-            @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:doYouWantToApply_continue"))
-        </div>
+        @inputRadios(
+            form = doYouWantToApplyForm,
+            legend = "eligibility.check.do.you.want.to.apply.h1",
+            id = Some("do-you-want-to-apply"),
+            name = "do-you-want-to-apply",
+            items = Seq(RadioItem(
+                            content = Text(messages("radio.yes")),
+                            value = Some("true"),
+                            id = Some("do-you-want-to-apply-true")
+                        ), RadioItem(
+                            content = Text(messages("radio.no")),
+                            value = Some("false"),
+                            id = Some("do-you-want-to-apply-false")    
+                        )),
+            legendAsHeading = false,
+            legendClasses = "govuk-visually-hidden"
+        )       
+        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:doYouWantToApply_continue"))
     }
 
 }

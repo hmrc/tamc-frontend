@@ -33,23 +33,19 @@ request: AuthenticatedUserRequest[_])
 pageTitle = Some(Messages("title.pattern", messages("title.confirm-transferor")))
 ) {
 
- <header class="page-heading">
-     @h1("pages.confirm.cancel.heading")
- </header>
+    @h1("pages.confirm.cancel.heading")
 
- @confirmSummaryView(viewModel.rows)
+    @confirmSummaryView(viewModel.rows)
 
- <p>@messages("pages.confirm.cancel.message")</p>
+    @p(Text(messages("pages.confirm.cancel.message")))
 
- <ul class="govuk-list govuk-list--bullet">
-  <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
-  <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
- </ul>
+    <ul class="govuk-list govuk-list--bullet">
+    <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
+    <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
+    </ul>
 
- @form(action = routes.UpdateRelationshipController.submitConfirmUpdate, args = ('id -> "")) {
-
-  @button(msg = "pages.confirm.cancel.continue.button", attrs = Map("data-journey-click" -> "marriage-allowance:link:confirm_cancellation"))
-
- }
+    @form(action = routes.UpdateRelationshipController.submitConfirmUpdate, args = ('id -> "")) {
+        @button(msg = "pages.confirm.cancel.continue.button", attrs = Map("data-journey-click" -> "marriage-allowance:link:confirm_cancellation"))
+    }
 
 }

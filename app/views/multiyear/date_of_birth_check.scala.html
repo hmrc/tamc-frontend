@@ -47,7 +47,6 @@ backLinkHref = Some(controllers.routes.EligibilityController.eligibilityCheck.ur
     )
 
     @form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
-        <div class="form-group inline">
             @inputRadios(
                 form = dateofBirthCheckForm,
                 legend = "eligibility.check.date.of.birth.legend",
@@ -66,7 +65,6 @@ backLinkHref = Some(controllers.routes.EligibilityController.eligibilityCheck.ur
                 fieldSetAttrs = Map("data-inline-error" -> "married-js-error", "id" -> "date-of-birth"),
                 legendClasses = "govuk-visually-hidden"
             )
-        </div>
 
         <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
             @p(HtmlContent(Messages("eligibility.check.date.of.birth.error.text.before.link",
@@ -79,9 +77,7 @@ backLinkHref = Some(controllers.routes.EligibilityController.eligibilityCheck.ur
             @p(Text(Messages("eligibility.check.date.of.birth.error.text.after.link")))
         </div>
 
-        <div class="form-group">
-            @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:married_continue"))
-        </div>
+        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:married_continue"))
     }
 
 }

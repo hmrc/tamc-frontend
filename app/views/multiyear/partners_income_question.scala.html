@@ -64,34 +64,30 @@ p: P)
     @form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
 
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
-        <div class="form-group inline">
-            @inputRadios(
-                form = partnersIncomeFormInput,
-                legend = "eligibility.check.partners.income.h1",
-                id = Some("partners-income"),
-                name = "partners-income",
-                items = Seq(RadioItem(
-                                content = Text(messages("radio.yes")),
-                                value = Some("true"),
-                                id = Some("partners-income-true")
-                            ), RadioItem(
-                                content = Text(messages("radio.no")),
-                                value = Some("false"),
-                                id = Some("partners-income-false")
-                            )),
-                legendAsHeading = false,
-                fieldSetAttrs = Map("data-inline-error" -> "inline-partners-income-error", "id" -> "marriage-criteria"),
-                legendClasses = "govuk-visually-hidden"
-            )
-        </div>
+        @inputRadios(
+            form = partnersIncomeFormInput,
+            legend = "eligibility.check.partners.income.h1",
+            id = Some("partners-income"),
+            name = "partners-income",
+            items = Seq(RadioItem(
+                            content = Text(messages("radio.yes")),
+                            value = Some("true"),
+                            id = Some("partners-income-true")
+                        ), RadioItem(
+                            content = Text(messages("radio.no")),
+                            value = Some("false"),
+                            id = Some("partners-income-false")
+                        )),
+            legendAsHeading = false,
+            fieldSetAttrs = Map("data-inline-error" -> "inline-partners-income-error", "id" -> "marriage-criteria"),
+            legendClasses = "govuk-visually-hidden"
+        )
 
         <div class="tamc-js-hidden error-inline validation-summary partners-inc-error" id="inline-partners-income-error">
             @p(Text(Messages("eligibility.check.partners.income.error")))
         </div>
 
-        <div class="form-group">
-            @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-eligibility-questions"))
-        </div>
+        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-eligibility-questions"))
     }
 
 }

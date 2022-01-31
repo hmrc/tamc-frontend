@@ -36,5 +36,5 @@ class ErrorHandler @Inject()(
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
     errorTemplate(pageTitle, heading, message)
 
-  override def notFoundTemplate(implicit request: Request[_]): Html = pageNotFoundTemplate(formPartialRetriever)
+  override def notFoundTemplate(implicit request: Request[_]): Html = pageNotFoundTemplate()
 }

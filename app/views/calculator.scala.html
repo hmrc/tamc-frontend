@@ -15,93 +15,63 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-
+@import includes.{H1, P, Link, InputRadios, InputValue, Button, ErrorSummary}
 @import models.auth.UserRequest
 
 @this(
-main: templates.tamc_main,
+main: main,
 formErrorNotificationView: templates.form_error_notification,
 inputRadioGroupView: templates.input_radio_group,
 inputView: templates.input,
 calculatorResultView: templates.calculator_result,
-form: FormWithCSRF)
+form: FormWithCSRF,
+errorSummary: ErrorSummary,
+h1: H1,
+govukFieldset : GovukFieldset,
+p: P,
+inputValue: InputValue,
+inputRadios: InputRadios,
+link: Link,
+button: Button,
+govukInsetText : GovukInsetText)
 
 @(
 calculatorForm: Form[models.EligibilityCalculatorInput],
 calculationResult: Option[models.EligibilityCalculatorResult] = None
 )(
 implicit messages: Messages,
-request: UserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.eligibility-criteria"))
-){
-@formErrorNotificationView(calculatorForm)
+pageTitle = Some(Messages("title.pattern", Messages("title.eligibility-criteria"))),
+afterContent = Some(afterContent)
+){  
+    @errorSummary(calculatorForm)
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("pages.calc.header"))</h1>
-    </header>
+    @h1("pages.calc.header")
 
-    <p>@Messages("pages.calc.para1")</p>
+    @p(Text(Messages("pages.calc.para1")))
 
-    <div class="panel panel-border-wide form-group">
-        <p>@Messages("pages.calc.para2")</p>
-    </div>
+    @govukInsetText(InsetText(content = Text(messages("pages.calc.para2"))))
 
+    @form(action = routes.EligibilityController.gdsCalculatorAction, args = ('id -> "calculator")) {
+        @govukFieldset(Fieldset(
+                    legend = Some(Legend(
+                    content = Text(Messages("pages.calc.header")),
+                    classes = "govuk-visually-hidden",
+                    isPageHeading = false
+                    )),
+                    html = html
+                ))
 
-@form(action = routes.EligibilityController.gdsCalculatorAction, args = ('id -> "calculator")) {
-<fieldset>
-    <legend class="visuallyhidden">@Html(Messages("pages.calc.header"))</legend>
+        @calculatorResultView(calculationResult)
 
-    <div class="form-group">
-        @inputRadioGroupView(
-        calculatorForm("country"),
-        Seq(
-        "england" -> Messages("label.england"),
-        "northernireland" -> Messages("label.ni"),
-        "scotland" -> Messages("label.scotland"),
-        "wales" -> Messages("label.wales")
-        ),
-        '_legendClass -> "heading-medium",
-        '_legend -> Messages("pages.calc.where")
-        )
-    </div>
-
-    <div class="form-group">
-        @inputView(calculatorForm("transferor-income"),
-        '_label -> Html(Messages("pages.form.field.income")),
-        '_labelClass -> "form-label-bold",
-        '_inputClass -> "form-control",
-        '_inputPrefix -> "£",
-        '_dataAttributes -> "autocomplete=on"
-        )
-    </div>
-    <div class="form-group">
-        @inputView(calculatorForm("recipient-income"),
-        '_label -> Html(Messages("pages.form.field.recipient-income")),
-        '_labelClass -> "form-label-bold",
-        '_inputClass -> "form-control",
-        '_inputPrefix -> "£",
-        '_dataAttributes -> "autocomplete=on"
-        )
-    </div>
-</fieldset>
-
-
-@calculatorResultView(calculationResult)
-
-
-    <button class="button button-calculate" data-journey-click="marriage-allowance:button:calculate" id="calculate"
-            type="submit">@Html(Messages("estimate.tax.saving"))
-    </button>
-
+        @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
+    }
 }
 
+@afterContent = {
 <div class="blue-underline-large"></div>
-
-<footer>
     <nav class="pagination" role="navigation" aria-label="Pagination">
         <ul class="group">
             <li class="previous">
@@ -120,5 +90,54 @@ title = Messages("title.pattern", Messages("title.eligibility-criteria"))
             </li>
         </ul>
     </nav>
-</footer>
+        <hr aria-hidden="true" class="govuk-section-break govuk-section-break--xl">
 }
+
+@html = {
+        @inputRadios(
+            form = calculatorForm,
+            legend = "pages.calc.where",
+            id = Some("country"),
+            name = "country",
+            items = Seq(RadioItem(
+                            content = Text(messages("label.england")),
+                            value = Some("england"),
+                            id = Some("country-england")
+                        ), RadioItem(
+                            content = Text(messages("label.ni")),
+                            value = Some("northernireland"),
+                            id = Some("country-northernireland")    
+                        ), RadioItem(
+                            content = Text(messages("label.scotland")),
+                            value = Some("scotland"),
+                            id = Some("country-scotland")    
+                        ), RadioItem(
+                            content = Text(messages("label.wales")),
+                            value = Some("wales"),
+                            id = Some("country-wales")    
+                        )),
+            legendAsHeading = true,
+            legendClasses = "govuk-label--s",
+            inline = false
+        )
+
+        @inputValue( 
+            form = calculatorForm,
+            id = "transferor-income",
+            name = "transferor-income",
+            labelKey = "pages.form.field.income",
+            isPageHeading = true,               
+            labelClasses = Some("govuk-label--s"),
+            prefix = Some(PrefixOrSuffix(content = Text("£")))
+        )
+
+        @inputValue( 
+            form = calculatorForm,
+            id = "recipient-income",
+                name = "recipient-income",
+                labelKey = "pages.form.field.recipient-income",
+                isPageHeading = true,
+                labelClasses = Some("govuk-label--s"),
+                prefix = Some(PrefixOrSuffix(content = Text("£")))
+            )
+    }

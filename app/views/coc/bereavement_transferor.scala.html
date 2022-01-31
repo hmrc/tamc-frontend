@@ -35,31 +35,29 @@ request: AuthenticatedUserRequest[_])
 pageTitle = Some(Messages("title.pattern", Messages("title.bereavement"))),
 backLinkHref = Some(controllers.routes.UpdateRelationshipController.history.url)
 ) {
-
-<header class="page-heading">
+    
     @h1("change.status.bereavement.sorry", elmId = Some("bereavement-transferor"))
-</header>
 
-@p(Text(messages("change.status.bereavement.tr.instruction")))
+    @p(Text(messages("change.status.bereavement.tr.instruction")))
 
-<ul class="govuk-list govuk-list--bullet">
-    <li>@messages("change.status.bereavement.tr.instruction-1")</li>
-    <li>@messages("change.status.bereavement.tr.instruction-2")</li>
-</ul>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("change.status.bereavement.tr.instruction-1")</li>
+        <li>@messages("change.status.bereavement.tr.instruction-2")</li>
+    </ul>
 
-@h2("change.status.bereavement.notify-hmrc")
+    @h2("change.status.bereavement.notify-hmrc")
 
-@p(HtmlContent(messages("hmrc.contact-details-2") + "<br>" +
-    messages("hmrc.contact-details-3") + "<br>" +
-    messages("hmrc.contact-details-4")))
+    @p(HtmlContent(messages("hmrc.contact-details-2") + "<br>" +
+        messages("hmrc.contact-details-3") + "<br>" +
+        messages("hmrc.contact-details-4")))
 
-@h2("hmrc.contact-detials.time")
-@p(HtmlContent(messages("hmrc.contact-details-5") + "<br>" + messages("hmrc.contact-details-6")))
-@p(Text(messages("hmrc.contact-details-7")))
+    @h2("hmrc.contact-detials.time")
+    @p(HtmlContent(messages("hmrc.contact-details-5") + "<br>" + messages("hmrc.contact-details-6")))
+    @p(Text(messages("hmrc.contact-details-7")))
 
-@h3("hmrc.contact-detials.calling.time")
-@p(Text(messages("hmrc.contact-details-8")))
+    @h3("hmrc.contact-detials.calling.time")
+    @p(Text(messages("hmrc.contact-details-8")))
 
-@link(link = applicationConfig.callChargeUrl, messageKey = "hmrc.contact-details-9", attrTarget = true)
+    @link(link = applicationConfig.callChargeUrl, messageKey = "hmrc.contact-details-9", attrTarget = true)
 
 }

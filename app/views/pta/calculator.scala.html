@@ -42,43 +42,38 @@ pageTitle = Some(Messages("title.pattern", Messages("title.eligibility-criteria"
 backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
 ){
 
-@errorSummary(calculatorForm)
+    @errorSummary(calculatorForm)
 
-<header class="page-heading">
     @h1("pages.calc.header")
-</header>
 
-@p(HtmlContent(Messages("pages.calc.skip-it.pre") + 
-                link(link = controllers.routes.EligibilityController.eligibilityCheck.url,
-                    messageKey = "pages.calc.skip-it",
-                    inParagraph = true)))
+    @p(HtmlContent(Messages("pages.calc.skip-it.pre") + 
+                    link(link = controllers.routes.EligibilityController.eligibilityCheck.url,
+                        messageKey = "pages.calc.skip-it",
+                        inParagraph = true)))
 
-@p(Text(Messages("pages.calc.para1")))
+    @p(Text(Messages("pages.calc.para1")))
 
-@form(action = routes.EligibilityController.ptaCalculatorAction, args = ('id -> "calculator")) {
+    @form(action = routes.EligibilityController.ptaCalculatorAction, args = ('id -> "calculator")) {
 
-    @govukFieldset(Fieldset(
-        legend = Some(Legend(
-        content = Text(Messages("pages.calc.header")),
-        classes = "govuk-visually-hidden",
-        isPageHeading = false
-        )),
-        html = html
-    ))
+        @govukFieldset(Fieldset(
+            legend = Some(Legend(
+            content = Text(Messages("pages.calc.header")),
+            classes = "govuk-visually-hidden",
+            isPageHeading = false
+            )),
+            html = html
+        ))
 
-    @calculatorResultView(calculationResult)
+        @calculatorResultView(calculationResult)
 
-    <div class="form-group">
         @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
-    </div>
 
-    @link(link = controllers.routes.EligibilityController.eligibilityCheck.url, messageKey = "change.status.apply", id = Some("continue"))
+        @link(link = controllers.routes.EligibilityController.eligibilityCheck.url, messageKey = "change.status.apply", id = Some("continue"))
 
-}
+    }
 }
 
 @html = {
-        <div class="form-group">
         @inputRadios(
             form = calculatorForm,
             legend = "pages.calc.where",
@@ -105,27 +100,24 @@ backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
             legendClasses = "govuk-label--s",
             inline = false
         )
-        </div>
-        <div class="form-group">
-            @inputValue( 
-                form = calculatorForm,
-                id = "transferor-income",
-                name = "transferor-income",
-                labelKey = "pages.form.field.income",
-                isPageHeading = true,
-                labelClasses = Some("govuk-label--s"),
-                prefix = Some(PrefixOrSuffix(content = Text("£")))
-            )
-        </div>
-        <div class="form-group">
-            @inputValue( 
-                form = calculatorForm,
-                id = "recipient-income",
+
+        @inputValue( 
+            form = calculatorForm,
+            id = "transferor-income",
+            name = "transferor-income",
+            labelKey = "pages.form.field.income",
+            isPageHeading = true,               
+            labelClasses = Some("govuk-label--s"),
+            prefix = Some(PrefixOrSuffix(content = Text("£")))
+        )
+
+        @inputValue( 
+            form = calculatorForm,
+            id = "recipient-income",
                 name = "recipient-income",
                 labelKey = "pages.form.field.recipient-income",
                 isPageHeading = true,
                 labelClasses = Some("govuk-label--s"),
                 prefix = Some(PrefixOrSuffix(content = Text("£")))
             )
-        </div>
     }

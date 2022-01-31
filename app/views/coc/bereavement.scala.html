@@ -34,10 +34,7 @@ request: AuthenticatedUserRequest[_])
 pageTitle = Some(messages("title.pattern", messages("pages.bereavement.title")))
 ) {
 
-  <header class="page-heading">
-    @h1("pages.bereavement.title", elmId = Some("bereavement"))
-  </header>
-
+  @h1("pages.bereavement.title", elmId = Some("bereavement"))
 
     @p(HtmlContent( messages("general.helpline.enquiries.link.pretext") + 
                     link(link = applicationConfig.generalEnquiriesLink, messageKey = "general.helpline.enquiries.link", inParagraph = true) +

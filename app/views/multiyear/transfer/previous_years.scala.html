@@ -47,9 +47,7 @@ pageTitle = Some(Messages("title.application.pattern", Messages("pages.previousy
 backLinkHref = Some(backLink)
 ){
 
-    <header class="page-heading">
-        @h1("pages.previousyear.header", elmId = Some("heading"))
-    </header>
+    @h1("pages.previousyear.header", elmId = Some("heading"))
 
     @p(HtmlContent(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage))))
 

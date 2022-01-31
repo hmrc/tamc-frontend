@@ -53,9 +53,7 @@ backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage.url)
 
 @errorSummary(form, Some("applyForCurrentYear-true"))
 
-    <header class="page-heading">
-        @h1("title.eligible-years")
-    </header>
+    @h1("title.eligible-years")
 
     @p(HtmlContent(Messages("pages.eligibleyear.toldus",recipientName) + s""" <span id="marriageDate">${languageUtilsImpl().ukDateTransformer(dom.get)}.</span>"""))
 
@@ -76,7 +74,7 @@ backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage.url)
     </ul>
 
     @formCSRF(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
-    <div @if(historicYearsAvailable) {class="form-group" } id="apply-For-CurrentYear">
+    <div id="apply-For-CurrentYear">
         @h3("pages.eligibleyear.doyou.want")
 
         @inputRadios(

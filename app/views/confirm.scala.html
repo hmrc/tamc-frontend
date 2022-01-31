@@ -45,9 +45,7 @@ pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm")
 backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
 ){
 
-    <header class="page-heading">
-        @h1("pages.confirm.html.h1", elmId = Some("confirm-page"))
-    </header>
+    @h1("pages.confirm.html.h1", elmId = Some("confirm-page"))
 
     @h2("pages.confirm.lower.earner")
     <dl class="govuk-summary-list">

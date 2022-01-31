@@ -33,17 +33,15 @@ request: AuthenticatedUserRequest[_])
     pageTitle = Some(messages("title.pattern", messages("pages.divorce.explanation.title")))
 ) {
 
- <header class="page-heading">
   @h1("pages.divorce.explanation.title")
- </header>
 
- @p(Text(messages("pages.divorce.explanation.paragraph1", viewModel.divorceDate)))
- @p(Text(messages("pages.divorce.explanation.paragraph2", viewModel.taxYearStatus)))
+  @p(Text(messages("pages.divorce.explanation.paragraph1", viewModel.divorceDate)))
+  @p(Text(messages("pages.divorce.explanation.paragraph2", viewModel.taxYearStatus)))
 
- <ul class="govuk-list govuk-list--bullet">
-   <li>@{viewModel.bulletStatement._1}</li>
-   <li>@{viewModel.bulletStatement._2}</li>
- </ul>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>@{viewModel.bulletStatement._1}</li>
+    <li>@{viewModel.bulletStatement._2}</li>
+  </ul>
 
   @button(msg = "generic.continue", href = Some(controllers.routes.UpdateRelationshipController.confirmEmail.url), id = "continue")
 }

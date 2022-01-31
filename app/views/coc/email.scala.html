@@ -40,26 +40,24 @@ pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm-e
 serviceName = Some("tamc.manage")
 ) {
 
-@form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
-@formErrorNotificationView(recipientForm)
-    <header class="page-heading">
-        @h1("pages.form.field.your-confirmation")
-    </header>
+    @form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
+
+    @formErrorNotificationView(recipientForm)
+    
+    @h1("pages.form.field.your-confirmation")
 
     @p(Text(messages("change.status.confirm.info")))
     @p(Text(messages("change.status.confirm.more.info")))
 
-    <div class="form-group">
-        @inputValue(
-            form = recipientForm,
-            id = "transferor-email",
-            name = "transferor-email",
-            labelKey = "pages.form.field.transferor-email",
-            isPageHeading = false,
-            classes = Some("govuk-label"),
-            autocomplete = Some("email")
-        )
-    </div>
+    @inputValue(
+        form = recipientForm,
+        id = "transferor-email",
+        name = "transferor-email",
+        labelKey = "pages.form.field.transferor-email",
+        isPageHeading = false,
+        classes = Some("govuk-label"),
+        autocomplete = Some("email")
+    )
 
     @button("generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-email"))
 }

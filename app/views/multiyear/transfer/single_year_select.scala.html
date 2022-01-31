@@ -56,13 +56,11 @@ request: AuthenticatedUserRequest[_])
 
     @errorSummary(earlierYearsForm, Some("selectedYear-true"))
 
-    <header class="page-heading">
-        @h1("pages.multi-year-select.heading", elmId = Some("heading"))
-    </header>
+    @h1("pages.multi-year-select.heading", elmId = Some("heading"))
 
     @form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
     <fieldset class="govuk-fieldset inline spacingBottom" id="earlierYears">
-        <div class="form-group" id="year-@availableYears.head.year">
+        <div id="year-@availableYears.head.year">
             <h2 class="govuk-heading-m"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year)))</span>
                 <br>@languageUtilsImpl().taxDateInterval(availableYears.head.year)</h2>
 

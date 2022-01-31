@@ -41,24 +41,20 @@ request: AuthenticatedUserRequest[_])
 
     @errorSummary(divorceSelectYearForm)
 
-    <header class="page-heading">
-        @h1("pages.divorce.title")
-    </header>
+    @h1("pages.divorce.title")
 
     @p(Text(messages("pages.divorce.paragraph1")))
 
     @form(action = routes.UpdateRelationshipController.submitDivorceEnterYear, args = ('id -> "")) {
-
-        <div class="form-group">
-            @inputDate(
-                fieldName = divorceYearForm.DateOfDivorce,
-                form = divorceSelectYearForm,
-                legendKey = "pages.divorce.title",
-                hint = Some(Text(messages("pages.divorce.date.hint"))),
-                isPageHeading = false,
-                legendClasses = "govuk-visually-hidden"
-            )
-        </div>
+        
+        @inputDate(
+            fieldName = divorceYearForm.DateOfDivorce,
+            form = divorceSelectYearForm,
+            legendKey = "pages.divorce.title",
+            hint = Some(Text(messages("pages.divorce.date.hint"))),
+            isPageHeading = false,
+            legendClasses = "govuk-visually-hidden"
+        )
 
         @button("generic.continue")
     }

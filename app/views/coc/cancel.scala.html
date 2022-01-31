@@ -43,9 +43,7 @@ languageUtilsImpl().ukDateTransformer(cancelDates.personalAllowanceEffectiveDate
 pageTitle = Some(messages("title.pattern", messages("pages.cancel.title")))
 ) {
 
-    <header class="page-heading">
-        @h1("pages.cancel.title", elmId=Some("cancel-heading"))
-    </header>
+    @h1("pages.cancel.title", elmId=Some("cancel-heading"))
 
     @p(Text(messages("pages.cancel.paragraph1", maDate)))
     @p(Text(messages("pages.cancel.paragraph2", paDate)))

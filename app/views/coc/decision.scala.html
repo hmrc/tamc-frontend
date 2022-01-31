@@ -34,32 +34,27 @@ pageTitle = Some(messages("title.pattern", messages("pages.decision.title")))
 
     @errorSummary(decisionForm, Some("decisionChoice-checkmarriageallowanceclaim"))
 
-    <header class="page-heading">
-        @h1("pages.decision.title")
-    </header>
+     @h1("pages.decision.title")
 
     @form(action = routes.UpdateRelationshipController.submitDecision, args = ('id -> "check-relationship-form")) {
 
-        <div class="form-group inline">
-
-            @inputRadios(
-                form = decisionForm,
-                legend = "pages.decision.title",
-                id = Some(CheckClaimOrCancelDecisionForm.DecisionChoice),
-                name = CheckClaimOrCancelDecisionForm.DecisionChoice,
-                items = Seq(RadioItem(
-                                content = Text(messages("pages.decision.radio.check")),
-                                value = Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim),
-                                id = Some("decisionChoice-checkmarriageallowanceclaim")
-                            ), RadioItem(
-                                content = Text(messages("pages.decision.radio.stop")),
-                                value = Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance),
-                                id = Some("decisionChoice-stopmarriageallowance")
-                            )),
-                legendAsHeading = false,
-                legendClasses = "govuk-visually-hidden"
-            )
-        </div>
+        @inputRadios(
+            form = decisionForm,
+            legend = "pages.decision.title",
+            id = Some(CheckClaimOrCancelDecisionForm.DecisionChoice),
+            name = CheckClaimOrCancelDecisionForm.DecisionChoice,
+            items = Seq(RadioItem(
+                            content = Text(messages("pages.decision.radio.check")),
+                            value = Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim),
+                            id = Some("decisionChoice-checkmarriageallowanceclaim")
+                        ), RadioItem(
+                            content = Text(messages("pages.decision.radio.stop")),
+                            value = Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance),
+                            id = Some("decisionChoice-stopmarriageallowance")
+                        )),
+            legendAsHeading = false,
+            legendClasses = "govuk-visually-hidden"
+        )
 
         @button("generic.continue")
     }

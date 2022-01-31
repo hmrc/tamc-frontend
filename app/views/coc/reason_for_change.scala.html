@@ -39,38 +39,31 @@ request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.par
     @backLink()
     @errorSummary(makeChangesDecisionForm)
 
-    <!-- formErrorMessage = "pages.form.error.mandatory.data" -->
-
-    <header class="page-heading">
-        @h1("pages.makeChanges.heading")
-    </header>
+    @h1("pages.makeChanges.heading")
 
     @form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
-
-      <div class="form-group">
-        @inputRadios(
-          form = makeChangesDecisionForm,
-          legend = "title.change.reason",
-          id = Some(MakeChangesDecisionForm.StopMAChoice),
-          name = MakeChangesDecisionForm.StopMAChoice,
-          items = Seq(RadioItem(
-                        content = Text(messages("pages.makeChanges.radio.noLongerRequired")),
-                        value = Some(MakeChangesDecisionForm.Cancel),
-                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-cancel")
-                      ), RadioItem(
-                          content = Text(messages("pages.makeChanges.radio.divorce")),
-                          value = Some(MakeChangesDecisionForm.Divorce),
-                          id = Some(MakeChangesDecisionForm.StopMAChoice + "-divorce")
-                      ), RadioItem(
-                          content = Text(messages("pages.makeChanges.radio.bereavement")),
-                          value = Some(MakeChangesDecisionForm.Bereavement),
-                          id = Some(MakeChangesDecisionForm.StopMAChoice + "-bereavement")
-                      )
-                  ),
-          legendAsHeading = false,
-          legendClasses = "govuk-visually-hidden"
-        )
-      </div>
+      @inputRadios(
+        form = makeChangesDecisionForm,
+        legend = "title.change.reason",
+        id = Some(MakeChangesDecisionForm.StopMAChoice),
+        name = MakeChangesDecisionForm.StopMAChoice,
+        items = Seq(RadioItem(
+                      content = Text(messages("pages.makeChanges.radio.noLongerRequired")),
+                      value = Some(MakeChangesDecisionForm.Cancel),
+                      id = Some(MakeChangesDecisionForm.StopMAChoice + "-cancel")
+                    ), RadioItem(
+                        content = Text(messages("pages.makeChanges.radio.divorce")),
+                        value = Some(MakeChangesDecisionForm.Divorce),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-divorce")
+                    ), RadioItem(
+                        content = Text(messages("pages.makeChanges.radio.bereavement")),
+                        value = Some(MakeChangesDecisionForm.Bereavement),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-bereavement")
+                    )
+                ),
+        legendAsHeading = false,
+        legendClasses = "govuk-visually-hidden"
+      )
 
       @button(msg = "generic.continue")
 

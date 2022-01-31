@@ -47,7 +47,6 @@ applicationConfig: ApplicationConfig)
         )
 
     @form(action = routes.EligibilityController.lowerEarnerCheckAction, args = ('id -> "income-form")) {
-    <div class="form-group inline">
         @p(HtmlContent(Messages("eligibility.check.lower.earner.information2")), elmId = Some("lower-earner-information"))
         
         @inputRadios(
@@ -69,15 +68,12 @@ applicationConfig: ApplicationConfig)
             legendAsHeading = false,
             legendClasses = "govuk-visually-hidden"
         )
-    </div>
 
     <div class="tamc-js-hidden error-inline validation-summary" id="inline-lower-earner-error">
         @p(Text(Messages("eligibility.check.lower.earner.error", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))))
     </div>
 
-    <div class="form-group">
-        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-eligibility-questions"))
-    </div>
+    @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-eligibility-questions"))
 
     }
 }

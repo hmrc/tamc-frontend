@@ -48,7 +48,7 @@
     ptaMenu: Boolean = false,
     backLinkAttrs: Map[String, String] = Map.empty,
     afterContent: Option[Html] = None
-)(content: Html)(implicit request: BaseUserRequest[_], messages: Messages)
+)(content: Html)(implicit request: Request[_], messages: Messages)
 
 @headBlock = {
     <meta name="format-detection" content="telephone=no" />
@@ -90,30 +90,17 @@
 }
 
 @beforeContent = {
-    @if(request.isAuthenticated) {
-        @hmrcAccountMenu(AccountMenu(
-                signOut = SignOut(href = controllers.routes.AuthorisationController.logout.url),
-                language = if(messages.lang.code == "cy") Cy else En
-            ).withUrlsFromConfig())
-    }
-    @if(backLinkHref.isDefined) {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-            @backLink(backLinkHref.get, backLinkAttrs)
-            </div>
-            <div class="govuk-grid-column-one-half">
-            @hmrcLanguageSelectHelper()
-            </div>
-        </div>
-    } else {
-        @hmrcLanguageSelectHelper()
-    }
+    @hmrcAccountMenu(AccountMenu(
+            signOut = SignOut(href = controllers.routes.AuthorisationController.logout.url),
+            language = if(messages.lang.code == "cy") Cy else En
+        ).withUrlsFromConfig())
+    
+    @hmrcLanguageSelectHelper()
 }
 
 
 @contentBlock = {
     @content
-    @afterContent
     @hmrcReportTechnicalIssue(ReportTechnicalIssue(
         serviceId = appConfig.templateServiceURL,
         language = if(messages.lang.code == "cy") Cy else En,
@@ -133,17 +120,8 @@
     ))
 }
 
-@serviceNameCheck = @{
-    if(request.isAuthenticated) {
-        serviceName
-    } else {
-        Some("")
-    }
-}
-
 @hmrcLayout(
     pageTitle = pageTitle,
-    serviceName = serviceNameCheck,
     nonce = CSPNonce.get,
     isWelshTranslationAvailable = true,
     accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),
