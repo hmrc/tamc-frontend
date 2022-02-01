@@ -104,6 +104,7 @@ coc.end-reason.MERGER=Customer accounts merged
 coc.end-reason.RETROSPECTIVE=Applied for Marriage Allowance retrospectively
 coc.end-reason.SYSTEM=Ended by HMRC
 coc.end-reason.DEFAULT=Marriage Allowance Ended
+eligibility.hidden-text=This section is
 
 #********************************************************************************
 # Year selection

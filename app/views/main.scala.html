@@ -44,7 +44,8 @@
     sessionExpiredPage: Boolean = false,
     additionalScripts: Option[Html] = None,
     backLinkAttrs: Map[String, String] = Map.empty,
-    afterContent: Option[Html] = None
+    afterContent: Option[Html] = None,
+    disableBackLink: Boolean = false
 )(content: Html)(implicit request: BaseUserRequest[_], messages: Messages)
 
 @headBlock = {
@@ -93,14 +94,18 @@
                 language = if(messages.lang.code == "cy") Cy else En
             ).withUrlsFromConfig())
     }
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-one-half">
-            @backLink(backLinkHref.getOrElse(""), backLinkAttrs)
+    @if(!disableBackLink){
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                @backLink(backLinkHref.getOrElse(""), backLinkAttrs)
+            </div>
+            <div class="govuk-grid-column-one-half">
+                @hmrcLanguageSelectHelper()
+            </div>
         </div>
-        <div class="govuk-grid-column-one-half">
-            @hmrcLanguageSelectHelper()
-        </div>
-    </div>
+    } else {
+        @hmrcLanguageSelectHelper()
+    }
 }
 
 

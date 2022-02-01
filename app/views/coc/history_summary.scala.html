@@ -29,7 +29,8 @@
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("title.history")))
+pageTitle = Some(messages("title.pattern", messages("title.history"))),
+disableBackLink = true
 ){
     @pageHeading(classes=Some("govuk-!-margin-bottom-3 govuk-heading-xl"),
         context = "This section is ",

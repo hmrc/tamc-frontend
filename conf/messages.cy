@@ -104,6 +104,7 @@ coc.end-reason.MERGER=Uno cyfrifon cwsmeriaid
 coc.end-reason.RETROSPECTIVE=Wedi gwneud cais am Lwfans Priodasol yn &#244;l-weithredol
 coc.end-reason.SYSTEM=CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT=Lwfans Priodasol wedi dod i ben
+eligibility.hidden-text=Teitl yr adran hon yw
 
 #********************************************************************************
 # Year selection
