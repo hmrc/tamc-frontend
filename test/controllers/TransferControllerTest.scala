@@ -39,9 +39,8 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
+import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import scala.language.postfixOps
 import play.api.inject.bind
@@ -60,7 +59,6 @@ class TransferControllerTest extends ControllerBaseTest {
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[MessagesApi].toInstance(stubMessagesApi())
     )
     .build()

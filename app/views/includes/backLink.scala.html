@@ -14,12 +14,15 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.urls.Link
-@()(implicit messages: Messages)
+@this()
 
-<div class="flush--bottom">@Link.toInternalPage(
-    id=Some("backLink"),
-    value=Some(messages("generic.back")),
-    url = "#",
-    cssClasses=Some("displayIfJsEnabled link-back")
-).toHtml</div>
+@(href: String, attrs: Map[String, String] = Map.empty)(implicit messages: Messages)
+
+@attrValues = @{
+  attrs.map{
+    case(key, value) => key + "=" + value
+  }
+}
+    <a id="backLink" href="@href" class="govuk-back-link displayIfJsEnabled link-back" @attrValues>@messages("generic.back")</a>
+
+

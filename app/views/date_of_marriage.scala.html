@@ -22,8 +22,6 @@
 
 @this(
 main: main,
-formErrorNotificationView: templates.form_error_notification,
-dateFieldsView: templates.dateFields,
 form: FormWithCSRF,
 languageUtilsImpl: LanguageUtilsImpl,
 h1: H1,
@@ -34,13 +32,11 @@ inputDate: InputDate)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(messages("title.application.pattern", messages("title.date-of-marriage"))),
-backLinkHref = Some(controllers.routes.TransferController.transfer.url),
-ptaMenu = true
+backLinkHref = Some(controllers.routes.TransferController.transfer.url)
 ){
 
   @errorSummary(marriageForm, Some("dateOfMarriage.day"))

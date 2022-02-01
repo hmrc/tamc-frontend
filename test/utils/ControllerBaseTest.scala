@@ -24,14 +24,12 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 trait ControllerBaseTest extends BaseTest with BeforeAndAfterEach {
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
     .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
-    .overrides(bind[TemplateRenderer].toInstance(MockTemplateRenderer))
     .overrides(bind[FormPartialRetriever].to[MockFormPartialRetriever]
     ).configure(
     "metrics.jvm" -> false,

@@ -29,15 +29,14 @@ inputRadios: InputRadios,
 button: Button)
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
     pageTitle = Some(Messages("title.pattern", messages("title.make-a-change"))),
     serviceName = Some("tamc.manage")
 ){
 
-    @backLink()
-    @errorSummary(makeChangesDecisionForm)
+    @errorSummary(makeChangesDecisionForm, Some("stopMAChoice-cancel"))
 
     @h1("pages.makeChanges.heading")
 

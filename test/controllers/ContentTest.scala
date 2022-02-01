@@ -33,9 +33,8 @@ import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTime
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
+import utils.{ControllerBaseTest, MockAuthenticatedAction, MockUnauthenticatedAction}
 
 import java.text.NumberFormat
 import java.time.LocalDate
@@ -57,7 +56,6 @@ class ContentTest extends ControllerBaseTest {
       bind[TransferService].toInstance(mockTransferService),
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
       bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
     )

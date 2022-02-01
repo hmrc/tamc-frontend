@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import config.ApplicationConfig
-@import includes.{back, Link}
+@import includes.Link
 @import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut, _}
@@ -32,7 +32,6 @@
     hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
     appConfig: ApplicationConfig,
     govukPhaseBanner : GovukPhaseBanner,
-    backLink: back,
     link: Link,
     hmrcAccountMenu: HmrcAccountMenu
 )(implicit accountMenuConfig: AccountMenuConfig)
@@ -41,24 +40,16 @@
     pageTitle: Option[String],
     serviceName: Option[String] = Some("tamc.apply"),
     backLinkHref: Option[String] = None,
-    sessionExpiredPage: Boolean = false,
-    additionalScripts: Option[Html] = None,
-    urBanner: Boolean = false,
-    signedOut: Boolean = false,
-    ptaMenu: Boolean = false,
-    backLinkAttrs: Map[String, String] = Map.empty,
-    afterContent: Option[Html] = None
+    additionalScripts: Option[Html] = None
 )(content: Html)(implicit request: Request[_], messages: Messages)
 
 @headBlock = {
     <meta name="format-detection" content="telephone=no" />
     <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/main.css")'/>
-    @if(!signedOut){
-        @hmrcTimeoutDialogHelper(
-            signOutUrl = routes.AuthorisationController.logout.url,
-            keepAliveUrl = Some("/keep-alive")
-        )
-    }
+    @hmrcTimeoutDialogHelper(
+        signOutUrl = routes.AuthorisationController.logout.url,
+        keepAliveUrl = Some("/keep-alive")
+    )
     @additionalScripts.getOrElse("")
 }
 
@@ -66,7 +57,6 @@
 <script src='@controllers.routes.Assets.at("javascripts/jquery.js")'></script>
     <script src='@controllers.routes.Assets.at("javascripts/tamc.js")'></script>
     <script src='@controllers.routes.Assets.at("javascripts/polyfill.js")'></script>
-    <script src='@controllers.routes.Assets.at("javascripts/tamc-backlink.js")'></script>
     <script type="text/javascript">
          function initCobrowse() {
              if (typeof(eGain) != 'undefined' && eGain.cobrowse) {

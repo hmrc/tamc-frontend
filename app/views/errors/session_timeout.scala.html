@@ -26,7 +26,8 @@ button: Button)
 @()(implicit messages: Messages, request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("session.timeout.title")))
+pageTitle = Some(messages("title.pattern", messages("session.timeout.title"))),
+sessionExpiredPage = true
 ){
 
 @h1("session.timeout.statement", classes = Some("govuk-heading-l"))

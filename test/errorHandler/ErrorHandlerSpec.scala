@@ -17,7 +17,7 @@
 package errorHandler
 
 import config.ApplicationConfig
-import helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
+import helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite

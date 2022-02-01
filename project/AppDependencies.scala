@@ -7,7 +7,6 @@ object AppDependencies {
     "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % "5.12.0",
     "com.ibm.icu" % "icu4j" % "54.1.1",
     "uk.gov.hmrc" %% "http-caching-client" % "9.5.0-play-28",
-    "uk.gov.hmrc" %% "local-template-renderer" % "2.15.0-play-28",
     "uk.gov.hmrc" %% "time" % "3.25.0",
     "uk.gov.hmrc" %% "domain" % "6.2.0-play-28",
     "uk.gov.hmrc" %% "url-builder" % "3.5.0-play-28",
@@ -15,10 +14,8 @@ object AppDependencies {
     "uk.gov.hmrc" %% "tax-year" % "1.3.0",
     "uk.gov.hmrc" %% "play-language" % "5.1.0-play-28",
     "uk.gov.hmrc" %% "govuk-template" % "5.70.0-play-28",
-    "uk.gov.hmrc" %% "play-ui" % "9.7.0-play-28",
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.12.5",
     "uk.gov.hmrc" %% "play-frontend-hmrc" % s"1.27.0-play-28"
-
   )
 
   val test: Seq[ModuleID] = Seq(

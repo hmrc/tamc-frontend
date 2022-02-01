@@ -20,7 +20,7 @@ import models.EligibilityCalculatorInput
 import play.api.data.Forms.mapping
 import play.api.data.format.Formatter
 import play.api.data.{FieldMapping, Form, FormError, Forms}
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
+import scala.math.BigDecimal.int2bigDecimal
 
 object EligibilityCalculatorForm {
 
@@ -43,8 +43,14 @@ object EligibilityCalculatorForm {
     private def messageCustomizer(fieldKey: String, messageKey: String): String = s"pages.form.$messageKey.$fieldKey"
 //    private def messageCustomizer(fieldKey: String, messageKey: String): String = s"pages.form.field.${fieldKey}.error.${messageKey}"
 
+    private def quantity (value: Int) =
+      s"%,.0f".format(
+        value
+          .setScale(0, BigDecimal.RoundingMode.CEILING).abs
+      )
+
     override def unbind(key: String, value: Int): Map[String, String] =
-      Map(key -> MoneyPounds(value, 0).quantity)
+      Map(key -> quantity(value))
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Int] =
       data.get(key) match {

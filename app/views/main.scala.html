@@ -16,7 +16,7 @@
 
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers._
 @import config.ApplicationConfig
-@import includes.{back, Link}
+@import includes.{backLink, Link}
 @import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut, _}
@@ -32,7 +32,7 @@
     hmrcReportTechnicalIssue: HmrcReportTechnicalIssue,
     appConfig: ApplicationConfig,
     govukPhaseBanner : GovukPhaseBanner,
-    backLink: back,
+    backLink: backLink,
     link: Link,
     hmrcAccountMenu: HmrcAccountMenu
 )(implicit accountMenuConfig: AccountMenuConfig)
@@ -43,9 +43,6 @@
     backLinkHref: Option[String] = None,
     sessionExpiredPage: Boolean = false,
     additionalScripts: Option[Html] = None,
-    urBanner: Boolean = false,
-    signedOut: Boolean = false,
-    ptaMenu: Boolean = false,
     backLinkAttrs: Map[String, String] = Map.empty,
     afterContent: Option[Html] = None
 )(content: Html)(implicit request: BaseUserRequest[_], messages: Messages)
@@ -53,7 +50,7 @@
 @headBlock = {
     <meta name="format-detection" content="telephone=no" />
     <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/main.css")'/>
-    @if(!signedOut){
+    @if(!sessionExpiredPage){
         @hmrcTimeoutDialogHelper(
             signOutUrl = routes.AuthorisationController.logout.url,
             keepAliveUrl = Some("/keep-alive")
@@ -96,24 +93,23 @@
                 language = if(messages.lang.code == "cy") Cy else En
             ).withUrlsFromConfig())
     }
-    @if(backLinkHref.isDefined) {
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-            @backLink(backLinkHref.get, backLinkAttrs)
-            </div>
-            <div class="govuk-grid-column-one-half">
-            @hmrcLanguageSelectHelper()
-            </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            @backLink(backLinkHref.getOrElse(""), backLinkAttrs)
         </div>
-    } else {
-        @hmrcLanguageSelectHelper()
-    }
+        <div class="govuk-grid-column-one-half">
+            @hmrcLanguageSelectHelper()
+        </div>
+    </div>
 }
 
 
 @contentBlock = {
     @content
     @afterContent
+    @if(!afterContent.isDefined){
+        <hr aria-hidden="true" class="govuk-section-break govuk-section-break--s">
+    }
     @hmrcReportTechnicalIssue(ReportTechnicalIssue(
         serviceId = appConfig.templateServiceURL,
         language = if(messages.lang.code == "cy") Cy else En,
@@ -133,17 +129,10 @@
     ))
 }
 
-@serviceNameCheck = @{
-    if(request.isAuthenticated) {
-        serviceName
-    } else {
-        Some("")
-    }
-}
 
 @hmrcLayout(
     pageTitle = pageTitle,
-    serviceName = serviceNameCheck,
+    serviceName = serviceName.map(messages(_)),
     nonce = CSPNonce.get,
     isWelshTranslationAvailable = true,
     accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),

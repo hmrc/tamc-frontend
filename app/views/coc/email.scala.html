@@ -22,8 +22,6 @@
 
 @this(
 main: main,
-inputView: templates.input,
-formErrorNotificationView: templates.form_error_notification,
 form: FormWithCSRF,
 languageUtilsImpl: LanguageUtilsImpl,
 h1: H1,
@@ -42,7 +40,7 @@ serviceName = Some("tamc.manage")
 
     @form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
 
-    @formErrorNotificationView(recipientForm)
+    @errorSummary(recipientForm)
     
     @h1("pages.form.field.your-confirmation")
 

@@ -39,7 +39,7 @@ request: AuthenticatedUserRequest[_])
     serviceName = Some("tamc.manage")
 ) {
 
-    @errorSummary(divorceSelectYearForm)
+    @errorSummary(divorceSelectYearForm, Some("dateOfDivorce.day"))
 
     @h1("pages.divorce.title")
 

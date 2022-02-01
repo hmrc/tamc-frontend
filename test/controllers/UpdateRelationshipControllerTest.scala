@@ -38,9 +38,8 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.RequestBuilder._
-import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
+import utils.{ControllerBaseTest, MockAuthenticatedAction}
 import viewModels._
 
 import java.time.LocalDate
@@ -79,7 +78,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi())
     ).build()

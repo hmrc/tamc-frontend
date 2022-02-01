@@ -31,9 +31,8 @@ import play.api.test.{FakeRequest, Injecting}
 import services._
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
-import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
+import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -54,7 +53,6 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[CachingService].toInstance(mockCachingService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[MessagesApi].toInstance(stubMessagesApi())
     ).build()
 

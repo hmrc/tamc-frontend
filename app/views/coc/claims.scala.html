@@ -25,7 +25,7 @@
 h1: H1,
 govukInsetText: GovukInsetText)
 
-@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(messages("title.pattern", messages("pages.claims.title")))
@@ -51,7 +51,7 @@ pageTitle = Some(messages("title.pattern", messages("pages.claims.title")))
 
                 @for((row, index) <- viewModel.historicRows.zipWithIndex) {
                     <tr>
-                        <td class="bold" id="line${index}-start">
+                        <td class="govuk-table__header" id="line${index}-start">
                             @row.dateInterval
                         </td>
                         <td class="govuk-table__cell" id="line${index}-reason">
