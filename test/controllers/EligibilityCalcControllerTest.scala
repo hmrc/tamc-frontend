@@ -70,7 +70,6 @@ class EligibilityCalcControllerTest extends ControllerBaseTest {
 
     "be 0 if transferor income=9540  and recipient income=11501" in {
       val formatter = java.text.NumberFormat.getIntegerInstance
-      val higherThreshold = formatter.format(applicationConfig.MAX_LIMIT())
       val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
       val request = FakeRequest().withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9540", "recipient-income" -> lowerThreshold)
       val result = controller.gdsCalculatorAction()(request)

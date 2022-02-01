@@ -15,9 +15,9 @@ object AppDependencies {
     "uk.gov.hmrc" %% "tax-year" % "1.3.0",
     "uk.gov.hmrc" %% "play-language" % "5.1.0-play-28",
     "uk.gov.hmrc" %% "govuk-template" % "5.70.0-play-28",
-    "uk.gov.hmrc" %% "play-ui" % "9.7.0-play-28",
-    "com.typesafe.play"            %%  "play-json-joda"      % "2.9.2",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.12.5"
+    "uk.gov.hmrc" %% "play-ui"        % "9.7.0-play-28",
+    "com.typesafe.play"              %%  "play-json-joda"      % "2.9.2",
+    "com.fasterxml.jackson.module"   %% "jackson-module-scala" % "2.12.5"
   )
 
   val test: Seq[ModuleID] = Seq(
@@ -29,7 +29,7 @@ object AppDependencies {
     "org.scalacheck"         %% "scalacheck" % "1.15.4",
     "org.mockito"             % "mockito-core" % "3.11.1",
     "com.github.tomakehurst"  % "wiremock-jre8" % "2.28.1",
-    "com.vladsch.flexmark" % "flexmark-all" % "0.35.10"
+    "com.vladsch.flexmark"    % "flexmark-all" % "0.35.10"
   ).map(_ % "test")
 
   private val silencerDependencies: Seq[ModuleID] = Seq(

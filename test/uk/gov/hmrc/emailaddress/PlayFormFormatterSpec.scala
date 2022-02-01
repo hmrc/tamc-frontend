@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.emailaddress
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers
 import play.api.data.FormError
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class PlayFormFormatterSpec extends WordSpec with Matchers with ScalaCheckPropertyChecks {
+class PlayFormFormatterSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks {
 
   val emails: List[String] = EmailAddressGenerators.randomEmailAddresses().distinct
 
@@ -115,16 +116,16 @@ class PlayFormFormatterSpec extends WordSpec with Matchers with ScalaCheckProper
   private def maxLengthConstraint =
     PlayFormFormatter.emailMaxLength(maxLength = 10)
 
-  private def maxLengthConstraintWithError =
-    PlayFormFormatter.emailMaxLength(maxLength = 10, error = "field.exceeds")
+  // delete? private def maxLengthConstraintWithError =
+   // PlayFormFormatter.emailMaxLength(maxLength = 10, error = "field.exceeds")
 
-  private def patternConstraint = {
-    val HAS_TLD = """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$""".r
-    PlayFormFormatter.emailPattern(HAS_TLD)
-  }
+  // delete? private def patternConstraint = {
+//    val HAS_TLD = """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$""".r
+//    PlayFormFormatter.emailPattern(HAS_TLD)
+//  }
 
-  private def patternConstraintWithError = {
-    val HAS_TLD = """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$""".r
-    PlayFormFormatter.emailPattern(HAS_TLD, error = "field.pattern")
-  }
+//// delete? private def patternConstraintWithError = {
+//    val HAS_TLD = """(.+)(\.[a-zA-Z0-9-]*)(^[\.])$""".r
+//    PlayFormFormatter.emailPattern(HAS_TLD, error = "field.pattern")
+//  }
 }

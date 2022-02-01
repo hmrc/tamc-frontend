@@ -18,7 +18,7 @@ package views.helpers
 
 import forms.EmailForm
 import org.mockito.Mockito.when
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.BaseTest

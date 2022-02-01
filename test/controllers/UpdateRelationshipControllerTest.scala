@@ -37,7 +37,7 @@ import test_utils._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.RequestBuilder._
 import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
