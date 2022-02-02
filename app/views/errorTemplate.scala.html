@@ -92,7 +92,7 @@
 @contentBlock = {
     @content
     @hmrcReportTechnicalIssue(ReportTechnicalIssue(
-        serviceId = appConfig.templateServiceURL,
+        serviceId = appConfig.contactFormServiceIdentifier,
         language = if(messages.lang.code == "cy") Cy else En,
         referrerUrl = Some(request.uri),
         baseUrl = Some(appConfig.reportAProblemPartialUrl),
