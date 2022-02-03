@@ -25,7 +25,7 @@
   text: String,
 )(implicit messages: Messages)
 
-<header class="hmrc-page-heading govuk-!-margin-bottom-3" data-component="tamc_page_heading"@if(specId){ data-spec="@specId"}>
+<header class="hmrc-page-heading govuk-!-margin-bottom-3 govuk-!-margin-top-0" data-component="tamc_page_heading"@if(specId){ data-spec="@specId"}>
   <h1 class="@classes.getOrElse("govuk-heading-xl")" data-component="tamc_page_heading__h1" id=@elmId>
     @messages(text)
   </h1>

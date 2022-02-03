@@ -17,6 +17,6 @@
 @this()
 
 @(msg: String, classes: Option[String] = None, elmId: Option[String] = None)(implicit messages: Messages)
-<header class="hmrc-page-heading">
+<header class="hmrc-page-heading govuk-!-margin-top-0">
 <h1 id=@elmId.getOrElse("pageHeading") class="@classes.getOrElse("govuk-heading-xl") govuk-!-margin-bottom-3">@Html(messages(msg))</h1>
 </header>
