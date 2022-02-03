@@ -123,7 +123,8 @@ afterContent = Some(afterContent)
             id = "transferor-income",
             name = "transferor-income",
             labelKey = "pages.form.field.income",
-            isPageHeading = true,               
+            isPageHeading = true,
+            classes = Some("govuk-!-width-one-half"),
             labelClasses = Some("govuk-label--s"),
             prefix = Some(PrefixOrSuffix(content = Text("£")))
         )
@@ -134,6 +135,7 @@ afterContent = Some(afterContent)
                 name = "recipient-income",
                 labelKey = "pages.form.field.recipient-income",
                 isPageHeading = true,
+                classes = Some("govuk-!-width-one-half"),
                 labelClasses = Some("govuk-label--s"),
                 prefix = Some(PrefixOrSuffix(content = Text("£")))
             )

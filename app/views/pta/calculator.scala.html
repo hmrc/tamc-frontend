@@ -106,7 +106,8 @@ backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
             id = "transferor-income",
             name = "transferor-income",
             labelKey = "pages.form.field.income",
-            isPageHeading = true,               
+            isPageHeading = true,
+            classes = Some("govuk-!-width-one-half"),
             labelClasses = Some("govuk-label--s"),
             prefix = Some(PrefixOrSuffix(content = Text("£")))
         )
@@ -117,6 +118,7 @@ backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
                 name = "recipient-income",
                 labelKey = "pages.form.field.recipient-income",
                 isPageHeading = true,
+                classes = Some("govuk-!-width-one-half"),
                 labelClasses = Some("govuk-label--s"),
                 prefix = Some(PrefixOrSuffix(content = Text("£")))
             )
