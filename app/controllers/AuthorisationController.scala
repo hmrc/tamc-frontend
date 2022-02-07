@@ -38,7 +38,6 @@ class AuthorisationController @Inject()(
   }
 
   def logout = unauthenticatedAction {
-    //implicit request =>
       Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
 

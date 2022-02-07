@@ -52,5 +52,4 @@ scalacOptions ++= suppressedImports
 scalacOptions ++= Seq(
   "-Xmaxerrs", "1000", // Maximum errors to print
   "-Xmaxwarns", "1000", // Maximum warnings to print
-  //"-Xfatal-warnings"
 )
