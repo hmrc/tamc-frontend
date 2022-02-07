@@ -62,7 +62,7 @@ class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
 
   private def genderMapping(errorRequired: String, errorInvalid: String): Mapping[Gender] =
     nonEmptyTrimmer(error = errorRequired).
-      verifying(error = errorInvalid, constraint = Gender.isValid(_)).
+      verifying(error = errorInvalid, constraint = Gender.isValid).
       transform[Gender](Gender(_), _.gender)
 
   private def ninoMapping(errorRequired: String,
@@ -70,7 +70,7 @@ class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
                           errorInvalidChars: String,
                           errorInvalid: String): Mapping[Nino] =
     nonEmptyTrimmer(error = errorRequired).
-      transform[String](utils.normaliseNino(_), _.toString()).
+      transform[String](utils.normaliseNino, _.toString()).
       verifying(ninoIsValidFormat(formatError = errorInvalid, charError = errorInvalidChars, maxLengthError = errorMaxLength)).
       transform[Nino](Nino(_), _.nino)
 
