@@ -28,7 +28,8 @@ button: Button
 request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", Messages("title.error")))
+pageTitle = Some(messages("title.pattern", Messages("title.error"))),
+disableBackLink = true
 ) {
 
     @p(HtmlContent(Messages("recipient.not.found.para1")), elmId=Some("error"))
