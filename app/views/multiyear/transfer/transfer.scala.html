@@ -55,13 +55,15 @@ backLinkHref = Some(controllers.routes.EligibilityController.doYouWantToApply.ur
                 form = recipientForm,
                 id = "name",
                 name = "name",
-                labelKey = "pages.form.field.name"
+                labelKey = "pages.form.field.name",
+                classes = Some("govuk-!-width-one-half")
             )
             @inputValue(
                 form = recipientForm,
                 id = "last-name",
                 name = "last-name",
-                labelKey = "pages.form.field.last-name"
+                labelKey = "pages.form.field.last-name",
+                classes = Some("govuk-!-width-one-half")
             )
             @inputRadios(
                 form = recipientForm,
@@ -86,7 +88,8 @@ backLinkHref = Some(controllers.routes.EligibilityController.doYouWantToApply.ur
                 id = "nino",
                 name = "nino",
                 labelKey = "pages.form.field.nino",
-                hint = Some(Text(Messages("pages.form.field-helper.nino-example")))
+                hint = Some(Text(Messages("pages.form.field-helper.nino-example"))),
+                classes = Some("govuk-!-width-one-half")
             )
         </fieldset>
 
