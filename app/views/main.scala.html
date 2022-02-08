@@ -140,6 +140,7 @@
     serviceName = serviceName.map(messages(_)),
     nonce = CSPNonce.get,
     isWelshTranslationAvailable = true,
+    userResearchBannerUrl = Some(messages("tamc.banner.recruitment.linkURL")),
     accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),
     displayHmrcBanner = false,
     additionalHeadBlock = Some(headBlock),
