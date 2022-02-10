@@ -562,7 +562,7 @@ pages.makeChanges.error.mandatory.value=Dewiswch y rheswm yr ydych am ddod â’
 #********************************************************************************
 pages.cancel.title=Canslo Lwfans Priodasol
 pages.cancel.paragraph1=Byddwn yn canslo’ch Lwfans Priodasol, ond bydd yn aros yn ei le tan {0}, sef diwedd y flwyddyn dreth bresennol.
-pages.cancel.paragraph2=Ni fydd eich Lwfans Personol yn cynnwys Lwfans Priodasol o {0} ymlaen, sef dechrau’r flwyddyn dreth newydd. Ni fydd yn rhaid i’ch partner ad-dalu unrhyw dreth.
+pages.cancel.paragraph2=Ni fydd eich Lwfans Personol yn cynnwys unrhyw Lwfans Priodasol o {0} ymlaen, sef dechrau’r flwyddyn dreth newydd.
 
 
 #********************************************************************************

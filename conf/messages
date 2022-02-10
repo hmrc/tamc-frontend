@@ -555,7 +555,7 @@ pages.makeChanges.error.mandatory.value=Select the reason you want to stop your 
 #********************************************************************************
 pages.cancel.title=Cancelling Marriage Allowance
 pages.cancel.paragraph1=We will cancel your Marriage Allowance, but it will remain in place until {0}, the end of the current tax year.
-pages.cancel.paragraph2=Your Personal Allowance will not include any Marriage Allowance from {0}, the start of the new tax year. Your partner will not have to pay back any tax.
+pages.cancel.paragraph2=Your Personal Allowance will not include any Marriage Allowance from {0}, the start of the new tax year.
 
 
 #********************************************************************************
