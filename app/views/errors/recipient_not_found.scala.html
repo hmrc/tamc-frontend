@@ -16,25 +16,27 @@
 
 @import models.auth.BaseUserRequest
 @import play.twirl.api.Html
+@import includes.{P, Button}
 
-@this(main: templates.tamc_main)
+@this(
+main: main,
+p: P,
+button: Button
+)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.error")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:recipient-not-found")))) {
+pageTitle = Some(messages("title.pattern", Messages("title.error"))),
+disableBackLink = true
+) {
 
-    <p id="error">@Html(Messages("recipient.not.found.para1"))</p>
+    @p(HtmlContent(Messages("recipient.not.found.para1")), elmId=Some("error"))
 
-    <p>@Html(Messages("recipient.not.found.para2"))</p>
+    @p(HtmlContent(Messages("recipient.not.found.para2")))
 
-    <p class="get-started group" id="get-started">
-        <a href="@controllers.routes.UpdateRelationshipController.history" class="button" role="button">
-            @Html(Messages("generic.back"))
-        </a>
-    </p>
+    @p(HtmlContent(
+    button(msg = "generic.back", href = Some(controllers.routes.UpdateRelationshipController.history.url))
+    ), elmId = Some("get-started"))
 }

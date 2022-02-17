@@ -30,8 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.test.Helpers.baseApplicationBuilder.injector
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
+import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockUnauthenticatedAction}
 
 class EligibilityControllerTest extends ControllerBaseTest {
 
@@ -42,15 +41,13 @@ class EligibilityControllerTest extends ControllerBaseTest {
     .overrides(
       bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
       bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer)
     ).build()
 
 
   def permAuthInjector: Injector = GuiceApplicationBuilder()
     .overrides(
         bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
-        bind[UnauthenticatedActionTransformer].to[MockPermUnauthenticatedAction],
-        bind[TemplateRenderer].toInstance(MockTemplateRenderer)
+        bind[UnauthenticatedActionTransformer].to[MockPermUnauthenticatedAction]
       ).injector()
 
   val authController = permAuthInjector.instanceOf[EligibilityController]

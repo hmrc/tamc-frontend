@@ -15,51 +15,56 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html.helpers._
+
 @import models.auth.AuthenticatedUserRequest
 @import forms.coc.MakeChangesDecisionForm
-@import includes.backLink
+@import includes.{backLink, H1, InputRadios, Button, ErrorSummary}
 
 @this(
-main: templates.tamc_main,
-formErrorMessageView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group,
-form: FormWithCSRF)
+main: main,
+form: FormWithCSRF,
+errorSummary: ErrorSummary,
+h1: H1,
+inputRadios: InputRadios,
+button: Button)
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-    title = Messages("title.pattern", messages("title.make-a-change")),
-    manageService = true,
-    mainConfig = views.helpers.MainConfig()
+    pageTitle = Some(Messages("title.pattern", messages("title.make-a-change"))),
+    serviceName = Some("tamc.manage")
 ){
 
-    @backLink()
-    @formErrorMessageView(makeChangesDecisionForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @errorSummary(makeChangesDecisionForm, Some("stopMAChoice-cancel"))
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@messages("pages.makeChanges.heading")</h1>
-    </header>
+    @h1("pages.makeChanges.heading")
 
     @form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
+      @inputRadios(
+        form = makeChangesDecisionForm,
+        legend = "title.change.reason",
+        id = Some(MakeChangesDecisionForm.StopMAChoice),
+        name = MakeChangesDecisionForm.StopMAChoice,
+        items = Seq(RadioItem(
+                      content = Text(messages("pages.makeChanges.radio.noLongerRequired")),
+                      value = Some(MakeChangesDecisionForm.Cancel),
+                      id = Some(MakeChangesDecisionForm.StopMAChoice + "-cancel")
+                    ), RadioItem(
+                        content = Text(messages("pages.makeChanges.radio.divorce")),
+                        value = Some(MakeChangesDecisionForm.Divorce),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-divorce")
+                    ), RadioItem(
+                        content = Text(messages("pages.makeChanges.radio.bereavement")),
+                        value = Some(MakeChangesDecisionForm.Bereavement),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-bereavement")
+                    )
+                ),
+        legendAsHeading = false,
+        legendClasses = "govuk-visually-hidden"
+      )
 
-      <div class="form-group">
-        @inputRadioGroupView(
-          makeChangesDecisionForm(MakeChangesDecisionForm.StopMAChoice),
-            Seq((MakeChangesDecisionForm.Cancel, messages("pages.makeChanges.radio.noLongerRequired")),
-                (MakeChangesDecisionForm.Divorce, messages("pages.makeChanges.radio.divorce")),
-                (MakeChangesDecisionForm.Bereavement, messages("pages.makeChanges.radio.bereavement"))
-          ),
-          '_legend -> Html(messages("title.change.reason")),
-          '_legendClass -> "visuallyhidden",
-          '_labelClass -> "block-label",
-          '_labelAfter -> true )
-      </div>
-
-      <button class="button" type="submit">
-          @messages("generic.continue")
-      </button>
+      @button(msg = "generic.continue")
 
     }
 }

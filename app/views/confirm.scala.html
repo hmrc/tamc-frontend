@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.html.helpers._
+
 @import play.twirl.api.Html
 @import uk.gov.hmrc.time.TaxYear
 @import views.helpers.LanguageUtilsImpl
@@ -22,30 +22,32 @@
 @import java.text.NumberFormat
 @import java.time.LocalDate
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H1, H2, P, Button}
 
 @this(
-main: templates.tamc_main,
+main: main,
 ninoRendererView: templates.ninoRenderer,
 form: FormWithCSRF,
 applicationConfig: ApplicationConfig,
-languageUtilsImpl: LanguageUtilsImpl)
+languageUtilsImpl: LanguageUtilsImpl,
+h1: H1,
+h2: H2,
+p: P,
+button: Button,
+govukInsetText: GovukInsetText)
 
 @(data: models.ConfirmationModel)(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = Messages("title.application.pattern", Messages("title.confirm"))
+pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm"))),
+backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
 ){
 
-<a href="@controllers.routes.TransferController.confirmYourEmail" class="link-back">@Html(messages("generic.back"))</a>
+    @h1("pages.confirm.html.h1", elmId = Some("confirm-page"))
 
-    <header class="page-heading">
-        <h1 id="confirm-page" class="heading-xlarge">@Html(messages("pages.confirm.html.h1"))</h1>
-    </header>
-
-    <h2 class="heading-medium">@Html(messages("pages.confirm.lower.earner"))</h2>
+    @h2("pages.confirm.lower.earner")
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list_row" id="transfer-name">
         @data.transferorFullName.map[Option[String]](_.fullName).flatten.map {name =>
@@ -66,7 +68,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         </div>
     </dl>
 
-    <h2 class="heading-medium">@Html(messages("pages.confirm.higher.earner"))</h2>
+    @h2("pages.confirm.higher.earner")
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list_row">
             <dt class="govuk-summary-list_key">@Html(messages("generic.name"))</dt>
@@ -85,7 +87,7 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         </div>
     </dl>
 
-    <h2 class="heading-medium">@Html(messages("pages.confirm.marriage.details"))</h2>
+    @h2("pages.confirm.marriage.details")
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list_row">
             <dt class="govuk-summary-list_key">@Html(messages("pages.confirm.date.of.marriage"))</dt>
@@ -126,15 +128,9 @@ title = Messages("title.application.pattern", Messages("title.confirm"))
         </dl>
     }
 
-    <div class="govuk-summary-list_row panel panel-border-wide">
-        <p id="warning-message">@Html(messages("pages.confirm.warning"))</p>
-    </div>
+    @govukInsetText(InsetText(id = Some("warning-message"), content = Text(messages("pages.confirm.warning"))))
 
     @form(action = routes.TransferController.confirmAction, args = ('id -> "create-form")) {
-
-        <button data-journey-click="marriage-allowance:button:application_confirm" class="button" id="create" type="submit">
-        @Html(messages("pages.confirm.button"))
-        </button>
-
+        @button(msg = "pages.confirm.button", id = "create", attrs = Map("data-journey-click" -> "marriage-allowance:button:application_confirm"))
     }
 }

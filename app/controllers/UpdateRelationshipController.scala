@@ -27,7 +27,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
+
 import utils.LoggerHelper
 import viewModels._
 
@@ -58,7 +58,7 @@ class   UpdateRelationshipController @Inject()(
   historySummaryViewModelImpl: HistorySummaryViewModelImpl,
   claimsViewModelImpl: ClaimsViewModelImpl,
   divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
-  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit templateRenderer: TemplateRenderer, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>

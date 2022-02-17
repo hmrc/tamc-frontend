@@ -15,48 +15,44 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H1, P, InputValue, Button, ErrorSummary}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-inputView: templates.input,
-form: FormWithCSRF)
+main: main,
+form: FormWithCSRF,
+h1: H1,
+p: P,
+inputValue: InputValue,
+button: Button,
+errorSummary: ErrorSummary)
 
 @(
 recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress],
 name: Option[models.CitizenName] = None)(implicit
 messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = Messages("title.application.pattern", Messages("title.confirm-email"))
+pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm-email"))),
+backLinkHref = Some(controllers.routes.TransferController.eligibleYears.url)
 ){
 
-<a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+    @form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
+        @errorSummary(recipientForm)
 
-@form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
-@formErrorNotificationView(recipientForm)
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("pages.form.field.your-confirmation"))</h1>
-    </header>
-    <p>@Html(Messages("pages.form.field.yourDetails"))</p>
+        @h1("pages.form.field.your-confirmation")
+        
+        @p(HtmlContent(Messages("pages.form.field.yourDetails")))
 
-    <div class="form-group">
-        @inputView(recipientForm("transferor-email"),
-        '_label -> Html(Messages("pages.form.field.transferor-email")),
-        '_labelClass -> "form-label",
-        '_inputClass -> "form-control",
-        '_dataAttributes -> "autocomplete=off"
+        @inputValue(
+            form = recipientForm,
+            id = "transferor-email",
+            name = "transferor-email",
+            labelKey = "pages.form.field.transferor-email"
         )
-    </div>
 
-    <button class="button" type="submit" data-journey-click="marriage-allowance:button:email_continue">
-        @Html(Messages("generic.continue"))
-    </button>
-
-}
+        @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:email_continue"))
+    }
 
 }

@@ -29,7 +29,6 @@ import scala.concurrent.duration._
 //TODO[DDCNL-3479] get rid of vals in here that aren't actually config values!!!!!
 class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig) {
 
-  val templateServiceURL: String = servicesConfig.baseUrl("frontend-template-provider")
   val templateRefreshAfter: Duration = 10 minutes
   val authURL: String = servicesConfig.baseUrl("auth")
   val cacheUri:String = servicesConfig.baseUrl("cachable.session-cache")
@@ -45,6 +44,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val pageTitle = "Your personal tax account"
   lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  val reportAProblemPartialUrl = s"$contactFrontendService/contact/problem_reports"
 
   lazy val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + '/'
 

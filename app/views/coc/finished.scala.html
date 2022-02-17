@@ -16,22 +16,24 @@
 
 @import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H1, P}
 
-@this(main: templates.tamc_main)
+@this(main: main,
+h1: H1,
+p: P)
 
-@(userEmailAddress: String)(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(userEmailAddress: String)(implicit messages: Messages, request: AuthenticatedUserRequest[_])
 
 @main(
-title = messages("title.pattern", messages("title.change.complete")),
-manageService = true,
-mainConfig = views.helpers.MainConfig(maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:finished")))) {
+pageTitle = Some(messages("title.pattern", messages("title.change.complete"))),
+serviceName = Some("tamc.manage")) {
 
   <div class="govuk-box-highlight">
-      <h1 class="heading-xlarge">@messages("pages.coc.finish.header")</h1>
+      @h1("pages.coc.finish.header")
   </div>
 
-  <p>@messages("pages.coc.finish.acknowledgement", userEmailAddress)</p>
-  <p>@messages("pages.coc.finish.junk")</p>
-  <p>@messages("pages.coc.finish.para1")</p>
+  @p(Text(messages("pages.coc.finish.acknowledgement", userEmailAddress)))
+  @p(Text(messages("pages.coc.finish.junk")))
+  @p(Text(messages("pages.coc.finish.para1")))
 
 }

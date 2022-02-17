@@ -1,5 +1,5 @@
 # TAMC specific routes
-
+->         /hmrc-frontend                                             hmrcfrontend.Routes
 # Authorisation helpers
 GET    /not-authorised                             controllers.AuthorisationController.notAuthorised
 GET    /logout                                     controllers.AuthorisationController.logout

@@ -17,26 +17,34 @@
 @import play.twirl.api.Html
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
+@import includes.{H1, P, Link}
 
 @this(
-main: templates.tamc_main,
-applicationConfig: ApplicationConfig)
+main: main,
+applicationConfig: ApplicationConfig,
+govukPanel: GovukPanel,
+h1: H1,
+p: P,
+link: Link
+)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.other-ways")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:other-ways")))) {
+pageTitle = Some(Messages("title.pattern", Messages("title.other-ways"))),
+backLinkHref = Some(controllers.routes.TransferController.eligibleYears.url)
+) {
 
-<a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
+@h1("pages.noyears.h1", elmId=Some("message"))
 
-<h1 class="heading-xlarge text mainpage" id="message">@Html(Messages("pages.noyears.h1"))</h1>
-<div class="panel panel-border-narrow">@Html(Messages("pages.noyears.content1"))</div>
-<p>
- @messages("pages.noyears.findoutmore.part1")
- <a href=@applicationConfig.howItWorksUrl target="_blank" rel="noopener noreferrer">@messages("pages.noyears.findoutmore.link-text")</a>
-</p>
+@govukPanel(Panel(
+    title = Text("Application complete"),
+    content = HtmlContent(messages("pages.noyears.content1"))
+  ))
+
+@p(HtmlContent(
+ messages("pages.noyears.findoutmore.part1") +
+ link(link = applicationConfig.howItWorksUrl, messageKey = "pages.noyears.findoutmore.link-text", attrTarget = true, inParagraph = true)
+))
 }

@@ -14,20 +14,10 @@
  * limitations under the License.
  *@
 
-@import play.twirl.api.Html
-@import models.auth.BaseUserRequest
-@import includes.{H1, P}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Content
 
-@this(main: main,
-h1: H1,
-p: P)
+@this()
 
-@()(implicit messages: Messages,
-request: BaseUserRequest[_])
+@(content: Content, elmId: Option[String] = None, classes: Option[String] = None)
 
-@main(
-pageTitle = Some(Messages("title.pattern", Messages("technical.issue.heading")))
-) {
-  @h1("technical.issue.heading", elmId = Some("error"))
-  @p(Text(Messages("technical.issue.try.later")))
-}
+<p @if(elmId.isDefined){ id="@{elmId.get}"} class="@classes.getOrElse("govuk-body")">@content.asHtml</p>

@@ -33,9 +33,8 @@ import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTime
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer, MockUnauthenticatedAction}
+import utils.{ControllerBaseTest, MockAuthenticatedAction, MockUnauthenticatedAction}
 
 import java.text.NumberFormat
 import java.time.LocalDate
@@ -57,7 +56,6 @@ class ContentTest extends ControllerBaseTest {
       bind[TransferService].toInstance(mockTransferService),
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
       bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
     )
@@ -90,8 +88,8 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("name-error").text()         shouldBe "Enter your partner’s first name"
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementById("name-error").text()         shouldBe "Error: Enter your partner’s first name"
     }
 
     "display form error message (request body missing form data)" in {
@@ -101,8 +99,8 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      document.getElementById("form-error-heading").text() shouldBe "There is a problem"
-      document.getElementById("nino-error").text()         shouldBe "Enter your partner’s National Insurance number"
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementById("nino-error").text()         shouldBe "Error: Enter your partner’s National Insurance number"
     }
   }
 
@@ -119,11 +117,10 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s first name"
-      document.getElementById("form-error-heading").text()         shouldBe "There is a problem"
-      document.getElementById("name-error").text()                 shouldBe "Enter your partner’s first name"
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe  "Error: Enter your partner’s first name"
     }
 
     "display form error message (first name is empty)" in {
@@ -139,10 +136,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s first name"
-      document.getElementById("name-error").text()                 shouldBe "Enter your partner’s first name"
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
     }
 
     "display form error message (first name is blank)" in {
@@ -158,10 +154,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s first name"
-      document.getElementById("name-error").text()                 shouldBe "Enter your partner’s first name"
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
     }
 
     "display form error message (first name contains more than 35 characters)" in {
@@ -177,13 +172,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text()                                    shouldBe "Your partner’s first name must be 35 characters or less"
-      document.getElementById("name-error").text() shouldBe "Your partner’s first name must be 35 characters or less"
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Your partner’s first name must be 35 characters or less"
     }
 
     "display form error message (first name contains numbers)" in {
@@ -199,15 +190,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
-      document
-        .getElementById("name-error")
-        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (first name contains letters and numbers)" in {
@@ -223,15 +208,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
-      document
-        .getElementById("name-error")
-        .text() shouldBe "Your partner’s first name must only include letters a to z and hyphens"
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name missing from request)" in {
@@ -246,10 +225,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=last-name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s last name"
-      document.getElementById("last-name-error").text()            shouldBe "Enter your partner’s last name"
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
     }
 
     "display form error message (last name is empty)" in {
@@ -265,10 +243,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=last-name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s last name"
-      document.getElementById("last-name-error").text()            shouldBe "Enter your partner’s last name"
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
     }
 
     "display form error message (last name is blank)" in {
@@ -284,10 +261,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=last-name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your partner’s last name"
-      document.getElementById("last-name-error").text()            shouldBe "Enter your partner’s last name"
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
     }
 
     "display form error message (last name contains more than 35 characters)" in {
@@ -303,15 +279,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=last-name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Your partner’s last name must be 35 characters or less"
-      document
-        .getElementById("last-name-error")
-        .text() shouldBe "Your partner’s last name must be 35 characters or less"
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Your partner’s last name must be 35 characters or less"
     }
 
     "display form error message (last name contains numbers)" in {
@@ -327,15 +297,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=last-name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
-      document
-        .getElementById("last-name-error")
-        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name contains letters and numbers)" in {
@@ -351,15 +315,10 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=last-name]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
-      document
-        .getElementById("last-name-error")
-        .text() shouldBe "Your partner’s last name must only include letters a to z and hyphens"
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
+  
     }
 
     "display form error message when recipient nino equals transferor nino" in {
@@ -375,10 +334,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelNino = form.select("label[for=nino]").first()
-      labelNino.getElementsByClass("error-message").first() shouldNot be(null)
-      labelNino.getElementsByClass("error-message").first().text() shouldBe "You cannot enter your own details"
-      document.getElementById("nino-error").text()                 shouldBe "You cannot enter your own details"
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text() shouldBe "Error: You cannot enter your own details"
     }
   }
 
@@ -395,10 +353,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("fieldset[id=gender]").first()
-      labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Select your partner’s gender"
-      document.getElementById("gender-error").text()                    shouldBe "Select your partner’s gender"
+      val genderError = document.getElementById("gender-error")
+      genderError shouldNot be(null)
+      genderError.text() shouldBe "Error: Select your partner’s gender"
     }
 
     "display form error message (gender code is invalid)" in {
@@ -414,10 +371,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("fieldset[id=gender]").first()
-      labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName.getElementsByClass("error-notification").first().text() shouldBe "Select your partner’s gender"
-      document.getElementById("gender-error").text()                    shouldBe "Select your partner’s gender"
+      val genderError = document.getElementById("gender-error")
+      genderError shouldNot be(null)
+      genderError.text() shouldBe "Error: Select your partner’s gender"
     }
   }
 
@@ -434,13 +390,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=nino]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text()                                    shouldBe "Enter your partner’s National Insurance number"
-      document.getElementById("nino-error").text() shouldBe "Enter your partner’s National Insurance number"
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text shouldBe "Error: Enter your partner’s National Insurance number"
     }
 
     "display form error message (NINO is empty)" in {
@@ -456,13 +408,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=nino]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text()                                    shouldBe "Enter your partner’s National Insurance number"
-      document.getElementById("nino-error").text() shouldBe "Enter your partner’s National Insurance number"
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text shouldBe "Error: Enter your partner’s National Insurance number"
     }
 
     "display form error message (NINO is invalid)" in {
@@ -478,10 +426,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=nino]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter a real National Insurance number"
-      document.getElementById("nino-error").text()                 shouldBe "Enter a real National Insurance number"
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text shouldBe "Error: Enter a real National Insurance number"
     }
   }
 
@@ -503,10 +450,10 @@ class ContentTest extends ControllerBaseTest {
       val field = form.getElementById("dateOfMarriage")
       field shouldNot be(null)
 
-      val err = field.getElementsByClass("client-error-notification")
+      val err = field.getElementsByClass("govuk-error-message")
       err.size() shouldBe 1
 
-      val back = document.getElementsByClass("link-back")
+      val back = document.getElementById("backLink")
       back shouldNot be(null)
       back.attr("href") shouldBe controllers.routes.TransferController.transfer.url
     }
@@ -528,7 +475,7 @@ class ContentTest extends ControllerBaseTest {
       val field = form.getElementById("dateOfMarriage")
       field shouldNot be(null)
 
-      val err = field.getElementsByClass("client-error-notification")
+      val err = form.getElementsByClass("govuk-error-message")
       err.size() shouldBe 1
     }
 
@@ -548,16 +495,16 @@ class ContentTest extends ControllerBaseTest {
       val field = form.getElementById("dateOfMarriage")
       field shouldNot be(null)
 
-      val err = field.getElementsByClass("client-error-notification")
+      val err = field.getElementsByClass("govuk-error-message")
       val labelName = form.select("fieldset[id=dateOfMarriage]").first()
       err.size() shouldBe 1
       labelName
-        .getElementsByClass("error-notification")
+        .getElementsByClass("govuk-error-message")
         .first()
-        .text() shouldBe "Enter the date of your marriage or civil partnership"
+        .text() shouldBe "Error: Enter the date of your marriage or civil partnership"
       document
         .getElementById("dateOfMarriage-error")
-        .text() shouldBe "Enter the date of your marriage or civil partnership"
+        .text() shouldBe "Error: Enter the date of your marriage or civil partnership"
     }
   }
 
@@ -619,15 +566,9 @@ class ContentTest extends ControllerBaseTest {
       document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
       val form = document.getElementById("eligible-years-form")
       form shouldNot be(null)
-      val labelName = form.select("fieldset[id=selectedYear]").first()
-      labelName.getElementsByClass("error-notification").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-notification")
-        .first()
-        .text() shouldBe "Select yes if you would like to apply for earlier tax years"
-      document
-        .getElementById("selectedYear-error")
-        .text() shouldBe "Select yes if you would like to apply for earlier tax years"
+      val selectedYearError = document.getElementById("selectedYear-error")
+      selectedYearError shouldNot be(null)
+      selectedYearError.text() shouldBe "Error: Select yes if you would like to apply for earlier tax years"
     }
   }
 
@@ -639,10 +580,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your email address"
-      document.getElementById("transferor-email-error").text()     shouldBe "Enter your email address"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter your email address"
 
       val back = document.getElementsByClass("link-back")
       back shouldNot be(null)
@@ -657,10 +597,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your email address"
-      document.getElementById("transferor-email-error").text()     shouldBe "Enter your email address"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter your email address"
     }
 
     "display form error message (transferor email contains only spaces)" in {
@@ -671,10 +610,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter your email address"
-      document.getElementById("transferor-email-error").text()     shouldBe "Enter your email address"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter your email address"
     }
 
     "display form error message (transferor email contains more than 100 characters)" in {
@@ -685,10 +623,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName.getElementsByClass("error-message").first().text() shouldBe "Enter no more than 100 characters"
-      document.getElementById("transferor-email-error").text()     shouldBe "Enter no more than 100 characters"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter no more than 100 characters"
     }
 
     "display form error message (transferor email is invalid)" in {
@@ -699,15 +636,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
-      document
-        .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email has consequent dots)" in {
@@ -718,15 +649,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
-      document
-        .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
@@ -737,15 +662,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
-      document
-        .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email does not include TLD)" in {
@@ -756,15 +675,9 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("register-form")
       form shouldNot be(null)
-      val labelName = form.select("label[for=transferor-email]").first()
-      labelName.getElementsByClass("error-message").first() shouldNot be(null)
-      labelName
-        .getElementsByClass("error-message")
-        .first()
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
-      document
-        .getElementById("transferor-email-error")
-        .text() shouldBe "Enter an email address in the correct format, like name@example.com"
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
   }
 
@@ -779,7 +692,7 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
 
       document.title()                                  shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
-      document.getElementsByClass("heading-large").text shouldBe "Marriage Allowance application successful"
+      document.getElementById("govuk-box").text shouldBe "Marriage Allowance application successful"
       document
         .getElementById("paragraph-1")
         .text shouldBe "An email with full details acknowledging your application will be " +
@@ -796,7 +709,7 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Eligibility Criteria - Marriage Allowance - GOV.UK"
 
-      val heading = document.getElementsByClass("heading-xlarge").text
+      val heading = document.getElementById("pageHeading").text
       heading shouldBe "Marriage Allowance calculator"
     }
   }
@@ -810,7 +723,7 @@ class ContentTest extends ControllerBaseTest {
 
       document.title() shouldBe "Apply for Marriage Allowance - Marriage Allowance - GOV.UK"
 
-      val heading = document.getElementsByClass("heading-xlarge").text
+      val heading = document.getElementById("pageHeading").text
       heading shouldBe "Apply for Marriage Allowance"
 
       val button = document.getElementById("get-started")
@@ -836,17 +749,17 @@ class ContentTest extends ControllerBaseTest {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
+      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
 
       document
         .getElementById("marriage-criteria-error")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset
-        .getElementsByClass("error-notification")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .getElementsByClass("govuk-error-message")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
     }
   }
@@ -868,17 +781,17 @@ class ContentTest extends ControllerBaseTest {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("form-error-heading").text() shouldBe ERROR_HEADING
+      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
 
       document
         .getElementById("marriage-criteria-error")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
       val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
       marriageFieldset
-        .getElementsByClass("error-notification")
-        .text() shouldBe "Select yes if you are married or in a civil partnership"
+        .getElementsByClass("govuk-error-message")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
     }
   }
@@ -908,7 +821,7 @@ class ContentTest extends ControllerBaseTest {
       document
         .title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
 
-      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
+      document.getElementById("lower-earner-information").text shouldBe lowerEarnerHelpText
     }
   }
 
@@ -925,10 +838,10 @@ class ContentTest extends ControllerBaseTest {
       document
         .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document
-        .getElementsByClass("bold-small")
+        .getElementById("partner-income-text")
         .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
       document
-        .getElementsByClass("heading-xlarge")
+        .getElementById("pageHeading")
         .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
 
     }
@@ -945,10 +858,10 @@ class ContentTest extends ControllerBaseTest {
       document
         .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
       document
-        .getElementsByClass("bold-small")
+        .getElementById("partner-income-text")
         .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
       document
-        .getElementsByClass("heading-xlarge")
+        .getElementById("pageHeading")
         .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
 
     }
@@ -1008,7 +921,7 @@ class ContentTest extends ControllerBaseTest {
       val document = Jsoup.parse(contentAsString(result))
       document
         .title()                                     shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
-      document.getElementsByClass("bold-small").text shouldBe lowerEarnerHelpText
+      document.getElementById("lower-earner-information").text shouldBe lowerEarnerHelpText
     }
   }
 
@@ -1024,10 +937,10 @@ class ContentTest extends ControllerBaseTest {
       document
         .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
       document
-        .getElementsByClass("bold-small")
+        .getElementById("partner-income-text")
         .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
       document
-        .getElementsByClass("heading-xlarge")
+        .getElementById("pageHeading")
         .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
 
     }
@@ -1044,10 +957,10 @@ class ContentTest extends ControllerBaseTest {
       document
         .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
       document
-        .getElementsByClass("bold-small")
+        .getElementById("partner-income-text")
         .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
       document
-        .getElementsByClass("heading-xlarge")
+        .getElementById("pageHeading")
         .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
 
     }

@@ -17,16 +17,14 @@
 package forms.coc
 
 import config.ApplicationConfig
-
-import java.time.LocalDate
-import play.api.data.Forms.{optional, single, text, tuple}
+import play.api.data.Forms.{optional, single, tuple}
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.data.{Form, Mapping}
+import play.api.data.{Form, Forms, Mapping}
 import play.api.i18n.Messages
 import services.TimeService
-import uk.gov.hmrc.play.mappers.DateFields.{day, month, year}
 import views.helpers.LanguageUtilsImpl
 
+import java.time.LocalDate
 import javax.inject.Inject
 import scala.util.Try
 
@@ -43,13 +41,13 @@ class DivorceSelectYearForm@Inject()(applicationConfig: ApplicationConfig, timeS
 
   private def divorceDateMapping(implicit messages: Messages): Mapping[LocalDate] = {
     tuple(
-        year -> optional(text),
-        month -> optional(text),
-        day -> optional(text)
+      "year" -> optional(Forms.text),
+      "month" -> optional(Forms.text),
+      "day" -> optional(Forms.text)
     ).verifying {
       isValidDate
     }.transform[LocalDate](transformToDate(_), transformToTuple(_))
-    .verifying(checkDateRange)
+      .verifying(checkDateRange)
   }
 
   private def isValidDate = Constraint[(Option[String], Option[String], Option[String])]("valid.date"){

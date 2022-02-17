@@ -19,49 +19,58 @@
 @import java.text.NumberFormat
 @import views.helpers.LanguageUtilsImpl
 @import models.auth.UserRequest
+@import includes.{H1, H2, P, Link, Button}
 
 @this(
-main: templates.tamc_main,
+main: main,
 applicationConfig: ApplicationConfig,
-languageUtilsImpl: LanguageUtilsImpl)
+languageUtilsImpl: LanguageUtilsImpl,
+h1: H1,
+h2: H2,
+p: P,
+link: Link,
+button: Button,
+insetText: GovukInsetText)
 
 @()(implicit messages: Messages,
-request: UserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.how-it-works"))
+pageTitle = Some(Messages("title.pattern", Messages("title.how-it-works"))),
+disableBackLink = true
 ){
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("generic.ma.apply"))</h1>
-    </header>
+    @h1("generic.ma.apply")
 
-    <p>
-        @if(languageUtilsImpl.isWelsh(messages)) {
-        messages("pages.how-it-works.lede-pre1.part1")
-        }
-        <a href=@applicationConfig.marriageAllowanceGuideUrl target="_blank" rel="noopener noreferrer">@messages("pages.how-it-works.lede-pre1.link-text")</a>
-        @messages("pages.how-it-works.lede-pre1.part2",
-    NumberFormat.getIntegerInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()))</p>
-    <p>@Html(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT())))</p>
-    <p>@Html(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE())))</p>
+    @p(HtmlContent(ledeContent))
+    @p(Text(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT()))))
+    @p(Text(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))))
 
-    <div class="panel panel-border-wide">
-        <p>@Html(Messages("pages.how-it-works.lede-pre5"))</p>
-    </div>
+    
+    @insetText(InsetText(content = Text(Messages("pages.how-it-works.lede-pre5"))))
 
-    <p>@Html(Messages("pages.how-it-works.lede-pre6"))</p>
+    @p(Text(Messages("pages.how-it-works.lede-pre6")))
 
-    <h2 class="heading-medium">@Html(Messages("pages.how-it-works.apply.heading"))</h2>
-    <p>@Html(Messages("pages.how-it-works.detail"))</p>
-    <p>@Html(Messages("pages.how-it-works.email"))</p>
-<p id="get-started" class="get-started group">
-    <a href="@controllers.routes.EligibilityController.ptaCalculator" data-transaction-slug="marriage-allowance"
-       class="button button-start" role="button" id="start-now">
-        @Html(Messages("generic.start-now"))
-    </a>
-    <span class="destination">@Html(Messages("pages.how-it-works.tse"))</span>
-</p>
+    @h2("pages.how-it-works.apply.heading")
+    @p(Text(Messages("pages.how-it-works.detail")))
+    @p(Text(Messages("pages.how-it-works.email")))
 
+    @p(HtmlContent(button(msg = "generic.start-now",
+                        href = Some(controllers.routes.EligibilityController.ptaCalculator.url),
+                        attrs = Map("data-transaction-slug" -> "marriage-allowance"),
+                        id = "start-now",
+                        classes = Some("govuk-!-margin-bottom-0"),
+                        isStartButton = true) +
+                    s"""<span class="destination"> ${Messages("pages.how-it-works.tse")} </span>"""), 
+        elmId=Some("get-started"),
+        classes=Some("get-started"))
+
+}
+
+@ledeContent = {
+    @if(languageUtilsImpl.isWelsh(messages)) {
+        @messages("pages.how-it-works.lede-pre1.part1")
+    } 
+    @link(link = applicationConfig.marriageAllowanceGuideUrl, messageKey = "pages.how-it-works.lede-pre1.link-text", attrTarget = true, inParagraph = true)
+    @messages("pages.how-it-works.lede-pre1.part2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()))
 }

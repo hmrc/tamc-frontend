@@ -104,6 +104,7 @@ coc.end-reason.MERGER=Uno cyfrifon cwsmeriaid
 coc.end-reason.RETROSPECTIVE=Wedi gwneud cais am Lwfans Priodasol yn &#244;l-weithredol
 coc.end-reason.SYSTEM=CThEM wedi dod ag ef i ben
 coc.end-reason.DEFAULT=Lwfans Priodasol wedi dod i ben
+eligibility.hidden-text=Teitl yr adran hon yw
 
 #********************************************************************************
 # Year selection
@@ -248,7 +249,7 @@ eligibility.check.partners.income.before.tax=Mae hyn cyn didynnu treth.
 eligibility.check.partners.income.error=Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal i fod yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd ei incwm yn is neu''n uwch yn y gorffennol.
 eligibility.check.date.of.birth.h1=A gawsoch chi neu''ch partner eich geni ar ôl 5 Ebrill 1935?
 eligibility.check.date.of.birth.span.married=A yw hyn yn berthnasol i chi a’ch partner?
-eligibility.check.date.of.birth.error.text.before.link=Mae’n bosibl y byddwch yn elwa mwy fel pâr drwy wneud cais am
+eligibility.check.date.of.birth.error.text.before.link=Mae’n bosibl y byddwch yn elwa mwy fel pâr drwy wneud cais am {0}
 eligibility.check.date.of.birth.error.link.text=Lwfans P&#226;r Priod
 eligibility.check.date.of.birth.error.text.after.link=Mae’n dal i fod yn bosibl i chi wneud cais am Lwfans Priodasol ond ni allwch gael Lwfans Priodasol a Lwfans Pâr Priod ar yr un pryd.
 eligibility.check.do.you.want.to.apply.h1=A ydych am wneud cais am Lwfans Priodasol?
@@ -708,3 +709,9 @@ global.page.not.found.error.check.web.address.full=Os gwnaethoch ludo’r cyfeir
 global.page.not.found.error.contact=Os yw’r cyfeiriad gwe yn gywir neu os ydych wedi dewis cysylltiad neu fotwm, {0} os oes angen i chi siarad â rhywun am eich crynodeb treth blynyddol.
 global.page.not.found.error.contact.link.text=cysylltwch â Gwasanaeth Cwsmeriaid Cymraeg CThEM
 global.page.not.found.error.contact.link=https://www.gov.uk/government/organisations/hm-revenue-customs/contact/welsh-language-helplines
+
+#*************************************************************
+# Beta Banner Text
+#*************************************************************
+betaBanner.message=Mae hwn yn wasanaeth newydd ‐ bydd eich {0} yn ein helpu i'w wella.
+betaBanner.linkText=adborth

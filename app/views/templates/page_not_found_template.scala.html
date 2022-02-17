@@ -15,58 +15,24 @@
  *@
 
 @import config.ApplicationConfig
-@import uk.gov.hmrc.play.views.html.layouts.Article
+@import includes.{H1, P}
 
 @this(
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
-reportProblemView: includes.report_problem,
+main: errorTemplate,
 applicationConfig: ApplicationConfig,
-article: Article)
+h1: H1,
+p: P
+)
 
-@(formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)(implicit messages: Messages, request: Request[_])
+@()(implicit messages: Messages, request: Request[_])
 
-@anchor(text: String, url: String) = {<a href="@url">@text</a>}
+@main(pageTitle = Some(messages("title.pattern", messages("global.page.not.found.error.title")))){
 
+    @h1("global.page.not.found.error.title")
 
-@contentHeader = {
-    <h1>@messages("global.page.not.found.error.title")</h1>
+    @p(Text(messages("global.page.not.found.error.check.web.address.correct")))
+    @p(Text(messages("global.page.not.found.error.check.web.address.full")))
+    @p(HtmlContent(messages("global.page.not.found.error.contact", anchor(messages("global.page.not.found.error.contact.link.text"), messages("global.page.not.found.error.contact.link")))))
 }
 
-@isWelsh = @{
-    messages.lang.code == "cy"
-}
-
-@langSelectorMap = @{
-  Map("enUrl" -> controllers.routes.LanguageController.enGb(),
-      "cyUrl" -> controllers.routes.LanguageController.cyGb()
-  )
-}
-
-@getHelpForm = {
-    @reportProblemView(true, formPartialRetriever, applicationConfig)
-}
-
-@mainContent = {
-    <p>@messages("global.page.not.found.error.check.web.address.correct")</p>
-    <p>@messages("global.page.not.found.error.check.web.address.full")</p>
-    <p>@Html(messages("global.page.not.found.error.contact", anchor(messages("global.page.not.found.error.contact.link.text"), messages("global.page.not.found.error.contact.link"))))</p>
-}
-
-
-@{
-    templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent), Map[String, Any](
-    "pageTitle" -> messages("title.pattern", messages("global.page.not.found.error.title")),
-    "isWelsh" -> isWelsh,
-    "getHelpForm" -> getHelpForm,
-    "showPropositionLinks" -> true,
-    "langSelector" -> langSelectorMap,
-    "signOutUrl" -> Some(routes.AuthorisationController.logout),
-    "googleAnalytics" -> Map(
-    "trackingId" -> applicationConfig.analyticsToken,
-    "cookieDomain" -> applicationConfig.analyticsHost
-    ),
-    "mainContentHeader" -> contentHeader,
-    "betaBanner" -> true,
-    "feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier
-    ))
-}
+@anchor(text: String, url: String) = {<a class="govuk-link" href="@url">@text</a>}

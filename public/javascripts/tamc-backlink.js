@@ -6,7 +6,7 @@ if (window.history && window.history.replaceState && typeof window.history.repla
 }
 var backLinkElem = document.getElementById("backLink");
 if (backLinkElem !=  null){
-    if (window.history && window.history.back && typeof window.history.back === 'function') {
+    if (backLinkElem.getAttribute("href") == "" && window.history && window.history.back && typeof window.history.back === 'function') {
         var backScript = (docReferrer === "" || docReferrer.indexOf(window.location.host) !== -1) ? "javascript:window.history.back(); return false;" : "javascript:void(0);"
         backLinkElem.setAttribute("onclick",backScript);
         backLinkElem.setAttribute("href","javascript:void(0);");

@@ -40,12 +40,12 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
     }
 
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    httpClient.POST(s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData)
+    httpClient.POST[RegistrationFormInput, HttpResponse](s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData)
 
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder
                         )(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    httpClient.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/pta", data)
+    httpClient.PUT[CreateRelationshipRequestHolder, HttpResponse](s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/pta", data)
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    httpClient.PUT(s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data)
+    httpClient.PUT[UpdateRelationshipRequestHolder, HttpResponse](s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data)
 }

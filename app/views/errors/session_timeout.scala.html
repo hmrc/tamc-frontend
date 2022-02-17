@@ -15,24 +15,32 @@
  *@
 
 @import models.auth.BaseUserRequest
+@import includes.{H1, P, Button}
 
-@this(main: templates.tamc_main)
+@this(
+main: main,
+h1: H1,
+p: P,
+button: Button)
 
-@()(implicit messages: Messages, request: BaseUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit messages: Messages, request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("session.timeout.title"))
+pageTitle = Some(messages("title.pattern", messages("session.timeout.title"))),
+sessionExpiredPage = true
 ){
 
-<h1 class="heading-large">@Html(Messages("session.timeout.statement"))</h1>
+@h1("session.timeout.statement", classes = Some("govuk-heading-l"))
 
-<p>@Html(Messages("session.timeout.verbose-statement"))</p>
-<p></p>
-<p>@Html(Messages("session.timeout.verbose-statement2"))</p>
-<p class="get-started group" id="continue-to-application">
-    <a href="@controllers.routes.EligibilityController.home" class="button" role="button" id="timed-out"
-       data-journey-click="button - click:Signed out - Marriage Allowance - GOV.UK:start again">
-        @Html(Messages("session.timeout.button"))
-    </a>
-</p>
+@p(Text(Messages("session.timeout.verbose-statement")))
+
+@p(Text(Messages("session.timeout.verbose-statement2")))
+
+@p(HtmlContent(
+        button(msg="session.timeout.button", 
+            href = Some(controllers.routes.EligibilityController.home.url), 
+            id = "timed-out", 
+            attrs = Map("data-journey-click" -> "button - click:Signed out - Marriage Allowance - GOV.UK:start again"))
+    ), elmId = Some("continue-to-application"))
+
 }

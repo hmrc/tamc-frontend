@@ -58,8 +58,8 @@ class HistorySummaryViewModelTest extends BaseTest {
           val role = Recipient
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
 
-          val expectedContent = Html(s"<p>${messages("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>" +
-            s"<p>${messages("pages.history.active.recipient.paragraph2", maxBenefit)}</p>")
+          val expectedContent = Html(s"""<p class="govuk-body">${messages("pages.history.active.recipient.paragraph1", maxPaTransferFormatted)}</p>""" +
+            s"""<p class="govuk-body">${messages("pages.history.active.recipient.paragraph2", maxBenefit)}</p>""")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
@@ -71,7 +71,7 @@ class HistorySummaryViewModelTest extends BaseTest {
 
           val role = Transferor
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
-          val expectedContent = Html(s"<p>${messages("pages.history.active.transferor")}</p>")
+          val expectedContent = Html(s"""<p class="govuk-body">${messages("pages.history.active.transferor")}</p>""")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
@@ -88,8 +88,8 @@ class HistorySummaryViewModelTest extends BaseTest {
           val role = Recipient
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
 
-          val expectedContent = Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-            s"<p>${messages("pages.history.historic.recipient", formattedEndOfYear)}</p>")
+          val expectedContent = Html(s"""<p class="govuk-body">${messages("pages.history.historic.ended")}</p>""" +
+            s"""<p class="govuk-body">${messages("pages.history.historic.recipient", formattedEndOfYear)}</p>""")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
@@ -102,8 +102,8 @@ class HistorySummaryViewModelTest extends BaseTest {
           val role = Transferor
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
 
-          val expectedContent = Html(s"<p>${messages("pages.history.historic.ended")}</p>" +
-            s"<p>${messages("pages.history.historic.transferor", formattedEndOfYear)}</p>")
+          val expectedContent = Html(s"""<p class="govuk-body">${messages("pages.history.historic.ended")}</p>""" +
+            s"""<p class="govuk-body">${messages("pages.history.historic.transferor", formattedEndOfYear)}</p>""")
 
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }

@@ -15,60 +15,69 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html.helpers._
 @import config.ApplicationConfig
 @import models.auth.UserRequest
+@import includes.{P, InputRadios, Button, ErrorSummary, PageHeading, Link}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group,
-applicationConfig: ApplicationConfig,
-form: FormWithCSRF)
+main: main,
+form: FormWithCSRF,
+p: P,
+link: Link,
+inputRadios: InputRadios,
+button: Button,
+errorSummary: ErrorSummary,
+pageHeading: PageHeading,
+applicationConfig: ApplicationConfig)
 
-@(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages, request: UserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(dateofBirthCheckForm: Form[(MultiYearDateOfBirthFormInput)])(implicit messages: Messages, request: UserRequest[_])
 
 
 @main(
-title = Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))
+pageTitle = Some(Messages("title.eligibility.pattern", Messages("title.dateOfBirth"))),
+backLinkHref = Some(controllers.routes.EligibilityController.eligibilityCheck.url)
 ) {
 
-<a href="@controllers.routes.EligibilityController.eligibilityCheck"
-   class="link-back">@Html(Messages("generic.back"))</a>
+    @errorSummary(dateofBirthCheckForm, Some("date-of-birth-true"))
 
-@formErrorNotificationView(dateofBirthCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
-
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.date.of.birth.h1"))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
-    </header>
-
-
-@form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
-<div class="form-group inline">
-    @inputRadioGroupView(
-    dateofBirthCheckForm("date-of-birth"),
-    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-    '_legend -> Html(Messages("eligibility.check.date.of.birth.legend")),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_labelAfter -> true,
-    '_fieldsetAttributes -> "data-inline-error=married-js-error",
-    '_groupClass -> "inline spacingBottom"
+    @pageHeading(classes=Some("govuk-!-margin-bottom-3 govuk-heading-xl"),
+        context = "This section is ",
+        section = "eligibility.check.span.h1",
+        text = "eligibility.check.date.of.birth.h1"
     )
-</div>
 
-<div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
-    <p>@Messages("eligibility.check.date.of.birth.error.text.before.link") <a href=@applicationConfig.marriedCoupleAllowanceLink data-journey-click="link - click:Check your eligibility:Married Couple’s Allowance" target="_blank" rel="noopener noreferrer">@Html(Messages("eligibility.check.date.of.birth.error.link.text")) @Messages("tamc.open.in.new.window")</a>.</p>
-    <p>@Messages("eligibility.check.date.of.birth.error.text.after.link")</p>
-</div>
+    @form(action = routes.EligibilityController.dateOfBirthCheckAction, args = ('id -> "dateOfBirth-form")) {
+            @inputRadios(
+                form = dateofBirthCheckForm,
+                legend = "eligibility.check.date.of.birth.legend",
+                id = Some("date-of-birth"),
+                name = "date-of-birth",
+                items = Seq(RadioItem(
+                    content = Text(messages("radio.yes")),
+                    value = Some("true"),
+                    id = Some("date-of-birth-true")
+                ), RadioItem(
+                    content = Text(messages("radio.no")),
+                    value = Some("false"),
+                    id = Some("date-of-birth-false")
+                )),
+                legendAsHeading = false,
+                fieldSetAttrs = Map("data-inline-error" -> "married-js-error", "id" -> "date-of-birth"),
+                legendClasses = "govuk-visually-hidden"
+            )
 
-<div class="form-group">
-    <button class="button" data-journey-click="marriage-allowance:button:married_continue"
-            id="continue" type="submit">
-        @Html(Messages("generic.continue"))
-    </button>
-</div>
-}
+        <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
+            @p(HtmlContent(Messages("eligibility.check.date.of.birth.error.text.before.link",
+                        link(link = applicationConfig.marriedCoupleAllowanceLink,
+                        messageKey = Messages("eligibility.check.date.of.birth.error.link.text") + Messages("tamc.open.in.new.window"),
+                        attrTarget = true,
+                        attrs = Map("data-journey-click" -> "link - click:Check your eligibility:Married Couple’s Allowance"),
+                        inParagraph = true)
+            )))
+            @p(Text(Messages("eligibility.check.date.of.birth.error.text.after.link")))
+        </div>
+
+        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:married_continue"))
+    }
 
 }

@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,13 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package utils
+@this()
 
-import play.api.inject.Injector
-import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
+@(msg: String, classes: Option[String] = None, elmId: Option[String] = None, args: Seq[String] = Seq.empty)(implicit messages: Messages)
 
-import javax.inject.Inject
-
-class TrackingConsentSnippetProvider @Inject()(val trackingConsentSnippet: TrackingConsentSnippet)
+<h2 @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-heading-m")">@messages(msg, args)</h2>

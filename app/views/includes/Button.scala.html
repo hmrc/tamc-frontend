@@ -14,20 +14,8 @@
  * limitations under the License.
  *@
 
-@import play.twirl.api.Html
-@import models.auth.BaseUserRequest
-@import includes.{H1, P}
+@this(govukButton: GovukButton)
 
-@this(main: main,
-h1: H1,
-p: P)
+@(msg: String, href: Option[String] = None, classes: Option[String] = None, name: Option[String] = None, id: String = "submit", attrs: Map[String, String] = Map.empty, isStartButton: Boolean = false)(implicit messages: Messages)
 
-@()(implicit messages: Messages,
-request: BaseUserRequest[_])
-
-@main(
-pageTitle = Some(Messages("title.pattern", Messages("technical.issue.heading")))
-) {
-  @h1("technical.issue.heading", elmId = Some("error"))
-  @p(Text(Messages("technical.issue.try.later")))
-}
+@govukButton(Button(content = Text(messages(msg)), href = href, classes = classes.getOrElse(""), name = name, attributes = attrs ++ Map("id" -> id, "type" -> "submit"), isStartButton = isStartButton))

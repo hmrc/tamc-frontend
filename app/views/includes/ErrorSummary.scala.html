@@ -14,12 +14,21 @@
  * limitations under the License.
  *@
 
-@import scala.concurrent.ExecutionContext.Implicits.global
 
-@this()
+@this(govukErrorSummary: GovukErrorSummary)
 
-@(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: config.ApplicationConfig)(implicit request: Request[_])
+@(form: Form[_], errorFieldName: Option[String] = None)(implicit messages: Messages)
 
-@if(supportLinkEnabled) {
-  @formPartialRetriever.getPartialContent(s"${appConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
+@if(form.errors.nonEmpty) {
+    @defining(form.errors.groupBy(_.key).values.flatMap(_.headOption).map { error =>
+        ErrorLink(
+        href = Some(s"#${errorFieldName.getOrElse(error.key)}"),
+        content = Text(messages(error.message, error.args:_*))
+        )
+    }) { errorLinks =>
+        @govukErrorSummary(ErrorSummary(
+        errorList = errorLinks.toSeq,
+        title = Text(messages("error.summary.title"))
+        ))
+    }
 }

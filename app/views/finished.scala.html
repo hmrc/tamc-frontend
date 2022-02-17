@@ -17,33 +17,45 @@
 @import play.twirl.api.Html
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H2, P, Link}
 
 @this(
-main: templates.tamc_main,
-applicationConfig: ApplicationConfig)
+main: main,
+applicationConfig: ApplicationConfig,
+govukPanel: GovukPanel,
+h2: H2,
+p: P,
+link: Link)
 
 @(transferorEmail: uk.gov.hmrc.emailaddress.EmailAddress)(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = Messages("title.application.pattern", Messages("title.finished"))
+pageTitle = Some(Messages("title.application.pattern", Messages("title.finished")))
 ){
 
-<div class="highlighted-event govuk-box-highlight" id="govuk-box">
-    <h1 class="heading-large">
-        @Html(Messages("pages.finished.successful"))</h1>
-</div>
+@govukPanel(Panel(
+    title = Text(messages("pages.finished.successful")),
+    attributes = Map("id" -> "govuk-box")
+  ))
 
-<p id="paragraph-1">@Html(Messages("pages.finished.para1.email1", transferorEmail))
-    @Html(Messages("pages.finished.para1.email2"))</p>
-<p id="paragraph-2">@Html(Messages("pages.finished.para2"))</p>
-<h2 class="heading-medium">@Html(Messages("pages.finished.now"))</h2>
-<p id="paragraph-3">@Html(Messages("pages.finished.para4"))</p>
+@p(Text(messages("pages.finished.para1.email1", transferorEmail) + " " + messages("pages.finished.para1.email2")), elmId=Some("paragraph-1"))
 
-<p id="paragraph-5">@messages("pages.finished.check-link-para1")
-    <a id="pta-link" href=@applicationConfig.ptaFinishedUrl data-journey-click="link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes">@messages("pages.finished.check-link.text")</a>
-    @messages("pages.finished.check-link-para2")
-</p>
+@p(Text(messages("pages.finished.para2")), elmId = Some("paragraph-2"))
+
+@h2("pages.finished.now")
+
+@p(Text(messages("pages.finished.para4")), elmId = Some("paragraph-3"))
+
+@p(HtmlContent(messages("pages.finished.check-link-para1") + 
+                link(
+                    link = applicationConfig.ptaFinishedUrl, 
+                    messageKey = "pages.finished.check-link.text",
+                    id = Some("pta-link"),
+                    attrs = Map("data-journey-click" -> "link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes"),
+                    inParagraph = true
+                ) + messages("pages.finished.check-link-para2")), elmId = Some("paragraph-5")
+)
+
 }

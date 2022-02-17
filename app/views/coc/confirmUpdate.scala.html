@@ -16,44 +16,36 @@
 
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.ConfirmUpdateViewModel
-@import uk.gov.hmrc.play.views.html.helpers._
-@import includes.backLink
+@import includes.{H1, P, Button}
 
 @this(
-main: templates.tamc_main,
+main: main,
 confirmSummaryView: templates.coc.confirmSummary,
-form: FormWithCSRF)
+form: FormWithCSRF,
+h1: H1,
+p: P,
+button: Button)
 
 @(viewModel: ConfirmUpdateViewModel)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = Messages("title.pattern", messages("title.confirm-transferor")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:confirm")))
+pageTitle = Some(Messages("title.pattern", messages("title.confirm-transferor")))
 ) {
 
- @backLink()
+    @h1("pages.confirm.cancel.heading")
 
- <header class="page-heading">
-     <h1 class="heading-xlarge">@messages("pages.confirm.cancel.heading")</h1>
- </header>
+    @confirmSummaryView(viewModel.rows)
 
- @confirmSummaryView(viewModel.rows)
+    @p(Text(messages("pages.confirm.cancel.message")))
 
- <p>@messages("pages.confirm.cancel.message")</p>
+    <ul class="govuk-list govuk-list--bullet">
+    <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
+    <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
+    </ul>
 
- <ul class="bullets">
-  <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
-  <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
- </ul>
-
- @form(action = routes.UpdateRelationshipController.submitConfirmUpdate, args = ('id -> "")) {
-
-   <button class="button" type="submit" data-journey-click="marriage-allowance:link:confirm_cancellation">
-    @messages("pages.confirm.cancel.continue.button")
-   </button>
- }
+    @form(action = routes.UpdateRelationshipController.submitConfirmUpdate, args = ('id -> "")) {
+        @button(msg = "pages.confirm.cancel.continue.button", attrs = Map("data-journey-click" -> "marriage-allowance:link:confirm_cancellation"))
+    }
 
 }

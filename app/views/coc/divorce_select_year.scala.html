@@ -15,57 +15,47 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html._
-@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
 @import java.time.LocalDate
 @import forms.coc.DivorceSelectYearForm
-@import includes.backLink
+@import includes.{H1, P, ErrorSummary, InputDate, Button}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-dateFieldView: templates.dateFields,
+main: main,
 form: FormWithCSRF,
-divorceYearForm: DivorceSelectYearForm)
+divorceYearForm: DivorceSelectYearForm,
+h1: H1,
+p: P,
+errorSummary: ErrorSummary,
+inputDate: InputDate,
+button: Button
+)
 
 @(divorceSelectYearForm: Form[LocalDate])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-    title = messages("title.pattern", messages("pages.divorce.title")),
-    manageService = true,
-    mainConfig = views.helpers.MainConfig()) {
+    pageTitle = Some(messages("title.pattern", messages("pages.divorce.title"))),
+    serviceName = Some("tamc.manage")
+) {
 
-    @backLink()
+    @errorSummary(divorceSelectYearForm, Some("dateOfDivorce.day"))
 
-    @formErrorNotificationView(divorceSelectYearForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @h1("pages.divorce.title")
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@messages("pages.divorce.title")</h1>
-    </header>
-
-    <p>@messages("pages.divorce.paragraph1")</p>
+    @p(Text(messages("pages.divorce.paragraph1")))
 
     @form(action = routes.UpdateRelationshipController.submitDivorceEnterYear, args = ('id -> "")) {
+        
+        @inputDate(
+            fieldName = divorceYearForm.DateOfDivorce,
+            form = divorceSelectYearForm,
+            legendKey = "pages.divorce.title",
+            hint = Some(Text(messages("pages.divorce.date.hint"))),
+            isPageHeading = false,
+            legendClasses = "govuk-visually-hidden"
+        )
 
-        <div class="form-group">
-            @dateFieldView(
-            divorceSelectYearForm,
-            divorceYearForm.DateOfDivorce,
-            Html(""),
-            None,
-            '_legend -> messages("pages.divorce.title"),
-            '_legendClass -> "visuallyhidden",
-            '_hintText -> Messages("pages.divorce.date.hint"),
-            '_label -> Html(messages("collect_user_data.dod.error")),
-            '_labelTextClass -> "client-error-notification")
-        </div>
-
-
-        <button class="button" type="submit">
-            @messages("generic.continue")
-        </button>
+        @button("generic.continue")
     }
 }

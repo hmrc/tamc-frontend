@@ -17,7 +17,7 @@
 package errorHandler
 
 import config.ApplicationConfig
-import helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever, FakeTemplateRenderer}
+import helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
@@ -28,27 +28,17 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
-import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever}
-import uk.gov.hmrc.renderer.TemplateRenderer
 import utils.UnitSpec
 
 import java.util.Locale
 
 class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
 
-  implicit val cachedRetriever: CachedStaticHtmlPartialRetriever = FakeCachedStaticHtmlPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = FakeTemplateRenderer
   implicit val request: Request[_] = FakeRequest()
 
   val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
 
-  override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[TemplateRenderer].toInstance(templateRenderer),
-      bind[FormPartialRetriever].to[FakePartialRetriever],
-      bind[CachedStaticHtmlPartialRetriever].toInstance(cachedRetriever),
-      bind[ApplicationConfig].toInstance(mockApplicationConfig)
-    ).build()
+  override def fakeApplication(): Application = GuiceApplicationBuilder().build()
 
   val errorHandler: ErrorHandler = inject[ErrorHandler]
   implicit val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
@@ -63,8 +53,8 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
       val doc: Document = Jsoup.parse(standardErrorTemplate.toString())
 
       val docTitle = doc.select("title").text()
-      val docHeading = doc.select("h1").text()
-      val docMessage = doc.select("article > p").text()
+      val docHeading = doc.select("#errorHeading").text()
+      val docMessage = doc.select("#errorText").text()
 
       docTitle shouldBe title
       docHeading shouldBe heading
