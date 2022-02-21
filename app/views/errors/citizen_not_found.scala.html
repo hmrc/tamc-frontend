@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +16,48 @@
 
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
+@import includes.{H1, P, Link}
 
 @this(
-main: templates.tamc_main,
-applicationConfig: ApplicationConfig)
+main: main,
+applicationConfig: ApplicationConfig,
+h1: H1,
+p: P,
+link: Link)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = messages("title.pattern", messages("title.cannot-find-details"))) {
+pageTitle = Some(messages("title.pattern", messages("title.cannot-find-details")))
+) {
 
-<h1 class="heading-large">@messages("technical.cannot-find-details.h1")</h1>
+@h1("technical.cannot-find-details.h1")
 
-<p id="error">
-    @messages("technical.cannot-find-details.para1")
-</p>
+@p(Text(messages("technical.cannot-find-details.para1")), elmId = Some("error"))
 
-<p><strong>@messages("hmrc.contact-details")</strong></p>
+@p(Text(messages("hmrc.contact-details")), classes = Some("govuk-body govuk-!-font-weight-bold"))
 
-<p>
-    @messages("hmrc.contact-details-2")
-    <br>
-    @messages("hmrc.contact-details-3")
-    <br>
-    @messages("hmrc.contact-details-4")
-</p>
+@p(HtmlContent(
+    messages("hmrc.contact-details-2") +
+    "<br>" +
+    messages("hmrc.contact-details-3") +
+    "<br>" +
+    messages("hmrc.contact-details-4")
+))
 
-<p>
-    @messages("hmrc.contact-details-5")
-    <br>
-    @messages("hmrc.contact-details-6")
-</p>
+@p(HtmlContent(
+    messages("hmrc.contact-details-5") +
+    "<br>" +
+    messages("hmrc.contact-details-6")
+))
 
-<p>
-    @messages("hmrc.contact-details-7")
-    <br>
-    @messages("hmrc.contact-details-8")
-</p>
+@p(HtmlContent(
+    messages("hmrc.contact-details-7") +
+    "<br>" +
+    messages("hmrc.contact-details-8")
+))
 
-<p><a target="_blank" rel="noopener noreferrer" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></p>
+@link(link = applicationConfig.callChargeUrl, messageKey = "hmrc.contact-details-9", attrTarget = true, inParagraph = false)
+
 }

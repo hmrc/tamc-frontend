@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,16 @@
 @import models.auth.AuthenticatedUserRequest
 @import views.helpers.LanguageUtilsImpl
 @import models.MarriageAllowanceEndingDates
-@import includes.backLink
+@import includes.{H1, P, Button}
 
 @this(
-main: templates.tamc_main,
-languageUtilsImpl: LanguageUtilsImpl)
+main: main,
+languageUtilsImpl: LanguageUtilsImpl,
+h1: H1,
+p: P,
+button: Button)
 
-@(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[_])
 
 @maDate = @{
 languageUtilsImpl().ukDateTransformer(cancelDates.marriageAllowanceEndDate)
@@ -34,19 +37,13 @@ languageUtilsImpl().ukDateTransformer(cancelDates.personalAllowanceEffectiveDate
 }
 
 @main(
-title = messages("title.pattern", messages("pages.cancel.title")),
-mainConfig = views.helpers.MainConfig()
+pageTitle = Some(messages("title.pattern", messages("pages.cancel.title")))
 ) {
 
- @backLink()
+    @h1("pages.cancel.title", elmId=Some("cancel-heading"))
 
- <header class="page-heading">
-  <h1 class="heading-xlarge" id="cancel-heading">@messages("pages.cancel.title")</h1>
- </header>
+    @p(Text(messages("pages.cancel.paragraph1", maDate)))
+    @p(Text(messages("pages.cancel.paragraph2", paDate)))
 
- <p>@messages("pages.cancel.paragraph1", maDate)</p>
- <p>@messages("pages.cancel.paragraph2", paDate)</p>
-
- <a href="@{controllers.routes.UpdateRelationshipController.confirmEmail}"
-    id="confirmUpdate" class="button" role="button">@messages("generic.continue")</a>
+    @button(msg = "generic.continue", href = Some(controllers.routes.UpdateRelationshipController.confirmEmail.url), id = "confirmUpdate")
 }

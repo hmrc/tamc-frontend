@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,68 +15,69 @@
  *@
 
 @import play.twirl.api.Html
-@import uk.gov.hmrc.play.views.html.helpers._
 @import config.ApplicationConfig
 @import models.auth.UserRequest
+@import includes.{P, InputRadios, Button, ErrorSummary, PageHeading}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group,
+main: main,
 applicationConfig: ApplicationConfig,
-form: FormWithCSRF)
+form: FormWithCSRF,
+p: P,
+inputRadios: InputRadios,
+button: Button,
+errorSummary: ErrorSummary,
+pageHeading: PageHeading
+)
 
 @(eligibilityCheckForm: Form[(MultiYearEligibilityFormInput)])(implicit messages: Messages,
-request: UserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_])
+
+@backLinkHref = @{
+    if(request.isAuthenticated){
+        controllers.routes.EligibilityController.ptaCalculator.url
+    } else {
+        applicationConfig.applyMarriageAllowanceUrl
+    }
+}
 
 @main(
-title = Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))
+pageTitle = Some(Messages("title.eligibility.pattern", Messages("eligibility.check.h1"))),
+backLinkHref = Some(backLinkHref)
 ) {
 
-@if(request.isAuthenticated){
-    <a href="@controllers.routes.EligibilityController.ptaCalculator" class="link-back">@Html(Messages("generic.back"))</a>
-} else {
-    <a href="@applicationConfig.applyMarriageAllowanceUrl" class="link-back">@Html(Messages("generic.back"))</a>
-}
+    @errorSummary(eligibilityCheckForm, Some("marriage-criteria-true"))
 
-@formErrorNotificationView(eligibilityCheckForm, formErrorMessage = "pages.form.error.mandatory.data")
-
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.h1"))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
-    </header>
-
-
-
-@form(action = routes.EligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
-<div class="form-group inline">
-    @inputRadioGroupView(
-    eligibilityCheckForm("marriage-criteria"),
-    Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-    '_legend -> Messages("eligibility.check.h1"),
-    '_legendClass -> "visuallyhidden",
-    '_labelClass -> "block-label",
-    '_labelAfter -> true,
-    '_fieldsetAttributes -> "data-inline-error=married-js-error",
-    '_groupClass -> "inline spacingBottom"
+    @pageHeading(classes=Some("govuk-!-margin-bottom-3 govuk-heading-xl"),
+                context = "This section is ",
+                section = "eligibility.check.span.h1",
+                text = "eligibility.check.h1"
     )
-</div>
-<div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
-    <p>@Html(Messages("eligibility.check.married.error1"))</p>
-    <p>@Html(Messages("eligibility.check.married.error2"))</p>
-</div>
 
-<script>
-                var _gaq = [];
-
-</script>
-<div class="form-group">
-    <button class="button button-calculate"
-            data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
-            type="submit">
-        @Html(Messages("generic.continue"))
-    </button>
-</div>
-}
+    @form(action = routes.EligibilityController.eligibilityCheckAction, args = ('id -> "eligibility-form")) {
+            @inputRadios(
+                form = eligibilityCheckForm,
+                legend = "eligibility.check.h1",
+                id = Some("marriage-criteria"),
+                name = "marriage-criteria",
+                items = Seq(RadioItem(
+                                content = Text(messages("radio.yes")),
+                                value = Some("true"),
+                                id = Some("marriage-criteria-true")
+                            ), RadioItem(
+                                content = Text(messages("radio.no")),
+                                value = Some("false"),
+                                id = Some("marriage-criteria-false")
+                            )),
+                legendAsHeading = false,
+                fieldSetAttrs = Map("data-inline-error" -> "married-js-error", "id" -> "marriage-criteria"),
+                legendClasses = "govuk-visually-hidden"
+            )
+        <div class="tamc-js-hidden error-inline validation-summary" id="married-js-error">
+            @p(Text(Messages("eligibility.check.married.error1")))
+            @p(Text(Messages("eligibility.check.married.error2")))
+        </div>
+        
+        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-eligibility-questions"))
+    }
 }

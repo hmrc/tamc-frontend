@@ -93,13 +93,13 @@ class RelationshipRecordTest extends UnitSpec {
       "participant endDate is in PastYear" in {
         val relationshipRecord = relationshipActiveRecordWithPastValidDate
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2019, 2018, 2020)
+        relationshipRecord.overlappingTaxYears shouldBe Set(2014, 2020, 2017, 2015, 2016, 2012, 2013, 2019, 2018)
       }
 
       "participant endDate is in FutureYear" in {
         val relationshipRecord = relationshipActiveRecordWithFutureValidDate
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2020, 2022)
+        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2022, 2017, 2018, 2019, 2021, 2020)
       }
 
       "participant startDate and endDate is in same year" in {

@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,34 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
+@import org.joda.time.LocalDate
+@import forms.coc.DivorceSelectYearForm
 @import viewModels.DivorceEndExplanationViewModel
-@import includes.backLink
+@import includes.{H1, P, Button}
 
-@this(main: templates.tamc_main)
+@this(main: main,
+h1: H1,
+p: P,
+button: Button)
 
 @(viewModel: DivorceEndExplanationViewModel)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-    title = messages("title.pattern", messages("pages.divorce.explanation.title")),
-    None,
-    mainConfig = views.helpers.MainConfig()
+    pageTitle = Some(messages("title.pattern", messages("pages.divorce.explanation.title")))
 ) {
 
- @backLink()
+  @h1("pages.divorce.explanation.title")
 
- <header class="page-heading">
-  <h1 class="heading-xlarge">@messages("pages.divorce.explanation.title")</h1>
- </header>
+  @p(Text(messages("pages.divorce.explanation.paragraph1", viewModel.divorceDate)))
+  @p(Text(messages("pages.divorce.explanation.paragraph2", viewModel.taxYearStatus)))
 
- <p>@messages("pages.divorce.explanation.paragraph1", viewModel.divorceDate)</p>
- <p>@messages("pages.divorce.explanation.paragraph2", viewModel.taxYearStatus)</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>@{viewModel.bulletStatement._1}</li>
+    <li>@{viewModel.bulletStatement._2}</li>
+  </ul>
 
- <ul class="bullets">
-   <li>@{viewModel.bulletStatement._1}</li>
-   <li>@{viewModel.bulletStatement._2}</li>
- </ul>
-
- <a id="continue" href="@controllers.routes.UpdateRelationshipController.confirmEmail.url" class="button" role="button">@messages("generic.continue")</a>
+  @button(msg = "generic.continue", href = Some(controllers.routes.UpdateRelationshipController.confirmEmail.url), id = "continue")
 }

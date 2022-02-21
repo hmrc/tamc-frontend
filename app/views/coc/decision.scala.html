@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,50 +15,47 @@
  *@
 
 @import models.auth.AuthenticatedUserRequest
-@import uk.gov.hmrc.play.views.html.helpers._
 @import forms.coc.CheckClaimOrCancelDecisionForm
-@import includes.backLink
+@import includes.{H1, ErrorSummary, InputRadios, Button}
 
 @this(
-main: templates.tamc_main,
-inputRadioGroupView: templates.input_radio_group,
-formErrorNotificationView: templates.form_error_notification,
-form: FormWithCSRF)
+main: main,
+form: FormWithCSRF,
+h1: H1,
+inputRadios: InputRadios,
+button: Button,
+errorSummary: ErrorSummary)
 
-@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_])
 
 @main(
-title = messages("title.pattern", messages("pages.decision.title")),
-mainConfig = views.helpers.MainConfig()
+pageTitle = Some(messages("title.pattern", messages("pages.decision.title")))
 ) {
 
-    @backLink()
-    @formErrorNotificationView(decisionForm, formErrorMessage = "pages.form.error.mandatory.data")
+    @errorSummary(decisionForm, Some("decisionChoice-checkmarriageallowanceclaim"))
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@messages("pages.decision.title")</h1>
-    </header>
+     @h1("pages.decision.title")
 
     @form(action = routes.UpdateRelationshipController.submitDecision, args = ('id -> "check-relationship-form")) {
 
-        <div class="form-group inline">
+        @inputRadios(
+            form = decisionForm,
+            legend = "pages.decision.title",
+            id = Some(CheckClaimOrCancelDecisionForm.DecisionChoice),
+            name = CheckClaimOrCancelDecisionForm.DecisionChoice,
+            items = Seq(RadioItem(
+                            content = Text(messages("pages.decision.radio.check")),
+                            value = Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim),
+                            id = Some("decisionChoice-checkmarriageallowanceclaim")
+                        ), RadioItem(
+                            content = Text(messages("pages.decision.radio.stop")),
+                            value = Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance),
+                            id = Some("decisionChoice-stopmarriageallowance")
+                        )),
+            legendAsHeading = false,
+            legendClasses = "govuk-visually-hidden"
+        )
 
-            @inputRadioGroupView(
-            decisionForm(CheckClaimOrCancelDecisionForm.DecisionChoice),
-            Seq((CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim, messages("pages.decision.radio.check")),
-            (CheckClaimOrCancelDecisionForm.StopMarriageAllowance, messages("pages.decision.radio.stop"))),
-            '_labelClass -> "block-label",
-            '_legend -> Messages("pages.decision.title"),
-            '_legendClass -> "visuallyhidden",
-            '_labelAfter -> true,
-            '_fieldsetAttributes -> "data-inline-error=update-marriage-criteria-js-error",
-            '_groupClass -> "inline spacingBottom"
-            )
-        </div>
-
-        <button class="button" type="submit">
-            @messages("generic.continue")
-        </button>
-
+        @button("generic.continue")
     }
 }

@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,8 @@
  * limitations under the License.
  *@
 
-@import scala.concurrent.ExecutionContext.Implicits.global
-
 @this()
 
-@(supportLinkEnabled: Boolean, formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: config.ApplicationConfig)(implicit request: Request[_])
+@(msg: String, classes: Option[String] = None, elmId: Option[String] = None, args: Seq[String] = Seq.empty)(implicit messages: Messages)
 
-@if(supportLinkEnabled) {
-  @formPartialRetriever.getPartialContent(s"${appConfig.contactFrontendPartialBaseUrl}/contact/problem_reports")
-}
+<h2 @elmId.map { i => id="@{i}"} class="@classes.getOrElse("govuk-heading-m")">@messages(msg, args)</h2>

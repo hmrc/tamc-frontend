@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,15 @@
 
 @import play.twirl.api.Html
 @import models.auth.BaseUserRequest
+@import includes.P
 
-@this(main: templates.tamc_main)
+@this(main: main, p: P)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.error")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:cannot-create")))) {
-<p id="error">@Html(Messages("create.relationship.failure"))</p>
+pageTitle = Some(Messages("title.pattern", Messages("title.error")))
+) {
+@p(Text(Messages("create.relationship.failure")), elmId=Some("error"))
 }

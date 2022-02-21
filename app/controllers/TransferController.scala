@@ -33,7 +33,6 @@ import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.LoggerHelper
-
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 

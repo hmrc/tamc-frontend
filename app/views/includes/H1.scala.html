@@ -14,20 +14,9 @@
  * limitations under the License.
  *@
 
-@import play.twirl.api.Html
-@import models.auth.BaseUserRequest
-@import includes.{H1, P}
+@this()
 
-@this(main: main,
-h1: H1,
-p: P)
-
-@()(implicit messages: Messages,
-request: BaseUserRequest[_])
-
-@main(
-pageTitle = Some(Messages("title.pattern", Messages("technical.issue.heading")))
-) {
-  @h1("technical.issue.heading", elmId = Some("error"))
-  @p(Text(Messages("technical.issue.try.later")))
-}
+@(msg: String, classes: Option[String] = None, elmId: Option[String] = None)(implicit messages: Messages)
+<header class="hmrc-page-heading govuk-!-margin-top-0">
+<h1 id=@elmId.getOrElse("pageHeading") class="@classes.getOrElse("govuk-heading-xl") govuk-!-margin-bottom-3">@Html(messages(msg))</h1>
+</header>

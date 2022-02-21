@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,26 @@
 
 @import play.twirl.api.Html
 @import models.auth.BaseUserRequest
+@import includes.{H1, P, Button}
 
-@this(main: templates.tamc_main)
+@this(main: main,
+h1: H1,
+p: P,
+button: Button)
 
-@()(implicit messages: Messages, request: BaseUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit messages: Messages, request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.no-tax-years")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:non-eligible")))) {
+pageTitle = Some(Messages("title.pattern", Messages("title.no-tax-years"))),
+backLinkHref = Some(controllers.routes.UpdateRelationshipController.history.url),
+backLinkAttrs = Map("data-journey-click" -> "marriage-allowance:click:back-on-not-eligible")
+) {
 
-<a href="@controllers.routes.UpdateRelationshipController.history"
-   data-journey-click="marriage-allowance:click:back-on-not-eligible" id="back" class="link-back">
-    @Html(Messages("generic.back"))
-</a>
+@h1("eligibility.check.header")
 
-<h1>@Html(Messages("eligibility.check.header"))</h1>
-<p id="description">@Html(Messages("transferor.no-previous-years-available"))</p>
+@p(Text(Messages("transferor.no-previous-years-available")), elmId=Some("description"))
 
-<p>
-    <a id="button-finished" class="button" role="button"
-       href="https://www.gov.uk/marriage-allowance-guide/how-it-works">
-        @Html(Messages("generic.finish"))
-    </a>
-</p>
+@button(msg = "generic.finish", href = Some("https://www.gov.uk/marriage-allowance-guide/how-it-works"), id = "button-finished")
+
 }
 

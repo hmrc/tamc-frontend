@@ -20,28 +20,30 @@ import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
 import models.auth.AuthenticatedUserRequest
+import java.time.LocalDate
+
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.i18n.MessagesApi
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
-import test_utils.TestData
 import test_utils.TestData.Ninos
 import test_utils.data.{ConfirmationModelData, RecipientRecordData}
+import test_utils.TestData
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
+import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
-import java.time.LocalDate
+import scala.language.postfixOps
+import play.api.inject.bind
 
 class TransferControllerTest extends ControllerBaseTest {
 
@@ -57,7 +59,6 @@ class TransferControllerTest extends ControllerBaseTest {
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[MessagesApi].toInstance(stubMessagesApi())
     )
     .build()
@@ -561,7 +562,7 @@ class TransferControllerTest extends ControllerBaseTest {
       )
       for ((error, redirectUrl) <- data)
         s"a $error has been thrown" in {
-          val result = controller.handleError(authRequest)(error)
+          val result = controller.handleError(HeaderCarrier(), authRequest)(error)
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(redirectUrl)
         }
@@ -581,7 +582,7 @@ class TransferControllerTest extends ControllerBaseTest {
       )
       for ((error, responseStatus, message) <- data)
         s"an $error has been thrown" in {
-          val result = controller.handleError(authRequest)(error)
+          val result = controller.handleError(HeaderCarrier(), authRequest)(error)
           status(result) shouldBe responseStatus
           val doc = Jsoup.parse(contentAsString(result))
           doc.text() should include(messages(message))

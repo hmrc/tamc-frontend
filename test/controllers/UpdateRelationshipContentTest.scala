@@ -31,9 +31,8 @@ import play.api.test.{FakeRequest, Injecting}
 import services._
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.time.TaxYear
-import utils.{ControllerBaseTest, MockAuthenticatedAction, MockTemplateRenderer}
+import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -54,7 +53,6 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[CachingService].toInstance(mockCachingService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[TemplateRenderer].toInstance(MockTemplateRenderer),
       bind[MessagesApi].toInstance(stubMessagesApi())
     ).build()
 
@@ -76,7 +74,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       status(result) shouldBe OK
 
       val document = Jsoup.parse(contentAsString(result))
-      val radioButtons = document.getElementsByClass("multiple-choice").eachText().toArray
+      val radioButtons = document.getElementsByClass("govuk-label").eachText().toArray
       radioButtons.length shouldBe expectedRadioButtons.length
       radioButtons shouldBe expectedRadioButtons
 
@@ -88,9 +86,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
     val expected = Seq(
       messages("pages.stopAllowance.paragraph1"),
-      messages("pages.stopAllowance.paragraph2")
+      messages("pages.stopAllowance.paragraph2"),
+      messages("claim.summary.link"),
+      "beta " + messages("betaBanner.message")
     ).toArray
-    val parsed = Jsoup.parse(contentAsString(result))
+    val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
     val current = parsed.getElementsByTag("p").eachText().toArray()
 
     current shouldBe expected
@@ -107,8 +107,8 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
     val result: Future[Result] = controller.cancel(request)
 
-    val expected = Seq(messages("pages.cancel.paragraph1"), messages("pages.cancel.paragraph2")).toArray
-    val parsed = Jsoup.parse(contentAsString(result))
+    val expected = Seq(messages("pages.cancel.paragraph1"), messages("pages.cancel.paragraph2"), "beta " + messages("betaBanner.message")).toArray
+    val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
     val current = parsed.getElementsByTag("p").eachText().toArray()
 
     current shouldBe expected
@@ -126,9 +126,10 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
       val expected = Seq(
         contactHMRCBereavementText,
-        messages("pages.bereavement.recipient.paragraph")
+        messages("pages.bereavement.recipient.paragraph"),
+        "beta " + messages("betaBanner.message")
       ).toArray
-      val parsed = Jsoup.parse(contentAsString(result))
+      val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val current = parsed.getElementsByTag("p").eachText().toArray()
 
       current shouldBe expected
@@ -145,9 +146,10 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
       val expected = Seq(
         contactHMRCBereavementText,
-        messages("pages.bereavement.transferor.paragraph")
+        messages("pages.bereavement.transferor.paragraph"), 
+        "beta " + messages("betaBanner.message")
       ).toArray
-      val parsed = Jsoup.parse(contentAsString(result))
+      val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val current = parsed.getElementsByTag("p").eachText().toArray()
 
       current shouldBe expected
@@ -163,7 +165,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val result: Future[Result] = controller.bereavement(request)
 
       val expected = Array()
-      val parsed = Jsoup.parse(contentAsString(result))
+      val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val current = parsed.getElementsByTag("li").eachText().toArray()
 
       current shouldBe expected
@@ -183,7 +185,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
         messages("pages.bereavement.transferor.point2")
       ).toArray
 
-      val parsed = Jsoup.parse(contentAsString(result))
+      val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val current = parsed.getElementsByTag("li").eachText().toArray()
 
       current shouldBe expected
@@ -200,27 +202,31 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
      val expectedHeading = messages("pages.divorce.title")
      val expectedParas = Seq(
        messages("pages.divorce.paragraph1"),
-       messages("pages.divorce.date.hint")
+       "beta " + messages("betaBanner.message")
      ).toArray
 
      val expectedLabel = Seq(
-       messages("date.fields.day"),
-       messages("date.fields.month"),
-       messages("date.fields.year")
+       messages("date.input.day"),
+       messages("date.input.month"),
+       messages("date.input.year")
      ).toArray
 
-     val parsed = Jsoup.parse(contentAsString(result))
+     val expectedHint = messages("pages.divorce.date.hint")
+
+     val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
 
      val heading = parsed.getElementsByTag("h1").text
      val paras = parsed.getElementsByTag("p").eachText().toArray()
      val formLabel = parsed.getElementsByTag("label").eachText.toArray
      val formInput = parsed.getElementsByTag("input").eachAttr("type")
+     val hint = parsed.getElementsByClass("govuk-hint").text
 
      heading shouldBe expectedHeading
      paras shouldBe expectedParas
      formLabel shouldBe expectedLabel
      formInput.size shouldBe 3
      formInput contains "text"
+     hint shouldBe expectedHint
    }
  }
 
@@ -244,7 +250,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"6 April ${date.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear"))
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear")), "beta " + messages("betaBanner.message")
       ).toArray
 
       val expectedBullets = Seq(
@@ -252,7 +258,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
         messages("pages.divorce.explanation.adjust.code.bullet")
       )
 
-      val view = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
 
       val heading = view.getElementsByTag("h1").text()
       val paras = view.getElementsByTag("p").eachText().toArray
@@ -278,11 +284,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
       val result =  controller.divorceEndExplanation(request)
 
-      val view = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear"))
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear")), "beta " + messages("betaBanner.message")
       ).toArray
 
       val expectedBullets = Seq(
@@ -314,11 +320,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
       val result =  controller.divorceEndExplanation(request)
 
-      val view = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"6 April ${divorceDate.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear"))
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear")), "beta " + messages("betaBanner.message")
       ).toArray
 
       val expectedBullets = Seq(
@@ -351,11 +357,11 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
       val result =  controller.divorceEndExplanation(request)
 
-      val view = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear"))
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear")), "beta " + messages("betaBanner.message")
       ).toArray
 
       val expectedBullets = Seq(
@@ -381,13 +387,14 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
     val expectedHeading = messages("pages.form.field.your-confirmation")
     val expectedParas = Seq(
       messages("change.status.confirm.info"),
-      messages("change.status.confirm.more.info")
+      messages("change.status.confirm.more.info"), 
+      "beta " + messages("betaBanner.message")
     ).toArray
     val expectedLabel = messages("pages.form.field.transferor-email")
 
     val result = controller.confirmEmail(FakeRequest().withHeaders(("Referer", "referer")))
 
-    val view = Jsoup.parse(contentAsString(result))
+    val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
 
     val heading = view.getElementsByTag("h1").text
     val paras = view.getElementsByTag("p").eachText().toArray
@@ -409,7 +416,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
           ConfirmationUpdateAnswers(loggedInUser, Some(LocalDate.now()), "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
       val expectedHeader = messages("pages.confirm.cancel.heading")
-      val expectedPara = messages("pages.confirm.cancel.message")
+      val expectedParas = Seq(messages("pages.confirm.cancel.message"), "beta " + messages("betaBanner.message"))
       val expectedList = Seq(
         messages("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
         messages("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
@@ -422,15 +429,15 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
       val result = controller.confirmUpdate(request)
 
-      val view = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
 
       val header = view.getElementsByTag("h1").text
-      val para = view.getElementsByTag("p").text
+      val para = view.getElementsByTag("p").eachText.toArray
       val list = view.getElementsByTag("li").eachText.toArray
       val tableHeadings = view.getElementsByTag("th").eachText.toArray
 
       header shouldBe expectedHeader
-      para shouldBe expectedPara
+      para shouldBe expectedParas
       list shouldBe expectedList
       tableHeadings.size shouldBe 3
       tableHeadings shouldBe expectedTableHeadings
@@ -442,7 +449,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
           ConfirmationUpdateAnswers(loggedInUser, None, "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
       val expectedHeader = messages("pages.confirm.cancel.heading")
-      val expectedPara = messages("pages.confirm.cancel.message")
+      val expectedParas = Seq(messages("pages.confirm.cancel.message"), "beta " + messages("betaBanner.message"))
       val expectedList = Seq(
         messages("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
         messages("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
@@ -454,15 +461,15 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
       val result = controller.confirmUpdate(request)
 
-      val view = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
 
       val header = view.getElementsByTag("h1").text
-      val para = view.getElementsByTag("p").text
+      val para = view.getElementsByTag("p").eachText.toArray
       val list = view.getElementsByTag("li").eachText.toArray
       val tableHeadings = view.getElementsByTag("th").eachText.toArray
 
       header shouldBe expectedHeader
-      para shouldBe expectedPara
+      para shouldBe expectedParas
       list shouldBe expectedList
       tableHeadings.size shouldBe 2
       tableHeadings shouldBe expectedTableHeadings
@@ -471,7 +478,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
   "Finish Update page" should {
 
-    "display the corrrect content" in {
+    "display the correct content" in {
 
       when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
         .thenReturn(Future.successful(EmailAddress("email@email.com")))
@@ -484,12 +491,12 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val expectedParas = Seq(
         messages("pages.coc.finish.acknowledgement", "email@email.com"),
         messages("pages.coc.finish.junk"),
-        messages("pages.coc.finish.para1")
+        messages("pages.coc.finish.para1"), "beta " + messages("betaBanner.message")
       ).toArray
 
       val result = controller.finishUpdate(request)
 
-      val view = Jsoup.parse(contentAsString(result))
+      val view = Jsoup.parse(contentAsString(result)).getElementById("main-content")
 
       val heading = view.getElementsByTag("h1").text
       val paras = view.getElementsByTag("p").eachText.toArray

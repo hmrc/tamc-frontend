@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 @import play.twirl.api.Html
 
-@this()
+@this(govukInsetText: GovukInsetText)
 
 @(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit messages: Messages)
 
@@ -29,10 +29,9 @@ case Some(gain) => Html(Messages(result.messageKey, {
 gain
 }))
 }
-Html(s"""
-<div class="form-group">
-    <div class="panel panel-border-wide" id="calculator-result">${message}</div>
-</div>""")
+
+govukInsetText(InsetText(id = Some("calculator-result"), content = HtmlContent(message)))
+
 case None => ""
 }
 }

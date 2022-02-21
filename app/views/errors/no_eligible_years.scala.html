@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,16 @@
 
 @import play.twirl.api.Html
 @import models.auth.BaseUserRequest
+@import includes.P
 
-@this(main: templates.tamc_main)
+@this(main: main, p: P)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = Messages("title.pattern", Messages("title.error")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:no-eligible-years")))
+pageTitle = Some(Messages("title.pattern", Messages("title.error"))),
+backLinkHref = Some(controllers.routes.UpdateRelationshipController.history.url)
 ) {
-<a href="@controllers.routes.UpdateRelationshipController.history" id="back" class="link-back">
-    @Html(Messages("generic.back"))
-</a>
-<p id="error">@Html(Messages("transferor.no-eligible-years"))</p>
+@p(Text(messages("transferor.no-eligible-years")), elmId=Some("error"))
 }

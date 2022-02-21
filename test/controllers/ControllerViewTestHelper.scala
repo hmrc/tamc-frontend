@@ -23,8 +23,7 @@ import play.api.test.Helpers._
 import play.twirl.api.Html
 import uk.gov.hmrc.domain.Generator
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.renderer.TemplateRenderer
-import utils.{MockFormPartialRetriever, MockTemplateRenderer, UnitSpec}
+import utils.{MockFormPartialRetriever, UnitSpec}
 
 import scala.concurrent.Future
 
@@ -37,7 +36,6 @@ trait ControllerViewTestHelper extends UnitSpec {
     AuthenticatedUserRequest(request, None, isSA = true, None, nino)
   }
 
-  implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   implicit val partialRetriever: FormPartialRetriever = mock[MockFormPartialRetriever]
 
   implicit class ViewMatcherHelper(result: Future[Result]) {

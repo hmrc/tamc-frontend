@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,24 @@
  *@
 
 @import models.auth.AuthenticatedUserRequest
-@import includes.backLink
+@import includes.{H1, P, Link}
 
-@this(main: templates.tamc_main)
+@this(main: main,
+h1: H1,
+p: P,
+link: Link)
 
-@()(implicit messages: Messages,request: AuthenticatedUserRequest[_], formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit messages: Messages,request: AuthenticatedUserRequest[_])
 
 @main(
-title = messages("title.pattern", messages("pages.stopAllowance.title")),
-mainConfig = views.helpers.MainConfig()
+pageTitle = Some(messages("title.pattern", messages("pages.stopAllowance.title")))
 ) {
 
-@backLink()
+    @h1("pages.stopAllowance.title")
 
-<header class="page-heading">
-    <h1 class="heading-xlarge">@messages("pages.stopAllowance.title")</h1>
-</header>
+    @p(Text(messages("pages.stopAllowance.paragraph1")))
+    @p(Text(messages("pages.stopAllowance.paragraph2")))
 
-<p>@messages("pages.stopAllowance.paragraph1")</p>
-<p>@messages("pages.stopAllowance.paragraph2")</p>
-
-<a id="backToSummary" href="@controllers.routes.UpdateRelationshipController.history">
-    @messages("claim.summary.link")
-</a>
+    @link(link = controllers.routes.UpdateRelationshipController.history.url, messageKey = "claim.summary.link", id= Some("backToSummary"))
 
 }

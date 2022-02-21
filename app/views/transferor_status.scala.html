@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,23 @@
 @import play.twirl.api.Html
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
+@import includes.{P, Link}
 
-@this(main: templates.tamc_main,
-applicationConfig: ApplicationConfig)
+@this(main: main,
+applicationConfig: ApplicationConfig,
+p: P,
+link: Link)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: BaseUserRequest[_])
 
 @main(
-title = messages("title.pattern", messages("title.transfer-in-place")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:transferor-rel-exists")))
+pageTitle = Some(messages("title.pattern", messages("title.transfer-in-place")))
 ) {
-<p>@Html(messages("transferor.has.relationship"))</p>
-<strong>@Html(messages("hmrc.contact-details"))</strong>
-<ul>
+
+@p(HtmlContent(messages("transferor.has.relationship")))
+<strong class="govuk-body govuk-!-font-weight-bold">@Html(messages("hmrc.contact-details"))</strong>
+<ul class = govuk-list>
     <li>@messages("hmrc.contact-details-2")</li>
     <li>@messages("hmrc.contact-details-3")</li>
     <li>@messages("hmrc.contact-details-4")</li>
@@ -40,6 +41,6 @@ maybeMainDataAttributes = Some(Html("data-journey=marriage-allowance:stage:trans
     <li>@messages("hmrc.contact-details-6")</li>
     <li>@messages("hmrc.contact-details-7")</li>
     <li>@messages("hmrc.contact-details-8")</li>
-    <li><a target="_blank" rel="noopener noreferrer" href=@applicationConfig.callChargeUrl>@messages("hmrc.contact-details-9")</a></li>
+    <li>@link(link=applicationConfig.callChargeUrl, messageKey = "hmrc.contact-details-9", attrTarget = true, inParagraph = true)</li>
 </ul>
 }

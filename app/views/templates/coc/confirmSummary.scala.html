@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,21 @@
  *@
 
 @import viewModels.SummaryRow
+@import includes.Link
 
-@this()
+@this(link: Link)
 
 @(rows: Seq[SummaryRow])(implicit messages: Messages)
 
-<table>
-      <tbody>
-
+<table class="govuk-table">
+      <tbody class="govuk-table__body">
         @for(row <- rows) {
-            <tr>
-                <th scope="row" class="bold">@row.title</th>
-                <td>@row.userAnswer</td>
-                @row.changeLink.fold(Html("<td></td>"))(changeLink => Html(s"""<td><a href="$changeLink" id="${row.id}" aria-label="${row.aria}">${messages("generic.change")}</a></td>"""))
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@row.title</th>
+                <td class="govuk-table__cell">@row.userAnswer</td>
+                @row.changeLink.fold(Html("""<td class="govuk-table__cell"></td>"""))(changeLink => Html(s"""<td class="govuk-table__cell">
+                ${link(link = changeLink, messageKey = "generic.change", id = Some(row.id), attrs = Map("aria-label" -> row.aria), inParagraph = true)}
+                </td>"""))
             </tr>
         }
 

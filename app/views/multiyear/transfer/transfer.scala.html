@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,97 +17,92 @@
 @import models.Gender
 @import play.twirl.api.Html
 @import views.helpers.LanguageUtilsImpl
-@import uk.gov.hmrc.play.views.html.helpers._
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H1, P, InputRadios, InputValue, Button, ErrorSummary}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-inputView: templates.input,
-inputRadioGroupView: templates.input_radio_group,
+main: main,
 form: FormWithCSRF,
-languageUtilsImpl: LanguageUtilsImpl)
+languageUtilsImpl: LanguageUtilsImpl,
+h1: H1,
+p: P,
+inputRadios: InputRadios,
+inputValue: InputValue,
+errorSummary: ErrorSummary,
+button: Button,
+details: GovukDetails,
+govukWarningText : GovukWarningText)
 
 @(recipientForm: Form[models.RecipientDetailsFormInput])(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 
 @main(
-title = Messages("title.application.pattern", Messages("title.transfer")),
-mainConfig = views.helpers.MainConfig(
-maybeMainDataAttributes = Some(Html(s"data-journey=${languageUtilsImpl().formPageDataJourney("marriage-allowance:stage:transfer", recipientForm)}")))
+pageTitle = Some(Messages("title.application.pattern", Messages("title.transfer"))),
+backLinkHref = Some(controllers.routes.EligibilityController.doYouWantToApply.url)
 ) {
 
-    <a href="@controllers.routes.EligibilityController.doYouWantToApply" class="link-back">@Html(Messages("generic.back"))</a>
+    @errorSummary(recipientForm)
 
-    @formErrorNotificationView(recipientForm)
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("pages.form.h1"))</h1>
-    </header>
-    <p>@Html(Messages("pages.form.details"))</p>
+    @h1("pages.form.h1", classes = Some("govuk-heading-xl govuk-!-margin-bottom-4"))
+
+    @p(HtmlContent(Messages("pages.form.details")))
 
     @form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
-        <fieldset>
-            <div class="form-group">
-                @inputView(recipientForm("name"),
-                '_label -> Html(Messages("pages.form.field.name")),
-                '_labelClass -> "form-label",
-                '_inputClass -> "form-control",
-                '_dataAttributes -> "autocomplete=off"
+        <fieldset class="govuk-fieldset">
+            @inputValue(
+                form = recipientForm,
+                id = "name",
+                name = "name",
+                labelKey = "pages.form.field.name",
+                classes = Some("govuk-!-width-one-half")
+            )
+            @inputValue(
+                form = recipientForm,
+                id = "last-name",
+                name = "last-name",
+                labelKey = "pages.form.field.last-name",
+                classes = Some("govuk-!-width-one-half")
+            )
+            @inputRadios(
+                form = recipientForm,
+                legend = "pages.form.field.gender",
+                id = Some("gender"),
+                name = "gender",
+                items = Seq(RadioItem(
+                                content = Text(messages("pages.form.field.gender.male")),
+                                value = Some(Gender("M").gender),
+                                    id = Some("gender-m")
+                                ), RadioItem(
+                                    content = Text(messages("pages.form.field.gender.female")),
+                                    value = Some(Gender("F").gender),
+                                    id = Some("gender-f")
+                                )),
+                legendAsHeading = false,
+                    legendClasses = "govuk-label",
+                    hint = Some(Text(messages("pages.form.field-helper.gender")))
                 )
-            </div>
-            <div class="form-group">
-                @inputView(recipientForm("last-name"),
-                '_label -> Html(Messages("pages.form.field.last-name")),
-                '_labelClass -> "form-label",
-                '_inputClass -> "form-control",
-                '_dataAttributes -> "autocomplete=off"
-                )
-            </div>
-            <div class="form-group">
-                @inputRadioGroupView(
-                recipientForm("gender"),
-                Seq((Gender("M").gender, Messages("pages.form.field.gender.male")), (Gender("F").gender,
-                Messages("pages.form.field.gender.female"))),
-                '_legend -> Html(Messages("pages.form.field.gender")),
-                '_labelClass -> "block-label",
-                '_labelAfter -> true,
-                '_fieldHelper -> Html(Messages("pages.form.field-helper.gender")),
-                '_groupClass -> "inline spacingBottom"
-                )
-            </div>
-            <div class="form-group">
-                @inputView(recipientForm("nino"),
-                '_label -> Html(Messages("pages.form.field.nino")),
-                '_labelClass -> "form-label",
-                '_inputClass -> "form-control",
-                '_fieldHelper -> Html(Messages("pages.form.field-helper.nino-example")),
-                '_dataAttributes -> "autocomplete=off"
-                )
-            </div>
+            @inputValue(
+                form = recipientForm,
+                id = "nino",
+                name = "nino",
+                labelKey = "pages.form.field.nino",
+                hint = Some(Text(Messages("pages.form.field-helper.nino-example"))),
+                classes = Some("govuk-!-width-one-half")
+            )
         </fieldset>
 
-        <details role="group">
-            <summary><span class="summary">@Html(Messages("pages.form.field-helper.nino-where"))</span></summary>
-            <div class="panel-indent">
-                <p>@Html(Messages("pages.form.field-helper.nino-found"))</p>
-            </div>
-        </details>
+        @details(Details(
+            summary = Text(messages("pages.form.field-helper.nino-where")),
+            content = Text(messages("pages.form.field-helper.nino-found"))
+        ))
 
-        <div class="form-group">
-            <div class="notice">
-                <i class="icon icon-important">
-                    <span class="visually-hidden">@Html(Messages("pages.form.field.warning-hidden"))</span>
-                </i>
-                <p class="icon-important-text ">@Html(Messages("pages.form.field.warning"))</p>
-            </div>
-        </div>
+        @govukWarningText(WarningText(
+            iconFallbackText = messages("pages.form.field.warning-hidden"),
+            content = Text(messages("pages.form.field.warning"))
+        ))
 
-        <button class="button" type="submit" data-journey-click="marriage-allowance:button:recipient_continue">
-            @Html(Messages("generic.continue"))
-        </button>
-
+        @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:recipient_continue"))
     }
 }

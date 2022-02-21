@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,25 @@
 
 @import java.text.NumberFormat
 @import config.ApplicationConfig
-@import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.play.views.html.helpers._
+@import views.html.templates._
 @import models.auth.UserRequest
+@import includes.{ErrorSummary, InputRadios, PageHeading, Button, P}
 
 @this(
-main: templates.tamc_main,
-formErrorNotificationView: templates.form_error_notification,
-inputRadioGroupView: templates.input_radio_group,
+main: main,
+errorSummary: ErrorSummary,
+inputRadios: InputRadios,
+pageHeading: PageHeading,
+button: Button,
 form: FormWithCSRF,
-applicationConfig: ApplicationConfig)
+applicationConfig: ApplicationConfig,
+p: P)
 
 @(
     partnersIncomeFormInput: Form[MultiYearPartnersIncomeQuestionInput],
     scottishResident: Boolean
 )(
-    implicit messages: Messages, request: UserRequest[_], formPartialRetriever: FormPartialRetriever
+    implicit messages: Messages, request: UserRequest[_]
 )
 
 @maxLimit = @{
@@ -39,66 +42,52 @@ applicationConfig: ApplicationConfig)
     else applicationConfig.MAX_LIMIT()
 }
 
-@main(title = Messages("title.eligibility.pattern",
+@main(pageTitle = Some(Messages("title.eligibility.pattern",
     Messages("eligibility.check.partners.income.h1",
         NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1),
         NumberFormat.getIntegerInstance().format(maxLimit)
+    ))),
+    backLinkHref = Some(controllers.routes.EligibilityController.lowerEarnerCheck.url)
+) {
+
+    @errorSummary(partnersIncomeFormInput, Some("partners-income-true"))
+
+    @pageHeading(classes=Some("govuk-!-margin-bottom-3 govuk-heading-xl"),
+                context = "This section is ",
+                section = "eligibility.check.span.h1",
+                text = Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() +
+                                1), NumberFormat.getIntegerInstance().format(maxLimit))
     )
-)) {
-    <a href="@controllers.routes.EligibilityController.lowerEarnerCheck"
-       class="link-back">@Html(Messages("generic.back"))</a>
 
-    @formErrorNotificationView(
-        partnersIncomeFormInput,
-        formErrorMessage = "pages.form.error.mandatory.data",
-        lowerLimit = Some(applicationConfig.PERSONAL_ALLOWANCE() + 1),
-        upperLimit = Some(maxLimit)
-    )
-
-
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Messages("eligibility.check.partners.income.h1", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() +
-        1), NumberFormat.getIntegerInstance().format(maxLimit))</h1>
-        <p class="heading-secondary"><span class="visuallyhidden">This section is </span>@Html(Messages("eligibility.check.span.h1"))</p>
-    </header>
-
-
-
-    <p class="bold-small">@Messages("eligibility.check.partners.income.information1")</p>
+    @p(Text(Messages("eligibility.check.partners.income.information1")), elmId = Some("partner-income-text"))
 
     @form(action = routes.EligibilityController.partnersIncomeCheckAction, args = 'id -> "income-form") {
+
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
-        <div class="form-group inline">
-            @inputRadioGroupView(
-            partnersIncomeFormInput("partners-income"),
-            Seq(("true", Messages("radio.yes")), ("false", Messages("radio.no"))),
-            '_legend -> Html(Messages("eligibility.check.partners.income.h1",
-            NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() +
-            1), NumberFormat.getIntegerInstance().format(maxLimit))),
-            '_legendClass -> "visuallyhidden",
-            '_labelClass -> "block-label",
-            '_labelAfter -> true,
-            '_fieldsetAttributes -> "data-inline-error=inline-partners-income-error",
-            '_groupClass -> "inline spacingBottom"
-            )
-        </div>
+        @inputRadios(
+            form = partnersIncomeFormInput,
+            legend = "eligibility.check.partners.income.h1",
+            id = Some("partners-income"),
+            name = "partners-income",
+            items = Seq(RadioItem(
+                            content = Text(messages("radio.yes")),
+                            value = Some("true"),
+                            id = Some("partners-income-true")
+                        ), RadioItem(
+                            content = Text(messages("radio.no")),
+                            value = Some("false"),
+                            id = Some("partners-income-false")
+                        )),
+            legendAsHeading = false,
+            fieldSetAttrs = Map("data-inline-error" -> "inline-partners-income-error", "id" -> "marriage-criteria"),
+            legendClasses = "govuk-visually-hidden"
+        )
 
         <div class="tamc-js-hidden error-inline validation-summary partners-inc-error" id="inline-partners-income-error">
-            @Messages("eligibility.check.partners.income.error")
+            @p(Text(Messages("eligibility.check.partners.income.error")))
         </div>
 
-        <script>
-                        var _gaq = [];
-
-        </script>
-
-        <div class="form-group">
-            <button class="button"
-                    data-journey-click="marriage-allowance:click:advance-from-eligibility-questions" id="continue"
-                    type="submit">
-                @Messages("generic.continue")
-            </button>
-        </div>
+        @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:click:advance-from-eligibility-questions"))
     }
 
 }

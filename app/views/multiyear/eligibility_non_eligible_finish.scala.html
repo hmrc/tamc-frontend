@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,28 @@
 
 @import play.twirl.api.Html
 @import models.auth.UserRequest
+@import includes.{P, Button, H1}
 
-@this(main: templates.tamc_main)
+@this(
+    main: main,
+    p: P,
+    h1: H1,
+    button: Button
+)
 
 @(finishedUrl: String
 )(implicit messages: Messages,
-request: UserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: UserRequest[_])
 
 @main(
-title = Messages("title.eligibility.pattern", Messages("title.non-eligible"))
+pageTitle = Some(Messages("title.eligibility.pattern", Messages("title.non-eligible"))),
+backLinkHref = Some(controllers.routes.EligibilityController.eligibilityCheck.url)
 ){
+    
+    @h1("eligibility.check.header")
 
-<a href="@controllers.routes.EligibilityController.eligibilityCheck"
-   class="link-back">@Html(Messages("generic.back"))</a>
+    @p(Text(Messages("eligibility.check.non-eligible")))
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge">@Html(Messages("eligibility.check.header"))</h1>
-    </header>
-
-    <p>@Html(Messages("eligibility.check.non-eligible"))</p>
-
-<p>
-    <a id="button-finished" class="button" role="button" href="@finishedUrl">
-        @Html(Messages("generic.finish"))
-    </a>
-</p>
+    @button(msg = "generic.finish", href = Some(finishedUrl), id = "button-finished")
 
 }

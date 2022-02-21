@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,41 @@
 
 @import play.twirl.api.Html
 @import views.helpers.LanguageUtilsImpl
+@import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
+@import includes.{H1, P, Button}
 
 @this(
-main: templates.tamc_main,
-languageUtilsImpl: LanguageUtilsImpl)
+main: main,
+languageUtilsImpl: LanguageUtilsImpl,
+h1: H1,
+p: P,
+button: Button
+)
 
 @(input:RegistrationFormInput,
 availableYears:List[TaxYear] = List[TaxYear](),
 currentYearAvailable: Boolean)(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
+
+@backLink = @{
+    if(currentYearAvailable) {
+        controllers.routes.TransferController.eligibleYears.url
+    } else {
+        controllers.routes.TransferController.dateOfMarriage.url
+    }
+}
 
 @main(
-title = Messages("title.application.pattern", Messages("pages.previousyear.header")),
-langSelectorOverride = Some(
-Map("enUrl" -> controllers.routes.TransferController.dateOfMarriageWithEn,
-"cyUrl" -> controllers.routes.TransferController.dateOfMarriageWithCy
-))){
+pageTitle = Some(Messages("title.application.pattern", Messages("pages.previousyear.header"))),
+backLinkHref = Some(backLink)
+){
 
-    @if(currentYearAvailable) {
-        <a href="@controllers.routes.TransferController.eligibleYears" class="link-back">@Html(Messages("generic.back"))</a>
-    } else {
-        <a href="@controllers.routes.TransferController.dateOfMarriage" class="link-back">@Html(Messages("generic.back"))</a>
-    }
+    @h1("pages.previousyear.header", elmId = Some("heading"))
 
-    <header class="page-heading">
-        <h1 class="heading-xlarge" id="heading">@Html(Messages("pages.previousyear.header"))</h1>
-    </header>
+    @p(HtmlContent(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage))))
 
-    <p>@Html(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage)))</p>
-
-    <a href="@{controllers.routes.TransferController.previousYears}" id="continue" class="button" role="button"
-       data-journey-click="marriage-allowance:button:previousyearlead_continue">@Html(Messages("generic.continue"))</a>
+    @button(msg = "generic.continue", href = Some(controllers.routes.TransferController.previousYears.url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
 
 }

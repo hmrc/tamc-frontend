@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,38 +15,19 @@
  *@
 
 @import config.ApplicationConfig
-@import uk.gov.hmrc.play.views.html.layouts.Article
+@import views.html.helper.CSPNonce
+@import includes.{H1, P}
 
 @this(
-templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer,
+main: errorTemplate,
 applicationConfig: ApplicationConfig,
-article: Article)
+p: P,
+h1: H1)
 
-@(pageTitle: String, heading: String, message: String)(implicit messages: Messages)
+@(pageTitle: String, heading: String, message: String)(implicit messages: Messages, request: Request[_])
 
+@main(pageTitle = Some(pageTitle)){
+@h1(heading, elmId = Some("errorHeading"))
 
-
-@contentHeader = {
-<h1>@heading</h1>
-}
-
-@mainContent = {
-<p>@message</p>
-}
-
-
-@{
-templateRenderer.renderDefaultTemplate(applicationConfig.frontendTemplatePath, article(mainContent), Map[String, Any](
-"pageTitle" -> pageTitle,
-"linkElems" -> None,
-"scriptElems" -> None,
-"googleAnalytics" -> Map(
-"trackingId" -> applicationConfig.analyticsToken,
-"cookieDomain" -> applicationConfig.analyticsHost
-),
-"includeHMRCBranding" -> true,
-"mainContentHeader" -> contentHeader,
-"betaBanner" -> true,
-"feedbackIdentifier" -> applicationConfig.contactFormServiceIdentifier
-))
+@p(Text(message), elmId = Some("errorText"))
 }

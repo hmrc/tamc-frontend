@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,32 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.Html
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.HistorySummaryViewModel
+@import includes.{PageHeading, Button}
 
-@this(main: templates.tamc_main)
+@this(
+    main: main,
+    pageHeading: PageHeading,
+    button: Button
+)
 
 @(viewModel: HistorySummaryViewModel)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_],
-formPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+request: AuthenticatedUserRequest[_])
 
 @main(
-title = messages("title.pattern", messages("title.history")),
-mainConfig = views.helpers.MainConfig(None)
+pageTitle = Some(messages("title.pattern", messages("title.history"))),
+disableBackLink = true
 ){
-    <header class="page-heading">
-        <p class="heading-secondary">@viewModel.displayName</p>
-        <h1 class="heading-xlarge">@messages("title.history")</h1>
-    </header>
+    @pageHeading(classes=Some("govuk-!-margin-bottom-3 govuk-heading-xl"),
+        context = "This section is ",
+        section = "title.history",
+        text = viewModel.displayName
+    )
 
    @viewModel.paragraphContent
-    <a id="@viewModel.button.id" href="@viewModel.button.href" class="button" role="button">
-        @viewModel.button.content
-    </a>
+
+   @button(msg = viewModel.button.content, href = Some(viewModel.button.href), id = viewModel.button.id)
 
 }
