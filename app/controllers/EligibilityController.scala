@@ -27,7 +27,6 @@ import forms._
 import models.Country
 import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
 import services.EligibilityCalculatorService
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.isScottishResident
 
 import javax.inject.Inject
@@ -48,7 +47,7 @@ class EligibilityController @Inject()(
   calculatorView: views.html.calculator,
   ptaCalculatorView: views.html.pta.calculator,
   multiYearPartnersIncomeQuestionForm: MultiYearPartnersIncomeQuestionForm,
-  multiYearLowerEarnerForm: MultiYearLowerEarnerForm)(implicit formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  multiYearLowerEarnerForm: MultiYearLowerEarnerForm) extends BaseController(cc) {
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>

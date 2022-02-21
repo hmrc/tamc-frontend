@@ -19,29 +19,28 @@ package controllers
 import com.google.inject.Inject
 import config.ApplicationConfig
 import controllers.actions.UnauthenticatedActionTransformer
-import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 class AuthorisationController @Inject()(
   unauthenticatedAction: UnauthenticatedActionTransformer,
   appConfig: ApplicationConfig,
   cc: MessagesControllerComponents,
   otherWaysView: views.html.errors.other_ways,
-  sessionTimeoutView: views.html.errors.session_timeout)(implicit formPartialRetriever: FormPartialRetriever) extends BaseController(cc) {
+  sessionTimeoutView: views.html.errors.session_timeout) extends BaseController(cc) {
 
   val logoutUrl: String = appConfig.logoutUrl
   val logoutCallbackUrl: String = appConfig.logoutCallbackUrl
 
-  def notAuthorised = unauthenticatedAction {
+  def notAuthorised: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(otherWaysView())
   }
 
-  def logout = unauthenticatedAction {
+  def logout: Action[AnyContent] = unauthenticatedAction {
       Redirect(logoutUrl).withSession("postLogoutPage" -> logoutCallbackUrl)
   }
 
-  def sessionTimeout = unauthenticatedAction {
+  def sessionTimeout: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(sessionTimeoutView())
   }

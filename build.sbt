@@ -16,7 +16,10 @@ val suppressedImports = Seq("-P:silencer:lineContentFilters=import _root_.play.t
   "-P:silencer:lineContentFilters=import views.html._",
   "-P:silencer:lineContentFilters=import play.api.templates.PlayMagic._",
   "-P:silencer:lineContentFilters=import play.api.mvc._",
-  "-P:silencer:lineContentFilters=import play.api.data._")
+  "-P:silencer:lineContentFilters=import play.api.data._",
+  "-P:silencer:lineContentFilters=import uk.gov.hmrc.govukfrontend.views.html.components._",
+  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.components._",
+  "-P:silencer:lineContentFilters=import uk.gov.hmrc.hmrcfrontend.views.html.helpers._")
 
 lazy val scoverageSettings = {
   Seq(

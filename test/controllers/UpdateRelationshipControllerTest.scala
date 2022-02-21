@@ -815,7 +815,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       for ((error, message) <- errors) {
         s"a $error has been thrown" in {
-          val result = Future.successful(controller.handleError(HeaderCarrier(), auhtRequest)(error))
+          val result = Future.successful(controller.handleError(auhtRequest)(error))
           status(result) shouldBe INTERNAL_SERVER_ERROR
           val doc = Jsoup.parse(contentAsString(result))
           doc.getElementById("error").text() shouldBe messages(message)
@@ -831,7 +831,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       for ((error, message) <- errors) {
         s"a $error has been thrown" in {
-          val result = Future.successful(controller.handleError(HeaderCarrier(), auhtRequest)(error))
+          val result = Future.successful(controller.handleError(auhtRequest)(error))
           status(result) shouldBe OK
           val doc = Jsoup.parse(contentAsString(result))
           doc.getElementById("error").text() shouldBe messages(message)
@@ -841,7 +841,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "redirect" when {
       "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
-        val result = Future.successful(controller.handleError(HeaderCarrier(), auhtRequest)(new CacheRelationshipAlreadyUpdated))
+        val result = Future.successful(controller.handleError(auhtRequest)(new CacheRelationshipAlreadyUpdated))
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.finishUpdate.url)
       }

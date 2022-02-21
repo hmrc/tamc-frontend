@@ -31,8 +31,8 @@ import play.api.i18n.Lang
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.LoggerHelper
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -62,7 +62,7 @@ class TransferController @Inject() (
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
   recipientDetailsForm: RecipientDetailsForm,
-  dateOfMarriageForm: DateOfMarriageForm)(implicit formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
