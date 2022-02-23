@@ -23,7 +23,7 @@ import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
-import views.helpers.{EnglishLangaugeUtils, LanguageUtils, WelshLanguageUtils}
+import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

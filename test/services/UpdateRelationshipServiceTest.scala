@@ -75,7 +75,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
     val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus("OK")))
 
-  val httpResponse = HttpResponse(OK, Some(json), headers)
+  val httpResponse = HttpResponse(OK, json, headers)
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockCachingService, mockMarriageAllowanceConnector)
@@ -415,7 +415,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
       "CannotUpdateRelationship error is returned from MarriageAllowanceConnector" in {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)))
-        val httpResponse = HttpResponse(OK, Some(json), headers)
+        val httpResponse = HttpResponse(OK, json, headers)
 
         when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
           .thenReturn(Future.successful(createCachedData()))
@@ -430,7 +430,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
       "RecipientNotFound error is returned from MarriageAllowanceConnector" in {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)))
-        val httpResponse = HttpResponse(OK, Some(json), headers)
+        val httpResponse = HttpResponse(OK, json, headers)
 
         when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
           .thenReturn(Future.successful(createCachedData()))
@@ -445,7 +445,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
       "RuntimeException is returned from the caching service" in {
         val json: JsValue = Json.toJson(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)))
-        val httpResponse = HttpResponse(OK, Some(json), headers)
+        val httpResponse = HttpResponse(OK, json, headers)
 
         when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
           .thenReturn(Future.failed(new RuntimeException("Failed to retrieve cacheMap")))
@@ -575,7 +575,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     "removeCache" should {
       "return the HTTPResponse when the cache has been dropped" in {
 
-        val httpResponse = HttpResponse(200, None, Map("" -> Seq("")))
+        val httpResponse = HttpResponse(OK, Json.toJson("{}"), Map("" -> Seq("")))
         when(mockCachingService.remove()(any(), any())).thenReturn(Future.successful(httpResponse))
 
         val result = await(service.removeCache)

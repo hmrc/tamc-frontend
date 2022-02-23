@@ -31,9 +31,8 @@ import play.api.i18n.Lang
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.LoggerHelper
+
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -63,7 +62,7 @@ class TransferController @Inject() (
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
   recipientDetailsForm: RecipientDetailsForm,
-  dateOfMarriageForm: DateOfMarriageForm)(implicit formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
@@ -85,11 +84,11 @@ class TransferController @Inject() (
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
-  def dateOfMarriageWithCy: Action[AnyContent] = authenticate { implicit request =>
+  def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
     Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("cy"))
   }
 
-  def dateOfMarriageWithEn: Action[AnyContent] = authenticate { implicit request =>
+  def dateOfMarriageWithEn: Action[AnyContent] = authenticate {
     Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("en"))
   }
 
@@ -250,14 +249,13 @@ class TransferController @Inject() (
     Ok(transfererDeceased())
   }
 
-  def handleError(implicit hc: HeaderCarrier, request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
-    PartialFunction[Throwable, Result] { throwable: Throwable =>
-      val message: String =
+  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
+      def message(throwable: Throwable): String  =
         s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils
           .getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"
 
-      def handle(logger: String => Unit, result: Result): Result = {
-        logger(message)
+      def handle(throwable: Throwable, logger: String => Unit, result: Result): Result = {
+        logger(message(throwable))
         result
       }
 
@@ -266,34 +264,34 @@ class TransferController @Inject() (
         InternalServerError(view)
       }
 
-      throwable match {
-        case _: TransferorNotFound => handle(warn, Ok(transferorNotFound()))
-        case _: RecipientNotFound  => handle(warn, Ok(recipientNotFound()))
-        case _: TransferorDeceased =>
-          handle(warn, Redirect(controllers.routes.TransferController.cannotUseService))
-        case _: RecipientDeceased =>
-          handle(warn, Redirect(controllers.routes.TransferController.cannotUseService))
-        case _: CacheMissingTransferor =>
-          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
-        case _: CacheTransferorInRelationship => handle(warn, Ok(transferorStatus()))
-        case _: CacheMissingRecipient =>
-          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
-        case _: CacheMissingEmail =>
-          handle(warn, Redirect(controllers.routes.TransferController.confirmYourEmail))
-        case _: CacheRelationshipAlreadyCreated =>
-          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
-        case _: CacheCreateRequestNotSent =>
-          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
-        case _: NoTaxYearsSelected      => handle(info, Ok(noYearSelected()))
-        case _: NoTaxYearsAvailable     => handle(info, Ok(noEligibleYears()))
-        case _: NoTaxYearsForTransferor => handle(info, Ok(noTaxYearTransferor()))
-        case _: RelationshipMightBeCreated =>
-          handle(warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+    val pf: PartialFunction[Throwable, Result] = {
+        case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
+        case t: RecipientNotFound  => handle(t, warn, Ok(recipientNotFound()))
+        case t: TransferorDeceased =>
+          handle(t, warn, Redirect(controllers.routes.TransferController.cannotUseService))
+        case t: RecipientDeceased =>
+          handle(t, warn, Redirect(controllers.routes.TransferController.cannotUseService))
+        case t: CacheMissingTransferor =>
+          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case t: CacheTransferorInRelationship => handle(t, warn, Ok(transferorStatus()))
+        case t: CacheMissingRecipient =>
+          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case t: CacheMissingEmail =>
+          handle(t, warn, Redirect(controllers.routes.TransferController.confirmYourEmail))
+        case t: CacheRelationshipAlreadyCreated =>
+          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case t: CacheCreateRequestNotSent =>
+          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history))
+        case t: NoTaxYearsSelected      => handle(t, info, Ok(noYearSelected()))
+        case t: NoTaxYearsAvailable     => handle(t, info, Ok(noEligibleYears()))
+        case t: NoTaxYearsForTransferor => handle(t, info, Ok(noTaxYearTransferor()))
+        case t: RelationshipMightBeCreated =>
+          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history))
         case ex: CannotCreateRelationship => handleWithException(ex, relationshipCannotCreate())
         case ex: CacheRecipientInRelationship =>
           handleWithException(ex, recipientRelationshipExists())
         case ex => handleWithException(ex, tryLater())
-      }
     }
-
+    pf
+  }
 }

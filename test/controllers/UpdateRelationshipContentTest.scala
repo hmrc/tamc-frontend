@@ -238,7 +238,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val date = TaxYear.current.starts
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
-        .thenReturn(Future.successful(Transferor, date))
+        .thenReturn(Future.successful((Transferor, date)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
@@ -274,7 +274,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val divorceDate  = LocalDate.of(2017, 4, 5)
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
-        .thenReturn(Future.successful(Transferor, divorceDate))
+        .thenReturn(Future.successful((Transferor, divorceDate)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
@@ -310,7 +310,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val divorceDate  = TaxYear.current.starts
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
-        .thenReturn(Future.successful(Recipient, divorceDate))
+        .thenReturn(Future.successful((Recipient, divorceDate)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
@@ -341,12 +341,13 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       bullets shouldBe expectedBullets
     }
 
-    "Recipient and DivorceDate is in previous year" in{
+    "Recipient and DivorceDate is in previous year" in {
+      val (year, month, day) = (2017, 4, 5)
       val endingDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
-      val divorceDate = LocalDate.of(2017, 4, 5)
+      val divorceDate = LocalDate.of(year, month, day)
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
-        .thenReturn(Future.successful(Recipient, divorceDate))
+        .thenReturn(Future.successful((Recipient, divorceDate)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)

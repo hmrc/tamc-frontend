@@ -21,7 +21,7 @@ import play.api.libs.json._
 
 object EndRelationshipReason {
   private val pattern = "dd/MM/yyyy"
-  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.jodaLocalDateReads(pattern), Writes.jodaLocalDateWrites(pattern))
+  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](JodaReads.jodaLocalDateReads(pattern), JodaWrites.jodaLocalDateWrites(pattern))
   implicit val formats: OFormat[EndRelationshipReason] = Json.format[EndRelationshipReason]
 }
 

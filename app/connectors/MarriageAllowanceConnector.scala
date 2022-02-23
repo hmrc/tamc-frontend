@@ -37,6 +37,7 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
       case RelationshipRecordStatusWrapper(_, ResponseStatus(TRANSFEROR_NOT_FOUND)) => throw TransferorNotFound()
       case RelationshipRecordStatusWrapper(_, ResponseStatus(CITIZEN_NOT_FOUND)) => throw CitizenNotFound()
       case RelationshipRecordStatusWrapper(_, ResponseStatus(BAD_REQUEST)) => throw BadFetchRequest()
+      case _ => throw new UnsupportedOperationException("Unable to handle list relationship request")
     }
 
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =

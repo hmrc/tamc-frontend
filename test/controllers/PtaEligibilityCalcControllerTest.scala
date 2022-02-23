@@ -27,32 +27,26 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
 
   val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
-  private def calculatorRequestAction(income: Map[String, String] = null) = {
+  private def calculatorRequestAction(income: Map[String, String]) = {
     val controller = app.injector.instanceOf[EligibilityController]
-    income match {
-      case nullMap if null == income =>
-        controller.ptaCalculator()(request)
-
-      case bothKeys if (income.contains("transferor-income") &&
-        income.contains("recipient-income")) =>
+      if (income.contains("transferor-income") && income.contains("recipient-income")) {
         val fakeRequest = FakeRequest()
           .withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"),
             "recipient-income" -> income("recipient-income"))
         controller.ptaCalculatorAction()(fakeRequest)
-
-      case transferorKey if (income.contains("transferor-income") &&
-        !income.contains("recipient-income")) =>
+      }
+      else if (income.contains("transferor-income") && !income.contains("recipient-income")) {
         val request = FakeRequest().
           withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"))
         controller.ptaCalculatorAction()(request)
-
-      case transferorKey if (!income.contains("transferor-income") &&
-        income.contains("recipient-income")) =>
+      }
+      else if (!income.contains("transferor-income") && income.contains("recipient-income")) {
         val request = FakeRequest().
           withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income("recipient-income"))
         controller.ptaCalculatorAction()(request)
+      }
+      else controller.ptaCalculator()(request)
     }
-  }
 
   "Check eligibility benefit" should {
 
@@ -69,7 +63,6 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
     }
 
     "if transferor income=14000 and recipient income=20000" in {
-      val formatter = java.text.NumberFormat.getIntegerInstance
       val result = calculatorRequestAction(Map("transferor-income" -> "14000", "recipient-income" -> "20000"))
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() should include("You will not benefit as a couple")
