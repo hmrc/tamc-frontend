@@ -41,13 +41,12 @@ disableBackLink = true
 ){
 
     @h1("generic.ma.apply")
-
     @p(HtmlContent(ledeContent))
     @p(Text(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT()))))
     @p(Text(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))))
 
     
-    @insetText(InsetText(content = Text(Messages("pages.how-it-works.lede-pre5"))))
+    @insetText(InsetText(content = Text(Messages("pages.how-it-works.lede-pre5", (applicationConfig.actualTaxYear(0) -4).toString))))
 
     @p(Text(Messages("pages.how-it-works.lede-pre6")))
 

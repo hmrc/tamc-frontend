@@ -25,6 +25,7 @@ import play.i18n.MessagesApi
 import utils.BaseTest
 import views.html.multiyear.lower_earner
 import play.api.mvc._
+import play.twirl.api.HtmlFormat
 
 import java.text.NumberFormat
 

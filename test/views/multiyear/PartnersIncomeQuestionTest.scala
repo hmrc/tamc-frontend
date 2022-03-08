@@ -34,20 +34,32 @@ class PartnersIncomeQuestionTest extends BaseTest {
   lazy val partnersIncomeFormInputForm = instanceOf[MultiYearPartnersIncomeQuestionForm].partnersIncomeForm
   lazy val partnersIncomeQuestionView = instanceOf[partners_income_question]
   override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
-  lazy val view = partnersIncomeQuestionView(partnersIncomeFormInputForm, scottishResident)
-  lazy val scottishResident = false
+
+  lazy val view = partnersIncomeQuestionView(partnersIncomeFormInputForm, false)
+  lazy val scottishResidentView = partnersIncomeQuestionView(partnersIncomeFormInputForm, true)
   lazy val personalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
   lazy val maxLimit = NumberFormat.getNumberInstance().format(applicationConfig.MAX_LIMIT())
+  lazy val maxLimitScottish = NumberFormat.getNumberInstance().format(applicationConfig.MAX_LIMIT_SCOT())
 
   "Partners Income Question Test" should {
 
-    "return correct title partners income question page" in {
+    "return correct title for partners income question page" in {
 
       val document = Jsoup.parse(view.toString())
       val title = document.title()
       val expected = messages("title.eligibility.pattern", messages("eligibility.check.partners.income.h1", personalAllowance, maxLimit))
 
       title should include(expected)
+    }
+
+    "return the correct Scottish resident income thresholds for partners income question page" in {
+
+      val document = Jsoup.parse(scottishResidentView.toString())
+      val title = document.title()
+      val expected = messages("title.eligibility.pattern", messages("eligibility.check.partners.income.h1", personalAllowance, maxLimitScottish))
+
+      title should include(expected)
+
     }
   }
 }
