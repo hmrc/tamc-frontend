@@ -77,7 +77,6 @@ class HowItWorksTest extends BaseTest {
       paragraphTag should include(expected)
     }
 
-    //TODO DDCNL-5544 make the value for earliest claimable year dynamic to change with config
     "display the correct year a claim can be backdated from: Current Year & 4 Previous years" in {
 
       val document = Jsoup.parse(howItWorksView().toString())
