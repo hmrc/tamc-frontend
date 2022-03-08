@@ -16,19 +16,28 @@
 
 package views.multiyear
 
+import config.ApplicationConfig
 import forms.MultiYearLowerEarnerForm
 import models.auth.UserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
+import play.i18n.MessagesApi
 import utils.BaseTest
 import views.html.multiyear.lower_earner
+import play.api.mvc._
+
+import java.text.NumberFormat
 
 class LowerEarnerTest extends BaseTest {
 
+  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
   implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
   lazy val multiYearLowerEarnerForm = instanceOf[MultiYearLowerEarnerForm].lowerEarnerForm
   lazy val lowerEarnerView = instanceOf[lower_earner]
+  override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
   lazy val view = lowerEarnerView(multiYearLowerEarnerForm)
+  lazy val personalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
+
 
   "Lower Earner Test" should {
 
@@ -36,10 +45,7 @@ class LowerEarnerTest extends BaseTest {
 
       val document = Jsoup.parse(view.toString())
       val title = document.title()
-      val expected = messages("")
-
-      println(s"TEST DOCUMENT $document DOCUMENT TEST")
-      println(s"TEST TITLE $title TITLE TEST")
+      val expected = messages("title.eligibility.pattern", messages("eligibility.check.lower.earner.h1", personalAllowance))
 
       title should include(expected)
 
