@@ -84,9 +84,6 @@ class HowItWorksTest extends BaseTest {
       val paragraphTag = document.getElementsByClass("govuk-inset-text").toString
       val expected = messages("pages.how-it-works.lede-pre5", earliestClaimYear)
 
-      println(s"TEST TEST TEST \n\n\n\n\n $document \n\n\n\n\n TEST TEST TEST")
-      println(s"TEST TEST TEST \n\n\n\n\n $paragraphTag \n\n\n\n\n TEST TEST TEST")
-      println(s"TEST TEST TEST \n\n\n\n\n $expected \n\n\n\n\n TEST TEST TEST")
       paragraphTag should include(expected)
 
     }
