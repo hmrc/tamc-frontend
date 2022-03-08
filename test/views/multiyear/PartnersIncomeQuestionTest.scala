@@ -13,33 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package views.multiyear
 
 import config.ApplicationConfig
 import forms.MultiYearPartnersIncomeQuestionForm
+import models.MultiYearPartnersIncomeQuestionInput
 import models.auth.UserRequest
 import org.jsoup.Jsoup
+import play.api.data.Form
+import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.i18n.MessagesApi
+import play.twirl.api.HtmlFormat
 import utils.BaseTest
 import views.html.multiyear.partners_income_question
+
 import java.text.NumberFormat
 
 class PartnersIncomeQuestionTest extends BaseTest {
 
-  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
-  lazy val partnersIncomeFormInputForm = instanceOf[MultiYearPartnersIncomeQuestionForm].partnersIncomeForm
-  lazy val partnersIncomeQuestionView = instanceOf[partners_income_question]
-  override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  val applicationConfig : ApplicationConfig                     = instanceOf[ApplicationConfig]
+  implicit val request: UserRequest[_]                          = UserRequest(FakeRequest(), None, true, None, false)
+  lazy val partnersIncomeFormInputForm: Form[MultiYearPartnersIncomeQuestionInput] = instanceOf[MultiYearPartnersIncomeQuestionForm].partnersIncomeForm
+  lazy val partnersIncomeQuestionView: partners_income_question = instanceOf[partners_income_question]
+  override implicit lazy val messages: Messages                 = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
 
-  lazy val view = partnersIncomeQuestionView(partnersIncomeFormInputForm, false)
-  lazy val scottishResidentView = partnersIncomeQuestionView(partnersIncomeFormInputForm, true)
-  lazy val personalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
-  lazy val maxLimit = NumberFormat.getNumberInstance().format(applicationConfig.MAX_LIMIT())
-  lazy val maxLimitScottish = NumberFormat.getNumberInstance().format(applicationConfig.MAX_LIMIT_SCOT())
+  lazy val view: HtmlFormat.Appendable                 = partnersIncomeQuestionView(partnersIncomeFormInputForm, false)
+  lazy val scottishResidentView: HtmlFormat.Appendable = partnersIncomeQuestionView(partnersIncomeFormInputForm, true)
+  lazy val personalAllowance: String                   = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+  lazy val maxLimit: String                            = NumberFormat.getNumberInstance().format(applicationConfig.MAX_LIMIT())
+  lazy val maxLimitScottish: String                    = NumberFormat.getNumberInstance().format(applicationConfig.MAX_LIMIT_SCOT())
+
 
   "Partners Income Question Test" should {
 
@@ -59,7 +64,6 @@ class PartnersIncomeQuestionTest extends BaseTest {
       val expected = messages("title.eligibility.pattern", messages("eligibility.check.partners.income.h1", personalAllowance, maxLimitScottish))
 
       title should include(expected)
-
     }
   }
 }

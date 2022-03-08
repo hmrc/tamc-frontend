@@ -30,14 +30,15 @@ import java.text.NumberFormat
 class HowItWorksTest extends BaseTest {
 
   val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
-  override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
-  lazy val howItWorksView = instanceOf[how_it_works]
+  implicit val request: UserRequest[_]      = UserRequest(FakeRequest(), None, true, None, false)
+  override implicit lazy val messages       = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  lazy val howItWorksView                   = instanceOf[how_it_works]
 
-  lazy val maxBenefit = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
+  lazy val maxBenefit                       = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
   lazy val maxPersonalAllowanceTransferable = NumberFormat.getNumberInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())
-  lazy val currentYearPersonalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
-  lazy val earliestClaimYear = (applicationConfig.actualTaxYear(0) -4).toString
+  lazy val currentYearPersonalAllowance     = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
+  lazy val earliestClaimYear                = (applicationConfig.actualTaxYear(0) -4).toString
+
 
   "How it works" should {
 
@@ -84,7 +85,6 @@ class HowItWorksTest extends BaseTest {
       val expected = messages("pages.how-it-works.lede-pre5", earliestClaimYear)
 
       paragraphTag should include(expected)
-
     }
   }
 }
