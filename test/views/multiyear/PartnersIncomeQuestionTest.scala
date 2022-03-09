@@ -58,6 +58,15 @@ class PartnersIncomeQuestionTest extends BaseTest {
       title should include(expected)
     }
 
+    "return the correct income thresholds for partner's income non Scottish resident" in {
+
+      val document = Jsoup.parse(view.toString())
+      val title = document.title()
+      val expected = messages("title.eligibility.pattern", messages("eligibility.check.partners.income.h1", personalAllowance, maxLimit))
+
+      title should include(expected)
+    }
+
     "return the correct Scottish resident income thresholds for partners income question page" in {
 
       val document = Jsoup.parse(scottishResidentView.toString())

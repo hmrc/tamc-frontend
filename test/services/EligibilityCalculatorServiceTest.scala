@@ -123,7 +123,6 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
         }
 
-
         "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
           val higherEarnerIncome = 14000
           val lowerEarnerIncome = 9000
