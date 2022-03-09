@@ -49,5 +49,14 @@ class LowerEarnerTest extends BaseTest {
 
       title should include(expected)
     }
+
+    "show the correct lower earner, non-benefit warning if transferor's current year income is above personal allowance" in {
+
+      val document = Jsoup.parse(view.toString())
+      val paragrapghTag = document.getElementsByTag("p").toString
+      val expected = messages("eligibility.check.lower.earner.error", personalAllowance)
+
+      paragrapghTag should include(expected)
+    }
   }
 }
