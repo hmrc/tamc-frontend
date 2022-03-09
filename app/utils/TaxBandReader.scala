@@ -47,7 +47,7 @@ class TaxBandReaderImpl @Inject()(config: ApplicationConfig) extends TaxBandRead
       }
       case _ => {
         List[TaxBand](
-          config.getTaxBand("BasicRate", "starter-rate", country.toLowerCase(), taxYear)
+          config.getTaxBand("BasicRate", "basic-rate", country.toLowerCase(), taxYear)
         )
       }
     }
