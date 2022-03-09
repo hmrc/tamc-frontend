@@ -21,12 +21,14 @@ import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
+import utils.{TaxBandReader, TaxBandReaderImpl}
 
 class TamcModule extends Module {
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
-      bind[CurrentTaxYear].toInstance(TaxYear)
+      bind[CurrentTaxYear].toInstance(TaxYear),
+      bind[TaxBandReader].to[TaxBandReaderImpl]
     )
 }

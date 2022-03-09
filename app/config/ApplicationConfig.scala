@@ -17,6 +17,7 @@
 package config
 
 import com.google.inject.Inject
+import models.TaxBand
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -34,7 +35,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val cacheUri:String = servicesConfig.baseUrl("cachable.session-cache")
   val sessionCacheDomain: String = servicesConfig.getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
 
-  private lazy val currentTaxYear: TaxYear = TaxYear.current
+  lazy val currentTaxYear: TaxYear = TaxYear.current
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -147,4 +148,15 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   def ivLoginUrl: String = createUrl(action = "registration")
 
   def ivUpliftUrl: String = createUrl(action = "uplift")
+
+  def getTaxBand(name: String, taxRate: String, country: String, taxYear: Int): TaxBand = {
+    val lowerThreshold = configuration.getOptional[Int](taxBandKey(taxRate, "lowerthreshold", country, taxYear)).getOrElse(0)
+    val upperThreshold = configuration.getOptional[Int](taxBandKey(taxRate, "upperthreshold", country, taxYear)).getOrElse(0)
+    val rate = configuration.getOptional[Double](taxBandKey(taxRate, "rate", country, taxYear)).getOrElse(0d)
+    TaxBand(name, lowerThreshold, upperThreshold, rate)
+  }
+
+  private def taxBandKey(taxRate: String, taxBand: String, country: String, taxYear: Int) = {
+    s"taxbands-${taxRate}-${taxBand}-${country}-${taxYear}"
+  }
 }
