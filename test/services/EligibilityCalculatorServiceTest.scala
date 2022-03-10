@@ -17,8 +17,9 @@
 package services
 
 import config.ApplicationConfig
-import models._
+import models.{EligibilityCalculatorResult, England, NorthernIreland, Scotland, Wales}
 import uk.gov.hmrc.time
+import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
 import java.text.NumberFormat
@@ -26,7 +27,8 @@ import java.util.Locale
 
 class EligibilityCalculatorServiceTest extends BaseTest {
 
-  val currentTaxYear: Int = time.TaxYear.current.startYear
+  lazy val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear
   val eligibilityCalculatorService = app.injector.instanceOf[EligibilityCalculatorService]
 
   private def currencyFormatter(limit: Int): String = {
@@ -34,8 +36,6 @@ class EligibilityCalculatorServiceTest extends BaseTest {
     formatter.setMaximumFractionDigits(0)
     formatter.format(limit)
   }
-  
-  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
 
   "MarriageAllowanceCalculator" when {
     "England is selected" should {
@@ -45,7 +45,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT() + 1
           val lowerEarnerIncome = 9000
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT())))
         }
@@ -55,7 +55,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE())))
         }
@@ -65,7 +65,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT() + 1
           val lowerEarnerIncome = 12000
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT())))
         }
@@ -75,7 +75,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
         }
       }
@@ -85,7 +85,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT()))
         }
       }
@@ -95,7 +95,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 1))
         }
 
@@ -103,7 +103,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 1))
         }
 
@@ -111,7 +111,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 5
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(1))
         }
 
@@ -119,7 +119,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 40
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
         }
 
@@ -128,7 +128,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = 14000
           val lowerEarnerIncome = 9000
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(252.0))
         }
       }
@@ -140,7 +140,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_SCOT() + 1
           val lowerEarnerIncome = 9000
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_SCOT())))
         }
@@ -149,7 +149,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE())))
         }
@@ -158,7 +158,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_SCOT() + 1
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_SCOT())))
         }
@@ -167,7 +167,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 5
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult("eligibility.feedback.loose")
         }
 
@@ -178,7 +178,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT()))
         }
       }
@@ -188,7 +188,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(239.0))
         }
 
@@ -196,7 +196,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(239.0))
         }
 
@@ -204,7 +204,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 40
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(231.0))
         }
 
@@ -216,7 +216,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           )
 
           incomes.foreach(income =>
-            eligibilityCalculatorService.calculate(income._2, income._1, Scotland) shouldBe
+            eligibilityCalculatorService.calculate(income._2, income._1, Scotland, currentTaxYear) shouldBe
               EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(income._3))
           )
         }
@@ -229,7 +229,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_WALES() + 1
           val lowerEarnerIncome = 9000
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_WALES())))
         }
@@ -238,7 +238,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE())))
         }
@@ -247,7 +247,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_WALES() + 1
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_WALES())))
         }
@@ -258,7 +258,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT()))
         }
 
@@ -267,7 +267,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
             val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
               EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 1))
           }
 
@@ -275,7 +275,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
             val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
               EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 1))
           }
 
@@ -283,7 +283,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             val higherEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 5
             val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
               EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(1))
           }
 
@@ -291,7 +291,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 40
             val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales) shouldBe
+            eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
               EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
           }
         }
@@ -304,7 +304,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_NORTHERN_IRELAND() + 1
           val lowerEarnerIncome = 9000
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_NORTHERN_IRELAND())))
         }
@@ -313,7 +313,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple", messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE())))
         }
 
@@ -321,7 +321,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_NORTHERN_IRELAND() + 1
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
               messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_NORTHERN_IRELAND())))
         }
@@ -332,7 +332,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT()))
         }
       }
@@ -342,7 +342,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 1))
         }
 
@@ -350,7 +350,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 1))
         }
 
@@ -358,7 +358,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 5
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(1))
         }
 
@@ -366,7 +366,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 40
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
-          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland) shouldBe
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
         }
       }
