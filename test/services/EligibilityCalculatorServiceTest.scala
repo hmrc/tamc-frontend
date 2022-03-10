@@ -42,6 +42,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
       "Inform the user they are ineligible for marriage allowance" when {
         "The higher earners income is taxed at the higher rate tax band" in {
 
+          //TODO DDCNL-5544 Making dynamic... to discuss, remove TODO after discussion
           val higherEarnerIncome = applicationConfig.MAX_LIMIT() + 1
           val lowerEarnerIncome = 9000
 
@@ -123,6 +124,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
         }
 
+        //TODO DDCNL-5544 Making dynamic... to discuss, remove TODO after discussion
         "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
           val higherEarnerIncome = 14000
           val lowerEarnerIncome = 9000
@@ -207,6 +209,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(231.0))
         }
 
+        //TODO Making dynamic... to discuss, remove TODO after discussion
         "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
           val incomes = List(
             (14000, 9000, 252),

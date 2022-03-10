@@ -204,10 +204,11 @@ class UpdateRelationshipService @Inject()(
                                      data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] =
     marriageAllowanceConnector.updateRelationship(transferorNino, data) map {
       httpResponse =>
-        Json.fromJson[UpdateRelationshipResponse](httpResponse.json).get match {
-          case UpdateRelationshipResponse(ResponseStatus("OK")) => data
-          case UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP)) => throw CannotUpdateRelationship()
-          case UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST)) => throw RecipientNotFound()
+        Json.fromJson[UpdateRelationshipResponse](httpResponse.json).asOpt match {
+          case Some(UpdateRelationshipResponse(ResponseStatus("OK"))) => data
+          case Some(UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP))) => throw CannotUpdateRelationship()
+          case Some(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))) => throw RecipientNotFound()
+          case _ => throw new UnsupportedOperationException("Unable to send relationship update request")
         }
     } recover {
       case error =>

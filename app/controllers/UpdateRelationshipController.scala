@@ -26,8 +26,6 @@ import models.auth.BaseUserRequest
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-
 import utils.LoggerHelper
 import viewModels._
 
@@ -58,7 +56,7 @@ class   UpdateRelationshipController @Inject()(
   historySummaryViewModelImpl: HistorySummaryViewModelImpl,
   claimsViewModelImpl: ClaimsViewModelImpl,
   divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
-  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit formPartialRetriever: FormPartialRetriever, ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def history(): Action[AnyContent] = authenticate.async {
     implicit request =>
@@ -263,7 +261,7 @@ class   UpdateRelationshipController @Inject()(
       }) recover handleError
   }
 
-  def handleError(implicit hc: HeaderCarrier, request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
+  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
     PartialFunction[Throwable, Result] {
       throwable: Throwable =>
 

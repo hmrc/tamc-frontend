@@ -18,7 +18,6 @@ package forms.coc
 
 import play.api.data.Form
 import play.api.data.Forms.{optional, single, text}
-import play.api.i18n.Messages
 
 object MakeChangesDecisionForm {
 
@@ -28,7 +27,7 @@ object MakeChangesDecisionForm {
   val Cancel = "Cancel"
   val Bereavement = "Bereavement"
 
-  def form(implicit messages: Messages): Form[Option[String]] = Form[Option[String]](
+  def form: Form[Option[String]] = Form[Option[String]](
     single(StopMAChoice -> optional(text).verifying("pages.makeChanges.error.mandatory.value", { _.isDefined }))
   )
 }
