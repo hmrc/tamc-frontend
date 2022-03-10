@@ -72,8 +72,9 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   lazy val frontendTemplatePath: String = configuration.getOptional[String]("microservice.services.frontend-template-provider.path")
     .getOrElse("/template/mustache")
 
-  val TAMC_BEGINNING_YEAR: Int = configuration.getOptional[Int]("tamc-earliest-valid-year")
-    .getOrElse(throw new RuntimeException("Cannot find 'tamc-earliest-valid-year' in 'data/tax-rates.conf'!"))
+  val DEFAULT_VALID_YEARS = 4
+  val TAMC_VALID_YEARS: Int = configuration.getOptional[Int]("tamc-valid-years-prior")
+    .getOrElse(DEFAULT_VALID_YEARS)
 
   val TAMC_MIN_DATE: LocalDate = LocalDate.of(1900, 1, 1)
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
