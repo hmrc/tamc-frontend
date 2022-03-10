@@ -33,7 +33,6 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionId}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.audit.model.DataEvent
 import utils.BaseTest
 
 import java.time.LocalDate
@@ -82,7 +81,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockTimeService.getTaxYearForDate(recipientData.dateOfMarriage))
           .thenReturn(2020)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
+          .thenReturn(HttpResponse(OK, Json.toJson(response), Map("" -> Seq(""))))
         when(mockTimeService.getValidYearsApplyMAPreviousYears(any()))
           .thenReturn(Nil)
         when(mockCachingService.saveRecipientRecord(RecipientRecordData.userRecord, recipientData, Nil))
@@ -101,7 +100,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
+          .thenReturn(HttpResponse(OK, Json.toJson(response), Map("" -> Seq(""))))
 
         intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
       }
@@ -113,7 +112,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(HttpResponse(OK, responseJson = Some(Json.toJson(response))))
+          .thenReturn(HttpResponse(OK, Json.toJson(response), Map("" -> Seq(""))))
 
         intercept[TransferorDeceased](await(service.isRecipientEligible(nino, recipientData)))
       }

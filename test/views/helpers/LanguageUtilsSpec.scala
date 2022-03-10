@@ -18,7 +18,7 @@ package views.helpers
 
 import forms.EmailForm
 import org.mockito.Mockito.when
-import org.scalatest.Matchers
+import org.scalatest.matchers.should.Matchers
 import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.BaseTest
@@ -106,10 +106,10 @@ class LanguageUtilsSpec extends BaseTest with Matchers {
         val start = year
         val finish = year + 1
         s"return the beginning and end dates of $year tax year(UK)" in new EnglishSetup {
-          languageUtils.taxDateInterval(year)(englishMessage) shouldBe s"6 April $start to 5 April $finish"
+          languageUtils.taxDateInterval(year) shouldBe s"6 April $start to 5 April $finish"
         }
         s"return the beginning and end dates of $year tax year(CY)" in new WelshSetup {
-          languageUtils.taxDateInterval(year)(welshMessage) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
+          languageUtils.taxDateInterval(year) shouldBe s"6 Ebrill $start i 5 Ebrill $finish"
         }
       }
     }

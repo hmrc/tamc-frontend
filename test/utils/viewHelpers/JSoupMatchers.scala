@@ -19,13 +19,13 @@ package utils.viewHelpers
 import org.jsoup.nodes.{Document, Element}
 import org.scalatest.matchers.{MatchResult, Matcher}
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters.asScalaBufferConverter
 
 trait JSoupMatchers {
 
   class TagWithTextMatcher(expectedContent: String, tag: String) extends Matcher[Document] {
     def apply(document: Document): MatchResult = {
-      val elements: List[String] = document.getElementsByTag(tag).toList.map(_.text)
+      val elements: List[String] = document.getElementsByTag(tag).asScala.toList.map(_.text)
 
       lazy val elementContents = elements.mkString("\t", "\n\t", "")
 
@@ -40,7 +40,7 @@ trait JSoupMatchers {
   class ElementWithAttributeValueMatcher(expectedContent: String, attribute: String) extends Matcher[Element] {
     def apply(left: Element): MatchResult = {
       val attribVal = left.attr(attribute)
-      val attributes = left.attributes().asList().mkString("\t", "\n\t", "")
+      val attributes = left.attributes().asList().asScala.mkString("\t", "\n\t", "")
 
       MatchResult(
         attribVal == expectedContent,
@@ -56,7 +56,7 @@ trait JSoupMatchers {
     def apply(left: Document): MatchResult = {
       val elements: List[String] =
         left
-          .select(selector)
+          .select(selector).asScala
           .toList
           .map(_.text)
 

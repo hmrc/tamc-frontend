@@ -17,13 +17,11 @@
 package errorHandler
 
 import config.ApplicationConfig
-import helpers.{FakeCachedStaticHtmlPartialRetriever, FakePartialRetriever}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
-import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Request
 import play.api.test.{FakeRequest, Injecting}
