@@ -16,6 +16,7 @@
 
 @import config.ApplicationConfig
 @import java.text.NumberFormat
+@import uk.gov.hmrc.time.TaxYear._
 @import views.helpers.LanguageUtilsImpl
 @import models.auth.UserRequest
 @import includes.{H1, H2, P, Link, Button}
@@ -46,7 +47,7 @@ disableBackLink = true
     @p(Text(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))))
 
     
-    @insetText(InsetText(content = Text(Messages("pages.how-it-works.lede-pre5"))))
+    @insetText(InsetText(content = Text(Messages("pages.how-it-works.lede-pre5", (applicationConfig.currentTaxYear.finishYear - 5).toString))))
 
     @p(Text(Messages("pages.how-it-works.lede-pre6")))
 

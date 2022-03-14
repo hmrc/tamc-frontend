@@ -57,22 +57,10 @@ pages.form.field-required.partners-income=Dewiswch ‘Iawn’ os yw incwm eich p
 pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
 
 pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
-pages.form.field-required.multiyear-transferor-income-criteria=Rhowch wybod a oedd eich incwm blynyddol er 6 Ebrill 2017 ar lefel y Lwfans Personol neu’n is.
 pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2017?
 pages.form.field-required.applyForHistoricYears=Dewiswch Iawn os hoffech wneud cais ar gyfer blwyddyn dreth gynharach
 
 pages.form.extra-year.field-required=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}
-pages.form.field-required.year-2016-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2016 i 2017
-pages.form.field-required.year-2017-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2017 i 2018
-pages.form.field-required.year-2018-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2018 i 2019
-pages.form.field-required.year-2019-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2019 i 2020
-pages.form.field-required.year-2020-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2020 i 2021
-pages.form.field-required.year-2021-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2021 i 2022
-pages.form.field-required.year-2022-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2022 i 2023
-pages.form.field-required.year-2023-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2023 i 2024
-pages.form.field-required.year-2024-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2024 i 2025
-pages.form.field-required.year-2025-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2025 i 2026
-pages.form.field-required.year-2026-=Cadarnhewch a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef 2026 i 2027
 
 eligibility.feedback.incorrect-role=Gwiriwch y rhifau yr ydych wedi’u nodi. Nodwch incwm yr unigolyn &#226;’r cyflog isaf, wedi’i ddilyn gan incwm yr unigolyn &#226;’r cyflog uchaf.
 
@@ -237,7 +225,6 @@ eligibility.check.married.legend=A ydych yn briod neu mewn partneriaeth sifil sy
 eligibility.check.yes=Iawn
 eligibility.check.married.error1=Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
 eligibility.check.married.error2=Gallwch wneud cais am Lwfans Priodasol os yw’ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
-multiyear.check.income=Er 6 Ebrill 2017, a oedd eich incwm blynyddol ar lefel y Lwfans Personol neu’n is?
 eligibility.check.non-eligible=Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
 eligibility.check.lower.earner.information2=Dyma gyfanswm eich enillion o bob cyflogaeth, pensiwn, buddiant, ymddiriedolaeth, incwm rhent, gan gynnwys incwm difidend sy’n fwy na’ch Lwfans Difidend – cyn i unrhyw dreth ac Yswiriant Gwladol gael eu didynnu.
 eligibility.check.lower.earner.h1=A yw’ch incwm yn llai na £{0} y flwyddyn?
