@@ -56,7 +56,6 @@ pages.form.field-required.partners-income=Select yes if your partner’s income 
 pages.form.field-required.do-you-want-to-apply=Select yes if you want to apply for Marriage Allowance
 
 pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
-pages.form.field-required.multiyear-recipient-income-criteria=Tell us if your partner is a basic rate tax payer since 6 April 2017?
 pages.form.field-required.applyForHistoricYears=Select yes if you would like to apply for earlier tax years
 
 error.end-reason.required=Select a reason for changing your Marriage Allowance below.

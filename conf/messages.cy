@@ -57,7 +57,6 @@ pages.form.field-required.partners-income=Dewiswch ‘Iawn’ os yw incwm eich p
 pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
 
 pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
-pages.form.field-required.multiyear-recipient-income-criteria=Rhowch wybod a yw’ch partner yn talu treth ar y gyfradd sylfaenol er 6 Ebrill 2017?
 pages.form.field-required.applyForHistoricYears=Dewiswch Iawn os hoffech wneud cais ar gyfer blwyddyn dreth gynharach
 
 pages.form.extra-year.field-required=Rhowch wybod a hoffech wneud cais ar gyfer y flwyddyn dreth flaenorol, sef {0} i {1}
