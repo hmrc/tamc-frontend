@@ -17,8 +17,7 @@
 package services
 
 import config.ApplicationConfig
-import models.{EligibilityCalculatorResult, England, NorthernIreland, Scotland, Wales}
-import uk.gov.hmrc.time
+import models._
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 

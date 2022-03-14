@@ -19,7 +19,7 @@ package utils.viewHelpers
 import org.jsoup.nodes.{Document, Element}
 import org.scalatest.matchers.{MatchResult, Matcher}
 
-import scala.collection.JavaConverters.asScalaBufferConverter
+import scala.collection.JavaConverters.{asScalaBufferConverter, iterableAsScalaIterableConverter}
 
 trait JSoupMatchers {
 
@@ -40,7 +40,7 @@ trait JSoupMatchers {
   class ElementWithAttributeValueMatcher(expectedContent: String, attribute: String) extends Matcher[Element] {
     def apply(left: Element): MatchResult = {
       val attribVal = left.attr(attribute)
-      val attributes = left.attributes().asList().asScala.mkString("\t", "\n\t", "")
+      val attributes = left.attributes().asScala.toList.mkString("\t", "\n\t", "")
 
 
       MatchResult(
