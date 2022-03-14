@@ -319,7 +319,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "recipient-income" -> "£100"
         )
         when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
-          ArgumentMatchers.eq(England))
+          ArgumentMatchers.eq(England), ArgumentMatchers.any())
         ).thenReturn(EligibilityCalculatorResult("test_key"))
         val result = controller.gdsCalculatorAction()(request)
         status(result) shouldBe OK
@@ -353,7 +353,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
           "recipient-income" -> "£100"
         )
         when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
-          ArgumentMatchers.eq(England))
+          ArgumentMatchers.eq(England), ArgumentMatchers.any())
         ).thenReturn(EligibilityCalculatorResult("test_key"))
         val result = controller.ptaCalculatorAction()(request)
         status(result) shouldBe OK

@@ -29,24 +29,25 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
 
   private def calculatorRequestAction(income: Map[String, String]) = {
     val controller = app.injector.instanceOf[EligibilityController]
-    if (income.contains("transferor-income") && income.contains("recipient-income")) {
-      val fakeRequest = FakeRequest()
-        .withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"),
-          "recipient-income" -> income("recipient-income"))
-      controller.ptaCalculatorAction()(fakeRequest)
+      if (income.contains("transferor-income") && income.contains("recipient-income")) {
+        val fakeRequest = FakeRequest()
+          .withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"),
+            "recipient-income" -> income("recipient-income"))
+        controller.ptaCalculatorAction()(fakeRequest)
+      }
+      else if (income.contains("transferor-income") && !income.contains("recipient-income")) {
+        val request = FakeRequest().
+          withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"))
+        controller.ptaCalculatorAction()(request)
+      }
+      else if (!income.contains("transferor-income") && income.contains("recipient-income")) {
+        val request = FakeRequest().
+          withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income("recipient-income"))
+        controller.ptaCalculatorAction()(request)
+      }
+      else controller.ptaCalculator()(request)
     }
-    else if (income.contains("transferor-income") && !income.contains("recipient-income")) {
-      val request = FakeRequest().
-        withFormUrlEncodedBody("country" -> "england", "transferor-income" -> income("transferor-income"))
-      controller.ptaCalculatorAction()(request)
-    }
-    else if (!income.contains("transferor-income") && income.contains("recipient-income")) {
-      val request = FakeRequest().
-        withFormUrlEncodedBody("country" -> "england", "recipient-income" -> income("recipient-income"))
-      controller.ptaCalculatorAction()(request)
-    }
-    else controller.ptaCalculator()(request)
-  }
+
 
   "Check eligibility benefit" should {
 

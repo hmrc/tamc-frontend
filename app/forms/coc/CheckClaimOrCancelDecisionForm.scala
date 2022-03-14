@@ -25,7 +25,7 @@ object CheckClaimOrCancelDecisionForm {
   val CheckMarriageAllowanceClaim = "checkMarriageAllowanceClaim"
   val StopMarriageAllowance = "stopMarriageAllowance"
 
-  def form: Form[Option[String]] = Form[Option[String]](
+  def form(): Form[Option[String]] = Form[Option[String]](
     single(DecisionChoice -> optional(text).verifying("pages.decision.error.mandatory.value", { _.isDefined }))
   )
 }

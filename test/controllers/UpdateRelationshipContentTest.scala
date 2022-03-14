@@ -341,9 +341,10 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       bullets shouldBe expectedBullets
     }
 
-    "Recipient and DivorceDate is in previous year" in{
+    "Recipient and DivorceDate is in previous year" in {
+      val (year, month, day) = (2017, 4, 5)
       val endingDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
-      val divorceDate = LocalDate.of(2017, 4, 5)
+      val divorceDate = LocalDate.of(year, month, day)
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((Recipient, divorceDate)))

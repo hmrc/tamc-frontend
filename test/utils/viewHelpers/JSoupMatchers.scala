@@ -42,6 +42,7 @@ trait JSoupMatchers {
       val attribVal = left.attr(attribute)
       val attributes = left.attributes().asList().asScala.mkString("\t", "\n\t", "")
 
+
       MatchResult(
         attribVal == expectedContent,
         s"""[$attribute="$expectedContent"] is not a member of the element's attributes:[\n$attributes]""",

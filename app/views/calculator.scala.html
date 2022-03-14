@@ -42,7 +42,7 @@ request: UserRequest[_])
 @main(
 pageTitle = Some(Messages("title.pattern", Messages("title.eligibility-criteria"))),
 afterContent = Some(afterContent)
-){  
+){
     @errorSummary(calculatorForm)
 
     @h1("pages.calc.header")
@@ -103,22 +103,22 @@ afterContent = Some(afterContent)
                         ), RadioItem(
                             content = Text(messages("label.ni")),
                             value = Some("northernireland"),
-                            id = Some("country-northernireland")    
+                            id = Some("country-northernireland")
                         ), RadioItem(
                             content = Text(messages("label.scotland")),
                             value = Some("scotland"),
-                            id = Some("country-scotland")    
+                            id = Some("country-scotland")
                         ), RadioItem(
                             content = Text(messages("label.wales")),
                             value = Some("wales"),
-                            id = Some("country-wales")    
+                            id = Some("country-wales")
                         )),
             legendAsHeading = true,
             legendClasses = "govuk-label--s",
             inline = false
         )
 
-        @inputValue( 
+        @inputValue(
             form = calculatorForm,
             id = "transferor-income",
             name = "transferor-income",
@@ -129,7 +129,7 @@ afterContent = Some(afterContent)
             prefix = Some(PrefixOrSuffix(content = Text("£")))
         )
 
-        @inputValue( 
+        @inputValue(
             form = calculatorForm,
             id = "recipient-income",
                 name = "recipient-income",

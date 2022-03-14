@@ -41,7 +41,6 @@ object EligibilityCalculatorForm {
 
   val currencyFormatter = new Formatter[Int] {
     private def messageCustomizer(fieldKey: String, messageKey: String): String = s"pages.form.$messageKey.$fieldKey"
-//    private def messageCustomizer(fieldKey: String, messageKey: String): String = s"pages.form.field.${fieldKey}.error.${messageKey}"
 
     private def quantity (value: Int) =
       s"%,.0f".format(

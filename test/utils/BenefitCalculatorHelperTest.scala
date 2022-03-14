@@ -18,15 +18,17 @@ package utils
 
 import _root_.services.EligibilityCalculatorService
 import config.ApplicationConfig
-import models._
+import models.{England, NorthernIreland, Scotland, TaxBand, Wales}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import uk.gov.hmrc.time.TaxYear
 
 class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
 
 
   val benefitCalculatorHelper: BenefitCalculatorHelper = instanceOf[BenefitCalculatorHelper]
   val eligibilityCalculatorService: EligibilityCalculatorService = instanceOf[EligibilityCalculatorService]
-  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
+  lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
+  lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear
 
   "BenefitCalculatorHelper" when {
 
@@ -34,24 +36,24 @@ class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
 
       "return the correct total benefit for an English tax payer" in {
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe applicationConfig.MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 116
+          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)) shouldBe 116
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(England)) shouldBe 216
+          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)) shouldBe 216
       }
 
       "return the correct total benefit for a Scottish tax payer" in {
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe applicationConfig.MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 110
+          eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear)) shouldBe 110
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland)) shouldBe 205
+          eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear)) shouldBe 205
       }
 
       "return the correct total benefit for a Scottish tax payer when hypothetical bands are used" in {
@@ -80,48 +82,48 @@ class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
 
       "return the correct total benefit for a Welsh tax payer" in {
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe applicationConfig.MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 116
+          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)) shouldBe 116
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales)) shouldBe 216
+          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)) shouldBe 216
       }
 
       "return the correct total benefit for a Northern Irish tax payer" in {
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe applicationConfig.MAX_BENEFIT()
+          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 116
+          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)) shouldBe 116
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland)) shouldBe 216
+          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)) shouldBe 216
       }
 
     }
 
     "getCountryTaxBandsFromFile is called" must {
       "return the correct banded income for an English tax payer" in {
-        eligibilityCalculatorService.getCountryTaxBandsFromFile(England) shouldBe
+        eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear) shouldBe
         List(TaxBand("BasicRate", applicationConfig.PERSONAL_ALLOWANCE() + 1, applicationConfig.MAX_LIMIT(), 0.20))
       }
 
       "return the correct banded income for a Scottish tax payer" in {
-        eligibilityCalculatorService.getCountryTaxBandsFromFile(Scotland) shouldBe
+        eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear) shouldBe
           List(TaxBand("StarterRate", applicationConfig.PERSONAL_ALLOWANCE() + 1, 14667, 0.19),
             TaxBand("BasicRate", 14668, 25296, 0.20),
             TaxBand("IntermediateRate", 25297, applicationConfig.MAX_LIMIT_SCOT(), 0.21))
       }
 
       "return the correct banded income for a Welsh tax payer" in {
-        eligibilityCalculatorService.getCountryTaxBandsFromFile(Wales) shouldBe
+        eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear) shouldBe
           List(TaxBand("BasicRate", applicationConfig.PERSONAL_ALLOWANCE() + 1, applicationConfig.MAX_LIMIT_WALES(), 0.20))
       }
 
       "return the correct banded income for a Northern Irish tax payer" in {
-        eligibilityCalculatorService.getCountryTaxBandsFromFile(NorthernIreland) shouldBe
+        eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear) shouldBe
           List(TaxBand("BasicRate", applicationConfig.PERSONAL_ALLOWANCE() + 1, applicationConfig.MAX_LIMIT_NORTHERN_IRELAND(), 0.20))
       }
     }

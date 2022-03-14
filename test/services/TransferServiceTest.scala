@@ -184,5 +184,4 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
     }
   }
-
 }

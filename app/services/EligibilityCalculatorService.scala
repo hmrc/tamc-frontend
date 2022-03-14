@@ -18,15 +18,20 @@ package services
 
 import com.google.inject.Inject
 import config.ApplicationConfig
-import models._
+import models.{Country, EligibilityCalculatorResult, TaxBand}
 import play.api.libs.json.Json
-import utils.BenefitCalculatorHelper
+import uk.gov.hmrc.time.TaxYear
+import utils.{BenefitCalculatorHelper, TaxBandReader}
 
 import scala.io.Source
 
-class EligibilityCalculatorService @Inject()(appConfig: ApplicationConfig, benefitCalculatorHelper: BenefitCalculatorHelper) {
+class EligibilityCalculatorService @Inject()(
+  appConfig: ApplicationConfig,
+  benefitCalculatorHelper: BenefitCalculatorHelper,
+  taxBandReader: TaxBandReader
+) {
 
-  def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country): EligibilityCalculatorResult = {
+  def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country, taxYear: TaxYear): EligibilityCalculatorResult = {
     val maxBenefitLimit = benefitCalculatorHelper.maxLimit(countryOfResidence)
 
     val hasMaxBenefit = transferorIncome < appConfig.TRANSFEROR_ALLOWANCE && recipientIncome > appConfig.RECIPIENT_ALLOWANCE
@@ -46,11 +51,11 @@ class EligibilityCalculatorService @Inject()(appConfig: ApplicationConfig, benef
       val paFormat = benefitCalculatorHelper.currencyFormatter(appConfig.PERSONAL_ALLOWANCE())
       EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple", messageParam = Some(paFormat))
     } else if (hasMaxBenefit) {
-      val basicRate = getCountryTaxBandsFromFile(countryOfResidence).find(band => band.name == "BasicRate").head.rate
+      val basicRate = getCountryTaxBands(countryOfResidence, taxYear).find(band => band.name == "BasicRate").head.rate
       val maxBenefit = (appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate).ceil.toInt
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(maxBenefit))
     } else {
-      partialEligibilityScenario(transferorIncome, recipientIncome, countryOfResidence, getCountryTaxBandsFromFile(countryOfResidence))
+      partialEligibilityScenario(transferorIncome, recipientIncome, countryOfResidence, getCountryTaxBands(countryOfResidence, taxYear))
     }
   }
 
@@ -73,8 +78,7 @@ class EligibilityCalculatorService @Inject()(appConfig: ApplicationConfig, benef
     (recipientBenefit - transferorLoss.floor).toInt
   }
 
-  def getCountryTaxBandsFromFile(countryOfResidence: Country): List[TaxBand] = {
-    val resource = getClass.getResourceAsStream(s"/data/${countryOfResidence}Bands.json")
-    Json.parse(Source.fromInputStream(resource).mkString).as[CountryTaxBands].taxBands
+  def getCountryTaxBands(countryOfResidence: Country, taxYear: TaxYear): List[TaxBand] = {
+    taxBandReader.read(countryOfResidence, taxYear)
   }
 }

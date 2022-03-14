@@ -27,7 +27,7 @@ object MakeChangesDecisionForm {
   val Cancel = "Cancel"
   val Bereavement = "Bereavement"
 
-  def form: Form[Option[String]] = Form[Option[String]](
+  def form(): Form[Option[String]] = Form[Option[String]](
     single(StopMAChoice -> optional(text).verifying("pages.makeChanges.error.mandatory.value", { _.isDefined }))
   )
 }

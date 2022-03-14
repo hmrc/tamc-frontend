@@ -184,7 +184,7 @@ class EligibilityController @Inject()(
           Ok(calculatorView(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
-              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country), appConfig.currentTaxYear)))))
   }
 
   def ptaCalculator(): Action[AnyContent] = unauthenticatedAction {
@@ -201,7 +201,7 @@ class EligibilityController @Inject()(
           Ok(ptaCalculatorView(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
-              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country))))))
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country), appConfig.currentTaxYear)))))
   }
 
 }
