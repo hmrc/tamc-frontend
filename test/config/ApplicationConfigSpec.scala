@@ -24,8 +24,8 @@ class ApplicationConfigSpec extends UnitSpec {
   val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
 
   "check rates for earliest valid year" when {
-    "return valid year" in {
-      applicationConfig.TAMC_BEGINNING_YEAR should be(2017)
+    "return valid years prior" in {
+      applicationConfig.TAMC_VALID_YEARS should be(4)
     }
   }
 
