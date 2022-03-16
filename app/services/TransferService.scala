@@ -230,7 +230,9 @@ class TransferService @Inject()(
     CreateRelationshipRequestHolder(request = createRelationshipreq, notification = sendNotificationData)
   }
 
-  private def sendCreateRelationship(transferorNino: Nino, data: CacheData)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[CacheData] = {
+  private def sendCreateRelationship(transferorNino: Nino, data: CacheData)(implicit hc: HeaderCarrier,
+                                                                            messages: Messages, ec: ExecutionContext): Future[CacheData] = {
+
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, messages)) map {
       httpResponse =>
         Json.fromJson[CreateRelationshipResponse](httpResponse.json).asOpt match {

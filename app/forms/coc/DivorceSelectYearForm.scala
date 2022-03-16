@@ -64,6 +64,7 @@ class DivorceSelectYearForm@Inject()(applicationConfig: ApplicationConfig, timeS
     case _ => Invalid(ValidationError("pages.divorce.date.error.mandatory"))
 
   }
+
   //TODO - Refactor to address warning
   private def transformToDate(dateTuple: (Option[String], Option[String], Option[String])): LocalDate = {
     dateTuple match {

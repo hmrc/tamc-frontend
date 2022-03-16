@@ -48,6 +48,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       else controller.ptaCalculator()(request)
     }
 
+
   "Check eligibility benefit" should {
 
     "be GBP 80 if transferor income=9000 (< 11500) and recipient income=14000" in {

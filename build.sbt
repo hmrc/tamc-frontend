@@ -52,6 +52,7 @@ lazy val microservice: Project = Project(appName, file("."))
   )
 scalacOptions ++= Seq("-P:silencer:pathFilters=routes")
 scalacOptions ++= suppressedImports
+
 scalacOptions ++= Seq(
   "-Xmaxerrs", "1000", // Maximum errors to print
   "-Xmaxwarns", "1000", // Maximum warnings to print

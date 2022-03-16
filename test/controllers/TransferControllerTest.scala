@@ -41,7 +41,6 @@ import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import java.time.LocalDate
-import scala.language.postfixOps
 
 class TransferControllerTest extends ControllerBaseTest {
 

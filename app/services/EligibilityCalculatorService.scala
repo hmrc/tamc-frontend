@@ -19,11 +19,8 @@ package services
 import com.google.inject.Inject
 import config.ApplicationConfig
 import models.{Country, EligibilityCalculatorResult, TaxBand}
-import play.api.libs.json.Json
 import uk.gov.hmrc.time.TaxYear
 import utils.{BenefitCalculatorHelper, TaxBandReader}
-
-import scala.io.Source
 
 class EligibilityCalculatorService @Inject()(
   appConfig: ApplicationConfig,

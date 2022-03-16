@@ -24,9 +24,6 @@ import scala.concurrent.duration.Duration
 object FakeCachedStaticHtmlPartialRetriever extends CachedStaticHtmlPartialRetriever {
   override def httpGet: HttpGet = ???
 
-  // delete? def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)(implicit request: RequestHeader): Html =
-    //Html("")
-
   override def refreshAfter: Duration = ???
 
   override def expireAfter: Duration = ???

@@ -17,8 +17,7 @@
 package services
 
 import config.ApplicationConfig
-import models.{EligibilityCalculatorResult, England, NorthernIreland, Scotland, Wales}
-import uk.gov.hmrc.time
+import models._
 import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
@@ -123,7 +122,6 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
         }
 
-
         "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
           val higherEarnerIncome = 14000
           val lowerEarnerIncome = 9000
@@ -208,6 +206,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(231.0))
         }
 
+        //TODO Making dynamic... to discuss, remove TODO after discussion
         "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
           val incomes = List(
             (14000, 9000, 252),

@@ -112,8 +112,6 @@ class HistorySummaryViewModelTest extends BaseTest {
 
     "There is no citizen name to allow a display name to be created" in  {
       val marriageAllowanceCancelled = false
-      // delete?  val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
-       // controllers.routes.UpdateRelationshipController.decision.url)
       val role = Transferor
       val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = LocalDate.now().toString, has_allowance = None, name = None)
 
