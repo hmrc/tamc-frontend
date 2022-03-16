@@ -28,7 +28,7 @@ class ApplicationService @Inject()(
   def canApplyForMarriageAllowance(
                                     historicRelationships: Option[Seq[RelationshipRecord]],
                                     activeRelationship: Option[RelationshipRecord],
-                                    startingFromTaxYear: Int = appConfig.TAMC_BEGINNING_YEAR): Boolean =
+                                    startingFromTaxYear: Int = timeService.getEarliestValidYear): Boolean =
     canApplyForPreviousYears(historicRelationships, activeRelationship, startingFromTaxYear) ||
       canApplyForCurrentYears(historicRelationships, activeRelationship)
 
@@ -40,8 +40,8 @@ class ApplicationService @Inject()(
   def canApplyForPreviousYears(
                                 historicRelationships: Option[Seq[RelationshipRecord]],
                                 activeRelationship: Option[RelationshipRecord],
-                                startingFromTaxYear: Int = appConfig.TAMC_BEGINNING_YEAR): Boolean = {
-    val startYear = Math.max(startingFromTaxYear, appConfig.TAMC_BEGINNING_YEAR)
+                                startingFromTaxYear: Int = timeService.getEarliestValidYear): Boolean = {
+    val startYear = Math.max(startingFromTaxYear, timeService.getEarliestValidYear)
     val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
     val unavailableYears: Set[Int] = taxYearsThatAreUnavailableForApplication(historicRelationships, activeRelationship)
     (availableYears -- unavailableYears).nonEmpty
