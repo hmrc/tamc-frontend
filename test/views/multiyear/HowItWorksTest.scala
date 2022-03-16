@@ -37,7 +37,7 @@ class HowItWorksTest extends BaseTest {
   lazy val maxBenefit                       = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
   lazy val maxPersonalAllowanceTransferable = NumberFormat.getNumberInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())
   lazy val currentYearPersonalAllowance     = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
-
+  lazy val availablePreviousYears           = (applicationConfig.currentTaxYear.finishYear -5).toString
 
 
   "How it works" should {
@@ -82,7 +82,7 @@ class HowItWorksTest extends BaseTest {
 
       val document = Jsoup.parse(howItWorksView().toString())
       val paragraphTag = document.getElementsByClass("govuk-inset-text").toString
-      val expected = messages("pages.how-it-works.lede-pre5", applicationConfig.currentTaxYear.finishYear -5)
+      val expected = messages("pages.how-it-works.lede-pre5", availablePreviousYears)
 
       paragraphTag should include(expected)
     }
