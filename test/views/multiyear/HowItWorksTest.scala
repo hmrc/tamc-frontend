@@ -39,6 +39,7 @@ class HowItWorksTest extends BaseTest {
   lazy val currentYearPersonalAllowance     = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
 
 
+
   "How it works" should {
 
     "return correct page title of how it works page" in {
@@ -81,7 +82,7 @@ class HowItWorksTest extends BaseTest {
 
       val document = Jsoup.parse(howItWorksView().toString())
       val paragraphTag = document.getElementsByClass("govuk-inset-text").toString
-      val expected = messages("pages.how-it-works.lede-pre5")
+      val expected = messages("pages.how-it-works.lede-pre5", applicationConfig.currentTaxYear.finishYear -5)
 
       paragraphTag should include(expected)
     }
