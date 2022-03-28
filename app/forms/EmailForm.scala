@@ -32,7 +32,7 @@ object EmailForm {
 
 
   private val formatPatternRegex: String =
-    """^([a-zA-Z0-9!#$git %&’'*+/=?^_`{|}~-]+[\.]?)+([a-zA-Z0-9!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9]{2,})+)$"""
+    """^([a-zA-Z0-9!#$%&’'*+/=?^_`{|}~-]+[\.]?)+([a-zA-Z0-9!#$%&’'*+/=?^_`{|}~-]+)@([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9]{2,})+)$"""
 
   private def email: Mapping[EmailAddress] =
     valueIsPresent(errorRequired = messageCustomizer("error.required"))
