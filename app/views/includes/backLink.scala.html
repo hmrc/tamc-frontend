@@ -23,6 +23,8 @@
     case(key, value) => key + "=" + value
   }
 }
-    <a id="backLink" href="@href" class="govuk-back-link displayIfJsEnabled link-back" @attrValues>@messages("generic.back")</a>
-
-
+    <a id="backLink" href="@href" class="govuk-back-link link-back" @attrValues>@messages("generic.back")</a>
+    &nbsp;
+@*
+ * ^ The &nbsp; is a hack to keep the column in place when JS is unavailable.
+ *@
