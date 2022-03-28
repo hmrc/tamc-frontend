@@ -21,7 +21,7 @@
 h1: H1,
 p: P)
 
-@(userEmailAddress: String)(implicit messages: Messages, request: AuthenticatedUserRequest[_])
+@()(implicit messages: Messages, request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(messages("title.pattern", messages("title.change.complete"))),
@@ -31,7 +31,7 @@ serviceName = Some("tamc.manage")) {
       @h1("pages.coc.finish.header")
   </div>
 
-  @p(Text(messages("pages.coc.finish.acknowledgement", userEmailAddress)))
+  @p(Text(messages("pages.coc.finish.acknowledgement")))
   @p(Text(messages("pages.coc.finish.junk")))
   @p(Text(messages("pages.coc.finish.para1")))
 
