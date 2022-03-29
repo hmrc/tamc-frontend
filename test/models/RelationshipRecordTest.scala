@@ -99,13 +99,13 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
       "participant endDate is in PastYear" in {
         val relationshipRecord = relationshipActiveRecordWithPastValidDate
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2014, 2020, 2017, 2015, 2016, 2012, 2013, 2019, 2018)
+        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe Set(2014, 2020, 2017, 2015, 2016, 2012, 2013, 2019, 2018)
       }
 
       "participant endDate is in FutureYear" in {
         val relationshipRecord = relationshipActiveRecordWithFutureValidDate
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2012, 2013, 2014, 2015, 2016, 2022, 2017, 2018, 2019, 2021, 2020)
+        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe Set(2012, 2013, 2014, 2015, 2016, 2022, 2017, 2018, 2019, 2021, 2020)
       }
 
       "participant startDate and endDate is in same year" in {
@@ -114,7 +114,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
         val relationshipRecord = relationshipActiveRecordWithNoEndDate.copy(participant1EndDate = Some(relationshipEndDate),
           participant1StartDate = relationshipStartDate)
 
-        relationshipRecord.overlappingTaxYears shouldBe Set(2019)
+        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe Set(2019)
       }
 
       "particpantEndDate is not set" in {
@@ -122,7 +122,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
 
         val range: Seq[Int] = currentTaxYear.startYear-9 to currentTaxYear.startYear
 
-        relationshipRecord.overlappingTaxYears shouldBe range.toSet
+        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe range.toSet
       }
 
       "Return a set of years that ends with the start year of the previous tax year when a participant endReason is Divorce" in {
@@ -131,7 +131,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
 
         val range: Seq[Int] = currentTaxYear.startYear-9 to currentTaxYear.startYear-4
 
-        relationshipRecord.overlappingTaxYears shouldBe range.toSet
+        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe range.toSet
       }
     }
   }
