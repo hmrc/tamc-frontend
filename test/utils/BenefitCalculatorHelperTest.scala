@@ -25,6 +25,7 @@ import uk.gov.hmrc.time.TaxYear
 class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
 
 
+
   val benefitCalculatorHelper: BenefitCalculatorHelper = instanceOf[BenefitCalculatorHelper]
   val eligibilityCalculatorService: EligibilityCalculatorService = instanceOf[EligibilityCalculatorService]
   lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
@@ -111,10 +112,15 @@ class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
       }
 
       "return the correct banded income for a Scottish tax payer" in {
+
+        val starterRate = applicationConfig.getTaxBand("StarterRate", "starter-rate", "scotland", currentTaxYear.startYear)
+        val basicRate = applicationConfig.getTaxBand("BasicRate", "basic-rate", "scotland", currentTaxYear.startYear)
+        val intermediateRate = applicationConfig.getTaxBand("IntermediateRate", "intermediate-rate", "scotland", currentTaxYear.startYear)
+
         eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear) shouldBe
-          List(TaxBand("StarterRate", applicationConfig.PERSONAL_ALLOWANCE() + 1, 14667, 0.19),
-            TaxBand("BasicRate", 14668, 25296, 0.20),
-            TaxBand("IntermediateRate", 25297, applicationConfig.MAX_LIMIT_SCOT(), 0.21))
+          List(TaxBand("StarterRate", applicationConfig.PERSONAL_ALLOWANCE() + 1, starterRate.upperThreshold, starterRate.rate),
+            basicRate,
+            TaxBand("IntermediateRate", intermediateRate.lowerThreshold, applicationConfig.MAX_LIMIT_SCOT(), intermediateRate.rate))
       }
 
       "return the correct banded income for a Welsh tax payer" in {
