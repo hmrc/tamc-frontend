@@ -29,16 +29,10 @@ case class RelationshipRecord(participant: String,
                               otherParticipantInstanceIdentifier: String,
                               otherParticipantUpdateTimestamp: String) {
 
-  def isActive: Boolean = participant1EndDate match {
+  def isActive(currentDate: LocalDate): Boolean = participant1EndDate match {
     case None => true
-    case Some(date) => isFutureDate(parseDateWithFormat(date))
+    case Some(date) => parseDateWithFormat(date).isAfter(currentDate)
   }
-
-  def isFutureDate(date: LocalDate): Boolean =
-    date.isAfter(getCurrentDate)
-
-  def getCurrentDate: LocalDate =
-    LocalDate.now()
 
   def getTaxYearForDate(date: LocalDate): Int =
     uk.gov.hmrc.time.TaxYear.taxYearFor(date).startYear
@@ -46,12 +40,8 @@ case class RelationshipRecord(participant: String,
   def getStartDateForTaxYear(year: Int): LocalDate =
     uk.gov.hmrc.time.TaxYear.firstDayOfTaxYear(year)
 
-  def getPreviousYearDate: LocalDate =
-    LocalDate.now().minusYears(1)
-
   def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
     LocalDate.parse(date, DateTimeFormatter.ofPattern(format))
-
 
   val role: Role = Role(participant)
 

@@ -37,13 +37,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   def currentTaxYear(): TaxYear = TaxYear(configuration.getOptional[Int]("tamc-effective-tax-year").getOrElse(TaxYear.current.startYear))
 
-  def currentLocalDate(): LocalDate = {
-    val now: LocalDate = LocalDate.now
-    val day: Int = now.getDayOfYear
-    val month: Int = now.getMonthValue
-    val year: Int = configuration.getOptional[Int]("tamc-effective-local-date").getOrElse(now.getYear)
-    LocalDate.of(year, month, day)
-  }
+  def currentLocalDate(): LocalDate = LocalDate.parse(configuration.getOptional[String]("tamc-effective-local-date").getOrElse(LocalDate.now.toString))
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 

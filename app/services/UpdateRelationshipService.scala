@@ -31,6 +31,7 @@ import uk.gov.hmrc.emailaddress.PlayJsonFormats._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
+import utils.SystemLocalDate
 import views.helpers.LanguageUtilsImpl
 
 import java.time.LocalDate
@@ -38,17 +39,18 @@ import java.time.format.DateTimeFormatter
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateRelationshipService @Inject()(
-                                           marriageAllowanceConnector: MarriageAllowanceConnector,
-                                           endDateForMACeased: EndDateForMACeased,
-                                           endDateDivorceCalculator: EndDateDivorceCalculator,
-                                           auditConnector: AuditConnector,
-                                           cachingService: CachingService,
-                                           appConfig: ApplicationConfig,
-                                           languageUtilsImpl: LanguageUtilsImpl
-                                         ) {
+  marriageAllowanceConnector: MarriageAllowanceConnector,
+  endDateForMACeased: EndDateForMACeased,
+  endDateDivorceCalculator: EndDateDivorceCalculator,
+  auditConnector: AuditConnector,
+  cachingService: CachingService,
+  appConfig: ApplicationConfig,
+  languageUtilsImpl: LanguageUtilsImpl,
+  localDate: SystemLocalDate
+) {
 
   def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
-    marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_))
+    marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_, localDate.now()))
 
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {

@@ -30,19 +30,21 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.time
+import utils.SystemTaxYear
 import views.helpers.LanguageUtilsImpl
 
 import scala.concurrent.{ExecutionContext, Future}
 
 
 class TransferService @Inject()(
-                               marriageAllowanceConnector: MarriageAllowanceConnector,
-                               auditConnector: AuditConnector,
-                               cachingService: CachingService,
-                               applicationService: ApplicationService,
-                               timeService: TimeService,
-                               languageUtilsImpl: LanguageUtilsImpl
-                               ) extends Logging {
+  marriageAllowanceConnector: MarriageAllowanceConnector,
+  auditConnector: AuditConnector,
+  cachingService: CachingService,
+  applicationService: ApplicationService,
+  timeService: TimeService,
+  languageUtilsImpl: LanguageUtilsImpl,
+  taxYear: SystemTaxYear
+) extends Logging {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
@@ -189,7 +191,7 @@ class TransferService @Inject()(
     }.sortWith((m1, m2) => m1.year > m2.year)
 
   private def isCurrentTaxYear(year: Int): Option[Boolean] =
-    if (time.TaxYear.current.startYear == year)
+    if (taxYear.current.startYear == year)
       Some(true)
     else
       None
@@ -213,7 +215,7 @@ class TransferService @Inject()(
 
   def getCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     cachingService.getRecipientRecord map {
-      _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_))
+      _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_, taxYear))
     }
 
   private def transform(sessionData: CacheData, messages: Messages): CreateRelationshipRequestHolder = {
