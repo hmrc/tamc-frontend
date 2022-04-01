@@ -37,6 +37,14 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   def currentTaxYear(): TaxYear = TaxYear(configuration.getOptional[Int]("tamc-effective-tax-year").getOrElse(TaxYear.current.startYear))
 
+  def currentLocalDate(): LocalDate = {
+    val now: LocalDate = LocalDate.now
+    val day: Int = now.getDayOfYear
+    val month: Int = now.getMonthValue
+    val year: Int = configuration.getOptional[Int]("tamc-effective-local-date").getOrElse(now.getYear)
+    LocalDate.of(year, month, day)
+  }
+
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
   private val contactHost = configuration.getOptional[String]("tamc.external-urls.contact-frontend").getOrElse("")

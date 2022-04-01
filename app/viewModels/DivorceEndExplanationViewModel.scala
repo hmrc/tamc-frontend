@@ -21,18 +21,19 @@ import models.{MarriageAllowanceEndingDates, Recipient, Role}
 import java.time.LocalDate
 import play.api.i18n.Messages
 import uk.gov.hmrc.time.TaxYear
+import utils.SystemTaxYear
 import views.helpers.LanguageUtilsImpl
 
 import javax.inject.Inject
 
 case class DivorceEndExplanationViewModel(divorceDate: String, taxYearStatus: String, bulletStatement: (String, String))
 
-class DivorceEndExplanationViewModelImpl@Inject()(languageUtilsImpl: LanguageUtilsImpl) {
+class DivorceEndExplanationViewModelImpl @Inject()(languageUtilsImpl: LanguageUtilsImpl, taxYear: SystemTaxYear) {
 
   def apply(role: Role, divorceDate: LocalDate, datesForDivorce: MarriageAllowanceEndingDates)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
     val divorceDateFormatted = languageUtilsImpl().ukDateTransformer(divorceDate)
-    val isCurrentYearDivorced: Boolean =  TaxYear.current.contains(divorceDate)
+    val isCurrentYearDivorced: Boolean =  taxYear.current.contains(divorceDate)
 
     val taxYearStatus = if(isCurrentYearDivorced) {
         messages("pages.divorce.explanation.current.taxYear")
