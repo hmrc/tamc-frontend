@@ -35,7 +35,7 @@ import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.time.TaxYear
-import utils.BaseTest
+import utils.{BaseTest, SystemLocalDate}
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -54,8 +54,10 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
   val OK = 200
   val headers = Map("headers" -> Seq(""))
   val email = "email@email.com"
+  lazy val localDate: LocalDate = instanceOf[SystemLocalDate].now()
+
   def createCachedData(records: RelationshipRecordList = recordList): UpdateRelationshipCacheData = {
-    UpdateRelationshipCacheData(Some(RelationshipRecords(records)), Some(email), Some("Divorce"), Some(date))
+    UpdateRelationshipCacheData(Some(RelationshipRecords(records, localDate)), Some(email), Some("Divorce"), Some(date))
   }
 
   def createLoggedInUserInfo(name: Option[CitizenName] = Some(CitizenName(Some(firstName), Some(surname)))): LoggedInUserInfo = {
@@ -273,7 +275,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
   "getDataForDivorceExplanation" should {
     "return Role and LocalDate" in {
-      val relationshipRecords = RelationshipRecords(recordList)
+      val relationshipRecords = RelationshipRecords(recordList, localDate)
 
       when(mockCachingService.getRelationshipRecords(any(), any()))
         .thenReturn(Future.successful(Some(relationshipRecords)))
@@ -288,7 +290,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     }
 
     "CacheMissingDivorceDate Error when no value returned from cache" in {
-      val relationshipRecords = RelationshipRecords(recordList)
+      val relationshipRecords = RelationshipRecords(recordList, localDate)
 
       when(mockCachingService.getRelationshipRecords(any(), any()))
         .thenReturn(Future.successful(Some(relationshipRecords)))
@@ -361,7 +363,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
         endReasonsWithEnumerations foreach { case(reason, enumeration) =>
 
-          val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList)), Some(email), Some(reason), Some(date))
+          val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList, localDate)), Some(email), Some(reason), Some(date))
 
           s"the reason is $reason" in  {
 
@@ -400,7 +402,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
     "throw relevant error" when {
 
-      val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList)), Some(email), Some("Earnings"), Some(date))
+      val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList, localDate)), Some(email), Some("Earnings"), Some(date))
 
       "if an unsupported marriage allowance end reason is provided" in {
         when(mockCachingService.getUpdateRelationshipCachedData(any(), any()))
@@ -461,7 +463,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
     "getConfirmationUpdateAnswers" should {
       "return Confirmation update answers" in {
-        val relationshipRecords = Some(RelationshipRecords(recordList))
+        val relationshipRecords = Some(RelationshipRecords(recordList, localDate))
         val endDates = MarriageAllowanceEndingDates(TaxYear.current.starts, TaxYear.current.finishes)
         val cacheData = ConfirmationUpdateAnswersCacheData(relationshipRecords, Some(date), Some("email@email.com"), Some(endDates))
 
@@ -555,7 +557,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     "getRelationshipRecords" should {
       "when RelationshipRecords are present return RelationshipRecords" in {
         when(mockCachingService.getRelationshipRecords(any(), any()))
-          .thenReturn(Some(RelationshipRecords(recordList)))
+          .thenReturn(Some(RelationshipRecords(recordList, localDate)))
 
         val result = await(service.getRelationshipRecords)
 
@@ -583,7 +585,5 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
         result shouldBe httpResponse
       }
     }
-
-
   }
 }
