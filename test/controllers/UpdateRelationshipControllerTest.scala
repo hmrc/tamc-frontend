@@ -777,7 +777,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val result = controller.finishUpdate()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs finishedView(email)
+      result rendersTheSameViewAs finishedView()
 
     }
 
