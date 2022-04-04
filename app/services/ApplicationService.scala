@@ -59,11 +59,11 @@ class ApplicationService @Inject()(
         )
         unavailableReasonCodes contains relationship.relationshipEndReason
     }.map {
-      _.overlappingTaxYears
+      _.overlappingTaxYears(appConfig.currentTaxYear.startYear)
     }
 
     val activeYears: Set[Int] = activeRelationship.map {
-      _.overlappingTaxYears
+      _.overlappingTaxYears(appConfig.currentTaxYear.startYear)
     }.getOrElse(Set[Int]())
     val allYears: Set[Set[Int]] = historicYears + activeYears
     allYears.flatten

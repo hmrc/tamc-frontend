@@ -40,9 +40,6 @@ case class RelationshipRecord(participant: String,
   def getCurrentDate: LocalDate =
     LocalDate.now()
 
-  def getCurrentTaxYear: Int =
-    uk.gov.hmrc.time.TaxYear.current.startYear
-
   def getTaxYearForDate(date: LocalDate): Int =
     uk.gov.hmrc.time.TaxYear.taxYearFor(date).startYear
 
@@ -58,10 +55,10 @@ case class RelationshipRecord(participant: String,
 
   val role: Role = Role(participant)
 
-  def overlappingTaxYears: Set[Int] = {
+  def overlappingTaxYears(currentTaxYear: Int): Set[Int] = {
 
     val taxYearOfRelationshipStart = getTaxYearForDate(parseDateWithFormat(participant1StartDate))
-    val taxYearOfRelationshipEnd = participant1EndDate.fold(getCurrentTaxYear)(
+    val taxYearOfRelationshipEnd = participant1EndDate.fold(currentTaxYear)(
       participant1EndDateAsString => {
         val participant1EndDate = parseDateWithFormat(participant1EndDateAsString)
         val taxYearOfParticipant1EndDate = getTaxYearForDate(participant1EndDate)
