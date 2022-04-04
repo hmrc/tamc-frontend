@@ -650,8 +650,8 @@ pages.confirm.date.of.marriage=Dyddiad y briodas neu’r dyddiad y ffurfiwyd y b
 # change-of-circs-finish-page
 #********************************************************************************
 pages.coc.finish.header=Lwfans Priodasol wedi’i ganslo
-pages.coc.finish.acknowledgement=Anfonir e-bost atoch yn {0} i gydnabod y canslo, a hynny o noreply@tax.service.gov.uk cyn pen 24 awr.
-pages.coc.finish.junk=Os nad yw’n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
+pages.coc.finish.acknowledgement=Byddwch yn cael e-bost yn cydnabod y canslo cyn pen 24 awr.
+pages.coc.finish.junk=Os na fyddwch yn ei gael, gwiriwch eich ffolder sbam neu’ch ffolder sothach.
 pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
 
 #********************************************************************************
