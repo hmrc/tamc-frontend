@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.ApplicationConfig
 import controllers.actions.AuthenticatedActionRefiner
 import models._
 import org.jsoup.Jsoup
@@ -39,6 +40,7 @@ import scala.concurrent.Future
 
 class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
 
+  lazy val config: ApplicationConfig = inject[ApplicationConfig]
   val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
@@ -306,8 +308,10 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
     }
 
     "Recipient and DivorceDate is in current year" in {
-      val endingDates = MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)
-      val divorceDate  = TaxYear.current.starts
+      val taxYear: TaxYear = config.currentTaxYear()
+
+      val endingDates = MarriageAllowanceEndingDates(taxYear.finishes, taxYear.next.starts)
+      val divorceDate  = taxYear.starts
 
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((Recipient, divorceDate)))
@@ -328,8 +332,8 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       ).toArray
 
       val expectedBullets = Seq(
-        messages("pages.divorce.explanation.current.ma.bullet", s"5 April ${TaxYear.current.finishYear}"),
-        messages("pages.divorce.explanation.current.pa.bullet", s"6 April ${TaxYear.current.next.startYear}")
+        messages("pages.divorce.explanation.current.ma.bullet", s"5 April ${taxYear.finishYear}"),
+        messages("pages.divorce.explanation.current.pa.bullet", s"6 April ${taxYear.next.startYear}")
       ).toArray
 
       val heading = view.getElementsByTag("h1").text

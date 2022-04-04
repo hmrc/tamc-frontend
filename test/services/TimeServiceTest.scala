@@ -16,9 +16,9 @@
 
 package services
 
+import config.ApplicationConfig
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
-import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 
 import java.time.LocalDate
@@ -27,6 +27,7 @@ import scala.collection.immutable
 class TimeServiceTest extends BaseTest {
 
   val timeService: TimeService = instanceOf[TimeService]
+  lazy val config: ApplicationConfig = instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder().build()
 
@@ -88,19 +89,19 @@ class TimeServiceTest extends BaseTest {
   "isFutureDate" should {
 
     "future date is today" in {
-      val data = LocalDate.now()
+      val data = config.currentLocalDate()
 
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is yesterday" in {
-      val data = LocalDate.now().minusDays(1)
+      val data = config.currentLocalDate().minusDays(1)
 
       timeService.isFutureDate(data) shouldBe false
     }
 
     "future date is tomorrow" in {
-      val data = LocalDate.now().plusDays(1)
+      val data = config.currentLocalDate().plusDays(1)
 
       timeService.isFutureDate(data) shouldBe true
     }
@@ -109,7 +110,7 @@ class TimeServiceTest extends BaseTest {
   "getCurrentTaxYear" should {
 
     "get current tax year" in {
-      val data = TaxYear.current.startYear
+      val data = config.currentTaxYear().startYear
 
       timeService.getCurrentTaxYear shouldBe data
     }
