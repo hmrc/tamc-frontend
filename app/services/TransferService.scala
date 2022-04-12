@@ -196,14 +196,21 @@ class TransferService @Inject()(
 
   private def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] =
-    marriageAllowanceConnector.getRecipientRelationship(transferorNino, recipientData) map {
-      httpResponse =>
-        Json.fromJson[GetRelationshipResponse](httpResponse.json).get match {
-          case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => (recipientRecord, availableYears)
-          case GetRelationshipResponse(_, _, ResponseStatus(TRANSFEROR_DECEASED)) => throw TransferorDeceased()
-          case _ => throw RecipientNotFound()
-        }
-    }
+    marriageAllowanceConnector
+      .getRecipientRelationship(transferorNino, recipientData)
+      .flatMap {
+        case Right(getRelationshipResponse) =>
+          getRelationshipResponse match {
+            case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => 
+              Future.successful((recipientRecord, availableYears))
+            case GetRelationshipResponse(_, _, ResponseStatus(TRANSFEROR_DECEASED)) =>
+              Future.failed(TransferorDeceased())
+            case _ =>
+              Future.failed(RecipientNotFound())
+          }
+        case Left(error) =>
+          Future.failed(error)
+      }
 
   def deleteSelectionAndGetCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     for {
