@@ -26,7 +26,6 @@ import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
-import play.api.test.Helpers._
 import test_utils.TestData.Ninos
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.domain.Nino
@@ -81,7 +80,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockTimeService.getTaxYearForDate(recipientData.dateOfMarriage))
           .thenReturn(2020)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(HttpResponse(OK, Json.toJson(response), Map("" -> Seq(""))))
+          .thenReturn(Right(response))
         when(mockTimeService.getValidYearsApplyMAPreviousYears(any()))
           .thenReturn(Nil)
         when(mockCachingService.saveRecipientRecord(RecipientRecordData.userRecord, recipientData, Nil))
@@ -100,7 +99,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(HttpResponse(OK, Json.toJson(response), Map("" -> Seq(""))))
+          .thenReturn(Right(response))
 
         intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
       }
@@ -112,7 +111,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(HttpResponse(OK, Json.toJson(response), Map("" -> Seq(""))))
+          .thenReturn(Right(response))
 
         intercept[TransferorDeceased](await(service.isRecipientEligible(nino, recipientData)))
       }

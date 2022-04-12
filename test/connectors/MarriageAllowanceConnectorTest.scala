@@ -25,7 +25,7 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import test_utils.TestData.Ninos
-import test_utils.data.MarriageAllowanceConnectorTestData
+import test_utils.data._
 import uk.gov.hmrc.domain.Nino
 import utils.ConnectorBaseTest
 
@@ -86,6 +86,11 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
         .willReturn(
           aResponse()
             .withStatus(200)
+            .withBody(
+              Json.toJson(
+                GetRelationshipResponse(Some(RecipientRecordData.userRecord), None, ResponseStatus("OK"))
+              ).toString
+            )
         ))
       val data = RegistrationFormInput("", "", Gender("M"), nino, LocalDate.now())
 
