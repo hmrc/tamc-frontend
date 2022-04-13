@@ -108,6 +108,11 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
         .willReturn(
           aResponse()
             .withStatus(200)
+            .withBody(
+              Json.toJson(
+                CreateRelationshipResponse(ResponseStatus("OK"))
+              ).toString
+            )
         ))
       val data = MarriageAllowanceConnectorTestData.relationshipRequestHolder
 

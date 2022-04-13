@@ -85,5 +85,8 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
       }
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
-    httpClient.PUT[UpdateRelationshipRequestHolder, HttpResponse](s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data)
+    httpClient
+      .PUT[UpdateRelationshipRequestHolder, HttpResponse](
+        s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data
+      )
 }
