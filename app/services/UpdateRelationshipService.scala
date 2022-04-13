@@ -24,7 +24,6 @@ import errors._
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
 import play.api.i18n.Messages
-import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.emailaddress.PlayJsonFormats._
@@ -202,19 +201,23 @@ class UpdateRelationshipService @Inject()(
 
   private def sendUpdateRelationship(transferorNino: Nino,
                                      data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] =
-    marriageAllowanceConnector.updateRelationship(transferorNino, data) map {
-      httpResponse =>
-        Json.fromJson[UpdateRelationshipResponse](httpResponse.json).asOpt match {
-          case Some(UpdateRelationshipResponse(ResponseStatus("OK"))) => data
-          case Some(UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP))) => throw CannotUpdateRelationship()
-          case Some(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))) => throw RecipientNotFound()
-          case _ => throw new UnsupportedOperationException("Unable to send relationship update request")
-        }
-    } recover {
-      case error =>
-        handleAudit(UpdateRelationshipFailureEvent(data, error))
-        throw error
-    }
+    marriageAllowanceConnector
+      .updateRelationship(transferorNino, data)
+      .map {
+        case Right(updateRelationshipResponse) =>
+          updateRelationshipResponse match {
+            case Some(UpdateRelationshipResponse(ResponseStatus("OK"))) => data
+            case Some(UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP))) => throw CannotUpdateRelationship()
+            case Some(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))) => throw RecipientNotFound()
+            case _ => throw new UnsupportedOperationException("Unable to send relationship update request")
+          }
+        case Left(error) => throw error
+      }
+      .recover {
+        case error =>
+          handleAudit(UpdateRelationshipFailureEvent(data, error))
+          throw error
+      }
 
   private def auditUpdateRelationship(updateData: UpdateRelationshipRequestHolder
                                      )(implicit hc: HeaderCarrier,

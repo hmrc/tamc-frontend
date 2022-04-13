@@ -84,9 +84,15 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
         case Left(error) => Left(error)
       }
 
-  def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] =
+  def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(
+    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[UpstreamErrorResponse, Option[UpdateRelationshipResponse]]] =
     httpClient
-      .PUT[UpdateRelationshipRequestHolder, HttpResponse](
+      .PUT[UpdateRelationshipRequestHolder, Either[UpstreamErrorResponse, HttpResponse]](
         s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data
       )
+      .map {
+        case Right(response) =>
+          Right(Json.fromJson[UpdateRelationshipResponse](response.json).asOpt)
+        case Left(error) => Left(error)
+      }
 }
