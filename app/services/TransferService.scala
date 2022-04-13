@@ -24,7 +24,6 @@ import events._
 import models._
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -241,14 +240,15 @@ class TransferService @Inject()(
                                                                             messages: Messages, ec: ExecutionContext): Future[CacheData] = {
 
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, messages)) map {
-      httpResponse =>
-        Json.fromJson[CreateRelationshipResponse](httpResponse.json).asOpt match {
+      case Right(createRelationshipResponse) =>
+        createRelationshipResponse match {
           case Some(CreateRelationshipResponse(ResponseStatus("OK"))) => data
           case Some(CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP))) => throw CannotCreateRelationship()
           case Some(CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED))) => throw RelationshipMightBeCreated()
           case Some(CreateRelationshipResponse(ResponseStatus(RECIPIENT_DECEASED))) => throw RecipientDeceased()
           case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
+      case Left(error) => throw error
     } recover {
       case error =>
         handleAudit(CreateRelationshipFailureEvent(data, error))
