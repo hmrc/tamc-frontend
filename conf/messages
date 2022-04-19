@@ -641,9 +641,9 @@ pages.confirm.date.of.marriage=Date of marriage or civil partnership
 # change-of-circs-finish-page
 #********************************************************************************
 pages.coc.finish.header=Marriage Allowance cancelled
-pages.coc.finish.acknowledgement=An email acknowledging your cancellation will be sent to you at {0} from noreply@tax.service.gov.uk within 24 hours.
-pages.coc.finish.junk=If it does not appear in your inbox, please check your spam or junk folder.
-pages.coc.finish.para1=There is no need to contact us.
+pages.coc.finish.acknowledgement=You will receive an email acknowledging your cancellation within 24 hours.
+pages.coc.finish.junk=If you do not receive it, please check your spam or junk folder.
+pages.coc.finish.para1=You do not need to contact us.
 
 #********************************************************************************
 # misc

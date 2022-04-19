@@ -256,10 +256,9 @@ class   UpdateRelationshipController @Inject()(
   def finishUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
       (for {
-        email <- updateRelationshipService.getEmailAddressForConfirmation
         _ <- updateRelationshipService.removeCache
       } yield {
-        Ok(finished(email))
+        Ok(finished())
       }) recover handleError
   }
 
