@@ -19,7 +19,7 @@ package models
 import config.ApplicationConfig
 import org.joda.time.DateTime
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import utils.BaseTest
+import utils.{BaseTest, SystemLocalDate}
 
 import java.time.LocalDate
 
@@ -34,6 +34,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
 
   lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
   lazy val currentTaxYear: uk.gov.hmrc.time.TaxYear = applicationConfig.currentTaxYear
+  lazy val localDate: LocalDate = instanceOf[SystemLocalDate].now()
 
   lazy val relationshipActiveRecordWithNoEndDate: RelationshipRecord =
     RelationshipRecord(
@@ -70,11 +71,11 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
     "return true" when {
 
       "there is no relationship end date" in {
-        relationshipActiveRecordWithNoEndDate.isActive shouldBe true
+        relationshipActiveRecordWithNoEndDate.isActive(localDate) shouldBe true
       }
 
       "relationship end date is a future date" in {
-        relationshipActiveRecordWithFutureValidDate.isActive shouldBe true
+        relationshipActiveRecordWithFutureValidDate.isActive(localDate) shouldBe true
       }
 
     }
@@ -82,13 +83,13 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
     "return false" when {
 
       "relationship end date is a past date" in {
-        relationshipActiveRecordWithPastValidDate.isActive shouldBe false
+        relationshipActiveRecordWithPastValidDate.isActive(localDate) shouldBe false
       }
 
       "relationship end date is today" in {
         val relationshipEndDate = new DateTime().toString(dateFormat)
         val relationshipRecord = relationshipActiveRecordWithNoEndDate.copy(participant1EndDate = Some(relationshipEndDate))
-        relationshipRecord.isActive shouldBe false
+        relationshipRecord.isActive(localDate) shouldBe false
       }
 
     }

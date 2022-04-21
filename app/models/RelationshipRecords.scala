@@ -20,6 +20,8 @@ import errors._
 import play.api.Logging
 import play.api.libs.json.Json
 
+import java.time.LocalDate
+
 case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryRecords: Seq[RelationshipRecord],
                                loggedInUserInfo: LoggedInUserInfo) {
 
@@ -45,17 +47,17 @@ object RelationshipRecords extends Logging  {
 
   implicit val formats = Json.format[RelationshipRecords]
 
-  def apply(relationshipRecordList: RelationshipRecordList): RelationshipRecords = {
+  def apply(relationshipRecordList: RelationshipRecordList, currentDate: LocalDate): RelationshipRecords = {
 
     val relationships = relationshipRecordList.relationships
-    val activeRecordCount = relationships.count(_.isActive)
+    val activeRecordCount = relationships.count(_.isActive(currentDate))
 
     val primaryRecord: RelationshipRecord  = activeRecordCount match {
       case(0) => {
         logger.error("No active primary record found")
         throw NoPrimaryRecordError()
       }
-      case(1) => relationships.find(_.isActive).head
+      case(1) => relationships.find(_.isActive(currentDate)).head
       case multiple => {
         logger.error(s"$multiple active records found")
         throw MultipleActiveRecordError()

@@ -16,20 +16,23 @@
 
 package forms.coc
 
+import config.ApplicationConfig
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl, MessagesProvider}
+import play.api.test.Injecting
 import utils.UnitSpec
 
 import java.time.LocalDate
 
-class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
+class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite with Injecting {
 
-  val today = LocalDate.now()
+  lazy val config: ApplicationConfig = inject[ApplicationConfig]
+  lazy val today = config.currentLocalDate()
   val defaultDate = LocalDate.of(2000, 1, 1)
-  implicit lazy val provider: MessagesProvider = MessagesImpl(Lang("en"), app.injector.instanceOf[MessagesApi])
+  implicit lazy val provider: MessagesProvider = MessagesImpl(Lang("en"), inject[MessagesApi])
 
-  val divorceSelectYearForm = app.injector.instanceOf[DivorceSelectYearForm]
+  val divorceSelectYearForm = inject[DivorceSelectYearForm]
 
   "DivorceSelectYearForm" should {
     "bind" when {
@@ -67,7 +70,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite {
     "not bind" when {
 
       "the divorce date entered is in the future" in {
-        val tomorrow = LocalDate.now().plusDays(1)
+        val tomorrow = today.plusDays(1)
         val formInput = createDivorceDateInput(tomorrow)
         val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)

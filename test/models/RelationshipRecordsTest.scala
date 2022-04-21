@@ -17,15 +17,19 @@
 package models
 
 import errors.{CitizenNotFound, MultipleActiveRecordError, NoPrimaryRecordError}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import test_utils.data.RelationshipRecordData._
-import utils.UnitSpec
+import utils.{BaseTest, SystemLocalDate}
 
-class RelationshipRecordsTest extends UnitSpec {
+import java.time.LocalDate
+
+class RelationshipRecordsTest extends BaseTest with GuiceOneAppPerSuite {
 
   val loggedInUserInfo = LoggedInUserInfo(1, "TimeStamp", name = Some(CitizenName(Some("Test"), Some("User"))))
   val nonPrimaryRelationships = Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord1)
   val primaryRecipientRelationship = activeRecipientRelationshipRecord
   val primaryTransferorRelationship = activeTransferorRelationshipRecord2
+  lazy val localDate: LocalDate = instanceOf[SystemLocalDate].now()
 
   "hasMarriageAllowanceBeenCancelled" should {
     "return true if endDate is present in primary record (active record)" in {
@@ -100,7 +104,7 @@ class RelationshipRecordsTest extends UnitSpec {
         Seq(activeRecipientRelationshipRecord, inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord1),
         Some(loggedInUserInfo))
 
-      val relationship = RelationshipRecords(relationshipRecordList)
+      val relationship = RelationshipRecords(relationshipRecordList, localDate)
 
       relationship shouldBe RelationshipRecords(primaryRecipientRelationship, nonPrimaryRelationships, loggedInUserInfo)
     }
@@ -110,7 +114,7 @@ class RelationshipRecordsTest extends UnitSpec {
         Some(loggedInUserInfo))
       val nonPrimaryRelationship = Seq()
 
-      val relationship = RelationshipRecords(relationshipRecordList)
+      val relationship = RelationshipRecords(relationshipRecordList, localDate)
 
       relationship shouldBe RelationshipRecords(primaryRecipientRelationship, nonPrimaryRelationship, loggedInUserInfo)
     }
@@ -119,7 +123,7 @@ class RelationshipRecordsTest extends UnitSpec {
       val relationshipRecordList = RelationshipRecordList(Seq(inactiveRecipientRelationshipRecord2, inactiveTransferorRelationshipRecord2),
         Some(loggedInUserInfo))
 
-      val relationship = intercept[NoPrimaryRecordError](RelationshipRecords(relationshipRecordList))
+      val relationship = intercept[NoPrimaryRecordError](RelationshipRecords(relationshipRecordList, localDate))
 
       relationship shouldBe NoPrimaryRecordError()
     }
@@ -128,7 +132,7 @@ class RelationshipRecordsTest extends UnitSpec {
       val relationshipRecordList = RelationshipRecordList(Seq(activeTransferorRelationshipRecord2, activeRecipientRelationshipRecord),
         Some(loggedInUserInfo))
 
-      val relationship = intercept[MultipleActiveRecordError](RelationshipRecords(relationshipRecordList))
+      val relationship = intercept[MultipleActiveRecordError](RelationshipRecords(relationshipRecordList, localDate))
 
       relationship shouldBe MultipleActiveRecordError()
     }
@@ -136,7 +140,7 @@ class RelationshipRecordsTest extends UnitSpec {
     "return a CitizenNotFound error when non logged in user found" in {
       val relationshipRecordList = RelationshipRecordList(Seq(activeRecipientRelationshipRecord))
 
-      val relationship = intercept[CitizenNotFound](RelationshipRecords(relationshipRecordList))
+      val relationship = intercept[CitizenNotFound](RelationshipRecords(relationshipRecordList, localDate))
 
       relationship shouldBe CitizenNotFound()
     }

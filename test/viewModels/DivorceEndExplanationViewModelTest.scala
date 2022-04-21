@@ -16,8 +16,8 @@
 
 package viewModels
 
+import config.ApplicationConfig
 import models.{MarriageAllowanceEndingDates, Recipient, Role, Transferor}
-import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 import views.helpers.{EnglishLangaugeUtils, LanguageUtils}
 
@@ -25,12 +25,13 @@ import java.time.LocalDate
 
 class DivorceEndExplanationViewModelTest extends BaseTest {
 
-  val maEndDate = LocalDate.now()
-  val paEffectiveDate = LocalDate.now()
+  lazy val config: ApplicationConfig = instanceOf[ApplicationConfig]
+  lazy val maEndDate = config.currentLocalDate()
+  lazy val paEffectiveDate = config.currentLocalDate()
 
-  val currentTaxYear = TaxYear.current
-  val divorceDateCurrentTaxYear = currentTaxYear.starts
-  val divorceDatePreviousTaxYear = currentTaxYear.previous.starts
+  lazy val currentTaxYear = config.currentTaxYear()
+  lazy val divorceDateCurrentTaxYear = currentTaxYear.starts
+  lazy val divorceDatePreviousTaxYear = currentTaxYear.previous.starts
 
   val languageUtils: LanguageUtils = EnglishLangaugeUtils
   val divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl = instanceOf[DivorceEndExplanationViewModelImpl]
