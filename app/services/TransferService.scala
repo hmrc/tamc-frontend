@@ -24,7 +24,6 @@ import events._
 import models._
 import play.api.Logging
 import play.api.i18n.Messages
-import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
@@ -198,14 +197,21 @@ class TransferService @Inject()(
 
   private def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] =
-    marriageAllowanceConnector.getRecipientRelationship(transferorNino, recipientData) map {
-      httpResponse =>
-        Json.fromJson[GetRelationshipResponse](httpResponse.json).get match {
-          case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => (recipientRecord, availableYears)
-          case GetRelationshipResponse(_, _, ResponseStatus(TRANSFEROR_DECEASED)) => throw TransferorDeceased()
-          case _ => throw RecipientNotFound()
-        }
-    }
+    marriageAllowanceConnector
+      .getRecipientRelationship(transferorNino, recipientData)
+      .flatMap {
+        case Right(getRelationshipResponse) =>
+          getRelationshipResponse match {
+            case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => 
+              Future.successful((recipientRecord, availableYears))
+            case GetRelationshipResponse(_, _, ResponseStatus(TRANSFEROR_DECEASED)) =>
+              Future.failed(TransferorDeceased())
+            case _ =>
+              Future.failed(RecipientNotFound())
+          }
+        case Left(error) =>
+          Future.failed(error)
+      }
 
   def deleteSelectionAndGetCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     for {
@@ -236,14 +242,15 @@ class TransferService @Inject()(
                                                                             messages: Messages, ec: ExecutionContext): Future[CacheData] = {
 
     marriageAllowanceConnector.createRelationship(transferorNino, transform(data, messages)) map {
-      httpResponse =>
-        Json.fromJson[CreateRelationshipResponse](httpResponse.json).asOpt match {
+      case Right(createRelationshipResponse) =>
+        createRelationshipResponse match {
           case Some(CreateRelationshipResponse(ResponseStatus("OK"))) => data
           case Some(CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP))) => throw CannotCreateRelationship()
           case Some(CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED))) => throw RelationshipMightBeCreated()
           case Some(CreateRelationshipResponse(ResponseStatus(RECIPIENT_DECEASED))) => throw RecipientDeceased()
           case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
+      case Left(error) => throw error
     } recover {
       case error =>
         handleAudit(CreateRelationshipFailureEvent(data, error))
