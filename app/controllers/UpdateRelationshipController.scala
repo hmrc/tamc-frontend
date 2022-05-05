@@ -79,7 +79,7 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  //TODO Refactor to address warning
+  //TODO Refactor to remove NotImplementedError
   def submitDecision: Action[AnyContent] = authenticate.async {
     implicit request =>
 
@@ -97,6 +97,7 @@ class   UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.makeChange)
             }
           }
+          case value => throw new NotImplementedError(s"Unhandled input: $value")
         })
   }
 
@@ -118,7 +119,7 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  //TODO Refactor to address warning
+  //TODO Refactor to remove NotImplementedError
   def submitMakeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       MakeChangesDecisionForm.form.bindFromRequest.fold(
@@ -140,6 +141,7 @@ class   UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.bereavement)
             }
           }
+          case value => throw new NotImplementedError(s"Unhandled input: $value")
         })
   }
 
@@ -262,10 +264,8 @@ class   UpdateRelationshipController @Inject()(
       }) recover handleError
   }
 
-  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] =
-    PartialFunction[Throwable, Result] {
-      throwable: Throwable =>
-
+  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
+      case throwable: Throwable =>
         val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
 
         def handle(logger: (String, Throwable) => Unit, result: Result): Result = {
