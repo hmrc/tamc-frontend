@@ -56,6 +56,13 @@ scalacOptions ++= suppressedImports
 scalacOptions ++= Seq(
   "-Xmaxerrs", "1000", // Maximum errors to print
   "-Xmaxwarns", "1000", // Maximum warnings to print
+  "-Xfatal-warnings",
+  // Suggested here https://github.com/playframework/twirl/issues/105#issuecomment-782985171
+  "-Wconf:src=routes/.*:is,src=twirl/.*:is"
+)
+
+scalacOptions in (Compile, doc) ++= Seq(
+  "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
 )
 
 TwirlKeys.templateImports ++= Seq(

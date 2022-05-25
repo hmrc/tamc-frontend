@@ -65,7 +65,9 @@ p: P)
         <input type="hidden" id="is-scottish" name="is-scottish" value=@scottishResident />
         @inputRadios(
             form = partnersIncomeFormInput,
-            legend = "eligibility.check.partners.income.h1",
+            legend = Messages("eligibility.check.partners.income.h1",
+                                NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1),
+                                NumberFormat.getIntegerInstance().format(maxLimit)),
             id = Some("partners-income"),
             name = "partners-income",
             items = Seq(RadioItem(

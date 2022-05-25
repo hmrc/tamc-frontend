@@ -20,7 +20,6 @@ import models.{MarriageAllowanceEndingDates, Recipient, Role}
 
 import java.time.LocalDate
 import play.api.i18n.Messages
-import uk.gov.hmrc.time.TaxYear
 import utils.SystemTaxYear
 import views.helpers.LanguageUtilsImpl
 
