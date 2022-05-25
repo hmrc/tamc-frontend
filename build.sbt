@@ -61,6 +61,10 @@ scalacOptions ++= Seq(
   "-Wconf:src=routes/.*:is,src=twirl/.*:is"
 )
 
+scalacOptions in (Compile, doc) ++= Seq(
+  "-no-link-warnings" // Suppresses problems with Scaladoc @throws links
+)
+
 TwirlKeys.templateImports ++= Seq(
   "uk.gov.hmrc.govukfrontend.views.html.components._",
   "uk.gov.hmrc.hmrcfrontend.views.html.components._",
