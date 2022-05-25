@@ -83,7 +83,7 @@ request: AuthenticatedUserRequest[_])
 
             @inputRadios(
                 form = earlierYearsForm,
-                legend = "pages.eligibleyear.doyou.want",
+                legend = Messages("pages.multiyear.extrayears.from.to", languageUtilsImpl().taxDateInterval(availableYears.head.year)),
                 id = Some("selectedYear"),
                 name = "selectedYear",
                 items = Seq(RadioItem(
