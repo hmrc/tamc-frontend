@@ -65,11 +65,12 @@ class DivorceSelectYearForm@Inject()(applicationConfig: ApplicationConfig, timeS
 
   }
 
-  //TODO - Refactor to address warning
   private def transformToDate(dateTuple: (Option[String], Option[String], Option[String])): LocalDate = {
-    dateTuple match {
-      case (Some(year), Some(month), Some(day)) =>  LocalDate.of(year.toInt, month.toInt, day.toInt)
-    }
+    val year = dateTuple._1.get
+    val month = dateTuple._2.get
+    val day = dateTuple._3.get
+
+    LocalDate.of(year.toInt, month.toInt, day.toInt)
   }
 
   private def transformToTuple(date: LocalDate): (Option[String], Option[String], Option[String]) = {
