@@ -623,7 +623,7 @@ pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os y
 pages.multiyear.taxyear=Blwyddyn dreth {0}
 pages.multiyear.canclaim=Gallwch chi a <span id="firstNameOnly">{0}</span> wneud cais am Lwfans Priodasol ar gyfer blwyddyn dreth {1}:
 pages.multiyear.successful=Os yw’ch cais yn llwyddiannus, bydd Lwfans Priodasol yn cael ei &#244;l-ddyddio ar gyfer blwyddyn dreth {0} a bydd <span id="firstNameOnly3"> {1} </span> yn cael siec am hyd at {2}.
-pages.multiyear.extrayears.from.to=A ydych am wneud cais ar gyfer {0} hefyd?
+pages.multiyear.extrayears.from.to=A ydych am wneud cais am y flwyddyn dreth {0} hefyd?
 
 #********************************************************************************
 # previous-years
