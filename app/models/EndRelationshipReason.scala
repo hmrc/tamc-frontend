@@ -16,12 +16,20 @@
 
 package models
 
-import org.joda.time.LocalDate
+import java.time.LocalDate
 import play.api.libs.json._
+
+import java.time.format.DateTimeFormatter
 
 object EndRelationshipReason {
   private val pattern = "dd/MM/yyyy"
-  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](JodaReads.jodaLocalDateReads(pattern), JodaWrites.jodaLocalDateWrites(pattern))
+  private def writes(pattern: String): Writes[LocalDate] = {
+    val datePattern = DateTimeFormatter.ofPattern(pattern)
+
+    Writes[LocalDate] { localDate => JsString(localDate.format(datePattern))}
+  }
+
+  implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.localDateReads(pattern),  writes(pattern))
   implicit val formats: OFormat[EndRelationshipReason] = Json.format[EndRelationshipReason]
 }
 

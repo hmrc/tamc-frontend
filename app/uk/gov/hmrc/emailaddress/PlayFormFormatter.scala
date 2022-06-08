@@ -16,9 +16,8 @@
 
 package uk.gov.hmrc.emailaddress
 
-import java.time.{ZoneId, ZonedDateTime}
+import java.time.{ZoneId, ZonedDateTime, LocalDateTime}
 
-import org.joda.time.DateTime
 import play.api.data.Forms.{of, optional, text, tuple}
 import play.api.data.format.Formatter
 import play.api.data.validation._
@@ -87,7 +86,7 @@ object PlayFormFormatter {
       .verifying(datePartsArePresent(allAbsentError = allAbsentError, missingPartError = missingPartError))
       .transform[(String, String, String)](x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
-      .verifying(invalidError, x => !verifyDigits(x) || Try(new DateTime(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
+      .verifying(invalidError, x => !verifyDigits(x) || Try(LocalDateTime.of(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
       .transform[ZonedDateTime](
         x => ZonedDateTime.of(
           x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
