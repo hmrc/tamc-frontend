@@ -79,7 +79,6 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  //TODO Refactor to remove NotImplementedError
   def submitDecision: Action[AnyContent] = authenticate.async {
     implicit request =>
 
@@ -87,17 +86,16 @@ class   UpdateRelationshipController @Inject()(
         formWithErrors => {
           Future.successful(BadRequest(decisionV(formWithErrors)))
         }, {
-          case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) => {
+          case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) =>
             updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.claims)
             }
-          }
-          case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) => {
+          case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) =>
             updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) map { _ =>
               Redirect(controllers.routes.UpdateRelationshipController.makeChange)
             }
-          }
-          case value => throw new NotImplementedError(s"Unhandled input: $value")
+          case _ =>
+            Future.successful(Redirect(controllers.routes.UpdateRelationshipController.decision))
         })
   }
 
@@ -119,7 +117,6 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  //TODO Refactor to remove NotImplementedError
   def submitMakeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       MakeChangesDecisionForm.form.bindFromRequest.fold(
@@ -141,7 +138,9 @@ class   UpdateRelationshipController @Inject()(
               Redirect(controllers.routes.UpdateRelationshipController.bereavement)
             }
           }
-          case value => throw new NotImplementedError(s"Unhandled input: $value")
+          case _ => {
+            Future.successful(Redirect(controllers.routes.UpdateRelationshipController.makeChange))
+          }
         })
   }
 
@@ -265,27 +264,26 @@ class   UpdateRelationshipController @Inject()(
   }
 
   def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
-      case throwable: Throwable =>
-        val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
+    val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
 
-        def handle(logger: (String, Throwable) => Unit, result: Result): Result = {
-          logger(message, throwable)
-          result
-        }
-
-        throwable match {
-          case _: NoPrimaryRecordError => Redirect(controllers.routes.EligibilityController.howItWorks)
-          case _: CacheRelationshipAlreadyUpdated => handle(warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate))
-          case _: CacheMissingUpdateRecord => handle(warn, InternalServerError(tryLater()))
-          case _: CacheUpdateRequestNotSent => handle(warn, InternalServerError(tryLater()))
-          case _: CannotUpdateRelationship => handle(warn, InternalServerError(tryLater()))
-          case _: MultipleActiveRecordError => handle(warn, InternalServerError(tryLater()))
-          case _: CitizenNotFound => handle(warn, InternalServerError(citizenNotFound()))
-          case _: BadFetchRequest => handle(warn, InternalServerError(tryLater()))
-          case _: TransferorNotFound => handle(warn, Ok(transferorNotFound()))
-          case _: RecipientNotFound => handle(warn, Ok(recipientNotFound()))
-          case _ => handle(error, InternalServerError(tryLater()))
-        }
+    def handle(throwable: Throwable, logger: (String, Throwable) => Unit, result: Result): Result = {
+      logger(message, throwable)
+      result
     }
 
+    val pf: PartialFunction[Throwable, Result] = {
+          case _: NoPrimaryRecordError => Redirect(controllers.routes.EligibilityController.howItWorks)
+          case t: CacheRelationshipAlreadyUpdated => handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate))
+          case t: CacheMissingUpdateRecord => handle(t, warn, InternalServerError(tryLater()))
+          case t: CacheUpdateRequestNotSent => handle(t, warn, InternalServerError(tryLater()))
+          case t: CannotUpdateRelationship => handle(t, warn, InternalServerError(tryLater()))
+          case t: MultipleActiveRecordError => handle(t, warn, InternalServerError(tryLater()))
+          case t: CitizenNotFound => handle(t, warn, InternalServerError(citizenNotFound()))
+          case t: BadFetchRequest => handle(t, warn, InternalServerError(tryLater()))
+          case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
+          case t: RecipientNotFound => handle(t, warn, Ok(recipientNotFound()))
+          case t => handle(t, error, InternalServerError(tryLater()))
+        }
+      pf
+    }
 }
