@@ -628,7 +628,7 @@ pages.previousyear.para=You told us you married or formed a civil partnership wi
 pages.confirm.lower.earner=Your details (low income)
 pages.confirm.higher.earner=Your partner’s details (high income)
 pages.confirm.current.tax=Current tax year: <span class=nowrap>{0}</span> onwards
-pages.confirm.current.tax.aria-label=Change tax year: {0}
+pages.confirm.current.tax.aria-label=tax year: {0}
 pages.confirm.current.tax.desc=HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
 pages.confirm.previous.tax=Previous tax year: <span class=nowrap>{0}</span> to <span class=nowrap>{1}</span>
 pages.confirm.previous.tax.desc=HMRC will check the details you have supplied before sending {0} a cheque by post for up to £{1}.

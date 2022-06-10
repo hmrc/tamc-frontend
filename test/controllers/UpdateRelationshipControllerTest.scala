@@ -258,6 +258,14 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
     }
 
+    "redirect to the decision page" when {
+      "there is an unexpected error" in {
+        val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> "Test")
+        val result = controller.submitDecision(request)
+        redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.decision.url)
+      }
+    }
+
   }
 
   "claims" should {
@@ -351,6 +359,14 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
           }
 
+        }
+
+        "redirect to the make change page" when {
+          "there is an unexpected error" in {
+            val request = FakeRequest().withFormUrlEncodedBody(MakeChangesDecisionForm.StopMAChoice -> "Test")
+            val result = controller.submitMakeChange()(request)
+            redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.makeChange.url)
+          }
         }
       }
 
