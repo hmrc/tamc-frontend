@@ -185,4 +185,57 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
     }
   }
+
+  "getFinishedData" should {
+    "return NotificationRecord when notification is present in cacheData" in {
+      val notificationRecord = NotificationRecord(EmailAddress("email@email.com"))
+      val cacheData = CacheData(None, None, Some(notificationRecord), Some(true))
+
+      when(mockCachingService.getCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+
+      val result = await(service.getFinishedData(nino))
+
+      result shouldBe notificationRecord
+    }
+
+    "return CacheCreateRequestNotSent Error" when {
+      "cacheData is returned and no notificationRecord is present" in {
+        val cacheData = CacheData(None, None, None, Some(true))
+
+        when(mockCachingService.getCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+
+        intercept[CacheCreateRequestNotSent]{
+          await(service.getFinishedData(nino))
+        }
+      }
+
+      "cacheData is returned and  relationshipCreated is false" in {
+        val cacheData = CacheData(None, None, Some(NotificationRecord(EmailAddress("email@email.com"))), Some(false))
+
+        when(mockCachingService.getCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+
+        intercept[CacheCreateRequestNotSent]{
+          await(service.getFinishedData(nino))
+        }
+      }
+
+      "cacheDate is returned and relationshipCreated is None" in {
+        val cacheData = CacheData(None, None, Some(NotificationRecord(EmailAddress("email@email.com"))))
+
+        when(mockCachingService.getCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+
+        intercept[CacheCreateRequestNotSent]{
+          await(service.getFinishedData(nino))
+        }
+      }
+
+      "no cacheData is returned" in {
+        when(mockCachingService.getCachedData(any(), any())).thenReturn(Future.successful(None))
+
+        intercept[CacheCreateRequestNotSent]{
+          await(service.getFinishedData(nino))
+        }
+      }
+    }
+  }
 }

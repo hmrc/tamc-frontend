@@ -324,6 +324,17 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   }
 
   "submitMakeChange" should {
+    "return the makeChange page with Bad Request status" when {
+      "when form with errors is submitted" in {
+        val userAnswer = "Bad Request"
+        buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
+
+        val result = controller.submitMakeChange()(request)
+
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+
     "redirect to the divorce enter year page" when {
       "a user selects the Divorce option" in {
 
