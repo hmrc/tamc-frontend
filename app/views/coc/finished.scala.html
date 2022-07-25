@@ -27,8 +27,8 @@ p: P)
 pageTitle = Some(messages("title.pattern", messages("title.change.complete"))),
 serviceName = Some("tamc.manage")) {
 
-  <div class="govuk-box-highlight">
-      @h1("pages.coc.finish.header")
+  <div class="govuk-panel govuk-panel--confirmation">
+      @h1("pages.coc.finish.header", Some("govuk-panel__title"))
   </div>
 
   @p(Text(messages("pages.coc.finish.acknowledgement")))
