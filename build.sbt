@@ -54,6 +54,7 @@ scalacOptions ++= Seq("-P:silencer:pathFilters=routes")
 scalacOptions ++= suppressedImports
 
 scalacOptions ++= Seq(
+  "-feature",
   "-Xmaxerrs", "1000", // Maximum errors to print
   "-Xmaxwarns", "1000", // Maximum warnings to print
   "-Xfatal-warnings",
