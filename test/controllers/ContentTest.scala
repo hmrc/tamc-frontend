@@ -447,7 +447,7 @@ class ContentTest extends ControllerBaseTest {
       val form = document.getElementById("date-of-marriage-form")
       form shouldNot be(null)
 
-      val field = form.getElementById("dateOfMarriage")
+      val field = form.getElementById("dateOfMarriageFieldset")
       field shouldNot be(null)
 
       val err = field.getElementsByClass("govuk-error-message")
@@ -492,11 +492,11 @@ class ContentTest extends ControllerBaseTest {
       val form = document.getElementById("date-of-marriage-form")
       form shouldNot be(null)
 
-      val field = form.getElementById("dateOfMarriage")
+      val field = form.getElementById("dateOfMarriageFieldset")
       field shouldNot be(null)
 
       val err = field.getElementsByClass("govuk-error-message")
-      val labelName = form.select("fieldset[id=dateOfMarriage]").first()
+      val labelName = form.select("fieldset[id=dateOfMarriageFieldset]").first()
       err.size() shouldBe 1
       labelName
         .getElementsByClass("govuk-error-message")
