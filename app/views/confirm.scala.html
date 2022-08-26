@@ -61,7 +61,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
                 <a href="@controllers.routes.TransferController.confirmYourEmail" aria-label="@Html(messages("pages.confirm.change.email"))"
                 data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
-                <span class="govuk-visually-hidden">@data.transferorEmail</span>
+                <span class="govuk-visually-hidden">@Html(messages("generic.email"))</span>
                 </a>
             </dd>
         </div>
@@ -76,7 +76,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
                 <a href="@controllers.routes.TransferController.transfer"
                 data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details" aria-label="@Html(messages("pages.form.aria-label"))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
-                <span class="govuk-visually-hidden">@data.recipientFirstName @data.recipientLastName</span>
+                <span class="govuk-visually-hidden">@Html(messages("generic.name"))</span>
                 </a>
             </dd>
         </div>
@@ -96,7 +96,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
                 <a href="@controllers.routes.TransferController.dateOfMarriage"
                 data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date" aria-label="@Html(messages("pages.form.marriage-date.aria-label"))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
-                <span class="govuk-visually-hidden">@languageUtilsImpl().ukDateTransformer(data.dateOfMarriage.dateOfMarriage)</span>
+                <span class="govuk-visually-hidden">@Html(messages("pages.confirm.date.of.marriage"))</span>
                 </a>
             </dd>
         </div>
@@ -107,7 +107,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
                 @if(taxYear.isCurrent) {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
                     @Html(messages("pages.confirm.current.tax",languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))
-                    </dt>
+                    </dt> 
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(messages("pages.confirm.current.tax.desc",
                         languageUtilsImpl().formPossessive(data.recipientFirstName),
                         data.recipientFirstName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
