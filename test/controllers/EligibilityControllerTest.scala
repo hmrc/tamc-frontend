@@ -79,7 +79,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "eligibilityCheckAction" should {
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "marriage-criteria" -> "not a boolean"
         )
         val result = controller.eligibilityCheckAction()(request)
@@ -89,7 +89,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "return a success" when {
       "user is not married with permanent auth state" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "marriage-criteria" -> "false"
         )
         val result = authController.eligibilityCheckAction()(request)
@@ -99,7 +99,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       }
 
       "user is not married with temporary auth state" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "marriage-criteria" -> "false"
         )
         val result = controller.eligibilityCheckAction()(request)
@@ -111,7 +111,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "redirect the user" when {
       "user is married" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "marriage-criteria" -> "true"
         )
         val result = controller.eligibilityCheckAction()(request)
@@ -131,7 +131,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "dateOfBirthCheckAction" should {
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "date-of-birth" -> "not bool")
         val result = controller.dateOfBirthCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -140,7 +140,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "redirect to do you live in scotland" when {
       "a valid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "date-of-birth" -> "true"
         )
         val result = controller.dateOfBirthCheckAction()(request)
@@ -160,7 +160,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "doYouLiveInScotlandAction" should {
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "do-you-live-in-scotland" -> "not bool")
         val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -169,7 +169,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "redirect to lower earner" when {
       "a valid form is submitted who lives in scotland" in {
-        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "do-you-live-in-scotland" -> "true")
         val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
@@ -178,7 +178,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       }
 
       "a valid form is submitted who does not live in scotland" in {
-        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(
+        implicit val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "do-you-live-in-scotland" -> "false")
         val result = controller.doYouLiveInScotlandAction()(request)
         status(result) shouldBe SEE_OTHER
@@ -198,7 +198,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "lowerEarnerCheckAction" should {
     "return a bad request" when {
       "a invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "lower-earner" -> "not a bool"
         )
         val result = controller.lowerEarnerCheckAction()(request)
@@ -207,7 +207,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
       "redirect to partners income" when {
         "a valid form is submitted" in {
-          val request = FakeRequest().withFormUrlEncodedBody(
+          val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
             "lower-earner" -> "true"
           )
           val result = controller.lowerEarnerCheckAction()(request)
@@ -228,7 +228,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "partnersIncomeCheckAction" should {
     "bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "partners-income" -> "not bool")
         val result = controller.partnersIncomeCheckAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -237,7 +237,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "redirect to want to apply" when {
       "a valid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "partners-income" -> "true",
           "is-scottish" -> "true")
         val result = controller.partnersIncomeCheckAction()(request)
@@ -257,7 +257,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "doYouWantToApplyAction" should {
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "not a bool")
         val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -266,7 +266,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "return a redirect to transfer" when {
       "the user wants to apply" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "true")
         val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
@@ -276,7 +276,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "return a redirect" when {
       "the user doesnt want to apply and is permanently logged in" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "false")
         val result = authController.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
@@ -284,7 +284,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
       }
 
       "the user doesnt want to apply and is not permanently logged in" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "do-you-want-to-apply" -> "false")
         val result = controller.doYouWantToApplyAction()(request)
         status(result) shouldBe SEE_OTHER
@@ -303,7 +303,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "gdsCalculatorAction" should {
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "transferor-income" -> "not some income",
           "recipient-income" -> "not some income")
         val result = controller.gdsCalculatorAction()(request)
@@ -313,7 +313,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "return a success" when {
       "a valid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "country" -> "england",
           "transferor-income" -> "£20.56",
           "recipient-income" -> "£100"
@@ -337,7 +337,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
   "ptaCalculatorAction" should {
     "return a bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "transferor-income" -> "not some income",
           "recipient-income" -> "not some income")
         val result = controller.ptaCalculatorAction()(request)
@@ -347,7 +347,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
     "return a success" when {
       "a valid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withMethod("POST").withFormUrlEncodedBody(
           "country" -> "england",
           "transferor-income" -> "£20.56",
           "recipient-income" -> "£100"

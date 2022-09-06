@@ -218,7 +218,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "a user selects the checkMarriageAllowanceClaim option" in {
 
         val userAnswer = CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim
-        val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> userAnswer)
+        val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> userAnswer).withMethod("POST")
 
         when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
           .thenReturn(Future.successful(userAnswer))
@@ -239,7 +239,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val request = FakeRequest().withFormUrlEncodedBody(
           CheckClaimOrCancelDecisionForm.DecisionChoice -> userAnswer
-        )
+        ).withMethod("POST")
 
         when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any()))
           .thenReturn(Future.successful(CheckClaimOrCancelDecisionForm.StopMarriageAllowance))
@@ -252,7 +252,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "return a bad request" when {
       "the form submission has a blank value" in {
-        val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> "")
+        val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> "").withMethod("POST")
         val result = controller.submitDecision(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -260,7 +260,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "redirect to the decision page" when {
       "there is an unexpected error" in {
-        val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> "Test")
+        val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> "Test").withMethod("POST")
         val result = controller.submitDecision(request)
         redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.decision.url)
       }
@@ -374,7 +374,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         "redirect to the make change page" when {
           "there is an unexpected error" in {
-            val request = FakeRequest().withFormUrlEncodedBody(MakeChangesDecisionForm.StopMAChoice -> "Test")
+            val request = FakeRequest().withFormUrlEncodedBody(MakeChangesDecisionForm.StopMAChoice -> "Test").withMethod("POST")
             val result = controller.submitMakeChange()(request)
             redirectLocation(result) shouldBe Some(controllers.routes.UpdateRelationshipController.makeChange.url)
           }
@@ -556,7 +556,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           "dateOfDivorce.year" -> "year",
           "dateOfDivorce.month" -> "month",
           "dateOfDivorce.day" -> "day"
-        )
+        ).withMethod("POST")
 
         val result = controller.submitDivorceEnterYear(invalidRequest)
         status(result) shouldBe BAD_REQUEST
@@ -572,7 +572,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val request = FakeRequest().withFormUrlEncodedBody("dateOfDivorce.year" -> divorceDateInThePast.getYear.toString,
           "dateOfDivorce.month" -> divorceDateInThePast.getMonthValue.toString,
-          "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString)
+          "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString).withMethod("POST")
 
         when(mockTimeService.getCurrentDate)
           .thenReturn(LocalDate.now())
