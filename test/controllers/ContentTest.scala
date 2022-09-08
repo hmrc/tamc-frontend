@@ -77,7 +77,7 @@ class ContentTest extends ControllerBaseTest {
   "Calling Transfer Submit page" should {
 
     "display form error message (first name and last name missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "gender"           -> "M",
         "nino"             -> Ninos.nino1,
         "transferor-email" -> "example@example.com"
@@ -106,7 +106,7 @@ class ContentTest extends ControllerBaseTest {
 
   "Calling Transfer Submit page with error in name field" should {
     "display form error message (first name missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "last-name" -> "bar",
         "gender"    -> "M",
         "nino"      -> Ninos.nino1
@@ -124,7 +124,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (first name is empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "",
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -142,7 +142,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (first name is blank)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> " ",
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -160,7 +160,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (first name contains more than 35 characters)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "a" * 36,
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -178,7 +178,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (first name contains numbers)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "12345",
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -196,7 +196,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (first name contains letters and numbers)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "abc123",
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -214,7 +214,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (last name missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"   -> "foo",
         "gender" -> "M",
         "nino"   -> Ninos.nino1
@@ -231,7 +231,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (last name is empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "",
         "gender"    -> "M",
@@ -249,7 +249,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (last name is blank)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> " ",
         "gender"    -> "M",
@@ -267,7 +267,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (last name contains more than 35 characters)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "a" * 36,
         "gender"    -> "M",
@@ -285,7 +285,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (last name contains numbers)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "12345",
         "gender"    -> "M",
@@ -303,7 +303,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (last name contains letters and numbers)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "abc123",
         "gender"    -> "M",
@@ -322,7 +322,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message when recipient nino equals transferor nino" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "abc",
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -342,7 +342,7 @@ class ContentTest extends ControllerBaseTest {
 
   "Calling Transfer Submit page with error in gender field" should {
     "display form error message (gender missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "bar",
         "nino"      -> Ninos.nino1
@@ -359,7 +359,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (gender code is invalid)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "bar",
         "gender"    -> "X",
@@ -379,7 +379,7 @@ class ContentTest extends ControllerBaseTest {
 
   "Calling Transfer Submit page with error in NINO field" should {
     "display form error message (NINO missing from request)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "bar",
         "gender"    -> "M"
@@ -396,7 +396,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (NINO is empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -414,7 +414,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (NINO is invalid)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "name"      -> "foo",
         "last-name" -> "bar",
         "gender"    -> "M",
@@ -435,7 +435,7 @@ class ContentTest extends ControllerBaseTest {
   "Calling Date Of Marriage page with error in dom field" should {
 
     "display form error message (date of marriage is before 1900)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day"   -> "1",
         "dateOfMarriage.month" -> "1",
         "dateOfMarriage.year"  -> "1899"
@@ -460,7 +460,7 @@ class ContentTest extends ControllerBaseTest {
 
     "display form error message (date of marriage is after today’s date)" in {
       val localDate = LocalDate.now().plusYears(1)
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day"   -> s"${localDate.getDayOfMonth}",
         "dateOfMarriage.month" -> s"${localDate.getDayOfMonth}",
         "dateOfMarriage.year"  -> s"${localDate.getYear}"
@@ -480,7 +480,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (date of marriage is left empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day"   -> "",
         "dateOfMarriage.month" -> "",
         "dateOfMarriage.year"  -> ""
@@ -536,7 +536,7 @@ class ContentTest extends ControllerBaseTest {
         mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any())
       )
         .thenReturn(Nil)
-      val request = FakeRequest().withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
       val result = transferController.eligibleYearsAction(request)
 
       status(result) shouldBe OK
@@ -558,7 +558,7 @@ class ContentTest extends ControllerBaseTest {
             recrecord.availableTaxYears
           )
         )
-      val request = FakeRequest().withFormUrlEncodedBody(data = "year" -> "List(0)")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "year" -> "List(0)")
       val result = transferController.extraYearsAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -590,7 +590,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email is empty)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -603,7 +603,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email contains only spaces)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "  ")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "  ")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -616,7 +616,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email contains more than 100 characters)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> s"${"a" * 90}@bbbb.ccccc")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> s"${"a" * 90}@bbbb.ccccc")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -629,7 +629,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email is invalid)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "example")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "example")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -642,7 +642,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email has consequent dots)" in {
-      val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "ex..ample@example.com")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "ex..ample@example.com")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -655,7 +655,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "check[example.com")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "check[example.com")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -668,7 +668,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "display form error message (transferor email does not include TLD)" in {
-      val request = FakeRequest().withFormUrlEncodedBody(data = "transferor-email" -> "example@example")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "example@example")
       val result = transferController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
@@ -847,7 +847,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "have partners-income page and content for Scottish resident" in {
-      val request = FakeRequest().withSession("scottish_resident" -> "true")
+      val request = FakeRequest().withMethod("POST").withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
@@ -946,7 +946,7 @@ class ContentTest extends ControllerBaseTest {
     }
 
     "have partners-income page and content for Scottish resident" in {
-      val request = FakeRequest().withSession("scottish_resident" -> "true")
+      val request = FakeRequest().withMethod("POST").withSession("scottish_resident" -> "true")
       val result = eligibilityController.partnersIncomeCheck()(request)
 
       val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)

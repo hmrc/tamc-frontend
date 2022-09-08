@@ -89,7 +89,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "a valid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
           "name"      -> "Test",
           "last-name" -> "User",
           "gender"    -> "M",
@@ -142,7 +142,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "redirect the user" when {
       "a valid form is submitted" in {
         val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
           "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
           "dateOfMarriage.month" -> dateOfMarriageInput.dateOfMarriage.getMonthValue.toString,
           "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
@@ -225,7 +225,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "eligibleYearsAction" should {
     "return bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("applyForCurrentYear" -> "abc")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "abc")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
@@ -242,7 +242,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "return success" when {
       "extra years is not empty and applyForCurrentYear is true" in {
-        val request = FakeRequest().withFormUrlEncodedBody("applyForCurrentYear" -> "true")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "true")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
@@ -262,7 +262,7 @@ class TransferControllerTest extends ControllerBaseTest {
       }
 
       "extra years is not empty and applyForCurrentYear is false" in {
-        val request = FakeRequest().withFormUrlEncodedBody("applyForCurrentYear" -> "false")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
@@ -281,7 +281,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "redirect the user" when {
       "extra years is empty and current year is unavailable" in {
-        val request = FakeRequest().withFormUrlEncodedBody("applyForCurrentYear" -> "false")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
@@ -298,7 +298,7 @@ class TransferControllerTest extends ControllerBaseTest {
       }
 
       "extra years is empty, current year is available but applyForCurrentYear is true" in {
-        val request = FakeRequest().withFormUrlEncodedBody("applyForCurrentYear" -> "true")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "true")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
@@ -318,7 +318,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "throw an exception and show an error page" when {
       "extra years is empty, current year is available and applyForCurrentYear is false" in {
-        val request = FakeRequest().withFormUrlEncodedBody("applyForCurrentYear" -> "false")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
@@ -374,7 +374,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "return success" when {
       "furtherYears is not empty" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
           "selectedYear"              -> "2015",
           "furtherYears"              -> "2014,2013",
           "yearAvailableForSelection" -> "2014"
@@ -403,7 +403,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "redirect" when {
       "further years is empty" in {
-        val request = FakeRequest().withFormUrlEncodedBody(
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
           "selectedYear"              -> "2015",
           "furtherYears"              -> "",
           "yearAvailableForSelection" -> "2014"
@@ -458,7 +458,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "confirmYourEmailAction" should {
     "return bad request" when {
       "an invalid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "not an email")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "not an email")
         val result = controller.confirmYourEmailAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -466,7 +466,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "redirect" when {
       "a valid form is submitted" in {
-        val request = FakeRequest().withFormUrlEncodedBody("transferor-email" -> "test@test.com")
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "test@test.com")
         when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any()))
           .thenReturn(notificationRecord)
         val result = controller.confirmYourEmailAction()(request)
