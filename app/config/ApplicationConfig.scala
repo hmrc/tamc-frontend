@@ -51,7 +51,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   lazy val analyticsHost: String = configuration.getOptional[String]("google-analytics.host").getOrElse("auto")
 
   lazy val loginUrl: String = loadConfig("tamc.external-urls.login-url")
-  lazy val feedbackUrl: String = loadConfig("tamc.external-urls.feedback-url")
+  lazy val logoutUrl: String = loadConfig("tamc.external-urls.logout-url")
   lazy val callbackUrl: String = loadConfig("tamc.external-urls.callback-url")
   lazy val ivNotAuthorisedUrl: String = loadConfig("tamc.external-urls.not-authorised-url")
   lazy val callChargeUrl: String = loadConfig("tamc.external-urls.govuk-call-charges")

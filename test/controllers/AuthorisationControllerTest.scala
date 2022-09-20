@@ -44,7 +44,7 @@ class AuthorisationControllerTest extends ControllerBaseTest {
     "redirect" in {
       val result = await(controller.logout()(request))
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(applicationConfig.feedbackUrl)
+      redirectLocation(result) shouldBe Some(applicationConfig.logoutUrl)
     }
   }
 
