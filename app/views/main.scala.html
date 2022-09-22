@@ -112,7 +112,7 @@
 @contentBlock = {
     @content
     @afterContent
-    @if(!afterContent.isDefined){
+    @if(afterContent.isEmpty){
         <hr aria-hidden="true" class="govuk-section-break govuk-section-break--s">
     }
     @hmrcReportTechnicalIssue(ReportTechnicalIssue(
@@ -124,13 +124,15 @@
     ))
     <hr aria-hidden="true" class="govuk-section-break govuk-section-break--m">
     @govukPhaseBanner(PhaseBanner(
-        tag = Some(Tag(
-            content = Text("beta")
-        )),
-        content = HtmlContent(messages("betaBanner.message",
-                link(link=appConfig.betaFeedbackUnauthenticatedUrl,
-                    messageKey="betaBanner.linkText",
-                    inParagraph = true)))
+        tag = Some(Tag(Text("beta"))),
+        content = HtmlContent(messages(
+            "betaBanner.message",
+            link(
+                link = appConfig.betaFeedbackUnauthenticatedUrl,
+                messageKey = "betaBanner.linkText",
+                inParagraph = true
+            )
+        ))
     ))
 }
 
