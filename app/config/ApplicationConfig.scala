@@ -25,13 +25,10 @@ import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
 
 import java.time.LocalDate
-import scala.concurrent.duration._
-import scala.language.postfixOps
 
 //TODO[DDCNL-3479] get rid of vals in here that aren't actually config values!!!!!
 class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig) {
 
-  val templateRefreshAfter: Duration = 10 minutes
   val authURL: String = servicesConfig.baseUrl("auth")
   val cacheUri:String = servicesConfig.baseUrl("cachable.session-cache")
   val sessionCacheDomain: String = servicesConfig.getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
@@ -50,14 +47,11 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
   val reportAProblemPartialUrl = s"$contactFrontendService/contact/problem_reports"
 
-  lazy val assetsPrefix: String = loadConfig("assets.url") + loadConfig("assets.version") + '/'
-
   lazy val analyticsToken: Option[String] = configuration.getOptional[String]("google-analytics.token")
   lazy val analyticsHost: String = configuration.getOptional[String]("google-analytics.host").getOrElse("auto")
 
   lazy val loginUrl: String = loadConfig("tamc.external-urls.login-url")
   lazy val logoutUrl: String = loadConfig("tamc.external-urls.logout-url")
-  lazy val logoutCallbackUrl: String = loadConfig("tamc.external-urls.logout-callback-url")
   lazy val callbackUrl: String = loadConfig("tamc.external-urls.callback-url")
   lazy val ivNotAuthorisedUrl: String = loadConfig("tamc.external-urls.not-authorised-url")
   lazy val callChargeUrl: String = loadConfig("tamc.external-urls.govuk-call-charges")
@@ -71,10 +65,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   lazy val marriageAllowanceUrl: String = servicesConfig.baseUrl("marriage-allowance")
   lazy val taiFrontendUrl: String = s"${configuration.getOptional[String]("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
   lazy val taxFreeAllowanceUrl = s"$taiFrontendUrl/tax-free-allowance"
-
-  lazy val enableRefresh: Any = configuration.getOptional[String]("enableRefresh").getOrElse(true)
-  lazy val frontendTemplatePath: String = configuration.getOptional[String]("microservice.services.frontend-template-provider.path")
-    .getOrElse("/template/mustache")
 
   val DEFAULT_VALID_YEARS = 4
   val TAMC_VALID_YEARS: Int = configuration.getOptional[Int]("tamc-valid-years-prior")
@@ -148,8 +138,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   private def createUrl(action: String) =
     s"$loginUrl/$action?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(callbackUrl)}&failureURL=${encodeQueryStringValue(ivNotAuthorisedUrl)}"
-
-  def ivLoginUrl: String = createUrl(action = "registration")
 
   def ivUpliftUrl: String = createUrl(action = "uplift")
 

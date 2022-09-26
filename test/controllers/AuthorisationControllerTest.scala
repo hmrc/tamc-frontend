@@ -45,7 +45,6 @@ class AuthorisationControllerTest extends ControllerBaseTest {
       val result = await(controller.logout()(request))
       status(result) shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(applicationConfig.logoutUrl)
-      result.session(request).data("postLogoutPage") shouldBe applicationConfig.logoutCallbackUrl
     }
   }
 
