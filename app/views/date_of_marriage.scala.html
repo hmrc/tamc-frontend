@@ -52,7 +52,7 @@ backLinkHref = Some(controllers.routes.TransferController.transfer.url)
         legendKey = "pages.date-of-marriage.h2",
         hint = Some(Text(messages("pages.form.field-helper.dom"))),
       legendClasses = "govuk-visually-hidden",
-      fieldSetAttrs = Map("id" -> "dateOfMarriage"))
+      fieldSetAttrs = Map("id" -> "dateOfMarriageFieldset"))
 
     @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:dateofmarriage_continue"))
   }

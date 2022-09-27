@@ -17,6 +17,8 @@ object AppDependencies {
     "uk.gov.hmrc"                  %% "play-partials"              % "8.3.0-play-28",
     "uk.gov.hmrc"                  %% "tax-year"                   % "3.0.0",
     "uk.gov.hmrc"                  %% "play-language"              % "5.3.0-play-28",
+    "uk.gov.hmrc"                  %% "govuk-template"             % "5.77.0-play-28",
+    "uk.gov.hmrc"                  %% "play-ui"                    % "9.10.0-play-28",
     "com.fasterxml.jackson.module" %% "jackson-module-scala"       % "2.13.4",
     "uk.gov.hmrc"                  %% "play-frontend-hmrc"         % "3.27.0-play-28"
   )

@@ -15,23 +15,27 @@
  *@
 
 @import viewModels.SummaryRow
-@import includes.Link
+@import includes.ChangeLink
 
-@this(link: Link)
+@this(link: ChangeLink)
 
 @(rows: Seq[SummaryRow])(implicit messages: Messages)
 
-<table class="govuk-table">
-      <tbody class="govuk-table__body">
-        @for(row <- rows) {
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">@row.title</th>
-                <td class="govuk-table__cell">@row.userAnswer</td>
-                @row.changeLink.fold(Html("""<td class="govuk-table__cell"></td>"""))(changeLink => Html(s"""<td class="govuk-table__cell">
-                ${link(link = changeLink, messageKey = "generic.change", id = Some(row.id), attrs = Map("aria-label" -> row.aria), inParagraph = true)}
-                </td>"""))
-            </tr>
-        }
 
-      </tbody>
-</table>
+<dl class="govuk-summary-list">
+  @for(row <- rows) {
+    <div class="govuk-summary-list_row">
+        <dt class="govuk-summary-list_key">@row.title</dt>
+        <dd class="govuk-summary-list_value">@row.userAnswer</dd>
+        @row.changeLink.fold(Html("""<dd class="govuk-summary-list_actions">&nbsp;</dd>"""))(changeLink => Html(s"""
+      
+          <dd class="govuk-summary-list_actions">
+            ${link(link = changeLink, messageKey = "generic.change", id = Some(row.id), attrs = Map("aria-label" -> row.aria), hiddenText = row.title)}
+        </dd>
+
+                """))
+
+
+    </div>
+  }
+</dl>

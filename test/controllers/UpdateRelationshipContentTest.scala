@@ -438,7 +438,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val header = view.getElementsByTag("h1").text
       val para = view.getElementsByTag("p").eachText.toArray
       val list = view.getElementsByTag("li").eachText.toArray
-      val tableHeadings = view.getElementsByTag("th").eachText.toArray
+      val tableHeadings = view.getElementsByTag("dt").eachText.toArray
 
       header shouldBe expectedHeader
       para shouldBe expectedParas
@@ -470,7 +470,7 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
       val header = view.getElementsByTag("h1").text
       val para = view.getElementsByTag("p").eachText.toArray
       val list = view.getElementsByTag("li").eachText.toArray
-      val tableHeadings = view.getElementsByTag("th").eachText.toArray
+      val tableHeadings = view.getElementsByTag("dt").eachText.toArray
 
       header shouldBe expectedHeader
       para shouldBe expectedParas
