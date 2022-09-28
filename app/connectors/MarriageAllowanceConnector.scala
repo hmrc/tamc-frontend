@@ -80,8 +80,11 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
       )
       .map {
         case Right(response) =>
+          println(Console.GREEN + response + Console.RESET)
           Right(Json.fromJson[CreateRelationshipResponse](response.json).asOpt)
-        case Left(error) => Left(error)
+        case Left(error) =>
+          println(Console.RED + error + Console.RESET)
+          Left(error)
       }
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(
