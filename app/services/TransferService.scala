@@ -68,7 +68,7 @@ class TransferService @Inject()(
     } yield true
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[EligibilityCheckCacheData])
-                                                : Future[Option[EligibilityCheckCacheData]] =
+  : Future[Option[EligibilityCheckCacheData]] =
     (recipientData, cache) match {
       case (RegistrationFormInput(_, _, _, _, dom), Some(EligibilityCheckCacheData(_, _, activeRelationshipRecord, historicRelationships, _, _, _)))
         if applicationService.canApplyForMarriageAllowance(historicRelationships, activeRelationshipRecord, timeService.getTaxYearForDate(dom)) =>
@@ -201,15 +201,16 @@ class TransferService @Inject()(
       .flatMap {
         case Right(getRelationshipResponse) =>
           getRelationshipResponse match {
-            case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) => 
+            case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) =>
               Future.successful((recipientRecord, availableYears))
-            case GetRelationshipResponse(_, _, ResponseStatus(TRANSFEROR_DECEASED)) =>
-              Future.failed(TransferorDeceased())
-            case _ =>
-              Future.failed(RecipientNotFound())
+            case _ => Future.failed(RecipientNotFound())
           }
         case Left(error) =>
-          Future.failed(error)
+          error.status.status_code match {
+            case TRANSFEROR_DECEASED => Future.failed(TransferorDeceased())
+            case RECIPIENT_NOT_FOUND => Future.failed(RecipientNotFound())
+            case _ => Future.failed(OtherError(error))
+          }
       }
 
   def deleteSelectionAndGetCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
@@ -244,12 +245,15 @@ class TransferService @Inject()(
       case Right(createRelationshipResponse) =>
         createRelationshipResponse match {
           case Some(CreateRelationshipResponse(ResponseStatus("OK"))) => data
-          case Some(CreateRelationshipResponse(ResponseStatus(CANNOT_CREATE_RELATIONSHIP))) => throw CannotCreateRelationship()
-          case Some(CreateRelationshipResponse(ResponseStatus(RELATION_MIGHT_BE_CREATED))) => throw RelationshipMightBeCreated()
-          case Some(CreateRelationshipResponse(ResponseStatus(RECIPIENT_DECEASED))) => throw RecipientDeceased()
           case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
-      case Left(error) => throw error
+      case Left(error) =>
+        error.status.status_code match {
+          case CANNOT_CREATE_RELATIONSHIP => throw CannotCreateRelationship()
+          case RELATION_MIGHT_BE_CREATED => throw RelationshipMightBeCreated()
+          case RECIPIENT_DECEASED => throw RecipientDeceased()
+          case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
+        }
     } recover {
       case error =>
         handleAudit(CreateRelationshipFailureEvent(data, error))

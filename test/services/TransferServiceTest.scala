@@ -32,8 +32,8 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import utils.BaseTest
-
 import java.time.LocalDate
+
 import scala.concurrent.Future
 
 class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
@@ -92,25 +92,25 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
     "throw an error" when {
       "recipient is not returned" in {
-        val response = GetRelationshipResponse(None, None, ResponseStatus(ErrorResponseStatus.SERVICE_UNAVILABLE))
+        val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:RECIPIENT-NOT-FOUND"))
         when(mockCachingService.getCachedDataForEligibilityCheck)
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(Right(response))
+          .thenReturn(Left(response))
 
         intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "transferor deceased" in {
-        val response = GetRelationshipResponse(None, None, ResponseStatus(ErrorResponseStatus.TRANSFEROR_DECEASED))
+        val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:TRANSFERER-DECEASED"))
         when(mockCachingService.getCachedDataForEligibilityCheck)
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(Right(response))
+          .thenReturn(Left(response))
 
         intercept[TransferorDeceased](await(service.isRecipientEligible(nino, recipientData)))
       }

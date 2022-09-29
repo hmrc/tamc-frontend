@@ -20,12 +20,11 @@ import com.google.inject.Inject
 import config.ApplicationConfig
 import play.api.libs.json.Json
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
-import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
+import errors.{BadFetchRequest, CitizenNotFound, MarriageAllowanceError, TransferorNotFound}
 import models._
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.HttpReadsInstances.readEitherOf
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -36,11 +35,11 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
   def listRelationship(nino: Nino)(
     implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordList] =
     httpClient
-      .GET[Either[UpstreamErrorResponse, HttpResponse]](
+      .GET[HttpResponse](
         s"$marriageAllowanceUrl/paye/$nino/list-relationship"
       )
       .flatMap {
-        case Right(response) =>
+        response =>
           val relationshipRecordWrapper = response.json.as[RelationshipRecordStatusWrapper]
           relationshipRecordWrapper match {
             case RelationshipRecordStatusWrapper(relationshipRecordWrapper, ResponseStatus("OK")) =>
@@ -56,46 +55,46 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
                 new UnsupportedOperationException("Unable to handle list relationship request")
               )
           }
-        case Left(error) =>
-          Future.failed(error)
-      }
+      }.recoverWith {
+      case t: Throwable => Future.failed(t)
+    }
 
-  def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[UpstreamErrorResponse, GetRelationshipResponse]] =
+  def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
+                              (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, GetRelationshipResponse]] =
     httpClient
-      .POST[RegistrationFormInput, Either[UpstreamErrorResponse, HttpResponse]](
+      .POST[RegistrationFormInput, HttpResponse](
         s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData
       )
       .map {
-        case Right(response) =>
-          Right(response.json.as[GetRelationshipResponse])
-        case Left(error) =>
-          Left(error)
-      }
+        case response if response.status == 200 => Right(response.json.as[GetRelationshipResponse])
+        case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
+      }.recoverWith {
+      case t: Throwable => Future.failed(t)
+    }
 
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[UpstreamErrorResponse, Option[CreateRelationshipResponse]]] =
+    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, Option[CreateRelationshipResponse]]] =
     httpClient
-      .PUT[CreateRelationshipRequestHolder, Either[UpstreamErrorResponse, HttpResponse]](
+      .PUT[CreateRelationshipRequestHolder, HttpResponse](
         s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/pta", data
       )
       .map {
-        case Right(response) =>
-          println(Console.GREEN + response + Console.RESET)
-          Right(Json.fromJson[CreateRelationshipResponse](response.json).asOpt)
-        case Left(error) =>
-          println(Console.RED + error + Console.RESET)
-          Left(error)
+        case response if response.status == 200 => Right(Json.fromJson[CreateRelationshipResponse](response.json).asOpt)
+        case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
+      }.recoverWith {
+        case t: Throwable => Future.failed(t)
       }
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[UpstreamErrorResponse, Option[UpdateRelationshipResponse]]] =
+    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, Option[UpdateRelationshipResponse]]] =
     httpClient
-      .PUT[UpdateRelationshipRequestHolder, Either[UpstreamErrorResponse, HttpResponse]](
+      .PUT[UpdateRelationshipRequestHolder, HttpResponse](
         s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data
       )
       .map {
-        case Right(response) =>
-          Right(Json.fromJson[UpdateRelationshipResponse](response.json).asOpt)
-        case Left(error) => Left(error)
+        case response if response.status == 200 => Right(Json.fromJson[UpdateRelationshipResponse](response.json).asOpt)
+        case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
+      }.recoverWith {
+        case t: Throwable => Future.failed(t)
       }
 }
