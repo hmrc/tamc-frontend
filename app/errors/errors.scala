@@ -16,6 +16,14 @@
 
 package errors
 
+import models.ResponseStatus
+import play.api.libs.json.{Json, OFormat}
+
+case class MarriageAllowanceError(status: ResponseStatus)
+object MarriageAllowanceError {
+  implicit val format: OFormat[MarriageAllowanceError] = Json.format[MarriageAllowanceError]
+}
+
 case class DesEnumerationNotFound() extends ServiceError
 case class UnknownParticipant() extends ServiceError
 case class TransferorNotFound() extends ServiceError
@@ -47,6 +55,7 @@ case class BadFetchRequest() extends ServiceError
 case class NoPrimaryRecordError() extends ServiceError
 case class MultipleActiveRecordError() extends ServiceError
 case class RelationshipMightBeCreated() extends ServiceError
+case class OtherError(error: MarriageAllowanceError) extends ServiceError
 
 sealed abstract class ServiceError extends RuntimeException
 

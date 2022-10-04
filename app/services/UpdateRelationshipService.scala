@@ -213,7 +213,12 @@ class UpdateRelationshipService @Inject()(
             case Some(UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))) => throw RecipientNotFound()
             case _ => throw new UnsupportedOperationException("Unable to send relationship update request")
           }
-        case Left(error) => throw error
+        case Left(error) =>
+          error.status.status_code match {
+            case CANNOT_UPDATE_RELATIONSHIP => throw CannotUpdateRelationship()
+            case BAD_REQUEST => throw RecipientNotFound()
+            case _ => throw new UnsupportedOperationException("Unable to send relationship update request")
+          }
       }
       .recover {
         case error =>
