@@ -17,26 +17,22 @@
 package services
 
 import com.google.inject.Inject
+import com.google.inject.name.Named
+import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors.{CacheMapNoFound, TransferorNotFound}
 import models._
-import java.time.LocalDate
-
-import com.google.inject.name.Named
-import config.ApplicationConfig
 import play.api.libs.json.{Reads, Writes}
-import play.api.{Configuration, Environment}
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class CachingService @Inject()(
                                 marriageAllowanceConnector: MarriageAllowanceConnector,
                                 val http: HttpClient,
-                                val runModeConfiguration: Configuration,
-                                environment: Environment,
                                 appConfig: ApplicationConfig,
                                 @Named("appName") appName: String
                               ) extends SessionCache {
@@ -51,10 +47,6 @@ class CachingService @Inject()(
   def saveTransferorRecord(transferorRecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cache[UserRecord](appConfig.CACHE_TRANSFEROR_RECORD, transferorRecord) map
       (_.getEntry[UserRecord](appConfig.CACHE_TRANSFEROR_RECORD).get)
-
-  def saveLoggedInUserInfo(loggedInUserInfo: LoggedInUserInfo)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[LoggedInUserInfo] =
-    cache[LoggedInUserInfo](appConfig.CACHE_LOGGEDIN_USER_RECORD, loggedInUserInfo) map
-      (_.getEntry[LoggedInUserInfo](appConfig.CACHE_LOGGEDIN_USER_RECORD).get)
 
   def saveRecipientRecord(recipientRecord: UserRecord, recipientData: RegistrationFormInput, availableYears: List[TaxYear])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
     cache[RecipientRecord](appConfig.CACHE_RECIPIENT_RECORD, RecipientRecord(record = recipientRecord, data = recipientData, availableTaxYears = availableYears)) map
@@ -73,40 +65,13 @@ class CachingService @Inject()(
     cache[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD, notificationRecord) map
       (_.getEntry[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD).get)
 
-  def saveSource(source: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
-    cache[String](appConfig.CACHE_SOURCE, source) map
-      (_.getEntry[String](appConfig.CACHE_SOURCE).get)
-
-  def saveActiveRelationshipRecord(activeRelationshipRecord: RelationshipRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecord] =
-    cache[RelationshipRecord](appConfig.CACHE_ACTIVE_RELATION_RECORD, activeRelationshipRecord) map
-      (_.getEntry[RelationshipRecord](appConfig.CACHE_ACTIVE_RELATION_RECORD).get)
-
-  def saveHistoricRelationships(historic: Option[Seq[RelationshipRecord]])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Seq[RelationshipRecord]]] =
-    cache[Seq[RelationshipRecord]](appConfig.CACHE_HISTORIC_RELATION_RECORD, historic.getOrElse(Seq[RelationshipRecord]())) map
-      (_.getEntry[Seq[RelationshipRecord]](appConfig.CACHE_HISTORIC_RELATION_RECORD))
-
-  def savRelationshipEndReasonRecord(relationshipEndReason: EndRelationshipReason)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EndRelationshipReason] =
-    cache[EndRelationshipReason](appConfig.CACHE_RELATION_END_REASON_RECORD, relationshipEndReason) map
-      (_.getEntry[EndRelationshipReason](appConfig.CACHE_RELATION_END_REASON_RECORD).get)
-
-  def saveRoleRecord(roleRecord: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
-    cache[String](appConfig.CACHE_ROLE_RECORD, roleRecord) map
-      (_.getEntry[String](appConfig.CACHE_ROLE_RECORD).get)
-
   def lockCreateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     cache[Boolean](appConfig.CACHE_LOCKED_CREATE, true) map
       (_.getEntry[Boolean](appConfig.CACHE_LOCKED_CREATE).get)
 
-  def lockUpdateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
-    cache[Boolean](appConfig.CACHE_LOCKED_UPDATE, true) map
-      (_.getEntry[Boolean](appConfig.CACHE_LOCKED_UPDATE).get)
-
   def unlockCreateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     cache[Boolean](appConfig.CACHE_LOCKED_CREATE, false) map
       (_.getEntry[Boolean](appConfig.CACHE_LOCKED_CREATE).get)
-
-  def getRecipientDetails(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[RecipientDetailsFormInput]] =
-    fetchAndGetEntry[RecipientDetailsFormInput](appConfig.CACHE_RECIPIENT_DETAILS)
 
   def saveSelectedYears(selectedYears: List[Int])(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     cache[List[Int]](appConfig.CACHE_SELECTED_YEARS, selectedYears) map
