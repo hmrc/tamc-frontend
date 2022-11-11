@@ -12,10 +12,8 @@ object AppDependencies {
     "com.ibm.icu"                   % "icu4j"                      % "71.1",
     "uk.gov.hmrc"                  %% "http-caching-client"        % "10.0.0-play-28",
     "uk.gov.hmrc"                  %% "domain"                     % "8.1.0-play-28",
-    "uk.gov.hmrc"                  %% "url-builder"                % "3.6.0-play-28",
     "uk.gov.hmrc"                  %% "play-partials"              % "8.3.0-play-28",
     "uk.gov.hmrc"                  %% "tax-year"                   % "3.0.0",
-    "uk.gov.hmrc"                  %% "play-language"              % "5.3.0-play-28",
     "com.fasterxml.jackson.module" %% "jackson-module-scala"       % "2.13.4",
     "uk.gov.hmrc"                  %% "play-frontend-hmrc"         % "3.32.0-play-28"
   )
