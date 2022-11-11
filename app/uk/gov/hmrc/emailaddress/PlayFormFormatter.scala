@@ -16,15 +16,13 @@
 
 package uk.gov.hmrc.emailaddress
 
-import java.time.{ZoneId, ZonedDateTime, LocalDateTime}
-
 import play.api.data.Forms.{of, optional, text, tuple}
 import play.api.data.format.Formatter
 import play.api.data.validation._
 import play.api.data.{FormError, Mapping}
 
+import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
 import scala.util.Try
-import scala.util.matching.Regex
 
 object PlayFormFormatter {
 
@@ -43,18 +41,6 @@ object PlayFormFormatter {
 
   def valueIsPresent(errorRequired: String = "error.required"): Mapping[String] =
     nonEmptyTrimmer(error = errorRequired)
-
-  /**
-    * Defines a regular expression constraint for [[uk.gov.hmrc.emailaddress.EmailAddress]] values
-    *
-    * @param error error message with default value `"error.pattern"`
-    * @param name  constraint's name with default value `"constraint.pattern"`
-    */
-  def emailPattern(regex: => Regex, name: String = "constraint.pattern", error: String = "error.pattern"): Constraint[EmailAddress] =
-    Constraint[EmailAddress](name) {
-      email =>
-        Constraints.pattern(regex = regex, error = error)(email.value)
-    }
 
   /**
     * Defines a maximum length constraint for [[uk.gov.hmrc.emailaddress.EmailAddress]] values

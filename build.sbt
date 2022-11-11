@@ -14,7 +14,7 @@ lazy val scoverageSettings = {
 }
 
 lazy val microservice: Project = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .settings(
     scoverageSettings,
     publishingSettings,
@@ -28,8 +28,7 @@ lazy val microservice: Project = Project(appName, file("."))
     Test / fork := false,
     retrieveManaged := true,
     resolvers ++= Seq(
-      Resolver.jcenterRepo,
-      "hmrc-releases" at "https://artefacts.tax.service.gov.uk/artifactory/hmrc-releases/"
+      Resolver.jcenterRepo
     ),
     majorVersion := 7
   )
