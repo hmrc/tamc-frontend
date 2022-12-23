@@ -605,7 +605,6 @@ pages.confirm.change.email=Newid E-bost
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-pages.eligibleyear.currentyear=Gallwch wneud cais ar gyfer y flwyddyn dreth bresennol
 pages.eligibleyear.toldus=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda <span id="firstNameOnly">{0}</span> ar
 pages.eligibleyear.thisyear1=Yn ystod y flwyddyn dreth bresennol
 pages.eligibleyear.thisyear2={0} ymlaen

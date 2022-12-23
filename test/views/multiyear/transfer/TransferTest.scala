@@ -43,7 +43,7 @@ class TransferTest extends BaseTest {
       title shouldBe expected
     }
 
-        "display lower income content" in {
+    "display lower income content" in {
 
           val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino("AA000000A"))).toString())
           val paragraphTag = document.getElementsByTag("p").toString
@@ -51,7 +51,7 @@ class TransferTest extends BaseTest {
 
           paragraphTag should include(expected)
 
-        }
+    }
   }
 
 }

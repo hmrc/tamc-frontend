@@ -597,7 +597,6 @@ pages.confirm.change.email=Change Email
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-pages.eligibleyear.currentyear=You can apply for the current tax year
 pages.eligibleyear.toldus=You have told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
 pages.eligibleyear.thisyear1=This current tax year
 pages.eligibleyear.thisyear2={0} onwards

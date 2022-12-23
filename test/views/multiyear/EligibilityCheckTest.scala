@@ -16,29 +16,51 @@
 
 package views.multiyear
 
-//import models.auth.UserRequest
-//import org.jsoup.Jsoup
-//import play.api.test.FakeRequest
-//import utils.BaseTest
-//import forms.MultiYearEligibilityCheckForm
-//import views.html.multiyear.eligibility_check
-//
-//class EligibilityCheckTest extends BaseTest {
-//
-//  lazy val eligibilityCheck = instanceOf[eligibility_check]
-//  implicit  val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
-//  val eligibilityCheckForm = instanceOf[MultiYearEligibilityCheckForm.eligibilityForm]
-//
-//
-//  "Eligibility Check page" should {
-//    "return correct content" in {
-//
-//      val document = Jsoup.parse(eligibilityCheck(eligibilityCheckForm).toString())
-//      val paragraphTag = document.getElementsByTag("p").toString
-//      val expected = messages("eligibility.check.married.error2")
-//
-//      paragraphTag should include(expected)
-//
-//    }
-//  }
-//}
+import models.auth.UserRequest
+import org.jsoup.Jsoup
+import play.api.test.FakeRequest
+import utils.BaseTest
+import forms.MultiYearEligibilityCheckForm
+import views.html.multiyear.eligibility_check
+
+class EligibilityCheckTest extends BaseTest {
+
+  lazy val eligibilityCheck = instanceOf[eligibility_check]
+  implicit  val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
+  lazy val eligibilityCheckForm = MultiYearEligibilityCheckForm.eligibilityForm
+
+
+  "Eligibility Check page" should {
+    "return correct page title of how it works page" in {
+
+      val document = Jsoup.parse(eligibilityCheck(eligibilityCheckForm).toString())
+      val title = document.title()
+      val expected = messages("title.eligibility.pattern", messages("eligibility.check.h1"))
+
+      title shouldBe expected
+
+    }
+    "display you can claim marriage allowance if partner has died content" in {
+
+      val document = Jsoup.parse(eligibilityCheck(eligibilityCheckForm).toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("eligibility.check.married.error2")
+
+      paragraphTag should include(expected)
+
+    }
+    "display you are not eligible for married allowance content" in {
+
+      val document = Jsoup.parse(eligibilityCheck(eligibilityCheckForm).toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("eligibility.check.married.error1")
+
+      paragraphTag should include(expected)
+
+    }
+  }
+
+
+
+
+}
