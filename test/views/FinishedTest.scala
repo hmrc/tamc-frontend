@@ -27,7 +27,7 @@ import views.html.finished
 class FinishedTest extends BaseTest {
 
   lazy val finished = instanceOf[finished]
-  implicit  val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
   val email = EmailAddress("test@test.com")
 
   "Finished" should {
