@@ -74,6 +74,18 @@ class EligibleYearsTest extends BaseTest {
       paragraphTag should include(expected)
 
     }
+
+    "display will pay up to £ less tax each year content" in {
+
+      val document = Jsoup.parse(eligibleYears(eligibleYearsForm, true, "testName", Some(LocalDate.now), Some(LocalDate.now)).toString)
+      val paragraphTag = document.getElementsByTag("Html").toString
+      val expectedpayLessTax = messages("pages.eligibleyear.li1")
+      val expectedAutomaticallyRenewEachYear = messages("pages.eligibleyear.li2")
+
+      paragraphTag should include(expectedpayLessTax)
+      paragraphTag should include(expectedAutomaticallyRenewEachYear)
+
+    }
   }
 
 

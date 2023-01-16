@@ -29,15 +29,15 @@ import java.text.NumberFormat
 
 class HowItWorksTest extends BaseTest {
 
-  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  implicit val request: UserRequest[_]      = UserRequest(FakeRequest(), None, true, None, false)
-  override implicit lazy val messages       = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
-  lazy val howItWorksView                   = instanceOf[how_it_works]
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
+  override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  lazy val howItWorksView = instanceOf[how_it_works]
 
-  lazy val maxBenefit                       = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
+  lazy val maxBenefit = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
   lazy val maxPersonalAllowanceTransferable = NumberFormat.getNumberInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())
-  lazy val currentYearPersonalAllowance     = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
-  lazy val availablePreviousYears           = (applicationConfig.currentTaxYear.finishYear -5).toString
+  lazy val currentYearPersonalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
+  lazy val availablePreviousYears = (applicationConfig.currentTaxYear.finishYear - 5).toString
 
 
   "How it works" should {
@@ -51,99 +51,108 @@ class HowItWorksTest extends BaseTest {
       title shouldBe expected
     }
 
-    "display correct details text" in {
+    "display correct h1" in {
 
       val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.how-it-works.detail")
+      val h1Tag = document.getElementsByTag("h1").toString
+      val expected = messages("generic.ma")
 
-      paragraphTag should include(expected)
+      h1Tag should include(expected)
 
-    }
-    "display correct Marriage Allowance claim text" in {
+      "display correct details text" in {
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.how-it-works.lede-pre6")
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("pages.how-it-works.detail")
 
-      paragraphTag should include(expected)
+        paragraphTag should include(expected)
 
-    }
+      }
+      "display correct Marriage Allowance claim text" in {
 
-    "display correct eligible for marriage allowance text" in {
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("pages.how-it-works.lede-pre6")
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("to see if you are eligible")
+        paragraphTag should include(expected)
 
-      paragraphTag should include(expected)
+      }
 
-    }
+      "display correct eligible for marriage allowance text" in {
 
-    "display correct email text" in {
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("to see if you are eligible")
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.how-it-works.email")
+        paragraphTag should include(expected)
 
-      paragraphTag should include(expected)
+      }
 
-    }
+      "display correct email text" in {
 
-    "display a start now button" in {
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("pages.how-it-works.email")
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("generic.start-now")
+        paragraphTag should include(expected)
 
-      paragraphTag should include(expected)
+      }
 
-    }
+      "display a start now button" in {
 
-    "display the correct page title" in {
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("generic.start-now")
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("main").toString
-      val expected = messages("title.how-it-works")
+        paragraphTag should include(expected)
 
-      paragraphTag should include(expected)
+      }
 
-    }
+      "display the correct page title" in {
 
-    "display the current year maximum amount of personal allowance transferable" in {
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("main").toString
+        val expected = messages("title.how-it-works")
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.how-it-works.lede-pre1.part2", maxPersonalAllowanceTransferable)
+        paragraphTag should include(expected)
 
-      paragraphTag should include(expected)
-    }
+      }
 
-    "display current years maximum amount of tax reduction" in {
+      "display the current year maximum amount of personal allowance transferable" in {
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.how-it-works.lede-pre2", maxBenefit)
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("pages.how-it-works.lede-pre1.part2", maxPersonalAllowanceTransferable)
 
-      paragraphTag should include(expected)
-    }
+        paragraphTag should include(expected)
+      }
 
-    "display correct eligibility to transferor, their income should be below partner and currentYear personal allowance" in {
+      "display current years maximum amount of tax reduction" in {
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.how-it-works.lede-pre4", currentYearPersonalAllowance)
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("pages.how-it-works.lede-pre2", maxBenefit)
 
-      paragraphTag should include(expected)
-    }
+        paragraphTag should include(expected)
+      }
 
-    "display the correct year a claim can be backdated from: Current Year & 4 Previous years" in {
+      "display correct eligibility to transferor, their income should be below partner and currentYear personal allowance" in {
 
-      val document = Jsoup.parse(howItWorksView().toString())
-      val paragraphTag = document.getElementsByClass("govuk-inset-text").toString
-      val expected = messages("pages.how-it-works.lede-pre5", availablePreviousYears)
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("pages.how-it-works.lede-pre4", currentYearPersonalAllowance)
 
-      paragraphTag should include(expected)
+        paragraphTag should include(expected)
+      }
+
+      "display the correct year a claim can be backdated from: Current Year & 4 Previous years" in {
+
+        val document = Jsoup.parse(howItWorksView().toString())
+        val paragraphTag = document.getElementsByClass("govuk-inset-text").toString
+        val expected = messages("pages.how-it-works.lede-pre5", availablePreviousYears)
+
+        paragraphTag should include(expected)
+      }
     }
   }
 }

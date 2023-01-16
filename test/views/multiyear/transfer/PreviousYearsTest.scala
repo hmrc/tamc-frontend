@@ -14,37 +14,60 @@
  * limitations under the License.
  */
 
-//package views.multiyear.transfer
-//
-//import org.jsoup.Jsoup
-//import utils.BaseTest
-//import views.html.multiyear.transfer.previous_years
-//import forms.RegistrationForm
-//import models.TaxYear
-//import models.auth.AuthenticatedUserRequest
-//import play.api.test.FakeRequest
-//import uk.gov.hmrc.domain.Nino
-//
-//import java.time.LocalDate
-//
-//class PreviousYearsTest extends BaseTest {
-//
-//  lazy val previousYears = instanceOf[previous_years]
-//  lazy val previousYearForm = instanceOf[RegistrationForm]
-//  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
-//
-//  "previousYears" should {
-//    "return the correct title" in {
-//
-//      val document = Jsoup.parse(previousYears(previousYearForm.registrationForm(LocalDate.now, Nino("AA000000A")),
-//        List(TaxYear(2022)),
-//        true).toString())
-//
-//      val title = document.title()
-//      val expected = messages("title.application.pattern", messages("pages.previousyear.header"))
-//
-//      title shouldBe expected
-//    }
-//  }
-//
-//}
+package views.multiyear.transfer
+
+import models.auth.AuthenticatedUserRequest
+import models.{RegistrationFormInput, TaxYear}
+import org.jsoup.Jsoup
+import play.api.test.FakeRequest
+import uk.gov.hmrc.domain.Nino
+import utils.BaseTest
+import views.html.multiyear.transfer.previous_years
+
+class PreviousYearsTest extends BaseTest {
+
+  lazy val previousYears = instanceOf[previous_years]
+  lazy val previousYearForm = instanceOf[RegistrationFormInput]
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+
+  "previousYears" should {
+    "return the correct title" in {
+
+      val document = Jsoup.parse(previousYears(previousYearForm,
+        List(TaxYear(2022)),
+        true).toString())
+
+      val title = document.title()
+      val expected = messages("title.application.pattern", messages("pages.previousyear.header"))
+
+      title shouldBe expected
+    }
+
+    "display 'automatically renew every year' content" in {
+
+      val document = Jsoup.parse(previousYears(previousYearForm,
+        List(TaxYear(2022)),
+        true).toString())
+
+        val paragraphTag = document.getElementsByTag("p").toString
+        val expected = messages("pages.previousyear.para")
+
+        paragraphTag should include(expected)
+
+      }
+
+    "display You can apply for earlier tax years h1" in {
+
+      val document = Jsoup.parse(previousYears(previousYearForm,
+        List(TaxYear(2022)),
+        true).toString())
+
+      val paragraphTag = document.getElementsByTag("h1").toString
+      val expected = messages("pages.previousyear.header")
+
+      paragraphTag should include(expected)
+
+    }
+  }
+
+}
