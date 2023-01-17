@@ -48,7 +48,7 @@ class DateOfMarriageTest extends BaseTest {
 
       val document = Jsoup.parse(dateOfMarriage(dateOfMarriageForm.dateOfMarriageForm(LocalDate.now)).toString)
       val h1Tag = document.getElementsByTag("h1").toString
-      println(h1Tag + "H1 TAG IS HERERERERERERRRERRERERERERERERERERER")
+
       val expected = messages("pages.date-of-marriage.heading")
 
       h1Tag should include(expected)

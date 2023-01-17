@@ -42,5 +42,14 @@ class ClaimsTest extends BaseTest {
 
       title shouldBe expected
     }
+
+    "return Your Marriage Allowance claims h1" in {
+
+      val document = Jsoup.parse(claims(claimViewModel).toString)
+      val h1Tag = document.getElementsByTag("h1").toString
+      val expected = messages("pages.date-of-marriage.heading")
+
+      h1Tag should include(expected)
+    }
   }
 }
