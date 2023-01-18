@@ -18,18 +18,20 @@ package views.multiyear.transfer
 
 import forms.EarlierYearForm
 import models.auth.AuthenticatedUserRequest
-import models.{RegistrationFormInput, TaxYear}
+import models.{Gender, RegistrationFormInput, TaxYear}
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
 import utils.BaseTest
 import views.html.multiyear.transfer.single_year_select
 
+import java.time.LocalDate
+
 class SingleYearSelectTest extends BaseTest {
 
   lazy val singleYearSelect = instanceOf[single_year_select]
   lazy val earlyYearForm = EarlierYearForm.earlierYearsForm()
-  lazy val registrationForm = instanceOf[RegistrationFormInput]
+  lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino("AA000000A"), LocalDate.now)
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
 
   "SingleYearSelect" should {
@@ -37,19 +39,19 @@ class SingleYearSelectTest extends BaseTest {
 
       val document = Jsoup.parse(singleYearSelect(earlyYearForm, registrationForm, List(TaxYear(2022))).toString())
       val title = document.title()
-      val expected = messages("title.pattern", messages("technical.other-ways.h1"))
+      val expected = messages("title.application.pattern", messages("technical.other-ways.h1"))
 
       title shouldBe expected
     }
 
 
-    "return you can call hmrc to make an application content" in {
+    "return TaxYear content" in {
 
       val document = Jsoup.parse(singleYearSelect(earlyYearForm, registrationForm, List(TaxYear(2022))).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("technical.other-ways.para1")
+      val h2Tag = document.getElementsByTag("h2").toString
+      val expected = messages("pages.multiyear.taxyear")
 
-      paragraphTag should include(expected)
+      h2Tag should include(expected)
 
     }
 
@@ -66,7 +68,7 @@ class SingleYearSelectTest extends BaseTest {
     "return your income was £x or less content" in {
 
       val document = Jsoup.parse(singleYearSelect(earlyYearForm, registrationForm, List(TaxYear(2022))).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
+      val paragraphTag = document.getElementsByTag("ul").toString
       val expected = messages("your-income")
 
       paragraphTag should include(expected)
@@ -76,7 +78,7 @@ class SingleYearSelectTest extends BaseTest {
     "return x income was between content" in {
 
       val document = Jsoup.parse(singleYearSelect(earlyYearForm, registrationForm, List(TaxYear(2022))).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
+      val paragraphTag = document.getElementsByTag("ul").toString
       val expected = messages("income-between")
 
       paragraphTag should include(expected)
@@ -96,7 +98,7 @@ class SingleYearSelectTest extends BaseTest {
     "return do you want to apply for extra tax year content" in {
 
       val document = Jsoup.parse(singleYearSelect(earlyYearForm, registrationForm, List(TaxYear(2022))).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
+      val paragraphTag = document.getElementsByTag("div").toString
       val expected = messages("pages.multiyear.extrayears.from.to")
 
       paragraphTag should include(expected)

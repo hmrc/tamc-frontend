@@ -16,38 +16,39 @@
 
 package views.coc
 
+import models.RelationshipRecord
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
 import utils.BaseTest
-import viewModels.ClaimsViewModel
+import viewModels.ClaimsViewModelImpl
 import views.html.coc.claims
 
 class ClaimsTest extends BaseTest {
 
   lazy val claims = instanceOf[claims]
-  lazy val claimViewModel = instanceOf[ClaimsViewModel]
+  lazy val claimViewModel = instanceOf[ClaimsViewModelImpl]
+  lazy val relationshipRecord = RelationshipRecord("Recipient","creationTimestamp","20220101", None, None,"otherPaticipant","otherParticipantupdateTimestamp")
+  lazy val relationshipRecord1 = RelationshipRecord("Recipient","creationTimestamp","20220101", None, None,"otherPaticipant","otherParticipantupdateTimestamp")
 
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
-
-
 
   "claims" should {
     "return the correct title" in {
 
-      val document = Jsoup.parse(claims(claimViewModel).toString)
+      val document = Jsoup.parse(claims(claimViewModel(relationshipRecord, Seq(relationshipRecord1))).toString)
       val title = document.title()
-      val expected = messages("title.application.pattern", messages("title.date-of-marriage"))
+      val expected = messages("title.pattern", messages("title.date-of-marriage"))
 
       title shouldBe expected
     }
 
     "return Your Marriage Allowance claims h1" in {
 
-      val document = Jsoup.parse(claims(claimViewModel).toString)
+      val document = Jsoup.parse(claims(claimViewModel(relationshipRecord, Seq(relationshipRecord1))).toString)
       val h1Tag = document.getElementsByTag("h1").toString
-      val expected = messages("pages.date-of-marriage.heading")
+      val expected = messages("pages.claims.title")
 
       h1Tag should include(expected)
     }

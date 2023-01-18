@@ -21,13 +21,13 @@ import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.time.TaxYear
 import utils.BaseTest
 import views.html.coc.cancel
 
 class CancelTest extends BaseTest {
 
   lazy val cancel = instanceOf[cancel]
-  lazy val marriageAllowanceEndingDates = instanceOf[MarriageAllowanceEndingDates]
 
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
 
@@ -35,7 +35,8 @@ class CancelTest extends BaseTest {
   "cancel" should {
     "return the correct title" in {
 
-      val document = Jsoup.parse(cancel(marriageAllowanceEndingDates).toString)
+      val expectedDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
+      val document = Jsoup.parse(cancel(expectedDates).toString)
       val title = document.title()
       val expected = messages("title.pattern", messages("pages.cancel.title"))
 
@@ -44,7 +45,8 @@ class CancelTest extends BaseTest {
 
     "return We will cancel your Marriage Allowance content" in {
 
-      val document = Jsoup.parse(cancel(marriageAllowanceEndingDates).toString)
+      val expectedDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
+      val document = Jsoup.parse(cancel(expectedDates).toString)
       val paragraphTag = document.getElementsByTag("p").toString
       val expectedPart1 = messages("pages.cancel.paragraph1")
       val expectedPart2 = messages("pages.cancel.paragraph2")

@@ -16,20 +16,24 @@
 
 package views.errors
 
+import models.auth.{BaseUserRequest, UserRequest}
 import org.jsoup.Jsoup
+import play.api.test.{FakeRequest, Helpers}
 import utils.BaseTest
 import views.html.errors.other_ways
 
 class OtherWaysTest extends BaseTest {
 
   lazy val otherWays = instanceOf[other_ways]
+  lazy val baseUserRequest: BaseUserRequest[_] = UserRequest(FakeRequest(), None, true, Some(""), true)
+  override lazy val messages = Helpers.stubMessages()
 
 
   "otherWays" should {
 
     "return correct page title of otherWays page" in {
 
-      val document = Jsoup.parse(otherWays.toString)
+      val document = Jsoup.parse(otherWays()(messages, baseUserRequest).toString)
       val title = document.title()
       val expected = messages("title.pattern", messages("technical.other-ways.h1"))
 
@@ -39,7 +43,7 @@ class OtherWaysTest extends BaseTest {
 
     "return you can apply for marriage allowance from PTA content" in {
 
-      val document = Jsoup.parse(otherWays.toString)
+      val document = Jsoup.parse(otherWays()(messages, baseUserRequest).toString)
       val paragraphTag = document.getElementsByTag("p").toString
       val expectedPart1 = messages("technical.other-ways.para0.part1")
       val expectedLink = messages("technical.other-ways.para0.link-text")
@@ -53,7 +57,7 @@ class OtherWaysTest extends BaseTest {
 
     "return you can call hmrc to make an application content" in {
 
-      val document = Jsoup.parse(otherWays.toString)
+      val document = Jsoup.parse(otherWays()(messages, baseUserRequest).toString)
       val paragraphTag = document.getElementsByTag("p").toString
       val expectedPart1 = messages("technical.other-ways.para1")
       val expectedPart2 = messages("technical.other-ways.para2")

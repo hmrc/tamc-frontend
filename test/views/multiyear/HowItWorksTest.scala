@@ -58,6 +58,7 @@ class HowItWorksTest extends BaseTest {
       val expected = messages("generic.ma")
 
       h1Tag should include(expected)
+    }
 
       "display correct details text" in {
 
@@ -66,8 +67,8 @@ class HowItWorksTest extends BaseTest {
         val expected = messages("pages.how-it-works.detail")
 
         paragraphTag should include(expected)
-
       }
+
       "display correct Marriage Allowance claim text" in {
 
         val document = Jsoup.parse(howItWorksView().toString())
@@ -75,7 +76,6 @@ class HowItWorksTest extends BaseTest {
         val expected = messages("pages.how-it-works.lede-pre6")
 
         paragraphTag should include(expected)
-
       }
 
       "display correct eligible for marriage allowance text" in {
@@ -85,7 +85,6 @@ class HowItWorksTest extends BaseTest {
         val expected = messages("to see if you are eligible")
 
         paragraphTag should include(expected)
-
       }
 
       "display correct email text" in {
@@ -95,7 +94,6 @@ class HowItWorksTest extends BaseTest {
         val expected = messages("pages.how-it-works.email")
 
         paragraphTag should include(expected)
-
       }
 
       "display a start now button" in {
@@ -105,7 +103,6 @@ class HowItWorksTest extends BaseTest {
         val expected = messages("generic.start-now")
 
         paragraphTag should include(expected)
-
       }
 
       "display the correct page title" in {
@@ -115,7 +112,6 @@ class HowItWorksTest extends BaseTest {
         val expected = messages("title.how-it-works")
 
         paragraphTag should include(expected)
-
       }
 
       "display the current year maximum amount of personal allowance transferable" in {
@@ -153,6 +149,5 @@ class HowItWorksTest extends BaseTest {
 
         paragraphTag should include(expected)
       }
-    }
   }
 }

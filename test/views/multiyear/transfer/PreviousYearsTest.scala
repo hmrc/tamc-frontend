@@ -17,23 +17,25 @@
 package views.multiyear.transfer
 
 import models.auth.AuthenticatedUserRequest
-import models.{RegistrationFormInput, TaxYear}
+import models.{Gender, RegistrationFormInput, TaxYear}
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
 import utils.BaseTest
 import views.html.multiyear.transfer.previous_years
 
+import java.time.LocalDate
+
 class PreviousYearsTest extends BaseTest {
 
   lazy val previousYears = instanceOf[previous_years]
-  lazy val previousYearForm = instanceOf[RegistrationFormInput]
+  lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino("AA000000A"), LocalDate.now)
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
 
   "previousYears" should {
     "return the correct title" in {
 
-      val document = Jsoup.parse(previousYears(previousYearForm,
+      val document = Jsoup.parse(previousYears(registrationForm,
         List(TaxYear(2022)),
         true).toString())
 
@@ -45,7 +47,7 @@ class PreviousYearsTest extends BaseTest {
 
     "display 'automatically renew every year' content" in {
 
-      val document = Jsoup.parse(previousYears(previousYearForm,
+      val document = Jsoup.parse(previousYears(registrationForm,
         List(TaxYear(2022)),
         true).toString())
 
@@ -58,7 +60,7 @@ class PreviousYearsTest extends BaseTest {
 
     "display You can apply for earlier tax years h1" in {
 
-      val document = Jsoup.parse(previousYears(previousYearForm,
+      val document = Jsoup.parse(previousYears(registrationForm,
         List(TaxYear(2022)),
         true).toString())
 
