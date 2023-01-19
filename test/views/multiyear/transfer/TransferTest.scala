@@ -31,7 +31,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   lazy val nino = generateNino().nino
   lazy val transferView = instanceOf[transfer]
   lazy val transferForm = instanceOf[RecipientDetailsForm]
-  implicit  val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "Transfer page" should {
@@ -46,11 +46,11 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display lower income content" in {
 
-          val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino))).toString())
-          val paragraphTag = document.getElementsByTag("p").toString
-          val expected = messages("pages.form.details")
+      val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino))).toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("pages.form.details")
 
-          paragraphTag should include(expected)
+      paragraphTag should include(expected)
 
     }
   }

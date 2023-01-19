@@ -41,7 +41,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
   "Confirm" should {
     "return the correct title" in {
 
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName","lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
+      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val title = document.title()
       val expected = messages("title.application.pattern", messages("title.confirm"))
 
@@ -50,7 +50,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
 
     "display Your details (low income) h2" in {
 
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName","lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
+      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val h2Tag = document.getElementsByTag("h2").toString
       val expected = messages("pages.confirm.lower.earner")
 
@@ -59,7 +59,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
 
     "display Your partner’s details (high income) h2" in {
 
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName","lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
+      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val h2Tag = document.getElementsByTag("h2").toString
       val expected = messages("pages.confirm.higher.earner")
 
@@ -68,7 +68,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
 
     "display Your Marriage Allowance details h2" in {
 
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName","lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
+      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val h2Tag = document.getElementsByTag("h2").toString
       val expected = messages("pages.confirm.marriage.details")
 
@@ -77,7 +77,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
 
     "display HMRC will check the details you have supplied content" in {
 
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName","lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
+      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val paragraphTag = document.getElementsByTag("dd").toString
       val expected = messages("pages.confirm.previous.tax.desc")
 
@@ -86,7 +86,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
 
     "display Date of marriage or civil partnership content" in {
 
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName","lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
+      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val paragraphTag = document.getElementsByTag("dt").toString
       val expected = messages("pages.confirm.date.of.marriage")
 
@@ -95,7 +95,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
 
     "display Previous tax year content" in {
 
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName","lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
+      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val paragraphTag = document.getElementsByTag("dt").toString
       val expected = messages("pages.confirm.previous.tax")
 

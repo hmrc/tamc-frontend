@@ -101,5 +101,4 @@ class FinishedTest extends BaseTest with NinoGenerator {
   }
 
 
-
 }

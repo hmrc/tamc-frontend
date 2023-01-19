@@ -52,12 +52,12 @@ class PreviousYearsTest extends BaseTest with NinoGenerator {
         List(TaxYear(2022)),
         true).toString())
 
-        val paragraphTag = document.getElementsByTag("p").toString
-        val expected = messages("pages.previousyear.para")
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("pages.previousyear.para")
 
-        paragraphTag should include(expected)
+      paragraphTag should include(expected)
 
-      }
+    }
 
     "display You can apply for earlier tax years h1" in {
 

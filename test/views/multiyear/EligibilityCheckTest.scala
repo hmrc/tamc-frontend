@@ -26,7 +26,7 @@ import views.html.multiyear.eligibility_check
 class EligibilityCheckTest extends BaseTest {
 
   lazy val eligibilityCheck = instanceOf[eligibility_check]
-  implicit  val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
+  implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
   lazy val eligibilityCheckForm = MultiYearEligibilityCheckForm.eligibilityForm
 
 
@@ -59,8 +59,6 @@ class EligibilityCheckTest extends BaseTest {
 
     }
   }
-
-
 
 
 }

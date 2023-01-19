@@ -77,7 +77,7 @@ class DateOfMarriageTest extends BaseTest with NinoGenerator {
     "return When did you marry or form a civil partnership h2" in {
 
       val document = Jsoup.parse(dateOfMarriage(dateOfMarriageForm.dateOfMarriageForm(LocalDate.now)).toString)
-      val paragraphTag = document.getElementsByTag("form").toString //can this be more specific
+      val paragraphTag = document.getElementsByTag("form").toString
       val expected = messages("pages.date-of-marriage.h2")
 
       paragraphTag should include(expected)

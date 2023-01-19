@@ -31,7 +31,7 @@ class EligibleYearsTest extends BaseTest with NinoGenerator {
   lazy val nino = generateNino().nino
   lazy val eligibleYears = instanceOf[eligible_years]
   val eligibleYearsForm = CurrentYearForm.currentYearForm()
-  implicit  val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "EligibleYears" should {
@@ -88,7 +88,6 @@ class EligibleYearsTest extends BaseTest with NinoGenerator {
 
     }
   }
-
 
 
 }
