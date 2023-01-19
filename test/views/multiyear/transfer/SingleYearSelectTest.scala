@@ -22,17 +22,18 @@ import models.{Gender, RegistrationFormInput, TaxYear}
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import views.html.multiyear.transfer.single_year_select
 
 import java.time.LocalDate
 
-class SingleYearSelectTest extends BaseTest {
+class SingleYearSelectTest extends BaseTest with NinoGenerator {
 
+  lazy val nino = generateNino().nino
   lazy val singleYearSelect = instanceOf[single_year_select]
   lazy val earlyYearForm = EarlierYearForm.earlierYearsForm()
-  lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino("AA000000A"), LocalDate.now)
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino(nino), LocalDate.now)
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
   "SingleYearSelect" should {
     "return the correct title" in {

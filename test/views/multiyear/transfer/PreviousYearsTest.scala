@@ -31,7 +31,7 @@ class PreviousYearsTest extends BaseTest with NinoGenerator {
   lazy val nino: String = generateNino.nino
   lazy val previousYears = instanceOf[previous_years]
   lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino(nino), LocalDate.now)
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
   "previousYears" should {
     "return the correct title" in {

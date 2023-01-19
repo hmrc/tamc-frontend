@@ -16,7 +16,7 @@
 
 package views.multiyear.transfer
 
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import views.html.multiyear.transfer.eligible_years
 import forms.CurrentYearForm
 import models.auth.AuthenticatedUserRequest
@@ -26,11 +26,12 @@ import uk.gov.hmrc.domain.Nino
 
 import java.time.LocalDate
 
-class EligibleYearsTest extends BaseTest {
+class EligibleYearsTest extends BaseTest with NinoGenerator {
 
+  lazy val nino = generateNino().nino
   lazy val eligibleYears = instanceOf[eligible_years]
   val eligibleYearsForm = CurrentYearForm.currentYearForm()
-  implicit  val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit  val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "EligibleYears" should {

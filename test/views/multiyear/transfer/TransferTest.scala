@@ -21,22 +21,23 @@ import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import views.html.multiyear.transfer.transfer
 
 import java.time.LocalDate
 
-class TransferTest extends BaseTest {
+class TransferTest extends BaseTest with NinoGenerator {
 
+  lazy val nino = generateNino().nino
   lazy val transferView = instanceOf[transfer]
   lazy val transferForm = instanceOf[RecipientDetailsForm]
-  implicit  val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit  val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "Transfer page" should {
     "display the correct page title of transfer page" in {
 
-      val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino("AA000000A"))).toString())
+      val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino))).toString())
       val title = document.title()
       val expected = messages("title.application.pattern", messages("pages.form.h1"))
 
@@ -45,7 +46,7 @@ class TransferTest extends BaseTest {
 
     "display lower income content" in {
 
-          val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino("AA000000A"))).toString())
+          val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino))).toString())
           val paragraphTag = document.getElementsByTag("p").toString
           val expected = messages("pages.form.details")
 

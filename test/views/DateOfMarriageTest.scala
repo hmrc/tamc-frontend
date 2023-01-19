@@ -21,17 +21,18 @@ import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import views.html.date_of_marriage
 
 import java.time.LocalDate
 
-class DateOfMarriageTest extends BaseTest {
+class DateOfMarriageTest extends BaseTest with NinoGenerator {
 
+  lazy val nino = generateNino().nino
   lazy val dateOfMarriage = instanceOf[date_of_marriage]
   lazy val dateOfMarriageForm = instanceOf[DateOfMarriageForm]
 
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "dateOfMarriage" should {

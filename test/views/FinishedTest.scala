@@ -21,13 +21,14 @@ import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import views.html.finished
 
-class FinishedTest extends BaseTest {
+class FinishedTest extends BaseTest with NinoGenerator {
 
+  lazy val nino = generateNino().nino
   lazy val finished = instanceOf[finished]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
   val email = EmailAddress("test@test.com")
 
   "Finished" should {
