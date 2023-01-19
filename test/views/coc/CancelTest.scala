@@ -22,14 +22,15 @@ import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.time.TaxYear
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import views.html.coc.cancel
 
-class CancelTest extends BaseTest {
+class CancelTest extends BaseTest with NinoGenerator {
 
   lazy val cancel = instanceOf[cancel]
+  lazy val nino: String = generateNino.nino
 
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "cancel" should {

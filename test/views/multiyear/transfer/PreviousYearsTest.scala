@@ -21,15 +21,16 @@ import models.{Gender, RegistrationFormInput, TaxYear}
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import views.html.multiyear.transfer.previous_years
 
 import java.time.LocalDate
 
-class PreviousYearsTest extends BaseTest {
+class PreviousYearsTest extends BaseTest with NinoGenerator {
 
+  lazy val nino: String = generateNino.nino
   lazy val previousYears = instanceOf[previous_years]
-  lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino("AA000000A"), LocalDate.now)
+  lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino(nino), LocalDate.now)
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
 
   "previousYears" should {

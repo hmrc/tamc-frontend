@@ -445,7 +445,7 @@ pages.bereavement.transferor.point1=their estate will be treated as having the e
 pages.bereavement.transferor.point2=your Personal Allowance will go back to the normal amount at the end of the tax year (5 April)
 
 #********************************************************************************
-# stop allowance pa
+# stop allowance page
 #********************************************************************************
 pages.stopAllowance.title=Your partner needs to stop the Marriage Allowance claim
 pages.stopAllowance.paragraph1=As your partner is transferring their allowances to you, they will need to stop the claim.

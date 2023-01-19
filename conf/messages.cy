@@ -324,7 +324,6 @@ change.status.divorce.date.invalid.para3=Cysylltwch &#226; CThEM os ydych o’r 
 change.status.divorce.header=Eich dyddiad ysgaru
 change.status.divorce-py-heading=Dileu’r trosglwyddiad Lwfans Priodasol hwn
 change.status.divorce-py-content=Caiff hyn ei ddileu o ddechrau’r flwyddyn dreth bresennol, Ebrill 6{0} ymlaen.
-change.status.divorce.recipient.condition.h1=Ysgariad neu ddiwedd partneriaeth sifil
 change.status.divorce.transferor.eoy-yes=Bydd eich Lwfans Priodasol yn parhau tan ddiwedd y flwyddyn dreth hon ({0}). Bydd eich Lwfans Personol yn cael ei addasu ar ddechrau’r flwyddyn dreth newydd ar {1}.
 change.status.divorce.transferor.eoy-no2=Gallai hyn arwain at eich cyn-bartner yn gorfod ad-dalu unrhyw dreth sydd arno.
 change.status.divorce.recipient.previous.para2=os nad ydych wedi talu digon o dreth, fel arfer byddwn yn ei chasglu drwy addasu’ch cod treth

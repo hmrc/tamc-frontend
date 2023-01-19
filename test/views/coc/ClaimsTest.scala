@@ -21,18 +21,19 @@ import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
-import utils.BaseTest
+import utils.{BaseTest, NinoGenerator}
 import viewModels.ClaimsViewModelImpl
 import views.html.coc.claims
 
-class ClaimsTest extends BaseTest {
+class ClaimsTest extends BaseTest with NinoGenerator {
 
   lazy val claims = instanceOf[claims]
+  lazy val nino: String = generateNino.nino
   lazy val claimViewModel = instanceOf[ClaimsViewModelImpl]
   lazy val relationshipRecord = RelationshipRecord("Recipient","creationTimestamp","20220101", None, None,"otherPaticipant","otherParticipantupdateTimestamp")
   lazy val relationshipRecord1 = RelationshipRecord("Recipient","creationTimestamp","20220101", None, None,"otherPaticipant","otherParticipantupdateTimestamp")
 
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino("AA000000A"))
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
   "claims" should {
     "return the correct title" in {
