@@ -39,44 +39,44 @@ class PlayFormFormatterSpec extends AnyWordSpec with Matchers with ScalaCheckPro
 
     emails foreach { email =>
       s"$email accept valid emails" in {
-        emailAddressMapping.bind(Map("email" -> email)).right.get shouldBe EmailAddress(email)
+        emailAddressMapping.bind(Map("email" -> email)).toOption.get shouldBe EmailAddress(email)
       }
     }
 
     emails foreach { email =>
       s"$email accept valid emails with padding" in {
-        emailAddressMapping.bind(Map("email" -> s" $email ")).right.get shouldBe EmailAddress(email)
+        emailAddressMapping.bind(Map("email" -> s" $email ")).toOption.get shouldBe EmailAddress(email)
       }
     }
 
     "reject missing or empty field" in {
       emptyEmailInputData.foreach(
         address =>
-          emailAddressMapping.bind(data = address).left.get shouldBe List(FormError("email", List("error.required"), List())))
+          emailAddressMapping.bind(data = address).swap.getOrElse(List(FormError("", ""))) shouldBe List(FormError("email", List("error.required"), List())))
     }
 
     "reject missing or empty field (using custom error message)" in {
       emptyEmailInputData.foreach(
         address =>
-          emailAddressCustomErrorsMapping.bind(data = address).left.get shouldBe List(FormError("email", List("field.required"), List())))
+          emailAddressCustomErrorsMapping.bind(data = address).swap.getOrElse(List(FormError("", ""))) shouldBe List(FormError("email", List("field.required"), List())))
     }
 
     invalidEmailInputData foreach { email =>
       s"$email reject invalid email" in {
-        emailAddressMapping.bind(data = email).left.get shouldBe List(FormError("email", List("error.email"), List()))
+        emailAddressMapping.bind(data = email).swap.getOrElse(List(FormError("", ""))) shouldBe List(FormError("email", List("error.email"), List()))
       }
     }
 
     invalidEmailInputData foreach { email =>
       s"$email reject invalid email (using custom error message)" in {
-        emailAddressCustomErrorsMapping.bind(data = email).left.get shouldBe List(FormError("email", List("field.invalid"), List()))
+        emailAddressCustomErrorsMapping.bind(data = email).swap.getOrElse(List(FormError("", ""))) shouldBe List(FormError("email", List("field.invalid"), List()))
       }
     }
 
     "reject too long email address (when using 'emailMaxLength' constraint)" in {
       emailAddressMapping.verifying {
        maxLengthConstraint
-      }.bind(Map("email" -> "aaa@bbb.ccc")).left.get shouldBe
+      }.bind(Map("email" -> "aaa@bbb.ccc")).swap.getOrElse(List(FormError("", ""))) shouldBe
           List(FormError("email", List("error.maxLength"), List(10)))
       }
     }

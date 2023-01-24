@@ -18,7 +18,6 @@ package forms.coc
 
 import play.api.data.FormError
 import utils.BaseTest
-import scala.collection.mutable
 
 class MakeChangesDecisionFormTest extends BaseTest {
 
@@ -36,7 +35,7 @@ class MakeChangesDecisionFormTest extends BaseTest {
             MakeChangesDecisionForm.StopMAChoice -> decision
           )
 
-          val form = MakeChangesDecisionForm.form.bind(formInput)
+          val form = MakeChangesDecisionForm.form().bind(formInput)
           val errors = form.errors
           val value = form.data
 
@@ -50,15 +49,14 @@ class MakeChangesDecisionFormTest extends BaseTest {
         MakeChangesDecisionForm.StopMAChoice -> ""
       )
 
-      val form = MakeChangesDecisionForm.form.bind(formInput)
+      val form = MakeChangesDecisionForm.form().bind(formInput)
       val errors = form.errors
       val value = form.data
 
       errors shouldBe Seq(
         FormError(
           MakeChangesDecisionForm.StopMAChoice,
-          Seq("pages.makeChanges.error.mandatory.value"),
-          mutable.WrappedArray.empty
+          Seq("pages.makeChanges.error.mandatory.value")
         )
       )
       value shouldBe formInput

@@ -35,7 +35,7 @@ import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockUnauthentic
 class EligibilityControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
-  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(

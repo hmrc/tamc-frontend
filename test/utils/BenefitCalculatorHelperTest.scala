@@ -29,7 +29,7 @@ class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
   val benefitCalculatorHelper: BenefitCalculatorHelper = instanceOf[BenefitCalculatorHelper]
   val eligibilityCalculatorService: EligibilityCalculatorService = instanceOf[EligibilityCalculatorService]
   lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear
+  lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear()
 
   "BenefitCalculatorHelper" when {
 

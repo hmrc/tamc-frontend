@@ -27,12 +27,10 @@ import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.api.data.FormError
-import play.api.i18n.I18nSupport.ResultWithMessagesApi
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc._
+import play.api.i18n.Lang
+import play.api.mvc.{MessagesControllerComponents, AnyContent, Action, Result}
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.LoggerHelper
 
 import javax.inject.Inject
@@ -64,7 +62,7 @@ class TransferController @Inject() (
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
   recipientDetailsForm: RecipientDetailsForm,
-  dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext, messages: Messages) extends FrontendController(cc) with LoggerHelper {
+  dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
