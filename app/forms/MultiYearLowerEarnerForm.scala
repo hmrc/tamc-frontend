@@ -33,7 +33,7 @@ class MultiYearLowerEarnerForm@Inject()(applicationConfig: ApplicationConfig) {
 
     def bind(key: String, data: Map[String, String]) = {
 
-      Right(data.getOrElse(key, "")).right.flatMap {
+      Right(data.getOrElse(key, "")).flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
         case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(applicationConfig.PERSONAL_ALLOWANCE()))))

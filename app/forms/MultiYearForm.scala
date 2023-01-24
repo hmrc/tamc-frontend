@@ -49,7 +49,7 @@ object MultiYearForm {
 
 
       if (allErrorsOrItems.forall(_.isRight)) {
-        Right(allErrorsOrItems.map(_.right.get).toList).right.flatMap(applyConstraints)
+        Right(allErrorsOrItems.map(_.toOption.get).toList).flatMap(applyConstraints)
       } else {
         Left(allErrorsOrItems.collect { case Left(errors) => errors }.flatten)
       }

@@ -27,7 +27,8 @@ import models._
 import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.api.data.FormError
-import play.api.i18n.Lang
+import play.api.i18n.I18nSupport.ResultWithMessagesApi
+import play.api.i18n.{Lang, Messages}
 import play.api.mvc._
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
@@ -63,7 +64,7 @@ class TransferController @Inject() (
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
   recipientDetailsForm: RecipientDetailsForm,
-  dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends FrontendController(cc) with LoggerHelper {
+  dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext, messages: Messages) extends FrontendController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate { implicit request =>
     Ok(
@@ -72,7 +73,7 @@ class TransferController @Inject() (
   }
 
   def transferAction: Action[AnyContent] = authenticate.async { implicit request =>
-    recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest.fold(
+    recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
         cachingService.saveRecipientDetails(recipientData).map { _ =>
@@ -94,12 +95,12 @@ class TransferController @Inject() (
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.async { implicit request =>
-    dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest.fold(
+    dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
       marriageData => {
         cachingService.saveDateOfMarriage(marriageData)
 
-        registrationService.getRecipientDetailsFormData flatMap {
+        registrationService.getRecipientDetailsFormData() flatMap {
           case RecipientDetailsFormInput(name, lastName, gender, nino) =>
             val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
             registrationService.isRecipientEligible(request.nino, dataToSend) map { _ =>
@@ -132,7 +133,7 @@ class TransferController @Inject() (
   def eligibleYearsAction: Action[AnyContent] = authenticate.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
       case CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, registrationInput, _) =>
-        currentYearForm(previousYears.nonEmpty).bindFromRequest.fold(
+        currentYearForm(previousYears.nonEmpty).bindFromRequest().fold(
           hasErrors =>
             Future {
               BadRequest(
@@ -180,7 +181,7 @@ class TransferController @Inject() (
 
     registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
       case CurrentAndPreviousYearsEligibility(_, extraYears, registrationInput, availableYears) =>
-        earlierYearsForm(extraYears.map(_.year)).bindFromRequest.fold(
+        earlierYearsForm(extraYears.map(_.year)).bindFromRequest().fold(
           hasErrors =>
             Future {
               BadRequest(
@@ -218,7 +219,7 @@ class TransferController @Inject() (
   }
 
   def confirmYourEmailAction: Action[AnyContent] = authenticate.async { implicit request =>
-    emailForm.bindFromRequest.fold(
+    emailForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(email(formWithErrors))),
       transferorEmail =>
         registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map { _ =>

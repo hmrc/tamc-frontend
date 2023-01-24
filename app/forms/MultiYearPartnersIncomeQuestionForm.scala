@@ -38,7 +38,7 @@ class MultiYearPartnersIncomeQuestionForm@Inject()(applicationConfig: Applicatio
       }
 
       val maxLimit = if(isScottish) applicationConfig.MAX_LIMIT_SCOT() else applicationConfig.MAX_LIMIT()
-      Right(data.getOrElse(key, "")).right.flatMap {
+      Right(data.getOrElse(key, "")).flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
         case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Seq(applicationConfig.PERSONAL_ALLOWANCE() + 1,

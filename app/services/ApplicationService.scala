@@ -28,7 +28,7 @@ class ApplicationService @Inject()(
   def canApplyForMarriageAllowance(
                                     historicRelationships: Option[Seq[RelationshipRecord]],
                                     activeRelationship: Option[RelationshipRecord],
-                                    startingFromTaxYear: Int = timeService.getEarliestValidYear): Boolean =
+                                    startingFromTaxYear: Int = timeService.getEarliestValidYear()): Boolean =
     canApplyForPreviousYears(historicRelationships, activeRelationship, startingFromTaxYear) ||
       canApplyForCurrentYears(historicRelationships, activeRelationship)
 
@@ -40,8 +40,8 @@ class ApplicationService @Inject()(
   def canApplyForPreviousYears(
                                 historicRelationships: Option[Seq[RelationshipRecord]],
                                 activeRelationship: Option[RelationshipRecord],
-                                startingFromTaxYear: Int = timeService.getEarliestValidYear): Boolean = {
-    val startYear = Math.max(startingFromTaxYear, timeService.getEarliestValidYear)
+                                startingFromTaxYear: Int = timeService.getEarliestValidYear()): Boolean = {
+    val startYear = Math.max(startingFromTaxYear, timeService.getEarliestValidYear())
     val availableYears: Set[Int] = (startYear until timeService.getCurrentTaxYear).toSet
     val unavailableYears: Set[Int] = taxYearsThatAreUnavailableForApplication(historicRelationships, activeRelationship)
     (availableYears -- unavailableYears).nonEmpty
@@ -59,11 +59,11 @@ class ApplicationService @Inject()(
         )
         unavailableReasonCodes contains relationship.relationshipEndReason
     }.map {
-      _.overlappingTaxYears(appConfig.currentTaxYear.startYear)
+      _.overlappingTaxYears(appConfig.currentTaxYear().startYear)
     }
 
     val activeYears: Set[Int] = activeRelationship.map {
-      _.overlappingTaxYears(appConfig.currentTaxYear.startYear)
+      _.overlappingTaxYears(appConfig.currentTaxYear().startYear)
     }.getOrElse(Set[Int]())
     val allYears: Set[Set[Int]] = historicYears + activeYears
     allYears.flatten

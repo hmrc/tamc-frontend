@@ -73,16 +73,16 @@ class   UpdateRelationshipController @Inject()(
   def decision: Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
-        Ok(decisionV(CheckClaimOrCancelDecisionForm.form.fill(claimOrCancelDecision)))
+        Ok(decisionV(CheckClaimOrCancelDecisionForm.form().fill(claimOrCancelDecision)))
       } recover {
-        case NonFatal(_) => Ok(decisionV(CheckClaimOrCancelDecisionForm.form))
+        case NonFatal(_) => Ok(decisionV(CheckClaimOrCancelDecisionForm.form()))
       }
   }
 
   def submitDecision: Action[AnyContent] = authenticate.async {
     implicit request =>
 
-      CheckClaimOrCancelDecisionForm.form.bindFromRequest.fold(
+      CheckClaimOrCancelDecisionForm.form().bindFromRequest().fold(
         formWithErrors => {
           Future.successful(BadRequest(decisionV(formWithErrors)))
         }, {
@@ -111,15 +111,15 @@ class   UpdateRelationshipController @Inject()(
   def makeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
       updateRelationshipService.getMakeChangesDecision map { makeChangesData =>
-        Ok(reasonForChange(MakeChangesDecisionForm.form.fill(makeChangesData.map(_.toString))))
+        Ok(reasonForChange(MakeChangesDecisionForm.form().fill(makeChangesData)))
       } recover {
-        case NonFatal(_) => Ok(reasonForChange(MakeChangesDecisionForm.form))
+        case NonFatal(_) => Ok(reasonForChange(MakeChangesDecisionForm.form()))
       }
   }
 
   def submitMakeChange(): Action[AnyContent] = authenticate.async {
     implicit request =>
-      MakeChangesDecisionForm.form.bindFromRequest.fold(
+      MakeChangesDecisionForm.form().bindFromRequest().fold(
         formWithErrors => {
           Future.successful(BadRequest(reasonForChange(formWithErrors)))
         }, {
@@ -191,7 +191,7 @@ class   UpdateRelationshipController @Inject()(
 
   def submitDivorceEnterYear: Action[AnyContent] = authenticate.async {
     implicit request =>
-      divorceSelectYearForm.form.bindFromRequest.fold(
+      divorceSelectYearForm.form.bindFromRequest().fold(
         formWithErrors => {
           Future.successful(BadRequest(divorceSelectYearV(formWithErrors)))
         }, {
@@ -229,7 +229,7 @@ class   UpdateRelationshipController @Inject()(
 
   def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
     implicit request =>
-      emailForm.bindFromRequest.fold(
+      emailForm.bindFromRequest().fold(
         formWithErrors => {
           Future.successful(BadRequest(emailV(formWithErrors)))
         },

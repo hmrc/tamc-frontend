@@ -29,7 +29,7 @@ object MultiYearDoYouWantToApplyForm {
     override val format = Some(("format.boolean", Nil))
 
     def bind(key: String, data: Map[String, String]) = {
-      Right(data.get(key).getOrElse("")).right.flatMap {
+      Right(data.get(key).getOrElse("")).flatMap {
         case "true" => Right(true)
         case "false" => Right(false)
         case _ => Left(Seq(FormError(key, PRE_ERROR_KEY + key, Nil)))
