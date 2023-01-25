@@ -33,10 +33,10 @@ class TimeService@Inject()(applicationConfig: ApplicationConfig, taxYear: System
     date.isAfter(getCurrentDate)
 
   def getCurrentDate: LocalDate =
-    date.now
+    date.now()
 
   def getCurrentTaxYear: Int =
-    taxYear.current.startYear
+    taxYear.current().startYear
 
   def getTaxYearForDate(date: LocalDate): Int =
     TaxYear.taxYearFor(date).startYear
@@ -45,7 +45,7 @@ class TimeService@Inject()(applicationConfig: ApplicationConfig, taxYear: System
     TaxYear.firstDayOfTaxYear(year)
 
   def getPreviousYearDate: LocalDate =
-    date.now.minusYears(1)
+    date.now().minusYears(1)
 
   def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
     LocalDate.parse(date, DateTimeFormatter.ofPattern(format))

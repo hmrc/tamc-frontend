@@ -44,7 +44,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
   val mockTimeService: TimeService = mock[TimeService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
-  override def fakeApplication: Application = GuiceApplicationBuilder()
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[CachingService].toInstance(mockCachingService),
       bind[ApplicationService].toInstance(mockApplicationService),
@@ -63,7 +63,11 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockCachingService, mockApplicationService, mockMarriageAllowanceConnector, mockTimeService, mockAuditConnector)
+    reset(mockCachingService)
+    reset(mockApplicationService)
+    reset(mockMarriageAllowanceConnector)
+    reset(mockTimeService)
+    reset(mockAuditConnector)
   }
 
   "isRecipientEligible" should {
@@ -169,7 +173,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
             Some(RecipientRecord(userRecord, RegistrationFormInput("firstName", "surname", Gender("M"),nino,LocalDate.now))),
             Some(NotificationRecord(EmailAddress("email@email.com"))), selectedYears = Some(List(2020, 2021))))))
 
-      when(mockCachingService.lockCreateRelationship).thenReturn(Future.successful(true))
+      when(mockCachingService.lockCreateRelationship()).thenReturn(Future.successful(true))
 
       when(mockAuditConnector.sendEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
 

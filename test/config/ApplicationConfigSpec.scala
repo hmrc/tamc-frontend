@@ -21,7 +21,7 @@ import utils.UnitSpec
 
 class ApplicationConfigSpec extends UnitSpec {
 
-  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   "check rates for earliest valid year" when {
     "return valid years prior" in {

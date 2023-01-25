@@ -64,18 +64,18 @@ sealed trait LanguageUtils {
   }
 
   def taxDateIntervalMultiYear(taxYear: Int, taxEndYear: Int): String = {
-    taxYear + separator + (taxEndYear + 1)
+    s"$taxYear$separator${(taxEndYear + 1)}"
   }
 
   def taxDateIntervalShort(taxYear: Int): String = {
-    taxYear + separator + (taxYear + 1)
+    s"$taxYear$separator${(taxYear + 1)}"
   }
 
   def taxDateIntervalGenerator(taxYear: String, taxAnotherYear: Option[String] = None, presentText: String): String = {
     taxAnotherYear.fold(
-      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + presentText
+      s"${TaxYear.taxYearFor(dateTransformer(taxYear)).startYear}$presentText"
     )(syear =>
-      TaxYear.taxYearFor(dateTransformer(taxYear)).startYear + separator + TaxYear.taxYearFor(dateTransformer(syear)).finishYear
+      s"${TaxYear.taxYearFor(dateTransformer(taxYear)).startYear}$separator${TaxYear.taxYearFor(dateTransformer(syear)).finishYear}"
     )
   }
 }

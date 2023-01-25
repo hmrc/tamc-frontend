@@ -26,7 +26,7 @@ import utils.ControllerBaseTest
 //TODO: Update values in test names
 class EligibilityCalcControllerTest extends ControllerBaseTest {
 
-  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   "Check eligibility benefit" should {
 

@@ -70,7 +70,7 @@ class EligibilityController @Inject()(
 
     unauthenticatedAction {
       implicit request =>
-        eligibilityForm.bindFromRequest.fold(
+        eligibilityForm.bindFromRequest().fold(
           formWithErrors =>
             BadRequest(eligibilityCheckView(formWithErrors)),
           eligibilityInput => {
@@ -90,7 +90,7 @@ class EligibilityController @Inject()(
 
   def dateOfBirthCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      dateOfBirthForm.bindFromRequest.fold(
+      dateOfBirthForm.bindFromRequest().fold(
         formWithErrors =>
           BadRequest(dateOfBirthCheckView(formWithErrors)),
         _ => {
@@ -106,7 +106,7 @@ class EligibilityController @Inject()(
 
   def doYouLiveInScotlandAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      doYouLiveInScotlandForm.bindFromRequest.fold(
+      doYouLiveInScotlandForm.bindFromRequest().fold(
         formWithErrors =>
           BadRequest(doYouLiveInScotlandView(formWithErrors)),
         doYouLiveInScotlandInput => {
@@ -122,7 +122,7 @@ class EligibilityController @Inject()(
 
   def lowerEarnerCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      multiYearLowerEarnerForm.lowerEarnerForm.bindFromRequest.fold(
+      multiYearLowerEarnerForm.lowerEarnerForm.bindFromRequest().fold(
         formWithErrors =>
           BadRequest(lowerEarnerView(formWithErrors)),
         _ => {
@@ -137,7 +137,7 @@ class EligibilityController @Inject()(
 
   def partnersIncomeCheckAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      multiYearPartnersIncomeQuestionForm.partnersIncomeForm.bindFromRequest.fold(
+      multiYearPartnersIncomeQuestionForm.partnersIncomeForm.bindFromRequest().fold(
         formWithErrors =>
           BadRequest(partnersIncomeQuestionView(formWithErrors, isScottishResident(request))),
         _ => {
@@ -157,7 +157,7 @@ class EligibilityController @Inject()(
 
     unauthenticatedAction {
       implicit request =>
-        doYouWantToApplyForm.bindFromRequest.fold(
+        doYouWantToApplyForm.bindFromRequest().fold(
           formWithErrors =>
             BadRequest(doYouWantToApplyView(formWithErrors)),
           doYouWantToApplyInput => {
@@ -177,14 +177,14 @@ class EligibilityController @Inject()(
 
   def gdsCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      calculatorForm.bindFromRequest.fold(
+      calculatorForm.bindFromRequest().fold(
         formWithErrors =>
           BadRequest(calculatorView(calculatorForm = formWithErrors)),
         calculatorInput =>
           Ok(calculatorView(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
-              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country), appConfig.currentTaxYear)))))
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country), appConfig.currentTaxYear())))))
   }
 
   def ptaCalculator(): Action[AnyContent] = unauthenticatedAction {
@@ -194,14 +194,14 @@ class EligibilityController @Inject()(
 
   def ptaCalculatorAction(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      calculatorForm.bindFromRequest.fold(
+      calculatorForm.bindFromRequest().fold(
         formWithErrors =>
           BadRequest(ptaCalculatorView(calculatorForm = formWithErrors)),
         calculatorInput =>
           Ok(ptaCalculatorView(
             calculatorForm = calculatorForm.fill(calculatorInput),
             calculationResult = Some(eligibilityCalculatorService.calculate(calculatorInput.transferorIncome,
-              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country), appConfig.currentTaxYear)))))
+              calculatorInput.recipientIncome, Country.fromString(calculatorInput.country), appConfig.currentTaxYear())))))
   }
 
 }

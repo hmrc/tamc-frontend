@@ -45,7 +45,7 @@ class ContentTest extends ControllerBaseTest {
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
 
-  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
 

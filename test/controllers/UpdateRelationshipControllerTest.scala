@@ -102,7 +102,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
   override def beforeEach(): Unit = {
     super.beforeEach()
-    reset(mockTransferService, mockCachingService, mockUpdateRelationshipService, mockTimeService)
+    reset(mockTransferService)
+    reset(mockCachingService)
+    reset(mockUpdateRelationshipService)
+    reset(mockTimeService)
   }
 
   "history" should {
@@ -180,7 +183,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   "decision" should {
     "display the decision page with cached data" in {
       val cacheData = Some("checkMarriageAllowanceClaim")
-      val validFormWithData = CheckClaimOrCancelDecisionForm.form.fill(cacheData)
+      val validFormWithData = CheckClaimOrCancelDecisionForm.form().fill(cacheData)
       when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.successful(cacheData))
 
       val result = controller.decision(request)
@@ -193,7 +196,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "there is no data return from the cache" in {
 
         when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any())).thenReturn(Future.successful(None))
-        val validForm = CheckClaimOrCancelDecisionForm.form
+        val validForm = CheckClaimOrCancelDecisionForm.form()
         val result = controller.decision(request)
         status(result) shouldBe OK
 
@@ -205,7 +208,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any()))
           .thenReturn(failedFuture)
         val result = controller.decision(request)
-        val validForm = CheckClaimOrCancelDecisionForm.form
+        val validForm = CheckClaimOrCancelDecisionForm.form()
         status(result) shouldBe OK
 
         result rendersTheSameViewAs decisionView(validForm)
@@ -302,7 +305,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form.fill(Some(userAnswer)))
+        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form().fill(Some(userAnswer)))
       }
 
       "there is no data in the cache" in {
@@ -310,7 +313,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form)
+        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form())
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -318,7 +321,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form)
+        result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form())
       }
     }
   }
@@ -522,7 +525,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
-      result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form)
+      result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form())
     }
   }
 

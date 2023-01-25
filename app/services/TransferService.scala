@@ -111,7 +111,7 @@ class TransferService @Inject()(
 
   private def lockCreateRelationship()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
     logger.info("lockCreateRelationship has been called.")
-    cachingService.lockCreateRelationship
+    cachingService.lockCreateRelationship()
   }
 
 
@@ -167,7 +167,8 @@ class TransferService @Inject()(
       case Some(CacheData(_, None, _, _, _, _, _)) => throw CacheMissingRecipient()
       case Some(CacheData(_, _, None, _, _, _, _)) => throw CacheMissingEmail()
       case Some(CacheData(_, _, _, _, None, _, _)) => throw NoTaxYearsSelected()
-      case Some(CacheData(_, _, _, _, Some(selectedTaxYears), _, _)) if (selectedTaxYears.size == 0) => throw NoTaxYearsSelected()
+      case Some(CacheData(_, _, _, _, Some(selectedTaxYears), _, _)) if (selectedTaxYears.isEmpty) => throw NoTaxYearsSelected()
+      case _ => throw BadFetchRequest()
     }
   }
 
@@ -189,7 +190,7 @@ class TransferService @Inject()(
     }.sortWith((m1, m2) => m1.year > m2.year)
 
   private def isCurrentTaxYear(year: Int): Option[Boolean] =
-    if (taxYear.current.startYear == year)
+    if (taxYear.current().startYear == year)
       Some(true)
     else
       None
@@ -297,6 +298,6 @@ class TransferService @Inject()(
 
   private def updateSelectedYears(cy: Option[List[Int]], extraYears: List[Int])(implicit ec: ExecutionContext): Future[List[Int]] =
     Future {
-      cy.getOrElse(List[Int]()).union(extraYears).distinct
+      cy.getOrElse(List[Int]()).concat(extraYears).distinct
     }
 }

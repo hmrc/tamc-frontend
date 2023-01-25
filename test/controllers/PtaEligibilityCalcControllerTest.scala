@@ -25,7 +25,7 @@ import utils.ControllerBaseTest
 
 class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
 
-  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   private def calculatorRequestAction(income: Map[String, String]) = {
     val controller = app.injector.instanceOf[EligibilityController]

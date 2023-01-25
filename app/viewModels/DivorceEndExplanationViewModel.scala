@@ -31,7 +31,7 @@ class DivorceEndExplanationViewModelImpl @Inject()(languageUtilsImpl: LanguageUt
   def apply(role: Role, divorceDate: LocalDate, datesForDivorce: MarriageAllowanceEndingDates)(implicit messages: Messages): DivorceEndExplanationViewModel = {
 
     val divorceDateFormatted = languageUtilsImpl().ukDateTransformer(divorceDate)
-    val isCurrentYearDivorced: Boolean =  taxYear.current.contains(divorceDate)
+    val isCurrentYearDivorced: Boolean =  taxYear.current().contains(divorceDate)
 
     val taxYearStatus = if(isCurrentYearDivorced) {
         messages("pages.divorce.explanation.current.taxYear")
