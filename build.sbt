@@ -1,6 +1,5 @@
 import scoverage.ScoverageKeys
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "tamc-frontend"
 
@@ -17,7 +16,6 @@ lazy val microservice: Project = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .settings(
     scoverageSettings,
-    publishingSettings,
     scalaSettings,
     defaultSettings(),
     targetJvm := "jvm-1.8",
