@@ -47,8 +47,8 @@ class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig
   }
 
   private def activeRecordContent(role: Role)(implicit messages: Messages): (Html, HistorySummaryButton) = {
-    lazy val maxPersonalAllowanceTransfer = applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(applicationConfig.currentTaxYear.currentYear)
-    lazy val maxPersonalBenefit = applicationConfig.MAX_BENEFIT(applicationConfig.currentTaxYear.currentYear)
+    lazy val maxPersonalAllowanceTransfer = applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(applicationConfig.currentTaxYear().currentYear)
+    lazy val maxPersonalBenefit = applicationConfig.MAX_BENEFIT(applicationConfig.currentTaxYear().currentYear)
 
     lazy val formattedMaxPATransfer = NumberFormat.getIntegerInstance().format(maxPersonalAllowanceTransfer)
     lazy val formattedMaxBenefit = NumberFormat.getIntegerInstance().format(maxPersonalBenefit)
@@ -71,7 +71,7 @@ class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig
 
 
   private def marriageAllowanceCancelledContent(role: Role)(implicit messages: Messages): (Html, HistorySummaryButton) = {
-    val formattedEndOfYear = languageUtilsImpl().ukDateTransformer(applicationConfig.currentTaxYear.finishes)
+    val formattedEndOfYear = languageUtilsImpl().ukDateTransformer(applicationConfig.currentTaxYear().finishes)
 
     val paragraphContent = if (role == Transferor) {
       Html(s"""<p class="govuk-body">${messages("pages.history.historic.ended")}</p>""" +

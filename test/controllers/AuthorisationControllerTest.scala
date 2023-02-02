@@ -24,7 +24,7 @@ import utils.ControllerBaseTest
 class AuthorisationControllerTest extends ControllerBaseTest {
 
   lazy val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
-  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   "Calling notAuthorised" should {
     "return OK" in {

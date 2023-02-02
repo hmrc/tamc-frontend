@@ -19,7 +19,7 @@ package utils.viewHelpers
 import org.jsoup.nodes.{Document, Element}
 import org.scalatest.matchers.{MatchResult, Matcher}
 
-import scala.collection.JavaConverters.{asScalaBufferConverter, iterableAsScalaIterableConverter}
+import scala.jdk.CollectionConverters.IterableHasAsScala
 
 trait JSoupMatchers {
 

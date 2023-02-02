@@ -76,6 +76,7 @@ object EligibilityCalculatorForm {
       data.get(key) match {
         case Some(c) if c.trim().isEmpty => Left(Seq(FormError(key, "pages.form.field-required.country")))
         case Some(c) if Set("england", "wales", "scotland", "northernireland").contains(c.trim()) => Right(c)
+        case Some(_) => Left(Seq(FormError(key, "pages.form.field-required.country")))
         case None => Left(Seq(FormError(key, "pages.form.field-required.country")))
       }
     }

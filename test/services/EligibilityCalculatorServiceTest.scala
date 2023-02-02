@@ -27,7 +27,7 @@ import java.util.Locale
 class EligibilityCalculatorServiceTest extends BaseTest {
 
   lazy val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
-  lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear
+  lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear()
   val eligibilityCalculatorService = app.injector.instanceOf[EligibilityCalculatorService]
 
   private def currencyFormatter(limit: Int): String = {

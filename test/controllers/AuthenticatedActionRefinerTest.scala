@@ -45,7 +45,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val retrievals: Retrieval[AuthRetrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
-  val applicationConfig: ApplicationConfig = injector.instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(

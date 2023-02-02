@@ -72,7 +72,7 @@ class EligibilityCalculatorService @Inject()(
     val transferorDifference = transferorIncome - appConfig.TRANSFEROR_ALLOWANCE
     val transferorLoss = if (transferorDifference > 0) benefitCalculatorHelper.calculateTotalBenefitAcrossBands(transferorDifference, countryTaxBands) else 0
 
-    (recipientBenefit - transferorLoss.floor).toInt
+    (recipientBenefit - transferorLoss.toFloat).toInt
   }
 
   def getCountryTaxBands(countryOfResidence: Country, taxYear: TaxYear): List[TaxBand] = {

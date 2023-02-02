@@ -84,7 +84,7 @@ class LanguageUtilsSpec extends BaseTest with Matchers {
         "Medi", "Hydref", "Tachwedd", "Rhagfyr")
 
 
-      for ((month, monthAsInt) <- welshMonthsInOrder.zip(Stream from 1)) {
+      for ((month, monthAsInt) <- welshMonthsInOrder.zip(LazyList from 1)) {
         s"return month as Welsh $month" in new WelshSetup {
           languageUtils.ukDateTransformer(LocalDate.of(2020, monthAsInt, 1)) should include(month)
         }

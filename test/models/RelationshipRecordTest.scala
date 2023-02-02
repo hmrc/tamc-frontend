@@ -33,7 +33,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
   val dateFormat = "yyyyMMdd"
 
   lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  lazy val currentTaxYear: uk.gov.hmrc.time.TaxYear = applicationConfig.currentTaxYear
+  lazy val currentTaxYear: uk.gov.hmrc.time.TaxYear = applicationConfig.currentTaxYear()
   lazy val localDate: LocalDate = instanceOf[SystemLocalDate].now()
 
   lazy val relationshipActiveRecordWithNoEndDate: RelationshipRecord =

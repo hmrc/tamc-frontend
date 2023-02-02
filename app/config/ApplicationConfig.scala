@@ -98,7 +98,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   def actualTaxYear(taxYear: Int): Int = {
     if (taxYear <= 0)
-      currentTaxYear.startYear
+      currentTaxYear().startYear
     else
       taxYear
   }
