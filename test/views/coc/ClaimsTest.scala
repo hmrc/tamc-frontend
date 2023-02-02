@@ -28,7 +28,7 @@ import views.html.coc.claims
 class ClaimsTest extends BaseTest with NinoGenerator {
 
   lazy val claims = instanceOf[claims]
-  lazy val nino: String = generateNino.nino
+  lazy val nino: String = generateNino().nino
   lazy val claimViewModel = instanceOf[ClaimsViewModelImpl]
   lazy val relationshipRecord = RelationshipRecord("Recipient", "creationTimestamp", "20220101", None, None, "otherPaticipant", "otherParticipantupdateTimestamp")
   lazy val relationshipRecord1 = RelationshipRecord("Recipient", "creationTimestamp", "20220101", None, None, "otherPaticipant", "otherParticipantupdateTimestamp")

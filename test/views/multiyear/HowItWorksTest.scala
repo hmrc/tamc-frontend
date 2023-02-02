@@ -37,7 +37,7 @@ class HowItWorksTest extends BaseTest {
   lazy val maxBenefit = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
   lazy val maxPersonalAllowanceTransferable = NumberFormat.getNumberInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())
   lazy val currentYearPersonalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
-  lazy val availablePreviousYears = (applicationConfig.currentTaxYear.finishYear - 5).toString
+  lazy val availablePreviousYears = (applicationConfig.currentTaxYear().finishYear - 5).toString
 
 
   "How it works" should {
