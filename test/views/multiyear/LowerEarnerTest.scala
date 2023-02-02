@@ -30,13 +30,13 @@ import java.text.NumberFormat
 
 class LowerEarnerTest extends BaseTest {
 
-  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  implicit val request: UserRequest[_]      = UserRequest(FakeRequest(), None, true, None, false)
-  lazy val multiYearLowerEarnerForm         = instanceOf[MultiYearLowerEarnerForm].lowerEarnerForm
-  lazy val lowerEarnerView                  = instanceOf[lower_earner]
-  override implicit lazy val messages       = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
-  lazy val view                             = lowerEarnerView(multiYearLowerEarnerForm)
-  lazy val personalAllowance                = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
+  lazy val multiYearLowerEarnerForm = instanceOf[MultiYearLowerEarnerForm].lowerEarnerForm
+  lazy val lowerEarnerView = instanceOf[lower_earner]
+  override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  lazy val view = lowerEarnerView(multiYearLowerEarnerForm)
+  lazy val personalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
 
 
   "Lower Earner Test" should {

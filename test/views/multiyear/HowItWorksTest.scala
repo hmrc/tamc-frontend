@@ -29,15 +29,15 @@ import java.text.NumberFormat
 
 class HowItWorksTest extends BaseTest {
 
-  val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
-  implicit val request: UserRequest[_]      = UserRequest(FakeRequest(), None, true, None, false)
-  override implicit lazy val messages       = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
-  lazy val howItWorksView                   = instanceOf[how_it_works]
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
+  override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  lazy val howItWorksView = instanceOf[how_it_works]
 
-  lazy val maxBenefit                       = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
+  lazy val maxBenefit = NumberFormat.getNumberInstance().format(applicationConfig.MAX_BENEFIT())
   lazy val maxPersonalAllowanceTransferable = NumberFormat.getNumberInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())
-  lazy val currentYearPersonalAllowance     = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
-  lazy val availablePreviousYears           = (applicationConfig.currentTaxYear().finishYear -5).toString
+  lazy val currentYearPersonalAllowance = NumberFormat.getNumberInstance().format(applicationConfig.PERSONAL_ALLOWANCE())
+  lazy val availablePreviousYears = (applicationConfig.currentTaxYear().finishYear - 5).toString
 
 
   "How it works" should {
@@ -49,6 +49,69 @@ class HowItWorksTest extends BaseTest {
       val expected = messages("title.pattern", messages("title.how-it-works"))
 
       title shouldBe expected
+    }
+
+    "display correct h1" in {
+
+      val document = Jsoup.parse(howItWorksView().toString())
+      val h1Tag = document.getElementsByTag("h1").toString
+      val expected = messages("generic.ma")
+
+      h1Tag should include(expected)
+    }
+
+    "display correct details text" in {
+
+      val document = Jsoup.parse(howItWorksView().toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("pages.how-it-works.detail")
+
+      paragraphTag should include(expected)
+    }
+
+    "display correct Marriage Allowance claim text" in {
+
+      val document = Jsoup.parse(howItWorksView().toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("pages.how-it-works.lede-pre6")
+
+      paragraphTag should include(expected)
+    }
+
+    "display correct eligible for marriage allowance text" in {
+
+      val document = Jsoup.parse(howItWorksView().toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("to see if you are eligible")
+
+      paragraphTag should include(expected)
+    }
+
+    "display correct email text" in {
+
+      val document = Jsoup.parse(howItWorksView().toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("pages.how-it-works.email")
+
+      paragraphTag should include(expected)
+    }
+
+    "display a start now button" in {
+
+      val document = Jsoup.parse(howItWorksView().toString())
+      val paragraphTag = document.getElementsByTag("p").toString
+      val expected = messages("generic.start-now")
+
+      paragraphTag should include(expected)
+    }
+
+    "display the correct page title" in {
+
+      val document = Jsoup.parse(howItWorksView().toString())
+      val paragraphTag = document.getElementsByTag("main").toString
+      val expected = messages("title.how-it-works")
+
+      paragraphTag should include(expected)
     }
 
     "display the current year maximum amount of personal allowance transferable" in {
