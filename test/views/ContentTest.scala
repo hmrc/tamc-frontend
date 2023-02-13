@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package controllers
+package views
 
 import _root_.services.{CachingService, TimeService, TransferService}
+import akka.util.Timeout
 import config.ApplicationConfig
+import controllers.{EligibilityController, TransferController}
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import models._
 import org.jsoup.Jsoup
@@ -29,7 +31,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.baseApplicationBuilder.injector
-import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString, defaultAwaitTimeout}
+import play.api.test.Helpers.{BAD_REQUEST, OK, contentAsString}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
@@ -38,6 +40,8 @@ import utils.{ControllerBaseTest, MockAuthenticatedAction, MockUnauthenticatedAc
 
 import java.text.NumberFormat
 import java.time.LocalDate
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class ContentTest extends ControllerBaseTest {
 
@@ -50,6 +54,8 @@ class ContentTest extends ControllerBaseTest {
   def eligibilityController: EligibilityController = instanceOf[EligibilityController]
 
   def transferController: TransferController = app.injector.instanceOf[TransferController]
+
+  implicit val duration: Timeout = 20 seconds
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
