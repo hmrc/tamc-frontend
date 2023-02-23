@@ -16,19 +16,45 @@
 
 package views.multiyear
 
+import akka.util.Timeout
+import config.ApplicationConfig
+import controllers.EligibilityController
 import models.auth.UserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import utils.BaseTest
 import forms.MultiYearEligibilityCheckForm
+import play.api.Play.materializer
+import play.api.http.Status.{BAD_REQUEST, OK}
+import play.api.test.Helpers.baseApplicationBuilder.injector
+import play.api.test.Helpers.contentAsString
+import services.{CachingService, TimeService}
 import views.html.multiyear.eligibility_check
+
+import java.text.NumberFormat
+import scala.concurrent.duration._
+import scala.language.postfixOps
 
 class EligibilityCheckTest extends BaseTest {
 
   lazy val eligibilityCheck = instanceOf[eligibility_check]
   implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
   lazy val eligibilityCheckForm = MultiYearEligibilityCheckForm.eligibilityForm
+  def eligibilityController: EligibilityController = instanceOf[EligibilityController]
+  val mockCachingService: CachingService = mock[CachingService]
+  val mockTimeService: TimeService = mock[TimeService]
+  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
+
+  implicit val duration: Timeout = 20 seconds
+
+
+  val ERROR_HEADING = "There is a problem"
+
+  private val lowerEarnerHelpText =
+    "This is your total earnings from all employment, pensions, benefits, trusts, " +
+      "rental income, including dividend income above your Dividend Allowance – before any tax and National " +
+      "Insurance is taken off."
 
   "Eligibility Check page" should {
     "return correct page title of how it works page" in {
@@ -60,5 +86,269 @@ class EligibilityCheckTest extends BaseTest {
     }
   }
 
+  "PTA Benefit calculator page " should {
 
+    "successfully load the calculator page " in {
+      val result = eligibilityController.ptaCalculator()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Eligibility Criteria - Marriage Allowance - GOV.UK"
+
+      val heading = document.getElementById("pageHeading").text
+      heading shouldBe "Marriage Allowance calculator"
+    }
+  }
+
+  "PTA How It Works page for multi year " should {
+    "successfully loaded " in {
+      val result = eligibilityController.howItWorks()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+
+      document.title() shouldBe "Apply for Marriage Allowance - Marriage Allowance - GOV.UK"
+
+      val heading = document.getElementById("pageHeading").text
+      heading shouldBe "Apply for Marriage Allowance"
+
+      val button = document.getElementById("get-started")
+      button.text shouldBe "Start now to see if you are eligible for Marriage Allowance"
+    }
+
+  }
+
+  "PTA Eligibility check page for multiyear" should {
+
+    "successfully authenticate the user and have eligibility-check page action" in {
+      val result = eligibilityController.eligibilityCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
+      val elements = document.getElementById("eligibility-form").getElementsByTag("p")
+      elements shouldNot be(null)
+    }
+
+    "diplay errors as none of the radio buttons are selected " in {
+      val result = eligibilityController.eligibilityCheckAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
+
+      document
+        .getElementById("marriage-criteria-error")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
+
+      val form = document.getElementById("eligibility-form")
+      val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
+      marriageFieldset
+        .getElementsByClass("govuk-error-message")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
+
+    }
+  }
+
+  "GDS Eligibility check page for multiyear" should {
+
+    "successfully authenticate the user and have eligibility-check page action" in {
+      val result = eligibilityController.eligibilityCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
+      val elements = document.getElementById("eligibility-form").getElementsByTag("p")
+      elements shouldNot be(null)
+    }
+
+    "diplay errors as none of the radio buttons are selected " in {
+      val result = eligibilityController.eligibilityCheckAction()(request)
+      status(result) shouldBe BAD_REQUEST
+
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
+
+      document
+        .getElementById("marriage-criteria-error")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
+
+      val form = document.getElementById("eligibility-form")
+      val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
+      marriageFieldset
+        .getElementsByClass("govuk-error-message")
+        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
+
+    }
+  }
+
+  "PTA date of birth check page for multiyear" should {
+
+    "successfully authenticate the user and have date of birth page and content" in {
+      val result = eligibilityController.dateOfBirthCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+
+      document
+        .title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
+  "PTA lower earner check page for multiyear" should {
+
+    "successfully authenticate the user and have income-check page and content" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE())
+      val result = eligibilityController.lowerEarnerCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document
+        .title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+
+      document.getElementById("lower-earner-information").text shouldBe lowerEarnerHelpText
+    }
+  }
+
+  "PTA partners income check page for multiyear" should {
+
+    "have partners-income page and content for English resident" in {
+      val result = eligibilityController.partnersIncomeCheck()(request)
+
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT())
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementById("partner-income-text")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementById("pageHeading")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+
+    }
+
+    "have partners-income page and content for Scottish resident" in {
+      val request = FakeRequest().withMethod("POST").withSession("scottish_resident" -> "true")
+      val result = eligibilityController.partnersIncomeCheck()(request)
+
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT_SCOT())
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementById("partner-income-text")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementById("pageHeading")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
+
+    }
+  }
+
+  "PTA do you want to apply page for multiyear" should {
+    "successfully authenticate the user and have do-you-want-to-apply page and content" in {
+      val result = eligibilityController.doYouWantToApply()(request)
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
+  "GDS date of birth page for multiyear" should {
+
+    "successfully authenticate the user and have date of birth page and content" in {
+      val result = eligibilityController.dateOfBirthCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document
+        .title() shouldBe "Were you and your partner born after 5 April 1935? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
+  "GDS do you live in scotland page for multiyear" should {
+
+    "successfully authenticate the user and have do you live in scotland page and content" in {
+      val result = eligibilityController.doYouLiveInScotland()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you live in Scotland? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
+  "GDS do you want to apply page for multiyear" should {
+
+    "successfully authenticate the user and have do you want to apply page and content" in {
+      val result = eligibilityController.doYouWantToApply()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.title() shouldBe "Do you want to apply for Marriage Allowance? - Marriage Allowance eligibility - GOV.UK"
+    }
+  }
+
+  "GDS lower earner page for multiyear" should {
+
+    "successfully authenticate the user and have lower earner page and content" in {
+      val formatter = java.text.NumberFormat.getIntegerInstance
+      val lowerThreshold = formatter.format(applicationConfig.PERSONAL_ALLOWANCE())
+      val result = eligibilityController.lowerEarnerCheck()(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document
+        .title() shouldBe s"Is your income less than £$lowerThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document.getElementById("lower-earner-information").text shouldBe lowerEarnerHelpText
+    }
+  }
+
+  "GDS partners income page for multiyear" should {
+    "have partners-income page and content for English resident" in {
+      val result = eligibilityController.partnersIncomeCheck()(request)
+
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT())
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementById("partner-income-text")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementById("pageHeading")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThreshold a year?"
+
+    }
+
+    "have partners-income page and content for Scottish resident" in {
+      val request = FakeRequest().withMethod("POST").withSession("scottish_resident" -> "true")
+      val result = eligibilityController.partnersIncomeCheck()(request)
+
+      val lowerThreshold = NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE() + 1)
+      val higherThresholdScot = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT_SCOT())
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document
+        .title() shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year? - Marriage Allowance eligibility - GOV.UK"
+      document
+        .getElementById("partner-income-text")
+        .text shouldBe "This is their total earnings from all employment, pensions, benefits, trusts, rental income, including dividend income above their Dividend Allowance – before any tax and National Insurance is taken off."
+      document
+        .getElementById("pageHeading")
+        .text shouldBe s"Is your partner’s income between £$lowerThreshold and £$higherThresholdScot a year?"
+
+    }
+  }
 }

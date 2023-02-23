@@ -16,15 +16,34 @@
 
 package views.multiyear.transfer
 
+import akka.util.Timeout
+import controllers.TransferController
+import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import forms.RecipientDetailsForm
+import models.{CitizenName, ConfirmationModel, CurrentAndPreviousYearsEligibility, DateOfMarriageFormInput, Gender, NotificationRecord, RecipientRecord, RegistrationFormInput, TaxYear, UserRecord}
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import play.api.Application
+import play.api.http.Status.{OK, BAD_REQUEST}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+import play.api.test.Helpers.contentAsString
+import services.TransferService
+import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
-import utils.{BaseTest, NinoGenerator}
+import uk.gov.hmrc.emailaddress.EmailAddress
+import uk.gov.hmrc.time
+import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 import views.html.multiyear.transfer.transfer
 
 import java.time.LocalDate
+import scala.concurrent.duration._
+import scala.language.postfixOps
+
 
 class TransferTest extends BaseTest with NinoGenerator {
 
@@ -32,6 +51,19 @@ class TransferTest extends BaseTest with NinoGenerator {
   lazy val transferView = instanceOf[transfer]
   lazy val transferForm = instanceOf[RecipientDetailsForm]
   implicit val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  val mockTransferService: TransferService = mock[TransferService]
+  def transferController: TransferController = app.injector.instanceOf[TransferController]
+
+  implicit val duration: Timeout = 20 seconds
+
+
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
+    )
+    .build()
 
 
   "Transfer page" should {
@@ -55,4 +87,655 @@ class TransferTest extends BaseTest with NinoGenerator {
     }
   }
 
+  "Calling Transfer Submit page" should {
+
+    "display form error message (first name and last name missing from request)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "gender" -> "M",
+        "nino" -> Ninos.nino1,
+        "transferor-email" -> "example@example.com"
+      )
+
+      val result = transferController.transferAction()(request)
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
+    }
+
+    "display form error message (request body missing form data)" in {
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementById("nino-error").text() shouldBe "Error: Enter your partner’s National Insurance number"
+    }
+  }
+
+  "Calling Transfer Submit page with error in name field" should {
+    "display form error message (first name missing from request)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
+    }
+
+    "display form error message (first name is empty)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
+    }
+
+    "display form error message (first name is blank)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> " ",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
+    }
+
+    "display form error message (first name contains more than 35 characters)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "a" * 36,
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Your partner’s first name must be 35 characters or less"
+    }
+
+    "display form error message (first name contains numbers)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "12345",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
+    }
+
+    "display form error message (first name contains letters and numbers)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "abc123",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val firstNameError = document.getElementById("name-error")
+      firstNameError shouldNot be(null)
+      firstNameError.text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
+    }
+
+    "display form error message (last name missing from request)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
+    }
+
+    "display form error message (last name is empty)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
+    }
+
+    "display form error message (last name is blank)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> " ",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
+    }
+
+    "display form error message (last name contains more than 35 characters)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "a" * 36,
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Your partner’s last name must be 35 characters or less"
+    }
+
+    "display form error message (last name contains numbers)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "12345",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
+    }
+
+    "display form error message (last name contains letters and numbers)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "abc123",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val lastNameError = document.getElementById("last-name-error")
+      lastNameError shouldNot be(null)
+      lastNameError.text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
+
+    }
+
+    "display form error message when recipient nino equals transferor nino" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "abc",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text() shouldBe "Error: You cannot enter your own details"
+    }
+  }
+
+  "Calling Transfer Submit page with error in gender field" should {
+    "display form error message (gender missing from request)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val genderError = document.getElementById("gender-error")
+      genderError shouldNot be(null)
+      genderError.text() shouldBe "Error: Select your partner’s gender"
+    }
+
+    "display form error message (gender code is invalid)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "X",
+        "nino" -> Ninos.nino1
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val genderError = document.getElementById("gender-error")
+      genderError shouldNot be(null)
+      genderError.text() shouldBe "Error: Select your partner’s gender"
+    }
+  }
+
+  "Calling Transfer Submit page with error in NINO field" should {
+    "display form error message (NINO missing from request)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "M"
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text shouldBe "Error: Enter your partner’s National Insurance number"
+    }
+
+    "display form error message (NINO is empty)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> ""
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text shouldBe "Error: Enter your partner’s National Insurance number"
+    }
+
+    "display form error message (NINO is invalid)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "name" -> "foo",
+        "last-name" -> "bar",
+        "gender" -> "M",
+        "nino" -> "ZZ"
+      )
+      val result = transferController.transferAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val ninoError = document.getElementById("nino-error")
+      ninoError shouldNot be(null)
+      ninoError.text shouldBe "Error: Enter a real National Insurance number"
+    }
+  }
+
+  "Calling Date Of Marriage page with error in dom field" should {
+
+    "display form error message (date of marriage is before 1900)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "dateOfMarriage.day" -> "1",
+        "dateOfMarriage.month" -> "1",
+        "dateOfMarriage.year" -> "1899"
+      )
+      val result = transferController.dateOfMarriageAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("date-of-marriage-form")
+      form shouldNot be(null)
+
+      val field = form.getElementById("dateOfMarriageFieldset")
+      field shouldNot be(null)
+
+      val err = field.getElementsByClass("govuk-error-message")
+      err.size() shouldBe 1
+
+      val back = document.getElementById("backLink")
+      back shouldNot be(null)
+      back.attr("href") shouldBe controllers.routes.TransferController.transfer.url
+    }
+
+    "display form error message (date of marriage is after today’s date)" in {
+      val localDate = LocalDate.now().plusYears(1)
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.month" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.year" -> s"${localDate.getYear}"
+      )
+      val result = transferController.dateOfMarriageAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("date-of-marriage-form")
+      form shouldNot be(null)
+
+      val field = form.getElementById("dateOfMarriage")
+      field shouldNot be(null)
+
+      val err = form.getElementsByClass("govuk-error-message")
+      err.size() shouldBe 1
+    }
+
+    "display form error message (date of marriage is left empty)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "dateOfMarriage.day" -> "",
+        "dateOfMarriage.month" -> "",
+        "dateOfMarriage.year" -> ""
+      )
+      val result = transferController.dateOfMarriageAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("date-of-marriage-form")
+      form shouldNot be(null)
+
+      val field = form.getElementById("dateOfMarriageFieldset")
+      field shouldNot be(null)
+
+      val err = field.getElementsByClass("govuk-error-message")
+      val labelName = form.select("fieldset[id=dateOfMarriageFieldset]").first()
+      err.size() shouldBe 1
+      labelName
+        .getElementsByClass("govuk-error-message")
+        .first()
+        .text() shouldBe "Error: Enter the date of your marriage or civil partnership"
+      document
+        .getElementById("dateOfMarriage-error")
+        .text() shouldBe "Error: Enter the date of your marriage or civil partnership"
+    }
+  }
+
+  "Calling Previous year page " should {
+    val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+    val rcdata = RegistrationFormInput(
+      name = "foo",
+      lastName = "bar",
+      gender = Gender("M"),
+      nino = Nino(Ninos.ninoWithLOA1),
+      dateOfMarriage = LocalDate.of(2011, 4, 10)
+    )
+    val recrecord = RecipientRecord(
+      record = rcrec,
+      data = rcdata,
+      availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016))
+    )
+    "display dynamic message " in {
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+        .thenReturn(
+          CurrentAndPreviousYearsEligibility(
+            true,
+            recrecord.availableTaxYears,
+            recrecord.data,
+            recrecord.availableTaxYears
+          )
+        )
+      when(
+        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any())
+      )
+        .thenReturn(Nil)
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
+      val result = transferController.eligibleYearsAction(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("firstNameOnly").text() shouldBe "foo"
+      document.getElementById("marriageDate").text() shouldBe "10 April 2011"
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
+    }
+
+    "display form error message (no year choice made )" in {
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+        .thenReturn(
+          CurrentAndPreviousYearsEligibility(
+            true,
+            recrecord.availableTaxYears,
+            recrecord.data,
+            recrecord.availableTaxYears
+          )
+        )
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "year" -> "List(0)")
+      val result = transferController.extraYearsAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
+      val form = document.getElementById("eligible-years-form")
+      form shouldNot be(null)
+      val selectedYearError = document.getElementById("selectedYear-error")
+      selectedYearError shouldNot be(null)
+      selectedYearError.text() shouldBe "Error: Select yes if you would like to apply for earlier tax years"
+    }
+  }
+
+  "Calling Confirm email page with error in email field" should {
+    "display form error message (transferor email missing from request)" in {
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter your email address"
+
+      val back = document.getElementsByClass("link-back")
+      back shouldNot be(null)
+      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
+    }
+
+    "display form error message (transferor email is empty)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "")
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter your email address"
+    }
+
+    "display form error message (transferor email contains only spaces)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "  ")
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter your email address"
+    }
+
+    "display form error message (transferor email contains more than 100 characters)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> s"${"a" * 90}@bbbb.ccccc")
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter no more than 100 characters"
+    }
+
+    "display form error message (transferor email is invalid)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "example")
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+    }
+
+    "display form error message (transferor email has consequent dots)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "ex..ample@example.com")
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+    }
+
+    "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "check[example.com")
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+    }
+
+    "display form error message (transferor email does not include TLD)" in {
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "example@example")
+      val result = transferController.confirmYourEmailAction(request)
+
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      val form = document.getElementById("register-form")
+      form shouldNot be(null)
+      val emailError = document.getElementById("transferor-email-error")
+      emailError shouldNot be(null)
+      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+    }
+  }
+
+  "Calling non-pta finished page" should {
+
+    "successfully authenticate the user and have finished page and content" in {
+      when(mockTransferService.getFinishedData(any())(any(), any()))
+        .thenReturn(NotificationRecord(EmailAddress("example@example.com")))
+      val result = transferController.finished(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+
+      document.title() shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
+      document.getElementById("govuk-box").text shouldBe "Marriage Allowance application successful"
+      document
+        .getElementById("paragraph-1")
+        .text shouldBe "An email with full details acknowledging your application will be " +
+        "sent to you at example@example.com from noreply@tax.service.gov.uk within 24 hours."
+    }
+  }
+  "Display Confirm page " should {
+    "have marriage date and name displayed" in {
+      val confirmData = ConfirmationModel(
+        Some(CitizenName(Some("JIM"), Some("FERGUSON"))),
+        EmailAddress("example@example.com"),
+        "foo",
+        "bar",
+        Nino(Ninos.ninoWithLOA1),
+        List(TaxYear(2014, Some(false)), TaxYear(2015, Some(false))),
+        DateOfMarriageFormInput(LocalDate.of(2015, 1, 1))
+      )
+      when(mockTransferService.getConfirmationData(any())(any(), any()))
+        .thenReturn(confirmData)
+
+      val result = transferController.confirm(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      val applicantName = document.getElementById("transferor-name")
+      val recipientName = document.getElementById("recipient-name")
+      val marriageDate = document.getElementById("marriage-date")
+      applicantName.ownText() shouldBe "Jim Ferguson"
+      recipientName.ownText() shouldBe "foo bar"
+      marriageDate.ownText() shouldBe "1 January 2015"
+    }
+  }
 }

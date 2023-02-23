@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package controllers
+package views
 
 import config.ApplicationConfig
+import controllers.UpdateRelationshipController
 import controllers.actions.AuthenticatedActionRefiner
 import models._
 import org.jsoup.Jsoup
@@ -26,19 +27,19 @@ import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.Result
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import services._
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.time.TaxYear
-import utils.{ControllerBaseTest, MockAuthenticatedAction}
+import utils.{BaseTest, MockAuthenticatedAction}
 
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
+class UpdateRelationshipContentTest extends BaseTest with Injecting {
 
   lazy val config: ApplicationConfig = inject[ApplicationConfig]
   val mockTransferService: TransferService = mock[TransferService]
@@ -48,6 +49,8 @@ class UpdateRelationshipContentTest extends ControllerBaseTest with Injecting {
   val contactHMRCBereavementText: Timestamp = (messages("general.helpline.enquiries.link.pretext") + " "
     + messages("general.helpline.enquiries.link") + " "
     + messages("pages.bereavement.enquiries.link.paragraph"))
+  implicit val request: Request[AnyContent] = FakeRequest()
+
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
