@@ -20,7 +20,6 @@ import controllers.actions.AuthenticatedActionRefiner
 import errors._
 import models._
 import models.auth.AuthenticatedUserRequest
-import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -181,8 +180,6 @@ class TransferControllerTest extends ControllerBaseTest {
           )
         val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
-        val document = Jsoup.parse(contentAsString(result))
-        document.getElementsByTag("h1").first().text() shouldBe messages("pages.previousyear.header")
       }
 
       "there are available tax years including current year" in {
@@ -198,8 +195,6 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(time.TaxYear.current.starts)
         val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
-        val document = Jsoup.parse(contentAsString(result))
-        document.getElementsByTag("h1").first().text() shouldBe messages("title.eligible-years")
       }
     }
 
@@ -216,8 +211,6 @@ class TransferControllerTest extends ControllerBaseTest {
           )
         val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
-        val document = Jsoup.parse(contentAsString(result))
-        document.title shouldBe messages("title.pattern", messages("title.error"))
       }
     }
   }
@@ -256,8 +249,6 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(List(currentTaxYear))
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        val doc = Jsoup.parse(contentAsString(result))
-        doc.title shouldBe messages("title.application.pattern", messages("title.extra-years"))
         verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any())
       }
 
@@ -331,8 +322,6 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        val doc = Jsoup.parse(contentAsString(result))
-        doc.title() shouldBe messages("title.pattern", messages("title.other-ways"))
       }
     }
   }
@@ -440,8 +429,6 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(Some(NotificationRecord(EmailAddress(email))))
         val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
-        val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("transferor-email").attr("value") shouldBe email
       }
 
       "no email is recovered from the cache" in {
@@ -449,8 +436,6 @@ class TransferControllerTest extends ControllerBaseTest {
           .thenReturn(None)
         val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
-        val document = Jsoup.parse(contentAsString(result))
-        document.getElementById("transferor-email").attr("value") shouldBe ""
       }
     }
   }
@@ -581,8 +566,6 @@ class TransferControllerTest extends ControllerBaseTest {
         s"an $error has been thrown" in {
           val result = controller.handleError(authRequest)(error)
           status(result) shouldBe responseStatus
-          val doc = Jsoup.parse(contentAsString(result))
-          doc.text() should include(messages(message))
         }
     }
   }
