@@ -428,10 +428,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       val error = field.getElementsByClass("govuk-error-message")
       error.size() shouldBe 1
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("dateOfMarriage-error").text shouldBe "Error: The date of your marriage or civil partnership must be after 1 01 1900"
-
-      val back = document.getElementById("backLink")
-      back.attr("href") shouldBe controllers.routes.TransferController.transfer.url
+      document.getElementById("backLink").attr("href") shouldBe controllers.routes.TransferController.transfer.url
     }
 
     "display form error message (date of marriage is after today’s date)" in {
@@ -449,12 +448,11 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       val form = document.getElementById("date-of-marriage-form")
       form.toString should include("/marriage-allowance-application/date-of-marriage")
-
-      val field = form.getElementById("dateOfMarriageFieldset")
-      field.text should include("When did you marry or form a civil partnership with your partner?")
+      form.getElementById("dateOfMarriageFieldset").text should include("When did you marry or form a civil partnership with your partner?")
 
       val err = form.getElementsByClass("govuk-error-message")
       err.size() shouldBe 1
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("dateOfMarriage-error").text shouldBe "Error: Enter a real date for your marriage or civil partnership"
     }
 
@@ -468,15 +466,17 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/date-of-marriage")
+
       val form = document.getElementById("date-of-marriage-form")
-      form shouldNot be(null)
+      form.toString should include("/marriage-allowance-application/date-of-marriage")
 
       val field = form.getElementById("dateOfMarriageFieldset")
-      field shouldNot be(null)
+      field.text should include("When did you marry or form a civil partnership with your partner?")
 
-      val err = field.getElementsByClass("govuk-error-message")
+      val error = field.getElementsByClass("govuk-error-message")
       val labelName = form.select("fieldset[id=dateOfMarriageFieldset]").first()
-      err.size() shouldBe 1
+      error.size() shouldBe 1
       labelName
         .getElementsByClass("govuk-error-message")
         .first()
@@ -501,6 +501,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       data = rcdata,
       availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016))
     )
+
     "display dynamic message " in {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
         .thenReturn(
@@ -522,9 +523,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("firstNameOnly").text() shouldBe "foo"
       document.getElementById("marriageDate").text() shouldBe "10 April 2011"
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
+      document.getElementsByClass("link-back").attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
     }
 
     "display form error message (no year choice made )" in {
@@ -543,11 +542,9 @@ class TransferTest extends BaseTest with NinoGenerator {
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
-      val form = document.getElementById("eligible-years-form")
-      form shouldNot be(null)
-      val selectedYearError = document.getElementById("selectedYear-error")
-      selectedYearError shouldNot be(null)
-      selectedYearError.text() shouldBe "Error: Select yes if you would like to apply for earlier tax years"
+      document.getElementById("eligible-years-form").toString should include("/marriage-allowance-application/extra-years")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("selectedYear-error").text() shouldBe "Error: Select yes if you would like to apply for earlier tax years"
     }
   }
 
@@ -557,15 +554,10 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter your email address"
-
-      val back = document.getElementsByClass("link-back")
-      back shouldNot be(null)
-      back.attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter your email address"
+      document.getElementsByClass("link-back").attr("href") shouldBe controllers.routes.TransferController.eligibleYears.url
     }
 
     "display form error message (transferor email is empty)" in {
@@ -574,11 +566,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter your email address"
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter your email address"
     }
 
     "display form error message (transferor email contains only spaces)" in {
@@ -587,11 +577,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter your email address"
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter your email address"
     }
 
     "display form error message (transferor email contains more than 100 characters)" in {
@@ -600,11 +588,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter no more than 100 characters"
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter no more than 100 characters"
     }
 
     "display form error message (transferor email is invalid)" in {
@@ -613,11 +599,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email has consequent dots)" in {
@@ -626,11 +610,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
@@ -639,11 +621,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
 
     "display form error message (transferor email does not include TLD)" in {
@@ -652,11 +632,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val emailError = document.getElementById("transferor-email-error")
-      emailError shouldNot be(null)
-      emailError.text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
+      document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-email-error").text() shouldBe "Error: Enter an email address in the correct format, like name@example.com"
     }
   }
 
