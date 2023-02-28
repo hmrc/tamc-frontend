@@ -99,9 +99,8 @@ class TransferTest extends BaseTest with NinoGenerator {
       val result = transferController.transferAction()(request)
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
 
@@ -110,9 +109,8 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("nino-error").text() shouldBe "Error: Enter your partner’s National Insurance number"
     }
   }
@@ -128,12 +126,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
-      val firstNameError = document.getElementById("name-error")
-      firstNameError shouldNot be(null)
-      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
 
     "display form error message (first name is empty)" in {
@@ -147,11 +142,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val firstNameError = document.getElementById("name-error")
-      firstNameError shouldNot be(null)
-      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
 
     "display form error message (first name is blank)" in {
@@ -165,11 +158,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val firstNameError = document.getElementById("name-error")
-      firstNameError shouldNot be(null)
-      firstNameError.text() shouldBe "Error: Enter your partner’s first name"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
 
     "display form error message (first name contains more than 35 characters)" in {
@@ -183,11 +174,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val firstNameError = document.getElementById("name-error")
-      firstNameError shouldNot be(null)
-      firstNameError.text() shouldBe "Error: Your partner’s first name must be 35 characters or less"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("name-error").text() shouldBe "Error: Your partner’s first name must be 35 characters or less"
     }
 
     "display form error message (first name contains numbers)" in {
@@ -201,11 +190,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val firstNameError = document.getElementById("name-error")
-      firstNameError shouldNot be(null)
-      firstNameError.text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("name-error").text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (first name contains letters and numbers)" in {
@@ -219,11 +206,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val firstNameError = document.getElementById("name-error")
-      firstNameError shouldNot be(null)
-      firstNameError.text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("name-error").text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name missing from request)" in {
@@ -236,11 +221,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val lastNameError = document.getElementById("last-name-error")
-      lastNameError shouldNot be(null)
-      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("last-name-error").text() shouldBe "Error: Enter your partner’s last name"
     }
 
     "display form error message (last name is empty)" in {
@@ -254,11 +237,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val lastNameError = document.getElementById("last-name-error")
-      lastNameError shouldNot be(null)
-      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("last-name-error").text() shouldBe "Error: Enter your partner’s last name"
     }
 
     "display form error message (last name is blank)" in {
@@ -272,11 +253,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val lastNameError = document.getElementById("last-name-error")
-      lastNameError shouldNot be(null)
-      lastNameError.text() shouldBe "Error: Enter your partner’s last name"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("last-name-error").text() shouldBe "Error: Enter your partner’s last name"
     }
 
     "display form error message (last name contains more than 35 characters)" in {
@@ -290,11 +269,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val lastNameError = document.getElementById("last-name-error")
-      lastNameError shouldNot be(null)
-      lastNameError.text() shouldBe "Error: Your partner’s last name must be 35 characters or less"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("last-name-error").text() shouldBe "Error: Your partner’s last name must be 35 characters or less"
     }
 
     "display form error message (last name contains numbers)" in {
@@ -308,11 +285,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val lastNameError = document.getElementById("last-name-error")
-      lastNameError shouldNot be(null)
-      lastNameError.text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("last-name-error").text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
     }
 
     "display form error message (last name contains letters and numbers)" in {
@@ -326,11 +301,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val lastNameError = document.getElementById("last-name-error")
-      lastNameError shouldNot be(null)
-      lastNameError.text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("last-name-error").text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
 
     }
 
@@ -345,11 +318,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val ninoError = document.getElementById("nino-error")
-      ninoError shouldNot be(null)
-      ninoError.text() shouldBe "Error: You cannot enter your own details"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("nino-error").text() shouldBe "Error: You cannot enter your own details"
     }
   }
 
@@ -364,11 +335,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val genderError = document.getElementById("gender-error")
-      genderError shouldNot be(null)
-      genderError.text() shouldBe "Error: Select your partner’s gender"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s gender"
     }
 
     "display form error message (gender code is invalid)" in {
@@ -382,11 +351,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val genderError = document.getElementById("gender-error")
-      genderError shouldNot be(null)
-      genderError.text() shouldBe "Error: Select your partner’s gender"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s gender"
     }
   }
 
@@ -401,11 +368,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val ninoError = document.getElementById("nino-error")
-      ninoError shouldNot be(null)
-      ninoError.text shouldBe "Error: Enter your partner’s National Insurance number"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("nino-error").text shouldBe "Error: Enter your partner’s National Insurance number"
     }
 
     "display form error message (NINO is empty)" in {
@@ -419,11 +384,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val ninoError = document.getElementById("nino-error")
-      ninoError shouldNot be(null)
-      ninoError.text shouldBe "Error: Enter your partner’s National Insurance number"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("nino-error").text shouldBe "Error: Enter your partner’s National Insurance number"
     }
 
     "display form error message (NINO is invalid)" in {
@@ -437,11 +400,9 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("register-form")
-      form shouldNot be(null)
-      val ninoError = document.getElementById("nino-error")
-      ninoError shouldNot be(null)
-      ninoError.text shouldBe "Error: Enter a real National Insurance number"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("nino-error").text shouldBe "Error: Enter a real National Insurance number"
     }
   }
 
@@ -457,17 +418,19 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/date-of-marriage")
+
       val form = document.getElementById("date-of-marriage-form")
-      form shouldNot be(null)
+      form.toString should include("/marriage-allowance-application/date-of-marriage")
 
       val field = form.getElementById("dateOfMarriageFieldset")
-      field shouldNot be(null)
+      field.text should include("When did you marry or form a civil partnership with your partner?")
 
-      val err = field.getElementsByClass("govuk-error-message")
-      err.size() shouldBe 1
+      val error = field.getElementsByClass("govuk-error-message")
+      error.size() shouldBe 1
+      document.getElementById("dateOfMarriage-error").text shouldBe "Error: The date of your marriage or civil partnership must be after 1 01 1900"
 
       val back = document.getElementById("backLink")
-      back shouldNot be(null)
       back.attr("href") shouldBe controllers.routes.TransferController.transfer.url
     }
 
@@ -482,14 +445,17 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("date-of-marriage-form")
-      form shouldNot be(null)
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/date-of-marriage")
 
-      val field = form.getElementById("dateOfMarriage")
-      field shouldNot be(null)
+      val form = document.getElementById("date-of-marriage-form")
+      form.toString should include("/marriage-allowance-application/date-of-marriage")
+
+      val field = form.getElementById("dateOfMarriageFieldset")
+      field.text should include("When did you marry or form a civil partnership with your partner?")
 
       val err = form.getElementsByClass("govuk-error-message")
       err.size() shouldBe 1
+      document.getElementById("dateOfMarriage-error").text shouldBe "Error: Enter a real date for your marriage or civil partnership"
     }
 
     "display form error message (date of marriage is left empty)" in {

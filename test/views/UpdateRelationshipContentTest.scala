@@ -151,7 +151,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
 
       val expected = Seq(
         contactHMRCBereavementText,
-        messages("pages.bereavement.transferor.paragraph"), 
+        messages("pages.bereavement.transferor.paragraph"),
         "beta " + messages("betaBanner.message")
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
