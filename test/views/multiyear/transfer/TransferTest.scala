@@ -435,9 +435,9 @@ class TransferTest extends BaseTest with NinoGenerator {
     }
 
     "display form error message (date of marriage is after today’s date)" in {
-      val todayPlusOne = LocalDate.now().plusDays(1)
+      val todayPlusOneDay = LocalDate.now().plusDays(1)
       val pattern = "d MM YYYY"
-      val formattedDate = todayPlusOne.format(DateTimeFormatter.ofPattern(pattern))
+      val todayPlusOneDayFormatted = todayPlusOneDay.format(DateTimeFormatter.ofPattern(pattern))
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
@@ -457,7 +457,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       val error = form.getElementsByClass("govuk-error-message")
       error.size() shouldBe 1
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
-      document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The date of your marriage or civil partnership must be before $formattedDate"
+      document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The date of your marriage or civil partnership must be before $todayPlusOneDayFormatted"
     }
 
     "display form error message (date of marriage is left empty)" in {
