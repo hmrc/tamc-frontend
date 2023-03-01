@@ -41,6 +41,7 @@ import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, Nino
 import views.html.multiyear.transfer.transfer
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -434,6 +435,9 @@ class TransferTest extends BaseTest with NinoGenerator {
     }
 
     "display form error message (date of marriage is after today’s date)" in {
+      val todayPlusOne = LocalDate.now().plusDays(1)
+      val pattern = "d MM YYYY"
+      val formattedDate = todayPlusOne.format(DateTimeFormatter.ofPattern(pattern))
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
@@ -450,10 +454,10 @@ class TransferTest extends BaseTest with NinoGenerator {
       form.toString should include("/marriage-allowance-application/date-of-marriage")
       form.getElementById("dateOfMarriageFieldset").text should include("When did you marry or form a civil partnership with your partner?")
 
-      val err = form.getElementsByClass("govuk-error-message")
-      err.size() shouldBe 1
+      val error = form.getElementsByClass("govuk-error-message")
+      error.size() shouldBe 1
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
-      document.getElementById("dateOfMarriage-error").text shouldBe "Error: Enter a real date for your marriage or civil partnership"
+      document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The date of your marriage or civil partnership must be before $formattedDate"
     }
 
     "display form error message (date of marriage is left empty)" in {

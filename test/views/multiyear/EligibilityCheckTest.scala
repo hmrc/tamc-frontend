@@ -45,11 +45,7 @@ class EligibilityCheckTest extends BaseTest {
   val mockTimeService: TimeService = mock[TimeService]
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
-
   implicit val duration: Timeout = 20 seconds
-
-
-  val ERROR_HEADING = "There is a problem"
 
   private val lowerEarnerHelpText =
     "This is your total earnings from all employment, pensions, benefits, trusts, " +
@@ -126,8 +122,8 @@ class EligibilityCheckTest extends BaseTest {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
-      val elements = document.getElementById("eligibility-form").getElementsByTag("p")
-      elements shouldNot be(null)
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/eligibility-check")
+      document.getElementById("pageHeading").text() shouldBe ("Are you married or in a civil partnership?")
     }
 
     "diplay errors as none of the radio buttons are selected " in {
@@ -135,18 +131,12 @@ class EligibilityCheckTest extends BaseTest {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
-
-      document
-        .getElementById("marriage-criteria-error")
-        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
-      val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset
-        .getElementsByClass("govuk-error-message")
-        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
-
+      form.select("fieldset[id=marriage-criteria]").first()
+        .getElementsByClass("govuk-error-message").text() shouldBe "Error: Select yes if you are married or in a civil partnership"
     }
   }
 
@@ -158,8 +148,8 @@ class EligibilityCheckTest extends BaseTest {
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.title() shouldBe "Are you married or in a civil partnership? - Marriage Allowance eligibility - GOV.UK"
-      val elements = document.getElementById("eligibility-form").getElementsByTag("p")
-      elements shouldNot be(null)
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/eligibility-check")
+      document.getElementById("pageHeading").text() shouldBe ("Are you married or in a civil partnership?")
     }
 
     "diplay errors as none of the radio buttons are selected " in {
@@ -167,17 +157,12 @@ class EligibilityCheckTest extends BaseTest {
       status(result) shouldBe BAD_REQUEST
 
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("error-summary-title").text() shouldBe ERROR_HEADING
-
-      document
-        .getElementById("marriage-criteria-error")
-        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("marriage-criteria-error").text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
       val form = document.getElementById("eligibility-form")
-      val marriageFieldset = form.select("fieldset[id=marriage-criteria]").first()
-      marriageFieldset
-        .getElementsByClass("govuk-error-message")
-        .text() shouldBe "Error: Select yes if you are married or in a civil partnership"
+      form.select("fieldset[id=marriage-criteria]").first()
+        .getElementsByClass("govuk-error-message").text() shouldBe "Error: Select yes if you are married or in a civil partnership"
 
     }
   }

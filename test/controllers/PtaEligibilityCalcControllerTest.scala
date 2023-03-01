@@ -104,24 +104,26 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
     "display form error message (one error)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "9000"))
       val document = Jsoup.parse(contentAsString(result))
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+
       val form = document.getElementById("calculator")
-      form shouldNot be(null)
-      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      form.getElementById("recipient-income-error").text() shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
     "display form error message (multiple errors)" in {
       val result = calculatorRequestAction(Map("transferor-income" -> "", "recipient-income" -> ""))
       val document = Jsoup.parse(contentAsString(result))
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       val form = document.getElementById("calculator")
-      form shouldNot be(null)
-      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      form.getElementById("recipient-income-error").text() shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
     "be displayed if transferor income is not provided (None)" in {
       val result = calculatorRequestAction(Map("recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("transferor-income-error").text shouldBe "Error: Enter your income (low), before tax is taken off"
     }
 
@@ -129,7 +131,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("transferor-income-error").text shouldBe "Error: Enter your income (low), before tax is taken off"
     }
 
@@ -137,7 +139,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "abc", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("transferor-income-error").text shouldBe "Error: Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
@@ -145,7 +147,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "-1", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("transferor-income-error").text shouldBe "Error: Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
@@ -153,7 +155,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "2147483648", "recipient-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("transferor-income-error").text shouldBe "Error: Your income (low), before tax is taken off must only include numbers 0 to 9"
     }
 
@@ -161,7 +163,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("recipient-income-error").text shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
@@ -169,7 +171,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> ""))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("recipient-income-error").text shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
@@ -177,7 +179,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> "abc"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("recipient-income-error").text shouldBe "Error: Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
@@ -185,7 +187,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> "-1"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("recipient-income-error").text shouldBe "Error: Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
@@ -193,7 +195,7 @@ class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
       val result = calculatorRequestAction(Map("transferor-income" -> "5000", "recipient-income" -> "2147483648"))
       val document = Jsoup.parse(contentAsString(result))
       val form = document.getElementById("calculator")
-      form.getElementsByClass("govuk-error-message").first() shouldNot be(null)
+      form.getElementsByClass("govuk-error-message").size() shouldBe 1
       document.getElementById("recipient-income-error").text shouldBe "Error: Your partner’s income (high), before tax is taken off must only include numbers 0 to 9"
     }
 
