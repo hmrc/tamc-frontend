@@ -108,18 +108,19 @@ class CalculatorResultTest extends BaseTest {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "9000")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form shouldNot be(null)
-      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/benefit-calculator")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("recipient-income-error").text() shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
     "display form error message (multiple errors)" in {
       val request = FakeRequest().withMethod("POST")
       val result = controller.gdsCalculatorAction()(request)
       val document = Jsoup.parse(contentAsString(result))
-      val form = document.getElementById("calculator")
-      form shouldNot be(null)
-      document.getElementById("error-summary-title").text() shouldBe "There is a problem"
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/benefit-calculator")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("transferor-income-error").text() shouldBe "Error: Enter your income (low), before tax is taken off"
+      document.getElementById("recipient-income-error").text() shouldBe "Error: Enter your partner’s income (high), before tax is taken off"
     }
 
     "be displayed if transferor income is not provided (None)" in {
