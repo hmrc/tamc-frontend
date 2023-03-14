@@ -441,7 +441,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       val localDate = LocalDate.now().plusYears(2)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
-        "dateOfMarriage.month" -> s"${localDate.getDayOfMonth}",
+        "dateOfMarriage.month" -> s"${localDate.getMonthValue}",
         "dateOfMarriage.year" -> s"${localDate.getYear}"
       )
       val result = transferController.dateOfMarriageAction(request)
