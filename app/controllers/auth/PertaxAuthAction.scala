@@ -14,30 +14,31 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.auth
+package controllers.auth
 
 import com.google.inject.ImplementedBy
+import connectors.PertaxAuthConnector
+import models.admin.PertaxBackendToggle
+import models.auth.AuthenticatedUserRequest
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.Results.{InternalServerError, Redirect, Status}
 import play.api.mvc.{ActionRefiner, ControllerComponents, Result}
+import services.admin.FeatureFlagService
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
-import uk.gov.hmrc.nisp.models.admin.PertaxBackendToggle
-import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
-import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
-import uk.gov.hmrc.nisp.utils.Constants._
-import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.partials.HtmlPartial
+import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
+import views.html.errors.try_later
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthActionImpl @Inject()(
                                   pertaxAuthConnector: PertaxAuthConnector,
-                                  technicalIssue: technical_issue,
+                                  technicalIssue: try_later,
                                   featureFlagService: FeatureFlagService
                                 )(
                                   implicit val executionContext: ExecutionContext,
@@ -46,13 +47,13 @@ class PertaxAuthActionImpl @Inject()(
 
   override def messagesApi: MessagesApi = controllerComponents.messagesApi
 
-  override protected def refine[A](request: AuthenticatedRequest[A]): Future[Either[Result, AuthenticatedRequest[A]]] = {
+  override protected def refine[A](request: AuthenticatedUserRequest[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
-    implicit val implicitRequest: AuthenticatedRequest[A] = request
+    implicit val implicitRequest: AuthenticatedUserRequest[A] = request
 
     featureFlagService.get(PertaxBackendToggle).flatMap { flag =>
       if (flag.isEnabled) {
-        pertaxAuthConnector.authorise(request.nispAuthedUser.nino.nino).flatMap {
+        pertaxAuthConnector.authorise(request.nino.nino).flatMap {
           case Right(PertaxAuthResponseModel(ACCESS_GRANTED, _, _, _)) =>
             Future.successful(Right(request))
           case Right(PertaxAuthResponseModel(NO_HMRC_PT_ENROLMENT, _, Some(redirect), _)) =>
@@ -79,4 +80,4 @@ class PertaxAuthActionImpl @Inject()(
 }
 
 @ImplementedBy(classOf[PertaxAuthActionImpl])
-trait PertaxAuthAction extends ActionRefiner[AuthenticatedRequest, AuthenticatedRequest]
+trait PertaxAuthAction extends ActionRefiner[AuthenticatedUserRequest, AuthenticatedUserRequest]

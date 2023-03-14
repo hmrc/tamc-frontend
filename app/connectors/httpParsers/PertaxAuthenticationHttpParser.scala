@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.connectors.httpParsers
+package connectors.httpParsers
 
+import models.pertaxAuth.PertaxAuthResponseModel
 import play.api.Logging
 import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.{HttpReads, HttpResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 
 object PertaxAuthenticationHttpParser extends Logging {
   type PertaxAuthenticationResponse = Either[UpstreamErrorResponse, PertaxAuthResponseModel]

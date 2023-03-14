@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.auth
+package controllers.auth
 
+import connectors.PertaxAuthConnector
+import models.admin.{FeatureFlag, PertaxBackendToggle}
+import models.auth.AuthenticatedUserRequest
+import models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -29,18 +33,14 @@ import play.api.mvc.{AnyContent, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
+import services.admin.FeatureFlagService
 import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.auth.core.retrieve.{LoginTimes, Name}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
-import uk.gov.hmrc.nisp.connectors.PertaxAuthConnector
-import uk.gov.hmrc.nisp.models.UserName
-import uk.gov.hmrc.nisp.models.admin.{FeatureFlag, PertaxBackendToggle}
-import uk.gov.hmrc.nisp.models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
-import uk.gov.hmrc.nisp.services.admin.FeatureFlagService
-import uk.gov.hmrc.nisp.utils.{Constants, UnitSpec}
-import uk.gov.hmrc.nisp.views.html.iv.failurepages.technical_issue
 import uk.gov.hmrc.play.partials.HtmlPartial
+import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
+import utils.UnitSpec
+import views.html.errors.try_later
 
 import java.time.{Instant, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
@@ -53,7 +53,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
 
   lazy val authAction = new PertaxAuthActionImpl(
     connector,
-    app.injector.instanceOf[technical_issue],
+    app.injector.instanceOf[try_later],
     featureFlagService
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
@@ -65,17 +65,12 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
     Mockito.reset()
   }
 
-  def authenticatedRequest(requestMethod: String = "GET", requestUrl: String = "/"): AuthenticatedRequest[AnyContent] = new AuthenticatedRequest[AnyContent](
+  def authenticatedRequest(requestMethod: String = "GET", requestUrl: String = "/"): AuthenticatedUserRequest[AnyContent] = new AuthenticatedUserRequest[AnyContent](
     FakeRequest(requestMethod, requestUrl),
-    NispAuthedUser(
-      Nino("AA000000A"),
-      date,
-      UserName(Name(Some("John"), Some("Doe"))),
-      None, None, isSa = true
-    ),
-    AuthDetails(ConfidenceLevel.L200, LoginTimes(
-      instant, None
-    ))
+    Some(ConfidenceLevel.L200),
+    true,
+    None,
+    Nino("AA000000A")
   )
 
   def mockAuth(pertaxAuthResponseModel: PertaxAuthResponseModel): OngoingStubbing[Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]] = {
@@ -86,7 +81,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
     when(connector.authorise(any())(any())).thenReturn(Future.successful(Left(error)))
   }
 
-  def block: AuthenticatedRequest[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
+  def block: AuthenticatedUserRequest[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
 
   "PertaxAuthAction.refine" when {
 
@@ -97,7 +92,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
         "the response from pertax auth connector indicates ACCESS_GRANTED" in {
           val result = {
             mockAuth(PertaxAuthResponseModel(
-              Constants.ACCESS_GRANTED,
+              ACCESS_GRANTED,
               "This message doesn't matter.",
               None, None
             ))
@@ -116,7 +111,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
         "the response from pertax auth connector indicates NO_HMRC_PT_ENROLMENT and has a redirect URL" which {
           lazy val request = {
             mockAuth(PertaxAuthResponseModel(
-              Constants.NO_HMRC_PT_ENROLMENT,
+              NO_HMRC_PT_ENROLMENT,
               "Still doesn't matter.",
               Some("/some-redirect"),
               None

@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.controllers.auth
+package controllers.auth
 
+import controllers.actions.AuthenticatedActionRefiner
+import models.auth.AuthenticatedUserRequest
 import play.api.mvc.{ActionBuilder, AnyContent}
 
 import javax.inject.Inject
 
-class StandardAuthJourney @Inject()(auth: AuthAction, pertaxAuth: PertaxAuthAction) {
-  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedRequest, AnyContent] = auth andThen pertaxAuth
+class StandardAuthJourney @Inject()(auth: AuthenticatedActionRefiner, pertaxAuth: PertaxAuthAction) {
+  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedUserRequest, AnyContent] = auth andThen pertaxAuth
 }

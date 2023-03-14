@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.models.pertaxAuth
+package models.pertaxAuth
 
 import play.api.libs.json.{Json, OFormat}
 

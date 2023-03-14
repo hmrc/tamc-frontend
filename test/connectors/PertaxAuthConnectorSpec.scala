@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.connectors
+package connectors
 
+import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import play.twirl.api.Html
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
-import uk.gov.hmrc.nisp.utils.Constants.ACCESS_GRANTED
-import uk.gov.hmrc.nisp.utils.{PertaxAuthMockingHelper, UnitSpec, WireMockHelper}
 import uk.gov.hmrc.play.partials.HtmlPartial
+import utils.Constants.ACCESS_GRANTED
+import utils.{PertaxAuthMockingHelper, UnitSpec, WireMockHelper}
 
 class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockHelper with PertaxAuthMockingHelper with Injecting {
 

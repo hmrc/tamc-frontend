@@ -152,4 +152,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private def taxBandKey(taxRate: String, taxBand: String, country: String, taxYear: Int) = {
     s"taxbands-$taxRate-$taxBand-$country-$taxYear"
   }
+
+  val pertaxAuthBaseUrl = servicesConfig.baseUrl("pertax-auth")
 }

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.utils
+package utils
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import play.utils.UriEncoding
-import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 
 trait PertaxAuthMockingHelper {
   this: WireMockHelper with GuiceOneAppPerSuite =>

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.nisp.connectors
+package connectors
 
 import com.google.inject.ImplementedBy
+import config.ApplicationConfig
 import play.api.Logging
 import play.api.http.HeaderNames
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
-import uk.gov.hmrc.nisp.config.ApplicationConfig
-import uk.gov.hmrc.nisp.connectors.httpParsers.PertaxAuthenticationHttpParser._
-import uk.gov.hmrc.nisp.models.pertaxAuth.PertaxAuthResponseModel
 import uk.gov.hmrc.play.partials.HtmlPartial
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
+import connectors.httpParsers.PertaxAuthenticationHttpParser._
+import models.pertaxAuth.PertaxAuthResponseModel
 
 class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: ApplicationConfig)(
                                    implicit ec: ExecutionContext
