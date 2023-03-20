@@ -49,8 +49,8 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
     .configure("microservice.services.marriage-allowance.port" -> server.port())
     .build()
 
-  lazy val marriageAllowanceConnector = app.injector.instanceOf[MarriageAllowanceConnector]
-  val nino = Nino(Ninos.nino1)
+  lazy val marriageAllowanceConnector: MarriageAllowanceConnector = app.injector.instanceOf[MarriageAllowanceConnector]
+  val nino: Nino = Nino(Ninos.nino1)
 
   "listRelationship" should {
     "return data" when {
@@ -114,27 +114,17 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
       val request = s.getRequest
       // assert is is for the test url
       assertEquals(request.getUrl, requestUrl)
-      // Assert tht the request body is correct
+      // Assert that the request body is correct
       val body = request.getBodyAsString
       val jsonStr = Json.toJson(data).toString()
       assertEquals(jsonStr, body)
-
-/* Above replaces which blows up with http exception!
-      verify(1,
-        postRequestedFor(urlEqualTo(s"/paye/$nino/get-recipient-relationship"))
-          .withRequestBody(equalToJson(Json.toJson(data).toString()))
-      )
- */
-      verify(1,
-        postRequestedFor(urlEqualTo(s"/paye/$nino/get-recipient-relationship"))
-          .withRequestBody(equalToJson(Json.toJson(data).toString()))
-      )
     }
   }
 
   "createRelationship" should {
     "return a response" in {
-      server.stubFor(put(urlPathEqualTo(s"/paye/$nino/create-multi-year-relationship/pta"))
+      val requestUrl = s"/paye/$nino/create-multi-year-relationship/pta"
+      server.stubFor(put(urlPathEqualTo(requestUrl))
         .willReturn(
           aResponse()
             .withStatus(200)
@@ -147,16 +137,21 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
       val data = MarriageAllowanceConnectorTestData.relationshipRequestHolder
 
       await(marriageAllowanceConnector.createRelationship(nino, data))
-      verify(1,
-        putRequestedFor(urlEqualTo(s"/paye/$nino/create-multi-year-relationship/pta"))
-          .withRequestBody(equalToJson(Json.toJson(data).toString()))
-      )
+
+      assertEquals(1, server.getAllServeEvents.size())
+      val s = server.getAllServeEvents.get(0)
+      val request = s.getRequest
+      assertEquals(request.getUrl, requestUrl)
+      val body = request.getBodyAsString
+      val jsonStr = Json.toJson(data).toString()
+      assertEquals(jsonStr, body)
     }
   }
 
   "updateRelationship" should {
     "return a responce" in {
-      server.stubFor(put(urlPathEqualTo(s"/paye/$nino/update-relationship"))
+      val requestUrl = s"/paye/$nino/update-relationship"
+      server.stubFor(put(urlPathEqualTo(requestUrl))
         .willReturn(
           aResponse()
             .withStatus(200)
@@ -170,10 +165,14 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
       val data = MarriageAllowanceConnectorTestData.updateRelationshipRequestHolder
 
       await(marriageAllowanceConnector.updateRelationship(nino, data))
-      verify(1,
-        putRequestedFor(urlEqualTo(s"/paye/$nino/update-relationship"))
-          .withRequestBody(equalToJson(Json.toJson(data).toString()))
-      )
+
+      assertEquals(1, server.getAllServeEvents.size())
+      val s = server.getAllServeEvents.get(0)
+      val request = s.getRequest
+      assertEquals(request.getUrl, requestUrl)
+      val body = request.getBodyAsString
+      val jsonStr = Json.toJson(data).toString()
+      assertEquals(jsonStr, body)
     }
   }
 

@@ -19,7 +19,9 @@ package views.multiyear.transfer
 import akka.util.Timeout
 import controllers.TransferController
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
+import helpers.FakePertaxAuthAction
 import models.{CitizenName, ConfirmationModel, CurrentAndPreviousYearsEligibility, DateOfMarriageFormInput, Gender, NotificationRecord, RecipientRecord, RegistrationFormInput, TaxYear, UserRecord}
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
@@ -27,9 +29,10 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.Application
-import play.api.http.Status.{OK, BAD_REQUEST}
+import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import play.api.test.Helpers.contentAsString
 import services.TransferService
@@ -48,10 +51,10 @@ import scala.language.postfixOps
 
 class TransferTest extends BaseTest with NinoGenerator {
 
-  lazy val nino = generateNino().nino
-  lazy val transferView = instanceOf[transfer]
-  lazy val transferForm = instanceOf[RecipientDetailsForm]
-  implicit val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  lazy val nino: String = generateNino().nino
+  lazy val transferView: transfer = instanceOf[transfer]
+  lazy val transferForm: RecipientDetailsForm = instanceOf[RecipientDetailsForm]
+  implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
   def transferController: TransferController = app.injector.instanceOf[TransferController]
 
@@ -62,7 +65,8 @@ class TransferTest extends BaseTest with NinoGenerator {
     .overrides(
       bind[TransferService].toInstance(mockTransferService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction]
+      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 
@@ -510,7 +514,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
         .thenReturn(
           CurrentAndPreviousYearsEligibility(
-            true,
+            currentYearAvailable = true,
             recrecord.availableTaxYears,
             recrecord.data,
             recrecord.availableTaxYears
@@ -534,7 +538,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
         .thenReturn(
           CurrentAndPreviousYearsEligibility(
-            true,
+            currentYearAvailable = true,
             recrecord.availableTaxYears,
             recrecord.data,
             recrecord.availableTaxYears

@@ -36,11 +36,8 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
   val nino = "AA000000A"
 
   "PertaxAuthConnector" when {
-
     "calling .authorise" when {
-
       "pertax auth returns a successful response" should {
-
         s"return a PertaxAuthResponseModel containing the data returned by pertax" in {
           val expectedReturnModel = PertaxAuthResponseModel(ACCESS_GRANTED, "A field", None, None)
 
@@ -54,7 +51,6 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
       }
 
       "pertax returns Json that cannot be parsed" should {
-
         "return an UpstreamErrorRespobnse" in {
           val expectedReturnModel = UpstreamErrorResponse(
             "[PertaxAuthenticationHttpParser][read] There was an issue parsing the response from Pertax Auth.",
@@ -76,9 +72,7 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
     }
 
     "calling .loadPartial" when {
-
       "pertax returns a successful response" should {
-
         "return an HtmlPartial" in {
           val expectedPartial = HtmlPartial.Success(Some("Test Page"), Html("<html></html>"))
 
@@ -92,7 +86,6 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
       }
 
       "pertax returns an unsuccessful response" should {
-
         "return a failure partial" in {
           val expectedPartial = HtmlPartial.Failure(Some(BAD_REQUEST), "<html>Failure Page</html>")
 
@@ -105,7 +98,5 @@ class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with Wir
         }
       }
     }
-
   }
-
 }

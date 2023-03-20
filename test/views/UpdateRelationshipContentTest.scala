@@ -19,6 +19,8 @@ package views
 import config.ApplicationConfig
 import controllers.UpdateRelationshipController
 import controllers.actions.AuthenticatedActionRefiner
+import controllers.auth.PertaxAuthAction
+import _root_.helpers.FakePertaxAuthAction
 import models._
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
@@ -45,7 +47,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
   val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val mockCachingService: CachingService = mock[CachingService]
-  val loggedInUser = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
+  val loggedInUser: LoggedInUserInfo = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
   val contactHMRCBereavementText: Timestamp = (messages("general.helpline.enquiries.link.pretext") + " "
     + messages("general.helpline.enquiries.link") + " "
     + messages("pages.bereavement.enquiries.link.paragraph"))
@@ -58,7 +60,8 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[CachingService].toInstance(mockCachingService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[MessagesApi].toInstance(stubMessagesApi())
+      bind[MessagesApi].toInstance(stubMessagesApi()),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     ).build()
 
   val controller: UpdateRelationshipController = inject[UpdateRelationshipController]
