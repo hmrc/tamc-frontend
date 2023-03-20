@@ -18,10 +18,8 @@ package utils
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
-import play.api.Logging
 
-
-trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach with Logging {
+trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach{
   this: Suite =>
 
   protected val server: WireMockServer = new WireMockServer(9132)
@@ -32,7 +30,6 @@ trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach with Logg
   }
 
   override def beforeEach(): Unit = {
-    logger.info("Resetting server")
     server.resetAll()
     super.beforeEach()
   }

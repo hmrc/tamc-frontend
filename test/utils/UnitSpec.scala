@@ -37,8 +37,7 @@ trait UnitSpec extends AnyWordSpec with Matchers with OptionValues {
   import scala.concurrent.duration._
   import scala.concurrent.{Await, Future}
 
-  // TODO revert to 5
-  implicit val defaultTimeout: FiniteDuration = 15 seconds
+  implicit val defaultTimeout: FiniteDuration = 5 seconds
 
   implicit def extractAwait[A](future: Future[A]): A = await[A](future)
 

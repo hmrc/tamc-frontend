@@ -25,7 +25,7 @@ import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-trait ControllerBaseTest extends BaseTest with BeforeAndAfterEach with Logging {
+trait ControllerBaseTest extends BaseTest with BeforeAndAfterEach{
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
