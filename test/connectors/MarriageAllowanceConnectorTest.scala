@@ -95,16 +95,8 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
             )
         ))
       val data = RegistrationFormInput("", "", Gender("M"), nino, LocalDate.now())
-
-      logger.info(s"Server stubs: ${server.getStubMappings}")
-      logger.info(s"Server port: ${server.port()}")
-      logger.info(s"marriageAllowanceUrl: '${marriageAllowanceConnector.marriageAllowanceUrl}'")
-
       val result = marriageAllowanceConnector.getRecipientRelationship(nino, data)
 
-      logger.info( s"Server port: ${server.port()}")
-      logger.info( s"Server running: ${server.isRunning}")
-      logger.info( s"marriageAllowanceUrl: '${marriageAllowanceConnector.marriageAllowanceUrl}'")
       await(result)
       // assert only 1 interaction with mock
       assertEquals(1, server.getAllServeEvents.size())

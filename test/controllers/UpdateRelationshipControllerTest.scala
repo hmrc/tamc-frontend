@@ -108,7 +108,6 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
   def randomNino: Nino = {
     val n = Nino(new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA"))
-    logger.info(s"Generated NINO: ${n.nino}")
     n
   }
 
