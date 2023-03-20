@@ -18,14 +18,14 @@ package utils
 
 import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
 import org.scalatest.BeforeAndAfterEach
-import play.api.Application
+import play.api.{Application, Logging}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-trait ControllerBaseTest extends BaseTest with BeforeAndAfterEach {
+trait ControllerBaseTest extends BaseTest with BeforeAndAfterEach with Logging {
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])

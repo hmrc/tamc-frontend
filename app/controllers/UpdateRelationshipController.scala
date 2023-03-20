@@ -17,7 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
-import controllers.actions.AuthenticatedActionRefiner
+import controllers.auth.StandardAuthJourney
 import errors._
 import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
@@ -33,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class   UpdateRelationshipController @Inject()(
-  authenticate: AuthenticatedActionRefiner,
+  authenticate: StandardAuthJourney,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
   historySummary: views.html.coc.history_summary,
@@ -58,7 +58,7 @@ class   UpdateRelationshipController @Inject()(
   divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
   confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  def history(): Action[AnyContent] = authenticate.async {
+  def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
         updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
@@ -70,7 +70,7 @@ class   UpdateRelationshipController @Inject()(
       } recover handleError
   }
 
-  def decision: Action[AnyContent] = authenticate.async {
+  def decision: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
         Ok(decisionV(CheckClaimOrCancelDecisionForm.form().fill(claimOrCancelDecision)))
@@ -79,7 +79,7 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  def submitDecision: Action[AnyContent] = authenticate.async {
+  def submitDecision: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
 
       CheckClaimOrCancelDecisionForm.form().bindFromRequest().fold(
@@ -99,7 +99,7 @@ class   UpdateRelationshipController @Inject()(
         })
   }
 
-  def claims: Action[AnyContent] = authenticate.async {
+  def claims: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
         val viewModel = claimsViewModelImpl(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
@@ -108,7 +108,7 @@ class   UpdateRelationshipController @Inject()(
   }
 
 
-  def makeChange(): Action[AnyContent] = authenticate.async {
+  def makeChange(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       updateRelationshipService.getMakeChangesDecision map { makeChangesData =>
         Ok(reasonForChange(MakeChangesDecisionForm.form().fill(makeChangesData)))
@@ -117,7 +117,7 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  def submitMakeChange(): Action[AnyContent] = authenticate.async {
+  def submitMakeChange(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       MakeChangesDecisionForm.form().bindFromRequest().fold(
         formWithErrors => {
@@ -155,13 +155,13 @@ class   UpdateRelationshipController @Inject()(
   }
 
 
-  def stopAllowance: Action[AnyContent] = authenticate.async {
+  def stopAllowance: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       Future.successful(Ok(stopAllowanceV()))
   }
 
 
-  def cancel: Action[AnyContent] = authenticate.async {
+  def cancel: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       val cancelDates = updateRelationshipService.getMAEndingDatesForCancelation
       updateRelationshipService.saveMarriageAllowanceEndingDates(cancelDates) map { _ =>
@@ -170,14 +170,14 @@ class   UpdateRelationshipController @Inject()(
   }
 
 
-  def bereavement: Action[AnyContent] = authenticate.async {
+  def bereavement: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
         Ok(bereavementV(relationshipRecords.primaryRecord.role))
       }) recover handleError
   }
 
-  def divorceEnterYear: Action[AnyContent] = authenticate.async {
+  def divorceEnterYear: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       updateRelationshipService.getDivorceDate map { optionalDivorceDate =>
         optionalDivorceDate.fold(Ok(divorceSelectYearV(divorceSelectYearForm.form))){ divorceDate =>
@@ -189,7 +189,7 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  def submitDivorceEnterYear: Action[AnyContent] = authenticate.async {
+  def submitDivorceEnterYear: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       divorceSelectYearForm.form.bindFromRequest().fold(
         formWithErrors => {
@@ -203,7 +203,7 @@ class   UpdateRelationshipController @Inject()(
       ) recover handleError
   }
 
-  def divorceEndExplanation: Action[AnyContent] = authenticate.async {
+  def divorceEndExplanation: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       (for {
         (role, divorceDate) <- updateRelationshipService.getDataForDivorceExplanation
@@ -216,7 +216,7 @@ class   UpdateRelationshipController @Inject()(
   }
 
 
-  def confirmEmail: Action[AnyContent] = authenticate.async {
+  def confirmEmail: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       lazy val emptyEmailView = emailV(emailForm)
       updateRelationshipService.getEmailAddress map {
@@ -227,7 +227,7 @@ class   UpdateRelationshipController @Inject()(
       }
   }
 
-  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.async {
+  def confirmYourEmailActionUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       emailForm.bindFromRequest().fold(
         formWithErrors => {
@@ -240,21 +240,21 @@ class   UpdateRelationshipController @Inject()(
       ) recover handleError
   }
 
-  def confirmUpdate: Action[AnyContent] = authenticate.async {
+  def confirmUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       updateRelationshipService.getConfirmationUpdateAnswers map { confirmationUpdateAnswers =>
           Ok(confirmUpdateV(confirmUpdateViewModelImpl(confirmationUpdateAnswers)))
       } recover handleError
   }
 
-  def submitConfirmUpdate: Action[AnyContent] = authenticate.async {
+  def submitConfirmUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       updateRelationshipService.updateRelationship(request.nino) map {
         _ => Redirect(controllers.routes.UpdateRelationshipController.finishUpdate)
       } recover handleError
   }
 
-  def finishUpdate: Action[AnyContent] = authenticate.async {
+  def finishUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
       (for {
         _ <- updateRelationshipService.removeCache

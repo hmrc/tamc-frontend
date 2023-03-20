@@ -21,6 +21,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, TransferorNotFound}
 import models._
+import org.junit.Assert.assertEquals
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
@@ -82,7 +83,8 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
 
   "getRecipientRelationship" should {
     "return a response" in {
-      server.stubFor(post(urlPathEqualTo(s"/paye/$nino/get-recipient-relationship"))
+      val requestUrl = s"/paye/$nino/get-recipient-relationship"
+      server.stubFor(post(urlPathEqualTo(requestUrl))
         .willReturn(
           aResponse()
             .withStatus(200)
@@ -94,7 +96,35 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
         ))
       val data = RegistrationFormInput("", "", Gender("M"), nino, LocalDate.now())
 
-      await(marriageAllowanceConnector.getRecipientRelationship(nino, data))
+      logger.info(s"Server stubs: ${server.getStubMappings}")
+      logger.info(s"Server port: ${server.port()}")
+      logger.info(s"marriageAllowanceUrl: '${marriageAllowanceConnector.marriageAllowanceUrl}'")
+
+      val result = marriageAllowanceConnector.getRecipientRelationship(nino, data)
+
+      logger.info( s"Server port: ${server.port()}")
+      logger.info( s"Server running: ${server.isRunning}")
+      logger.info( s"marriageAllowanceUrl: '${marriageAllowanceConnector.marriageAllowanceUrl}'")
+      await(result)
+      // assert only 1 interaction with mock
+      assertEquals(1, server.getAllServeEvents.size())
+      // get that interactions details
+      val s = server.getAllServeEvents.get(0)
+      // get the details of the request
+      val request = s.getRequest
+      // assert is is for the test url
+      assertEquals(request.getUrl, requestUrl)
+      // Assert tht the request body is correct
+      val body = request.getBodyAsString
+      val jsonStr = Json.toJson(data).toString()
+      assertEquals(jsonStr, body)
+
+/* Above replaces which blows up with http exception!
+      verify(1,
+        postRequestedFor(urlEqualTo(s"/paye/$nino/get-recipient-relationship"))
+          .withRequestBody(equalToJson(Json.toJson(data).toString()))
+      )
+ */
       verify(1,
         postRequestedFor(urlEqualTo(s"/paye/$nino/get-recipient-relationship"))
           .withRequestBody(equalToJson(Json.toJson(data).toString()))

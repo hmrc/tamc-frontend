@@ -20,25 +20,12 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
 import play.api.http.Status.{BAD_REQUEST, OK}
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import play.utils.UriEncoding
 
 trait PertaxAuthMockingHelper {
   this: WireMockHelper with GuiceOneAppPerSuite =>
-
-  lazy val config: Map[String, Any] = Map[String, Any](
-    "microservice.services.pertax-auth.port" -> server.port()
-  )
-
-  override def fakeApplication(): Application = {
-    GuiceApplicationBuilder()
-      .configure(
-        config
-      ).build()
-  }
 
   def mockPertaxAuth(returnedValue: PertaxAuthResponseModel, nino: String = "AA000000A"): StubMapping = {
     server.stubFor(

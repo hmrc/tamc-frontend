@@ -17,7 +17,9 @@
 package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
+import controllers.auth.PertaxAuthAction
 import errors._
+import helpers.FakePertaxAuthAction
 import models._
 import models.auth.AuthenticatedUserRequest
 import org.mockito.ArgumentMatchers
@@ -55,7 +57,8 @@ class TransferControllerTest extends ControllerBaseTest {
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[MessagesApi].toInstance(stubMessagesApi())
+      bind[MessagesApi].toInstance(stubMessagesApi()),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 

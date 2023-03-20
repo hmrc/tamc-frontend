@@ -20,20 +20,25 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
+import play.api.Logging
 
-trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach {
+
+trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach with Logging {
   this: Suite =>
 
   protected val server: WireMockServer = new WireMockServer(wireMockConfig().dynamicPort())
 
   override def beforeAll(): Unit = {
+    WireMock.configureFor("localhost", 9132)
     server.start()
-    WireMock.configureFor("localhost", server.port())
+    logger.info(s"Server stubs: ${server.getStubMappings}")
     super.beforeAll()
   }
 
   override def beforeEach(): Unit = {
+    logger.info("Resetting server")
     server.resetAll()
+    logger.info(s"Server stubs: ${server.getStubMappings}")
     super.beforeEach()
   }
 
