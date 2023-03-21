@@ -17,27 +17,33 @@
 package services
 
 import models.admin.{FeatureFlag, NoExistantToggle, PertaxBackendToggle}
+import org.junit.Assert.assertTrue
 import org.scalatest.BeforeAndAfterAll
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import services.admin.FeatureFlagService
 import utils.BaseTest
 
-class FeatureFlagServiceTest extends BaseTest with BeforeAndAfterAll{
+import scala.concurrent.duration.{Duration, DurationInt}
+import scala.language.postfixOps
 
+class FeatureFlagServiceTest extends BaseTest with BeforeAndAfterAll{
+  implicit val testTimeout: Duration = 20 seconds
   val featureFlagService: FeatureFlagService = app.injector.instanceOf[FeatureFlagService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder().build()
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    featureFlagService.set(PertaxBackendToggle, enabled = true)
+    val wasSet = featureFlagService.set(PertaxBackendToggle, enabled = true)
+    await(wasSet)(testTimeout)
+    assertTrue("Failed to set PertaxBackendToggle", wasSet)
   }
 
   "getFlagValue when flag does not exist " should {
     "return requested toggle with enabled false " in {
       val result = featureFlagService.get(NoExistantToggle)
-      await(result) shouldBe FeatureFlag(NoExistantToggle, isEnabled = false, None)
+      await(result)(testTimeout) shouldBe FeatureFlag(NoExistantToggle, isEnabled = false, None)
     }
   }
 
@@ -45,7 +51,7 @@ class FeatureFlagServiceTest extends BaseTest with BeforeAndAfterAll{
   "getFlagValue for PertaxBackendToggle " should {
     "return true when set " in {
       val result = featureFlagService.get(PertaxBackendToggle)
-      await(result) shouldBe FeatureFlag(PertaxBackendToggle, isEnabled = true, None)
+      await(result)(testTimeout) shouldBe FeatureFlag(PertaxBackendToggle, isEnabled = true, None)
     }
   }
 
