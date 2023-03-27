@@ -442,7 +442,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       val todayPlusOneDay = LocalDate.now().plusDays(1)
       val pattern = "d MM YYYY"
       val todayPlusOneDayFormatted = todayPlusOneDay.format(DateTimeFormatter.ofPattern(pattern))
-      val localDate = LocalDate.now().plusYears(2)
+      val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
         "dateOfMarriage.month" -> s"${localDate.getMonthValue}",
