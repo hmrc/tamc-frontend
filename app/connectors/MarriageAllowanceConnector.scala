@@ -69,9 +69,8 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
         case response if response.status == 200 => Right(response.json.as[GetRelationshipResponse])
         case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
       }.recoverWith {
-          case t: Throwable => {
+          case t: Throwable =>
             Future.failed(t)
-          }
     }
 
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder)(
