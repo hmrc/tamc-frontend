@@ -16,9 +16,11 @@
 
 package services
 
+import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors._
 import models._
+import org.junit.Assert.{assertEquals, assertTrue}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
@@ -32,8 +34,8 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import utils.BaseTest
-import java.time.LocalDate
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
@@ -44,6 +46,17 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
   val mockTimeService: TimeService = mock[TimeService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
+
+  val dateOfMarriage: LocalDate = LocalDate.now()
+  val nino: Nino = Nino(Ninos.nino1)
+  val recipientData: RegistrationFormInput = RegistrationFormInput("First", "Last", Gender("F"), nino, dateOfMarriage)
+  val relationshipRecord: RelationshipRecord = RelationshipRecord("Recipient", "20150531235901", "19960327", None, None, "123456789123", "20150531235901")
+  implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("SessionId")))
+
+  val appConf: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
+
+  appConf.currentTaxYear() -> {}
+
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[CachingService].toInstance(mockCachingService),
@@ -53,11 +66,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       bind[AuditConnector].toInstance(mockAuditConnector)
     ).build()
 
-  val dateOfMarriage: LocalDate = LocalDate.now()
-  val nino: Nino = Nino(Ninos.nino1)
-  val recipientData: RegistrationFormInput = RegistrationFormInput("First", "Last", Gender("F"), nino, dateOfMarriage)
-  val relationshipRecord: RelationshipRecord = RelationshipRecord("Recipient", "20150531235901", "19960327", None, None, "123456789123", "20150531235901")
-  implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("SessionId")))
 
   val service: TransferService = app.injector.instanceOf[TransferService]
 
@@ -240,6 +248,37 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
           await(service.getFinishedData(nino))
         }
       }
+    }
+  }
+
+  "getCachedData test " should {
+    "return a value " in {
+      val rdfi = RecipientDetailsFormInput("Jain", "Doe", Gender("F"), nino)
+      val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(2019)))
+      val cacheData = CacheData(None, Some(recipientRecord), Some(NotificationRecord(EmailAddress("email@email.com"))), None, None, Option(rdfi) )
+      when(mockCachingService.getCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+
+      val result = service.getRecipientDetailsFormData()
+      await(result)
+      assertTrue(result.nino == nino)
+    }
+  }
+
+  "getConfirmationData test " should {
+    "return a value " in {
+      val rdfi = RecipientDetailsFormInput("Test", "User", Gender("F"), nino)
+      val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(2022)))
+      val cacheData = CacheData(
+        transferor = Some(RecipientRecordData.userRecord),
+        recipient = Some(recipientRecord),
+        notification = Some(NotificationRecord(EmailAddress("email@email.com"))),
+        selectedYears = Some(List(2021, 2022)),
+        recipientDetailsFormData = Option(rdfi),
+        dateOfMarriage = Some( DateOfMarriageFormInput(LocalDate.of(2019, 6, 6))))
+      when(mockCachingService.getCachedData(nino)).thenReturn(Future.successful(Some(cacheData)))
+      val result = service.getConfirmationData(nino)
+      await(result)
+      assertEquals(CitizenName(Option("Test"), Option("User")).fullName, result.transferorFullName.get.fullName)
     }
   }
 }

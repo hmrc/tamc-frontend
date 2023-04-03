@@ -14,28 +14,14 @@
  * limitations under the License.
  */
 
-package utils
+package controllers.auth
 
-import com.github.tomakehurst.wiremock.WireMockServer
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
+import controllers.actions.AuthenticatedActionRefiner
+import models.auth.AuthenticatedUserRequest
+import play.api.mvc.{ActionBuilder, AnyContent}
 
-trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach{
-  this: Suite =>
+import javax.inject.Inject
 
-  protected val server: WireMockServer = new WireMockServer(9132)
-
-  override def beforeAll(): Unit = {
-    server.start()
-    super.beforeAll()
-  }
-
-  override def beforeEach(): Unit = {
-    server.resetAll()
-    super.beforeEach()
-  }
-
-  override def afterAll(): Unit = {
-    super.afterAll()
-    server.stop()
-  }
+class StandardAuthJourney @Inject()(auth: AuthenticatedActionRefiner, pertaxAuth: PertaxAuthAction) {
+  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedUserRequest, AnyContent] = auth andThen pertaxAuth
 }

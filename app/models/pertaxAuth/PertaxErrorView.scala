@@ -14,28 +14,12 @@
  * limitations under the License.
  */
 
-package utils
+package models.pertaxAuth
 
-import com.github.tomakehurst.wiremock.WireMockServer
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
+import play.api.libs.json.{Json, OFormat}
 
-trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach{
-  this: Suite =>
+case class PertaxErrorView(statusCode: Int, url: String)
 
-  protected val server: WireMockServer = new WireMockServer(9132)
-
-  override def beforeAll(): Unit = {
-    server.start()
-    super.beforeAll()
-  }
-
-  override def beforeEach(): Unit = {
-    server.resetAll()
-    super.beforeEach()
-  }
-
-  override def afterAll(): Unit = {
-    super.afterAll()
-    server.stop()
-  }
+object PertaxErrorView {
+  implicit val format: OFormat[PertaxErrorView] = Json.format[PertaxErrorView]
 }

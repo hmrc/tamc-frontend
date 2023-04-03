@@ -17,7 +17,7 @@
 package controllers
 
 import config.ApplicationConfig
-import controllers.actions.AuthenticatedActionRefiner
+import controllers.auth.StandardAuthJourney
 import errors._
 import forms.CurrentYearForm.currentYearForm
 import forms.EarlierYearForm.earlierYearsForm
@@ -28,7 +28,7 @@ import models.auth.BaseUserRequest
 import org.apache.commons.lang3.exception.ExceptionUtils
 import play.api.data.FormError
 import play.api.i18n.Lang
-import play.api.mvc.{MessagesControllerComponents, AnyContent, Action, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.twirl.api.Html
 import services.{CachingService, TimeService, TransferService}
 import utils.LoggerHelper
@@ -37,7 +37,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferController @Inject() (
-  authenticate: AuthenticatedActionRefiner,
+  authenticate: StandardAuthJourney,
   registrationService: TransferService,
   cachingService: CachingService,
   timeService: TimeService,
@@ -64,13 +64,13 @@ class TransferController @Inject() (
   recipientDetailsForm: RecipientDetailsForm,
   dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  def transfer: Action[AnyContent] = authenticate { implicit request =>
+  def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(
       transferV(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
     )
   }
 
-  def transferAction: Action[AnyContent] = authenticate.async { implicit request =>
+  def transferAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
@@ -80,19 +80,19 @@ class TransferController @Inject() (
     )
   }
 
-  def dateOfMarriage: Action[AnyContent] = authenticate { implicit request =>
+  def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
-  def dateOfMarriageWithCy: Action[AnyContent] = authenticate {
+  def dateOfMarriageWithCy: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
     Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("cy"))
   }
 
-  def dateOfMarriageWithEn: Action[AnyContent] = authenticate {
+  def dateOfMarriageWithEn: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
     Redirect(controllers.routes.TransferController.dateOfMarriage).withLang(Lang("en"))
   }
 
-  def dateOfMarriageAction: Action[AnyContent] = authenticate.async { implicit request =>
+  def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async{ implicit request =>
     dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
       marriageData => {
@@ -109,7 +109,7 @@ class TransferController @Inject() (
     ) recover handleError
   }
 
-  def eligibleYears: Action[AnyContent] = authenticate.async { implicit request =>
+  def eligibleYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {
       case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
         throw new NoTaxYearsAvailable
@@ -128,7 +128,7 @@ class TransferController @Inject() (
     } recover handleError
   }
 
-  def eligibleYearsAction: Action[AnyContent] = authenticate.async { implicit request =>
+  def eligibleYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
       case CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, registrationInput, _) =>
         currentYearForm(previousYears.nonEmpty).bindFromRequest().fold(
@@ -166,14 +166,14 @@ class TransferController @Inject() (
     } recover handleError
   }
 
-  def previousYears: Action[AnyContent] = authenticate.async { implicit request =>
+  def previousYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.map {
       case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
         Ok(singleYearSelect(earlierYearsForm(), registrationInput, previousYears))
     } recover handleError
   }
 
-  def extraYearsAction: Action[AnyContent] = authenticate.async { implicit request =>
+  def extraYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     def toTaxYears(years: List[Int]): List[TaxYear] =
       years.map(year => TaxYear(year, None))
 
@@ -208,7 +208,7 @@ class TransferController @Inject() (
     } recover handleError
   }
 
-  def confirmYourEmail: Action[AnyContent] = authenticate.async { implicit request =>
+  def confirmYourEmail: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     cachingService.fetchAndGetEntry[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD) map {
       case Some(NotificationRecord(transferorEmail)) =>
         Ok(email(emailForm.fill(transferorEmail)))
@@ -216,7 +216,7 @@ class TransferController @Inject() (
     }
   }
 
-  def confirmYourEmailAction: Action[AnyContent] = authenticate.async { implicit request =>
+  def confirmYourEmailAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     emailForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(email(formWithErrors))),
       transferorEmail =>
@@ -226,26 +226,26 @@ class TransferController @Inject() (
     ) recover handleError
   }
 
-  def confirm: Action[AnyContent] = authenticate.async { implicit request =>
+  def confirm: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getConfirmationData(request.nino) map { data =>
       Ok(confirmV(data = data))
     } recover handleError
   }
 
-  def confirmAction: Action[AnyContent] = authenticate.async { implicit request =>
+  def confirmAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.createRelationship(request.nino) map { _ =>
       Redirect(controllers.routes.TransferController.finished)
     } recover handleError
   }
 
-  def finished: Action[AnyContent] = authenticate.async { implicit request =>
+  def finished: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getFinishedData(request.nino) map { case NotificationRecord(email) =>
       cachingService.remove()
       Ok(finishedV(transferorEmail = email))
     } recover handleError
   }
 
-  def cannotUseService: Action[AnyContent] = authenticate { implicit request =>
+  def cannotUseService: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(transfererDeceased())
   }
 

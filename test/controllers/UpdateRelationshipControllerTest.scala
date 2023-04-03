@@ -17,9 +17,11 @@
 package controllers
 
 import controllers.actions.AuthenticatedActionRefiner
+import controllers.auth.PertaxAuthAction
 import errors._
 import forms.EmailForm.emailForm
 import forms.coc._
+import helpers.FakePertaxAuthAction
 import models._
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
@@ -44,8 +46,9 @@ import viewModels._
 
 import java.time.LocalDate
 import scala.concurrent.Future
+import scala.util.Random
 
-class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+class UpdateRelationshipControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting{
 
   val generatedNino: Nino = new Generator().nextNino
   val mockTransferService: TransferService = mock[TransferService]
@@ -79,7 +82,8 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
-      bind[MessagesApi].toInstance(stubMessagesApi())
+      bind[MessagesApi].toInstance(stubMessagesApi()),
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     ).build()
 
   lazy val controller = app.injector.instanceOf[UpdateRelationshipController]
@@ -100,6 +104,13 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   val confirmUpdateView = inject[views.html.coc.confirmUpdate]
   val finishedView = inject[views.html.coc.finished]
 
+  val mockUserNino: Nino = randomNino
+
+  def randomNino: Nino = {
+    val n = Nino(new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA"))
+    n
+  }
+
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockTransferService)
@@ -109,9 +120,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   }
 
   "history" should {
-
     "display the history summary page with a status of OK" in {
-
       val relationshipRecords = createRelationshipRecords()
       val historySummaryViewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
         relationshipRecords.hasMarriageAllowanceBeenCancelled,
@@ -129,6 +138,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       result rendersTheSameViewAs historySummaryView(historySummaryViewModel)
     }
   }
+
   "History" should {
     "redirect to how-it-works" when {
       "there is no active (primary) record" in {

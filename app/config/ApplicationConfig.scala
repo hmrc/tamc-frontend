@@ -129,6 +129,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val isWelshEnabled: Boolean = configuration.getOptional[Boolean]("microservice.services.features.welsh-translation").getOrElse(false)
   lazy val webchatId: String = loadConfig("webchat.id")
 
+  val ehCacheTtlInSeconds: Int = configuration.underlying.getInt("ehCache.ttlInSeconds")
   val frontendHost: String = loadConfig("tamc-frontend.host")
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
@@ -149,6 +150,8 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   }
 
   private def taxBandKey(taxRate: String, taxBand: String, country: String, taxYear: Int) = {
-    s"taxbands-${taxRate}-${taxBand}-${country}-${taxYear}"
+    s"taxbands-$taxRate-$taxBand-$country-$taxYear"
   }
+
+  val pertaxAuthBaseUrl = servicesConfig.baseUrl("pertax-auth")
 }

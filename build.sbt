@@ -13,7 +13,7 @@ lazy val scoverageSettings = {
 }
 
 lazy val microservice: Project = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtGitVersioning, SbtAutoBuildPlugin, SbtDistributablesPlugin)
   .settings(
     scoverageSettings,
     scalaSettings,
