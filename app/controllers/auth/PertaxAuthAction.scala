@@ -53,7 +53,6 @@ class PertaxAuthActionImpl @Inject()(
 
     featureFlagService.get(PertaxBackendToggle).flatMap { flag =>
       if (flag.isEnabled) {
-        println(Console.GREEN + "Is enabled for some reason?" + Console.RESET)
         pertaxAuthConnector.authorise(request.nino.nino).flatMap {
           case Right(PertaxAuthResponseModel(ACCESS_GRANTED, _, _, _)) =>
             Future.successful(Right(request))

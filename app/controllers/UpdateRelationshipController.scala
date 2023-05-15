@@ -60,7 +60,6 @@ class   UpdateRelationshipController @Inject()(
 
   def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
-      println(Console.GREEN + "Got past auth" + Console.RESET)
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
         updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
           val viewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
