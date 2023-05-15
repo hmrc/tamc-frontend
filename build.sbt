@@ -3,9 +3,26 @@ import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJ
 
 val appName = "tamc-frontend"
 
+lazy val excludedPackages = Seq(
+  "<empty>",
+  "app.*",
+  "config.*",
+  "testOnlyDoNotUseInAppConf.*",
+  "views.*",
+  "uk.gov.hmrc.*",
+  "prod.*",
+  "forms.*",
+  "connectors.ApplicationAuditConnector",
+  "connectors.ApplicationAuthConnector",
+  "services.CachingService",
+  "metrics.Metrics",
+  "utils.WSHttp",
+  "events"
+)
+
 lazy val scoverageSettings = {
   Seq(
-    ScoverageKeys.coverageExcludedPackages := "<empty>;app.*;config.*;testOnlyDoNotUseInAppConf.*;views.*;uk.gov.hmrc.*;prod.*;forms.*;connectors.ApplicationAuditConnector;connectors.ApplicationAuthConnector;services.CachingService;metrics.Metrics;utils.WSHttp;events",
+    ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
     ScoverageKeys.coverageMinimumStmtTotal := 92,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
