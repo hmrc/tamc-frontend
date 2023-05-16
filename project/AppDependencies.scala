@@ -5,10 +5,9 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapVersion = "7.11.0"
+  private val bootstrapVersion = "7.12.0"
   private val playVersion = "play-28"
   private val hmrcMongoVersion = "0.74.0"
-  private val CATS_CORE_VERSION = "2.9.0"
 
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"                  %% "emailaddress"                       % "3.7.0",
@@ -21,6 +20,7 @@ object AppDependencies {
     "uk.gov.hmrc"                  %% "tax-year"                           % "3.0.0",
     "com.fasterxml.jackson.module" %% "jackson-module-scala"               % "2.13.4",
     "uk.gov.hmrc"                  %% "play-frontend-hmrc"                 % s"6.6.0-$playVersion",
+    "uk.gov.hmrc"                  %% s"internal-auth-client-$playVersion" % "1.2.0",
     ehcache
   )
 

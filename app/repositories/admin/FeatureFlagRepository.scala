@@ -49,6 +49,13 @@ class FeatureFlagRepository @Inject()(
 
   private implicit val tc: TransactionConfiguration = TransactionConfiguration.strict
 
+  def deleteFeatureFlag(name: FeatureFlagName): Future[Boolean] =
+    collection
+      .deleteOne(Filters.equal("name", name.toString))
+      .map(_.wasAcknowledged())
+      .toSingle()
+      .toFuture()
+
   def getFeatureFlag(name: FeatureFlagName): Future[Option[FeatureFlag]] =
     collection
       .find(Filters.equal("name", name.toString))

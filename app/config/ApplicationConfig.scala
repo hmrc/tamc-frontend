@@ -43,12 +43,8 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
   val contactFormServiceIdentifier = "TAMC"
   val pageTitle = "Your personal tax account"
-  lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
   val reportAProblemPartialUrl = s"$contactFrontendService/contact/problem_reports"
-
-  lazy val analyticsToken: Option[String] = configuration.getOptional[String]("google-analytics.token")
-  lazy val analyticsHost: String = configuration.getOptional[String]("google-analytics.host").getOrElse("auto")
 
   lazy val loginUrl: String = loadConfig("tamc.external-urls.login-url")
   lazy val logoutUrl: String = loadConfig("tamc.external-urls.logout-url")
@@ -119,14 +115,8 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val gdsFinishedUrl: String = loadConfig("tamc.external-urls.finished-gds")
   val ptaFinishedUrl: String = loadConfig("tamc.external-urls.finished-pta")
 
-  lazy val urBannerEnabled: Boolean = configuration.getOptional[String]("feature.ur-banner.enabled").getOrElse("true").toBoolean
-
-  val LANG_CODE_ENGLISH = "en-GB"
-  val LANG_CODE_WELSH = "cy-GB"
-  val LANG_LANG_ENGLISH = "en"
   val LANG_LANG_WELSH = "cy"
 
-  val isWelshEnabled: Boolean = configuration.getOptional[Boolean]("microservice.services.features.welsh-translation").getOrElse(false)
   lazy val webchatId: String = loadConfig("webchat.id")
 
   val ehCacheTtlInSeconds: Int = configuration.underlying.getInt("ehCache.ttlInSeconds")
@@ -154,4 +144,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   }
 
   val pertaxAuthBaseUrl = servicesConfig.baseUrl("pertax-auth")
+
+  lazy val internalAuthResourceType: String =
+    servicesConfig.getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
 }
