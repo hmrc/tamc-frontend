@@ -55,12 +55,12 @@ disableBackLink = true
     @p(Text(Messages("pages.how-it-works.email")))
 
     @p(HtmlContent(button(msg = "generic.start-now",
-                        href = Some(controllers.routes.EligibilityController.ptaCalculator.url),
+                        href = Some(controllers.routes.TransferController.transfer.url),
                         attrs = Map("data-transaction-slug" -> "marriage-allowance"),
                         id = "start-now",
                         classes = Some("govuk-!-margin-bottom-0"),
                         isStartButton = true) +
-                    s"""<span class="destination"> ${Messages("pages.how-it-works.tse")} </span>"""), 
+                    s"""<span class="destination"> ${Messages("pages.how-it-works.tse")} </span>"""),
         elmId=Some("get-started"),
         classes=Some("get-started"))
 
@@ -69,7 +69,7 @@ disableBackLink = true
 @ledeContent = {
     @if(languageUtilsImpl.isWelsh(messages)) {
         @messages("pages.how-it-works.lede-pre1.part1")
-    } 
+    }
     @link(link = applicationConfig.marriageAllowanceGuideUrl, messageKey = "pages.how-it-works.lede-pre1.link-text", attrTarget = true, inParagraph = true)
     @messages("pages.how-it-works.lede-pre1.part2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()))
 }
