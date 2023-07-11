@@ -39,7 +39,7 @@ request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.application.pattern", Messages("title.transfer"))),
-backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
+backLinkHref = Some(controllers.routes.EligibilityController.doYouWantToApply.url)
 ) {
 
     @errorSummary(recipientForm)
