@@ -17,12 +17,20 @@
 package utils
 
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
 
 trait BaseTest extends UnitSpec with GuiceOneAppPerSuite {
+
+  override def fakeApplication(): Application = new GuiceApplicationBuilder()
+    .configure(
+      "metrics.jvm" -> false
+    ).build()
+
 
   implicit lazy val messages = Helpers.stubMessages()
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
