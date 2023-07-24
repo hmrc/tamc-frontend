@@ -50,6 +50,8 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[AuthConnector].toInstance(mockAuthConnector)
+    ).configure(
+    "metrics.jvm" -> false
     ).build()
 
   val authAction = app.injector.instanceOf[AuthenticatedActionRefiner]

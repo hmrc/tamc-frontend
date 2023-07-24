@@ -38,17 +38,21 @@ class EligibilityControllerTest extends ControllerBaseTest {
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
-    .overrides(
-      bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
-      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
+    .configure(
+      "metrics.jvm" -> false
+    ).overrides(
+        bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
+        bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
     ).build()
 
 
   def permAuthInjector: Injector = GuiceApplicationBuilder()
-    .overrides(
+    .configure(
+      "metrics.jvm" -> false
+    ).overrides(
         bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
         bind[UnauthenticatedActionTransformer].to[MockPermUnauthenticatedAction]
-      ).injector()
+    ).injector()
 
   val authController = permAuthInjector.instanceOf[EligibilityController]
 

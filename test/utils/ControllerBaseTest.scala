@@ -32,9 +32,8 @@ trait ControllerBaseTest extends BaseTest with BeforeAndAfterEach{
     .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
     .overrides(bind[FormPartialRetriever].to[MockFormPartialRetriever]
     ).configure(
-    "metrics.jvm" -> false,
-    "metrics.enabled" -> false
-  ).build()
+      "metrics.jvm" -> false
+    ).build()
 
   implicit val request: Request[AnyContent] = FakeRequest()
 
