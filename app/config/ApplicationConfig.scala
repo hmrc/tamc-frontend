@@ -39,7 +39,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactHost = configuration.getOptional[String]("tamc.external-urls.contact-frontend").getOrElse("")
+  val contactHost = configuration.getOptional[String]("tamc.external-urls.contact-frontend").getOrElse("")
   private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
   val contactFormServiceIdentifier = "TAMC"
   val pageTitle = "Your personal tax account"
