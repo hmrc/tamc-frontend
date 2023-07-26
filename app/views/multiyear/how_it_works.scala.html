@@ -42,34 +42,59 @@ disableBackLink = true
     @h1("generic.ma.apply")
 
     @p(HtmlContent(ledeContent))
-    @p(Text(Messages("pages.how-it-works.lede-pre2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT()))))
-    @p(Text(Messages("pages.how-it-works.lede-pre4", NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))))
+    @p(Text(messages("pages.how-it-works.lede-pre2")))
+    @p(Text(messages("pages.how-it-works.lede-pre3")))
+    @insetText(InsetText(content = Text(messages("pages.how-it-works.lede-pre4"))))
 
+    @h2("pages.how-it-works.eligibility.heading")
+    @p(Text(messages("pages.how-it-works.eligibility-pre1")))
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@messages("pages.how-it-works.eligibility-pre1.part1")</li>
+        <li>@messages("pages.how-it-works.eligibility-pre1.part2",NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))</li>
+        <li>@messages("pages.how-it-works.eligibility-pre1.part3",NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT()))</li>
+    </ul>
+    @insetText(InsetText(content = Text(messages("pages.how-it-works.eligibility-pre2",
+        NumberFormat.getIntegerInstance().format(applicationConfig.STARTER_RATE_LOWER_TRESHOLD_SCOT()),
+        NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT_SCOT())
+    ))))
+    @p(HtmlContent(calculateEligibilityDetails))
 
-    @insetText(InsetText(content = Text(Messages("pages.how-it-works.lede-pre5", (applicationConfig.currentTaxYear.finishYear - 5).toString))))
+    @h2("pages.how-it-works.calculate-benefit.heading")
+    @p(HtmlContent(calculateBenefitDetails))
 
-    @p(Text(Messages("pages.how-it-works.lede-pre6")))
-
-    @h2("pages.how-it-works.apply.heading")
-    @p(Text(Messages("pages.how-it-works.detail")))
-    @p(Text(Messages("pages.how-it-works.email")))
+    @h2("pages.how-it-works.before-apply.heading")
+    @p(Text(messages("pages.how-it-works.before-apply-pre1")))
 
     @p(HtmlContent(button(msg = "generic.start-now",
                         href = Some(controllers.routes.EligibilityController.ptaCalculator.url),
                         attrs = Map("data-transaction-slug" -> "marriage-allowance"),
                         id = "start-now",
-                        classes = Some("govuk-!-margin-bottom-0"),
-                        isStartButton = true) +
-                    s"""<span class="destination"> ${Messages("pages.how-it-works.tse")} </span>"""), 
+                        classes = Some("govuk-!-margin-bottom-8"),
+                        isStartButton = true)),
         elmId=Some("get-started"),
         classes=Some("get-started"))
-
 }
 
 @ledeContent = {
-    @if(languageUtilsImpl.isWelsh(messages)) {
-        @messages("pages.how-it-works.lede-pre1.part1")
-    } 
     @link(link = applicationConfig.marriageAllowanceGuideUrl, messageKey = "pages.how-it-works.lede-pre1.link-text", attrTarget = true, inParagraph = true)
-    @messages("pages.how-it-works.lede-pre1.part2", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()))
+    @messages("pages.how-it-works.lede-pre1",
+        NumberFormat.getIntegerInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()),
+        NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT())
+    )
+}
+
+@calculateEligibilityDetails = {
+    @messages("pages.how-it-works.eligibility-pre3.part1")
+    @link(link = applicationConfig.marriedCoupleAllowanceLink, messageKey = "pages.how-it-works.eligibility-pre3.link-text", attrTarget = true, inParagraph = true)
+    @messages("pages.how-it-works.eligibility-pre3.part2")
+}
+
+@calculateBenefitDetails = {
+    @link(
+        link = controllers.routes.EligibilityController.ptaCalculator.url,
+        messageKey = "pages.how-it-works.calculate-benefit-pre1.link-text",
+        inParagraph = true,
+        id=Some("calculator")
+    )
+    @messages("pages.how-it-works.calculate-benefit-pre1")
 }
