@@ -96,24 +96,6 @@ class EligibilityCheckTest extends BaseTest {
     }
   }
 
-  "PTA How It Works page for multi year " should {
-    "successfully loaded " in {
-      val result = eligibilityController.howItWorks()(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-
-      document.title() shouldBe "Apply for Marriage Allowance - Marriage Allowance - GOV.UK"
-
-      val heading = document.getElementById("pageHeading").text
-      heading shouldBe "Apply for Marriage Allowance"
-
-      val button = document.getElementById("get-started")
-      button.text shouldBe "Start now to see if you are eligible for Marriage Allowance"
-    }
-
-  }
-
   "PTA Eligibility check page for multiyear" should {
 
     "successfully authenticate the user and have eligibility-check page action" in {

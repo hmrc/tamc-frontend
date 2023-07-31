@@ -36,7 +36,6 @@ class EligibilityController @Inject()(
   eligibilityCalculatorService: EligibilityCalculatorService,
   appConfig: ApplicationConfig,
   cc: MessagesControllerComponents,
-  howItWorksView: views.html.multiyear.how_it_works,
   eligibilityCheckView: views.html.multiyear.eligibility_check,
   eligibilityNonEligibleFinishView: views.html.multiyear.eligibility_non_eligible_finish,
   dateOfBirthCheckView: views.html.multiyear.date_of_birth_check,
@@ -49,13 +48,8 @@ class EligibilityController @Inject()(
   multiYearPartnersIncomeQuestionForm: MultiYearPartnersIncomeQuestionForm,
   multiYearLowerEarnerForm: MultiYearLowerEarnerForm) extends BaseController(cc) {
 
-  def howItWorks: Action[AnyContent] = unauthenticatedAction {
-    implicit request =>
-      Ok(howItWorksView())
-  }
-
   def home: Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.EligibilityController.eligibilityCheck)
+      Redirect(controllers.routes.HowItWorksController.howItWorks)
   }
 
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {

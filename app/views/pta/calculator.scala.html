@@ -38,7 +38,7 @@ request: UserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.pattern", Messages("title.eligibility-criteria"))),
-backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
+backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks.url)
 ){
 
     @errorSummary(calculatorForm)
