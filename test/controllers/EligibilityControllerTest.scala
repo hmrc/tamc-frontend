@@ -58,14 +58,6 @@ class EligibilityControllerTest extends ControllerBaseTest {
 
   val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
 
-  "home" should {
-    "redirect the user" in {
-      val result = controller.home()(request)
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.HowItWorksController.howItWorks.url)
-    }
-  }
-
   "eligibilityCheck" should {
     "return success" in {
       val result = controller.eligibilityCheck()(request)

@@ -18,8 +18,8 @@ package controllers
 
 import org.jsoup.Jsoup
 import play.api.http.Status.OK
-import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 import utils.ControllerBaseTest
+import play.api.test.Helpers._
 
 class HowItWorksControllerTest extends ControllerBaseTest {
 
@@ -39,6 +39,14 @@ class HowItWorksControllerTest extends ControllerBaseTest {
 
       val button = document.getElementById("get-started")
       button.text shouldBe "Start now to see if you are eligible for Marriage Allowance"
+    }
+  }
+
+  "home" should {
+    "redirect the user" in {
+      val result = howItWorksController.home()(request)
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.HowItWorksController.howItWorks.url)
     }
   }
 }

@@ -48,10 +48,6 @@ class EligibilityController @Inject()(
   multiYearPartnersIncomeQuestionForm: MultiYearPartnersIncomeQuestionForm,
   multiYearLowerEarnerForm: MultiYearLowerEarnerForm) extends BaseController(cc) {
 
-  def home: Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.HowItWorksController.howItWorks)
-  }
-
   def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(eligibilityCheckView(eligibilityCheckForm = eligibilityForm))

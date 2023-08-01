@@ -25,10 +25,12 @@ class HowItWorksController @Inject()(
                                       howItWorksView: views.html.multiyear.how_it_works,
                                       cc: MessagesControllerComponents) extends BaseController(cc) {
 
+  def home: Action[AnyContent] = unauthenticatedAction {
+    Redirect(controllers.routes.HowItWorksController.howItWorks)
+  }
+
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
       Ok(howItWorksView())
   }
-
-
 }
