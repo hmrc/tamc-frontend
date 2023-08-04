@@ -129,7 +129,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
 
       val startNow = selectFirst(Selectors.startNow)
       startNow.text shouldBe "Apply now"
-      startNow.attr("href") shouldBe "/marriage-allowance-application/benefit-calculator-pta"
+      startNow.attr("href") shouldBe "/marriage-allowance-application/transfer-allowance"
     }
   }
 }

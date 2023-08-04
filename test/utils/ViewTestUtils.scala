@@ -63,5 +63,4 @@ trait ViewTestUtils extends Matchers {
   def selectFirst(selector: String)(implicit doc: LazyDocument): Element = {
     doc().selectFirst(selector)
   }
-
 }
