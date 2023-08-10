@@ -46,7 +46,7 @@ backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
     @h1("pages.calc.header")
 
     @p(HtmlContent(Messages("pages.calc.skip-it.pre") + 
-                    link(link = controllers.routes.EligibilityController.eligibilityCheck.url,
+                    link(link = controllers.routes.TransferController.transfer.url,
                         messageKey = "pages.calc.skip-it",
                         inParagraph = true)))
 
@@ -67,7 +67,7 @@ backLinkHref = Some(controllers.routes.EligibilityController.howItWorks.url)
 
         @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
 
-        @link(link = controllers.routes.EligibilityController.eligibilityCheck.url, messageKey = "change.status.apply", id = Some("continue"))
+        @link(link = controllers.routes.TransferController.transfer.url, messageKey = "change.status.apply", id = Some("continue"))
 
     }
 }

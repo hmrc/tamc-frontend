@@ -114,7 +114,7 @@ generic.continue=Yn eich blaen
 generic.change=Newid
 generic.confirm-apply=Cadarnhau a gwneud cais
 generic.confirm.button=Cadarnhau
-generic.start-now=Dechrau nawr
+generic.start-now=Gwneud cais nawr
 generic.name=Enw
 generic.email=E-bost
 generic.nino-full=Rhif Yswiriant Gwladol
@@ -287,18 +287,29 @@ pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifi
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=Sut y mae’n gweithio
-pages.how-it-works.lede-pre1.part1=Mae
-pages.how-it-works.lede-pre1.part2=yn caniatáu i chi drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil.
-pages.how-it-works.lede-pre1.link-text=Lwfans Priodasol
-pages.how-it-works.lede-pre2=Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{0} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
-pages.how-it-works.lede-pre4=Er mwyn elwa fel pâr, mae angen i’ch incwm fod yn llai nag incwm eich partner ac yn is na £{0}  y flwyddyn.
-pages.how-it-works.lede-pre5=Gallwch ôl-ddyddio’ch hawliad i gynnwys unrhyw flwyddyn dreth o 6 Ebrill {0} ymlaen pan oeddech yn gymwys i gael Lwfans Priodasol.
-pages.how-it-works.lede-pre6=Gallwch wneud cais am Lwfans Priodasol os yw'ch partner wedi marw, cyn belled â bod yr amodau'n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
-pages.how-it-works.lede-in=Lwfans Personol
-pages.how-it-works.tse=i weld a ydych yn gymwys ar gyfer Lwfans Priodasol
-pages.how-it-works.apply.heading=Cyn i chi wneud cais
-pages.how-it-works.email=Cewch e-bost yn cadarnhau’ch cais.
-pages.how-it-works.detail=Mae angen eich rhif Yswiriant Gwladol arnoch, ac un eich partner.
+pages.how-it-works.lede-pre1.link-text=Mae Lwfans
+pages.how-it-works.lede-pre1=Priodasol yn eich galluogi i drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil os yw’ch incwm yn llai nag incwm eich priod neu bartner sifil. Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{1} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
+pages.how-it-works.lede-pre2=Gallwch wneud cais am y flwyddyn bresennol, a gallwch hefyd ôl-ddyddio’ch cais am 4 blynedd os oeddech yn gymwys i gael Lwfans Priodasol yn y blynyddoedd hynny.
+pages.how-it-works.lede-pre3=Mae Lwfans Priodasol yn adnewyddu’n awtomatig ar ddiwedd pob blwyddyn dreth. Gallwch ei ganslo, ond ni fydd yn dod i ben tan ddiwedd y flwyddyn treth.
+pages.how-it-works.lede-pre4=Gallwch wneud cais am Lwfans Priodasol os yw’ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Os yw hyn yn berthnasol i chi, ffoniwch Wasanaeth Cwsmeriaid Cymraeg CThEF ar 0300 200 1900.
+
+pages.how-it-works.eligibility.heading=Cymhwystra
+pages.how-it-works.eligibility-pre1=I fod yn gymwys i gael Lwfans Priodasol, mae’n rhaid i’r canlynol fod yn wir:
+pages.how-it-works.eligibility-pre1.part1=rydych yn briod neu mewn partneriaeth sifil
+pages.how-it-works.eligibility-pre1.part2=mae’ch incwm yn llai nag incwm eich partner, ac yn is na £{0}
+pages.how-it-works.eligibility-pre1.part3=mae incwm eich partner yn llai na £{0} yn y flwyddyn dreth bresennol
+pages.how-it-works.eligibility-pre2=Os ydych yn yr Alban, mae’n rhaid i’ch partner dalu’r gyfradd gychwynnol, sylfaenol neu ganolradd, sydd fel arfer yn golygu bod ei incwm rhwng £{0} a £{1}.
+pages.how-it-works.eligibility-pre3.part1=Os ganed un ohonoch cyn 6 Ebrill 1935, efallai y byddwch yn elwa mwy fel pâr drwy wneud cais am
+pages.how-it-works.eligibility-pre3.link-text=Lwfans Pâr Priod.
+pages.how-it-works.eligibility-pre3.part2=Gallwch wneud cais am Lwfans Priodasol o hyd, ond ni allwch gael y ddau lwfans ar yr un pryd.
+
+
+pages.how-it-works.calculate-benefit.heading=Cyfrifo faint y gallech fod yn elwa
+pages.how-it-works.calculate-benefit-pre1.link-text=Gallwch ddefnyddio’r cyfrifiannell
+pages.how-it-works.calculate-benefit-pre1.detail=i weld faint y gallech ei arbed yn y flwyddyn dreth bresennol. Nid yw hwn yn ffurfio rhan o’r cais.
+
+pages.how-it-works.before-apply.heading=Cyn i chi wneud cais
+pages.how-it-works.before-apply-pre1=Bydd angen rhifau Yswiriant Gwladol eich partner
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************

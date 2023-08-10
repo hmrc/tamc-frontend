@@ -114,7 +114,7 @@ generic.continue=Continue
 generic.change=Change
 generic.confirm-apply=Confirm and apply
 generic.confirm.button=Confirm
-generic.start-now=Start now
+generic.start-now=Apply now
 generic.name=Name
 generic.email=Email
 generic.nino-full=National Insurance number
@@ -293,19 +293,29 @@ pages.date-of-marriage.h2=When did you marry or form a civil partnership with yo
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=How it works
-pages.how-it-works.lede-pre1.part2=lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner.
+
 pages.how-it-works.lede-pre1.link-text=Marriage Allowance
-pages.how-it-works.lede-pre2=This can reduce their tax by up to £{0} this tax year (6 April to 5 April the next year).
-pages.how-it-works.lede-pre4=To benefit as a couple, your income must be less than your partner and lower than £{0} a year.
-pages.how-it-works.lede-pre5=You can backdate your claim to include any tax year from 6 April {0} that you were eligible for Marriage Allowance.
-pages.how-it-works.lede-pre6=You can make a Marriage Allowance claim if your partner has since died, provided the conditions are met. It can be backdated up to 4 years, as with current claims. If this applies to you call HMRC on 0300 200 3300.
-pages.how-it-works.lede-in=Personal Allowance
-pages.how-it-works.tse=to see if you are eligible for Marriage Allowance
-pages.how-it-works.apply.heading=Before you apply
-pages.how-it-works.email=You will get an email confirming your application.
-pages.how-it-works.detail=You need you and your partner’s National Insurance numbers.
+pages.how-it-works.lede-pre1=lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £{1} this tax year (6 April to 5 April the next year).
+pages.how-it-works.lede-pre2=You can apply for the current year and also backdate your claim for 4 years if you were eligible for Marriage Allowance in those years.
+pages.how-it-works.lede-pre3=Marriage Allowance automatically renews at the end of each tax year. You can cancel it, but it will not be stopped until the end of the tax year.
+pages.how-it-works.lede-pre4=If your partner has died, you can still make a Marriage Allowance claim as long as the conditions are met. If this applies to you, call HMRC on 0300 200 3300.
 
+pages.how-it-works.eligibility.heading=Eligibility
+pages.how-it-works.eligibility-pre1=To be eligible for Marriage Allowance:
+pages.how-it-works.eligibility-pre1.part1=you must be married or in a civil partnership
+pages.how-it-works.eligibility-pre1.part2=your income must be lower than your partner’s and less than £{0}
+pages.how-it-works.eligibility-pre1.part3=your partner’s income must be less than £{0} in the current tax year
+pages.how-it-works.eligibility-pre2=If you’re in Scotland, your partner must pay the starter, basic or intermediate rate, which usually means their income is between £{0} and £{1}.
+pages.how-it-works.eligibility-pre3.part1=If one of you was born before 6 April 1935, you might benefit more as a couple by
+pages.how-it-works.eligibility-pre3.link-text=applying for the Married Couple’s Allowance.
+pages.how-it-works.eligibility-pre3.part2=You can still apply for Marriage Allowance but you cannot receive both allowances at the same time.
 
+pages.how-it-works.calculate-benefit.heading=Calculate how much you could benefit
+pages.how-it-works.calculate-benefit-pre1.link-text=Use the calculator
+pages.how-it-works.calculate-benefit-pre1=to see how much you could save in the current tax year. This does not form part of the application.
+
+pages.how-it-works.before-apply.heading=Before you apply
+pages.how-it-works.before-apply-pre1=You will need your partner’s national insurance numbers
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
