@@ -38,7 +38,7 @@ class HowItWorksControllerTest extends ControllerBaseTest {
       heading shouldBe "Apply for Marriage Allowance"
 
       val button = document.getElementById("get-started")
-      button.text shouldBe "Start now to see if you are eligible for Marriage Allowance"
+      button.text shouldBe "Apply now"
     }
   }
 
