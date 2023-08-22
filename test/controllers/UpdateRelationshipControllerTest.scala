@@ -147,7 +147,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.EligibilityController.howItWorks.url)
+        redirectLocation(result) shouldBe Some(controllers.routes.HowItWorksController.howItWorks.url)
       }
     }
 
