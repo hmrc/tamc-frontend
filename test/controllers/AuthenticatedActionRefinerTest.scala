@@ -49,7 +49,8 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[AuthConnector].toInstance(mockAuthConnector)
+      bind[AuthConnector].toInstance(mockAuthConnector),
+      featureFlagServiceBinding
     ).configure(
     "metrics.jvm" -> false
     ).build()

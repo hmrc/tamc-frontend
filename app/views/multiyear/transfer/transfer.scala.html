@@ -19,8 +19,10 @@
 @import models.auth.AuthenticatedUserRequest
 @import includes.{H1, P, InputRadios, InputValue, Button, ErrorSummary}
 
+@import views.Main
+
 @this(
-main: main,
+main: Main,
 form: FormWithCSRF,
 languageUtilsImpl: LanguageUtilsImpl,
 h1: H1,
@@ -98,7 +100,7 @@ backLinkHref = Some(controllers.routes.EligibilityController.doYouWantToApply.ur
         ))
 
         @govukWarningText(WarningText(
-            iconFallbackText = messages("pages.form.field.warning-hidden"),
+            iconFallbackText = Some(messages("pages.form.field.warning-hidden")),
             content = Text(messages("pages.form.field.warning"))
         ))
 

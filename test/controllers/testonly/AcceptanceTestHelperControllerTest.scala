@@ -30,8 +30,6 @@ import scala.concurrent.Future
 
 class AcceptanceTestHelperControllerTest extends ControllerBaseTest {
 
-  private val mockFeatureFlagService = mock[FeatureFlagService]
-
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(bind[FeatureFlagService].toInstance(mockFeatureFlagService))
     .build()

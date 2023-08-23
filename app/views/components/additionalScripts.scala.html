@@ -14,31 +14,11 @@
  * limitations under the License.
  *@
 
-@import models.auth.UserRequest
-@import includes.{P, Button, H1}
+@this()
+@(scripts: Option[Html])
 
-@import views.Main
-
-@this(
-    main: Main,
-    p: P,
-    h1: H1,
-    button: Button
-)
-
-@(finishedUrl: String
-)(implicit messages: Messages,
-request: UserRequest[_])
-
-@main(
-pageTitle = Some(Messages("title.eligibility.pattern", Messages("title.non-eligible"))),
-backLinkHref = Some(controllers.routes.EligibilityController.eligibilityCheck.url)
-){
-    
-    @h1("eligibility.check.header")
-
-    @p(Text(Messages("eligibility.check.non-eligible")))
-
-    @button(msg = "generic.finish", href = Some(finishedUrl), id = "button-finished")
-
-}
+<script src='@controllers.routes.Assets.at("javascripts/jquery.js")'></script>
+<script src='@controllers.routes.Assets.at("javascripts/tamc.js")'></script>
+<script src='@controllers.routes.Assets.at("javascripts/polyfill.js")'></script>
+<script src='@controllers.routes.Assets.at("javascripts/tamc-backlink.js")'></script>
+@scripts

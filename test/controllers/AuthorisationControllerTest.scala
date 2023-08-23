@@ -17,11 +17,15 @@
 package controllers
 
 import config.ApplicationConfig
+import play.api.mvc.{AnyContent, Request}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.test.Helpers.baseApplicationBuilder.injector
-import utils.ControllerBaseTest
+import utils.BaseTest
 
-class AuthorisationControllerTest extends ControllerBaseTest {
+class AuthorisationControllerTest extends BaseTest {
+
+  implicit val request: Request[AnyContent] = FakeRequest()
 
   lazy val controller: AuthorisationController = app.injector.instanceOf[AuthorisationController]
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]

@@ -18,12 +18,15 @@ package controllers
 
 import config.ApplicationConfig
 import org.jsoup.Jsoup
+import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
-import utils.ControllerBaseTest
+import utils.BaseTest
 
-class PtaEligibilityCalcControllerTest extends ControllerBaseTest {
+class PtaEligibilityCalcControllerTest extends BaseTest {
+
+  implicit val request: Request[AnyContent] = FakeRequest()
 
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
