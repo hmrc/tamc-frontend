@@ -21,6 +21,7 @@ object AppDependencies {
     "com.fasterxml.jackson.module" %% "jackson-module-scala"               % "2.13.4",
     "uk.gov.hmrc"                  %% "play-frontend-hmrc"                 % s"6.6.0-$playVersion",
     "uk.gov.hmrc"                  %% s"internal-auth-client-$playVersion" % "1.2.0",
+    "uk.gov.hmrc"                  %% "mongo-feature-toggles-client"       % "0.3.0",
     ehcache
   )
 

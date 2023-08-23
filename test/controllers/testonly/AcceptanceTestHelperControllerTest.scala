@@ -16,14 +16,15 @@
 
 package controllers.testonly
 
-import models.admin.{FeatureFlag, FeatureFlagName, PertaxBackendToggle}
+import models.admin.PertaxBackendToggle
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.http.Status.OK
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import services.admin.FeatureFlagService
+import uk.gov.hmrc.mongoFeatureToggles.model.{FeatureFlag, FeatureFlagName}
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import utils.ControllerBaseTest
 
 import scala.concurrent.Future

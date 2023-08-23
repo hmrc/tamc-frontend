@@ -14,30 +14,13 @@
  * limitations under the License.
  */
 
-package utils
+package models.admin
 
-import com.github.tomakehurst.wiremock.WireMockServer
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagName
 
-trait WireMockHelper extends BeforeAndAfterAll with BeforeAndAfterEach{
-  this: Suite =>
-
-  val wiremockPort: Int = 11111
-
-  protected val server: WireMockServer = new WireMockServer(wiremockPort)
-
-  override def beforeAll(): Unit = {
-    server.start()
-    super.beforeAll()
-  }
-
-  override def beforeEach(): Unit = {
-    server.resetAll()
-    super.beforeEach()
-  }
-
-  override def afterAll(): Unit = {
-    super.afterAll()
-    server.stop()
-  }
+case object PertaxBackendToggle extends FeatureFlagName {
+  override val name: String = "pertax-backend-toggle"
+  override val description: Option[String] = Some(
+    "Enable/disable pertax backend during auth"
+  )
 }

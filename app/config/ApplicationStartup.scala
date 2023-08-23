@@ -16,20 +16,13 @@
 
 package config
 
-import connectors.TamcAuthConnector
-import play.api.inject.{Binding, Module}
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
-import utils.{TaxBandReader, TaxBandReaderImpl}
+import com.google.inject.Singleton
+import models.admin.PertaxBackendToggle
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagNamesLibrary
 
-class TamcModule extends Module {
-
-  override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[_]] =
-    Seq(
-      bind[AuthConnector].to[TamcAuthConnector],
-      bind[CurrentTaxYear].toInstance(TaxYear),
-      bind[TaxBandReader].to[TaxBandReaderImpl],
-      bind[ApplicationStartup].toSelf.eagerly()
-    )
+@Singleton
+class ApplicationStartup {
+  FeatureFlagNamesLibrary.addFlags(List(
+    PertaxBackendToggle
+  ))
 }

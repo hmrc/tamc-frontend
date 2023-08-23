@@ -18,7 +18,9 @@ package connectors
 
 import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.test.Injecting
 import play.twirl.api.Html
@@ -28,6 +30,14 @@ import utils.Constants.ACCESS_GRANTED
 import utils.{PertaxAuthMockingHelper, UnitSpec, WireMockHelper}
 
 class PertaxAuthConnectorSpec extends UnitSpec with GuiceOneAppPerSuite with WireMockHelper with PertaxAuthMockingHelper with Injecting {
+
+  lazy val configOverrides: Map[String, Any] = Map(
+    "microservice.services.pertax-auth.port" -> wiremockPort
+  )
+
+  override def fakeApplication(): Application = new GuiceApplicationBuilder()
+    .configure(configOverrides)
+    .build()
 
   lazy val connector: PertaxAuthConnector = inject[PertaxAuthConnector]
 
