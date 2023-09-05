@@ -71,7 +71,17 @@ case object NoExistantToggle extends FeatureFlagName {
   )
 }
 
+case object SCAWrapperToggle extends FeatureFlagName {
+  override def toString: String = "SCAWrapperToggle"
+  override val description: Option[String] = Some(
+    "Enable/Disable the sca page wrapper"
+  )
+}
+
 object FeatureFlagMongoFormats {
   implicit val formats: Format[FeatureFlag] =
     Json.format[FeatureFlag]
 }
+
+
+

@@ -16,12 +16,15 @@
 
 package test_utils.data
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
 import models._
-import org.joda.time.DateTime
 
 object RelationshipRecordData {
 
-  val dateFormat = "yyyyMMdd"
+  val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")
+
   val activeRecipientRelationshipRecord: RelationshipRecord = RelationshipRecord(
     Recipient.value,
     creationTimestamp = "20150531235901",
@@ -32,13 +35,13 @@ object RelationshipRecordData {
     otherParticipantUpdateTimestamp = "20150531235901")
 
   val activeTransferorRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant = Transferor.value)
-  val activeRelationshipEndDate1: String = new DateTime().plusDays(10).toString(dateFormat)
+  val activeRelationshipEndDate1: String = dateFormat.format(LocalDateTime.now().plusDays(10))
   val activeTransferorRelationshipRecord3: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(activeRelationshipEndDate1))
 
 
-  val inactiveRelationshipEndDate1: String = new DateTime().minusDays(1).toString(dateFormat)
-  val inactiveRelationshipEndDate2: String = new DateTime().minusDays(10).toString(dateFormat)
-  val inactiveRelationshipEndDate3: String = new DateTime().minusDays(1000).toString(dateFormat)
+  val inactiveRelationshipEndDate1: String = dateFormat.format(LocalDateTime.now().minusDays(1))
+  val inactiveRelationshipEndDate2: String = dateFormat.format(LocalDateTime.now().minusDays(10))
+  val inactiveRelationshipEndDate3: String = dateFormat.format(LocalDateTime.now().minusDays(1000))
 
   val inactiveRecipientRelationshipRecord1: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate1))
   val inactiveRecipientRelationshipRecord2: RelationshipRecord = activeRecipientRelationshipRecord.copy(participant1EndDate = Some(inactiveRelationshipEndDate2))

@@ -20,7 +20,6 @@
 @import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.accountmenu.{AccountMenu, SignOut}
-@import views.html.helper.CSPNonce
 @import models.auth._
 
 @this(
@@ -140,7 +139,6 @@
 @hmrcLayout(
     pageTitle = pageTitle,
     serviceName = serviceName.map(messages(_)),
-    nonce = CSPNonce.get,
     isWelshTranslationAvailable = true,
     userResearchBannerUrl = Some(messages("tamc.banner.recruitment.linkURL")),
     accessibilityStatementUrl = Some(appConfig.accessibilityStatementUrl(request.uri)),

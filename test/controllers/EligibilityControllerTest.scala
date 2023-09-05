@@ -43,6 +43,7 @@ class EligibilityControllerTest extends ControllerBaseTest {
     ).overrides(
         bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
         bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
+        featureFlagServiceBinding
     ).build()
 
 
@@ -51,7 +52,8 @@ class EligibilityControllerTest extends ControllerBaseTest {
       "metrics.jvm" -> false
     ).overrides(
         bind[EligibilityCalculatorService].toInstance(mockEligibilityCalculatorService),
-        bind[UnauthenticatedActionTransformer].to[MockPermUnauthenticatedAction]
+        bind[UnauthenticatedActionTransformer].to[MockPermUnauthenticatedAction],
+        featureFlagServiceBinding
     ).injector()
 
   val authController = permAuthInjector.instanceOf[EligibilityController]

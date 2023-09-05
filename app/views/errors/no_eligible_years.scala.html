@@ -17,7 +17,9 @@
 @import models.auth.BaseUserRequest
 @import includes.P
 
-@this(main: main, p: P)
+@import views.Main
+
+@this(main: Main, p: P)
 
 @()(implicit messages: Messages,
 request: BaseUserRequest[_])

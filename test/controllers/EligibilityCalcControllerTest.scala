@@ -22,10 +22,10 @@ import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
-import utils.ControllerBaseTest
+import utils.BaseTest
 
 //TODO: Update values in test names
-class EligibilityCalcControllerTest extends ControllerBaseTest {
+class EligibilityCalcControllerTest extends BaseTest {
 
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 

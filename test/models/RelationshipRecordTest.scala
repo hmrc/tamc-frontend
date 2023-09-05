@@ -16,12 +16,12 @@
 
 package models
 
+import java.time.format.DateTimeFormatter
+
 import config.ApplicationConfig
-import org.joda.time.DateTime
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import utils.{BaseTest, SystemLocalDate}
-
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 
 class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
 
@@ -30,7 +30,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
   lazy val pastYear: Int = currentYear - 1
   lazy val futureDateTime: String = "" + nextYear + "0101"
   lazy val pastDateTime: String = "" + pastYear + "0101"
-  val dateFormat = "yyyyMMdd"
+  val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")
 
   lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
   lazy val currentTaxYear: uk.gov.hmrc.time.TaxYear = applicationConfig.currentTaxYear()
@@ -87,7 +87,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
       }
 
       "relationship end date is today" in {
-        val relationshipEndDate = new DateTime().toString(dateFormat)
+        val relationshipEndDate = dateFormat.format(LocalDateTime.now())
         val relationshipRecord = relationshipActiveRecordWithNoEndDate.copy(participant1EndDate = Some(relationshipEndDate))
         relationshipRecord.isActive(localDate) shouldBe false
       }
