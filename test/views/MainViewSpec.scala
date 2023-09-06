@@ -47,7 +47,7 @@ class MainViewSpec extends BaseTest with Injecting {
     override val researchBannerLinkSelector: String = "a"
 
     override val accessibilityReferrerUrl: String = "9900%2Fsome-url"
-    override val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/" +
+    override val reportTechnicalProblemUrl: String = "http://localhost:9250/" +
       "contact/report-technical-problem?newTab=true&service=TAMC&referrerUrl=%2Fsome-url"
   }
 

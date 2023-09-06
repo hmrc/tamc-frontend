@@ -43,7 +43,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
   val contactFormServiceIdentifier = "TAMC"
   val pageTitle = "Your personal tax account"
-  lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
+  lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/contact/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
   val reportAProblemPartialUrl = s"$contactFrontendService/contact/problem_reports"
 
   lazy val loginUrl: String = loadConfig("tamc.external-urls.login-url")
