@@ -51,28 +51,27 @@ GET         /confirm-change-action              controllers.UpdateRelationshipCo
 GET         /finished-change                    controllers.UpdateRelationshipController.finishUpdate
 POST        /confirm-email                      controllers.UpdateRelationshipController.confirmYourEmailActionUpdate
 
-GET         /eligibility-check-pta              controllers.Default.redirect(to = controllers.routes.EligibilityController.eligibilityCheck.url)
-GET         /lower-earner-pta                   controllers.Default.redirect(to = controllers.routes.EligibilityController.lowerEarnerCheck.url)
-GET         /partners-income-pta                controllers.Default.redirect(to = controllers.routes.EligibilityController.partnersIncomeCheck.url)
-GET         /date-of-birth-check-pta            controllers.Default.redirect(to = controllers.routes.EligibilityController.dateOfBirthCheck.url)
-GET         /do-you-live-in-scotland-pta        controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouLiveInScotland.url)
-GET         /do-you-want-to-apply-pta           controllers.Default.redirect(to = controllers.routes.EligibilityController.doYouWantToApply.url)
+GET         /eligibility-check-pta              controllers.HowItWorksController.howItWorks
+GET         /lower-earner-pta                   controllers.HowItWorksController.howItWorks
+GET         /partners-income-pta                controllers.HowItWorksController.howItWorks
+GET         /date-of-birth-check-pta            controllers.HowItWorksController.howItWorks
+GET         /do-you-live-in-scotland-pta        controllers.HowItWorksController.howItWorks
+GET         /do-you-want-to-apply-pta           controllers.HowItWorksController.howItWorks
 
 GET         /                                   controllers.HowItWorksController.home
 GET         /how-it-works                       controllers.HowItWorksController.howItWorks
 
-GET         /eligibility-check                  controllers.EligibilityController.eligibilityCheck
-POST        /eligibility-check                  controllers.EligibilityController.eligibilityCheckAction
-GET         /lower-earner                       controllers.EligibilityController.lowerEarnerCheck
-POST        /lower-earner                       controllers.EligibilityController.lowerEarnerCheckAction
-GET         /partners-income                    controllers.EligibilityController.partnersIncomeCheck
-POST        /partners-income                    controllers.EligibilityController.partnersIncomeCheckAction
-GET         /date-of-birth-check                controllers.EligibilityController.dateOfBirthCheck
-POST        /date-of-birth-check                controllers.EligibilityController.dateOfBirthCheckAction
-GET         /do-you-live-in-scotland            controllers.EligibilityController.doYouLiveInScotland
-POST        /do-you-live-in-scotland            controllers.EligibilityController.doYouLiveInScotlandAction
+GET         /eligibility-check                  controllers.HowItWorksController.howItWorks
+
+GET         /lower-earner                       controllers.HowItWorksController.howItWorks
+
+GET         /partners-income                    controllers.HowItWorksController.howItWorks
+
+GET         /date-of-birth-check                controllers.HowItWorksController.howItWorks
+
+GET         /do-you-live-in-scotland            controllers.HowItWorksController.howItWorks
+
 GET         /do-you-want-to-apply               controllers.EligibilityController.doYouWantToApply
-POST        /do-you-want-to-apply               controllers.EligibilityController.doYouWantToApplyAction
 
 #Welsh Translation
 GET         /lang/enGb                          controllers.LanguageController.enGb()
