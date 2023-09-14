@@ -71,7 +71,7 @@ GET         /date-of-birth-check                controllers.HowItWorksController
 
 GET         /do-you-live-in-scotland            controllers.HowItWorksController.howItWorks
 
-GET         /do-you-want-to-apply               controllers.EligibilityController.doYouWantToApply
+GET         /do-you-want-to-apply               controllers.HowItWorksController.howItWorks
 
 #Welsh Translation
 GET         /lang/enGb                          controllers.LanguageController.enGb()
