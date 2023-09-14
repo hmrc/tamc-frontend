@@ -56,7 +56,9 @@ object PlayFormFormatter {
         else Invalid(ValidationError(error, maxLength))
     }
 
-  def validDateTuple(missingPartError: String = "error.enter_full_date",
+  def validDateTuple(missingYearError: String = "pages.form.field.dom.error.must.include.year",
+                     missingMonthError: String = "pages.form.field.dom.error.must.include.month",
+                     missingDayError: String = "pages.form.field.dom.error.must.include.day",
                      allAbsentError: String = "error.enter_a_date",
                      nonNumericError: String = "error.enter_numbers",
                      invalidError: String = "error.enter_valid_date"): Mapping[ZonedDateTime] = {
@@ -69,7 +71,7 @@ object PlayFormFormatter {
       "month" -> optional(text),
       "day" -> optional(text)
     )
-      .verifying(datePartsArePresent(allAbsentError = allAbsentError, missingPartError = missingPartError))
+      .verifying(datePartsArePresent(allAbsentError = allAbsentError, missingYearError = missingYearError, missingMonthError = missingMonthError, missingDayError = missingDayError))
       .transform[(String, String, String)](x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
       .verifying(invalidError, x => !verifyDigits(x) || Try(LocalDateTime.of(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
@@ -82,16 +84,20 @@ object PlayFormFormatter {
 
   private def datePartsArePresent(name: String = "constraint.datepresent",
                                   allAbsentError: String,
-                                  missingPartError: String): Constraint[(Option[String], Option[String], Option[String])] = {
+                                  missingYearError: String,
+                                  missingMonthError: String,
+                                  missingDayError: String): Constraint[(Option[String], Option[String], Option[String])] = {
 
     Constraint[(Option[String], Option[String], Option[String])](name) {
       tup =>
         if (tup._1.isDefined && tup._2.isDefined && tup._3.isDefined) Valid else {
           if (tup._1.isEmpty && tup._2.isEmpty && tup._3.isEmpty) {
             Invalid(ValidationError(allAbsentError))
-          } else {
-            Invalid(ValidationError(missingPartError))
-          }
+          } else if (tup._1.isEmpty && tup._2.isDefined && tup._3.isDefined) {
+            Invalid(ValidationError(missingYearError))
+          } else if (tup._1.isDefined && tup._2.isEmpty && tup._3.isDefined) {
+            Invalid(ValidationError(missingMonthError))
+          } else Invalid(ValidationError(missingDayError))
         }
     }
   }

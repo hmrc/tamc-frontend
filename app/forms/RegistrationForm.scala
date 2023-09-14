@@ -125,7 +125,8 @@ class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
     val minDate = applicationConfig.TAMC_MIN_DATE
     val maxDate = today.plusDays(1)
 
-    validDateTuple("pages.form.field.dom.error.enter_full_date",
+    validDateTuple("pages.form.field.dom.error.must.include.year",
+      "pages.form.field.dom.error.must.include.month",
       "pages.form.field.dom.error.enter_a_date",
       "pages.form.field.dom.error.enter_numbers",
       "pages.form.field.dom.error.enter_valid_date")
