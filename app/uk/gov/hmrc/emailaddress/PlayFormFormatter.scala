@@ -56,9 +56,9 @@ object PlayFormFormatter {
         else Invalid(ValidationError(error, maxLength))
     }
 
-  def validDateTuple(missingYearError: String = "pages.form.field.dom.error.must.include.year",
-                     missingMonthError: String = "pages.form.field.dom.error.must.include.month",
-                     missingDayError: String = "pages.form.field.dom.error.must.include.day",
+  def validDateTuple(missingYearError: String = "error.must.include.year",
+                     missingMonthError: String = "error.must.include.month",
+                     missingDayError: String = "error.must.include.day",
                      allAbsentError: String = "error.enter_a_date",
                      nonNumericError: String = "error.enter_numbers",
                      invalidError: String = "error.enter_valid_date"): Mapping[ZonedDateTime] = {

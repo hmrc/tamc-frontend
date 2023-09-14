@@ -125,10 +125,12 @@ class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
     val minDate = applicationConfig.TAMC_MIN_DATE
     val maxDate = today.plusDays(1)
 
-    validDateTuple("pages.form.field.dom.error.must.include.year",
+    validDateTuple(
+      "pages.form.field.dom.error.must.include.year",
       "pages.form.field.dom.error.must.include.month",
-      "pages.form.field.dom.error.enter_a_date",
+      "pages.form.field.dom.error.must.include.day",
       "pages.form.field.dom.error.enter_numbers",
+      "pages.form.field.dom.error.enter_valid_date",
       "pages.form.field.dom.error.enter_valid_date")
       .transform[LocalDate](dt => dt.toLocalDate,
         ld => ZonedDateTime.of(ld.getYear, ld.getMonthValue, ld.getDayOfMonth, 0, 0, 0, 0, ZoneId.systemDefault()))

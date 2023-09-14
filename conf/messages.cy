@@ -38,7 +38,10 @@ pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad eich priodas neu pr
 pages.form.field.dom.error.enter_a_date=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.dom.error.enter_full_date=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil. Rhowch ddiwrnod, mis a blwyddyn
 pages.form.field.dom.error.enter_numbers=Nodwch ddyddiad go iawn ar gyfer eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
-pages.form.field.dom.error.enter_valid_date=Nodwch ddyddiad go iawn ar gyfer eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
+pages.form.field.dom.error.enter_valid_date=Mae’n rhaid i ddyddiad y briodas neu ffurfio’r bartneriaeth sifil fod yn ddyddiad go iawn
+pages.form.field.dom.error.must.include.year = Mae’n rhaid i ddyddiad y briodas neu ffurfio’r bartneriaeth sifil gynnwys blwyddyn
+pages.form.field.dom.error.must.include.month = Mae’n rhaid i ddyddiad y briodas neu ffurfio’r bartneriaeth sifil gynnwys mis
+pages.form.field.dom.error.must.include.day = Mae’n rhaid i ddyddiad y briodas neu ffurfio’r bartneriaeth sifil gynnwys diwrnod
 
 pages.form.field-required-alt.dateOfDivorce=Cadarnhewch eich dyddiad ysgaru
 
