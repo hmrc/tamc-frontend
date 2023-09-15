@@ -94,7 +94,10 @@ class TransferController @Inject() (
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async{ implicit request =>
     dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
+      formWithErrors => {
+        println(Console.YELLOW + s"${formWithErrors.errors}" + Console.RESET)
+        Future.successful(BadRequest(dateOfMarriageV(formWithErrors)))
+      },
       marriageData => {
         cachingService.saveDateOfMarriage(marriageData)
 

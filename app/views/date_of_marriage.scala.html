@@ -16,8 +16,7 @@
 
 @import views.helpers.LanguageUtilsImpl
 @import models.auth.AuthenticatedUserRequest
-@import includes.{H1, P, Button, ErrorSummary}
-@import uk.gov.hmrc.govukfrontend.views.html.components._
+@import includes.{H1, P, Button, ErrorSummary, InputDate}
 @import views.Main
 
 @this(
@@ -28,7 +27,7 @@ h1: H1,
 p: P,
 button: Button,
 errorSummary: ErrorSummary,
-inputDate: GovukDateInput)
+inputDate: InputDate)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
@@ -47,38 +46,14 @@ backLinkHref = Some(controllers.routes.TransferController.transfer.url)
   @p(Text(messages("pages.date-of-marriage.para2")))
 
   @form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
-
-    @inputDate(DateInput(
-        id = "dateOfMarriage",
-        namePrefix = Some("dateOfMarriage"),
-        items = Seq(
-            InputItem(
-                name = messages("date.fields.day"),
-                autocomplete = Some("day"),
-                classes = "govuk-input--width-2"
-            ),
-            InputItem(
-                name = messages("date.fields.month"),
-                autocomplete = Some("month"),
-                classes = "govuk-input--width-2"
-            ),
-            InputItem(
-                name = messages("date.fields.year"),
-                autocomplete = Some("year"),
-                classes = "govuk-input--width-4"
-            )
-        ),
-        hint = Some(Hint(
-            content = Text(messages("pages.form.field-helper.dom")),
-        )),
-        errorMessage = marriageForm.errors.headOption.map(msg => ErrorMessage(content = HtmlContent(msg.message))),
-        fieldset = Some(Fieldset(
-            legend = Some(Legend(
-                classes = "govuk-fieldset__legend--l",
-                isPageHeading = true
-            ))
-        ))
-    ))
+    @inputDate(
+        fieldName = "dateOfMarriage",
+        form = marriageForm,
+        legendKey = "pages.date-of-marriage.h2",
+        hint = Some(Text(messages("pages.form.field-helper.dom"))),
+        legendClasses = "govuk-visually-hidden",
+        fieldSetAttrs = Map("id" -> "dateOfMarriageFieldset")
+    )
 
     @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:dateofmarriage_continue"))
   }

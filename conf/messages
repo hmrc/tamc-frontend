@@ -42,6 +42,9 @@ pages.form.field.dom.error.enter_valid_date=The date of marriage or civil partne
 pages.form.field.dom.error.must.include.year = The date of marriage or civil partnership must include a year
 pages.form.field.dom.error.must.include.month = The date of marriage or civil partnership must include a month
 pages.form.field.dom.error.must.include.day = The date of marriage or civil partnership must include a day
+pages.form.field.dom.error.invalid.day = The day must be a number between 1 and {0}
+pages.form.field.dom.error.invalid.month = The month must be a number between 1 and 12
+pages.form.field.dom.error.invalid.year = The year must be a number between 1900 and {0}
 
 pages.form.field-required-alt.dateOfDivorce=Confirm your date of divorce
 
