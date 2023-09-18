@@ -32,9 +32,12 @@ sealed trait FeatureFlagName {
 object FeatureFlagName {
   implicit val writes: Writes[FeatureFlagName] = (o: FeatureFlagName) => JsString(o.toString)
 
-  implicit val reads: Reads[FeatureFlagName] = {
-    case name if name == JsString(PertaxBackendToggle.toString) => JsSuccess(PertaxBackendToggle)
-    case _ => JsError("Unknown FeatureFlagName")
+  implicit val reads: Reads[FeatureFlagName] = new Reads[FeatureFlagName] {
+    override def reads(json: JsValue): JsResult[FeatureFlagName] =
+      allFeatureFlags
+        .find(flag => JsString(flag.toString) == json)
+        .map(JsSuccess(_))
+        .getOrElse(JsError(s"Unknown FeatureFlagName `${json.toString}`"))
   }
 
   implicit val formats: Format[FeatureFlagName] =
