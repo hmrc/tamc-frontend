@@ -54,7 +54,7 @@ object FeatureFlagName {
       value.toString
   }
 
-  val allFeatureFlags: Seq[PertaxBackendToggle.type] = List(PertaxBackendToggle)
+  val allFeatureFlags: Seq[FeatureFlagName] = List(PertaxBackendToggle, SCAWrapperToggle)
 }
 
 case object PertaxBackendToggle extends FeatureFlagName {
