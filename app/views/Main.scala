@@ -92,7 +92,6 @@ class MainImpl @Inject() (
         signoutUrl = controllers.routes.AuthorisationController.logout.url,
         timeOutUrl = Some(controllers.routes.AuthorisationController.sessionTimeout.url),
         keepAliveUrl = "/keep-alive",
-        showBackLinkJS = !disableBackLink,
         backLinkUrl = backLinkHref,
         showSignOutInHeader = false,
         hideMenuBar = !BaseUserRequest.isAuthenticated,
