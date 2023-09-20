@@ -129,7 +129,7 @@ class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
       .transform[LocalDate](dt => dt.toLocalDate,
         ld => ZonedDateTime.of(ld.getYear, ld.getMonthValue, ld.getDayOfMonth, 0, 0, 0, 0, ZoneId.systemDefault()))
       .verifying(error = Messages("pages.form.field.dom.error.min-date", minDate.format(DateTimeFormatter.ofPattern("d MM YYYY"))), constraint = _.isAfter(minDate))
-      .verifying(error = Messages("pages.form.field.dom.error.max-date", maxDate.format(DateTimeFormatter.ofPattern("d MM YYYY"))), constraint = _.isBefore(maxDate))
+      .verifying(error = Messages("pages.form.field.dom.error.max-date"), constraint = _.isBefore(maxDate))
   }
 
   def registrationForm(today: LocalDate, transferorNino: Nino)(implicit messages: Messages) = Form[RegistrationFormInput](

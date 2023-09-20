@@ -56,7 +56,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   lazy val transferForm: RecipientDetailsForm = instanceOf[RecipientDetailsForm]
   implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
-  def transferController: TransferController = app.injector.instanceOf[TransferController]
+  val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
 
@@ -415,8 +415,8 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (date of marriage is before 1900)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-        "dateOfMarriage.day" -> "1",
-        "dateOfMarriage.month" -> "1",
+        "dateOfMarriage.day" -> "01",
+        "dateOfMarriage.month" -> "01",
         "dateOfMarriage.year" -> "1899"
       )
       val result = transferController.dateOfMarriageAction(request)
@@ -440,12 +440,12 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (date of marriage is after today’s date)" in {
       val todayPlusOneDay = LocalDate.now().plusDays(1)
-      val pattern = "d MM YYYY"
+      val pattern = "dd MM YYYY"
       val todayPlusOneDayFormatted = todayPlusOneDay.format(DateTimeFormatter.ofPattern(pattern))
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-        "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
-        "dateOfMarriage.month" -> s"${localDate.getMonthValue}",
+        "dateOfMarriage.day" -> "01",
+        "dateOfMarriage.month" -> "01",
         "dateOfMarriage.year" -> s"${localDate.getYear}"
       )
       val result = transferController.dateOfMarriageAction(request)

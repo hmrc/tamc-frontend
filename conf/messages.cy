@@ -34,7 +34,7 @@ pages.form.field.nino.error.self=Ni allwch nodi’ch manylion eich hun
 
 pages.form.field-required.dateOfMarriage=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.dom.error.min-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod ar ôl {0}
-pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil fod cyn {0}
+pages.form.field.dom.error.max-date=Mae’n rhaid i ddyddiad y briodas neu ffurfio’r bartneriaeth sifil fod heddiw neu yn y gorffennol
 pages.form.field.dom.error.enter_a_date=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil
 pages.form.field.dom.error.enter_full_date=Nodwch ddyddiad eich priodas neu pryd ffurfiwyd eich partneriaeth sifil. Rhowch ddiwrnod, mis a blwyddyn
 pages.form.field.dom.error.enter_numbers=Nodwch ddyddiad go iawn ar gyfer eich priodas neu pryd ffurfiwyd eich partneriaeth sifil

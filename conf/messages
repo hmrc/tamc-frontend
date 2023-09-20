@@ -33,7 +33,7 @@ pages.form.field.nino.error.invalid.chars=Your partner’s National Insurance nu
 pages.form.field.nino.error.self=You cannot enter your own details
 
 pages.form.field-required.dateOfMarriage=Enter the date of your marriage or civil partnership
-pages.form.field.dom.error.max-date=The date of your marriage or civil partnership must be before {0}
+pages.form.field.dom.error.max-date=The date of marriage or civil partnership must be today or in the past
 pages.form.field.dom.error.min-date=The date of your marriage or civil partnership must be after {0}
 pages.form.field.dom.error.enter_a_date=Enter the date of your marriage or civil partnership
 pages.form.field.dom.error.enter_full_date=Enter the date of your marriage or civil partnership and include a day, month and year

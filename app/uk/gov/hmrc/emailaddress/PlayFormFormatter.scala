@@ -64,7 +64,9 @@ object PlayFormFormatter {
                      invalidError: String = "pages.form.field.dom.error.enter_valid_date",
                      invalidDayError: String = "pages.form.field.dom.error.invalid.day",
                      invalidMonthError: String = "pages.form.field.dom.error.invalid.month",
-                     invalidYearError: String = "pages.form.field.dom.error.invalid.year"): Mapping[ZonedDateTime] = {
+                     invalidYearError: String = "pages.form.field.dom.error.invalid.year",
+                     yearTodayOrPast: String = "pages.form.field.dom.error.max-date"
+                    ): Mapping[ZonedDateTime] = {
 
     def verifyDigits(triple: (String, String, String)): Boolean =
       triple._1.forall(_.isDigit) && triple._2.forall(_.isDigit) && triple._3.forall(_.isDigit)
@@ -74,17 +76,16 @@ object PlayFormFormatter {
       "month" -> optional(text),
       "day" -> optional(text)
     )
-      .verifying(
-        datePartsArePresent(
-          allAbsentError = allAbsentError,
-          missingYearError = missingYearError,
-          missingMonthError = missingMonthError,
-          missingDayError = missingDayError
-        )
+      .verifying(datePartsArePresent(
+      allAbsentError = allAbsentError,
+      missingYearError = missingYearError,
+      missingMonthError = missingMonthError,
+      missingDayError = missingDayError
+    )
       ).transform[(String, String, String)](x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
-      .verifying(checkDateRangeValidator(invalidDay = invalidDayError, invalidMonth = invalidMonthError, invalidYear = invalidYearError))
       .verifying(invalidError, x => !verifyDigits(x) || Try(LocalDateTime.of(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
+      .verifying(checkDateRangeValidator(invalidDay = invalidDayError, invalidMonth = invalidMonthError, invalidYear = invalidYearError, yearTodayOrPast = yearTodayOrPast))
       .transform[ZonedDateTime](
         x => ZonedDateTime.of(
           x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
@@ -107,11 +108,12 @@ object PlayFormFormatter {
     }
   }
 
-  def checkDateRangeValidator(
-                               name: String = "dateOfMarriage.year",
+  private def checkDateRangeValidator(
+                               name: String = "constraint.datepresent",
                                invalidDay: String,
                                invalidMonth: String,
                                invalidYear: String,
+                               yearTodayOrPast: String,
                              ): Constraint[(String, String, String)] = {
 
     val currentYear: Int = LocalDateTime.now().getYear
@@ -119,6 +121,7 @@ object PlayFormFormatter {
     Constraint[(String, String, String)](name) {
       case tup if tup._2.toInt < 1 || tup._2.toInt > 12 => Invalid(ValidationError(invalidMonth))
       case tup if tup._3.toInt < 1 || tup._3.toInt > dayRange(tup._2, tup._1) => Invalid(ValidationError(invalidDay, dayRange(tup._2, tup._1)))
+      case tup if dayRange(tup._2, tup._1) <= 31 && tup._2.toInt <= 12 && tup._1.length == 4 && tup._1.toInt > currentYear => Invalid(ValidationError(yearTodayOrPast))
       case tup if tup._1.toInt < 1900 || tup._1.toInt > currentYear => Invalid(ValidationError(invalidYear, currentYear.toString))
       case _ => Valid
     }
@@ -126,7 +129,7 @@ object PlayFormFormatter {
 
   }
 
-  def dayRange(monthNumber: String, year: String): Int = {
+  private def dayRange(monthNumber: String, year: String): Int = {
     Map(
       "01" -> 31,
       "02" -> (if (year.toInt % 4 == 0) 29 else 28),

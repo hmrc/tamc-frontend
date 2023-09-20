@@ -42,8 +42,8 @@ backLinkHref = Some(controllers.routes.TransferController.transfer.url)
 
   @h1("pages.date-of-marriage.heading")
 
-  @p(Text(messages("pages.date-of-marriage.para1")))
-  @p(Text(messages("pages.date-of-marriage.para2")))
+  @p(HtmlContent(messages("pages.date-of-marriage.para1")))
+  @p(HtmlContent(messages("pages.date-of-marriage.para2")))
 
   @form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
     @inputDate(
