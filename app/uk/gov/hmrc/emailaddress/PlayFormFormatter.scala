@@ -82,14 +82,13 @@ object PlayFormFormatter {
       missingMonthError = missingMonthError,
       missingDayError = missingDayError
     )
-      ).transform[(String, String, String)](x => (x._1.get.trim, x._2.get.trim, x._3.get.trim), x => (Some(x._1), Some(x._2), Some(x._3)))
+      ).transform[(String, String, String)](x =>  (x._1.get.trim, x._2.get.trim, x._3.get.trim), x =>  (Some(x._1), Some(x._2), Some(x._3)))
       .verifying(nonNumericError, verifyDigits _)
-      .verifying(invalidError, x => !verifyDigits(x) || Try(LocalDateTime.of(x._1.toInt, x._2.toInt, x._3.toInt, 0, 0)).isSuccess)
+      .transform[(Integer, Integer, Integer)](x =>  (x._1.toInt, x._2.toInt, x._3.toInt), x =>  (x.toString(), x.toString(), x.toString()))
       .verifying(checkDateRangeValidator(invalidDay = invalidDayError, invalidMonth = invalidMonthError, invalidYear = invalidYearError, yearTodayOrPast = yearTodayOrPast))
-      .transform[ZonedDateTime](
-        x => ZonedDateTime.of(
-          x._1.toInt, x._2.toInt, x._3.toInt, 0, 0, 0, 0, ZoneId.systemDefault()),
-        x => (x.getYear.toString, x.getMonthValue.toString, x.getDayOfMonth.toString)
+      .verifying(invalidError, x => Try(LocalDateTime.of(x._1, x._2, x._3, 0, 0)).isSuccess)
+      .transform[ZonedDateTime](x => ZonedDateTime.of(x._1, x._2, x._3, 0, 0, 0, 0, ZoneId.systemDefault()),
+        x => (x.getYear, x.getMonthValue, x.getDayOfMonth)
       )
   }
 
@@ -114,36 +113,34 @@ object PlayFormFormatter {
                                invalidMonth: String,
                                invalidYear: String,
                                yearTodayOrPast: String,
-                             ): Constraint[(String, String, String)] = {
+                             ): Constraint[(Integer, Integer, Integer)] = {
 
     val currentYear: Int = LocalDateTime.now().getYear
 
-    Constraint[(String, String, String)](name) {
-      case tup if tup._2.toInt < 1 || tup._2.toInt > 12 => Invalid(ValidationError(invalidMonth))
-      case tup if tup._3.toInt < 1 || tup._3.toInt > dayRange(tup._2, tup._1) => Invalid(ValidationError(invalidDay, dayRange(tup._2, tup._1)))
-      case tup if dayRange(tup._2, tup._1) <= 31 && tup._2.toInt <= 12 && tup._1.length == 4 && tup._1.toInt > currentYear => Invalid(ValidationError(yearTodayOrPast))
-      case tup if tup._1.toInt < 1900 || tup._1.toInt > currentYear => Invalid(ValidationError(invalidYear, currentYear.toString))
+    Constraint[(Integer, Integer, Integer)](name) {
+      case tup if tup._2 < 1 || tup._2 > 12 => Invalid(ValidationError(invalidMonth))
+      case tup if tup._3 < 1 || tup._3 > dayRange(tup._2, tup._1) => Invalid(ValidationError(invalidDay, dayRange(tup._2, tup._1)))
+      case tup if dayRange(tup._2, tup._1) <= 31 && tup._2 <= 12 && tup._1.toString.length == 4 && tup._1 > currentYear => Invalid(ValidationError(yearTodayOrPast))
+      case tup if tup._1 < 1900 || tup._1 > currentYear => Invalid(ValidationError(invalidYear, currentYear.toString))
       case _ => Valid
     }
 
-
   }
 
-  private def dayRange(monthNumber: String, year: String): Int = {
+  private def dayRange(monthNumber: Integer, year: Integer): Int = {
     Map(
-      "01" -> 31,
-      "02" -> (if (year.toInt % 4 == 0) 29 else 28),
-      "03" -> 31,
-      "04" -> 30,
-      "05" -> 31,
-      "06" -> 30,
-      "07" -> 31,
-      "08" -> 31,
-      "09" -> 30,
-      "10" -> 31,
-      "11" -> 30,
-      "12" -> 31
+      1 -> 31,
+      2 -> (if (year.toInt % 4 == 0) 29 else 28),
+      3 -> 31,
+      4 -> 30,
+      5 -> 31,
+      6 -> 30,
+      7 -> 31,
+      8 -> 31,
+      9 -> 30,
+      10 -> 31,
+      11 -> 30,
+      12 -> 31
     )(monthNumber)
   }
-
 }
