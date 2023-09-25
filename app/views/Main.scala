@@ -92,16 +92,16 @@ class MainImpl @Inject() (
         signoutUrl = controllers.routes.AuthorisationController.logout.url,
         timeOutUrl = Some(controllers.routes.AuthorisationController.sessionTimeout.url),
         keepAliveUrl = "/keep-alive",
-        showBackLinkJS = !disableBackLink,
         backLinkUrl = backLinkHref,
-        showSignOutInHeader = true,
+        showSignOutInHeader = false,
+        hideMenuBar = !BaseUserRequest.isAuthenticated,
         scripts = Seq(additionalScripts(scripts)),
         styleSheets = Seq(
           additionalStyles()
         ),
         bannerConfig = BannerConfig(
           showAlphaBanner = false,
-          showBetaBanner = false,
+          showBetaBanner = true,
           showHelpImproveBanner = true
         ),
         optTrustedHelper = trustedHelper,
