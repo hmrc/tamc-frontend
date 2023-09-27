@@ -55,18 +55,18 @@ GET         /                                   controllers.HowItWorksController
 GET         /how-it-works                       controllers.HowItWorksController.howItWorks
 
 #Deprecated journey, keep to redirect hardCoded urls to how-it-works until fully deprecated
-GET         /eligibility-check-pta              controllers.HowItWorksController.home
-GET         /lower-earner-pta                   controllers.HowItWorksController.home
-GET         /partners-income-pta                controllers.HowItWorksController.home
-GET         /date-of-birth-check-pta            controllers.HowItWorksController.home
-GET         /do-you-live-in-scotland-pta        controllers.HowItWorksController.home
-GET         /do-you-want-to-apply-pta           controllers.HowItWorksController.home
-GET         /eligibility-check                  controllers.HowItWorksController.home
-GET         /lower-earner                       controllers.HowItWorksController.home
-GET         /partners-income                    controllers.HowItWorksController.home
-GET         /date-of-birth-check                controllers.HowItWorksController.home
-GET         /do-you-live-in-scotland            controllers.HowItWorksController.home
-GET         /do-you-want-to-apply               controllers.HowItWorksController.home
+GET         /eligibility-check                  controllers.HowItWorksController.eligibilityCheck
+GET         /eligibility-check-pta              controllers.HowItWorksController.eligibilityCheck
+GET         /lower-earner                       controllers.HowItWorksController.lowerEarner
+GET         /lower-earner-pta                   controllers.HowItWorksController.lowerEarner
+GET         /partners-income                    controllers.HowItWorksController.partnersIncome
+GET         /partners-income-pta                controllers.HowItWorksController.partnersIncome
+GET         /date-of-birth-check                controllers.HowItWorksController.dateOfBirthCheck
+GET         /date-of-birth-check-pta            controllers.HowItWorksController.dateOfBirthCheck
+GET         /do-you-live-in-scotland            controllers.HowItWorksController.doYouLiveInScotland
+GET         /do-you-live-in-scotland-pta        controllers.HowItWorksController.doYouLiveInScotland
+GET         /do-you-want-to-apply               controllers.HowItWorksController.doYouWantToApply
+GET         /do-you-want-to-apply-pta           controllers.HowItWorksController.doYouWantToApply
 
 #Welsh Translation
 GET         /lang/enGb                          controllers.LanguageController.enGb()
