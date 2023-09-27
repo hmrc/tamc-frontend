@@ -60,9 +60,6 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
       )
       val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
-
-      println("\n\n\n" + res + "\n\n\n")
-
       res shouldBe Left(Seq(
         FormError("", "pages.form.field.dom.error.must.include.month", Nil)
       ))
