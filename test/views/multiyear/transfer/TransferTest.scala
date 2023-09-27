@@ -22,8 +22,8 @@ import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTra
 import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
 import helpers.FakePertaxAuthAction
-import models.{CitizenName, ConfirmationModel, CurrentAndPreviousYearsEligibility, DateOfMarriageFormInput, Gender, NotificationRecord, RecipientRecord, RegistrationFormInput, TaxYear, UserRecord}
 import models.auth.AuthenticatedUserRequest
+import models._
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
@@ -44,7 +44,6 @@ import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, Nino
 import views.html.multiyear.transfer.transfer
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -56,7 +55,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   lazy val transferForm: RecipientDetailsForm = instanceOf[RecipientDetailsForm]
   implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
-  def transferController: TransferController = app.injector.instanceOf[TransferController]
+  val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
 
@@ -415,8 +414,8 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (date of marriage is before 1900)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-        "dateOfMarriage.day" -> "1",
-        "dateOfMarriage.month" -> "1",
+        "dateOfMarriage.day" -> "01",
+        "dateOfMarriage.month" -> "01",
         "dateOfMarriage.year" -> "1899"
       )
       val result = transferController.dateOfMarriageAction(request)
@@ -434,18 +433,15 @@ class TransferTest extends BaseTest with NinoGenerator {
       val error = field.getElementsByClass("govuk-error-message")
       error.size() shouldBe 1
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
-      document.getElementById("dateOfMarriage-error").text shouldBe "Error: The date of your marriage or civil partnership must be after 1 01 1900"
+      document.getElementById("dateOfMarriage-error").text shouldBe "Error: The year must be a number between 1900 and 2023"
       document.getElementById("backLink").attr("href") shouldBe controllers.routes.TransferController.transfer.url
     }
 
     "display form error message (date of marriage is after today’s date)" in {
-      val todayPlusOneDay = LocalDate.now().plusDays(1)
-      val pattern = "d MM YYYY"
-      val todayPlusOneDayFormatted = todayPlusOneDay.format(DateTimeFormatter.ofPattern(pattern))
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-        "dateOfMarriage.day" -> s"${localDate.getDayOfMonth}",
-        "dateOfMarriage.month" -> s"${localDate.getMonthValue}",
+        "dateOfMarriage.day" -> "01",
+        "dateOfMarriage.month" -> "01",
         "dateOfMarriage.year" -> s"${localDate.getYear}"
       )
       val result = transferController.dateOfMarriageAction(request)
@@ -461,7 +457,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       val error = form.getElementsByClass("govuk-error-message")
       error.size() shouldBe 1
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
-      document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The date of your marriage or civil partnership must be before $todayPlusOneDayFormatted"
+      document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The date of marriage or civil partnership must be today or in the past"
     }
 
     "display form error message (date of marriage is left empty)" in {

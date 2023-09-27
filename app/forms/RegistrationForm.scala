@@ -125,14 +125,11 @@ class RegistrationForm@Inject()(applicationConfig: ApplicationConfig) {
     val minDate = applicationConfig.TAMC_MIN_DATE
     val maxDate = today.plusDays(1)
 
-    validDateTuple("pages.form.field.dom.error.enter_full_date",
-      "pages.form.field.dom.error.enter_a_date",
-      "pages.form.field.dom.error.enter_numbers",
-      "pages.form.field.dom.error.enter_valid_date")
+    validDateTuple()
       .transform[LocalDate](dt => dt.toLocalDate,
         ld => ZonedDateTime.of(ld.getYear, ld.getMonthValue, ld.getDayOfMonth, 0, 0, 0, 0, ZoneId.systemDefault()))
       .verifying(error = Messages("pages.form.field.dom.error.min-date", minDate.format(DateTimeFormatter.ofPattern("d MM YYYY"))), constraint = _.isAfter(minDate))
-      .verifying(error = Messages("pages.form.field.dom.error.max-date", maxDate.format(DateTimeFormatter.ofPattern("d MM YYYY"))), constraint = _.isBefore(maxDate))
+      .verifying(error = Messages("pages.form.field.dom.error.max-date"), constraint = _.isBefore(maxDate))
   }
 
   def registrationForm(today: LocalDate, transferorNino: Nino)(implicit messages: Messages) = Form[RegistrationFormInput](

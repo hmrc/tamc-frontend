@@ -146,7 +146,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
           "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
-          "dateOfMarriage.month" -> dateOfMarriageInput.dateOfMarriage.getMonthValue.toString,
+          "dateOfMarriage.month" -> s"0${dateOfMarriageInput.dateOfMarriage.getMonthValue.toString}",
           "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
         )
         val registrationFormInput =

@@ -23,12 +23,12 @@
 @govukDateInput(DateInput(
     hint = hint.map(hintHtml => Hint(
                 content = hintHtml
-            )),
+    )),
     fieldset = Some(Fieldset(
         legend = Some(Legend(
             content = Text(messages(legendKey)),
             classes = legendClasses,
             isPageHeading = isPageHeading)),
-            attributes = fieldSetAttrs)
-    )
+            attributes = fieldSetAttrs
+        ))
 ).withFormField(form(fieldName)))
