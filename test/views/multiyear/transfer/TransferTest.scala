@@ -438,9 +438,6 @@ class TransferTest extends BaseTest with NinoGenerator {
     }
 
     "display form error message (date of marriage is after today’s date)" in {
-      //val todayPlusOneDay = LocalDate.now().plusDays(1)
-      //val pattern = "dd MM YYYY"
-      //val todayPlusOneDayFormatted = todayPlusOneDay.format(DateTimeFormatter.ofPattern(pattern))
       val localDate = LocalDate.now().plusYears(1)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day" -> "01",
