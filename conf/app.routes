@@ -6,12 +6,12 @@ GET         /logout                             controllers.AuthorisationControl
 GET         /signed-out                         controllers.AuthorisationController.sessionTimeout
 
 # GDS journey
-GET         /benefit-calculator                 controllers.EligibilityController.gdsCalculator
-POST        /benefit-calculator                 controllers.EligibilityController.gdsCalculatorAction
+GET         /benefit-calculator                 controllers.EligibilityCalculatorController.gdsCalculator
+POST        /benefit-calculator                 controllers.EligibilityCalculatorController.gdsCalculatorAction
 
 # PTA journey
-GET         /benefit-calculator-pta             controllers.EligibilityController.ptaCalculator
-POST        /benefit-calculator-pta             controllers.EligibilityController.ptaCalculatorAction
+GET         /benefit-calculator-pta             controllers.EligibilityCalculatorController.ptaCalculator
+POST        /benefit-calculator-pta             controllers.EligibilityCalculatorController.ptaCalculatorAction
 
 # Transfer Allowance
 GET         /transfer-allowance                 controllers.TransferController.transfer
@@ -54,7 +54,7 @@ POST        /confirm-email                      controllers.UpdateRelationshipCo
 GET         /                                   controllers.HowItWorksController.home
 GET         /how-it-works                       controllers.HowItWorksController.howItWorks
 
-#Deprecated journey, keep to redirect hardCoded urls to how-it-works until fully deprecated
+#Deprecated journey, keep until fully deprecated, to redirect customer's who manually enter URL
 GET         /eligibility-check                  controllers.HowItWorksController.eligibilityCheck
 GET         /eligibility-check-pta              controllers.HowItWorksController.eligibilityCheck
 GET         /lower-earner                       controllers.HowItWorksController.lowerEarner

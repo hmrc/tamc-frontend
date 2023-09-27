@@ -25,7 +25,7 @@ import services.EligibilityCalculatorService
 
 import javax.inject.Inject
 
-class EligibilityController @Inject()(
+class EligibilityCalculatorController @Inject()(
   unauthenticatedAction: UnauthenticatedActionTransformer,
   eligibilityCalculatorService: EligibilityCalculatorService,
   appConfig: ApplicationConfig,

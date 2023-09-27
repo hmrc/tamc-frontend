@@ -30,7 +30,7 @@ import play.api.test.Helpers.baseApplicationBuilder.injector
 import services.EligibilityCalculatorService
 import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockUnauthenticatedAction}
 
-class EligibilityControllerTest extends ControllerBaseTest {
+class EligibilityCalculatorControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
@@ -54,9 +54,9 @@ class EligibilityControllerTest extends ControllerBaseTest {
     featureFlagServiceBinding
   ).injector()
 
-  val authController = permAuthInjector.instanceOf[EligibilityController]
+  val authController = permAuthInjector.instanceOf[EligibilityCalculatorController]
 
-  val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
+  val controller: EligibilityCalculatorController = app.injector.instanceOf[EligibilityCalculatorController]
 
   "gdsCalculator" should {
     "return success" in {
