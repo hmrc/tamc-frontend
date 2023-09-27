@@ -15,11 +15,8 @@ object AppDependencies {
     "uk.gov.hmrc"                  %% "bootstrap-frontend-play-28"         % bootstrapVersion,
     "uk.gov.hmrc"                  %% "http-caching-client"                % s"10.0.0-$playVersion",
     "com.ibm.icu"                   % "icu4j"                              % "71.1",
-    "uk.gov.hmrc"                  %% "domain"                             % s"8.1.0-$playVersion",
-    "uk.gov.hmrc"                  %% "play-partials"                      % s"8.3.0-$playVersion",
     "uk.gov.hmrc"                  %% "tax-year"                           % "3.0.0",
     "com.fasterxml.jackson.module" %% "jackson-module-scala"               % "2.13.4",
-    "uk.gov.hmrc"                  %% "play-frontend-hmrc"                 % s"6.6.0-$playVersion",
     "uk.gov.hmrc"                  %% s"internal-auth-client-$playVersion" % "1.2.0",
     "uk.gov.hmrc"                  %% "sca-wrapper"                        % "1.0.43",
     ehcache
