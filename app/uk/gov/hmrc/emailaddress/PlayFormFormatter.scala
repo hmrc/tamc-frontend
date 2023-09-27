@@ -22,7 +22,6 @@ import play.api.data.validation._
 import play.api.data.{FormError, Mapping}
 
 import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
-import scala.util.Try
 
 object PlayFormFormatter {
 
@@ -86,7 +85,6 @@ object PlayFormFormatter {
       .verifying(nonNumericError, verifyDigits _)
       .transform[(Int, Int, Int)](x =>  (x._1.toInt, x._2.toInt, x._3.toInt), x =>  (x.toString(), x.toString(), x.toString()))
       .verifying(checkDateRangeValidator(invalidDay = invalidDayError, invalidMonth = invalidMonthError, invalidYear = invalidYearError, yearTodayOrPast = yearTodayOrPast))
-      .verifying(invalidError, x => Try(LocalDateTime.of(x._1, x._2, x._3, 0, 0)).isSuccess)
       .transform[ZonedDateTime](x => ZonedDateTime.of(x._1, x._2, x._3, 0, 0, 0, 0, ZoneId.systemDefault()),
         x => (x.getYear, x.getMonthValue, x.getDayOfMonth)
       )

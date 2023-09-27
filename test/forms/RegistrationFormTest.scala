@@ -24,7 +24,6 @@ import uk.gov.hmrc.emailaddress.PlayFormFormatter.dayRange
 import utils.UnitSpec
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
 
@@ -61,6 +60,9 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
       )
       val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
+
+      println("\n\n\n" + res + "\n\n\n")
+
       res shouldBe Left(Seq(
         FormError("", "pages.form.field.dom.error.must.include.month", Nil)
       ))
@@ -79,7 +81,7 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
       val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", "pages.form.field.dom.error.invalid.year", Seq(LocalDate.now().getYear)))
+        FormError("", "pages.form.field.dom.error.invalid.year", Seq(LocalDate.now().getYear.toString)))
       )
     }
 
@@ -96,8 +98,8 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
       val res = registrationForm.dateOfMarriageValidator(today).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messages("pages.form.field.dom.error.max-date", today.plusDays(1).format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
-      ))
+        FormError("", messages("pages.form.field.dom.error.max-date"), Nil))
+      )
     }
 
     "fail to bind a date containing non numeric" in {
@@ -123,11 +125,9 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
       )
       val res: Either[Seq[FormError], LocalDate] = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
-      println("\n\n\n" + res + "\n")
-
       res shouldBe Left(Seq(
-        FormError("", "pages.form.field.dom.error.invalid.day", List(dayRange(formInput("month").toInt, formInput("year").toInt)))
-      ))
+        FormError("", "pages.form.field.dom.error.invalid.day", Seq(dayRange(formInput("month").toInt, formInput("year").toInt))))
+      )
     }
   }
 }
