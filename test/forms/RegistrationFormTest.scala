@@ -20,10 +20,10 @@ import config.ApplicationConfig
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import uk.gov.hmrc.emailaddress.PlayFormFormatter.dayRange
 import utils.UnitSpec
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
 
@@ -61,7 +61,7 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
       val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", "pages.form.field.dom.error.enter_full_date", Nil)
+        FormError("", "pages.form.field.dom.error.must.include.month", Nil)
       ))
     }
 
@@ -78,9 +78,8 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
       val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messages("pages.form.field.dom.error.min-date",
-          earliestDate.format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
-      ))
+        FormError("", "pages.form.field.dom.error.invalid.year", Seq(LocalDate.now().getYear.toString)))
+      )
     }
 
     "fail to bind a date which is later than today + 1" in {
@@ -90,14 +89,14 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
 
       val formInput = Map[String, String](
         "day" -> tooLate.getDayOfMonth.toString,
-        "month" -> tooLate.getMonthValue.toString,
+        "month" -> s"0${tooLate.getMonthValue.toString}",
         "year" -> tooLate.getYear.toString
       )
       val res = registrationForm.dateOfMarriageValidator(today).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", messages("pages.form.field.dom.error.max-date", today.plusDays(1).format(DateTimeFormatter.ofPattern("d MM YYYY")), Nil))
-      ))
+        FormError("", messages("pages.form.field.dom.error.max-date"), Nil))
+      )
     }
 
     "fail to bind a date containing non numeric" in {
@@ -121,11 +120,11 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
         "month" -> "02",
         "year" -> "2018"
       )
-      val res = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
+      val res: Either[Seq[FormError], LocalDate] = registrationForm.dateOfMarriageValidator(LocalDate.now()).bind(formInput)
 
       res shouldBe Left(Seq(
-        FormError("", "pages.form.field.dom.error.enter_valid_date", Nil)
-      ))
+        FormError("", "pages.form.field.dom.error.invalid.day", Seq(dayRange(formInput("month").toInt, formInput("year").toInt))))
+      )
     }
   }
 }
