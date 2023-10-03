@@ -219,28 +219,6 @@ pages.confirm.html.check-details=Dylech wirio’r manylion yr ydych wedi’i rho
 # Eligibility Check
 #********************************************************************************
 eligibility.check.header=A ydych yn gymwys?
-eligibility.check.h1=A ydych yn briod neu mewn partneriaeth sifil?
-eligibility.check.span.h1=Gwiriwch a ydych yn gymwys
-eligibility.check.married=A yw hyn yn berthnasol i chi?
-eligibility.check.married.legend=A ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon?
-eligibility.check.yes=Iawn
-eligibility.check.married.error1=Nid ydych yn gymwys ar gyfer Lwfans Priodasol am nad ydych yn briod neu mewn partneriaeth sifil sydd wedi’i chofrestru’n gyfreithlon.
-eligibility.check.married.error2=Gallwch wneud cais am Lwfans Priodasol os yw’ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Gellir ei ôl‑ddyddio hyd at 4 blynedd, fel gyda cheisiadau presennol. Os yw hyn yn berthnasol i chi, ffoniwch Ganolfan Cyswllt Cymraeg CThEM ar 0300 200 1900.
-eligibility.check.non-eligible=Ar sail eich atebion, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
-eligibility.check.lower.earner.information2=Dyma gyfanswm eich enillion o bob cyflogaeth, pensiwn, buddiant, ymddiriedolaeth, incwm rhent, gan gynnwys incwm difidend sy’n fwy na’ch Lwfans Difidend – cyn i unrhyw dreth ac Yswiriant Gwladol gael eu didynnu.
-eligibility.check.lower.earner.h1=A yw’ch incwm yn llai na £{0} y flwyddyn?
-eligibility.check.lower.earner.error=Mae''n bosibl na fyddwch yn elwa o Lwfans Priodasol yn y flwyddyn dreth hon am fod eich incwm dros £{0}. Mae''n dal yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd eich incwm yn is yn y gorffennol.
-eligibility.check.partners.income.h1=A yw incwm eich partner rhwng £{0} a £{1} y flwyddyn?
-eligibility.check.partners.income.information1=Dyma gyfanswm ei enillion o bob cyflogaeth, pensiwn, buddiant, ymddiriedolaeth, incwm rhent, gan gynnwys incwm difidend sy'n fwy na'i Lwfans Difidend – cyn i unrhyw dreth ac Yswiriant Gwladol gael eu didynnu.
-eligibility.check.partners.income.h2=A yw hyn yn berthnasol i’ch partner?
-eligibility.check.partners.income.before.tax=Mae hyn cyn didynnu treth.
-eligibility.check.partners.income.error=Nid ydych yn gymwys ar gyfer Lwfans Priodasol yn y flwyddyn dreth hon am fod incwm eich partner yn rhy uchel neu''n rhy isel. Mae''n dal i fod yn bosibl i chi wneud cais ar gyfer blynyddoedd blaenorol os oedd ei incwm yn is neu''n uwch yn y gorffennol.
-eligibility.check.date.of.birth.h1=A gawsoch chi neu''ch partner eich geni ar ôl 5 Ebrill 1935?
-eligibility.check.date.of.birth.span.married=A yw hyn yn berthnasol i chi a’ch partner?
-eligibility.check.date.of.birth.error.text.before.link=Mae’n bosibl y byddwch yn elwa mwy fel pâr drwy wneud cais am {0}
-eligibility.check.date.of.birth.error.link.text=Lwfans P&#226;r Priod
-eligibility.check.date.of.birth.error.text.after.link=Mae’n dal i fod yn bosibl i chi wneud cais am Lwfans Priodasol ond ni allwch gael Lwfans Priodasol a Lwfans Pâr Priod ar yr un pryd.
-eligibility.check.do.you.want.to.apply.h1=A ydych am wneud cais am Lwfans Priodasol?
 
 #********************************************************************************
 # Finished Message
@@ -639,7 +617,6 @@ tamc.breadcrumb.incometax=Treth Incwm
 tamc.menu=Dewislen
 tamc.apply=Gwneud cais am Lwfans Priodasol
 tamc.manage=Rheoli’ch Lwfans Priodasol
-eligibility.check.do.you.live.in.scotland.h1=A ydych yn byw yn yr Alban?
 #*************************************************************
 # User Research Banner Messages
 #*************************************************************
