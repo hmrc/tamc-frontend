@@ -118,7 +118,7 @@
         serviceId = appConfig.contactFormServiceIdentifier,
         language = if(messages.lang.code == "cy") Cy else En,
         referrerUrl = Some(request.uri),
-        baseUrl = Some(appConfig.contactHost),
+        baseUrl = Some(appConfig.contactFrontendService),
         classes = Some("govuk-!-margin-bottom-8")
     ))
     <hr aria-hidden="true" class="govuk-section-break govuk-section-break--m">
