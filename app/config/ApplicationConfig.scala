@@ -40,7 +40,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
   val contactHost = configuration.getOptional[String]("tamc.external-urls.contact-frontend").getOrElse("")
-  val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
+  val contactFrontendService = configuration.getOptional[String]("microservice.contact-frontend.host").getOrElse("")
   val contactFormServiceIdentifier = "TAMC"
   val pageTitle = "Your personal tax account"
   lazy val betaFeedbackUnauthenticatedUrl = s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
