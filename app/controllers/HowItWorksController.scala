@@ -33,4 +33,29 @@ class HowItWorksController @Inject()(
     implicit request =>
       Ok(howItWorksView())
   }
+
+  //TODO: - to be removed when URLs deprecated completely
+  def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
+      Redirect(controllers.routes.HowItWorksController.howItWorks)
+  }
+
+  def lowerEarner(): Action[AnyContent] = unauthenticatedAction {
+      Redirect(controllers.routes.HowItWorksController.howItWorks)
+  }
+
+  def partnersIncome(): Action[AnyContent] = unauthenticatedAction {
+      Redirect(controllers.routes.HowItWorksController.howItWorks)
+  }
+
+  def dateOfBirthCheck(): Action[AnyContent] = unauthenticatedAction {
+      Redirect(controllers.routes.HowItWorksController.howItWorks)
+  }
+
+  def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
+      Redirect(controllers.routes.HowItWorksController.howItWorks)
+  }
+
+  def doYouWantToApply(): Action[AnyContent] = unauthenticatedAction {
+      Redirect(controllers.routes.HowItWorksController.howItWorks)
+  }
 }

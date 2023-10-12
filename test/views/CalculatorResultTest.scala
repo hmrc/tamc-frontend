@@ -22,12 +22,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 import utils.BaseTest
-import controllers.EligibilityController
+import controllers.EligibilityCalculatorController
 
 class CalculatorResultTest extends BaseTest {
 
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
-  lazy val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
+  lazy val controller: EligibilityCalculatorController = app.injector.instanceOf[EligibilityCalculatorController]
 
   "Check eligibility benefit" should {
 

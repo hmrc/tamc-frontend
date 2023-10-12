@@ -54,7 +54,7 @@ backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks.url)
 
     @p(Text(Messages("pages.calc.para1")))
 
-    @form(action = routes.EligibilityController.ptaCalculatorAction, args = ('id -> "calculator")) {
+    @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction, args = ('id -> "calculator")) {
 
         @govukFieldset(Fieldset(
             legend = Some(Legend(

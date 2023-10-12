@@ -12,7 +12,7 @@ object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"                  %% "emailaddress"                       % "3.7.0",
     "uk.gov.hmrc.mongo"            %% s"hmrc-mongo-$playVersion"           % hmrcMongoVersion,
-    "uk.gov.hmrc"                  %% "bootstrap-frontend-play-28"         % bootstrapVersion,
+    "uk.gov.hmrc"                  %% s"bootstrap-frontend-$playVersion"   % bootstrapVersion,
     "uk.gov.hmrc"                  %% "http-caching-client"                % s"10.0.0-$playVersion",
     "com.ibm.icu"                   % "icu4j"                              % "71.1",
     "uk.gov.hmrc"                  %% "tax-year"                           % "3.0.0",
@@ -30,7 +30,7 @@ object AppDependencies {
     "org.scalacheck"         %% "scalacheck"                    % "1.16.0",
     "org.mockito"             % "mockito-core"                  % "4.7.0",
     "com.github.tomakehurst"  % "wiremock-jre8"                 % "2.33.2",
-    "uk.gov.hmrc"            %% "bootstrap-test-play-28"        % bootstrapVersion,
+    "uk.gov.hmrc"            %% s"bootstrap-test-$playVersion"  % bootstrapVersion,
     "uk.gov.hmrc.mongo"      %% s"hmrc-mongo-test-$playVersion" % hmrcMongoVersion
   ).map(_ % "test")
 

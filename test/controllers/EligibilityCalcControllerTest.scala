@@ -110,5 +110,5 @@ class EligibilityCalcControllerTest extends BaseTest {
       status(result) shouldBe BAD_REQUEST
     }
   }
-  lazy val controller: EligibilityController = app.injector.instanceOf[EligibilityController]
+  lazy val controller: EligibilityCalculatorController = app.injector.instanceOf[EligibilityCalculatorController]
 }
