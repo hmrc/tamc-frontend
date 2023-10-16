@@ -54,13 +54,6 @@ pages.form.field.transferor-email.error.maxLength=Nodwch ddim mwy na {0} o gymer
 pages.form.field.transferor-email.error.email=Nodwch gyfeiriad e-bost ag enw, y symbol @ ac enw parth, megis eichenw@enghraifft.com
 pages.form.field.transferor-email.error.character=Mae’n rhaid i’ch cyfeiriad e-bost gynnwys y llythrennau a i z, y rhifau 0 i 9, atalnodau llawn, cysylltnodau a thanlinellau yn unig
 
-pages.form.field-required.marriage-criteria=Dewiswch ‘Iawn’ os ydych yn briod neu mewn partneriaeth sifil
-pages.form.field-required.date-of-birth=Dewiswch ‘Iawn’ os cawsoch chi a’ch partner eich geni ar ôl 5 Ebrill 1935
-pages.form.field-required.do-you-live-in-scotland=Dewiswch ‘Iawn’ os ydych yn byw yn yr Alban
-pages.form.field-required.lower-earner=Dewiswch ‘Iawn’ os yw’ch incwm yn llai na £{0} y flwyddyn
-pages.form.field-required.partners-income=Dewiswch ‘Iawn’ os yw incwm eich partner rhwng £{0} a £{1} y flwyddyn
-pages.form.field-required.do-you-want-to-apply=Dewiswch Iawn os ydych am wneud cais am Lwfans Priodasol
-
 pages.form.field-required.applyForCurrentYear=Dewiswch ‘Iawn’ os ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 pages.form.field-required.applyForHistoricYears=Dewiswch Iawn os hoffech wneud cais ar gyfer blwyddyn dreth gynharach
 
