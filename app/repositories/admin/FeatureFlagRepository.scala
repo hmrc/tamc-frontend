@@ -47,6 +47,8 @@ class FeatureFlagRepository @Inject()(
     )
     with Transactions {
 
+  override lazy val requiresTtlIndex: Boolean = false
+
   private implicit val tc: TransactionConfiguration = TransactionConfiguration.strict
 
   def deleteFeatureFlag(name: FeatureFlagName): Future[Boolean] =
