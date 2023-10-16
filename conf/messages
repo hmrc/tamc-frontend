@@ -53,13 +53,6 @@ pages.form.field.transferor-email.error.required=Enter your email address
 pages.form.field.transferor-email.error.maxLength=Enter no more than {0} characters
 pages.form.field.transferor-email.error.email=Enter an email address in the correct format, like name@example.com
 
-pages.form.field-required.marriage-criteria=Select yes if you are married or in a civil partnership
-pages.form.field-required.date-of-birth=Select yes if you and your partner were born after 5 April 1935
-pages.form.field-required.do-you-live-in-scotland=Select yes if you live in Scotland
-pages.form.field-required.lower-earner=Select yes if your income is less than £{0} a year
-pages.form.field-required.partners-income=Select yes if your partner’s income is between £{0} and £{1} a year
-pages.form.field-required.do-you-want-to-apply=Select yes if you want to apply for Marriage Allowance
-
 pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
 pages.form.field-required.applyForHistoricYears=Select yes if you would like to apply for earlier tax years
 
