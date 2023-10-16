@@ -55,6 +55,7 @@ pages.form.field.transferor-email.error.email=Enter an email address in the corr
 
 pages.form.field-required.applyForCurrentYear=Select yes if you want to apply for this current tax year onwards
 pages.form.field-required.applyForHistoricYears=Select yes if you would like to apply for earlier tax years
+
 error.end-reason.required=Select a reason for changing your Marriage Allowance below.
 pages.form.field-required.endReason=Select a reason for changing your Marriage Allowance below
 
