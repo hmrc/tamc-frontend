@@ -21,7 +21,7 @@ import com.google.inject.{Inject, Singleton}
 import models.admin.SCAWrapperToggle
 import play.api.http.{EnabledFilters, HttpFilters}
 import play.api.mvc.{EssentialFilter, RequestHeader, Result}
-import services.admin.FeatureFlagService
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.sca.connectors.ScaWrapperDataConnector
 import uk.gov.hmrc.sca.filters.WrapperDataFilter
 

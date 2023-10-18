@@ -19,7 +19,7 @@ package controllers.testonly
 import com.google.inject.Inject
 import play.api.Logging
 import play.api.mvc.{Action, AnyContent, InjectedController}
-import services.admin.FeatureFlagService
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 
 import scala.concurrent.ExecutionContext
 
