@@ -65,7 +65,8 @@ class TransferTest extends BaseTest with NinoGenerator {
       bind[TransferService].toInstance(mockTransferService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
       bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     )
     .build()
 
