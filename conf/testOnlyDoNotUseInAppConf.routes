@@ -10,6 +10,6 @@
 # Failing to follow this rule may result in test routes deployed in production.
 
 # Add all the application routes to the prod.routes file
-->         /                                                                        prod.Routes
+->        /                                      prod.Routes
 
-GET       /marriage-allowance-application/test-only/disable-admin-feature-flags    @controllers.testonly.AcceptanceTestHelperController.disableAdminFeatureFlags()
+->        /marriage-allowance-application        mongoFeatureTogglesTestOnly.Routes
