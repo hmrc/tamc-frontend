@@ -61,7 +61,8 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       bind[CachingService].toInstance(mockCachingService),
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
-      bind[PertaxAuthAction].to[FakePertaxAuthAction]
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      featureFlagServiceBinding
     ).build()
 
   val controller: UpdateRelationshipController = inject[UpdateRelationshipController]

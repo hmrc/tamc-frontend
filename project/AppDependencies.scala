@@ -17,8 +17,8 @@ object AppDependencies {
     "com.ibm.icu"                   % "icu4j"                              % "71.1",
     "uk.gov.hmrc"                  %% "tax-year"                           % "3.0.0",
     "com.fasterxml.jackson.module" %% "jackson-module-scala"               % "2.13.4",
-    "uk.gov.hmrc"                  %% s"internal-auth-client-$playVersion" % "1.2.0",
     "uk.gov.hmrc"                  %% "sca-wrapper"                        % "1.0.43",
+    "uk.gov.hmrc"                  %% "mongo-feature-toggles-client"       % "0.3.0",
     ehcache
   )
 

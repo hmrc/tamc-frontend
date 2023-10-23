@@ -16,12 +16,13 @@
 
 package utils
 
+import models.admin.SCAWrapperToggle
 import org.mockito.ArgumentMatchers.{eq => mockEq}
 import play.api.inject.{Binding, bind}
-import models.admin.{FeatureFlag, SCAWrapperToggle}
 import org.mockito.Mockito.{mock, when}
 import org.mockito.stubbing.OngoingStubbing
-import services.admin.FeatureFlagService
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 
 import scala.concurrent.Future
 

@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package models.admin
+package config
 
-import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagName
+import models.admin.{PertaxBackendToggle, SCAWrapperToggle}
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlagNamesLibrary
 
-case object PertaxBackendToggle extends FeatureFlagName {
-  override val name: String                = "pertax-backend-toggle"
-  override val description: Option[String] = Some(
-    "Enable/disable pertax backend during auth"
-  )
-}
-
-case object SCAWrapperToggle extends FeatureFlagName {
-  override val name: String                = "SCAWrapperToggle"
-  override val description: Option[String] = Some(
-    "Enable/Disable the sca page wrapper"
-  )
+class ApplicationStartUp {
+  FeatureFlagNamesLibrary.addFlags(List(
+    SCAWrapperToggle,
+    PertaxBackendToggle
+  ))
 }

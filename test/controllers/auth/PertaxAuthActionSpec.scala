@@ -17,7 +17,7 @@
 package controllers.auth
 
 import connectors.PertaxAuthConnector
-import models.admin.{FeatureFlag, PertaxBackendToggle}
+import models.admin.PertaxBackendToggle
 import models.auth.AuthenticatedUserRequest
 import models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
 import org.mockito.ArgumentMatchers.any
@@ -33,10 +33,11 @@ import play.api.mvc.{AnyContent, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
-import services.admin.FeatureFlagService
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
+import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.play.partials.HtmlPartial
 import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
 import utils.UnitSpec

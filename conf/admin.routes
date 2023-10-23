@@ -1,6 +1,3 @@
-GET        /metrics                         com.kenshoo.play.metrics.MetricsController.metrics
-+nocsrf
-PUT        /featureFlags/:flagName          controllers.admin.FeatureFlagsAdminController.put(flagName: models.admin.FeatureFlagName)
-+nocsrf
-PUT        /featureFlags                    controllers.admin.FeatureFlagsAdminController.putAll
-GET        /featureFlags                    controllers.admin.FeatureFlagsAdminController.get
+GET        /metrics                         @com.kenshoo.play.metrics.MetricsController.metrics
+
+->         /featureFlags                    mongoFeatureTogglesAdmin.Routes
