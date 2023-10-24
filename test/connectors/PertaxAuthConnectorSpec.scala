@@ -49,7 +49,7 @@ class PertaxAuthConnectorSpec extends BaseTest with GuiceOneAppPerSuite with Wir
       }
 
       "pertax returns Json that cannot be parsed" should {
-        "return an UpstreamErrorRespobnse" in {
+        "return an UpstreamErrorResponse" in {
           val expectedReturnModel = UpstreamErrorResponse(
             "[PertaxAuthenticationHttpParser][read] There was an issue parsing the response from Pertax Auth.",
             INTERNAL_SERVER_ERROR
