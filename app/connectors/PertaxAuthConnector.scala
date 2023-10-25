@@ -22,8 +22,8 @@ import play.api.Logging
 import play.api.http.HeaderNames
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
 import uk.gov.hmrc.play.partials.HtmlPartial
-
 import javax.inject.Inject
+
 import scala.concurrent.{ExecutionContext, Future}
 import connectors.httpParsers.PertaxAuthenticationHttpParser._
 import models.pertaxAuth.PertaxAuthResponseModel
@@ -32,12 +32,12 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: Application
                                    implicit ec: ExecutionContext
 ) extends PertaxAuthConnector with Logging {
 
-  override def authorise(nino: String)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]] = {
-    val authUrl = appConfig.pertaxAuthBaseUrl + s"/pertax/$nino/authorise"
+  override def authorise()(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]] = {
+    val authUrl = appConfig.pertaxAuthBaseUrl + s"/pertax/authorise"
 
-    http.GET[Either[UpstreamErrorResponse, PertaxAuthResponseModel]](
+    http.POSTEmpty[Either[UpstreamErrorResponse, PertaxAuthResponseModel]](
       url = authUrl,
-      headers = Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.1.0+json")
+      headers = Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
     )
   }
 
@@ -60,7 +60,7 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: Application
 
 @ImplementedBy(classOf[PertaxAuthConnectorImpl])
 trait PertaxAuthConnector {
-  def authorise(nino: String)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]
+  def authorise()(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]
 
   def loadPartial(partialContextUrl: String)(implicit hc: HeaderCarrier): Future[HtmlPartial]
 }
