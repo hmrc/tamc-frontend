@@ -18,7 +18,7 @@ object AppDependencies {
     "uk.gov.hmrc"                  %% "tax-year"                           % "3.0.0",
     "com.fasterxml.jackson.module" %% "jackson-module-scala"               % "2.13.4",
     "uk.gov.hmrc"                  %% "sca-wrapper"                        % "1.0.43",
-    "uk.gov.hmrc"                  %% "mongo-feature-toggles-client"       % "0.3.0",
+    "uk.gov.hmrc"                  %% "mongo-feature-toggles-client"       % "0.4.0",
     ehcache
   )
 
