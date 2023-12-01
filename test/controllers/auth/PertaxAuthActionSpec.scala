@@ -39,23 +39,27 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
 import uk.gov.hmrc.play.partials.HtmlPartial
-import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
+import utils.Constants.{ACCESS_GRANTED, CONFIDENCE_LEVEL_UPLIFT_REQUIRED, CREDENTIAL_STRENGTH_UPLIFT_REQUIRED, NO_HMRC_PT_ENROLMENT}
 import utils.UnitSpec
 import views.html.errors.try_later
-
 import java.time.{Instant, LocalDate}
+
+import config.ApplicationConfig
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
   lazy val connector: PertaxAuthConnector = mock[PertaxAuthConnector]
+  val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
 
   lazy val featureFlagService = mock[FeatureFlagService]
 
   lazy val authAction = new PertaxAuthActionImpl(
     connector,
     app.injector.instanceOf[try_later],
-    featureFlagService
+    featureFlagService,
+    mockApplicationConfig
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
   lazy val date = LocalDate.now()
@@ -75,11 +79,11 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
   )
 
   def mockAuth(pertaxAuthResponseModel: PertaxAuthResponseModel): OngoingStubbing[Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]] = {
-    when(connector.authorise(any())(any())).thenReturn(Future.successful(Right(pertaxAuthResponseModel)))
+    when(connector.authorise()(any())).thenReturn(Future.successful(Right(pertaxAuthResponseModel)))
   }
 
   def mockFailedAuth(error: UpstreamErrorResponse): OngoingStubbing[Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]] = {
-    when(connector.authorise(any())(any())).thenReturn(Future.successful(Left(error)))
+    when(connector.authorise()(any())).thenReturn(Future.successful(Left(error)))
   }
 
   def block: AuthenticatedUserRequest[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
@@ -130,6 +134,60 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
 
           "has a redirect url of '/some-redirect'" in {
             val expectedRedirectUrl = "/some-redirect/?redirectUrl=%2Fsome-base-url"
+
+            result.header.headers(LOCATION) shouldBe expectedRedirectUrl
+          }
+        }
+
+        "the response from pertax auth connector indicates CREDENTIAL_STRENGTH_UPLIFT_REQUIRED and has a redirect URL" which {
+          lazy val request = {
+            mockAuth(PertaxAuthResponseModel(
+              CREDENTIAL_STRENGTH_UPLIFT_REQUIRED,
+              "Still doesn't matter.",
+              Some("/some-redirect"),
+              None
+            ))
+
+            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+
+            authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
+          }
+          lazy val result = await(request)
+
+          "has a status of SEE_OTHER(303)" in {
+            status(result) shouldBe SEE_OTHER
+          }
+
+          "has a redirect url of '/some-redirect'" in {
+            val expectedRedirectUrl = "/some-redirect?origin=ma&continueUrl=%2Fsome-base-url"
+
+            result.header.headers(LOCATION) shouldBe expectedRedirectUrl
+          }
+        }
+
+        "the response from pertax auth connector indicates CONFIDENCE_LEVEL_UPLIFT_REQUIRED and has a redirect URL" which {
+          lazy val request = {
+            mockAuth(PertaxAuthResponseModel(
+              CONFIDENCE_LEVEL_UPLIFT_REQUIRED,
+              "Still doesn't matter.",
+              Some("/some-redirect"),
+              None
+            ))
+
+            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(mockApplicationConfig.callbackUrl).thenReturn("/marriage-allowance-application/history")
+            when(mockApplicationConfig.ivNotAuthorisedUrl).thenReturn("/marriage-allowance-application/not-authorised")
+
+            authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
+          }
+          lazy val result = await(request)
+
+          "has a status of SEE_OTHER(303)" in {
+            status(result) shouldBe SEE_OTHER
+          }
+
+          "has a redirect url of '/some-redirect'" in {
+            val expectedRedirectUrl = "/some-redirect?origin=ma&confidenceLevel=200&completionURL=%2Fmarriage-allowance-application%2Fhistory&failureURL=%2Fmarriage-allowance-application%2Fnot-authorised=%2Fsome-base-url"
 
             result.header.headers(LOCATION) shouldBe expectedRedirectUrl
           }

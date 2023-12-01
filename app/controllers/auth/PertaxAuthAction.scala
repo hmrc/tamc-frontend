@@ -17,6 +17,7 @@
 package controllers.auth
 
 import com.google.inject.ImplementedBy
+import config.ApplicationConfig
 import connectors.PertaxAuthConnector
 import models.admin.PertaxBackendToggle
 import models.auth.AuthenticatedUserRequest
@@ -30,16 +31,18 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.partials.HtmlPartial
-import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
+import utils.Constants.{ACCESS_GRANTED, CONFIDENCE_LEVEL_UPLIFT_REQUIRED, CREDENTIAL_STRENGTH_UPLIFT_REQUIRED, NO_HMRC_PT_ENROLMENT}
 import views.html.errors.try_later
-
 import javax.inject.Inject
+import utils.encodeQueryStringValue
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthActionImpl @Inject()(
                                   pertaxAuthConnector: PertaxAuthConnector,
                                   technicalIssue: try_later,
-                                  featureFlagService: FeatureFlagService
+                                  featureFlagService: FeatureFlagService,
+                                  appConfig: ApplicationConfig
                                 )(
                                   implicit val executionContext: ExecutionContext,
                                   controllerComponents: ControllerComponents
@@ -53,11 +56,15 @@ class PertaxAuthActionImpl @Inject()(
 
     featureFlagService.get(PertaxBackendToggle).flatMap { flag =>
       if (flag.isEnabled) {
-        pertaxAuthConnector.authorise(request.nino.nino).flatMap {
+        pertaxAuthConnector.authorise().flatMap {
           case Right(PertaxAuthResponseModel(ACCESS_GRANTED, _, _, _)) =>
             Future.successful(Right(request))
           case Right(PertaxAuthResponseModel(NO_HMRC_PT_ENROLMENT, _, Some(redirect), _)) =>
             Future.successful(Left(Redirect(s"$redirect/?redirectUrl=${SafeRedirectUrl(request.uri).encodedUrl}")))
+          case Right(PertaxAuthResponseModel(CREDENTIAL_STRENGTH_UPLIFT_REQUIRED, _, Some(redirect), _)) =>
+            Future.successful(Left(Redirect(s"$redirect?origin=ma&continueUrl=${SafeRedirectUrl(request.uri).encodedUrl}")))
+          case Right(PertaxAuthResponseModel(CONFIDENCE_LEVEL_UPLIFT_REQUIRED, _, Some(redirect), _)) =>
+            Future.successful(Left(Redirect(s"$redirect?origin=ma&confidenceLevel=200&completionURL=${encodeQueryStringValue(appConfig.callbackUrl)}&failureURL=${encodeQueryStringValue(appConfig.ivNotAuthorisedUrl)}=${SafeRedirectUrl(request.uri).encodedUrl}")))
           case Right(PertaxAuthResponseModel(_, _, _, Some(errorPartial))) =>
             pertaxAuthConnector.loadPartial(errorPartial.url).map {
               case partial: HtmlPartial.Success =>

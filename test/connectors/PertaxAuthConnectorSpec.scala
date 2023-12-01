@@ -31,8 +31,6 @@ class PertaxAuthConnectorSpec extends BaseTest with GuiceOneAppPerSuite with Wir
 
   lazy val connector: PertaxAuthConnector = inject[PertaxAuthConnector]
 
-  val nino = "AA000000A"
-
   "PertaxAuthConnector" when {
     "calling .authorise" when {
       "pertax auth returns a successful response" should {
@@ -41,7 +39,7 @@ class PertaxAuthConnectorSpec extends BaseTest with GuiceOneAppPerSuite with Wir
 
           lazy val result = {
             mockPertaxAuth(expectedReturnModel)
-            connector.authorise(nino)
+            connector.authorise()
           }
 
           await(result) shouldBe Right(expectedReturnModel)
@@ -61,7 +59,7 @@ class PertaxAuthConnectorSpec extends BaseTest with GuiceOneAppPerSuite with Wir
 
           lazy val result = {
             mockPertaxAuthFailure(brokenJson)
-            connector.authorise(nino)
+            connector.authorise()
           }
 
           await(result) shouldBe Left(expectedReturnModel)

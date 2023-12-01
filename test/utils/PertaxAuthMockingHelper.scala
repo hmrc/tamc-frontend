@@ -40,9 +40,9 @@ trait PertaxAuthMockingHelper {
       ).build()
   }
 
-  def mockPertaxAuth(returnedValue: PertaxAuthResponseModel, nino: String = "AA000000A"): StubMapping = {
+  def mockPertaxAuth(returnedValue: PertaxAuthResponseModel): StubMapping = {
     server.stubFor(
-      get(urlMatching(s"/pertax/$nino/authorise"))
+      post(urlMatching(s"/pertax/authorise"))
         .willReturn(
           aResponse()
             .withStatus(OK)
@@ -51,9 +51,9 @@ trait PertaxAuthMockingHelper {
     )
   }
 
-  def mockPertaxAuthFailure(returnedValue: JsValue, nino: String = "AA000000A"): StubMapping = {
+  def mockPertaxAuthFailure(returnedValue: JsValue): StubMapping = {
     server.stubFor(
-      get(urlMatching(s"/pertax/$nino/authorise"))
+      post(urlMatching(s"/pertax/authorise"))
         .willReturn(
           aResponse()
             .withStatus(BAD_REQUEST)
