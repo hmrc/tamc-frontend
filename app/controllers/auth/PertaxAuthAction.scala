@@ -31,19 +31,23 @@ import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.play.partials.HtmlPartial
 import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
+import views.Main
 import views.html.errors.try_later
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthActionImpl @Inject()(
-                                  pertaxAuthConnector: PertaxAuthConnector,
-                                  technicalIssue: try_later,
-                                  featureFlagService: FeatureFlagService
-                                )(
-                                  implicit val executionContext: ExecutionContext,
-                                  controllerComponents: ControllerComponents
-                                ) extends PertaxAuthAction with I18nSupport with Logging {
+  pertaxAuthConnector: PertaxAuthConnector,
+  technicalIssue: try_later,
+  featureFlagService: FeatureFlagService,
+  main: Main
+)(
+  implicit val executionContext: ExecutionContext,
+  controllerComponents: ControllerComponents
+) extends PertaxAuthAction
+  with I18nSupport
+  with Logging {
 
   override def messagesApi: MessagesApi = controllerComponents.messagesApi
 
@@ -61,7 +65,7 @@ class PertaxAuthActionImpl @Inject()(
           case Right(PertaxAuthResponseModel(_, _, _, Some(errorPartial))) =>
             pertaxAuthConnector.loadPartial(errorPartial.url).map {
               case partial: HtmlPartial.Success =>
-                Left(Status(errorPartial.statusCode)(partial.content))
+                Left(Status(errorPartial.statusCode)(main(partial.title)(partial.content)))
               case _: HtmlPartial.Failure =>
                 logger.error("[PertaxAuthAction][refine] Failed to retrieve a partial from pertax auth service.")
                 Left(InternalServerError(technicalIssue()))

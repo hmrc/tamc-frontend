@@ -95,6 +95,25 @@ class PertaxAuthConnectorSpec extends BaseTest with GuiceOneAppPerSuite with Wir
           await(result) shouldBe expectedPartial
         }
       }
+
+      "ensure url has leading /" should {
+        "check char at 0" in {
+          val expectedPartial = HtmlPartial.Failure(Some(BAD_REQUEST), "<html>Failure Page</html>")
+
+          val result1 = {
+            mockPertaxPartial("<html>Failure Page</html>", None, BAD_REQUEST)
+            connector.loadPartial("/partial")
+          }
+
+          val result2 = {
+            mockPertaxPartial("<html>Failure Page</html>", None, BAD_REQUEST)
+            connector.loadPartial("partial")
+          }
+
+          await(result1) shouldBe expectedPartial
+          await(result2) shouldBe expectedPartial
+        }
+      }
     }
   }
 }

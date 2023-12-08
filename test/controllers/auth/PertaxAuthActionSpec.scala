@@ -17,9 +17,10 @@
 package controllers.auth
 
 import connectors.PertaxAuthConnector
-import models.admin.PertaxBackendToggle
+import models.admin.{PertaxBackendToggle, SCAWrapperToggle}
 import models.auth.AuthenticatedUserRequest
 import models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
+import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito
 import org.mockito.Mockito.when
@@ -33,14 +34,15 @@ import play.api.mvc.{AnyContent, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
-import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.UpstreamErrorResponse
+import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.play.partials.HtmlPartial
 import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
 import utils.UnitSpec
+import views.Main
 import views.html.errors.try_later
 
 import java.time.{Instant, LocalDate}
@@ -48,14 +50,20 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
-  lazy val connector: PertaxAuthConnector = mock[PertaxAuthConnector]
+  implicit val headerCarrier: HeaderCarrier =
+    HeaderCarrier()
 
-  lazy val featureFlagService = mock[FeatureFlagService]
+  lazy val connector: PertaxAuthConnector =
+    mock[PertaxAuthConnector]
+
+  lazy val featureFlagService: FeatureFlagService =
+    mock[FeatureFlagService]
 
   lazy val authAction = new PertaxAuthActionImpl(
-    connector,
-    app.injector.instanceOf[try_later],
-    featureFlagService
+    pertaxAuthConnector = connector,
+    technicalIssue      = app.injector.instanceOf[try_later],
+    featureFlagService  = featureFlagService,
+    main                = app.injector.instanceOf[Main]
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
   lazy val date = LocalDate.now()
@@ -66,13 +74,14 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
     Mockito.reset()
   }
 
-  def authenticatedRequest(requestMethod: String = "GET", requestUrl: String = "/"): AuthenticatedUserRequest[AnyContent] = new AuthenticatedUserRequest[AnyContent](
-    FakeRequest(requestMethod, requestUrl),
-    Some(ConfidenceLevel.L200),
-    true,
-    None,
-    Nino("AA000000A")
-  )
+  def authenticatedRequest(requestMethod: String = "GET", requestUrl: String = "/"): AuthenticatedUserRequest[AnyContent] =
+    new AuthenticatedUserRequest[AnyContent](
+      FakeRequest(requestMethod, requestUrl),
+      Some(ConfidenceLevel.L200),
+      true,
+      None,
+      Nino("AA000000A")
+    )
 
   def mockAuth(pertaxAuthResponseModel: PertaxAuthResponseModel): OngoingStubbing[Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]] = {
     when(connector.authorise(any())(any())).thenReturn(Future.successful(Right(pertaxAuthResponseModel)))
@@ -149,10 +158,16 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
             ))
 
             when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
-              HtmlPartial.Success(Some("Test Title"), Html("Hello"))
+              HtmlPartial.Success(Some("Test Title"), Html("<div id=\"partial\">Hello</div>"))
             ))
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(
+              FeatureFlag(PertaxBackendToggle, isEnabled = true)
+            ))
+
+            when(featureFlagService.get(SCAWrapperToggle)).thenReturn(Future.successful(
+              FeatureFlag(SCAWrapperToggle, isEnabled = true)
+            ))
 
             authAction.invokeBlock(authenticatedRequest(), block)
           })
@@ -161,8 +176,10 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
             result.header.status shouldBe IM_A_TEAPOT
           }
 
-          "has a body of 'Hello'" in {
-            bodyOf(result) shouldBe "Hello"
+          "has a title of 'Test Title' and partial of 'Hello'" in {
+            lazy val doc = Jsoup.parse(bodyOf(result))
+            doc.getElementsByTag("title").text() shouldBe "Test Title"
+            doc.getElementById("partial").text() shouldBe "Hello"
           }
         }
 
