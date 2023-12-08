@@ -62,13 +62,13 @@ trait PertaxAuthMockingHelper {
     )
   }
 
-  def mockPertaxPartial(body: String, title: Option[String], status: Int = OK, partialUrl: String = "partial"): StubMapping = {
+  def mockPertaxPartial(body: String, title: Option[String], status: Int = OK, partialUrl: String = "/partial"): StubMapping = {
     val response = aResponse()
       .withStatus(status)
       .withBody(body)
 
     server.stubFor(
-      get(urlMatching(s"/pertax/partials/$partialUrl"))
+      get(urlMatching(partialUrl))
         .willReturn(
           title.fold(response) { unwrappedTitle =>
             response.withHeader("X-Title", UriEncoding.encodePathSegment(unwrappedTitle, "UTF-8"))
