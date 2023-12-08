@@ -17,7 +17,7 @@
 package controllers.auth
 
 import connectors.PertaxAuthConnector
-import models.admin.{PertaxBackendToggle, SCAWrapperToggle}
+import models.admin.PertaxBackendToggle
 import models.auth.AuthenticatedUserRequest
 import models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
 import org.jsoup.Jsoup
@@ -163,10 +163,6 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
 
             when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(
               FeatureFlag(PertaxBackendToggle, isEnabled = true)
-            ))
-
-            when(featureFlagService.get(SCAWrapperToggle)).thenReturn(Future.successful(
-              FeatureFlag(SCAWrapperToggle, isEnabled = true)
             ))
 
             authAction.invokeBlock(authenticatedRequest(), block)
