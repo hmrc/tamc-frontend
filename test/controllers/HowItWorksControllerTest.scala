@@ -43,23 +43,6 @@ class HowItWorksControllerTest extends ControllerBaseTest {
       val button = document.getElementById("get-started")
       button.text shouldBe "Apply now"
     }
-
-    //TODO: - to be removed when URLs deprecated completely
-    "Redirect deprecated eligibility end points to /how-it-works" in {
-      val eligibilityRedirects: List[Future[Result]] = List(
-        howItWorksController.eligibilityCheck()(request),
-        howItWorksController.lowerEarner()(request),
-        howItWorksController.partnersIncome()(request),
-        howItWorksController.dateOfBirthCheck()(request),
-        howItWorksController.doYouLiveInScotland()(request),
-        howItWorksController.doYouWantToApply()(request)
-      )
-      eligibilityRedirects.foreach { redirectAction =>
-        val result: Future[Result] = redirectAction
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.HowItWorksController.howItWorks.url)
-      }
-    }
   }
 
   "home" should {

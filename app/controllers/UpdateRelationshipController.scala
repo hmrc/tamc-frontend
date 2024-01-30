@@ -272,7 +272,7 @@ class   UpdateRelationshipController @Inject()(
     }
 
     val pf: PartialFunction[Throwable, Result] = {
-          case _: NoPrimaryRecordError => Redirect(controllers.routes.HowItWorksController.howItWorks)
+          case _: NoPrimaryRecordError => Redirect(controllers.routes.TransferController.transfer)
           case t: CacheRelationshipAlreadyUpdated => handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate))
           case t: CacheMissingUpdateRecord => handle(t, warn, InternalServerError(tryLater()))
           case t: CacheUpdateRequestNotSent => handle(t, warn, InternalServerError(tryLater()))
