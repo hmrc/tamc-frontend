@@ -414,6 +414,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   "Calling Date Of Marriage page with error in dom field" should {
 
     "display form error message (date of marriage is before 1900)" in {
+      val localDate = LocalDate.now()
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
         "dateOfMarriage.day" -> "01",
         "dateOfMarriage.month" -> "01",
@@ -434,7 +435,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       val error = field.getElementsByClass("govuk-error-message")
       error.size() shouldBe 1
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
-      document.getElementById("dateOfMarriage-error").text shouldBe "Error: The year must be a number between 1900 and 2023"
+      document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The year must be a number between 1900 and ${localDate.getYear}"
       document.getElementById("backLink").attr("href") shouldBe controllers.routes.TransferController.transfer.url
     }
 

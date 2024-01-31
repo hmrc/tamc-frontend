@@ -18,11 +18,9 @@ package controllers
 
 import org.jsoup.Jsoup
 import play.api.http.Status.OK
-import play.api.mvc.Result
 import play.api.test.Helpers._
 import utils.ControllerBaseTest
 
-import scala.concurrent.Future
 
 class HowItWorksControllerTest extends ControllerBaseTest {
 
