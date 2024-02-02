@@ -64,7 +64,6 @@ class   UpdateRelationshipController @Inject()(
 
   def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
-      println(s"\n\n\n\n HISTORY ACTION REFERRER \n ${request.headers.get("http_referrer").getOrElse("/")}\n HISTORY ACTION REFERRER \n\n\n\n\n")
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
         updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
           val viewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
