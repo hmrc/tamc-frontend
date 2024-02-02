@@ -23,9 +23,11 @@ import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
 import models.auth.BaseUserRequest
+import play.api.Configuration
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.sca.config.AppConfig
 import utils.LoggerHelper
 import viewModels._
 
@@ -33,6 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class   UpdateRelationshipController @Inject()(
+  config: Configuration,
   authenticate: StandardAuthJourney,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
@@ -56,10 +59,12 @@ class   UpdateRelationshipController @Inject()(
   historySummaryViewModelImpl: HistorySummaryViewModelImpl,
   claimsViewModelImpl: ClaimsViewModelImpl,
   divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
-  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl,
+  appConfig: AppConfig)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
+      println(s"\n\n\n\n HISTORY ACTION REFERRER \n ${request.headers.get("http_referrer").getOrElse("/")}\n HISTORY ACTION REFERRER \n\n\n\n\n")
       updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
         updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
           val viewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
@@ -272,7 +277,7 @@ class   UpdateRelationshipController @Inject()(
     }
 
     val pf: PartialFunction[Throwable, Result] = {
-          case _: NoPrimaryRecordError => Redirect(controllers.routes.TransferController.transfer)
+          case _: NoPrimaryRecordError => Redirect(controllers.routes.HowItWorksController.howItWorks)
           case t: CacheRelationshipAlreadyUpdated => handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate))
           case t: CacheMissingUpdateRecord => handle(t, warn, InternalServerError(tryLater()))
           case t: CacheUpdateRequestNotSent => handle(t, warn, InternalServerError(tryLater()))

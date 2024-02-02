@@ -18,18 +18,18 @@ package controllers
 
 import org.jsoup.Jsoup
 import play.api.http.Status.OK
+import play.api.mvc.{AnyContent, Request}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import utils.ControllerBaseTest
-
 
 class HowItWorksControllerTest extends ControllerBaseTest {
 
   def howItWorksController: HowItWorksController = instanceOf[HowItWorksController]
 
   "HowItWorksController" should {
-    "direct the user to How It Works page" in {
-      val result = howItWorksController.howItWorks()(request)
-
+    "direct a PTA user to How It Works page" in {
+      val result = await(howItWorksController.howItWorks()(request))
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
@@ -40,6 +40,15 @@ class HowItWorksControllerTest extends ControllerBaseTest {
 
       val button = document.getElementById("get-started")
       button.text shouldBe "Apply now"
+    }
+
+    "redirect a Govuk signed in user to Transfer Allowance page" in {
+      val request: Request[AnyContent] = FakeRequest("GET", "/marriage-allowance-application/how-it-works")
+        .withHeaders("Referer" -> "https://www.gov.uk/")
+
+      val result = await(howItWorksController.howItWorks()(request))
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer.url)
     }
   }
 
