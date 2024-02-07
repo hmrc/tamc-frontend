@@ -50,7 +50,7 @@ request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.application.pattern", Messages("title.eligible-years"))),
-backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage.url)
+backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage().url)
 ){
 
 @errorSummary(form, Some("applyForCurrentYear-true"))
@@ -75,7 +75,7 @@ backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage.url)
         </li>
     </ul>
 
-    @formCSRF(action = routes.TransferController.eligibleYearsAction, args = ('id -> "current-year-form")) {
+    @formCSRF(action = routes.TransferController.eligibleYearsAction(), args = (Symbol("id") -> "current-year-form")) {
     <div id="apply-For-CurrentYear">
         @h3("pages.eligibleyear.doyou.want")
 

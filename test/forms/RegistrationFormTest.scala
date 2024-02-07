@@ -29,7 +29,7 @@ class RegistrationFormTest extends UnitSpec with GuiceOneServerPerSuite {
 
   val applicationConfig = app.injector.instanceOf[ApplicationConfig]
   lazy val registrationForm: RegistrationForm = app.injector.instanceOf[RegistrationForm]
-  implicit val messages = MessagesImpl(Lang("en"), app.injector.instanceOf[MessagesApi])
+  implicit val messages: MessagesImpl = MessagesImpl(Lang("en"), app.injector.instanceOf[MessagesApi])
 
   ".dateOfMarriageValidator" should {
 

@@ -38,7 +38,7 @@ pageTitle = Some(messages("title.pattern", messages("pages.decision.title")))
 
      @h1("pages.decision.title")
 
-    @form(action = routes.UpdateRelationshipController.submitDecision, args = ('id -> "check-relationship-form")) {
+    @form(action = routes.UpdateRelationshipController.submitDecision(), args = (Symbol("id") -> "check-relationship-form")) {
 
         @inputRadios(
             form = decisionForm,

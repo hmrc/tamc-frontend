@@ -42,7 +42,7 @@ request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm"))),
-backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
+backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail().url)
 ){
 
     @h1("pages.confirm.html.h1", elmId = Some("confirm-page"))
@@ -60,7 +60,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
             <dt class="govuk-summary-list_key" id="email-label">@Html(messages("generic.email"))</dt>
             <dd class="govuk-summary-list_value" id="transferor-email">@data.transferorEmail</dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.confirmYourEmail" aria-label="@Html(messages("pages.confirm.change.email"))"
+                <a href="@controllers.routes.TransferController.confirmYourEmail()" aria-label="@Html(messages("pages.confirm.change.email"))"
                 data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("generic.email"))</span>
@@ -75,7 +75,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
             <dt class="govuk-summary-list_key">@Html(messages("generic.name"))</dt>
             <dd class="govuk-summary-list_value" id="recipient-name">@data.recipientFirstName @data.recipientLastName</dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.transfer"
+                <a href="@controllers.routes.TransferController.transfer()"
                 data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details" aria-label="@Html(messages("pages.form.aria-label"))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("generic.name"))</span>
@@ -95,7 +95,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
             <dt class="govuk-summary-list_key">@Html(messages("pages.confirm.date.of.marriage"))</dt>
             <dd class="govuk-summary-list_value" id="marriage-date">@languageUtilsImpl().ukDateTransformer(data.dateOfMarriage.dateOfMarriage) </dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.dateOfMarriage"
+                <a href="@{controllers.routes.TransferController.dateOfMarriage()}"
                 data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date" aria-label="@Html(messages("pages.form.marriage-date.aria-label"))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("pages.confirm.date.of.marriage"))</span>
@@ -123,7 +123,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
                     </dd>
                 }
             <dd class="govuk-summary-list_actions">
-                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
+                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears()" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))</span>
                 </a>
@@ -134,7 +134,7 @@ backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail.url)
 
     @govukInsetText(InsetText(id = Some("warning-message"), content = Text(messages("pages.confirm.warning"))))
 
-    @form(action = routes.TransferController.confirmAction, args = ('id -> "create-form")) {
+    @form(action = routes.TransferController.confirmAction(), args = (Symbol("id") -> "create-form")) {
         @button(msg = "pages.confirm.button", id = "create", attrs = Map("data-journey-click" -> "marriage-allowance:button:application_confirm"))
     }
 }

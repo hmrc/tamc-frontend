@@ -34,11 +34,13 @@ request: BaseUserRequest[_])
 pageTitle = Some(messages("title.pattern", messages("title.cannot-use-service")))
 ) {
     @h1("title.cannot-use-service", elmId=Some("error"))
-    @p(HtmlContent(link(link = applicationConfig.contactIncomeTaxHelplineUrl,
-                        messageKey = messages("technical.transferor-dead-p1") + messages("tamc.open.in.new.window"),
-                        attrTarget = true,
-                        attrs = Map("data-journey-click" -> s"click - link:${Messages("technical.transferor-dead-p1")}:${Messages("title.pattern", Messages("title.cannot-use-service"))}", "role" -> "button"),
-                        inParagraph = true) +
-                    messages("technical.transferor-dead-p2")
-    ))
+    @p(HtmlContent(transferorLink))
+}
+@transferorLink = {
+    @link(link = applicationConfig.contactIncomeTaxHelplineUrl,
+        messageKey = messages("technical.transferor-dead-p1") + messages("tamc.open.in.new.window"),
+        attrTarget = true,
+        attrs = Map("data-journey-click" -> s"click - link:${Messages("technical.transferor-dead-p1")}:${Messages("title.pattern", Messages("title.cannot-use-service"))}", "role" -> "button"),
+        inParagraph = true)
+    messages("technical.transferor-dead-p2")
 }

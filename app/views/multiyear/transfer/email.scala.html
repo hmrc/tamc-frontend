@@ -36,10 +36,10 @@ request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm-email"))),
-backLinkHref = Some(controllers.routes.TransferController.eligibleYears.url)
+backLinkHref = Some(controllers.routes.TransferController.eligibleYears().url)
 ){
 
-    @form(action = routes.TransferController.confirmYourEmailAction, args = ('id -> "register-form")) {
+    @form(action = routes.TransferController.confirmYourEmailAction(), args = (Symbol("id") -> "register-form")) {
         @errorSummary(recipientForm)
 
         @h1("pages.form.field.your-confirmation")

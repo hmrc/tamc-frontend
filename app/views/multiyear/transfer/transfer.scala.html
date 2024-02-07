@@ -40,7 +40,7 @@ request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.application.pattern", Messages("title.transfer"))),
-backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks.url)
+backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
 ) {
 
     @errorSummary(recipientForm)
@@ -49,7 +49,7 @@ backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks.url)
 
     @p(HtmlContent(Messages("pages.form.details")))
 
-    @form(action = routes.TransferController.transferAction, args = ('id -> "register-form")) {
+    @form(action = routes.TransferController.transferAction(), args = (Symbol("id") -> "register-form")) {
         <fieldset class="govuk-fieldset">
             @inputValue(
                 form = recipientForm,

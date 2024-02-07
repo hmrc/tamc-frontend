@@ -35,7 +35,7 @@ request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Some(messages("title.application.pattern", messages("title.date-of-marriage"))),
-backLinkHref = Some(controllers.routes.TransferController.transfer.url)
+backLinkHref = Some(controllers.routes.TransferController.transfer().url)
 ){
 
   @errorSummary(marriageForm, Some("dateOfMarriage.day"))
@@ -45,7 +45,7 @@ backLinkHref = Some(controllers.routes.TransferController.transfer.url)
   @p(HtmlContent(messages("pages.date-of-marriage.para1")))
   @p(HtmlContent(messages("pages.date-of-marriage.para2")))
 
-  @form(action = routes.TransferController.dateOfMarriageAction, args = ('id -> "date-of-marriage-form")) {
+  @form(action = routes.TransferController.dateOfMarriageAction(), args = (Symbol("id") -> "date-of-marriage-form")) {
     @inputDate(
         fieldName = "dateOfMarriage",
         form = marriageForm,

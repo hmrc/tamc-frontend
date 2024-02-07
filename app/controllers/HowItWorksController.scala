@@ -28,12 +28,12 @@ class HowItWorksController @Inject()(
                                       cc: MessagesControllerComponents) extends BaseController(cc) {
 
   def home: Action[AnyContent] = unauthenticatedAction {
-    Redirect(controllers.routes.HowItWorksController.howItWorks)
+    Redirect(controllers.routes.HowItWorksController.howItWorks())
   }
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      if (request.headers.get("Referer").contains(appConfig.gdsStartUrl)) Redirect(controllers.routes.TransferController.transfer)
+      if (request.headers.get("Referer").contains(appConfig.gdsStartUrl)) Redirect(controllers.routes.TransferController.transfer())
       else Ok(howItWorksView())
   }
 }

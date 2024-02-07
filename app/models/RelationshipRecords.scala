@@ -18,7 +18,7 @@ package models
 
 import errors._
 import play.api.Logging
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
@@ -45,12 +45,12 @@ case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryReco
 
 object RelationshipRecords extends Logging  {
 
-  implicit val formats = Json.format[RelationshipRecords]
+  implicit val formats: OFormat[RelationshipRecords] = Json.format[RelationshipRecords]
 
   def apply(relationshipRecordList: RelationshipRecordList, currentDate: LocalDate): RelationshipRecords = {
 
-    val relationships = relationshipRecordList.relationships
-    val activeRecordCount = relationships.count(_.isActive(currentDate))
+    val relationships: Seq[RelationshipRecord] = relationshipRecordList.relationships
+    val activeRecordCount: Int = relationships.count(_.isActive(currentDate))
 
     val primaryRecord: RelationshipRecord  = activeRecordCount match {
       case(0) => {
@@ -64,9 +64,9 @@ object RelationshipRecords extends Logging  {
       }
     }
 
-    val nonPrimaryRelationships = relationships.filterNot(_ == primaryRecord)
+    val nonPrimaryRelationships: Seq[RelationshipRecord] = relationships.filterNot(_ == primaryRecord)
 
-    val loggedInUser = relationshipRecordList.userRecord.getOrElse(throw CitizenNotFound())
+    val loggedInUser: LoggedInUserInfo = relationshipRecordList.userRecord.getOrElse(throw CitizenNotFound())
 
     RelationshipRecords(primaryRecord, nonPrimaryRelationships, loggedInUser)
   }

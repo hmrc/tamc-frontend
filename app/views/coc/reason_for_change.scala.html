@@ -40,7 +40,7 @@ request: AuthenticatedUserRequest[_])
 
     @h1("pages.makeChanges.heading")
 
-    @form(action = routes.UpdateRelationshipController.submitMakeChange, args = ('id -> "change-relationship-form")) {
+    @form(action = routes.UpdateRelationshipController.submitMakeChange(), args = (Symbol("id") -> "change-relationship-form")) {
       @inputRadios(
         form = makeChangesDecisionForm,
         legend = "title.change.reason",

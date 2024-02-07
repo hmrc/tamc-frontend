@@ -53,7 +53,7 @@ class HistorySummaryViewModelTest extends BaseTest {
         "the person is a recipient " in {
           val marriageAllowanceCancelled = false
           val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
-            controllers.routes.UpdateRelationshipController.decision.url)
+            controllers.routes.UpdateRelationshipController.decision().url)
 
           val role = Recipient
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
@@ -67,7 +67,7 @@ class HistorySummaryViewModelTest extends BaseTest {
         "The person is a transferor" in {
           val marriageAllowanceCancelled = false
           val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", messages("pages.history.active.button"),
-            controllers.routes.UpdateRelationshipController.decision.url)
+            controllers.routes.UpdateRelationshipController.decision().url)
 
           val role = Transferor
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
@@ -83,7 +83,7 @@ class HistorySummaryViewModelTest extends BaseTest {
         "the person is a recipient" in {
           val marriageAllowanceCancelled = true
           val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
-            controllers.routes.UpdateRelationshipController.claims.url)
+            controllers.routes.UpdateRelationshipController.claims().url)
 
           val role = Recipient
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
@@ -97,7 +97,7 @@ class HistorySummaryViewModelTest extends BaseTest {
         "the person is a transferor" in {
           val marriageAllowanceCancelled = true
           val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
-            controllers.routes.UpdateRelationshipController.claims.url)
+            controllers.routes.UpdateRelationshipController.claims().url)
 
           val role = Transferor
           val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)

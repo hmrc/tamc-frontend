@@ -28,7 +28,7 @@ button: Button)
 
 @main(
 pageTitle = Some(Messages("title.pattern", Messages("title.no-tax-years"))),
-backLinkHref = Some(controllers.routes.UpdateRelationshipController.history.url),
+backLinkHref = Some(controllers.routes.UpdateRelationshipController.history().url),
 backLinkAttrs = Map("data-journey-click" -> "marriage-allowance:click:back-on-not-eligible")
 ) {
 

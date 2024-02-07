@@ -40,7 +40,7 @@ sessionExpiredPage = true
 
 @p(HtmlContent(
         button(msg="session.timeout.button", 
-            href = Some(controllers.routes.HowItWorksController.home.url),
+            href = Some(controllers.routes.HowItWorksController.home().url),
             id = "timed-out", 
             attrs = Map("data-journey-click" -> "button - click:Signed out - Marriage Allowance - GOV.UK:start again"))
     ), elmId = Some("continue-to-application"))
