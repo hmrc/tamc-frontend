@@ -23,9 +23,11 @@ import forms.EmailForm.emailForm
 import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeChangesDecisionForm}
 import models._
 import models.auth.BaseUserRequest
+import play.api.Configuration
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.sca.config.AppConfig
 import utils.LoggerHelper
 import viewModels._
 
@@ -33,6 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NonFatal
 
 class   UpdateRelationshipController @Inject()(
+  config: Configuration,
   authenticate: StandardAuthJourney,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
@@ -56,7 +59,8 @@ class   UpdateRelationshipController @Inject()(
   historySummaryViewModelImpl: HistorySummaryViewModelImpl,
   claimsViewModelImpl: ClaimsViewModelImpl,
   divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
-  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl,
+  appConfig: AppConfig)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>

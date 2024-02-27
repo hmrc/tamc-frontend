@@ -17,10 +17,12 @@
 package controllers
 
 import com.google.inject.Inject
+import config.ApplicationConfig
 import controllers.actions.UnauthenticatedActionTransformer
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 class HowItWorksController @Inject()(
+                                      appConfig: ApplicationConfig,
                                       unauthenticatedAction: UnauthenticatedActionTransformer,
                                       howItWorksView: views.html.multiyear.how_it_works,
                                       cc: MessagesControllerComponents) extends BaseController(cc) {
@@ -31,31 +33,7 @@ class HowItWorksController @Inject()(
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request =>
-      Ok(howItWorksView())
-  }
-
-  //TODO: - to be removed when URLs deprecated completely
-  def eligibilityCheck(): Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.HowItWorksController.howItWorks)
-  }
-
-  def lowerEarner(): Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.HowItWorksController.howItWorks)
-  }
-
-  def partnersIncome(): Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.HowItWorksController.howItWorks)
-  }
-
-  def dateOfBirthCheck(): Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.HowItWorksController.howItWorks)
-  }
-
-  def doYouLiveInScotland(): Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.HowItWorksController.howItWorks)
-  }
-
-  def doYouWantToApply(): Action[AnyContent] = unauthenticatedAction {
-      Redirect(controllers.routes.HowItWorksController.howItWorks)
+      if (request.headers.get("Referer").contains(appConfig.gdsStartUrl)) Redirect(controllers.routes.TransferController.transfer)
+      else Ok(howItWorksView())
   }
 }

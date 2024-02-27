@@ -113,6 +113,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
   val SCOTTISH_RESIDENT = "scottish_resident"
 
+  val gdsStartUrl: String = loadConfig("tamc.external-urls.start-gds")
   val gdsFinishedUrl: String = loadConfig("tamc.external-urls.finished-gds")
   val ptaFinishedUrl: String = loadConfig("tamc.external-urls.finished-pta")
 
