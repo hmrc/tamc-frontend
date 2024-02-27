@@ -19,7 +19,7 @@ import sbt.*
 object AppDependencies {
 
   private val hmrcMongoFeatureTogglesClientVersion  = "1.1.0"
-  private val hmrcScaWrapperVersion                 = "1.2.0"
+  private val hmrcScaWrapperVersion                 = "1.3.0"
   private val hmrcBootstrapVersion                  = "8.2.0"
 
   private val playVersion = "play-30"
