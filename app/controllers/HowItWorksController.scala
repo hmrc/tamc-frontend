@@ -32,8 +32,10 @@ class HowItWorksController @Inject()(
   }
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
-    implicit request =>
-      if (request.headers.get("Referer").contains(appConfig.gdsStartUrl)) Redirect(controllers.routes.TransferController.transfer())
-      else Ok(howItWorksView())
+    implicit request => request.headers.get("Referer") match {
+      case Some(referrer) if referrer.contains(appConfig.gdsStartUrl) => Redirect (controllers.routes.TransferController.transfer())
+      case Some(referrer) if referrer.contains(appConfig.gdsContinueUrl) => Redirect (controllers.routes.TransferController.transfer())
+      case _ => Ok(howItWorksView())
+    }
   }
 }
