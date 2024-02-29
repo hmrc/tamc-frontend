@@ -53,7 +53,7 @@ afterContent = Some(afterContent)
 
     @govukInsetText(InsetText(content = Text(messages("pages.calc.para2"))))
 
-    @form(action = routes.EligibilityCalculatorController.gdsCalculatorAction, args = ('id -> "calculator")) {
+    @form(action = routes.EligibilityCalculatorController.gdsCalculatorAction(), args = (Symbol("id") -> "calculator")) {
         @govukFieldset(Fieldset(
                     legend = Some(Legend(
                     content = Text(Messages("pages.calc.header")),

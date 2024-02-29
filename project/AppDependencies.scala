@@ -1,38 +1,41 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import play.core.PlayVersion
-import play.sbt.PlayImport.ehcache
-import sbt._
+import sbt.*
 
 object AppDependencies {
 
-  private val bootstrapVersion = "7.19.0"
-  private val playVersion = "play-28"
-  private val hmrcMongoVersion = "1.3.0"
+  private val hmrcMongoFeatureTogglesClientVersion  = "1.1.0"
+  private val hmrcScaWrapperVersion                 = "1.3.0"
+  private val hmrcBootstrapVersion                  = "8.2.0"
+
+  private val playVersion = "play-30"
 
   val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"                  %% "emailaddress"                       % "3.7.0",
-    "uk.gov.hmrc.mongo"            %% s"hmrc-mongo-$playVersion"           % hmrcMongoVersion,
-    "uk.gov.hmrc"                  %% s"bootstrap-frontend-$playVersion"   % bootstrapVersion,
-    "uk.gov.hmrc"                  %% "http-caching-client"                % s"10.0.0-$playVersion",
-    "com.ibm.icu"                   % "icu4j"                              % "71.1",
-    "uk.gov.hmrc"                  %% "tax-year"                           % "3.0.0",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala"               % "2.13.4",
-    "uk.gov.hmrc"                  %% "sca-wrapper"                        % "1.0.43",
-    "uk.gov.hmrc"                  %% "mongo-feature-toggles-client"       % "0.4.0",
-    ehcache
+    "uk.gov.hmrc"                  %% s"emailaddress-$playVersion"                  % "4.0.0",
+    "uk.gov.hmrc"                  %% s"http-caching-client-$playVersion"           % "11.2.0",
+    "uk.gov.hmrc"                  %% s"mongo-feature-toggles-client-$playVersion"  % hmrcMongoFeatureTogglesClientVersion,
+    "uk.gov.hmrc"                  %% s"sca-wrapper-$playVersion"                   % hmrcScaWrapperVersion,
+    "uk.gov.hmrc"                  %% s"tax-year"                                   % "4.0.0",
   )
 
   val test: Seq[ModuleID] = Seq(
-    "com.typesafe.play"      %% "play-test"                     % PlayVersion.current,
-    "org.scalatestplus"      %% "scalacheck-1-14"               % "3.2.2.0",
-    "org.jsoup"               % "jsoup"                         % "1.15.3",
-    "org.pegdown"             % "pegdown"                       % "1.6.0",
-    "org.scalacheck"         %% "scalacheck"                    % "1.16.0",
-    "org.mockito"             % "mockito-core"                  % "4.7.0",
-    "com.github.tomakehurst"  % "wiremock-jre8"                 % "2.33.2",
-    "uk.gov.hmrc"            %% s"bootstrap-test-$playVersion"  % bootstrapVersion,
-    "uk.gov.hmrc.mongo"      %% s"hmrc-mongo-test-$playVersion" % hmrcMongoVersion
-  ).map(_ % "test")
+    "uk.gov.hmrc"       %% s"bootstrap-test-$playVersion" % hmrcBootstrapVersion,
+    "org.scalatestplus" %% "scalacheck-1-17"              % "3.2.18.0"
+  ).map(_ % Test)
 
   val all: Seq[ModuleID] = compile ++ test
 }

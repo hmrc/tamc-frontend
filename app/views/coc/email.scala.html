@@ -38,7 +38,7 @@ pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm-e
 serviceName = Some("tamc.manage")
 ) {
 
-    @form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate, args = ('id -> "register-form")) {
+    @form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate(), args = (Symbol("id") -> "register-form")) {
 
     @errorSummary(recipientForm)
     

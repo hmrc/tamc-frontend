@@ -68,7 +68,7 @@ disableBackLink = true
     @p(Text(messages("pages.how-it-works.before-apply-pre1")))
 
     @p(HtmlContent(button(msg = "generic.start-now",
-                        href = Some(controllers.routes.TransferController.transfer.url),
+                        href = Some(controllers.routes.TransferController.transfer().url),
                         attrs = Map("data-transaction-slug" -> "marriage-allowance"),
                         id = "start-now",
                         classes = Some("govuk-!-margin-bottom-8"),
@@ -93,7 +93,7 @@ disableBackLink = true
 
 @calculateBenefitDetails = {
     @link(
-        link = controllers.routes.EligibilityCalculatorController.ptaCalculator.url,
+        link = controllers.routes.EligibilityCalculatorController.ptaCalculator().url,
         messageKey = "pages.how-it-works.calculate-benefit-pre1.link-text",
         inParagraph = true,
         id=Some("calculator")

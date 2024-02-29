@@ -20,9 +20,7 @@ import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.Timer.Context
 import com.google.inject.Inject
 
-class Metrics @Inject()(metrics: com.kenshoo.play.metrics.Metrics) {
-
-  val registry: MetricRegistry = metrics.defaultRegistry
+class Metrics @Inject()(registry: MetricRegistry) {
 
   def incrementSuccessCitizenDetail(): Unit = registry.counter("citizen-detail-success").inc()
 

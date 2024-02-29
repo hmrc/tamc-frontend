@@ -46,7 +46,7 @@
     <meta name="format-detection" content="telephone=no" />
     <link rel="stylesheet" href='@controllers.routes.Assets.at("stylesheets/main.css")'/>
     @hmrcTimeoutDialogHelper(
-        signOutUrl = routes.AuthorisationController.logout.url,
+        signOutUrl = routes.AuthorisationController.logout().url,
         keepAliveUrl = Some("/keep-alive")
     )
     @additionalScripts.getOrElse("")
@@ -80,7 +80,7 @@
 
 @beforeContent = {
     @hmrcAccountMenu(AccountMenu(
-            signOut = SignOut(href = controllers.routes.AuthorisationController.logout.url),
+            signOut = SignOut(href = controllers.routes.AuthorisationController.logout().url),
             language = if(messages.lang.code == "cy") Cy else En
         ).withUrlsFromConfig())
     

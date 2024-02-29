@@ -19,7 +19,6 @@ package config
 import com.google.inject.Inject
 import models.TaxBand
 import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.time.TaxYear
 import utils.encodeQueryStringValue
@@ -125,7 +124,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val frontendHost: String = loadConfig("tamc-frontend.host")
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
-    accessibilityStatementHost + "/marriage-allowance?referrerUrl=" + SafeRedirectUrl(frontendHost + relativeReferrerPath).encodedUrl
+    accessibilityStatementHost + "/marriage-allowance?referrerUrl=" + encodeQueryStringValue(frontendHost + relativeReferrerPath)
 
   val applyMarriageAllowanceUrl: String = loadConfig("tamc.external-urls.apply-marriage-allowance")
 

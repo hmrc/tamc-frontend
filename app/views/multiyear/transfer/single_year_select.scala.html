@@ -17,7 +17,7 @@
 @import play.twirl.api.Html
 @import views.helpers.LanguageUtilsImpl
 @import models.auth.AuthenticatedUserRequest
-@import utils.BenefitCalculatorHelper
+@import _root_.utils.BenefitCalculatorHelper
 @import config.ApplicationConfig
 @import includes.{H1, H2, P, Button, InputRadios, ErrorSummary}
 
@@ -49,14 +49,14 @@ request: AuthenticatedUserRequest[_])
   pageTitle = Some(Messages("title.application.pattern",
     Messages("title.confirm-extra-years", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year))
   )),
-  backLinkHref = Some(controllers.routes.TransferController.eligibleYearsAction.url)
+  backLinkHref = Some(controllers.routes.TransferController.eligibleYearsAction().url)
 ) {
 
     @errorSummary(earlierYearsForm, Some("selectedYear-true"))
 
     @h1("pages.multi-year-select.heading", elmId = Some("heading"))
 
-    @form(action = routes.TransferController.extraYearsAction, args = 'id -> "eligible-years-form") {
+    @form(action = routes.TransferController.extraYearsAction(), args = Symbol("id") -> "eligible-years-form") {
     <fieldset class="govuk-fieldset inline spacingBottom" id="earlierYears">
         <div id="year-@availableYears.head.year">
             <h2 class="govuk-heading-m"><span style="color: grey">@Html(Messages("pages.multiyear.taxyear", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year)))</span>

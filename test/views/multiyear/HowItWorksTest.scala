@@ -20,6 +20,7 @@ import config.ApplicationConfig
 import models.auth.UserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import play.api.i18n.Messages
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.i18n.MessagesApi
@@ -32,8 +33,8 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
 
   val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
   implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
-  override implicit lazy val messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
-  lazy val howItWorksView = instanceOf[how_it_works]
+  override implicit lazy val messages: Messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  lazy val howItWorksView: how_it_works = instanceOf[how_it_works]
   implicit val doc: () => Document = () => Jsoup.parse(howItWorksView().toString())
 
   val maxAllowedTransfer = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER())

@@ -48,7 +48,7 @@ class HowItWorksControllerTest extends ControllerBaseTest {
 
       val result = await(howItWorksController.howItWorks()(request))
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer.url)
+      redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
     }
   }
 
@@ -56,7 +56,7 @@ class HowItWorksControllerTest extends ControllerBaseTest {
     "redirect the user" in {
       val result = howItWorksController.home()(request)
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.routes.HowItWorksController.howItWorks.url)
+      redirectLocation(result) shouldBe Some(controllers.routes.HowItWorksController.howItWorks().url)
     }
   }
 }

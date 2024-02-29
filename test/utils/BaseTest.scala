@@ -20,28 +20,27 @@ import org.mockito.Mockito
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.i18n.Messages
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext
 
-trait BaseTest extends UnitSpec with GuiceOneAppPerSuite with BeforeAndAfterEach with SCAWrapperMockHelper {
+trait BaseTest extends UnitSpec with GuiceOneAppPerSuite with BeforeAndAfterEach {
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
     .configure(
       "metrics.jvm" -> false
     )
-    .overrides(featureFlagServiceBinding)
     .build()
 
   override def beforeEach(): Unit = {
     Mockito.reset()
-    featureFlagSCAWrapperMock()
   }
 
 
-  implicit lazy val messages = Helpers.stubMessages()
+  implicit lazy val messages: Messages = Helpers.stubMessages()
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
   implicit lazy val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 

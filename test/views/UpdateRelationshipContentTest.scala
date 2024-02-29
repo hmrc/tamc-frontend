@@ -62,7 +62,6 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
-      featureFlagServiceBinding
     ).build()
 
   val controller: UpdateRelationshipController = inject[UpdateRelationshipController]
@@ -97,7 +96,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       messages("pages.stopAllowance.paragraph1"),
       messages("pages.stopAllowance.paragraph2"),
       messages("claim.summary.link"),
-      "beta " + messages("betaBanner.message")
+      "beta phase.banner.before phase.banner.link phase.banner.after"
     ).toArray
     val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
     val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -116,7 +115,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
 
     val result: Future[Result] = controller.cancel(request)
 
-    val expected = Seq(messages("pages.cancel.paragraph1"), messages("pages.cancel.paragraph2"), "beta " + messages("betaBanner.message")).toArray
+    val expected = Seq(messages("pages.cancel.paragraph1"), messages("pages.cancel.paragraph2"),  "beta phase.banner.before phase.banner.link phase.banner.after").toArray
     val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
     val current = parsed.getElementsByTag("p").eachText().toArray()
 
@@ -136,7 +135,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val expected = Seq(
         contactHMRCBereavementText,
         messages("pages.bereavement.recipient.paragraph"),
-        "beta " + messages("betaBanner.message")
+        "beta phase.banner.before phase.banner.link phase.banner.after"
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -156,7 +155,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val expected = Seq(
         contactHMRCBereavementText,
         messages("pages.bereavement.transferor.paragraph"),
-        "beta " + messages("betaBanner.message")
+        "beta phase.banner.before phase.banner.link phase.banner.after"
       ).toArray
       val parsed = Jsoup.parse(contentAsString(result)).getElementById("main-content")
       val current = parsed.getElementsByTag("p").eachText().toArray()
@@ -211,7 +210,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
      val expectedHeading = messages("pages.divorce.title")
      val expectedParas = Seq(
        messages("pages.divorce.paragraph1"),
-       "beta " + messages("betaBanner.message")
+       "beta phase.banner.before phase.banner.link phase.banner.after"
      ).toArray
 
      val expectedLabel = Seq(
@@ -259,7 +258,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"6 April ${date.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear")), "beta " + messages("betaBanner.message")
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear")), "beta phase.banner.before phase.banner.link phase.banner.after"
       ).toArray
 
       val expectedBullets = Seq(
@@ -297,7 +296,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear")), "beta " + messages("betaBanner.message")
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear")), "beta phase.banner.before phase.banner.link phase.banner.after"
       ).toArray
 
       val expectedBullets = Seq(
@@ -335,7 +334,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"6 April ${divorceDate.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear")), "beta " + messages("betaBanner.message")
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.current.taxYear")), "beta phase.banner.before phase.banner.link phase.banner.after"
       ).toArray
 
       val expectedBullets = Seq(
@@ -372,7 +371,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val expectedHeading = messages("pages.divorce.explanation.title")
       val expectedParas = Seq(
         messages("pages.divorce.explanation.paragraph1", s"5 April ${divorceDate.getYear}"),
-        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear")), "beta " + messages("betaBanner.message")
+        messages("pages.divorce.explanation.paragraph2", messages("pages.divorce.explanation.previous.taxYear")), "beta phase.banner.before phase.banner.link phase.banner.after"
       ).toArray
 
       val expectedBullets = Seq(
@@ -398,8 +397,8 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     val expectedHeading = messages("pages.form.field.your-confirmation")
     val expectedParas = Seq(
       messages("change.status.confirm.info"),
-      messages("change.status.confirm.more.info"), 
-      "beta " + messages("betaBanner.message")
+      messages("change.status.confirm.more.info"),
+      "beta phase.banner.before phase.banner.link phase.banner.after"
     ).toArray
     val expectedLabel = messages("pages.form.field.transferor-email")
 
@@ -427,7 +426,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
           ConfirmationUpdateAnswers(loggedInUser, Some(LocalDate.now()), "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
       val expectedHeader = messages("pages.confirm.cancel.heading")
-      val expectedParas = Seq(messages("pages.confirm.cancel.message"), "beta " + messages("betaBanner.message"))
+      val expectedParas = Seq(messages("pages.confirm.cancel.message"), "beta phase.banner.before phase.banner.link phase.banner.after")
       val expectedList = Seq(
         messages("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
         messages("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
@@ -460,7 +459,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
           ConfirmationUpdateAnswers(loggedInUser, None, "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
       val expectedHeader = messages("pages.confirm.cancel.heading")
-      val expectedParas = Seq(messages("pages.confirm.cancel.message"), "beta " + messages("betaBanner.message"))
+      val expectedParas = Seq(messages("pages.confirm.cancel.message"), "beta phase.banner.before phase.banner.link phase.banner.after")
       val expectedList = Seq(
         messages("pages.confirm.cancel.message1", s"5 April ${TaxYear.current.finishYear}"),
         messages("pages.confirm.cancel.message2", s"6 April ${TaxYear.current.next.startYear}")
@@ -502,7 +501,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val expectedParas = Seq(
         messages("pages.coc.finish.acknowledgement", "email@email.com"),
         messages("pages.coc.finish.junk"),
-        messages("pages.coc.finish.para1"), "beta " + messages("betaBanner.message")
+        messages("pages.coc.finish.para1"), "beta phase.banner.before phase.banner.link phase.banner.after"
       ).toArray
 
       val result = controller.finishUpdate(request)

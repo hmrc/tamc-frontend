@@ -16,10 +16,10 @@
 
 package models.pertaxAuth
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PertaxAuthResponseModel(code: String, message: String, redirect: Option[String], errorView: Option[PertaxErrorView])
 
 object PertaxAuthResponseModel {
-  implicit val format = Json.format[PertaxAuthResponseModel]
+  implicit val format: OFormat[PertaxAuthResponseModel] = Json.format[PertaxAuthResponseModel]
 }

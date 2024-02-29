@@ -36,9 +36,9 @@ request: AuthenticatedUserRequest[_])
 
 @backLink = @{
     if(currentYearAvailable) {
-        controllers.routes.TransferController.eligibleYears.url
+        controllers.routes.TransferController.eligibleYears().url
     } else {
-        controllers.routes.TransferController.dateOfMarriage.url
+        controllers.routes.TransferController.dateOfMarriage().url
     }
 }
 
@@ -51,6 +51,6 @@ backLinkHref = Some(backLink)
 
     @p(HtmlContent(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage))))
 
-    @button(msg = "generic.continue", href = Some(controllers.routes.TransferController.previousYears.url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
+    @button(msg = "generic.continue", href = Some(controllers.routes.TransferController.previousYears().url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
 
 }

@@ -19,8 +19,11 @@ package views.multiyear.transfer
 import utils.{BaseTest, NinoGenerator}
 import views.html.multiyear.transfer.eligible_years
 import forms.CurrentYearForm
+import models.CurrentYearInput
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
+import play.api.data.Form
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
 
@@ -28,10 +31,10 @@ import java.time.LocalDate
 
 class EligibleYearsTest extends BaseTest with NinoGenerator {
 
-  lazy val nino = generateNino().nino
-  lazy val eligibleYears = instanceOf[eligible_years]
-  val eligibleYearsForm = CurrentYearForm.currentYearForm()
-  implicit val request = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  val nino: String = generateNino().nino
+  val eligibleYears: eligible_years = instanceOf[eligible_years]
+  val eligibleYearsForm: Form[CurrentYearInput] = CurrentYearForm.currentYearForm()
+  implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "EligibleYears" should {

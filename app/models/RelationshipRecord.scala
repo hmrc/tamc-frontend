@@ -18,8 +18,7 @@ package models
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class RelationshipRecord(participant: String,
                               creationTimestamp: String,
@@ -65,5 +64,5 @@ case class RelationshipRecord(participant: String,
 }
 
 object RelationshipRecord {
-  implicit val formats = Json.format[RelationshipRecord]
+  implicit val formats: OFormat[RelationshipRecord] = Json.format[RelationshipRecord]
 }

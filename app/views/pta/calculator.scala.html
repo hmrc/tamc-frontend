@@ -40,7 +40,7 @@ request: UserRequest[_])
 
 @main(
 pageTitle = Some(Messages("title.pattern", Messages("title.eligibility-criteria"))),
-backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks.url)
+backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
 ){
 
     @errorSummary(calculatorForm)
@@ -48,13 +48,13 @@ backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks.url)
     @h1("pages.calc.header")
 
     @p(HtmlContent(Messages("pages.calc.skip-it.pre") + 
-                    link(link = controllers.routes.TransferController.transfer.url,
+                    link(link = controllers.routes.TransferController.transfer().url,
                         messageKey = "pages.calc.skip-it",
                         inParagraph = true)))
 
     @p(Text(Messages("pages.calc.para1")))
 
-    @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction, args = ('id -> "calculator")) {
+    @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction(), args = (Symbol("id") -> "calculator")) {
 
         @govukFieldset(Fieldset(
             legend = Some(Legend(
@@ -69,7 +69,7 @@ backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks.url)
 
         @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
 
-        @link(link = controllers.routes.TransferController.transfer.url, messageKey = "change.status.apply", id = Some("continue"))
+        @link(link = controllers.routes.TransferController.transfer().url, messageKey = "change.status.apply", id = Some("continue"))
 
     }
 }
