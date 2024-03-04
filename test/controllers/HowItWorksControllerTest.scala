@@ -42,9 +42,18 @@ class HowItWorksControllerTest extends ControllerBaseTest {
       button.text shouldBe "Apply now"
     }
 
-    "redirect a Govuk signed in user to Transfer Allowance page" in {
+    "redirect an already signed in Govuk user to Transfer Allowance page" in {
       val request: Request[AnyContent] = FakeRequest("GET", "/marriage-allowance-application/how-it-works")
         .withHeaders("Referer" -> "https://www.gov.uk/")
+
+      val result = await(howItWorksController.howItWorks()(request))
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+    }
+
+    "redirect a currently signing in Govuk user to Transfer Allowance page" in {
+      val request: Request[AnyContent] = FakeRequest("GET", "/marriage-allowance-application/how-it-works")
+        .withHeaders("Referer" -> "https://www.access.service.gov.uk/")
 
       val result = await(howItWorksController.howItWorks()(request))
       status(result) shouldBe SEE_OTHER
