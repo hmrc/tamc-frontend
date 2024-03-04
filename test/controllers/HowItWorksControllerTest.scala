@@ -51,7 +51,7 @@ class HowItWorksControllerTest extends ControllerBaseTest {
       redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
     }
 
-    "redirect a currently singing in Govuk user to Transfer Allowance page" in {
+    "redirect a currently signing in Govuk user to Transfer Allowance page" in {
       val request: Request[AnyContent] = FakeRequest("GET", "/marriage-allowance-application/how-it-works")
         .withHeaders("Referer" -> "https://www.access.service.gov.uk/")
 
