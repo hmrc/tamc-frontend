@@ -147,8 +147,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   val pertaxAuthBaseUrl = servicesConfig.baseUrl("pertax-auth")
 
-  val scaWrapperFutureTimeout: Int = servicesConfig.getInt("sca-wrapper.future-timeout")
-
   lazy val internalAuthResourceType: String =
     servicesConfig.getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
 }

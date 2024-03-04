@@ -13,25 +13,10 @@ ThisBuild / scalacOptions ++= Seq(
 )
 
 val scoverageSettings: Seq[Def.Setting[?]] = {
-  val excludedPackages = Seq(
-    "<empty>",
-    "app.*",
-    "config.*",
-    "testOnlyDoNotUseInAppConf.*",
-    "views.*",
-    "uk.gov.hmrc.*",
-    "prod.*",
-    "forms.*",
-    "connectors.ApplicationAuditConnector",
-    "connectors.ApplicationAuthConnector",
-    "services.CachingService",
-    "metrics.Metrics",
-    "utils.WSHttp",
-    "events"
-  )
   Seq(
-    ScoverageKeys.coverageExcludedPackages := excludedPackages.mkString(";"),
-    ScoverageKeys.coverageMinimumStmtTotal := 92,
+    ScoverageKeys.coverageExcludedPackages := ".*Reverse.*;.*Routes.*;view.*",
+    ScoverageKeys.coverageMinimumStmtTotal := 90,
+    ScoverageKeys.coverageMinimumBranchTotal := 85,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true
   )
