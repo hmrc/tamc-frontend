@@ -17,6 +17,7 @@
 package controllers
 
 import com.google.inject.Inject
+import config.ApplicationConfig
 import controllers.auth.StandardAuthJourney
 import errors._
 import forms.EmailForm.emailForm
@@ -27,7 +28,6 @@ import play.api.Configuration
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.sca.config.AppConfig
 import utils.LoggerHelper
 import viewModels._
 
@@ -60,7 +60,7 @@ class   UpdateRelationshipController @Inject()(
   claimsViewModelImpl: ClaimsViewModelImpl,
   divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl,
   confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl,
-  appConfig: AppConfig)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+  appConfig: ApplicationConfig)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
@@ -276,18 +276,22 @@ class   UpdateRelationshipController @Inject()(
     }
 
     val pf: PartialFunction[Throwable, Result] = {
-          case _: NoPrimaryRecordError => Redirect(controllers.routes.HowItWorksController.howItWorks())
-          case t: CacheRelationshipAlreadyUpdated => handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-          case t: CacheMissingUpdateRecord => handle(t, warn, InternalServerError(tryLater()))
-          case t: CacheUpdateRequestNotSent => handle(t, warn, InternalServerError(tryLater()))
-          case t: CannotUpdateRelationship => handle(t, warn, InternalServerError(tryLater()))
-          case t: MultipleActiveRecordError => handle(t, warn, InternalServerError(tryLater()))
-          case t: CitizenNotFound => handle(t, warn, InternalServerError(citizenNotFound()))
-          case t: BadFetchRequest => handle(t, warn, InternalServerError(tryLater()))
-          case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
-          case t: RecipientNotFound => handle(t, warn, Ok(recipientNotFound()))
-          case t => handle(t, error, InternalServerError(tryLater()))
+        case _: NoPrimaryRecordError => request.headers.get("Referer") match {
+          case Some(referrer) if referrer.contains(appConfig.gdsStartUrl)    => Redirect(controllers.routes.TransferController.transfer())
+          case Some(referrer) if referrer.contains(appConfig.gdsContinueUrl) => Redirect(controllers.routes.TransferController.transfer())
+          case _                                                             => Redirect(controllers.routes.HowItWorksController.howItWorks())
         }
-      pf
-    }
+        case t: CacheRelationshipAlreadyUpdated => handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
+        case t: CacheMissingUpdateRecord => handle(t, warn, InternalServerError(tryLater()))
+        case t: CacheUpdateRequestNotSent => handle(t, warn, InternalServerError(tryLater()))
+        case t: CannotUpdateRelationship => handle(t, warn, InternalServerError(tryLater()))
+        case t: MultipleActiveRecordError => handle(t, warn, InternalServerError(tryLater()))
+        case t: CitizenNotFound => handle(t, warn, InternalServerError(citizenNotFound()))
+        case t: BadFetchRequest => handle(t, warn, InternalServerError(tryLater()))
+        case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
+        case t: RecipientNotFound => handle(t, warn, Ok(recipientNotFound()))
+        case t => handle(t, error, InternalServerError(tryLater()))
+      }
+    pf
+  }
 }

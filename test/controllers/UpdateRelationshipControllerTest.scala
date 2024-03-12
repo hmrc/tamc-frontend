@@ -32,6 +32,7 @@ import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.{AnyContent, Request}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import services._
@@ -148,6 +149,33 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.history()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.HowItWorksController.howItWorks().url)
+      }
+    }
+
+    "redirect to transfer-controller" when {
+      "there is no active (primary) record for a govuk user who has already logged in" in {
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.failed(NoPrimaryRecordError()))
+
+        val request: Request[AnyContent] = FakeRequest("GET", "/marriage-allowance-application/history")
+          .withHeaders("Referer" -> "https://www.gov.uk/")
+
+        val result = controller.history()(request)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+      }
+
+      "there is no active (primary) record for a govuk user who is currently logging in" in {
+        when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
+          .thenReturn(Future.failed(NoPrimaryRecordError()))
+
+        val request: Request[AnyContent] = FakeRequest("GET", "/marriage-allowance-application/history")
+          .withHeaders("Referer" -> "https://www.access.service.gov.uk/")
+
+        val result = controller.history()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
       }
     }
 
