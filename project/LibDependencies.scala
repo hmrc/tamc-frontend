@@ -16,7 +16,7 @@
 
 import sbt.*
 
-object AppDependencies {
+object LibDependencies {
 
   private val hmrcMongoFeatureTogglesClientVersion  = "1.1.0"
   private val hmrcScaWrapperVersion                 = "1.3.0"
@@ -24,7 +24,7 @@ object AppDependencies {
 
   private val playVersion = "play-30"
 
-  val compile: Seq[ModuleID] = Seq(
+  private val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"                  %% s"emailaddress-$playVersion"                  % "4.0.0",
     "uk.gov.hmrc"                  %% s"http-caching-client-$playVersion"           % "11.2.0",
     "uk.gov.hmrc"                  %% s"mongo-feature-toggles-client-$playVersion"  % hmrcMongoFeatureTogglesClientVersion,
@@ -32,7 +32,7 @@ object AppDependencies {
     "uk.gov.hmrc"                  %% s"tax-year"                                   % "4.0.0",
   )
 
-  val test: Seq[ModuleID] = Seq(
+  private val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% s"bootstrap-test-$playVersion" % hmrcBootstrapVersion,
     "org.scalatestplus" %% "scalacheck-1-17"              % "3.2.18.0"
   ).map(_ % Test)
