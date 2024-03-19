@@ -1,4 +1,5 @@
 digital-service: Marriage Allowance
+description: Frontend for the Transferable Allowance for Married Couples (TAMC)
 
 leakDetectionExemptions:
   - ruleId: 'tax_service_gov_uk'

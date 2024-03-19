@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 object CreateRelationshipSuccessEvent {
-  def apply(cacheData: CacheData)(implicit hc: HeaderCarrier) =
+  def apply(cacheData: CacheData)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(
@@ -33,7 +33,7 @@ object CreateRelationshipSuccessEvent {
 }
 
 object UpdateRelationshipSuccessEvent {
-  def apply(updateData: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier) =
+  def apply(updateData: UpdateRelationshipRequestHolder)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(
@@ -44,7 +44,7 @@ object UpdateRelationshipSuccessEvent {
 }
 
 object CreateRelationshipFailureEvent {
-  def apply(cacheData: CacheData, error: Throwable)(implicit hc: HeaderCarrier) =
+  def apply(cacheData: CacheData, error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
@@ -56,7 +56,7 @@ object CreateRelationshipFailureEvent {
 }
 
 object RelationshipAlreadyCreatedEvent {
-  def apply(cacheData: CacheData)(implicit hc: HeaderCarrier) =
+  def apply(cacheData: CacheData)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
@@ -79,7 +79,7 @@ object UpdateRelationshipFailureEvent {
 }
 
 object CreateRelationshipCacheFailureEvent {
-  def apply(error: Throwable)(implicit hc: HeaderCarrier) =
+  def apply(error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
@@ -90,7 +90,7 @@ object CreateRelationshipCacheFailureEvent {
 }
 
 object UpdateRelationshipCacheFailureEvent {
-  def apply(error: Throwable)(implicit hc: HeaderCarrier) =
+  def apply(error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
@@ -101,7 +101,7 @@ object UpdateRelationshipCacheFailureEvent {
 }
 
 object RecipientFailureEvent {
-  def apply(nino: Nino, error: Throwable)(implicit hc: HeaderCarrier) =
+  def apply(nino: Nino, error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
@@ -113,7 +113,7 @@ object RecipientFailureEvent {
 }
 
 object RiskTriageRedirectEvent {
-  def apply()(implicit hc: HeaderCarrier) =
+  def apply()(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(
