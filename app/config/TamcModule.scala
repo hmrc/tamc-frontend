@@ -17,11 +17,19 @@
 package config
 
 import connectors.TamcAuthConnector
+import play.api.cache.AsyncCacheApi
 import play.api.inject.{Binding, Module}
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.mongoFeatureToggles.internal.config.AppConfig
+import uk.gov.hmrc.mongoFeatureToggles.internal.repository.FeatureFlagRepository
+import uk.gov.hmrc.mongoFeatureToggles.services.{FeatureFlagService, FeatureFlagServiceImpl}
 import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 import utils.{TaxBandReader, TaxBandReaderImpl}
+
+import javax.inject.{Inject, Provider, Singleton}
+import scala.concurrent.ExecutionContext
+
 
 class TamcModule extends Module {
 
@@ -30,6 +38,18 @@ class TamcModule extends Module {
       bind[AuthConnector].to[TamcAuthConnector],
       bind[CurrentTaxYear].toInstance(TaxYear),
       bind[TaxBandReader].to[TaxBandReaderImpl],
-      bind[ApplicationStartUp].toSelf.eagerly()
+      bind[ApplicationStartUp].toSelf.eagerly(),
+      bind[FeatureFlagService].toProvider[FeatureFlagServiceProvider].in[Singleton]
     )
+}
+
+class FeatureFlagServiceProvider @Inject()(appConfig: AppConfig, cache: AsyncCacheApi, repo: FeatureFlagRepository)(implicit ec: ExecutionContext)
+  extends Provider[FeatureFlagService] {
+  override def get(): FeatureFlagService = {
+    println("---------------------------------------------")
+    println("---------------------------appConfig:"+appConfig)
+    println("---------------------------repo:"+repo)
+    println("---------------------------cache:"+cache)
+    new FeatureFlagServiceImpl(appConfig, repo, cache)(ec)
+  }
 }
