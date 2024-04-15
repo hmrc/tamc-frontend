@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
+    <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel"/>
+
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/tamc-frontend.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -12,8 +14,9 @@
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] rid=[%X{X-Request-ID}]
-                user=[%X{Authorization}] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n
+            <pattern>%green(%date{ISO8601}) level=[%level] %white(logger=[%yellow(%logger)]) %white(thread=[%yellow(%thread)])
+                %white(rid=[%yellow(%X{X-Request-ID})]) %white(user=[%yellow(%X{Authorization})])
+                %coloredLevel %white(message=[%yellow(%message)]) %replace(exception=[%xException]){'^exception=\[\]$',''}%n
             </pattern>
         </encoder>
     </appender>
