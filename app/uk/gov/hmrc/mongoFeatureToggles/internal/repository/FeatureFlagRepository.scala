@@ -29,13 +29,14 @@ import uk.gov.hmrc.play.http.logging.Mdc
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagCrud
 
 @Singleton
 class FeatureFlagRepository @Inject()(
   val mongoComponent: MongoComponent
 )(implicit
   ec: ExecutionContext
-) extends PlayMongoRepository[FeatureFlagSerialised](
+) extends PlayMongoRepository[FeatureFlagSerialised] (
       collectionName = "admin-feature-flags",
       mongoComponent = mongoComponent,
       domainFormat = implicitly[Format[FeatureFlagSerialised]],
@@ -49,7 +50,7 @@ class FeatureFlagRepository @Inject()(
       )
     )
     with Transactions
-    with Logging {
+    with Logging with FeatureFlagCrud {
 
   private implicit val tc: TransactionConfiguration = TransactionConfiguration.strict
 
