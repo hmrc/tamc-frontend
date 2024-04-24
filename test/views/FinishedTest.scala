@@ -36,7 +36,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
       val document = Jsoup.parse(finished(email).toString())
       val title = document.title()
-      val expected = messages("title.application.pattern", messages("pages.finished.successful"))
+      val expected = messages("title.finished") + " - " + messages("title.application.pattern")
 
       title shouldBe expected
     }

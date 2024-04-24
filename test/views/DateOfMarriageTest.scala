@@ -40,7 +40,7 @@ class DateOfMarriageTest extends BaseTest with NinoGenerator {
 
       val document = Jsoup.parse(dateOfMarriage(dateOfMarriageForm.dateOfMarriageForm(LocalDate.now)).toString)
       val title = document.title()
-      val expected = messages("title.application.pattern", messages("title.date-of-marriage"))
+      val expected = messages("title.date-of-marriage") + " - " + messages("title.application.pattern")
 
       title shouldBe expected
     }

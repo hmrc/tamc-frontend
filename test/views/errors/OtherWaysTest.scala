@@ -35,7 +35,7 @@ class OtherWaysTest extends BaseTest {
 
       val document = Jsoup.parse(otherWays()(messages, baseUserRequest).toString)
       val title = document.title()
-      val expected = messages("title.pattern", messages("technical.other-ways.h1"))
+      val expected = messages("title.other-ways") + " - " + messages("title.pattern")
 
       title shouldBe expected
 

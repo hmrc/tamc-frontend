@@ -66,7 +66,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
       val doc: Document = Jsoup.parse(notFoundTemplate.toString())
 
       val docTitle = doc.select("title").text()
-      docTitle should include(messages("global.page.not.found.error.title"))
+      docTitle should include(messages("title.pattern"))
     }
   }
 }

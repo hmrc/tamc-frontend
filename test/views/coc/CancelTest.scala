@@ -39,7 +39,7 @@ class CancelTest extends BaseTest with NinoGenerator {
       val expectedDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
       val document = Jsoup.parse(cancel(expectedDates).toString)
       val title = document.title()
-      val expected = messages("title.pattern", messages("pages.cancel.title"))
+      val expected = messages("pages.cancel.title") + " - " + messages("title.pattern")
 
       title shouldBe expected
     }

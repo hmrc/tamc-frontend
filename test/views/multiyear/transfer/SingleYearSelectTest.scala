@@ -40,7 +40,7 @@ class SingleYearSelectTest extends BaseTest with NinoGenerator {
 
       val document = Jsoup.parse(singleYearSelect(earlyYearForm, registrationForm, List(TaxYear(2022))).toString())
       val title = document.title()
-      val expected = messages("title.application.pattern", messages("technical.other-ways.h1"))
+      val expected = messages("title.confirm-extra-years") + " - " + messages("title.application.pattern")
 
       title shouldBe expected
     }

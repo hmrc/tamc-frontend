@@ -41,7 +41,7 @@ class PreviousYearsTest extends BaseTest with NinoGenerator {
         true).toString())
 
       val title = document.title()
-      val expected = messages("title.application.pattern", messages("pages.previousyear.header"))
+      val expected = messages("pages.previousyear.header") + " - " + messages("title.application.pattern")
 
       title shouldBe expected
     }
