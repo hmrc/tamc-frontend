@@ -26,8 +26,8 @@ p: P)
 @()(implicit messages: Messages, request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("title.change.complete"))),
-serviceName = Some("tamc.manage")) {
+    pageTitle = messages("title.change.complete"),
+    serviceTitle = "tamc.manage") {
 
   <div class="govuk-panel govuk-panel--confirmation">
       @h1("pages.coc.finish.header", Some("govuk-panel__title"))

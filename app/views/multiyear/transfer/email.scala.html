@@ -26,6 +26,7 @@ h1: H1,
 p: P,
 inputValue: InputValue,
 button: Button,
+viewHelpers: utils.ViewHelpers,
 errorSummary: ErrorSummary)
 
 @(
@@ -35,8 +36,9 @@ messages: Messages,
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm-email"))),
-backLinkHref = Some(controllers.routes.TransferController.eligibleYears().url)
+    pageTitle = viewHelpers.formErrorPrefix(recipientForm, Messages("title.confirm-email")),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(controllers.routes.TransferController.eligibleYears().url)
 ){
 
     @form(action = routes.TransferController.confirmYourEmailAction(), args = (Symbol("id") -> "register-form")) {

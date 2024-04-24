@@ -33,7 +33,7 @@ link: Link)
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.pattern", Messages("title.bereavement"))),
+pageTitle = Messages("title.bereavement"),
 backLinkHref = Some(controllers.routes.UpdateRelationshipController.history().url)
 ) {
     

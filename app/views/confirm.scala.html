@@ -41,8 +41,9 @@ implicit messages: Messages,
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm"))),
-backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail().url)
+    pageTitle = Messages("title.confirm"),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail().url)
 ){
 
     @h1("pages.confirm.html.h1", elmId = Some("confirm-page"))

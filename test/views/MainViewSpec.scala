@@ -30,7 +30,7 @@ class MainViewSpec extends BaseTest with Injecting {
   lazy val main = inject[Main]
 
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
-  lazy val pageRender = main.apply(Some("Fake Page Title - Apply for Marriage Allowance - GOV.UK"))(Html("<p>Fake body</p>"))
+  lazy val pageRender = main.apply("Fake Page Title - Apply for Marriage Allowance - GOV.UK")(Html("<p>Fake body</p>"))
 
   implicit val baseUserRequest: BaseUserRequest[_] = UserRequest(FakeRequest("GET", "/some-url"), None, isAuthenticated = true, Some(""), isSA = true)
   lazy val doc = Jsoup.parse(pageRender.toString())

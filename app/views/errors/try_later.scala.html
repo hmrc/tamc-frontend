@@ -27,7 +27,7 @@ p: P)
 request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.pattern", Messages("technical.issue.heading")))
+pageTitle = Messages("technical.issue.heading")
 ) {
   @h1("technical.issue.heading", elmId = Some("error"))
   @p(Text(Messages("technical.issue.try.later")))

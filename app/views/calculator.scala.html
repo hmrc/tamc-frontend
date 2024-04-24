@@ -32,6 +32,7 @@ inputValue: InputValue,
 inputRadios: InputRadios,
 link: Link,
 button: Button,
+viewHelpers: utils.ViewHelpers,
 govukInsetText : GovukInsetText)
 
 @(
@@ -42,7 +43,7 @@ implicit messages: Messages,
 request: UserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.pattern", Messages("title.eligibility-criteria"))),
+pageTitle = viewHelpers.formErrorPrefix(calculatorForm, Messages("title.eligibility-criteria")),
 afterContent = Some(afterContent)
 ){
     @errorSummary(calculatorForm)

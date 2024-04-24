@@ -30,6 +30,7 @@ p: P,
 inputValue: InputValue,
 inputRadios: InputRadios,
 link: Link,
+viewHelpers: utils.ViewHelpers,
 button: Button)
 
 @(
@@ -39,7 +40,7 @@ calculatorForm: Form[models.EligibilityCalculatorInput]
 request: UserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.pattern", Messages("title.eligibility-criteria"))),
+pageTitle = viewHelpers.formErrorPrefix(calculatorForm, Messages("title.eligibility-criteria")),
 backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
 ){
 

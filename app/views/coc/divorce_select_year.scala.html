@@ -29,6 +29,7 @@ h1: H1,
 p: P,
 errorSummary: ErrorSummary,
 inputDate: InputDate,
+viewHelpers: utils.ViewHelpers,
 button: Button
 )
 
@@ -36,9 +37,8 @@ button: Button
 request: AuthenticatedUserRequest[_])
 
 @main(
-    pageTitle = Some(messages("title.pattern", messages("pages.divorce.title"))),
-    serviceName = Some("tamc.manage")
-) {
+    pageTitle = viewHelpers.formErrorPrefix(divorceSelectYearForm, messages("pages.divorce.title")),
+    serviceTitle = "tamc.manage") {
 
     @errorSummary(divorceSelectYearForm, Some("dateOfDivorce.day"))
 

@@ -25,6 +25,7 @@ main: Main,
 form: FormWithCSRF,
 errorSummary: ErrorSummary,
 h1: H1,
+viewHelpers: utils.ViewHelpers,
 inputRadios: InputRadios,
 button: Button)
 
@@ -32,8 +33,8 @@ button: Button)
 request: AuthenticatedUserRequest[_])
 
 @main(
-    pageTitle = Some(Messages("title.pattern", messages("title.make-a-change"))),
-    serviceName = Some("tamc.manage")
+    pageTitle = viewHelpers.formErrorPrefix(makeChangesDecisionForm, messages("title.make-a-change")),
+    serviceTitle = "tamc.manage"
 ){
 
     @errorSummary(makeChangesDecisionForm, Some("stopMAChoice-cancel"))

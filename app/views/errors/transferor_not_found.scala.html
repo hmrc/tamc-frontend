@@ -30,7 +30,7 @@ link: Link)
     request: BaseUserRequest[_])
 
 @main(
-    pageTitle = Some(messages("title.pattern", messages("title.error")))
+    pageTitle = messages("title.error")
 ) {
 
     @p(Text(messages("transferor.not.found")), elmId = Some("error"))

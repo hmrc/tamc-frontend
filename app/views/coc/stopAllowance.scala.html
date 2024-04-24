@@ -27,7 +27,7 @@ link: Link)
 @()(implicit messages: Messages,request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("pages.stopAllowance.title")))
+    pageTitle = messages(messages("pages.stopAllowance.title"))
 ) {
 
     @h1("pages.stopAllowance.title")

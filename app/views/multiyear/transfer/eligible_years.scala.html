@@ -34,6 +34,7 @@ h2: H2,
 h3: H3,
 p: P,
 link: Link,
+viewHelpers: utils.ViewHelpers,
 inputRadios: InputRadios,
 button: Button)
 
@@ -49,8 +50,9 @@ request: AuthenticatedUserRequest[_])
 
 
 @main(
-pageTitle = Some(Messages("title.application.pattern", Messages("title.eligible-years"))),
-backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage().url)
+    pageTitle = viewHelpers.formErrorPrefix(form, Messages("title.eligible-years")),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage().url)
 ){
 
 @errorSummary(form, Some("applyForCurrentYear-true"))

@@ -25,7 +25,7 @@
 request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.pattern", Messages("title.error")))
+pageTitle = Messages("title.error")
 ) {
 @p(Text(Messages("create.relationship.failure")), elmId=Some("error"))
 }

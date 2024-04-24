@@ -126,13 +126,13 @@ generic.translation.welsh=Cymraeg
 radio.yes=Iawn
 radio.no=Na
 tamc.open.in.new.window=(yn agor ffenestr neu dab newydd)
+error.form.error = Gwall:
 
 #********************************************************************************
 # Titles
 #********************************************************************************
-title.pattern={0} – Lwfans Priodasol – GOV.UK
-title.eligibility.pattern={0} – Lwfans Priodasol: Bod yn gymwys ar ei gyfer – GOV.UK
-title.application.pattern={0} – Cais am Lwfans Priodasol – GOV.UK
+title.pattern=Lwfans Priodasol – GOV.UK
+title.application.pattern=Cais am Lwfans Priodasol – GOV.UK
 title.dateOfBirth=Eich dyddiad geni
 title.eligible-years=Gwneud cais ar gyfer y flwyddyn dreth bresennol
 title.extra-years=Gwneud cais ar gyfer blynyddoedd treth cynharach

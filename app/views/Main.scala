@@ -33,13 +33,13 @@ import scala.util.{Failure, Success, Try}
 @ImplementedBy(classOf[MainImpl])
 trait Main {
   def apply(
-             pageTitle: Option[String],
-             serviceName: Option[String] = Some("tamc.apply"),
+             pageTitle: String,
              backLinkHref: Option[String] = None,
              sessionExpiredPage: Boolean = false,
              scripts: Option[Html] = None,
              backLinkAttrs: Map[String, String] = Map.empty,
              afterContent: Option[Html] = None,
+             serviceTitle: String = "title.pattern",
              disableBackLink: Boolean = false
            )(
              contentBlock: Html
@@ -58,13 +58,13 @@ class MainImpl @Inject() (
                          ) extends Main with Logging {
 
   override def apply(
-                      pageTitle: Option[String],
-                      serviceName: Option[String],
+                      pageTitle: String,
                       backLinkHref: Option[String],
                       sessionExpiredPage: Boolean,
                       scripts: Option[Html],
                       backLinkAttrs: Map[String, String],
                       afterContent: Option[Html],
+                      serviceTitle: String = "title.pattern",
                       disableBackLink: Boolean,
                     )(
                       contentBlock: Html
@@ -76,9 +76,13 @@ class MainImpl @Inject() (
       case Failure(exception) => throw exception
     }
 
+    val fullPageTitle =
+    {
+      s"""$pageTitle - ${messages(serviceTitle)}"""
+    }
     wrapperService.layout(
       content = contentBlock,
-      pageTitle = pageTitle,
+      pageTitle = Some(fullPageTitle),
       serviceNameKey = Some(messages("tamc.apply")),
       serviceNameUrl = None,
       signoutUrl = controllers.routes.AuthorisationController.logout().url,
