@@ -94,7 +94,7 @@ class MainImpl @Inject() (
       bannerConfig = BannerConfig(
         showAlphaBanner = false,
         showBetaBanner = true,
-        showHelpImproveBanner = true
+        showHelpImproveBanner = false
       ),
       optTrustedHelper = trustedHelper,
       fullWidth = false
