@@ -28,7 +28,7 @@ button: Button)
 @()(implicit messages: Messages, request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("session.timeout.title"))),
+pageTitle = messages("session.timeout.title"),
 sessionExpiredPage = true
 ){
 

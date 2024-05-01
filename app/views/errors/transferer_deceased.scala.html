@@ -31,7 +31,7 @@ link: Link)
 request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("title.cannot-use-service")))
+pageTitle = messages("title.cannot-use-service")
 ) {
     @h1("title.cannot-use-service", elmId=Some("error"))
     @p(HtmlContent(transferorLink))

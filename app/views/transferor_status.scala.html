@@ -30,7 +30,7 @@ link: Link)
 request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("title.transfer-in-place")))
+    pageTitle = messages(messages("title.transfer-in-place"))
 ) {
 
 @p(HtmlContent(messages("transferor.has.relationship")))

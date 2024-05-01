@@ -74,7 +74,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
       val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino))).toString())
       val title = document.title()
-      val expected = messages("title.application.pattern", messages("pages.form.h1"))
+      val expected = messages("title.transfer") + " - " + messages("title.application.pattern")
 
       title shouldBe expected
     }

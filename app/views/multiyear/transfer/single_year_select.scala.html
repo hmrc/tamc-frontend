@@ -33,6 +33,7 @@ h1: H1,
 h2: H2,
 p: P,
 errorSummary: ErrorSummary,
+viewHelpers: utils.ViewHelpers,
 button: Button,
 inputRadios: InputRadios
 )
@@ -46,10 +47,9 @@ request: AuthenticatedUserRequest[_])
 
 
 @main(
-  pageTitle = Some(Messages("title.application.pattern",
-    Messages("title.confirm-extra-years", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year))
-  )),
-  backLinkHref = Some(controllers.routes.TransferController.eligibleYearsAction().url)
+    pageTitle = viewHelpers.formErrorPrefix(earlierYearsForm, Messages("title.confirm-extra-years", languageUtilsImpl().taxDateIntervalShort(availableYears.head.year))),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(controllers.routes.TransferController.eligibleYearsAction().url)
 ) {
 
     @errorSummary(earlierYearsForm, Some("selectedYear-true"))

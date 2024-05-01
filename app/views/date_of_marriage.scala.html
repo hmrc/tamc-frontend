@@ -26,6 +26,7 @@ languageUtilsImpl: LanguageUtilsImpl,
 h1: H1,
 p: P,
 button: Button,
+viewHelpers: utils.ViewHelpers,
 errorSummary: ErrorSummary,
 inputDate: InputDate)
 
@@ -34,8 +35,9 @@ implicit messages: Messages,
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.application.pattern", messages("title.date-of-marriage"))),
-backLinkHref = Some(controllers.routes.TransferController.transfer().url)
+    pageTitle = viewHelpers.formErrorPrefix(marriageForm, messages("title.date-of-marriage")),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(controllers.routes.TransferController.transfer().url)
 ){
 
   @errorSummary(marriageForm, Some("dateOfMarriage.day"))

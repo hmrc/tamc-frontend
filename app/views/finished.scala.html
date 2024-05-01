@@ -33,7 +33,8 @@ implicit messages: Messages,
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.application.pattern", Messages("title.finished")))
+    pageTitle = Messages("title.finished"),
+    serviceTitle = "title.application.pattern"
 ){
 
 @govukPanel(Panel(

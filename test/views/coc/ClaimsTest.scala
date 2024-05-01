@@ -40,7 +40,7 @@ class ClaimsTest extends BaseTest with NinoGenerator {
 
       val document = Jsoup.parse(claims(claimViewModel(relationshipRecord, Seq(relationshipRecord1))).toString)
       val title = document.title()
-      val expected = messages("title.pattern", messages("title.date-of-marriage"))
+      val expected = messages("pages.claims.title") + " - " + messages("title.pattern")
 
       title shouldBe expected
     }

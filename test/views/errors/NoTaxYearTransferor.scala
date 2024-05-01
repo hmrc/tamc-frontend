@@ -32,7 +32,7 @@ class NoTaxYearTransferor extends BaseTest {
     "return the correct title" in {
       val doc = Jsoup.parse(noTaxYearTransferor()(messages, baseUserRequest).toString)
       val title = doc.title()
-      val expected = messages("title.pattern", messages("title.no-tax-years"))
+      val expected = messages("title.no-tax-years") + " - " + messages("title.pattern")
 
       title shouldBe expected
     }

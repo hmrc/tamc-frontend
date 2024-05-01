@@ -28,14 +28,15 @@ h1: H1,
 p: P,
 errorSummary: ErrorSummary,
 inputValue: InputValue,
+viewHelpers: utils.ViewHelpers,
 button: Button)
 
 @(recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress])(implicit messages: Messages,
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.application.pattern", Messages("title.confirm-email"))),
-serviceName = Some("tamc.manage")
+    pageTitle = viewHelpers.formErrorPrefix(recipientForm, Messages("title.confirm-email")),
+    serviceTitle = "tamc.manage"
 ) {
 
     @form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate(), args = (Symbol("id") -> "register-form")) {

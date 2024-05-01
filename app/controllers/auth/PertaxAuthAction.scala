@@ -65,7 +65,7 @@ class PertaxAuthActionImpl @Inject()(
           case Right(PertaxAuthResponseModel(_, _, _, Some(errorPartial))) =>
             pertaxAuthConnector.loadPartial(errorPartial.url).map {
               case partial: HtmlPartial.Success =>
-                Left(Status(errorPartial.statusCode)(main(partial.title)(partial.content)))
+                Left(Status(errorPartial.statusCode)(main(partial.title.getOrElse(""))(partial.content)))
               case _: HtmlPartial.Failure =>
                 logger.error("[PertaxAuthAction][refine] Failed to retrieve a partial from pertax auth service.")
                 Left(InternalServerError(technicalIssue()))

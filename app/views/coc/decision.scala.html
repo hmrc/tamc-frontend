@@ -26,12 +26,13 @@ form: FormWithCSRF,
 h1: H1,
 inputRadios: InputRadios,
 button: Button,
+viewHelpers: utils.ViewHelpers,
 errorSummary: ErrorSummary)
 
 @(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(messages("title.pattern", messages("pages.decision.title")))
+pageTitle = viewHelpers.formErrorPrefix(decisionForm, messages("pages.decision.title"))
 ) {
 
     @errorSummary(decisionForm, Some("decisionChoice-checkmarriageallowanceclaim"))

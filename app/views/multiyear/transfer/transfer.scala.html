@@ -32,6 +32,7 @@ inputValue: InputValue,
 errorSummary: ErrorSummary,
 button: Button,
 details: GovukDetails,
+viewHelpers: utils.ViewHelpers,
 govukWarningText : GovukWarningText)
 
 @(recipientForm: Form[models.RecipientDetailsFormInput])(
@@ -39,8 +40,9 @@ implicit messages: Messages,
 request: AuthenticatedUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.application.pattern", Messages("title.transfer"))),
-backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
+    pageTitle = viewHelpers.formErrorPrefix(recipientForm, messages("title.transfer")),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
 ) {
 
     @errorSummary(recipientForm)

@@ -33,7 +33,7 @@ link: Link
 request: BaseUserRequest[_])
 
 @main(
-pageTitle = Some(Messages("title.pattern", Messages("title.other-ways"))),
+pageTitle = Messages("title.other-ways"),
 backLinkHref = Some(controllers.routes.TransferController.eligibleYears().url)
 ) {
 

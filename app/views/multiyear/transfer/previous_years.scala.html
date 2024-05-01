@@ -43,8 +43,9 @@ request: AuthenticatedUserRequest[_])
 }
 
 @main(
-pageTitle = Some(Messages("title.application.pattern", Messages("pages.previousyear.header"))),
-backLinkHref = Some(backLink)
+    pageTitle = Messages("pages.previousyear.header"),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(backLink)
 ){
 
     @h1("pages.previousyear.header", elmId = Some("heading"))

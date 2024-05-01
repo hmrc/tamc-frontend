@@ -43,7 +43,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
 
       val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val title = document.title()
-      val expected = messages("title.application.pattern", messages("title.confirm"))
+      val expected = messages("title.confirm") + " - " + messages("title.application.pattern")
 
       title shouldBe expected
     }
