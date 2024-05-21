@@ -54,7 +54,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
       val docHeading = doc.select("#errorHeading").text()
       val docMessage = doc.select("#errorText").text()
 
-      docTitle shouldBe title
+      docTitle shouldBe title + " GOV.UK"
       docHeading shouldBe heading
       docMessage shouldBe message
     }

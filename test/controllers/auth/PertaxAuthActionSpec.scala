@@ -174,7 +174,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
 
           "has a title of 'Test Title' and partial of 'Hello'" in {
             lazy val doc = Jsoup.parse(bodyOf(result))
-            doc.getElementsByTag("title").text() shouldBe "Test Title - title.pattern"
+            doc.getElementsByTag("title").text() shouldBe "Test Title - title.pattern GOV.UK"
             doc.getElementById("partial").text() shouldBe "Hello"
           }
         }
