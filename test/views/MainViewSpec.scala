@@ -56,7 +56,7 @@ class MainViewSpec extends BaseTest with Injecting {
     val urBannerLink = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=TAMCPTAbanner&utm_source=Other&utm_medium=gov.uk%20survey&t=HMRC&id=133"
 
     val accessibilityStatementText = "Accessibility statement"
-    val accessibilityStatementBaseUrl = "http://localhost:12346/accessibility-statement/marriage-allowance?referrerUrl=http%3A%2F%2Flocalhost%3A"
+    val accessibilityStatementBaseUrl = "http://localhost:12346/accessibility-statement/marriage-allowance?referrerUrl="
 
     val reportATechnicalIssueText = "Is this page not working properly? (opens in new tab)"
 
@@ -67,14 +67,14 @@ class MainViewSpec extends BaseTest with Injecting {
     val testName: String = "new style"
     val profileAndSettingsLink: String = "http://localhost:9232/personal-account/profile-and-settings"
 
-    val accessibilityReferrerUrl: String = "12346%2Fmarriage-allowance"
+    val accessibilityReferrerUrl: String = "%2Fsome-url"
     val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?newTab=true&service=TAMC&referrerUrl=%2Fsome-url"
 
   }
 
   s"when using the ${CommonValues.testName} for the main" which {
     "the page header should" should {
-      lazy val pageHeader = doc.select(".hmrc-header__service-name")
+      lazy val pageHeader = doc.select(".govuk-header__service-name")
 
       "contain the text 'Apply for Marriage Allowance'" in {
         pageHeader.text() shouldBe CommonValues.pageHeader

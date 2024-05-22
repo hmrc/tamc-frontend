@@ -22,6 +22,7 @@ import models.auth.BaseUserRequest
 import play.api.Logging
 import play.api.i18n.Messages
 import play.twirl.api.{Html, HtmlFormat}
+import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
 import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.sca.models.BannerConfig
@@ -80,16 +81,16 @@ class MainImpl @Inject() (
     {
       s"""$pageTitle - ${messages(serviceTitle)}"""
     }
-    wrapperService.layout(
+    wrapperService.standardScaLayout(
       content = contentBlock,
       pageTitle = Some(fullPageTitle),
-      serviceNameKey = Some(messages("tamc.apply")),
-      serviceNameUrl = None,
-      signoutUrl = controllers.routes.AuthorisationController.logout().url,
+      serviceNameKey = Some("tamc.apply"),
+      serviceURLs = ServiceURLs(
+        signOutUrl = Some(controllers.routes.AuthorisationController.logout().url)
+      ),
       timeOutUrl = Some(controllers.routes.AuthorisationController.sessionTimeout().url),
       keepAliveUrl = "/keep-alive",
       backLinkUrl = backLinkHref,
-      showSignOutInHeader = false,
       hideMenuBar = !BaseUserRequest.isAuthenticated,
       scripts = Seq(additionalScripts(scripts)),
       styleSheets = Seq(
@@ -102,6 +103,6 @@ class MainImpl @Inject() (
       ),
       optTrustedHelper = trustedHelper,
       fullWidth = false
-    )(messages, HeaderCarrierConverter.fromRequest(BaseUserRequest), BaseUserRequest)
+    )(messages, BaseUserRequest)
   }
 }

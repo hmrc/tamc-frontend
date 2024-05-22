@@ -123,7 +123,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   val ehCacheTtlInSeconds: Int = configuration.underlying.getInt("ehCache.ttlInSeconds")
   val frontendHost: String = loadConfig("tamc-frontend.host")
-  val accessibilityStatementHost: String = loadConfig("accessibility-statement.url") + "/accessibility-statement"
+  val accessibilityStatementHost: String = loadConfig("accessibility-statement.service-path") + "/accessibility-statement"
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/marriage-allowance?referrerUrl=" + encodeQueryStringValue(frontendHost + relativeReferrerPath)
 
