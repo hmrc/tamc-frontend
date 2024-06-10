@@ -18,7 +18,7 @@ package views.multiyear.transfer
 
 import org.apache.pekko.util.Timeout
 import controllers.TransferController
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
 import helpers.FakePertaxAuthAction
@@ -62,7 +62,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TransferService].toInstance(mockTransferService),
-      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
     )

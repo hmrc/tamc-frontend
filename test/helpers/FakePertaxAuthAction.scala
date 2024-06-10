@@ -17,15 +17,13 @@
 package helpers
 
 import controllers.auth.PertaxAuthAction
-import models.auth.AuthenticatedUserRequest
-import play.api.mvc.Result
+import play.api.mvc.{Request, Result}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakePertaxAuthAction @Inject()(implicit val executionContext: ExecutionContext) extends PertaxAuthAction {
-  override protected def refine[A](request: AuthenticatedUserRequest[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
-    Future.successful(Right(request))
+  override protected def filter[A](request: Request[A]): Future[Option[Result]] = {
+    Future.successful(None)
   }
-
 }

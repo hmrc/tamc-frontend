@@ -16,8 +16,9 @@
 
 package controllers.auth
 
+import cats.data.EitherT
+import config.ApplicationConfig
 import connectors.PertaxAuthConnector
-import models.admin.PertaxBackendToggle
 import models.auth.AuthenticatedUserRequest
 import models.pertaxAuth.{PertaxAuthResponseModel, PertaxErrorView}
 import org.jsoup.Jsoup
@@ -30,15 +31,13 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Play.materializer
 import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER}
 import play.api.mvc.Results.Ok
-import play.api.mvc.{AnyContent, Result}
+import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.Helpers.LOCATION
 import play.api.test.{FakeRequest, Helpers}
 import play.twirl.api.Html
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import uk.gov.hmrc.mongoFeatureToggles.model.FeatureFlag
-import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.play.partials.HtmlPartial
 import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
 import utils.UnitSpec
@@ -56,14 +55,11 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
   lazy val connector: PertaxAuthConnector =
     mock[PertaxAuthConnector]
 
-  lazy val featureFlagService: FeatureFlagService =
-    mock[FeatureFlagService]
-
   lazy val authAction = new PertaxAuthActionImpl(
     pertaxAuthConnector = connector,
     technicalIssue      = app.injector.instanceOf[try_later],
-    featureFlagService  = featureFlagService,
-    main                = app.injector.instanceOf[Main]
+    main                = app.injector.instanceOf[Main],
+    appConfig           = app.injector.instanceOf[ApplicationConfig]
   )(ExecutionContext.Implicits.global, Helpers.stubMessagesControllerComponents())
 
   lazy val date = LocalDate.now()
@@ -91,9 +87,9 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
     when(connector.authorise(any())(any())).thenReturn(Future.successful(Left(error)))
   }
 
-  def block: AuthenticatedUserRequest[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
+  def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
 
-  "PertaxAuthAction.refine" when {
+  "PertaxAuthAction.filter" when {
 
     "the pertax auth feature switch is on" should {
 
@@ -107,7 +103,11 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               None, None
             ))
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                Future.successful(Right(PertaxAuthResponseModel("ACCESS_GRANTED", "", None, None)))
+              ))
 
             authAction.invokeBlock(authenticatedRequest(), block)
           }
@@ -127,7 +127,11 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               None
             ))
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel("NO_HMRC_PT_ENROLMENT", "", Some("/some-redirect/"), None)
+                ))))
 
             authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
           }
@@ -157,12 +161,18 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
             ))
 
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel(
+                    "NOT_A_VALID_CODE",
+                    "Doesn't matter, even now.",
+                    None,
+                    Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
+                  )))))
+
             when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
               HtmlPartial.Success(Some("Test Title"), Html("<div id=\"partial\">Hello</div>"))
-            ))
-
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(
-              FeatureFlag(PertaxBackendToggle, isEnabled = true)
             ))
 
             authAction.invokeBlock(authenticatedRequest(), block)
@@ -194,8 +204,6 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
                 Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
               ))
 
-              when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
-
               when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
                 HtmlPartial.Failure(None, "ERROR")
               ))
@@ -215,26 +223,10 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               authAction.invokeBlock(authenticatedRequest(), block)
             })
 
-            when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = true)))
-
             result.header.status shouldBe INTERNAL_SERVER_ERROR
           }
         }
       }
     }
-
-    "the pertax feature switch is off" should {
-
-      "return Successful in the request body" in {
-        lazy val result = await {
-          when(featureFlagService.get(PertaxBackendToggle)).thenReturn(Future.successful(FeatureFlag(PertaxBackendToggle, isEnabled = false)))
-          authAction.invokeBlock(authenticatedRequest(), block)
-        }
-
-        bodyOf(result) shouldBe "Successful"
-      }
-
-    }
   }
-
 }

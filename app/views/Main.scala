@@ -18,9 +18,10 @@ package views
 
 import com.google.inject.{ImplementedBy, Inject}
 import config.ApplicationConfig
-import models.auth.BaseUserRequest
+import models.auth.{BaseUserRequest, UserRequest}
 import play.api.Logging
 import play.api.i18n.Messages
+import play.api.mvc.Request
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
 import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
@@ -45,7 +46,7 @@ trait Main {
            )(
              contentBlock: Html
            )(implicit
-             BaseUserRequest: BaseUserRequest[_],
+             BaseUserRequest: Request[_],
              messages: Messages
            ): HtmlFormat.Appendable
 }
@@ -69,7 +70,7 @@ class MainImpl @Inject() (
                       disableBackLink: Boolean,
                     )(
                       contentBlock: Html
-                    )(implicit BaseUserRequest: BaseUserRequest[_], messages: Messages): HtmlFormat.Appendable = {
+                    )(implicit BaseUserRequest: Request[_], messages: Messages): HtmlFormat.Appendable = {
 
     val trustedHelper = Try(BaseUserRequest.asInstanceOf[AuthenticatedRequest[_]]) match {
       case Failure(_: java.lang.ClassCastException) => None
@@ -91,7 +92,6 @@ class MainImpl @Inject() (
       timeOutUrl = Some(controllers.routes.AuthorisationController.sessionTimeout().url),
       keepAliveUrl = "/keep-alive",
       backLinkUrl = backLinkHref,
-      hideMenuBar = !BaseUserRequest.isAuthenticated,
       scripts = Seq(additionalScripts(scripts)),
       styleSheets = Seq(
         additionalStyles()

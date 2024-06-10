@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.AuthenticatedActionRefiner
+import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import errors._
 import helpers.FakePertaxAuthAction
@@ -56,7 +56,7 @@ class TransferControllerTest extends ControllerBaseTest {
       bind[TransferService].toInstance(mockTransferService),
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
-      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )

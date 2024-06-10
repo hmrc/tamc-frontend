@@ -18,7 +18,7 @@ package views
 
 import config.ApplicationConfig
 import controllers.UpdateRelationshipController
-import controllers.actions.AuthenticatedActionRefiner
+import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import _root_.helpers.FakePertaxAuthAction
 import models._
@@ -59,7 +59,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       bind[TransferService].toInstance(mockTransferService),
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[CachingService].toInstance(mockCachingService),
-      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],
     ).build()

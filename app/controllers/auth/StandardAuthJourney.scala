@@ -16,12 +16,12 @@
 
 package controllers.auth
 
-import controllers.actions.AuthenticatedActionRefiner
+import controllers.actions.AuthRetrievals
 import models.auth.AuthenticatedUserRequest
-import play.api.mvc.{ActionBuilder, AnyContent}
+import play.api.mvc.{ActionBuilder, AnyContent, DefaultActionBuilder}
 
 import javax.inject.Inject
 
-class StandardAuthJourney @Inject()(auth: AuthenticatedActionRefiner, pertaxAuth: PertaxAuthAction) {
-  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedUserRequest, AnyContent] = auth andThen pertaxAuth
+class StandardAuthJourney @Inject()(auth: AuthRetrievals, pertaxAuth: PertaxAuthAction, defaultActionBuilder: DefaultActionBuilder) {
+  val pertaxAuthActionWithUserDetails: ActionBuilder[AuthenticatedUserRequest, AnyContent] = defaultActionBuilder andThen pertaxAuth andThen auth
 }

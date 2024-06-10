@@ -16,7 +16,7 @@
 
 package controllers
 
-import controllers.actions.AuthenticatedActionRefiner
+import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import errors._
 import forms.EmailForm.emailForm
@@ -82,7 +82,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
-      bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction],
+      bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
     ).build()

@@ -18,7 +18,7 @@ package utils
 
 import com.google.inject.Inject
 import config.ApplicationConfig
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import models.auth._
 import play.api.mvc.{BodyParsers, MessagesControllerComponents, Request, Result}
 import test_utils.TestData
@@ -30,10 +30,9 @@ import scala.concurrent.Future
 
 class MockAuthenticatedAction @Inject()(
                                          override val authConnector: AuthConnector,
-                                         val parsers: BodyParsers.Default,
-                                         appConfig: ApplicationConfig
+                                         val parsers: BodyParsers.Default
                                        )
-  extends AuthenticatedActionRefiner(authConnector, appConfig, parsers) {
+  extends AuthRetrievals(authConnector, parsers) {
 
   override protected def refine[A](request: Request[A]): Future[Either[Result, AuthenticatedUserRequest[A]]] = {
     Future.successful(
