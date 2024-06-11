@@ -17,7 +17,6 @@
 package utils
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import models.auth._
 import play.api.mvc.{BodyParsers, MessagesControllerComponents, Request, Result}

@@ -16,6 +16,7 @@
 
 package connectors
 
+import cats.implicits.catsStdInstancesForFuture
 import models.pertaxAuth.PertaxAuthResponseModel
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR}
@@ -65,6 +66,23 @@ class PertaxAuthConnectorSpec extends BaseTest with GuiceOneAppPerSuite with Wir
           }
 
           await(result) shouldBe Left(expectedReturnModel)
+        }
+      }
+    }
+
+    "calling .pertaxPostAuthorise" when {
+      "pertax returns a successful response" should {
+        "return the expected return model" in {
+          val expectedReturnModel = PertaxAuthResponseModel(ACCESS_GRANTED, "A field", None, None)
+
+          val result = {
+            mockPostPertaxAuth(expectedReturnModel)
+            connector.pertaxPostAuthorise
+          }
+
+          await(result).map { res =>
+            res shouldBe expectedReturnModel
+          }
         }
       }
     }

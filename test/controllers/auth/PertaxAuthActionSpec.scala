@@ -29,7 +29,7 @@ import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Play.materializer
-import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER}
+import play.api.http.Status.{IM_A_TEAPOT, INTERNAL_SERVER_ERROR, SEE_OTHER, UNAUTHORIZED}
 import play.api.mvc.Results.Ok
 import play.api.mvc.{AnyContent, Request, Result}
 import play.api.test.Helpers.LOCATION
@@ -39,7 +39,7 @@ import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
 import uk.gov.hmrc.play.partials.HtmlPartial
-import utils.Constants.{ACCESS_GRANTED, NO_HMRC_PT_ENROLMENT}
+import utils.Constants.{ACCESS_GRANTED, CONFIDENCE_LEVEL_UPLIFT_REQUIRED, CREDENTIAL_STRENGTH_UPLIFT_REQUIRED, NO_HMRC_PT_ENROLMENT}
 import utils.UnitSpec
 import views.Main
 import views.html.errors.try_later
@@ -118,6 +118,21 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
 
       "redirect the user" when {
 
+        "the response from pertax auth connector has an UNAUTHORIZED status" in {
+          lazy val result = await({
+            mockFailedAuth(UpstreamErrorResponse("Error", UNAUTHORIZED))
+            authAction.invokeBlock(authenticatedRequest(), block)
+          })
+
+          when(connector.pertaxPostAuthorise(any(), any()))
+            .thenReturn(
+              EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                Future.successful(Left(UpstreamErrorResponse("Error", UNAUTHORIZED))
+                )))
+
+          result.header.status shouldBe SEE_OTHER
+        }
+
         "the response from pertax auth connector indicates NO_HMRC_PT_ENROLMENT and has a redirect URL" which {
           lazy val request = {
             mockAuth(PertaxAuthResponseModel(
@@ -145,6 +160,54 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
             val expectedRedirectUrl = "/some-redirect/?redirectUrl=%2Fsome-base-url"
 
             result.header.headers(LOCATION) shouldBe expectedRedirectUrl
+          }
+
+          "the response from pertax auth connector indicates CREDENTIAL_STRENGTH_UPLIFT_REQUIRED" which {
+            lazy val request = {
+              mockAuth(PertaxAuthResponseModel(
+                CREDENTIAL_STRENGTH_UPLIFT_REQUIRED,
+                "Still doesn't matter.",
+                Some("/some-redirect"),
+                None
+              ))
+
+              when(connector.pertaxPostAuthorise(any(), any()))
+                .thenReturn(
+                  EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                    Future.successful(Right(PertaxAuthResponseModel("CREDENTIAL_STRENGTH_UPLIFT_REQUIRED", "", Some("/some-redirect/"), None)
+                    ))))
+
+              authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
+            }
+            lazy val result = await(request)
+
+            "has a status of SEE_OTHER(303)" in {
+              status(result) shouldBe INTERNAL_SERVER_ERROR
+            }
+          }
+
+          "the response from pertax auth connector indicates CONFIDENCE_LEVEL_UPLIFT_REQUIRED and has a redirect URL" which {
+            lazy val request = {
+              mockAuth(PertaxAuthResponseModel(
+                CONFIDENCE_LEVEL_UPLIFT_REQUIRED,
+                "Still doesn't matter.",
+                Some("/some-redirect"),
+                None
+              ))
+
+              when(connector.pertaxPostAuthorise(any(), any()))
+                .thenReturn(
+                  EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                    Future.successful(Right(PertaxAuthResponseModel("CONFIDENCE_LEVEL_UPLIFT_REQUIRED", "", Some("/some-redirect/"), None)
+                    ))))
+
+              authAction.invokeBlock(authenticatedRequest(requestUrl = "/some-base-url"), block)
+            }
+            lazy val result = await(request)
+
+            "has a status of SEE_OTHER(303)" in {
+              status(result) shouldBe SEE_OTHER
+            }
           }
         }
       }
@@ -188,10 +251,24 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
             doc.getElementById("partial").text() shouldBe "Hello"
           }
         }
-
       }
 
       "return an internal server error" when {
+
+        "pertax auth connector returns a left that isn't unauthorised" in {
+          lazy val result = await({
+            mockFailedAuth(UpstreamErrorResponse("Error", INTERNAL_SERVER_ERROR))
+            authAction.invokeBlock(authenticatedRequest(), block)
+          })
+
+          when(connector.pertaxPostAuthorise(any(), any()))
+            .thenReturn(
+              EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                Future.successful(Left(UpstreamErrorResponse("Error", INTERNAL_SERVER_ERROR))
+                )))
+
+          result.header.status shouldBe INTERNAL_SERVER_ERROR
+        }
 
         "the pertax auth service fails to return a partial" which {
 
@@ -203,6 +280,16 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
                 None,
                 Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
               ))
+
+              when(connector.pertaxPostAuthorise(any(), any()))
+                .thenReturn(
+                  EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                    Future.successful(Right(PertaxAuthResponseModel(
+                      "NOT_A_VALID_CODE",
+                      "Doesn't matter, even now.",
+                      None,
+                      Some(PertaxErrorView(IM_A_TEAPOT, "/partial-url"))
+                    )))))
 
               when(connector.loadPartial(any())(any())).thenReturn(Future.successful(
                 HtmlPartial.Failure(None, "ERROR")
@@ -222,6 +309,16 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
               mockFailedAuth(UpstreamErrorResponse("I'M AN ERROR", INTERNAL_SERVER_ERROR))
               authAction.invokeBlock(authenticatedRequest(), block)
             })
+
+            when(connector.pertaxPostAuthorise(any(), any()))
+              .thenReturn(
+                EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel](
+                  Future.successful(Right(PertaxAuthResponseModel(
+                    "NOT_A_VALID_CODE",
+                    "Doesn't matter, even now.",
+                    None,
+                    None
+                  )))))
 
             result.header.status shouldBe INTERNAL_SERVER_ERROR
           }

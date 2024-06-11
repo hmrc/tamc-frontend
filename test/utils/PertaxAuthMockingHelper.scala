@@ -40,6 +40,14 @@ trait PertaxAuthMockingHelper {
       ).build()
   }
 
+  def mockPostPertaxAuth(returnedValue: PertaxAuthResponseModel): StubMapping = {
+    server.stubFor(
+      post(urlMatching("/pertax/authorise"))
+        .willReturn(aResponse().withStatus(OK)
+        .withBody(Json.stringify(Json.toJson(returnedValue))))
+    )
+  }
+
   def mockPertaxAuth(returnedValue: PertaxAuthResponseModel, nino: String = "AA000000A"): StubMapping = {
     server.stubFor(
       get(urlMatching(s"/pertax/$nino/authorise"))
