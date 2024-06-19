@@ -17,8 +17,7 @@
 package controllers
 
 import config.ApplicationConfig
-import controllers.actions.AuthenticatedActionRefiner
-import org.mockito.ArgumentMatchers
+import controllers.actions.AuthRetrievals
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import play.api.Application
@@ -26,24 +25,23 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results.Ok
 import play.api.mvc._
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.mvc.Controller
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.{Credentials, Retrieval, ~}
-import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, InsufficientConfidenceLevel, NoActiveSession}
+import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel}
 import utils.ControllerBaseTest
 import utils.RetrivalHelper._
 
 import scala.concurrent.Future
 
-class AuthenticatedActionRefinerTest extends ControllerBaseTest {
+class AuthRetrievalsTest extends ControllerBaseTest {
 
-  type AuthRetrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String]
+  type Retrievals = Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String]
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
-  val retrievals: Retrieval[AuthRetrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
+  val retrievals: Retrieval[Retrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
   val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
 
@@ -54,7 +52,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
     "metrics.jvm" -> false
     ).build()
 
-  val authAction = app.injector.instanceOf[AuthenticatedActionRefiner]
+  val authAction = app.injector.instanceOf[AuthRetrievals]
 
   class FakeController extends Controller {
     def onPageLoad(): Action[AnyContent] = authAction {
@@ -63,36 +61,11 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
   }
 
 
-  "AuthenticatedActionRefiner" should {
-    "redirect the user" when {
-      "there is insufficient confidence level" in new FakeController {
-
-        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
-          .thenReturn(Future.failed(new InsufficientConfidenceLevel))
-
-        val result: Future[Result] = onPageLoad()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(applicationConfig.ivUpliftUrl)
-      }
-
-      "there is no active session" in new FakeController {
-
-        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
-          .thenReturn(Future.failed(NoActiveSessionException))
-
-        val request: Request[AnyContent] = FakeRequest("GET", "/tamc")
-        val result: Future[Result] = onPageLoad()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(
-          "http://localhost:9553/bas-gateway/sign-in?continue_url=http%3A%2F%2Flocalhost%3A9900%2Fmarriage-allowance-application%2Fhistory"
-        )
-      }
-    }
-
+  "AuthRetrievals" should {
     "throw exception" when {
       "no nino is found" in new FakeController {
 
-        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
+        when(mockAuthConnector.authorise[Retrievals](any(), any())(any(), any()))
           .thenReturn(Future.successful(noNinoRetrieval))
 
         intercept[Exception] {
@@ -104,7 +77,7 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
     "return success" when {
       "nino is returned" in new FakeController {
 
-        when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
+        when(mockAuthConnector.authorise[Retrievals](any(), any())(any(), any()))
           .thenReturn(Future.successful(withNinoRetrieval))
 
         val result: Future[Result] = onPageLoad()(request)
@@ -113,8 +86,6 @@ class AuthenticatedActionRefinerTest extends ControllerBaseTest {
       }
     }
   }
-
-  object NoActiveSessionException extends NoActiveSession("")
 
   val noNinoRetrieval: Option[Credentials] ~ Option[String] ~ ConfidenceLevel ~ Option[String] =
     None ~ None ~ ConfidenceLevel.L200 ~ None

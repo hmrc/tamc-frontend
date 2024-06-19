@@ -17,9 +17,7 @@
 package controllers.actions
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import models.auth._
-import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -30,9 +28,8 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthenticatedActionRefiner @Inject()(
+class AuthRetrievals @Inject()(
                                             val authConnector: AuthConnector,
-                                            appConfig: ApplicationConfig,
                                             val parser: BodyParsers.Default
                                           )(implicit val executionContext: ExecutionContext)
   extends ActionRefiner[Request, AuthenticatedUserRequest] with ActionBuilder[AuthenticatedUserRequest, AnyContent] with AuthorisedFunctions {
@@ -42,7 +39,7 @@ class AuthenticatedActionRefiner @Inject()(
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(ConfidenceLevel.L200)
+    authorised()
       .retrieve(Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr) {
         case credentials ~ Some(nino) ~ confidenceLevel ~ saUtr =>
           Future.successful(
@@ -51,11 +48,6 @@ class AuthenticatedActionRefiner @Inject()(
             )
           )
         case _ => throw new Exception("Nino not found")
-      } recover {
-      case _: InsufficientConfidenceLevel =>
-        Left(Redirect(appConfig.ivUpliftUrl))
-      case _: NoActiveSession =>
-        Left(Redirect(appConfig.ggSignInUrl))
+      }
     }
-  }
 }

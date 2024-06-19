@@ -16,7 +16,7 @@
 
 package utils
 
-import controllers.actions.{AuthenticatedActionRefiner, UnauthenticatedActionTransformer}
+import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -29,7 +29,7 @@ trait ControllerBaseTest extends BaseTest {
   implicit val request: Request[AnyContent] = FakeRequest()
 
   override def fakeApplication(): Application = new GuiceApplicationBuilder()
-    .overrides(bind[AuthenticatedActionRefiner].to[MockAuthenticatedAction])
+    .overrides(bind[AuthRetrievals].to[MockAuthenticatedAction])
     .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
     .overrides(bind[FormPartialRetriever].to[MockFormPartialRetriever]
     ).configure(

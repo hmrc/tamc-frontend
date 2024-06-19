@@ -89,16 +89,6 @@ object CreateRelationshipCacheFailureEvent {
     )
 }
 
-object UpdateRelationshipCacheFailureEvent {
-  def apply(error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
-    new BusinessEvent(
-      AuditType.Tx_FAILED,
-      Map(
-        "event" -> "update-relationship",
-        "error" -> error.toString
-      )
-    )
-}
 
 object RecipientFailureEvent {
   def apply(nino: Nino, error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
@@ -108,17 +98,6 @@ object RecipientFailureEvent {
         "event" -> "recipient-error",
         "error" -> error.toString,
         "data" -> nino.value
-      )
-    )
-}
-
-object RiskTriageRedirectEvent {
-  def apply()(implicit hc: HeaderCarrier): BusinessEvent =
-    new BusinessEvent(
-      AuditType.Tx_SUCCESSFUL,
-      Map(
-        "event" -> "authorisation-attempt",
-        "data" -> "TRIAGE"
       )
     )
 }

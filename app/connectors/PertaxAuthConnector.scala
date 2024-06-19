@@ -16,19 +16,22 @@
 
 package connectors
 
+import cats.data.EitherT
+import cats.implicits.catsStdInstancesForFuture
 import com.google.inject.ImplementedBy
 import config.ApplicationConfig
 import play.api.Logging
 import play.api.http.HeaderNames
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpException, HttpResponse, UpstreamErrorResponse}
 import uk.gov.hmrc.play.partials.HtmlPartial
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import connectors.httpParsers.PertaxAuthenticationHttpParser._
 import models.pertaxAuth.PertaxAuthResponseModel
 
-class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: ApplicationConfig)(
+class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: ApplicationConfig, httpClientResponse: HttpClientResponse)(
                                    implicit ec: ExecutionContext
 ) extends PertaxAuthConnector with Logging {
 
@@ -41,6 +44,23 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: Application
     )
   }
 
+  def pertaxPostAuthorise(implicit
+                          hc: HeaderCarrier,
+                          ec: ExecutionContext
+                         ): EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel] = {
+    val pertaxUrl = appConfig.pertaxAuthBaseUrl
+
+    httpClientResponse
+      .read(
+        http
+          .POSTEmpty[Either[UpstreamErrorResponse, HttpResponse]](
+            s"$pertaxUrl/pertax/authorise",
+            Seq(HeaderNames.ACCEPT -> "application/vnd.hmrc.2.0+json")
+          )
+      )
+      .map(_.json.as[PertaxAuthResponseModel])
+  }
+
   override def loadPartial(partialContextUrl: String)(implicit hc: HeaderCarrier): Future[HtmlPartial] = {
     val partialUrl =
       appConfig.pertaxAuthBaseUrl + s"${if (partialContextUrl.charAt(0).toString == "/") partialContextUrl else s"/$partialContextUrl"}"
@@ -49,7 +69,7 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: Application
       case partialSuccess: HtmlPartial.Success => partialSuccess
       case partialFailure: HtmlPartial.Failure =>
         logger.error(s"[PertaxAuthConnector][loadPartial] Failed to load Partial from partial url '$partialUrl'. " +
-          s"Partial info: $partialFailure")
+          s"Partial info: $partialFailure, body: ${partialFailure.body}")
         partialFailure
     }.recover {
       case exception: HttpException => HtmlPartial.Failure(Some(exception.responseCode))
@@ -62,6 +82,8 @@ class PertaxAuthConnectorImpl @Inject()(http: HttpClient, appConfig: Application
 @ImplementedBy(classOf[PertaxAuthConnectorImpl])
 trait PertaxAuthConnector {
   def authorise(nino: String)(implicit hc: HeaderCarrier): Future[Either[UpstreamErrorResponse, PertaxAuthResponseModel]]
+
+  def pertaxPostAuthorise(implicit hc: HeaderCarrier, ec: ExecutionContext): EitherT[Future, UpstreamErrorResponse, PertaxAuthResponseModel]
 
   def loadPartial(partialContextUrl: String)(implicit hc: HeaderCarrier): Future[HtmlPartial]
 }
