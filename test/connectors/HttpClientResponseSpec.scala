@@ -58,7 +58,8 @@ class HttpClientResponseSpec extends AnyWordSpec with Matchers {
       INTERNAL_SERVER_ERROR,
       BAD_GATEWAY,
       SERVICE_UNAVAILABLE,
-      LOCKED
+      LOCKED,
+      UNAUTHORIZED
       ).foreach { error =>
         s"hand $error and log info" in {
         val returnedError = UpstreamErrorResponse("Error Message", error)
