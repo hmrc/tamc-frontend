@@ -110,7 +110,7 @@ object PlayFormFormatter {
                                        invalidDay: String,
                                        invalidMonth: String,
                                        invalidYear: String,
-                                       yearTodayOrPast: String,
+                                       yearTodayOrPast: String
                                      ): Constraint[(Int, Int, Int)] = {
 
     val currentYear: Int = LocalDateTime.now().getYear

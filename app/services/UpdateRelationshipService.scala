@@ -23,7 +23,9 @@ import errors.ErrorResponseStatus._
 import errors._
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
 import models._
+import play.api.Logging
 import play.api.i18n.Messages
+import play.api.mvc.Request
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.emailaddress.PlayJsonFormats._
@@ -46,21 +48,26 @@ class UpdateRelationshipService @Inject()(
   appConfig: ApplicationConfig,
   languageUtilsImpl: LanguageUtilsImpl,
   localDate: SystemLocalDate
-) {
+) extends Logging {
 
   def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
     marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_, localDate.now()))
 
 
-  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
+  def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] = {
+
+    def unlockCreateRelationship()(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
+      logger.info("unlockCreateRelationship has been called.")
+      cachingService.put[Boolean](appConfig.CACHE_LOCKED_CREATE, false)
+    }
 
     def checkCreateActionLock(trrecord: UserRecord)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UserRecord] =
-      cachingService.unlockCreateRelationship().map { _ => trrecord }
+      unlockCreateRelationship().map { _ => trrecord }
 
     val transferorRec = UserRecord(Some(relationshipRecords.loggedInUserInfo))
     val checkCreateActionLockFuture = checkCreateActionLock(transferorRec)
-    val saveTransferorRecordFuture = cachingService.saveTransferorRecord(transferorRec)
-    val cacheRelationshipRecordFuture = cachingService.cacheValue(appConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
+    val saveTransferorRecordFuture = cachingService.put[UserRecord](appConfig.CACHE_TRANSFEROR_RECORD, transferorRec)
+    val cacheRelationshipRecordFuture = cachingService.put(appConfig.CACHE_RELATIONSHIP_RECORDS, relationshipRecords)
 
     for {
       _ <- cacheRelationshipRecordFuture
@@ -70,31 +77,31 @@ class UpdateRelationshipService @Inject()(
   }
 
   def getCheckClaimOrCancelDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
-    cachingService.fetchAndGetEntry[String](appConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
+    cachingService.get[String](appConfig.CACHE_CHECK_CLAIM_OR_CANCEL)
   }
 
-  def getMakeChangesDecision(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
-    cachingService.fetchAndGetEntry[String](appConfig.CACHE_MAKE_CHANGES_DECISION)
+  def getMakeChangesDecision(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[String]] = {
+    cachingService.get[String](appConfig.CACHE_MAKE_CHANGES_DECISION)
   }
 
-  def saveMakeChangeDecision(makeChangeDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
-    cachingService.cacheValue(appConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
+  def saveMakeChangeDecision(makeChangeDecision: String)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[String] = {
+    cachingService.put(appConfig.CACHE_MAKE_CHANGES_DECISION, makeChangeDecision)
   }
 
   def getDivorceDate(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[LocalDate]] = {
-    cachingService.fetchAndGetEntry[LocalDate](appConfig.CACHE_DIVORCE_DATE)
+    cachingService.get[LocalDate](appConfig.CACHE_DIVORCE_DATE)
   }
 
   def getEmailAddress(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EmailAddress]] = {
-    cachingService.fetchAndGetEntry[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS)
+    cachingService.get[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS)
   }
 
   def getEmailAddressForConfirmation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
-    cachingService.fetchAndGetEntry[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw CacheMissingEmail()))
+    cachingService.get[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS).map(_.getOrElse(throw CacheMissingEmail()))
   }
 
-  def saveEmailAddress(emailAddress: EmailAddress)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
-    cachingService.cacheValue[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS, emailAddress)
+  def saveEmailAddress(emailAddress: EmailAddress)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[EmailAddress] = {
+    cachingService.put[EmailAddress](appConfig.CACHE_EMAIL_ADDRESS, emailAddress)
   }
 
   def getDataForDivorceExplanation(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(Role, LocalDate)] = {
@@ -112,12 +119,12 @@ class UpdateRelationshipService @Inject()(
     }
   }
 
-  def saveDivorceDate(dateOfDivorce: LocalDate)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[LocalDate] =
-    cachingService.cacheValue[LocalDate](appConfig.CACHE_DIVORCE_DATE, dateOfDivorce)
+  def saveDivorceDate(dateOfDivorce: LocalDate)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[LocalDate] =
+    cachingService.put[LocalDate](appConfig.CACHE_DIVORCE_DATE, dateOfDivorce)
 
 
-  def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
-    cachingService.cacheValue[String](appConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
+  def saveCheckClaimOrCancelDecision(checkClaimOrCancelDecision: String)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[String] =
+    cachingService.put[String](appConfig.CACHE_CHECK_CLAIM_OR_CANCEL, checkClaimOrCancelDecision)
 
   def updateRelationship(nino: Nino)(implicit hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[UpdateRelationshipRequestHolder] = {
 
@@ -158,7 +165,7 @@ class UpdateRelationshipService @Inject()(
     }
 
     for {
-      updateRelationshipCacheData <- cachingService.getUpdateRelationshipCachedData
+      updateRelationshipCacheData <- getUpdateRelationshipCachedData
       updateRelationshipData = UpdateRelationshipData(updateRelationshipCacheData)
       updateRelationshipRequest = updateRelationshipRequestHolder(updateRelationshipData)
       postUpdateData <- sendUpdateRelationship(nino, updateRelationshipRequest)
@@ -166,9 +173,11 @@ class UpdateRelationshipService @Inject()(
     } yield postUpdateData
   }
 
-  def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] = {
-    cachingService.getConfirmationAnswers.map(ConfirmationUpdateAnswers(_))
-  }
+  def getUpdateRelationshipCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
+    cachingService.getUpdateRelationshipCachedData.map(_.getOrElse(throw CacheMapNoFound()))
+
+  def getConfirmationUpdateAnswers(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] =
+    cachingService.getConfirmationAnswers.map(_.getOrElse(throw CacheMapNoFound())).map(ConfirmationUpdateAnswers(_))
 
   def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
     val marriageAllowanceEndDate = endDateForMACeased.endDate
@@ -186,15 +195,14 @@ class UpdateRelationshipService @Inject()(
 
   }
 
-  def saveMarriageAllowanceEndingDates(maEndingDates: MarriageAllowanceEndingDates)(implicit hc: HeaderCarrier, ec: ExecutionContext):
+  def saveMarriageAllowanceEndingDates(maEndingDates: MarriageAllowanceEndingDates)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext):
   Future[MarriageAllowanceEndingDates] =
-    cachingService.cacheValue[MarriageAllowanceEndingDates](appConfig.CACHE_MA_ENDING_DATES, maEndingDates)
-
+    cachingService.put[MarriageAllowanceEndingDates](appConfig.CACHE_MA_ENDING_DATES, maEndingDates)
 
   def getRelationshipRecords(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
-    cachingService.getRelationshipRecords.map(_.getOrElse(throw CacheMissingRelationshipRecords()))
+    cachingService.get[RelationshipRecords](appConfig.CACHE_RELATIONSHIP_RECORDS).map(_.getOrElse(throw CacheMissingRelationshipRecords()))
 
-  def removeCache(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[HttpResponse] = cachingService.remove()
+  def removeCache(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Unit] = cachingService.clear()
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {

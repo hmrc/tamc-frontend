@@ -65,7 +65,7 @@ class MainImpl @Inject() (
                       backLinkAttrs: Map[String, String],
                       afterContent: Option[Html],
                       serviceTitle: String = "title.pattern",
-                      disableBackLink: Boolean,
+                      disableBackLink: Boolean
                     )(
                       contentBlock: Html
                     )(implicit BaseUserRequest: Request[_], messages: Messages): HtmlFormat.Appendable = {

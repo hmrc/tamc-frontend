@@ -16,11 +16,11 @@
 
 package views
 
+import _root_.helpers.FakePertaxAuthAction
 import config.ApplicationConfig
 import controllers.UpdateRelationshipController
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
-import _root_.helpers.FakePertaxAuthAction
 import models._
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
@@ -34,7 +34,6 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import services._
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.time.TaxYear
 import utils.{BaseTest, MockAuthenticatedAction}
 
@@ -75,7 +74,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       ).toArray
 
       val request = FakeRequest()
-      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any()))
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any(), any()))
         .thenReturn(Future.successful(None))
 
       val result = controller.makeChange()(request)
@@ -110,7 +109,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     when(mockUpdateRelationshipService.getMAEndingDatesForCancelation)
       .thenReturn(maEndingDates)
 
-    when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
+    when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
       .thenReturn(Future.successful(maEndingDates))
 
     val result: Future[Result] = controller.cancel(request)
@@ -251,7 +250,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
         .thenReturn(endingDates)
 
       val result = controller.divorceEndExplanation(request)
@@ -287,7 +286,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
         .thenReturn(endingDates)
 
       val result =  controller.divorceEndExplanation(request)
@@ -325,7 +324,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
         .thenReturn(endingDates)
 
       val result =  controller.divorceEndExplanation(request)
@@ -362,7 +361,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
         .thenReturn(endingDates)
 
       val result =  controller.divorceEndExplanation(request)
@@ -493,8 +492,8 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
         .thenReturn(Future.successful(EmailAddress("email@email.com")))
 
-      when(mockUpdateRelationshipService.removeCache(any(), any()))
-        .thenReturn(mock[HttpResponse])
+      when(mockUpdateRelationshipService.removeCache(any(), any(), any()))
+        .thenReturn(())
 
       val expectedHeading = messages("pages.coc.finish.header")
 

@@ -16,6 +16,7 @@
 
 package controllers
 
+import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import errors._
@@ -50,6 +51,7 @@ class TransferControllerTest extends ControllerBaseTest {
   val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
+  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -80,7 +82,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.saveRecipientDetails(ArgumentMatchers.eq(recipientDetails))(any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -97,7 +99,7 @@ class TransferControllerTest extends ControllerBaseTest {
           "gender"    -> "M",
           "nino"      -> Ninos.nino2
         )
-        when(mockCachingService.saveRecipientDetails(ArgumentMatchers.eq(recipientDetails))(any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
@@ -151,15 +153,17 @@ class TransferControllerTest extends ControllerBaseTest {
         )
         val registrationFormInput =
           RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
-        when(mockCachingService.saveDateOfMarriage(ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
+
+        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any(), any(), any()))
           .thenReturn(dateOfMarriageInput)
+
         when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
           .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
         when(
           mockTransferService.isRecipientEligible(
             ArgumentMatchers.eq(Nino(Ninos.nino1)),
             ArgumentMatchers.eq(registrationFormInput)
-          )(any(), any())
+          )(any(), any(), any())
         )
           .thenReturn(true)
         val result = controller.dateOfMarriageAction()(request)
@@ -172,7 +176,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "eligibleYears" should {
     "return a success" when {
       "there are available tax years not including current year" in {
-        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -186,7 +190,7 @@ class TransferControllerTest extends ControllerBaseTest {
       }
 
       "there are available tax years including current year" in {
-        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               true,
@@ -203,7 +207,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "throw an exception and recover user to error page" when {
       "available tax years is empty" in {
-        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -248,11 +252,11 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any()))
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any(), any()))
           .thenReturn(List(currentTaxYear))
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any())
+        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any(), any())
       }
 
       "extra years is not empty and applyForCurrentYear is false" in {
@@ -266,10 +270,10 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())
+        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())
       }
     }
 
@@ -285,7 +289,7 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
@@ -302,7 +306,7 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any()))
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any(), any()))
           .thenReturn(List(currentTaxYear))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
@@ -322,7 +326,7 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
       }
@@ -385,7 +389,7 @@ class TransferControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
             ArgumentMatchers.eq(2015),
             ArgumentMatchers.eq(Some(2014))
-          )(any(), any())
+          )(any(), any(), any())
         )
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)
@@ -414,7 +418,7 @@ class TransferControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
             ArgumentMatchers.eq(2015),
             ArgumentMatchers.eq(Some(2014))
-          )(any(), any())
+          )(any(), any(), any())
         )
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)
@@ -428,14 +432,14 @@ class TransferControllerTest extends ControllerBaseTest {
     "return a success" when {
       "an email is recovered from the cache" in {
         val email = "test@test.com"
-        when(mockCachingService.fetchAndGetEntry[NotificationRecord](any())(any(), any(), any()))
+        when(mockCachingService.get[NotificationRecord](any())(any(), any(), any()))
           .thenReturn(Some(NotificationRecord(EmailAddress(email))))
         val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
       }
 
       "no email is recovered from the cache" in {
-        when(mockCachingService.fetchAndGetEntry[NotificationRecord](any())(any(), any(), any()))
+        when(mockCachingService.get[NotificationRecord](any())(any(), any(), any()))
           .thenReturn(None)
         val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
@@ -455,7 +459,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "redirect" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "test@test.com")
-        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any()))
+        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any(), any()))
           .thenReturn(notificationRecord)
         val result = controller.confirmYourEmailAction()(request)
         status(result)           shouldBe SEE_OTHER
@@ -467,7 +471,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "confirm" should {
     "return success" when {
       "successful future is returned from transfer service" in {
-        when(mockTransferService.getConfirmationData(any())(any(), any()))
+        when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
           .thenReturn(ConfirmationModelData.confirmationModelData)
         val result = controller.confirm()(request)
         status(result) shouldBe OK
@@ -478,12 +482,12 @@ class TransferControllerTest extends ControllerBaseTest {
   "confirmAction" should {
     "redirect" when {
       "a user is permanently authenticated" in {
-        when(mockTransferService.createRelationship(any())(any(), any(), any()))
+        when(mockTransferService.createRelationship(any())(any(), any(), any(), any()))
           .thenReturn(notificationRecord)
         val result = controller.confirmAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
-        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any())
+        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any(), any())
       }
     }
   }
@@ -492,7 +496,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "return success" when {
       "A notification record is returned and cache is called" in {
         reset(mockCachingService)
-        verify(mockCachingService, times(0)).remove()(any(), any())
+        verify(mockCachingService, times(0)).clear()(any(), any(), any())
 
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(notificationRecord)
@@ -500,21 +504,21 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.finished()(request)
         status(result) shouldBe OK
 
-        verify(mockCachingService, times(1)).remove()(any(), any())
+        verify(mockCachingService, times(1)).clear()(any(), any(), any())
       }
     }
 
     "return error" when {
       "error is thrown" in {
         reset(mockCachingService)
-        verify(mockCachingService, times(0)).remove()(any(), any())
+        verify(mockCachingService, times(0)).clear()(any(), any(), any())
 
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenThrow(new IllegalArgumentException("123"))
 
         controller.finished()(request)
 
-        verify(mockCachingService, times(0)).remove()(any(), any())
+        verify(mockCachingService, times(0)).clear()(any(), any(), any())
       }
     }
   }
