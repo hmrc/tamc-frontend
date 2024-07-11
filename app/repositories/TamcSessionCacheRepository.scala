@@ -18,10 +18,11 @@ package repositories
 
 import com.google.inject.{ImplementedBy, Inject}
 import play.api.Configuration
-import play.api.libs.json.Format
+import play.api.libs.json.{Format, JsResultException}
 import play.api.mvc.Request
+import repositories.SessionCacheNew.{CacheKeyRead, CacheKeyReadWrite}
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.mongo.cache.{DataKey, SessionCacheRepository}
+import uk.gov.hmrc.mongo.cache.{CacheItem, DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 
 import java.util.concurrent.TimeUnit
@@ -53,4 +54,32 @@ class TamcSessionCacheRepository @Inject() (
 
   override def clear()(implicit request: Request[_]): Future[Unit] =
     cacheRepo.deleteEntity(request)
+
+  def put[T](cacheKey: CacheKeyReadWrite[T], value: T)(implicit format: Format[T], request: Request[_]): Future[T] =
+    putSession(cacheKey.dataKey, value).map(_ => value)
+
+  def get[T](cacheKey: CacheKeyRead[T])(implicit request: Request[_]): Future[Option[T]] =
+    cacheRepo.findById(request).map(_.flatMap(cacheKey))
+}
+
+object SessionCacheNew {
+
+  sealed abstract class CacheKeyRead[T] extends Function1[CacheItem, Option[T]]
+  sealed abstract class CacheKeyReadWrite[T] extends CacheKeyRead[T] {val dataKey: DataKey[T]}
+
+  object CacheKeyRead {
+    def apply[T](key: String)(implicit format: Format[T]): CacheKeyReadWrite[T] = new CacheKeyReadWrite[T] {
+      override def apply(cacheItem: CacheItem): Option[T] =
+        (cacheItem.data \ key)
+          .validateOpt[T]
+          .fold(e => throw JsResultException(e), identity)
+      override val dataKey: DataKey[T] = DataKey[T](key)
+    }
+
+    def apply[T](transformation: CacheItem => T): CacheKeyRead[T] = new CacheKeyRead[T] {
+      override def apply(cacheItem: CacheItem): Option[T] = Some(transformation(cacheItem))
+    }
+  }
+
+
 }
