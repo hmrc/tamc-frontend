@@ -28,7 +28,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
   lazy val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
   lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear()
-  val eligibilityCalculatorService = app.injector.instanceOf[EligibilityCalculatorService]
+  val eligibilityCalculatorService: EligibilityCalculatorService = app.injector.instanceOf[EligibilityCalculatorService]
 
   private def currencyFormatter(limit: Int): String = {
     val formatter = NumberFormat.getCurrencyInstance(Locale.UK)
@@ -45,8 +45,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val lowerEarnerIncome = 9000
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT()))
+            )
         }
 
         "The lower earners income is above personal allowance" in {
@@ -65,8 +68,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val lowerEarnerIncome = 12000
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT()))
+            )
         }
 
         "potential gain is less than £1" in {
@@ -139,8 +145,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_SCOT() + 1
           val lowerEarnerIncome = 9000
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_SCOT())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_SCOT()))
+            )
         }
 
         "The lower earners income is above personal allowance" in {
@@ -157,8 +166,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_SCOT() + 1
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_SCOT())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_SCOT()))
+            )
         }
 
         "The higher earners income is £5 above personal allowance and the lower earners income is exactly transferor allowance" in {
@@ -229,8 +241,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_WALES() + 1
           val lowerEarnerIncome = 9000
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_WALES())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_WALES()))
+            )
         }
 
         "The lower earners income is above personal allowance" in {
@@ -247,8 +262,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_WALES() + 1
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_WALES())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_WALES()))
+            )
         }
       }
 
@@ -304,8 +322,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_NORTHERN_IRELAND() + 1
           val lowerEarnerIncome = 9000
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_NORTHERN_IRELAND())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_NORTHERN_IRELAND()))
+            )
         }
 
         "The lower earners income is above personal allowance" in {
@@ -313,7 +334,10 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = 30000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple", messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.check.unlike-benefit-as-couple",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE()))
+            )
         }
 
         "Both higher earners income is taxed at higher rate and lower earners income is above personal allowance" in {
@@ -321,8 +345,11 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_NORTHERN_IRELAND() + 1
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
-              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)), messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_NORTHERN_IRELAND())))
+            EligibilityCalculatorResult(
+              messageKey = "eligibility.feedback.recipient-not-eligible",
+              messageParam = Some(currencyFormatter(applicationConfig.PERSONAL_ALLOWANCE() + 1)),
+              messageParam2 = Some(currencyFormatter(applicationConfig.MAX_LIMIT_NORTHERN_IRELAND()))
+            )
         }
       }
 

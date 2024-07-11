@@ -20,6 +20,7 @@ import config.ApplicationConfig
 import controllers.actions.UnauthenticatedActionTransformer
 import models.{EligibilityCalculatorResult, England}
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -52,7 +53,7 @@ class EligibilityCalculatorControllerTest extends ControllerBaseTest {
     bind[UnauthenticatedActionTransformer].to[MockPermUnauthenticatedAction],
   ).injector()
 
-  val authController = permAuthInjector.instanceOf[EligibilityCalculatorController]
+  val authController: EligibilityCalculatorController = permAuthInjector.instanceOf[EligibilityCalculatorController]
 
   val controller: EligibilityCalculatorController = app.injector.instanceOf[EligibilityCalculatorController]
 
@@ -78,12 +79,17 @@ class EligibilityCalculatorControllerTest extends ControllerBaseTest {
       "a valid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
           "country" -> "england",
-          "transferor-income" -> "£20.56",
-          "recipient-income" -> "£100"
+          "transferor-income" -> "£350",
+          "recipient-income" -> "£1000"
         )
-        when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
-          ArgumentMatchers.eq(England), ArgumentMatchers.any())
-        ).thenReturn(EligibilityCalculatorResult("test_key"))
+
+        when(mockEligibilityCalculatorService.calculate(
+          ArgumentMatchers.eq(BigDecimal(350)),
+          ArgumentMatchers.eq(BigDecimal(1000)),
+          ArgumentMatchers.eq(England),
+          any()
+        )).thenReturn(EligibilityCalculatorResult("test_key"))
+
         val result = controller.gdsCalculatorAction()(request)
         status(result) shouldBe OK
       }
@@ -112,12 +118,16 @@ class EligibilityCalculatorControllerTest extends ControllerBaseTest {
       "a valid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
           "country" -> "england",
-          "transferor-income" -> "£20.56",
-          "recipient-income" -> "£100"
+          "transferor-income" -> "    £20    ",
+          "recipient-income" -> "    £100    "
         )
-        when(mockEligibilityCalculatorService.calculate(ArgumentMatchers.eq(20), ArgumentMatchers.eq(100),
-          ArgumentMatchers.eq(England), ArgumentMatchers.any())
-        ).thenReturn(EligibilityCalculatorResult("test_key"))
+        when(mockEligibilityCalculatorService.calculate(
+          ArgumentMatchers.eq(BigDecimal(20)),
+          ArgumentMatchers.eq(BigDecimal(100)),
+          ArgumentMatchers.eq(England),
+          any()
+        )).thenReturn(EligibilityCalculatorResult("test_key"))
+
         val result = controller.ptaCalculatorAction()(request)
         status(result) shouldBe OK
       }

@@ -14,114 +14,112 @@
  * limitations under the License.
  *@
 
+@import includes.{Button, ErrorSummary, H1, InputRadios, InputValue, Link, P}
 @import models.auth.UserRequest
-@import includes.{H1, P, Link, InputRadios, InputValue, Button, ErrorSummary}
-
 @import views.Main
 
 @this(
-main: Main,
-calculatorResultView: templates.calculator_result,
-form: FormWithCSRF,
-errorSummary: ErrorSummary,
-h1: H1,
-govukFieldset : GovukFieldset,
-p: P,
-inputValue: InputValue,
-inputRadios: InputRadios,
-link: Link,
-viewHelpers: utils.ViewHelpers,
-button: Button)
+        main: Main,
+        calculatorResultView: templates.calculator_result,
+        form: FormWithCSRF,
+        errorSummary: ErrorSummary,
+        h1: H1,
+        govukFieldset: GovukFieldset,
+        p: P,
+        inputValue: InputValue,
+        inputRadios: InputRadios,
+        link: Link,
+        viewHelpers: utils.ViewHelpers,
+        button: Button)
 
 @(
-calculationResult: Option[models.EligibilityCalculatorResult] = None,
-calculatorForm: Form[models.EligibilityCalculatorInput]
-)(implicit messages: Messages,
-request: UserRequest[_])
+        calculationResult: Option[models.EligibilityCalculatorResult] = None,
+        calculatorForm: Form[models.EligibilityCalculatorInput]
+)(implicit messages: Messages, request: UserRequest[_])
 
-@main(
-pageTitle = viewHelpers.formErrorPrefix(calculatorForm, Messages("title.eligibility-criteria")),
-backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
-){
+    @main(
+        pageTitle = viewHelpers.formErrorPrefix(calculatorForm, Messages("title.eligibility-criteria")),
+        backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
+    ) {
 
-    @errorSummary(calculatorForm)
+        @errorSummary(calculatorForm)
 
-    @h1("pages.calc.header")
+        @h1("pages.calc.header")
 
-    @p(HtmlContent(Messages("pages.calc.skip-it.pre") + 
-                    link(link = controllers.routes.TransferController.transfer().url,
-                        messageKey = "pages.calc.skip-it",
-                        inParagraph = true)))
+        @p(HtmlContent(Messages("pages.calc.skip-it.pre") +
+                link(link = controllers.routes.TransferController.transfer().url,
+                    messageKey = "pages.calc.skip-it",
+                    inParagraph = true)))
 
-    @p(Text(Messages("pages.calc.para1")))
+        @p(Text(Messages("pages.calc.para1")))
 
-    @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction(), args = (Symbol("id") -> "calculator")) {
+        @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction(), args = Symbol("id") -> "calculator") {
 
-        @govukFieldset(Fieldset(
-            legend = Some(Legend(
-            content = Text(Messages("pages.calc.header")),
-            classes = "govuk-visually-hidden",
-            isPageHeading = false
-            )),
-            html = html
-        ))
+            @govukFieldset(Fieldset(
+                legend = Some(Legend(
+                    content = Text(Messages("pages.calc.header")),
+                    classes = "govuk-visually-hidden",
+                    isPageHeading = false
+                )),
+                html = html
+            ))
 
-        @calculatorResultView(calculationResult)
+            @calculatorResultView(calculationResult)
 
-        @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
+            @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
 
-        @link(link = controllers.routes.TransferController.transfer().url, messageKey = "change.status.apply", id = Some("continue"))
+            @link(link = controllers.routes.TransferController.transfer().url, messageKey = "change.status.apply", id = Some("continue"))
 
+        }
     }
-}
 
-@html = {
-        @inputRadios(
-            form = calculatorForm,
-            legend = "pages.calc.where",
-            id = Some("country"),
-            name = "country",
-            items = Seq(RadioItem(
-                            content = Text(messages("label.england")),
-                            value = Some("england"),
-                            id = Some("country-england")
-                        ), RadioItem(
-                            content = Text(messages("label.ni")),
-                            value = Some("northernireland"),
-                            id = Some("country-northernireland")    
-                        ), RadioItem(
-                            content = Text(messages("label.scotland")),
-                            value = Some("scotland"),
-                            id = Some("country-scotland")    
-                        ), RadioItem(
-                            content = Text(messages("label.wales")),
-                            value = Some("wales"),
-                            id = Some("country-wales")    
-                        )),
-            legendAsHeading = true,
-            legendClasses = "govuk-label--s",
-            inline = false
-        )
+    @html = {
+    @inputRadios(
+        form = calculatorForm,
+        legend = "pages.calc.where",
+        id = Some("country"),
+        name = "country",
+        items = Seq(RadioItem(
+            content = Text(messages("label.england")),
+            value = Some("england"),
+            id = Some("country-england")
+        ), RadioItem(
+            content = Text(messages("label.ni")),
+            value = Some("northernireland"),
+            id = Some("country-northernireland")
+        ), RadioItem(
+            content = Text(messages("label.scotland")),
+            value = Some("scotland"),
+            id = Some("country-scotland")
+        ), RadioItem(
+            content = Text(messages("label.wales")),
+            value = Some("wales"),
+            id = Some("country-wales")
+        )),
+        legendAsHeading = true,
+        legendClasses = "govuk-label--s",
+        inline = false
+    )
 
-        @inputValue( 
-            form = calculatorForm,
-            id = "transferor-income",
-            name = "transferor-income",
-            labelKey = "pages.form.field.income",
-            isPageHeading = true,
-            classes = Some("govuk-!-width-one-half"),
-            labelClasses = Some("govuk-label--s"),
-            prefix = Some(PrefixOrSuffix(content = Text("£")))
-        )
+    @inputValue(
+        form = calculatorForm,
+        id = "transferor-income",
+        name = "transferor-income",
+        labelKey = "pages.form.field.income",
+        isPageHeading = true,
+        classes = Some("govuk-!-width-one-half"),
+        labelClasses = Some("govuk-label--s"),
+        prefix = Some(PrefixOrSuffix(content = Text("£")))
+    )
 
-        @inputValue( 
-            form = calculatorForm,
-            id = "recipient-income",
-                name = "recipient-income",
-                labelKey = "pages.form.field.recipient-income",
-                isPageHeading = true,
-                classes = Some("govuk-!-width-one-half"),
-                labelClasses = Some("govuk-label--s"),
-                prefix = Some(PrefixOrSuffix(content = Text("£")))
-            )
+    @inputValue(
+        form = calculatorForm,
+        id = "recipient-income",
+        name = "recipient-income",
+        labelKey = "pages.form.field.recipient-income",
+        isPageHeading = true,
+        classes = Some("govuk-!-width-one-half"),
+        labelClasses = Some("govuk-label--s"),
+        prefix = Some(PrefixOrSuffix(content = Text("£")))
+    )
     }
