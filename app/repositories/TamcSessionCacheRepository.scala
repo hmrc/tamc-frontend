@@ -17,10 +17,11 @@
 package repositories
 
 import com.google.inject.{ImplementedBy, Inject}
+import models.{RecipientRecord, UserAnswersCacheData, UserRecord}
 import play.api.Configuration
 import play.api.libs.json.{Format, JsResultException}
 import play.api.mvc.Request
-import repositories.SessionCacheNew.{CacheKeyRead, CacheKeyReadWrite}
+import repositories.SessionCacheNew.{CacheKey, CacheKeyReadWrite}
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.{CacheItem, DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
@@ -58,16 +59,16 @@ class TamcSessionCacheRepository @Inject() (
   def put[T](cacheKey: CacheKeyReadWrite[T], value: T)(implicit format: Format[T], request: Request[_]): Future[T] =
     putSession(cacheKey.dataKey, value).map(_ => value)
 
-  def get[T](cacheKey: CacheKeyRead[T])(implicit request: Request[_]): Future[Option[T]] =
+  def get[T](cacheKey: CacheKey[T])(implicit request: Request[_]): Future[Option[T]] =
     cacheRepo.findById(request).map(_.flatMap(cacheKey))
 }
 
 object SessionCacheNew {
 
-  sealed abstract class CacheKeyRead[T] extends Function1[CacheItem, Option[T]]
-  sealed abstract class CacheKeyReadWrite[T] extends CacheKeyRead[T] {val dataKey: DataKey[T]}
+  sealed abstract class CacheKey[T] extends Function1[CacheItem, Option[T]]
+  sealed abstract class CacheKeyReadWrite[T] extends CacheKey[T] {val dataKey: DataKey[T]}
 
-  object CacheKeyRead {
+  object CacheKey {
     def apply[T](key: String)(implicit format: Format[T]): CacheKeyReadWrite[T] = new CacheKeyReadWrite[T] {
       override def apply(cacheItem: CacheItem): Option[T] =
         (cacheItem.data \ key)
@@ -76,10 +77,21 @@ object SessionCacheNew {
       override val dataKey: DataKey[T] = DataKey[T](key)
     }
 
-    def apply[T](transformation: CacheItem => T): CacheKeyRead[T] = new CacheKeyRead[T] {
+    def apply[T](transformation: CacheItem => T): CacheKey[T] = new CacheKey[T] {
       override def apply(cacheItem: CacheItem): Option[T] = Some(transformation(cacheItem))
     }
-  }
 
+    val TRANSFEROR_RECORD:CacheKeyReadWrite[UserRecord] = CacheKey[UserRecord]("TRANSFEROR_RECORD")
+    val RECIPIENT_RECORD:CacheKeyReadWrite[RecipientRecord] = CacheKey[RecipientRecord]("RECIPIENT_RECORD")
+
+    val CACHED_USER_ANSWERS:CacheKey[UserAnswersCacheData] = CacheKey[UserAnswersCacheData]({
+      cacheItem:CacheItem =>
+        UserAnswersCacheData(
+          transferor = TRANSFEROR_RECORD.apply(cacheItem),
+          recipient = RECIPIENT_RECORD.apply(cacheItem),
+          None,None
+        )
+    })
+  }
 
 }
