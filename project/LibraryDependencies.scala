@@ -34,7 +34,8 @@ object LibraryDependencies {
 
   private val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% s"bootstrap-test-$playVersion" % hmrcBootstrapVersion,
-    "org.scalatestplus" %% "scalacheck-1-17"              % "3.2.18.0"
+    "org.scalatestplus" %% "scalacheck-1-17"              % "3.2.18.0",
+    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-test-$playVersion"% "1.9.0",
   ).map(_ % Test)
 
   def apply(): Seq[ModuleID] = compile ++ test
