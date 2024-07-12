@@ -16,13 +16,13 @@
 
 package events
 
-import models.{CacheData, UpdateRelationshipRequestHolder}
+import models.{UserAnswersCacheData, UpdateRelationshipRequestHolder}
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, HeaderNames}
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 object CreateRelationshipSuccessEvent {
-  def apply(cacheData: CacheData)(implicit hc: HeaderCarrier): BusinessEvent =
+  def apply(cacheData: UserAnswersCacheData)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_SUCCESSFUL,
       Map(
@@ -44,7 +44,7 @@ object UpdateRelationshipSuccessEvent {
 }
 
 object CreateRelationshipFailureEvent {
-  def apply(cacheData: CacheData, error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
+  def apply(cacheData: UserAnswersCacheData, error: Throwable)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(
@@ -56,7 +56,7 @@ object CreateRelationshipFailureEvent {
 }
 
 object RelationshipAlreadyCreatedEvent {
-  def apply(cacheData: CacheData)(implicit hc: HeaderCarrier): BusinessEvent =
+  def apply(cacheData: UserAnswersCacheData)(implicit hc: HeaderCarrier): BusinessEvent =
     new BusinessEvent(
       AuditType.Tx_FAILED,
       Map(

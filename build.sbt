@@ -38,3 +38,9 @@ val root: Project = Project(appName, file("."))
     PlayKeys.playDefaultPort := 9900,
     libraryDependencies ++= LibraryDependencies(),
   )
+
+addCommandAlias("runLocal", "run -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes")
+addCommandAlias("runLocalWithColours", "run -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes -Dlogger.resource=logback-colours.xml")
+addCommandAlias("runAllTests", ";test;")
+addCommandAlias("runAllTestsWithColours", ";set Test/javaOptions += \"-Dlogger.resource=logback-colours.xml\";runAllTests;")
+addCommandAlias("runAllChecks", ";clean;scalastyle;coverageOn;runAllTests;coverageOff;coverageAggregate;")

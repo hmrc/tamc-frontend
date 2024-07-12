@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class ViewHelpers @Inject()(
                              val appConfig: ApplicationConfig,
-                             val languageUtils: LanguageUtils,
+                             val languageUtils: LanguageUtils
                            ) extends Logging {
 
 

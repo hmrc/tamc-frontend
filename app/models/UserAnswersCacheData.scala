@@ -17,7 +17,7 @@
 package models
 
 
-case class CacheData(
+case class UserAnswersCacheData(
                       transferor: Option[UserRecord],
                       recipient: Option[RecipientRecord],
                       notification: Option[NotificationRecord],

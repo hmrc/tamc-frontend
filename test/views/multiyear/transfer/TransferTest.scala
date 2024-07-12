@@ -517,7 +517,7 @@ class TransferTest extends BaseTest with NinoGenerator {
           )
         )
       when(
-        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any())
+        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any(), any())
       )
         .thenReturn(Nil)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
@@ -671,7 +671,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         List(TaxYear(2014, Some(false)), TaxYear(2015, Some(false))),
         DateOfMarriageFormInput(LocalDate.of(2015, 1, 1))
       )
-      when(mockTransferService.getConfirmationData(any())(any(), any()))
+      when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
         .thenReturn(confirmData)
 
       val result = transferController.confirm(request)
