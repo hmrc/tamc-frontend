@@ -20,18 +20,18 @@
 
 @(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit messages: Messages)
 
-@{
-calculationResult match {
-case Some(result) =>
-val message = result.monetaryGain match {
-case None => Html(Messages(result.messageKey, result.messageParam.getOrElse(""), result.messageParam2.getOrElse("")))
-case Some(gain) => Html(Messages(result.messageKey, {
-gain
-}))
-}
+    @{
+        calculationResult match {
+            case Some(result) =>
+                val message = result.monetaryGain match {
+                    case None => Html(Messages(result.messageKey, result.messageParam.getOrElse(""), result.messageParam2.getOrElse("")))
+                    case Some(gain) => Html(Messages(result.messageKey, {
+                        gain
+                    }))
+                }
 
-govukInsetText(InsetText(id = Some("calculator-result"), content = HtmlContent(message)))
+                govukInsetText(InsetText(id = Some("calculator-result"), content = HtmlContent(message)))
 
-case None => ""
-}
-}
+            case None => ""
+        }
+    }

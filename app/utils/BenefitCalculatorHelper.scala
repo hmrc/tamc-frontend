@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 class BenefitCalculatorHelper@Inject()(applicationConfig: ApplicationConfig) {
 
-  def calculateTotalBenefitAcrossBands(income: Int, countryTaxBands: List[TaxBand]): Int = {
+  def calculateTotalBenefitAcrossBands(income: BigDecimal, countryTaxBands: List[TaxBand]): Int = {
     val rates = countryTaxBands.map(band => band.name -> band.rate).toMap
     val basicRate = countryTaxBands.find(band => band.name == "BasicRate").head.rate
     val maxBenefit = applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate
@@ -37,19 +37,17 @@ class BenefitCalculatorHelper@Inject()(applicationConfig: ApplicationConfig) {
     Math.min(benefitsFromBandedIncome, maxBenefit.toInt)
   }
 
-  def dividedIncome(relevantTaxBands: List[TaxBand], incomeLessPersonalAllowance: Int): Map[String, Int] = {
+  private def dividedIncome(relevantTaxBands: List[TaxBand], incomeLessPersonalAllowance: BigDecimal): Map[String, BigDecimal] = {
     relevantTaxBands.map {
       band =>
-        if (relevantTaxBands.size == 1 || band.name == relevantTaxBands.head.name)
-          band.name -> Math.min(incomeLessPersonalAllowance, band.diffBetweenLowerAndUpperThreshold)
-        else
+        if (relevantTaxBands.size == 1 || band.name == relevantTaxBands.head.name) {
+          band.name -> incomeLessPersonalAllowance.min(band.diffBetweenLowerAndUpperThreshold)
+        } else
           band.name -> {
             val valueOfPreviousBands = relevantTaxBands.takeWhile(
               relevantBand => relevantTaxBands.indexOf(relevantBand) < relevantTaxBands.indexOf(band)).map(
               _.diffBetweenLowerAndUpperThreshold).sum
-            Math.min(
-              incomeLessPersonalAllowance - valueOfPreviousBands,
-              band.diffBetweenLowerAndUpperThreshold)
+            (incomeLessPersonalAllowance - valueOfPreviousBands).min(band.diffBetweenLowerAndUpperThreshold)
           }
     }.toMap
   }

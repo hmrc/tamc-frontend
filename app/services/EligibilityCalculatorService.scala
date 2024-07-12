@@ -28,7 +28,7 @@ class EligibilityCalculatorService @Inject()(
   taxBandReader: TaxBandReader
 ) {
 
-  def calculate(transferorIncome: Int, recipientIncome: Int, countryOfResidence: Country, taxYear: TaxYear): EligibilityCalculatorResult = {
+  def calculate(transferorIncome: BigDecimal, recipientIncome: BigDecimal, countryOfResidence: Country, taxYear: TaxYear): EligibilityCalculatorResult = {
     val maxBenefitLimit = benefitCalculatorHelper.maxLimit(countryOfResidence)
 
     val hasMaxBenefit = transferorIncome < appConfig.TRANSFEROR_ALLOWANCE && recipientIncome > appConfig.RECIPIENT_ALLOWANCE
@@ -52,20 +52,23 @@ class EligibilityCalculatorService @Inject()(
       val maxBenefit = (appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate).ceil.toInt
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(maxBenefit))
     } else {
-      partialEligibilityScenario(transferorIncome, recipientIncome, countryOfResidence, getCountryTaxBands(countryOfResidence, taxYear))
+      partialEligibilityScenario(transferorIncome, recipientIncome, getCountryTaxBands(countryOfResidence, taxYear))
     }
   }
 
-  private def partialEligibilityScenario(transferorIncome: Int, recipientIncome: Int,
-                                         countryOfResidence: Country, countryTaxBands: List[TaxBand]): EligibilityCalculatorResult = {
-    val possibleGain = calculateGain(transferorIncome, recipientIncome, countryOfResidence, countryTaxBands)
+  private def partialEligibilityScenario(
+                                          transferorIncome: BigDecimal,
+                                          recipientIncome: BigDecimal,
+                                          countryTaxBands: List[TaxBand]
+                                        ): EligibilityCalculatorResult = {
+    val possibleGain = calculateGain(transferorIncome, recipientIncome, countryTaxBands)
     if (possibleGain >= 1)
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(possibleGain))
     else
       EligibilityCalculatorResult(messageKey = "eligibility.feedback.loose")
   }
 
-  private def calculateGain(transferorIncome: Int, recipientIncome: Int, country: Country, countryTaxBands: List[TaxBand]): Int = {
+  private def calculateGain(transferorIncome: BigDecimal, recipientIncome: BigDecimal, countryTaxBands: List[TaxBand]): Int = {
     val recipientIncomeMinusPA = recipientIncome - appConfig.PERSONAL_ALLOWANCE()
     val recipientBenefit = benefitCalculatorHelper.calculateTotalBenefitAcrossBands(recipientIncomeMinusPA, countryTaxBands)
 
