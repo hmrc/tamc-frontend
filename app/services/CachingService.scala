@@ -42,28 +42,29 @@ trait CachingService {
 
 object CacheService {
 
-  val CACHE_DIVORCE_DATE: CacheReadWriteKey[LocalDate] = CacheKey[LocalDate]("DIVORCE_DATE")
-  val CACHE_MAKE_CHANGES_DECISION:CacheReadWriteKey[String]  = CacheKey[String]("MAKE_CHANGES_DECISION")
-  val CACHE_CHECK_CLAIM_OR_CANCEL:CacheReadWriteKey[String] = CacheKey[String]("CHECK_CLAIM_OR_CANCEL")
-  val CACHE_TRANSFEROR_RECORD:CacheReadWriteKey[UserRecord] = CacheKey[UserRecord]("TRANSFEROR_RECORD")
-  val CACHE_RECIPIENT_RECORD:CacheReadWriteKey[RecipientRecord] = CacheKey[RecipientRecord]("RECIPIENT_RECORD")
-  val CACHE_RECIPIENT_DETAILS:CacheReadWriteKey[RecipientDetailsFormInput] = CacheKey[RecipientDetailsFormInput]("RECIPIENT_DETAILS")
-  val CACHE_NOTIFICATION_RECORD:CacheReadWriteKey[NotificationRecord] = CacheKey[NotificationRecord]("NOTIFICATION_RECORD")
-  val CACHE_LOCKED_CREATE:CacheReadWriteKey[Boolean] = CacheKey[Boolean]("LOCKED_CREATE")
-  val CACHE_SELECTED_YEARS:CacheReadWriteKey[List[Int]] = CacheKey[List[Int]]("SELECTED_YEARS")
-  val CACHE_MARRIAGE_DATE:CacheReadWriteKey[DateOfMarriageFormInput] = CacheKey[DateOfMarriageFormInput]("MARRIAGE_DATE")
-  val CACHE_EMAIL_ADDRESS:CacheReadWriteKey[EmailAddress] = CacheKey[EmailAddress]("EMAIL_ADDRESS")
-  val CACHE_MA_ENDING_DATES:CacheReadWriteKey[MarriageAllowanceEndingDates] = CacheKey[MarriageAllowanceEndingDates]("MA_ENDING_DATES")
-  val CACHE_RELATIONSHIP_RECORDS:CacheReadWriteKey[RelationshipRecords] = CacheKey[RelationshipRecords]("RELATIONSHIP_RECORDS")
-  val CACHE_LOGGEDIN_USER_RECORD:CacheReadWriteKey[LoggedInUserInfo] = CacheKey[LoggedInUserInfo]("LOGGEDIN_USER_RECORD")                          //FIXME is this key used properly?
-  val CACHE_ACTIVE_RELATION_RECORD:CacheReadWriteKey[RelationshipRecord] = CacheKey[RelationshipRecord]("ACTIVE_RELATION_RECORD")                  //FIXME is this key used properly?
-  val CACHE_HISTORIC_RELATION_RECORD:CacheReadWriteKey[Seq[RelationshipRecord]] = CacheKey[Seq[RelationshipRecord]]("HISTORIC_RELATION_RECORD")    //FIXME is this key used properly?
-  val CACHE_RELATION_END_REASON_RECORD:CacheReadWriteKey[EndRelationshipReason] = CacheKey[EndRelationshipReason]("RELATION_END_REASON_RECORD")    //FIXME is this key used properly?
-  val CACHE_LOCKED_UPDATE:CacheReadWriteKey[Boolean] = CacheKey[Boolean]("LOCKED_UPDATE")                                                          //FIXME is this key used properly?
-  val CACHE_ROLE_RECORD:CacheReadWriteKey[String] = CacheKey[String]("ROLE")                                                                       //FIXME is this key used properly?
+  val CACHE_DIVORCE_DATE: CacheReadWriteKey[LocalDate]                           = CacheKey[LocalDate]("DIVORCE_DATE")
+  val CACHE_MAKE_CHANGES_DECISION: CacheReadWriteKey[String]                     = CacheKey[String]("MAKE_CHANGES_DECISION")
+  val CACHE_CHECK_CLAIM_OR_CANCEL: CacheReadWriteKey[String]                     = CacheKey[String]("CHECK_CLAIM_OR_CANCEL")
+  val CACHE_TRANSFEROR_RECORD: CacheReadWriteKey[UserRecord]                     = CacheKey[UserRecord]("TRANSFEROR_RECORD")
+  val CACHE_RECIPIENT_RECORD: CacheReadWriteKey[RecipientRecord]                 = CacheKey[RecipientRecord]("RECIPIENT_RECORD")
+  val CACHE_RECIPIENT_DETAILS: CacheReadWriteKey[RecipientDetailsFormInput]      = CacheKey[RecipientDetailsFormInput]("RECIPIENT_DETAILS")
+  val CACHE_NOTIFICATION_RECORD: CacheReadWriteKey[NotificationRecord]           = CacheKey[NotificationRecord]("NOTIFICATION_RECORD")
+  val CACHE_LOCKED_CREATE: CacheReadWriteKey[Boolean]                            = CacheKey[Boolean]("LOCKED_CREATE")
+  val CACHE_SELECTED_YEARS: CacheReadWriteKey[List[Int]]                         = CacheKey[List[Int]]("SELECTED_YEARS")
+  val CACHE_MARRIAGE_DATE: CacheReadWriteKey[DateOfMarriageFormInput]            = CacheKey[DateOfMarriageFormInput]("MARRIAGE_DATE")
+  val CACHE_EMAIL_ADDRESS: CacheReadWriteKey[EmailAddress]                       = CacheKey[EmailAddress]("EMAIL_ADDRESS")
+  val CACHE_MA_ENDING_DATES: CacheReadWriteKey[MarriageAllowanceEndingDates]     = CacheKey[MarriageAllowanceEndingDates]("MA_ENDING_DATES")
+  val CACHE_RELATIONSHIP_RECORDS: CacheReadWriteKey[RelationshipRecords]         = CacheKey[RelationshipRecords]("RELATIONSHIP_RECORDS")
+  val CACHE_LOGGEDIN_USER_RECORD: CacheReadWriteKey[LoggedInUserInfo]            = CacheKey[LoggedInUserInfo]("LOGGEDIN_USER_RECORD")             // TODO is this key required?
+  val CACHE_ACTIVE_RELATION_RECORD: CacheReadWriteKey[RelationshipRecord]        = CacheKey[RelationshipRecord]("ACTIVE_RELATION_RECORD")         // TODO is this key required?
+  val CACHE_HISTORIC_RELATION_RECORD: CacheReadWriteKey[Seq[RelationshipRecord]] = CacheKey[Seq[RelationshipRecord]]("HISTORIC_RELATION_RECORD")  // TODO is this key required?
+  val CACHE_RELATION_END_REASON_RECORD: CacheReadWriteKey[EndRelationshipReason] = CacheKey[EndRelationshipReason]("RELATION_END_REASON_RECORD")  // TODO is this key required?
+  val CACHE_LOCKED_UPDATE: CacheReadWriteKey[Boolean]                            = CacheKey[Boolean]("LOCKED_UPDATE")                             // TODO is this key required?
+  val CACHE_ROLE_RECORD: CacheReadWriteKey[String]                               = CacheKey[String]("ROLE")                                       // TODO is this key required?
 
-  val USER_ANSWERS_CACHE:CacheReadKey[UserAnswersCacheData] = CacheKey[UserAnswersCacheData](
-    (cacheItem: CacheItem) => Some(UserAnswersCacheData(
+  val USER_ANSWERS_CACHE: CacheReadKey[UserAnswersCacheData] = CacheKey[UserAnswersCacheData]((cacheItem: CacheItem) =>
+    Some(
+      UserAnswersCacheData(
         transferor = CACHE_TRANSFEROR_RECORD.read(cacheItem),
         recipient = CACHE_RECIPIENT_RECORD.read(cacheItem),
         notification = CACHE_NOTIFICATION_RECORD.read(cacheItem),
@@ -71,41 +72,52 @@ object CacheService {
         selectedYears = CACHE_SELECTED_YEARS.read(cacheItem),
         recipientDetailsFormData = CACHE_RECIPIENT_DETAILS.read(cacheItem),
         dateOfMarriage = CACHE_MARRIAGE_DATE.read(cacheItem)
-      )))
+      )
+    )
+  )
 
-  val USER_ANSWERS_ELIGIBILITY_CHECK:CacheReadKey[EligibilityCheckCacheData] = CacheKey[EligibilityCheckCacheData](
-    (cacheItem: CacheItem) => Some(EligibilityCheckCacheData(
-        loggedInUserInfo = CACHE_LOGGEDIN_USER_RECORD.read(cacheItem),
-        roleRecord = CACHE_ROLE_RECORD.read(cacheItem),
-        activeRelationshipRecord = CACHE_ACTIVE_RELATION_RECORD.read(cacheItem),
-        historicRelationships = CACHE_HISTORIC_RELATION_RECORD.read(cacheItem),
-        notification = CACHE_NOTIFICATION_RECORD.read(cacheItem),
-        relationshipEndReasonRecord = CACHE_RELATION_END_REASON_RECORD.read(cacheItem),
-        relationshipUpdated = CACHE_LOCKED_UPDATE.read(cacheItem)
-      )))
+  val USER_ANSWERS_ELIGIBILITY_CHECK: CacheReadKey[EligibilityCheckCacheData] =
+    CacheKey[EligibilityCheckCacheData]((cacheItem: CacheItem) =>
+      Some(
+        EligibilityCheckCacheData(
+          loggedInUserInfo = CACHE_LOGGEDIN_USER_RECORD.read(cacheItem),
+          roleRecord = CACHE_ROLE_RECORD.read(cacheItem),
+          activeRelationshipRecord = CACHE_ACTIVE_RELATION_RECORD.read(cacheItem),
+          historicRelationships = CACHE_HISTORIC_RELATION_RECORD.read(cacheItem),
+          notification = CACHE_NOTIFICATION_RECORD.read(cacheItem),
+          relationshipEndReasonRecord = CACHE_RELATION_END_REASON_RECORD.read(cacheItem),
+          relationshipUpdated = CACHE_LOCKED_UPDATE.read(cacheItem)
+        )
+      )
+    )
 
-  val USER_ANSWERS_UPDATE_RELATIONSHIP:CacheReadKey[UpdateRelationshipCacheData] = CacheKey[UpdateRelationshipCacheData](
-    (cacheItem: CacheItem) => Some(UpdateRelationshipCacheData(
-        relationshipRecords = CACHE_RELATIONSHIP_RECORDS.read(cacheItem),
-        email = CACHE_EMAIL_ADDRESS.read(cacheItem).map(_.value),
-        endMaReason = CACHE_MAKE_CHANGES_DECISION.read(cacheItem),
-        marriageEndDate = CACHE_MA_ENDING_DATES.read(cacheItem).map(_.marriageAllowanceEndDate)
-      )))
+  val USER_ANSWERS_UPDATE_RELATIONSHIP: CacheReadKey[UpdateRelationshipCacheData] =
+    CacheKey[UpdateRelationshipCacheData]((cacheItem: CacheItem) =>
+      Some(
+        UpdateRelationshipCacheData(
+          relationshipRecords = CACHE_RELATIONSHIP_RECORDS.read(cacheItem),
+          email = CACHE_EMAIL_ADDRESS.read(cacheItem).map(_.value),
+          endMaReason = CACHE_MAKE_CHANGES_DECISION.read(cacheItem),
+          marriageEndDate = CACHE_MA_ENDING_DATES.read(cacheItem).map(_.marriageAllowanceEndDate)
+        )
+      )
+    )
 
-  val USER_ANSWERS_UPDATE_CONFIRMATION:CacheReadKey[ConfirmationUpdateAnswersCacheData] = CacheKey[ConfirmationUpdateAnswersCacheData](
-    (cacheItem: CacheItem) => Some(ConfirmationUpdateAnswersCacheData(
-        relationshipRecords = CACHE_RELATIONSHIP_RECORDS.read(cacheItem),
-        divorceDate = CACHE_DIVORCE_DATE.read(cacheItem),
-        email = CACHE_EMAIL_ADDRESS.read(cacheItem).map(_.value),
-        maEndingDates = CACHE_MA_ENDING_DATES.read(cacheItem)
-      )))
+  val USER_ANSWERS_UPDATE_CONFIRMATION: CacheReadKey[ConfirmationUpdateAnswersCacheData] =
+    CacheKey[ConfirmationUpdateAnswersCacheData]((cacheItem: CacheItem) =>
+      Some(
+        ConfirmationUpdateAnswersCacheData(
+          relationshipRecords = CACHE_RELATIONSHIP_RECORDS.read(cacheItem),
+          divorceDate = CACHE_DIVORCE_DATE.read(cacheItem),
+          email = CACHE_EMAIL_ADDRESS.read(cacheItem).map(_.value),
+          maEndingDates = CACHE_MA_ENDING_DATES.read(cacheItem)
+        )
+      )
+    )
 
   object CacheKey {
-    sealed abstract class CacheReadKey[T]{val read: CacheItem => Option[T]}
-    sealed abstract class CacheReadWriteKey[T] extends CacheReadKey[T] {val dataKey: DataKey[T]}
-
     def apply[T](readWriteKey: String)(implicit format: Format[T]): CacheReadWriteKey[T] = new CacheReadWriteKey[T] {
-      override val dataKey = DataKey[T](readWriteKey)
+      override val dataKey                      = DataKey[T](readWriteKey)
       override val read: CacheItem => Option[T] =
         cache =>
           (cache.data \ readWriteKey)
@@ -113,9 +125,12 @@ object CacheService {
             .fold(e => throw JsResultException(e), identity)
     }
 
-    def apply[T](reader: CacheItem => Option[T]): CacheReadKey[T] = new CacheReadKey[T]{
+    def apply[T](reader: CacheItem => Option[T]): CacheReadKey[T] = new CacheReadKey[T] {
       override val read: CacheItem => Option[T] = reader
     }
+
+    sealed abstract class CacheReadKey[T] { val read: CacheItem => Option[T] }
+    sealed abstract class CacheReadWriteKey[T] extends CacheReadKey[T] { val dataKey: DataKey[T] }
   }
 }
 
@@ -124,13 +139,14 @@ class CachingServiceImpl @Inject() (
   config: Configuration,
   timestampSupport: TimestampSupport
 )(implicit ec: ExecutionContext)
-  extends SessionCacheRepository(
-    mongoComponent = mongoComponent,
-    collectionName = "session-cache",
-    ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
-    timestampSupport = timestampSupport,
-    sessionIdKey = SessionKeys.sessionId
-  ) with CachingService {
+    extends SessionCacheRepository(
+      mongoComponent = mongoComponent,
+      collectionName = "session-cache",
+      ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
+      timestampSupport = timestampSupport,
+      sessionIdKey = SessionKeys.sessionId
+    )
+    with CachingService {
 
   def get[T](key: CacheReadKey[T])(implicit request: Request[_]): Future[Option[T]] =
     cacheRepo
