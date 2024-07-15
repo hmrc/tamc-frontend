@@ -38,14 +38,14 @@ import services.CacheService._
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferService @Inject()(
-                                 marriageAllowanceConnector: MarriageAllowanceConnector,
-                                 auditConnector: AuditConnector,
-                                 cachingService: CachingService,
-                                 applicationService: ApplicationService,
-                                 timeService: TimeService,
-                                 languageUtilsImpl: LanguageUtilsImpl,
-                                 taxYear: SystemTaxYear,
-                                 appConfig: ApplicationConfig
+  marriageAllowanceConnector: MarriageAllowanceConnector,
+  auditConnector: AuditConnector,
+  cachingService: CachingService,
+  applicationService: ApplicationService,
+  timeService: TimeService,
+  languageUtilsImpl: LanguageUtilsImpl,
+  taxYear: SystemTaxYear,
+  appConfig: ApplicationConfig
 ) extends Logging {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
