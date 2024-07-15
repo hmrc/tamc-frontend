@@ -37,7 +37,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait CachingService {
 
   def get[T](cacheKey: CacheKey[T])(implicit request: Request[_]): Future[Option[T]]
-  def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T]
+  def put[T](cacheKey: CacheKeyWithWriteSupport[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T]
   def clear()(implicit request: Request[_]): Future[Unit]
 
   def getUserAnswersCachedData(implicit request: Request[_]): Future[Option[UserAnswersCacheData]]
@@ -47,25 +47,26 @@ trait CachingService {
 }
 
 object CacheService {
-  val CACHE_DIVORCE_DATE: CacheKey[LocalDate] = CacheKey[LocalDate]("DIVORCE_DATE")
-  val CACHE_MAKE_CHANGES_DECISION:CacheKey[String]  = CacheKey[String]("MAKE_CHANGES_DECISION")
-  val CACHE_CHECK_CLAIM_OR_CANCEL:CacheKey[String] = CacheKey[String]("CHECK_CLAIM_OR_CANCEL")
-  val CACHE_TRANSFEROR_RECORD:CacheKey[UserRecord] = CacheKey[UserRecord]("TRANSFEROR_RECORD")
-  val CACHE_RECIPIENT_RECORD:CacheKey[RecipientRecord] = CacheKey[RecipientRecord]("RECIPIENT_RECORD")
-  val CACHE_RECIPIENT_DETAILS:CacheKey[RecipientDetailsFormInput] = CacheKey[RecipientDetailsFormInput]("RECIPIENT_DETAILS")
-  val CACHE_NOTIFICATION_RECORD:CacheKey[NotificationRecord] = CacheKey[NotificationRecord]("NOTIFICATION_RECORD")
-  val CACHE_LOCKED_CREATE:CacheKey[Boolean] = CacheKey[Boolean]("LOCKED_CREATE")
-  val CACHE_SELECTED_YEARS:CacheKey[List[Int]] = CacheKey[List[Int]]("SELECTED_YEARS")
-  val CACHE_MARRIAGE_DATE:CacheKey[DateOfMarriageFormInput] = CacheKey[DateOfMarriageFormInput]("MARRIAGE_DATE")
-  val CACHE_EMAIL_ADDRESS:CacheKey[EmailAddress] = CacheKey[EmailAddress]("EMAIL_ADDRESS")
-  val CACHE_MA_ENDING_DATES:CacheKey[MarriageAllowanceEndingDates] = CacheKey[MarriageAllowanceEndingDates]("MA_ENDING_DATES")
-  val CACHE_RELATIONSHIP_RECORDS:CacheKey[RelationshipRecords] = CacheKey[RelationshipRecords]("RELATIONSHIP_RECORDS")
-  val CACHE_LOGGEDIN_USER_RECORD:CacheKey[LoggedInUserInfo] = CacheKey[LoggedInUserInfo]("LOGGEDIN_USER_RECORD")                          //FIXME is this key used properly?
-  val CACHE_ACTIVE_RELATION_RECORD:CacheKey[RelationshipRecord] = CacheKey[RelationshipRecord]("ACTIVE_RELATION_RECORD")                  //FIXME is this key used properly?
-  val CACHE_HISTORIC_RELATION_RECORD:CacheKey[Seq[RelationshipRecord]] = CacheKey[Seq[RelationshipRecord]]("HISTORIC_RELATION_RECORD")    //FIXME is this key used properly?
-  val CACHE_RELATION_END_REASON_RECORD:CacheKey[EndRelationshipReason] = CacheKey[EndRelationshipReason]("RELATION_END_REASON_RECORD")    //FIXME is this key used properly?
-  val CACHE_LOCKED_UPDATE:CacheKey[Boolean] = CacheKey[Boolean]("LOCKED_UPDATE")                                                          //FIXME is this key used properly?
-  val CACHE_ROLE_RECORD:CacheKey[String] = CacheKey[String]("ROLE")                                                                       //FIXME is this key used properly?
+
+  val CACHE_DIVORCE_DATE: CacheKeyWithWriteSupport[LocalDate] = CacheKey[LocalDate]("DIVORCE_DATE")
+  val CACHE_MAKE_CHANGES_DECISION:CacheKeyWithWriteSupport[String]  = CacheKey[String]("MAKE_CHANGES_DECISION")
+  val CACHE_CHECK_CLAIM_OR_CANCEL:CacheKeyWithWriteSupport[String] = CacheKey[String]("CHECK_CLAIM_OR_CANCEL")
+  val CACHE_TRANSFEROR_RECORD:CacheKeyWithWriteSupport[UserRecord] = CacheKey[UserRecord]("TRANSFEROR_RECORD")
+  val CACHE_RECIPIENT_RECORD:CacheKeyWithWriteSupport[RecipientRecord] = CacheKey[RecipientRecord]("RECIPIENT_RECORD")
+  val CACHE_RECIPIENT_DETAILS:CacheKeyWithWriteSupport[RecipientDetailsFormInput] = CacheKey[RecipientDetailsFormInput]("RECIPIENT_DETAILS")
+  val CACHE_NOTIFICATION_RECORD:CacheKeyWithWriteSupport[NotificationRecord] = CacheKey[NotificationRecord]("NOTIFICATION_RECORD")
+  val CACHE_LOCKED_CREATE:CacheKeyWithWriteSupport[Boolean] = CacheKey[Boolean]("LOCKED_CREATE")
+  val CACHE_SELECTED_YEARS:CacheKeyWithWriteSupport[List[Int]] = CacheKey[List[Int]]("SELECTED_YEARS")
+  val CACHE_MARRIAGE_DATE:CacheKeyWithWriteSupport[DateOfMarriageFormInput] = CacheKey[DateOfMarriageFormInput]("MARRIAGE_DATE")
+  val CACHE_EMAIL_ADDRESS:CacheKeyWithWriteSupport[EmailAddress] = CacheKey[EmailAddress]("EMAIL_ADDRESS")
+  val CACHE_MA_ENDING_DATES:CacheKeyWithWriteSupport[MarriageAllowanceEndingDates] = CacheKey[MarriageAllowanceEndingDates]("MA_ENDING_DATES")
+  val CACHE_RELATIONSHIP_RECORDS:CacheKeyWithWriteSupport[RelationshipRecords] = CacheKey[RelationshipRecords]("RELATIONSHIP_RECORDS")
+  val CACHE_LOGGEDIN_USER_RECORD:CacheKeyWithWriteSupport[LoggedInUserInfo] = CacheKey[LoggedInUserInfo]("LOGGEDIN_USER_RECORD")                          //FIXME is this key used properly?
+  val CACHE_ACTIVE_RELATION_RECORD:CacheKeyWithWriteSupport[RelationshipRecord] = CacheKey[RelationshipRecord]("ACTIVE_RELATION_RECORD")                  //FIXME is this key used properly?
+  val CACHE_HISTORIC_RELATION_RECORD:CacheKeyWithWriteSupport[Seq[RelationshipRecord]] = CacheKey[Seq[RelationshipRecord]]("HISTORIC_RELATION_RECORD")    //FIXME is this key used properly?
+  val CACHE_RELATION_END_REASON_RECORD:CacheKeyWithWriteSupport[EndRelationshipReason] = CacheKey[EndRelationshipReason]("RELATION_END_REASON_RECORD")    //FIXME is this key used properly?
+  val CACHE_LOCKED_UPDATE:CacheKeyWithWriteSupport[Boolean] = CacheKey[Boolean]("LOCKED_UPDATE")                                                          //FIXME is this key used properly?
+  val CACHE_ROLE_RECORD:CacheKeyWithWriteSupport[String] = CacheKey[String]("ROLE")                                                                       //FIXME is this key used properly?
 
   val CK_EXTRACT_USER_ANSWERS:CacheKey[UserAnswersCacheData] = CacheKey[UserAnswersCacheData](
     (cacheItem: CacheItem) => Some(UserAnswersCacheData(
@@ -105,20 +106,21 @@ object CacheService {
         maEndingDates = CACHE_MA_ENDING_DATES.extractor(cacheItem)
       )))
 
-  sealed abstract class CacheKey[T]{val dataKey: String; val extractor: CacheItem => Option[T]}
+  sealed abstract class CacheKey[T]{val extractor: CacheItem => Option[T]}
+  sealed abstract class CacheKeyWithWriteSupport[T] extends CacheKey[T] {val dataKey: DataKey[T]}
+
   object CacheKey {
-    def apply[T](key: String)(implicit format: Reads[T]): CacheKey[T] = new CacheKey[T] {
-      override val dataKey = key
+    def apply[T](writableKey: String)(implicit format: Reads[T]): CacheKeyWithWriteSupport[T] = new CacheKeyWithWriteSupport[T] {
+      override val dataKey = DataKey[T](writableKey)
       override val extractor: CacheItem => Option[T] =
         cache =>
-          (cache.data \ dataKey)
+          (cache.data \ writableKey)
             .validateOpt[T]
             .fold(e => throw JsResultException(e), identity)
     }
 
-    def apply[T](extra: CacheItem => Option[T]): CacheKey[T] = new CacheKey[T]{
-      override  val dataKey = "???"
-      override val extractor: CacheItem => Option[T] = extra
+    def apply[T](extractor: CacheItem => Option[T]): CacheKey[T] = new CacheKey[T]{
+      override val extractor: CacheItem => Option[T] = extractor
     }
   }
 }
@@ -141,9 +143,9 @@ class CachingServiceImpl @Inject() (
       .findById(request)
       .map(_.flatMap(cacheKey.extractor))
 
-  def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T] =
+  def put[T](cacheKey: CacheKeyWithWriteSupport[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T] =
     cacheRepo
-      .put[T](request)(DataKey[T](cacheKey.dataKey), value)
+      .put[T](request)(cacheKey.dataKey, value)
       .map(cacheKey.extractor)
       .map(_.getOrElse(throw new RuntimeException(s"Failed to retrieve ${cacheKey.dataKey} from cache after saving")))
 
