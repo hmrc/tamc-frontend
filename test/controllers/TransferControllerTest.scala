@@ -82,7 +82,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -99,7 +99,7 @@ class TransferControllerTest extends ControllerBaseTest {
           "gender"    -> "M",
           "nino"      -> Ninos.nino2
         )
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
@@ -154,7 +154,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val registrationFormInput =
           RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
 
-        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any(), any(), any()))
+        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
           .thenReturn(dateOfMarriageInput)
 
         when(mockTransferService.getRecipientDetailsFormData()(any(), any(), any()))
@@ -432,14 +432,14 @@ class TransferControllerTest extends ControllerBaseTest {
     "return a success" when {
       "an email is recovered from the cache" in {
         val email = "test@test.com"
-        when(mockCachingService.get[NotificationRecord](any())(any(), any(), any(), any()))
+        when(mockCachingService.get[NotificationRecord](any())(any()))
           .thenReturn(Some(NotificationRecord(EmailAddress(email))))
         val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
       }
 
       "no email is recovered from the cache" in {
-        when(mockCachingService.get[NotificationRecord](any())(any(), any(), any(), any()))
+        when(mockCachingService.get[NotificationRecord](any())(any()))
           .thenReturn(None)
         val result = controller.confirmYourEmail()(request)
         status(result) shouldBe OK
@@ -496,7 +496,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "return success" when {
       "A notification record is returned and cache is called" in {
         reset(mockCachingService)
-        verify(mockCachingService, times(0)).clear()(any(), any(), any())
+        verify(mockCachingService, times(0)).clear()(any())
 
         when(mockTransferService.getFinishedData(any())(any(), any(), any()))
           .thenReturn(notificationRecord)
@@ -504,21 +504,21 @@ class TransferControllerTest extends ControllerBaseTest {
         val result = controller.finished()(request)
         status(result) shouldBe OK
 
-        verify(mockCachingService, times(1)).clear()(any(), any(), any())
+        verify(mockCachingService, times(1)).clear()(any())
       }
     }
 
     "return error" when {
       "error is thrown" in {
         reset(mockCachingService)
-        verify(mockCachingService, times(0)).clear()(any(), any(), any())
+        verify(mockCachingService, times(0)).clear()(any())
 
         when(mockTransferService.getFinishedData(any())(any(), any(), any()))
           .thenThrow(new IllegalArgumentException("123"))
 
         controller.finished()(request)
 
-        verify(mockCachingService, times(0)).clear()(any(), any(), any())
+        verify(mockCachingService, times(0)).clear()(any())
       }
     }
   }

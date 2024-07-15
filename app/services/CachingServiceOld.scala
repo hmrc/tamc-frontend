@@ -16,33 +16,34 @@
 
 package services
 
-import com.google.inject.name.Named
 import com.google.inject.{ImplementedBy, Inject}
-import config.ApplicationConfig
 import models._
-import play.api.libs.json.Format
+import play.api.Configuration
+import play.api.libs.json.{Format, JsResultException, Reads}
 import play.api.mvc.Request
-import repositories.SessionCacheNew
 import services.CacheService._
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.{emailAddressReads, emailAddressWrites}
-import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
+import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.mongo.cache.{CacheItem, DataKey, SessionCacheRepository}
+import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
 
 import java.time.LocalDate
+import java.util.concurrent.TimeUnit
+import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[CachingServiceImpl])
 trait CachingServiceOld {
 
-  def get[T](cacheKey: CacheKey[T])(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]]
-  def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T]
-  def clear()(implicit request: Request[_], hc: HeaderCarrier, executionContext: ExecutionContext): Future[Unit]
+  def get[T](cacheKey: CacheKey[T])(implicit request: Request[_]): Future[Option[T]]
+  def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T]
+  def clear()(implicit request: Request[_]): Future[Unit]
 
-  def getUserAnswersCachedData(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UserAnswersCacheData]]
-  def getCachedDataForEligibilityCheck(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]]
-  def getUpdateRelationshipCachedData(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]]
-  def getConfirmationAnswers(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[ConfirmationUpdateAnswersCacheData]]
+  def getUserAnswersCachedData(implicit request: Request[_]): Future[Option[UserAnswersCacheData]]
+  def getCachedDataForEligibilityCheck(implicit request: Request[_]): Future[Option[EligibilityCheckCacheData]]
+  def getUpdateRelationshipCachedData(implicit request: Request[_]): Future[Option[UpdateRelationshipCacheData]]
+  def getConfirmationAnswers(implicit request: Request[_]): Future[Option[ConfirmationUpdateAnswersCacheData]]
 }
 
 object CacheService {
@@ -66,114 +67,104 @@ object CacheService {
   val CACHE_LOCKED_UPDATE:CacheKey[Boolean] = CacheKey[Boolean]("LOCKED_UPDATE")                                                          //FIXME is this key used properly?
   val CACHE_ROLE_RECORD:CacheKey[String] = CacheKey[String]("ROLE")                                                                       //FIXME is this key used properly?
 
-  val EXTRACT_USER_ANSWERS: CacheMap => Option[UserAnswersCacheData] =
-    cacheMap => Some(cacheMap).map (cacheMap =>
-      UserAnswersCacheData(
-        transferor = cacheMap.getEntry[UserRecord](CACHE_TRANSFEROR_RECORD.dataKey),
-        recipient = cacheMap.getEntry[RecipientRecord](CACHE_RECIPIENT_RECORD.dataKey),
-        notification = cacheMap.getEntry[NotificationRecord](CACHE_NOTIFICATION_RECORD.dataKey),
-        relationshipCreated = cacheMap.getEntry[Boolean](CACHE_LOCKED_CREATE.dataKey),
-        selectedYears = cacheMap.getEntry[List[Int]](CACHE_SELECTED_YEARS.dataKey),
-        recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS.dataKey),
-        dateOfMarriage = cacheMap.getEntry[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE.dataKey)
-      ))
+  val CK_EXTRACT_USER_ANSWERS:CacheKey[UserAnswersCacheData] = CacheKey[UserAnswersCacheData](
+    (cacheItem: CacheItem) => Some(UserAnswersCacheData(
+        transferor = CACHE_TRANSFEROR_RECORD.extractor(cacheItem),
+        recipient = CACHE_RECIPIENT_RECORD.extractor(cacheItem),
+        notification = CACHE_NOTIFICATION_RECORD.extractor(cacheItem),
+        relationshipCreated = CACHE_LOCKED_CREATE.extractor(cacheItem),
+        selectedYears = CACHE_SELECTED_YEARS.extractor(cacheItem),
+        recipientDetailsFormData = CACHE_RECIPIENT_DETAILS.extractor(cacheItem),
+        dateOfMarriage = CACHE_MARRIAGE_DATE.extractor(cacheItem)
+      )))
 
-  val EXTRACT_ELIGIBILITY_CHECK: CacheMap => Option[EligibilityCheckCacheData] =
-    cacheMap => Some(cacheMap).map (cacheMap =>
-      EligibilityCheckCacheData(
-        loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](CACHE_LOGGEDIN_USER_RECORD.dataKey),
-        roleRecord = cacheMap.getEntry[String](CACHE_ROLE_RECORD.dataKey),
-        activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](CACHE_ACTIVE_RELATION_RECORD.dataKey),
-        historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](CACHE_HISTORIC_RELATION_RECORD.dataKey),
-        notification = cacheMap.getEntry[NotificationRecord](CACHE_NOTIFICATION_RECORD.dataKey),
-        relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](CACHE_RELATION_END_REASON_RECORD.dataKey),
-        relationshipUpdated = cacheMap.getEntry[Boolean](CACHE_LOCKED_UPDATE.dataKey)
-      ))
+  val CK_EXTRACT_ELIGIBILITY_CHECK:CacheKey[EligibilityCheckCacheData] = CacheKey[EligibilityCheckCacheData](
+    (cacheItem: CacheItem) => Some(EligibilityCheckCacheData(
+        loggedInUserInfo = CACHE_LOGGEDIN_USER_RECORD.extractor(cacheItem),
+        roleRecord = CACHE_ROLE_RECORD.extractor(cacheItem),
+        activeRelationshipRecord = CACHE_ACTIVE_RELATION_RECORD.extractor(cacheItem),
+        historicRelationships = CACHE_HISTORIC_RELATION_RECORD.extractor(cacheItem),
+        notification = CACHE_NOTIFICATION_RECORD.extractor(cacheItem),
+        relationshipEndReasonRecord = CACHE_RELATION_END_REASON_RECORD.extractor(cacheItem),
+        relationshipUpdated = CACHE_LOCKED_UPDATE.extractor(cacheItem)
+      )))
 
-  val EXTRACT_UPDATE_RELATIONSHIP: CacheMap => Option[UpdateRelationshipCacheData] =
-    cacheMap => Some(cacheMap).map (cacheMap =>
-      UpdateRelationshipCacheData(
-        relationshipRecords = cacheMap.getEntry[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS.dataKey),
-        email = cacheMap.getEntry[EmailAddress](CACHE_EMAIL_ADDRESS.dataKey).map(_.value),
-        endMaReason = cacheMap.getEntry[String](CACHE_MAKE_CHANGES_DECISION.dataKey),
-        marriageEndDate = cacheMap.getEntry[MarriageAllowanceEndingDates](CACHE_MA_ENDING_DATES.dataKey).map(_.marriageAllowanceEndDate)
-      ))
+  val CK_EXTRACT_UPDATE_RELATIONSHIP:CacheKey[UpdateRelationshipCacheData] = CacheKey[UpdateRelationshipCacheData](
+    (cacheItem: CacheItem) => Some(UpdateRelationshipCacheData(
+        relationshipRecords = CACHE_RELATIONSHIP_RECORDS.extractor(cacheItem),
+        email = CACHE_EMAIL_ADDRESS.extractor(cacheItem).map(_.value),
+        endMaReason = CACHE_MAKE_CHANGES_DECISION.extractor(cacheItem),
+        marriageEndDate = CACHE_MA_ENDING_DATES.extractor(cacheItem).map(_.marriageAllowanceEndDate)
+      )))
 
-  val EXTRACT_CONFIRMATION: CacheMap => Option[ConfirmationUpdateAnswersCacheData] =
-    cacheMap => Some(cacheMap).map (cacheMap =>
-      ConfirmationUpdateAnswersCacheData(
-        relationshipRecords = cacheMap.getEntry[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS.dataKey),
-        divorceDate = cacheMap.getEntry[LocalDate](CACHE_DIVORCE_DATE.dataKey),
-        email = cacheMap.getEntry[String](CACHE_EMAIL_ADDRESS.dataKey),
-        maEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](CACHE_MA_ENDING_DATES.dataKey)
-      ))
+  val CK_EXTRACT_CONFIRMATION:CacheKey[ConfirmationUpdateAnswersCacheData] = CacheKey[ConfirmationUpdateAnswersCacheData](
+    (cacheItem: CacheItem) => Some(ConfirmationUpdateAnswersCacheData(
+        relationshipRecords = CACHE_RELATIONSHIP_RECORDS.extractor(cacheItem),
+        divorceDate = CACHE_DIVORCE_DATE.extractor(cacheItem),
+        email = CACHE_EMAIL_ADDRESS.extractor(cacheItem).map(_.value),
+        maEndingDates = CACHE_MA_ENDING_DATES.extractor(cacheItem)
+      )))
 
-
-  sealed abstract class CacheKey[T]{val dataKey: String; val extractor: CacheMap => Option[T]}
+  sealed abstract class CacheKey[T]{val dataKey: String; val extractor: CacheItem => Option[T]}
   object CacheKey {
-    def apply[T](key: String)(implicit format: Format[T]): CacheKey[T] = new CacheKey[T] {
+    def apply[T](key: String)(implicit format: Reads[T]): CacheKey[T] = new CacheKey[T] {
       override val dataKey = key
-      override val extractor: CacheMap => Option[T] =
-        _.getEntry[T](dataKey)
+      override val extractor: CacheItem => Option[T] =
+        cache =>
+          (cache.data \ dataKey)
+            .validateOpt[T]
+            .fold(e => throw JsResultException(e), identity)
     }
 
-    def apply[T](extra: CacheMap => Option[T])(implicit format: Format[T]): CacheKey[T] = new CacheKey[T]{
-      override  val dataKey = ???
-      override val extractor: CacheMap => Option[T] =
-        _.getEntry[T](dataKey)
+    def apply[T](extra: CacheItem => Option[T]): CacheKey[T] = new CacheKey[T]{
+      override  val dataKey = "???"
+      override val extractor: CacheItem => Option[T] = extra
     }
   }
 }
 
 class CachingServiceImpl @Inject() (
-  val http: HttpClient,
-  appConfig: ApplicationConfig,
-  sessionCacheNew: SessionCacheNew,
-  @Named("appName") appName: String
-) extends SessionCache with CachingServiceOld {
+  mongoComponent: MongoComponent,
+  config: Configuration,
+  timestampSupport: TimestampSupport
+)(implicit ec: ExecutionContext)
+  extends SessionCacheRepository(
+    mongoComponent = mongoComponent,
+    collectionName = "session-cache",
+    ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
+    timestampSupport = timestampSupport,
+    sessionIdKey = SessionKeys.sessionId
+  ) with CachingServiceOld {
 
-  override lazy val defaultSource: String = appName
-  override lazy val baseUri: String       = appConfig.cacheUri
-  override lazy val domain: String        = appConfig.sessionCacheDomain
+  def get[T](cacheKey: CacheKey[T])(implicit request: Request[_]): Future[Option[T]] =
+    cacheRepo
+      .findById(request)
+      .map(_.flatMap(ck => cacheKey.extractor.apply(ck)))
 
-  def get[T](cacheKey: CacheKey[T])(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] =
-    fetch() map (_ flatMap (cacheKey.extractor))
+  def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T] =
+    putSession(DataKey[T](cacheKey.dataKey), value).map(_ => value)
 
-  def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] =
-    cache[T](cacheKey.dataKey, value)
-      .map(_.getEntry[T](cacheKey.dataKey).getOrElse(throw new RuntimeException(s"Failed to retrieve ${cacheKey.dataKey} from cache after saving")))
-      .andThen(_ => sessionCacheNew.put[T](cacheKey.dataKey, value))
-
-  def clear()(implicit request: Request[_], hc: HeaderCarrier, executionContext: ExecutionContext): Future[Unit] =
-    remove()
-      .map(_ => ())
-      .andThen(_ => sessionCacheNew.clear())
+  def clear()(implicit request: Request[_]): Future[Unit] =
+    cacheRepo
+      .deleteEntity(request)
 
   def getUserAnswersCachedData(implicit
-    request: Request[_],
-    hc: HeaderCarrier,
-    ec: ExecutionContext
+    request: Request[_]
   ): Future[Option[UserAnswersCacheData]] =
-    fetch() map (_ flatMap  (EXTRACT_USER_ANSWERS))
+    get[UserAnswersCacheData](CK_EXTRACT_USER_ANSWERS)
 
   def getCachedDataForEligibilityCheck(implicit
-    request: Request[_],
-    hc: HeaderCarrier,
-    ec: ExecutionContext
+    request: Request[_]
   ): Future[Option[EligibilityCheckCacheData]] =
-    fetch() map (_ flatMap (EXTRACT_ELIGIBILITY_CHECK))
+    get[EligibilityCheckCacheData](CK_EXTRACT_ELIGIBILITY_CHECK)
 
   def getUpdateRelationshipCachedData(implicit
-    request: Request[_],
-    hc: HeaderCarrier,
-    ec: ExecutionContext
+    request: Request[_]
   ): Future[Option[UpdateRelationshipCacheData]] =
-    fetch() map (_ flatMap (EXTRACT_UPDATE_RELATIONSHIP))
+    get[UpdateRelationshipCacheData](CK_EXTRACT_UPDATE_RELATIONSHIP)
 
   def getConfirmationAnswers(implicit
-    request: Request[_],
-    hc: HeaderCarrier,
-    ec: ExecutionContext
+    request: Request[_]
   ): Future[Option[ConfirmationUpdateAnswersCacheData]] =
-    fetch() map (_ flatMap (EXTRACT_CONFIRMATION))
+    get[ConfirmationUpdateAnswersCacheData](CK_EXTRACT_CONFIRMATION)
 }
