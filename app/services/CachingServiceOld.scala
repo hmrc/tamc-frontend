@@ -66,11 +66,59 @@ object CacheService {
   val CACHE_LOCKED_UPDATE:CacheKey[Boolean] = CacheKey[Boolean]("LOCKED_UPDATE")                                                          //FIXME is this key used properly?
   val CACHE_ROLE_RECORD:CacheKey[String] = CacheKey[String]("ROLE")                                                                       //FIXME is this key used properly?
 
+  val EXTRACT_USER_ANSWERS: CacheMap => Option[UserAnswersCacheData] =
+    cacheMap => Some(cacheMap).map (cacheMap =>
+      UserAnswersCacheData(
+        transferor = cacheMap.getEntry[UserRecord](CACHE_TRANSFEROR_RECORD.dataKey),
+        recipient = cacheMap.getEntry[RecipientRecord](CACHE_RECIPIENT_RECORD.dataKey),
+        notification = cacheMap.getEntry[NotificationRecord](CACHE_NOTIFICATION_RECORD.dataKey),
+        relationshipCreated = cacheMap.getEntry[Boolean](CACHE_LOCKED_CREATE.dataKey),
+        selectedYears = cacheMap.getEntry[List[Int]](CACHE_SELECTED_YEARS.dataKey),
+        recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS.dataKey),
+        dateOfMarriage = cacheMap.getEntry[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE.dataKey)
+      ))
+
+  val EXTRACT_ELIGIBILITY_CHECK: CacheMap => Option[EligibilityCheckCacheData] =
+    cacheMap => Some(cacheMap).map (cacheMap =>
+      EligibilityCheckCacheData(
+        loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](CACHE_LOGGEDIN_USER_RECORD.dataKey),
+        roleRecord = cacheMap.getEntry[String](CACHE_ROLE_RECORD.dataKey),
+        activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](CACHE_ACTIVE_RELATION_RECORD.dataKey),
+        historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](CACHE_HISTORIC_RELATION_RECORD.dataKey),
+        notification = cacheMap.getEntry[NotificationRecord](CACHE_NOTIFICATION_RECORD.dataKey),
+        relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](CACHE_RELATION_END_REASON_RECORD.dataKey),
+        relationshipUpdated = cacheMap.getEntry[Boolean](CACHE_LOCKED_UPDATE.dataKey)
+      ))
+
+  val EXTRACT_UPDATE_RELATIONSHIP: CacheMap => Option[UpdateRelationshipCacheData] =
+    cacheMap => Some(cacheMap).map (cacheMap =>
+      UpdateRelationshipCacheData(
+        relationshipRecords = cacheMap.getEntry[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS.dataKey),
+        email = cacheMap.getEntry[EmailAddress](CACHE_EMAIL_ADDRESS.dataKey).map(_.value),
+        endMaReason = cacheMap.getEntry[String](CACHE_MAKE_CHANGES_DECISION.dataKey),
+        marriageEndDate = cacheMap.getEntry[MarriageAllowanceEndingDates](CACHE_MA_ENDING_DATES.dataKey).map(_.marriageAllowanceEndDate)
+      ))
+
+  val EXTRACT_CONFIRMATION: CacheMap => Option[ConfirmationUpdateAnswersCacheData] =
+    cacheMap => Some(cacheMap).map (cacheMap =>
+      ConfirmationUpdateAnswersCacheData(
+        relationshipRecords = cacheMap.getEntry[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS.dataKey),
+        divorceDate = cacheMap.getEntry[LocalDate](CACHE_DIVORCE_DATE.dataKey),
+        email = cacheMap.getEntry[String](CACHE_EMAIL_ADDRESS.dataKey),
+        maEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](CACHE_MA_ENDING_DATES.dataKey)
+      ))
+
 
   sealed abstract class CacheKey[T]{val dataKey: String; val extractor: CacheMap => Option[T]}
   object CacheKey {
-    def apply[T](key: String)(implicit format: Format[T]) = new CacheKey[T]{
-      override  val dataKey = key
+    def apply[T](key: String)(implicit format: Format[T]): CacheKey[T] = new CacheKey[T] {
+      override val dataKey = key
+      override val extractor: CacheMap => Option[T] =
+        _.getEntry[T](dataKey)
+    }
+
+    def apply[T](extra: CacheMap => Option[T])(implicit format: Format[T]): CacheKey[T] = new CacheKey[T]{
+      override  val dataKey = ???
       override val extractor: CacheMap => Option[T] =
         _.getEntry[T](dataKey)
     }
@@ -106,56 +154,26 @@ class CachingServiceImpl @Inject() (
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Option[UserAnswersCacheData]] =
-    fetch() map (_ map (cacheMap =>
-      UserAnswersCacheData(
-        transferor = cacheMap.getEntry[UserRecord](CACHE_TRANSFEROR_RECORD.dataKey),
-        recipient = cacheMap.getEntry[RecipientRecord](CACHE_RECIPIENT_RECORD.dataKey),
-        notification = cacheMap.getEntry[NotificationRecord](CACHE_NOTIFICATION_RECORD.dataKey),
-        relationshipCreated = cacheMap.getEntry[Boolean](CACHE_LOCKED_CREATE.dataKey),
-        selectedYears = cacheMap.getEntry[List[Int]](CACHE_SELECTED_YEARS.dataKey),
-        recipientDetailsFormData = cacheMap.getEntry[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS.dataKey),
-        dateOfMarriage = cacheMap.getEntry[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE.dataKey)
-      )))
+    fetch() map (_ flatMap  (EXTRACT_USER_ANSWERS))
 
   def getCachedDataForEligibilityCheck(implicit
     request: Request[_],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Option[EligibilityCheckCacheData]] =
-    fetch() map (_ map (cacheMap =>
-      EligibilityCheckCacheData(
-        loggedInUserInfo = cacheMap.getEntry[LoggedInUserInfo](CACHE_LOGGEDIN_USER_RECORD.dataKey),
-        roleRecord = cacheMap.getEntry[String](CACHE_ROLE_RECORD.dataKey),
-        activeRelationshipRecord = cacheMap.getEntry[RelationshipRecord](CACHE_ACTIVE_RELATION_RECORD.dataKey),
-        historicRelationships = cacheMap.getEntry[Seq[RelationshipRecord]](CACHE_HISTORIC_RELATION_RECORD.dataKey),
-        notification = cacheMap.getEntry[NotificationRecord](CACHE_NOTIFICATION_RECORD.dataKey),
-        relationshipEndReasonRecord = cacheMap.getEntry[EndRelationshipReason](CACHE_RELATION_END_REASON_RECORD.dataKey),
-        relationshipUpdated = cacheMap.getEntry[Boolean](CACHE_LOCKED_UPDATE.dataKey)
-      )))
+    fetch() map (_ flatMap (EXTRACT_ELIGIBILITY_CHECK))
 
   def getUpdateRelationshipCachedData(implicit
     request: Request[_],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Option[UpdateRelationshipCacheData]] =
-    fetch() map (_ map (cacheMap =>
-      UpdateRelationshipCacheData(
-        relationshipRecords = cacheMap.getEntry[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS.dataKey),
-        email = cacheMap.getEntry[EmailAddress](CACHE_EMAIL_ADDRESS.dataKey).map(_.value),
-        endMaReason = cacheMap.getEntry[String](CACHE_MAKE_CHANGES_DECISION.dataKey),
-        marriageEndDate = cacheMap.getEntry[MarriageAllowanceEndingDates](CACHE_MA_ENDING_DATES.dataKey).map(_.marriageAllowanceEndDate)
-      )))
+    fetch() map (_ flatMap (EXTRACT_UPDATE_RELATIONSHIP))
 
   def getConfirmationAnswers(implicit
     request: Request[_],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Option[ConfirmationUpdateAnswersCacheData]] =
-    fetch() map (_ map (cacheMap =>
-      ConfirmationUpdateAnswersCacheData(
-        relationshipRecords = cacheMap.getEntry[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS.dataKey),
-        divorceDate = cacheMap.getEntry[LocalDate](CACHE_DIVORCE_DATE.dataKey),
-        email = cacheMap.getEntry[String](CACHE_EMAIL_ADDRESS.dataKey),
-        maEndingDates = cacheMap.getEntry[MarriageAllowanceEndingDates](CACHE_MA_ENDING_DATES.dataKey)
-      )))
+    fetch() map (_ flatMap (EXTRACT_CONFIRMATION))
 }
