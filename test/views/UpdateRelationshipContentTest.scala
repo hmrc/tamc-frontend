@@ -45,7 +45,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
   lazy val config: ApplicationConfig = inject[ApplicationConfig]
   val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
-  val mockCachingService: CachingService = mock[CachingService]
+  val mockCachingService: CachingServiceOld = mock[CachingServiceOld]
   val loggedInUser: LoggedInUserInfo = LoggedInUserInfo(1, "20130101",None, Some(CitizenName(Some("Test"), Some("User"))))
   val contactHMRCBereavementText: Timestamp = (messages("general.helpline.enquiries.link.pretext") + " "
     + messages("general.helpline.enquiries.link") + " "
@@ -57,7 +57,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     .overrides(
       bind[TransferService].toInstance(mockTransferService),
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
-      bind[CachingService].toInstance(mockCachingService),
+      bind[CachingServiceOld].toInstance(mockCachingService),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction],

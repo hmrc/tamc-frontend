@@ -67,11 +67,11 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
   }
 
   val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
-  val mockCachingService: CachingService = mock[CachingService]
+  val mockCachingService: CachingServiceOld = mock[CachingServiceOld]
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MarriageAllowanceConnector].toInstance(mockMarriageAllowanceConnector),
-      bind[CachingService].toInstance(mockCachingService)
+      bind[CachingServiceOld].toInstance(mockCachingService)
     ).build()
 
   val service: UpdateRelationshipService = instanceOf[UpdateRelationshipService]

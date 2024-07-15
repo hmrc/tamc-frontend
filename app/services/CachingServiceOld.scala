@@ -16,7 +16,7 @@
 
 package services
 
-import com.google.inject.Inject
+import com.google.inject.{ImplementedBy, Inject}
 import com.google.inject.name.Named
 import config.ApplicationConfig
 import models._
@@ -29,16 +29,32 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class CachingService @Inject() (
+@ImplementedBy(classOf[CachingServiceImpl])
+trait CachingServiceOld {
+
+  def get[T](key: String)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]]
+  def put[T](key: String, value: T)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T]
+  def clear()(implicit request: Request[_], hc: HeaderCarrier, executionContext: ExecutionContext): Future[Unit]
+
+  def getUserAnswersCachedData(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UserAnswersCacheData]]
+  def getCachedDataForEligibilityCheck(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[EligibilityCheckCacheData]]
+  def getUpdateRelationshipCachedData(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UpdateRelationshipCacheData]]
+  def getConfirmationAnswers(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[ConfirmationUpdateAnswersCacheData]]
+}
+
+class CachingServiceImpl @Inject() (
   val http: HttpClient,
   appConfig: ApplicationConfig,
   sessionCacheNew: SessionCacheNew,
   @Named("appName") appName: String
-) extends SessionCache {
+) extends SessionCache with CachingServiceOld {
 
   override lazy val defaultSource: String = appName
   override lazy val baseUri: String       = appConfig.cacheUri
   override lazy val domain: String        = appConfig.sessionCacheDomain
+
+  def get[T](key: String)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] =
+    fetchAndGetEntry[T](key)
 
   def put[T](key: String, value: T)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] =
     cache[T](key, value)
@@ -49,9 +65,6 @@ class CachingService @Inject() (
     remove()
       .map(_ => ())
       .andThen(_ => sessionCacheNew.clear())
-
-  def get[T](key: String)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] =
-    fetchAndGetEntry[T](key)
 
   def getUserAnswersCachedData(implicit
     request: Request[_],
