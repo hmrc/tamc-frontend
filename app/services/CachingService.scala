@@ -119,8 +119,8 @@ object CacheService {
             .fold(e => throw JsResultException(e), identity)
     }
 
-    def apply[T](extractor: CacheItem => Option[T]): CacheKey[T] = new CacheKey[T]{
-      override val extractor: CacheItem => Option[T] = extractor
+    def apply[T](fun: CacheItem => Option[T]): CacheKey[T] = new CacheKey[T]{
+      override val extractor: CacheItem => Option[T] = fun
     }
   }
 }
