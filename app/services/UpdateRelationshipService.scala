@@ -175,10 +175,10 @@ class UpdateRelationshipService @Inject()(
   }
 
   def getUpdateRelationshipCachedData(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[UpdateRelationshipCacheData] =
-    cachingService.get[UpdateRelationshipCacheData](CK_EXTRACT_UPDATE_RELATIONSHIP).map(_.getOrElse(throw CacheMapNoFound()))
+    cachingService.get[UpdateRelationshipCacheData](USER_ANSWERS_UPDATE_RELATIONSHIP).map(_.getOrElse(throw CacheMapNoFound()))
 
   def getConfirmationUpdateAnswers(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationUpdateAnswers] =
-    cachingService.get[ConfirmationUpdateAnswersCacheData](CK_EXTRACT_CONFIRMATION).map(_.getOrElse(throw CacheMapNoFound())).map(ConfirmationUpdateAnswers(_))
+    cachingService.get[ConfirmationUpdateAnswersCacheData](USER_ANSWERS_UPDATE_CONFIRMATION).map(_.getOrElse(throw CacheMapNoFound())).map(ConfirmationUpdateAnswers(_))
 
   def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
     val marriageAllowanceEndDate = endDateForMACeased.endDate

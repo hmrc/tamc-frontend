@@ -75,7 +75,7 @@ class TransferService @Inject()(
   def getCachedDataForEligibilityCheck(implicit
                                        request: Request[_]
                                       ): Future[Option[EligibilityCheckCacheData]] =
-    cachingService.get[EligibilityCheckCacheData](CK_EXTRACT_ELIGIBILITY_CHECK)
+    cachingService.get[EligibilityCheckCacheData](USER_ANSWERS_ELIGIBILITY_CHECK)
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[EligibilityCheckCacheData])
   : Future[Option[EligibilityCheckCacheData]] =
@@ -104,7 +104,7 @@ class TransferService @Inject()(
   def getUserAnswersCachedData(implicit
                                request: Request[_]
                               ): Future[Option[UserAnswersCacheData]] =
-    cachingService.get[UserAnswersCacheData](CK_EXTRACT_USER_ANSWERS)
+    cachingService.get[UserAnswersCacheData](USER_ANSWERS_CACHE)
 
   private def validateFinishedData(cacheData: Option[UserAnswersCacheData])(implicit ec: ExecutionContext): Future[NotificationRecord] =
     Future {

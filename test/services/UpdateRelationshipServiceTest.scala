@@ -349,7 +349,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
           val expectedResult = UpdateRelationshipRequestHolder(expectedUpdateRelationshipRequest, expectedUpdateRelationshipNotificationRequest)
 
-            when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+            when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
               .thenReturn(Future.successful(Some(createCachedData())))
 
             when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -371,7 +371,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
           s"the reason is $reason" in  {
 
-            when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+            when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
               .thenReturn(Future.successful(Some(cacheData)))
 
             when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -391,7 +391,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
         val cacheData = createCachedData(recordsWithUnknownUser)
 
-        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
           .thenReturn(Future.successful(Some(cacheData)))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -409,7 +409,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       val cacheData = UpdateRelationshipCacheData(Some(RelationshipRecords(recordList, localDate)), Some(email), Some("Earnings"), Some(date))
 
       "if an unsupported marriage allowance end reason is provided" in {
-        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
           .thenReturn(Future.successful(Some(cacheData)))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -423,7 +423,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
         val updateRelationshipResponse = 
           UpdateRelationshipResponse(ResponseStatus(CANNOT_UPDATE_RELATIONSHIP))
 
-        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
           .thenReturn(Future.successful(Some(createCachedData())))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -437,7 +437,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       "RecipientNotFound error is returned from MarriageAllowanceConnector" in {
         val updateRelationshipResponse = UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))
 
-        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
           .thenReturn(Future.successful(Some(createCachedData())))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -451,7 +451,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       "RuntimeException is returned from the caching service" in {
         val updateRelationshipResponse = UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))
 
-        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
           .thenReturn(Future.failed(new RuntimeException("Failed to retrieve cacheMap")))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -465,7 +465,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       "CacheMapNoFound is returned from the caching service" in {
         val updateRelationshipResponse = UpdateRelationshipResponse(ResponseStatus(BAD_REQUEST))
 
-        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(CK_EXTRACT_UPDATE_RELATIONSHIP))(any()))
+        when(mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(any()))
           .thenReturn(Future.successful(None))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
@@ -482,7 +482,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
         val endDates = MarriageAllowanceEndingDates(TaxYear.current.starts, TaxYear.current.finishes)
         val cacheData = ConfirmationUpdateAnswersCacheData(relationshipRecords, Some(date), Some("email@email.com"), Some(endDates))
 
-        when(mockCachingService.get[ConfirmationUpdateAnswersCacheData](ArgumentMatchers.eq(CK_EXTRACT_CONFIRMATION))(any()))
+        when(mockCachingService.get[ConfirmationUpdateAnswersCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_CONFIRMATION))(any()))
           .thenReturn(Future.successful(Some(cacheData)))
 
         val result = await(service.getConfirmationUpdateAnswers)
@@ -491,7 +491,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       }
 
       "return RuntimeException when cacheMap not found and returns RuntimeException" in {
-        when(mockCachingService.get[ConfirmationUpdateAnswersCacheData](ArgumentMatchers.eq(CK_EXTRACT_CONFIRMATION))(any()))
+        when(mockCachingService.get[ConfirmationUpdateAnswersCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_CONFIRMATION))(any()))
           .thenReturn(Future.failed(new RuntimeException("Failed to retrieve cacheMap")))
 
         val result = intercept[RuntimeException](await(service.getConfirmationUpdateAnswers))
@@ -500,7 +500,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       }
 
       "return CacheMapNoFound when cacheMap not found" in {
-        when(mockCachingService.get[ConfirmationUpdateAnswersCacheData](ArgumentMatchers.eq(CK_EXTRACT_CONFIRMATION))(any()))
+        when(mockCachingService.get[ConfirmationUpdateAnswersCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_CONFIRMATION))(any()))
           .thenReturn(Future.successful(None))
 
         intercept[CacheMapNoFound](await(service.getConfirmationUpdateAnswers))
