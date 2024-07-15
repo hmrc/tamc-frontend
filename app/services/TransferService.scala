@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class TransferService @Inject()(
                                  marriageAllowanceConnector: MarriageAllowanceConnector,
                                  auditConnector: AuditConnector,
-                                 cachingService: CachingServiceOld,
+                                 cachingService: CachingService,
                                  applicationService: ApplicationService,
                                  timeService: TimeService,
                                  languageUtilsImpl: LanguageUtilsImpl,

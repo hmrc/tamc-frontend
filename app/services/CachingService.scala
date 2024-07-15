@@ -34,7 +34,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[CachingServiceImpl])
-trait CachingServiceOld {
+trait CachingService {
 
   def get[T](cacheKey: CacheKey[T])(implicit request: Request[_]): Future[Option[T]]
   def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T]
@@ -134,15 +134,18 @@ class CachingServiceImpl @Inject() (
     ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
     timestampSupport = timestampSupport,
     sessionIdKey = SessionKeys.sessionId
-  ) with CachingServiceOld {
+  ) with CachingService {
 
   def get[T](cacheKey: CacheKey[T])(implicit request: Request[_]): Future[Option[T]] =
     cacheRepo
       .findById(request)
-      .map(_.flatMap(ck => cacheKey.extractor.apply(ck)))
+      .map(_.flatMap(cacheKey.extractor))
 
   def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T] =
-    putSession(DataKey[T](cacheKey.dataKey), value).map(_ => value)
+    cacheRepo
+      .put[T](request)(DataKey[T](cacheKey.dataKey), value)
+      .map(cacheKey.extractor)
+      .map(_.getOrElse(throw new RuntimeException(s"Failed to retrieve ${cacheKey.dataKey} from cache after saving")))
 
   def clear()(implicit request: Request[_]): Future[Unit] =
     cacheRepo

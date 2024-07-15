@@ -32,7 +32,7 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.{CachingServiceOld, TimeService, TransferService}
+import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData
 import test_utils.TestData.Ninos
 import test_utils.data.{ConfirmationModelData, RecipientRecordData}
@@ -48,7 +48,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
   val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingServiceOld = mock[CachingServiceOld]
+  val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
   val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
@@ -56,7 +56,7 @@ class TransferControllerTest extends ControllerBaseTest {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TransferService].toInstance(mockTransferService),
-      bind[CachingServiceOld].toInstance(mockCachingService),
+      bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),

@@ -31,7 +31,7 @@ import play.api.i18n.Lang
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.twirl.api.Html
 import services.CacheService.CACHE_NOTIFICATION_RECORD
-import services.{CachingServiceOld, TimeService, TransferService}
+import services.{CachingService, TimeService, TransferService}
 import utils.LoggerHelper
 import services.CacheService._
 import javax.inject.Inject
@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class TransferController @Inject() (
                                      authenticate: StandardAuthJourney,
                                      registrationService: TransferService,
-                                     cachingService: CachingServiceOld,
+                                     cachingService: CachingService,
                                      timeService: TimeService,
                                      appConfig: ApplicationConfig,
                                      cc: MessagesControllerComponents,

@@ -44,7 +44,7 @@ import scala.concurrent.Future
 
 class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
-  val mockCachingService: CachingServiceOld = mock[CachingServiceOld]
+  val mockCachingService: CachingService = mock[CachingService]
   val mockApplicationService: ApplicationService = mock[ApplicationService]
   val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
   val mockTimeService: TimeService = mock[TimeService]
@@ -65,7 +65,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
-      bind[CachingServiceOld].toInstance(mockCachingService),
+      bind[CachingService].toInstance(mockCachingService),
       bind[ApplicationService].toInstance(mockApplicationService),
       bind[MarriageAllowanceConnector].toInstance(mockMarriageAllowanceConnector),
       bind[TimeService].toInstance(mockTimeService),

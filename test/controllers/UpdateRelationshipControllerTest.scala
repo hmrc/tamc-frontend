@@ -54,7 +54,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
   val generatedNino: Nino = new Generator().nextNino
   val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
-  val mockCachingService: CachingServiceOld = mock[CachingServiceOld]
+  val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
 
   val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
@@ -80,7 +80,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     .overrides(
       bind[TransferService].toInstance(mockTransferService),
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
-      bind[CachingServiceOld].toInstance(mockCachingService),
+      bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),

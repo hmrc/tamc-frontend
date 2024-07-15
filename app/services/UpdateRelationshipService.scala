@@ -45,7 +45,7 @@ class UpdateRelationshipService @Inject()(
                                            endDateForMACeased: EndDateForMACeased,
                                            endDateDivorceCalculator: EndDateDivorceCalculator,
                                            auditConnector: AuditConnector,
-                                           cachingService: CachingServiceOld,
+                                           cachingService: CachingService,
                                            appConfig: ApplicationConfig,
                                            languageUtilsImpl: LanguageUtilsImpl,
                                            localDate: SystemLocalDate
