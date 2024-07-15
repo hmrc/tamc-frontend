@@ -41,7 +41,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
-
+import services.CacheService._
 import java.time.LocalDate
 
 class TransferControllerTest extends ControllerBaseTest {
@@ -82,7 +82,7 @@ class TransferControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -99,7 +99,7 @@ class TransferControllerTest extends ControllerBaseTest {
           "gender"    -> "M",
           "nino"      -> Ninos.nino2
         )
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
@@ -154,7 +154,7 @@ class TransferControllerTest extends ControllerBaseTest {
         val registrationFormInput =
           RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
 
-        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any(), any(), any()))
+        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any(), any(), any()))
           .thenReturn(dateOfMarriageInput)
 
         when(mockTransferService.getRecipientDetailsFormData()(any(), any(), any()))

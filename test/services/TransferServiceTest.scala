@@ -37,6 +37,7 @@ import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import utils.BaseTest
+import services.CacheService._
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -101,7 +102,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockTimeService.getValidYearsApplyMAPreviousYears(any()))
           .thenReturn(Nil)
 
-        when(mockCachingService.put(applicationConfig.CACHE_RECIPIENT_RECORD, recipientRecord))
+        when(mockCachingService.put(CACHE_RECIPIENT_RECORD, recipientRecord))
           .thenReturn(recipientRecord)
 
         val result = service.isRecipientEligible(nino, recipientData)
@@ -163,7 +164,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       val currentYear = 2019
       val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(currentYear)))
 
-      when(mockCachingService.get[RecipientRecord](applicationConfig.CACHE_RECIPIENT_RECORD)).thenReturn(Future.successful(Some(recipientRecord)))
+      when(mockCachingService.get[RecipientRecord](CACHE_RECIPIENT_RECORD)).thenReturn(Future.successful(Some(recipientRecord)))
       when(mockTimeService.getCurrentTaxYear).thenReturn(currentYear)
 
       val result = await(service.getCurrentAndPreviousYearsEligibility)
@@ -173,7 +174,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
     "throw an error" when {
 
       "no CurrentAndPreviousYearsEligibility is returned" in {
-        when(mockCachingService.get[RecipientRecord](applicationConfig.CACHE_RECIPIENT_RECORD)).thenReturn(Future.successful(None))
+        when(mockCachingService.get[RecipientRecord](CACHE_RECIPIENT_RECORD)).thenReturn(Future.successful(None))
         intercept[CacheMissingRecipient](await(service.getCurrentAndPreviousYearsEligibility))
       }
     }
@@ -189,7 +190,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
             Some(RecipientRecord(userRecord, RegistrationFormInput("firstName", "surname", Gender("M"),nino,LocalDate.now))),
             Some(NotificationRecord(EmailAddress("email@email.com"))), selectedYears = Some(List(2020, 2021))))))
 
-      when(mockCachingService.put[Boolean](ArgumentMatchers.eq(applicationConfig.CACHE_LOCKED_CREATE), ArgumentMatchers.eq(true))(any(),any(),any(),any())).thenReturn(Future.successful(true))
+      when(mockCachingService.put[Boolean](ArgumentMatchers.eq(CACHE_LOCKED_CREATE), ArgumentMatchers.eq(true))(any(),any(),any(),any())).thenReturn(Future.successful(true))
 
       when(mockAuditConnector.sendEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
 
@@ -309,7 +310,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       )
       when(mockMarriageAllowanceConnector.listRelationship(nino)).thenReturn(recordList)
       when(mockCachingService.put[UserRecord](
-        ArgumentMatchers.eq(applicationConfig.CACHE_TRANSFEROR_RECORD),
+        ArgumentMatchers.eq(CACHE_TRANSFEROR_RECORD),
         ArgumentMatchers.eq(userRecord))(any(), any(), any(), any())).thenReturn(Future.successful(userRecord))
 
       val result = service.getConfirmationData(nino)

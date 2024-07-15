@@ -32,6 +32,8 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
 import utils.SystemTaxYear
 import views.helpers.LanguageUtilsImpl
+import services.CacheService._
+
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -66,7 +68,7 @@ class TransferService @Inject()(
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (userRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
       validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
-      _ <- cachingService.put[RecipientRecord](appConfig.CACHE_RECIPIENT_RECORD, RecipientRecord(record = userRecord, data = recipientData, availableTaxYears = validYears))
+      _ <- cachingService.put[RecipientRecord](CACHE_RECIPIENT_RECORD, RecipientRecord(record = userRecord, data = recipientData, availableTaxYears = validYears))
     } yield true
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[EligibilityCheckCacheData])
@@ -113,7 +115,7 @@ class TransferService @Inject()(
 
   private def lockCreateRelationship()(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] = {
     logger.info("lockCreateRelationship has been called.")
-    cachingService.put[Boolean](appConfig.CACHE_LOCKED_CREATE, true)
+    cachingService.put[Boolean](CACHE_LOCKED_CREATE, true)
   }
 
 
@@ -138,7 +140,7 @@ class TransferService @Inject()(
 
   def upsertTransferorNotification(notificationRecord: NotificationRecord)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] = {
     logger.info("upsertTransferorNotification has been called.")
-    cachingService.put[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD, notificationRecord)
+    cachingService.put[NotificationRecord](CACHE_NOTIFICATION_RECORD, notificationRecord)
   }
 
   def getConfirmationData(nino: Nino)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[ConfirmationModel] = {
@@ -159,7 +161,7 @@ class TransferService @Inject()(
 
   private def updateCacheWithTransferorRecord(nino: Nino)(implicit request: Request[_], hc: HeaderCarrier, executionContext: ExecutionContext): Future[Unit] = {
     getTransferorRecord(nino)
-      .flatMap(cachingService.put[UserRecord](appConfig.CACHE_TRANSFEROR_RECORD, _))
+      .flatMap(cachingService.put[UserRecord](CACHE_TRANSFEROR_RECORD, _))
       .recover({case _ => throw TransferorNotFound()})
       .map(_ => ())
   }
@@ -249,7 +251,7 @@ class TransferService @Inject()(
     } yield res
 
   def getCurrentAndPreviousYearsEligibility(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
-    cachingService.get[RecipientRecord](appConfig.CACHE_RECIPIENT_RECORD) map {
+    cachingService.get[RecipientRecord](CACHE_RECIPIENT_RECORD) map {
       _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_, taxYear))
     }
 
@@ -291,7 +293,7 @@ class TransferService @Inject()(
   }
 
   def saveSelectedYears(selectedYears: List[Int])(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
-    cachingService.put[List[Int]](appConfig.CACHE_SELECTED_YEARS, selectedYears)
+    cachingService.put[List[Int]](CACHE_SELECTED_YEARS, selectedYears)
 
   def updateSelectedYears(availableTaxYears: List[TaxYear], extraYear: Int, yearAvailableForSelection: Option[Int])(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] = {
     updateSelectedYears(availableTaxYears, List(extraYear).filter(_ > 0), yearAvailableForSelection)
