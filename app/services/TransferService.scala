@@ -91,9 +91,14 @@ class TransferService @Inject()(
 
   def getFinishedData(transferorNino: Nino)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     for {
-      userAnswersCachedData <- cachingService.getUserAnswersCachedData
+      userAnswersCachedData <- getUserAnswersCachedData
       notification <- validateFinishedData(userAnswersCachedData)
     } yield notification
+
+  def getUserAnswersCachedData(implicit
+                               request: Request[_]
+                              ): Future[Option[UserAnswersCacheData]] =
+    cachingService.get[UserAnswersCacheData](CK_EXTRACT_USER_ANSWERS)
 
   private def validateFinishedData(cacheData: Option[UserAnswersCacheData])(implicit ec: ExecutionContext): Future[NotificationRecord] =
     Future {
@@ -105,7 +110,7 @@ class TransferService @Inject()(
 
   private def doCreateRelationship(transferorNino: Nino)(implicit request: Request[_], hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
     for {
-      userAnswersCachedData <- cachingService.getUserAnswersCachedData
+      userAnswersCachedData <- getUserAnswersCachedData
       validated <- validateCompleteCache(userAnswersCachedData)
       postCreateData <- sendCreateRelationship(transferorNino, validated)(hc, messages, ec)
       _ <- lockCreateRelationship()
@@ -121,7 +126,7 @@ class TransferService @Inject()(
 
   def getRecipientDetailsFormData()(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientDetailsFormInput] =
     for {
-      userAnswersCachedData <- cachingService.getUserAnswersCachedData
+      userAnswersCachedData <- getUserAnswersCachedData
       registrationData <- validateRegistrationData(userAnswersCachedData)
     } yield registrationData
 
@@ -153,9 +158,9 @@ class TransferService @Inject()(
   }
 
   def getUserAnswersCachedDataWithTransferorRecord(nino: Nino)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UserAnswersCacheData]] = {
-    cachingService.getUserAnswersCachedData.flatMap({
+    getUserAnswersCachedData.flatMap({
       case maybeData if maybeData.forall(_.transferor.isDefined)=> Future.successful(maybeData)
-      case _ => updateCacheWithTransferorRecord(nino).flatMap(_ => cachingService.getUserAnswersCachedData)
+      case _ => updateCacheWithTransferorRecord(nino).flatMap(_ => getUserAnswersCachedData)
     })
   }
 
@@ -301,7 +306,7 @@ class TransferService @Inject()(
 
   def updateSelectedYears(availableTaxYears: List[TaxYear], extraYears: List[Int], yearAvailableForSelection: Option[Int])(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[List[Int]] =
     for {
-      userAnswersCachedData <- cachingService.getUserAnswersCachedData
+      userAnswersCachedData <- getUserAnswersCachedData
       updatedYears <- updateSelectedYears(userAnswersCachedData.get.selectedYears, extraYears)
       validatedSelectedYears <- validateSelectedYears(availableTaxYears, updatedYears, yearAvailableForSelection)
       savedYears <- saveSelectedYears(validatedSelectedYears)

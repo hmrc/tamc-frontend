@@ -40,7 +40,6 @@ trait CachingService {
   def put[T](cacheKey: CacheKeyWithWriteSupport[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T]
   def clear()(implicit request: Request[_]): Future[Unit]
 
-  def getUserAnswersCachedData(implicit request: Request[_]): Future[Option[UserAnswersCacheData]]
   def getCachedDataForEligibilityCheck(implicit request: Request[_]): Future[Option[EligibilityCheckCacheData]]
   def getUpdateRelationshipCachedData(implicit request: Request[_]): Future[Option[UpdateRelationshipCacheData]]
   def getConfirmationAnswers(implicit request: Request[_]): Future[Option[ConfirmationUpdateAnswersCacheData]]
@@ -152,11 +151,6 @@ class CachingServiceImpl @Inject() (
   def clear()(implicit request: Request[_]): Future[Unit] =
     cacheRepo
       .deleteEntity(request)
-
-  def getUserAnswersCachedData(implicit
-    request: Request[_]
-  ): Future[Option[UserAnswersCacheData]] =
-    get[UserAnswersCacheData](CK_EXTRACT_USER_ANSWERS)
 
   def getCachedDataForEligibilityCheck(implicit
     request: Request[_]
