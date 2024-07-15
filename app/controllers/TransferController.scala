@@ -30,9 +30,10 @@ import play.api.data.FormError
 import play.api.i18n.Lang
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import play.twirl.api.Html
+import services.CacheService.CACHE_NOTIFICATION_RECORD
 import services.{CachingService, TimeService, TransferService}
 import utils.LoggerHelper
-
+import services.CacheService._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -74,7 +75,7 @@ class TransferController @Inject() (
     recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
-        cachingService.put[RecipientDetailsFormInput](appConfig.CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
+        cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
           Redirect(controllers.routes.TransferController.dateOfMarriage())
         }
     )
@@ -96,7 +97,7 @@ class TransferController @Inject() (
     dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
       marriageData => {
-        cachingService.put[DateOfMarriageFormInput](appConfig.CACHE_MARRIAGE_DATE, marriageData)
+        cachingService.put[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE, marriageData)
 
         registrationService.getRecipientDetailsFormData() flatMap {
           case RecipientDetailsFormInput(name, lastName, gender, nino) =>
@@ -209,7 +210,7 @@ class TransferController @Inject() (
   }
 
   def confirmYourEmail: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    cachingService.get[NotificationRecord](appConfig.CACHE_NOTIFICATION_RECORD) map {
+    cachingService.get[NotificationRecord](CACHE_NOTIFICATION_RECORD) map {
       case Some(NotificationRecord(transferorEmail)) =>
         Ok(email(emailForm.fill(transferorEmail)))
       case None => Ok(email(emailForm))

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <conversionRule conversionWord="coloredLevel" converterClass="play.api.libs.logback.ColoredLevel"/>
-
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/tamc-frontend.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -32,12 +30,6 @@
     <logger name="connector" level="TRACE">
         <appender-ref ref="STDOUT"/>
     </logger>
-
-    <logger name="com.ning.http.client" level="WARN"/>
-
-    <logger name="org.asynchttpclient.netty.channel.DefaultChannelPool" level="WARN"/>
-
-    <logger name="org.asynchttpclient.netty" level="WARN"/>
 
     <logger name="com.google.inject" level="WARN"/>
 
