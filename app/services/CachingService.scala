@@ -35,14 +35,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[CachingServiceImpl])
 trait CachingService {
-
   def get[T](cacheKey: CacheKey[T])(implicit request: Request[_]): Future[Option[T]]
   def put[T](cacheKey: CacheKeyWithWriteSupport[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T]
   def clear()(implicit request: Request[_]): Future[Unit]
-
-  def getCachedDataForEligibilityCheck(implicit request: Request[_]): Future[Option[EligibilityCheckCacheData]]
-  def getUpdateRelationshipCachedData(implicit request: Request[_]): Future[Option[UpdateRelationshipCacheData]]
-  def getConfirmationAnswers(implicit request: Request[_]): Future[Option[ConfirmationUpdateAnswersCacheData]]
 }
 
 object CacheService {
@@ -151,19 +146,4 @@ class CachingServiceImpl @Inject() (
   def clear()(implicit request: Request[_]): Future[Unit] =
     cacheRepo
       .deleteEntity(request)
-
-  def getCachedDataForEligibilityCheck(implicit
-    request: Request[_]
-  ): Future[Option[EligibilityCheckCacheData]] =
-    get[EligibilityCheckCacheData](CK_EXTRACT_ELIGIBILITY_CHECK)
-
-  def getUpdateRelationshipCachedData(implicit
-    request: Request[_]
-  ): Future[Option[UpdateRelationshipCacheData]] =
-    get[UpdateRelationshipCacheData](CK_EXTRACT_UPDATE_RELATIONSHIP)
-
-  def getConfirmationAnswers(implicit
-    request: Request[_]
-  ): Future[Option[ConfirmationUpdateAnswersCacheData]] =
-    get[ConfirmationUpdateAnswersCacheData](CK_EXTRACT_CONFIRMATION)
 }

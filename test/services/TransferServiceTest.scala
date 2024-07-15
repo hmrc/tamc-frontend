@@ -90,8 +90,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
         val response = GetRelationshipResponse(Some(RecipientRecordData.userRecord), None, ResponseStatus("OK"))
         val recipientRecord = RecipientRecord(RecipientRecordData.userRecord, recipientData, Nil)
-
-        when(mockCachingService.getCachedDataForEligibilityCheck)
+        when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(CK_EXTRACT_ELIGIBILITY_CHECK))(any()))
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
@@ -113,7 +112,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
     "throw an error" when {
       "recipient is not returned" in {
         val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:RECIPIENT-NOT-FOUND"))
-        when(mockCachingService.getCachedDataForEligibilityCheck)
+        when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(CK_EXTRACT_ELIGIBILITY_CHECK))(any()))
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
@@ -125,7 +124,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
       "transferor deceased" in {
         val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:TRANSFERER-DECEASED"))
-        when(mockCachingService.getCachedDataForEligibilityCheck)
+        when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(CK_EXTRACT_ELIGIBILITY_CHECK))(any()))
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
@@ -136,21 +135,21 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       }
 
       "the cache returns no data" in {
-        when(mockCachingService.getCachedDataForEligibilityCheck)
+        when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(CK_EXTRACT_ELIGIBILITY_CHECK))(any()))
           .thenReturn(None)
 
         intercept[CacheMissingTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the active relationship record is not returned" in {
-        when(mockCachingService.getCachedDataForEligibilityCheck)
+        when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(CK_EXTRACT_ELIGIBILITY_CHECK))(any()))
           .thenReturn(Some(EligibilityCheckCacheData(None, None, None, Some(List(relationshipRecord)), None)))
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the historic relationship record is not returned" in {
-        when(mockCachingService.getCachedDataForEligibilityCheck)
+        when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(CK_EXTRACT_ELIGIBILITY_CHECK))(any()))
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), None, None)))
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))

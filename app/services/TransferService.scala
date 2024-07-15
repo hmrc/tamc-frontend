@@ -64,12 +64,18 @@ class TransferService @Inject()(
   private def checkRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
                                     (implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     for {
-      cache <- cachingService.getCachedDataForEligibilityCheck
+      cache <- getCachedDataForEligibilityCheck
       _ <- validateTransferorAgainstRecipient(recipientData, cache)
       (userRecord, taxYears) <- getRecipientRelationship(transferorNino, recipientData)
       validYears = timeService.getValidYearsApplyMAPreviousYears(taxYears)
       _ <- cachingService.put[RecipientRecord](CACHE_RECIPIENT_RECORD, RecipientRecord(record = userRecord, data = recipientData, availableTaxYears = validYears))
     } yield true
+
+
+  def getCachedDataForEligibilityCheck(implicit
+                                       request: Request[_]
+                                      ): Future[Option[EligibilityCheckCacheData]] =
+    cachingService.get[EligibilityCheckCacheData](CK_EXTRACT_ELIGIBILITY_CHECK)
 
   private def validateTransferorAgainstRecipient(recipientData: RegistrationFormInput, cache: Option[EligibilityCheckCacheData])
   : Future[Option[EligibilityCheckCacheData]] =
