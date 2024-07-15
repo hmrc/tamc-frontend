@@ -16,8 +16,8 @@
 
 package services
 
-import com.google.inject.{ImplementedBy, Inject}
 import com.google.inject.name.Named
+import com.google.inject.{ImplementedBy, Inject}
 import config.ApplicationConfig
 import models._
 import play.api.libs.json.Format
@@ -25,10 +25,10 @@ import play.api.mvc.Request
 import repositories.SessionCacheNew
 import services.CacheService._
 import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.http.cache.client.SessionCache
+import uk.gov.hmrc.emailaddress.PlayJsonFormats.{emailAddressReads, emailAddressWrites}
+import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressWrites
+
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -67,9 +67,13 @@ object CacheService {
   val CACHE_ROLE_RECORD:CacheKey[String] = CacheKey[String]("ROLE")                                                                       //FIXME is this key used properly?
 
 
-  sealed abstract class CacheKey[T]{val dataKey: String}
+  sealed abstract class CacheKey[T]{val dataKey: String; val extractor: CacheMap => Option[T]}
   object CacheKey {
-    def apply[T](key: String) = new CacheKey[T]{override  val dataKey = key}
+    def apply[T](key: String)(implicit format: Format[T]) = new CacheKey[T]{
+      override  val dataKey = key
+      override val extractor: CacheMap => Option[T] =
+        _.getEntry[T](dataKey)
+    }
   }
 }
 
@@ -85,7 +89,7 @@ class CachingServiceImpl @Inject() (
   override lazy val domain: String        = appConfig.sessionCacheDomain
 
   def get[T](cacheKey: CacheKey[T])(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] =
-    fetchAndGetEntry[T](cacheKey.dataKey)
+    fetch() map (_ flatMap (cacheKey.extractor))
 
   def put[T](cacheKey: CacheKey[T], value: T)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, executionContext: ExecutionContext): Future[T] =
     cache[T](cacheKey.dataKey, value)
