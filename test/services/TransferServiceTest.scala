@@ -54,7 +54,9 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
   val nino: Nino = Nino(Ninos.nino1)
   val recipientData: RegistrationFormInput = RegistrationFormInput("First", "Last", Gender("F"), nino, dateOfMarriage)
   val relationshipRecord: RelationshipRecord = RelationshipRecord("Recipient", "20150531235901", "19960327", None, None, "123456789123", "20150531235901")
+
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("SessionId")))
+  implicit val request = FakeRequest()
 
   val appConf: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
@@ -99,7 +101,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockTimeService.getValidYearsApplyMAPreviousYears(any()))
           .thenReturn(Nil)
 
-        implicit val request = FakeRequest()
         when(mockCachingService.put(applicationConfig.CACHE_RECIPIENT_RECORD, recipientRecord))
           .thenReturn(recipientRecord)
 
@@ -118,7 +119,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(Left(response))
 
-        implicit val request = FakeRequest()
         intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
       }
 
@@ -131,7 +131,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(Left(response))
 
-        implicit val request = FakeRequest()
         intercept[TransferorDeceased](await(service.isRecipientEligible(nino, recipientData)))
       }
 
@@ -139,7 +138,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockCachingService.getCachedDataForEligibilityCheck)
           .thenReturn(None)
 
-        implicit val request = FakeRequest()
         intercept[CacheMissingTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
@@ -147,7 +145,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockCachingService.getCachedDataForEligibilityCheck)
           .thenReturn(Some(EligibilityCheckCacheData(None, None, None, Some(List(relationshipRecord)), None)))
 
-        implicit val request = FakeRequest()
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
@@ -155,7 +152,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         when(mockCachingService.getCachedDataForEligibilityCheck)
           .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), None, None)))
 
-        implicit val request = FakeRequest()
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
     }
@@ -166,6 +162,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
     "return a CurrentAndPreviousYearsEligibility" in {
       val currentYear = 2019
       val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(currentYear)))
+
       when(mockCachingService.get[RecipientRecord](applicationConfig.CACHE_RECIPIENT_RECORD)).thenReturn(Future.successful(Some(recipientRecord)))
       when(mockTimeService.getCurrentTaxYear).thenReturn(currentYear)
 
@@ -186,13 +183,12 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
     "return a notificationRecord" in {
       val userRecord = UserRecord(11111111L,"timestamp")
 
-      when(mockCachingService.getUserAnswersCachedData(any(), any()))
+      when(mockCachingService.getUserAnswersCachedData(any(), any(), any()))
         .thenReturn(Future.successful(Some(UserAnswersCacheData(
             Some(userRecord),
             Some(RecipientRecord(userRecord, RegistrationFormInput("firstName", "surname", Gender("M"),nino,LocalDate.now))),
             Some(NotificationRecord(EmailAddress("email@email.com"))), selectedYears = Some(List(2020, 2021))))))
 
-      implicit val request = FakeRequest()
       when(mockCachingService.put[Boolean](ArgumentMatchers.eq(applicationConfig.CACHE_LOCKED_CREATE), ArgumentMatchers.eq(true))(any(),any(),any(),any())).thenReturn(Future.successful(true))
 
       when(mockAuditConnector.sendEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
@@ -215,7 +211,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       val notificationRecord = NotificationRecord(EmailAddress("email@email.com"))
       val cacheData = UserAnswersCacheData(None, None, Some(notificationRecord), Some(true))
 
-      when(mockCachingService.getUserAnswersCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+      when(mockCachingService.getUserAnswersCachedData(any(), any(), any())).thenReturn(Future.successful(Some(cacheData)))
 
       val result = await(service.getFinishedData(nino))
 
@@ -226,7 +222,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       "cacheData is returned and no notificationRecord is present" in {
         val cacheData = UserAnswersCacheData(None, None, None, Some(true))
 
-        when(mockCachingService.getUserAnswersCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+        when(mockCachingService.getUserAnswersCachedData(any(), any(), any())).thenReturn(Future.successful(Some(cacheData)))
 
         intercept[CacheCreateRequestNotSent]{
           await(service.getFinishedData(nino))
@@ -236,7 +232,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       "cacheData is returned and  relationshipCreated is false" in {
         val cacheData = UserAnswersCacheData(None, None, Some(NotificationRecord(EmailAddress("email@email.com"))), Some(false))
 
-        when(mockCachingService.getUserAnswersCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+        when(mockCachingService.getUserAnswersCachedData(any(), any(), any())).thenReturn(Future.successful(Some(cacheData)))
 
         intercept[CacheCreateRequestNotSent]{
           await(service.getFinishedData(nino))
@@ -246,7 +242,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       "cacheDate is returned and relationshipCreated is None" in {
         val cacheData = UserAnswersCacheData(None, None, Some(NotificationRecord(EmailAddress("email@email.com"))))
 
-        when(mockCachingService.getUserAnswersCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+        when(mockCachingService.getUserAnswersCachedData(any(), any(), any())).thenReturn(Future.successful(Some(cacheData)))
 
         intercept[CacheCreateRequestNotSent]{
           await(service.getFinishedData(nino))
@@ -254,7 +250,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       }
 
       "no cacheData is returned" in {
-        when(mockCachingService.getUserAnswersCachedData(any(), any())).thenReturn(Future.successful(None))
+        when(mockCachingService.getUserAnswersCachedData(any(), any(), any())).thenReturn(Future.successful(None))
 
         intercept[CacheCreateRequestNotSent]{
           await(service.getFinishedData(nino))
@@ -268,7 +264,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       val rdfi = RecipientDetailsFormInput("Jain", "Doe", Gender("F"), nino)
       val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(2019)))
       val cacheData = UserAnswersCacheData(None, Some(recipientRecord), Some(NotificationRecord(EmailAddress("email@email.com"))), None, None, Option(rdfi) )
-      when(mockCachingService.getUserAnswersCachedData(any(), any())).thenReturn(Future.successful(Some(cacheData)))
+      when(mockCachingService.getUserAnswersCachedData(any(), any(), any())).thenReturn(Future.successful(Some(cacheData)))
 
       val result = service.getRecipientDetailsFormData()
       await(result)
@@ -289,7 +285,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         dateOfMarriage = Some( DateOfMarriageFormInput(LocalDate.of(2019, 6, 6))))
       when(mockCachingService.getUserAnswersCachedData).thenReturn(Future.successful(Some(cacheData)))
 
-      implicit val request = FakeRequest()
       val result = service.getConfirmationData(nino)
       await(result)
       assertEquals(CitizenName(Option("Test"), Option("User")).fullName, result.transferorFullName.get.fullName)
@@ -317,13 +312,12 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         ArgumentMatchers.eq(applicationConfig.CACHE_TRANSFEROR_RECORD),
         ArgumentMatchers.eq(userRecord))(any(), any(), any(), any())).thenReturn(Future.successful(userRecord))
 
-      implicit val request = FakeRequest()
       val result = service.getConfirmationData(nino)
       await(result)
       assertEquals(CitizenName(Option("Test"), Option("User")).fullName, result.transferorFullName.get.fullName)
       verify(mockMarriageAllowanceConnector, times(1)).listRelationship(ArgumentMatchers.eq(nino))(any(),any())
       verify(mockCachingService, times(1)).put[UserRecord](any(),any())(any(),any(),any(),any())
-      verify(mockCachingService, times(2)).getUserAnswersCachedData(any(),any())
+      verify(mockCachingService, times(2)).getUserAnswersCachedData(any(),any(), any())
     }
   }
 }

@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import com.google.inject.name.Named
 import config.ApplicationConfig
 import models._
-import play.api.libs.json.{Format, Reads}
+import play.api.libs.json.Format
 import play.api.mvc.Request
 import repositories.SessionCacheNew
 import uk.gov.hmrc.http.cache.client.SessionCache
@@ -50,10 +50,14 @@ class CachingService @Inject() (
       .map(_ => ())
       .andThen(_ => sessionCacheNew.clear())
 
-  def get[T](key: String)(implicit reads: Reads[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] =
+  def get[T](key: String)(implicit request: Request[_], format: Format[T], hc: HeaderCarrier, ec: ExecutionContext): Future[Option[T]] =
     fetchAndGetEntry[T](key)
 
-  def getUserAnswersCachedData(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[UserAnswersCacheData]] =
+  def getUserAnswersCachedData(implicit
+    request: Request[_],
+    hc: HeaderCarrier,
+    ec: ExecutionContext
+  ): Future[Option[UserAnswersCacheData]] =
     fetch() map (_ map (cacheMap =>
       UserAnswersCacheData(
         transferor = cacheMap.getEntry[UserRecord](appConfig.CACHE_TRANSFEROR_RECORD),
@@ -66,6 +70,7 @@ class CachingService @Inject() (
       )))
 
   def getCachedDataForEligibilityCheck(implicit
+    request: Request[_],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Option[EligibilityCheckCacheData]] =
@@ -82,6 +87,7 @@ class CachingService @Inject() (
       )))
 
   def getUpdateRelationshipCachedData(implicit
+    request: Request[_],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Option[UpdateRelationshipCacheData]] =
@@ -96,6 +102,7 @@ class CachingService @Inject() (
       )))
 
   def getConfirmationAnswers(implicit
+    request: Request[_],
     hc: HeaderCarrier,
     ec: ExecutionContext
   ): Future[Option[ConfirmationUpdateAnswersCacheData]] =

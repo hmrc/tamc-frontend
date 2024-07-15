@@ -25,7 +25,7 @@ import forms.coc.{CheckClaimOrCancelDecisionForm, DivorceSelectYearForm, MakeCha
 import models._
 import models.auth.BaseUserRequest
 import play.api.Configuration
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import services._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.LoggerHelper
@@ -148,7 +148,7 @@ class   UpdateRelationshipController @Inject()(
         })
   }
 
-  private def noLongerWantMarriageAllowanceRedirect(implicit hc: HeaderCarrier): Future[Result] = {
+  private def noLongerWantMarriageAllowanceRedirect(implicit request: Request[_], hc: HeaderCarrier): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.primaryRecord.role == Recipient){
         Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())

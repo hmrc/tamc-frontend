@@ -507,7 +507,7 @@ class TransferTest extends BaseTest with NinoGenerator {
     )
 
     "display dynamic message " in {
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
         .thenReturn(
           CurrentAndPreviousYearsEligibility(
             currentYearAvailable = true,
@@ -531,7 +531,7 @@ class TransferTest extends BaseTest with NinoGenerator {
     }
 
     "display form error message (no year choice made )" in {
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
         .thenReturn(
           CurrentAndPreviousYearsEligibility(
             currentYearAvailable = true,
@@ -645,7 +645,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   "Calling non-pta finished page" should {
 
     "successfully authenticate the user and have finished page and content" in {
-      when(mockTransferService.getFinishedData(any())(any(), any()))
+      when(mockTransferService.getFinishedData(any())(any(), any(), any()))
         .thenReturn(NotificationRecord(EmailAddress("example@example.com")))
       val result = transferController.finished(request)
 

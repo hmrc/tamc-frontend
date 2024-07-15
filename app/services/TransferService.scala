@@ -87,7 +87,7 @@ class TransferService @Inject()(
     }
   }
 
-  def getFinishedData(transferorNino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
+  def getFinishedData(transferorNino: Nino)(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[NotificationRecord] =
     for {
       userAnswersCachedData <- cachingService.getUserAnswersCachedData
       notification <- validateFinishedData(userAnswersCachedData)
@@ -117,7 +117,7 @@ class TransferService @Inject()(
   }
 
 
-  def getRecipientDetailsFormData()(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientDetailsFormInput] =
+  def getRecipientDetailsFormData()(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[RecipientDetailsFormInput] =
     for {
       userAnswersCachedData <- cachingService.getUserAnswersCachedData
       registrationData <- validateRegistrationData(userAnswersCachedData)
@@ -248,7 +248,7 @@ class TransferService @Inject()(
       res <- getCurrentAndPreviousYearsEligibility
     } yield res
 
-  def getCurrentAndPreviousYearsEligibility(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
+  def getCurrentAndPreviousYearsEligibility(implicit request: Request[_], hc: HeaderCarrier, ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     cachingService.get[RecipientRecord](appConfig.CACHE_RECIPIENT_RECORD) map {
       _.fold(throw CacheMissingRecipient())(CurrentAndPreviousYearsEligibility(_, taxYear))
     }
