@@ -41,14 +41,14 @@ import java.time.format.DateTimeFormatter
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateRelationshipService @Inject()(
-                                           marriageAllowanceConnector: MarriageAllowanceConnector,
-                                           endDateForMACeased: EndDateForMACeased,
-                                           endDateDivorceCalculator: EndDateDivorceCalculator,
-                                           auditConnector: AuditConnector,
-                                           cachingService: CachingService,
-                                           appConfig: ApplicationConfig,
-                                           languageUtilsImpl: LanguageUtilsImpl,
-                                           localDate: SystemLocalDate
+  marriageAllowanceConnector: MarriageAllowanceConnector,
+  endDateForMACeased: EndDateForMACeased,
+  endDateDivorceCalculator: EndDateDivorceCalculator,
+  auditConnector: AuditConnector,
+  cachingService: CachingService,
+  appConfig: ApplicationConfig,
+  languageUtilsImpl: LanguageUtilsImpl,
+  localDate: SystemLocalDate
 ) extends Logging {
 
   def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
