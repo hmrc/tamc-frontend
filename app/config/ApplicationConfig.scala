@@ -29,8 +29,6 @@ import java.time.LocalDate
 class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: ServicesConfig) {
 
   val authURL: String = servicesConfig.baseUrl("auth")
-  val cacheUri:String = servicesConfig.baseUrl("cachable.session-cache")
-  val sessionCacheDomain: String = servicesConfig.getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
 
   def currentTaxYear(): TaxYear = TaxYear(configuration.getOptional[Int]("tamc-effective-tax-year").getOrElse(TaxYear.current.startYear))
 
@@ -68,28 +66,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   val marriedCoupleAllowanceLink = "https://www.gov.uk/married-couples-allowance"
   val generalEnquiriesLink = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
-  val CACHE_DIVORCE_DATE = "DIVORCE_DATE"
-  val CACHE_MAKE_CHANGES_DECISION = "MAKE_CHANGES_DECISION"
-  val CACHE_CHECK_CLAIM_OR_CANCEL = "CHECK_CLAIM_OR_CANCEL"
-  val CACHE_TRANSFEROR_RECORD = "TRANSFEROR_RECORD"
-  val CACHE_RECIPIENT_RECORD = "RECIPIENT_RECORD"
-  val CACHE_RECIPIENT_DETAILS = "RECIPIENT_DETAILS"
-  val CACHE_NOTIFICATION_RECORD = "NOTIFICATION_RECORD"
-  val CACHE_LOCKED_CREATE = "LOCKED_CREATE"
-  val CACHE_LOGGEDIN_USER_RECORD = "LOGGEDIN_USER_RECORD"
-  val CACHE_ACTIVE_RELATION_RECORD = "ACTIVE_RELATION_RECORD"
-  val CACHE_HISTORIC_RELATION_RECORD = "HISTORIC_RELATION_RECORD"
-  val CACHE_RELATION_END_REASON_RECORD = "RELATION_END_REASON_RECORD"
-  val CACHE_PERSON_DETAILS = "PERSON_DETAILS"
-  val CACHE_SELECTED_YEARS = "SELECTED_YEARS"
-  val CACHE_SOURCE = "SOURCE"
-  val CACHE_LOCKED_UPDATE = "LOCKED_UPDATE"
-  val CACHE_MARRIAGE_DATE = "MARRIAGE_DATE"
-  val CACHE_ROLE_RECORD = "ROLE"
-  val CACHE_EMAIL_ADDRESS = "EMAIL_ADDRESS"
-  val CACHE_MA_ENDING_DATES = "MA_ENDING_DATES"
-  val CACHE_RELATIONSHIP_RECORDS = "RELATIONSHIP_RECORDS"
-
   def actualTaxYear(taxYear: Int): Int = {
     if (taxYear <= 0)
       currentTaxYear().startYear
@@ -121,7 +97,6 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   lazy val webchatId: String = loadConfig("webchat.id")
 
-  val ehCacheTtlInSeconds: Int = configuration.underlying.getInt("ehCache.ttlInSeconds")
   val frontendHost: String = loadConfig("tamc-frontend.host")
   val accessibilityStatementHost: String = loadConfig("accessibility-statement.service-path") + "/accessibility-statement"
   def accessibilityStatementUrl(relativeReferrerPath: String): String =

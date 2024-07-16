@@ -26,7 +26,6 @@ object LibraryDependencies {
 
   private val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"                  %% s"emailaddress-$playVersion"                  % "4.0.0",
-    "uk.gov.hmrc"                  %% s"http-caching-client-$playVersion"           % "11.2.0",
     "uk.gov.hmrc"                  %% s"mongo-feature-toggles-client-$playVersion"  % hmrcMongoFeatureTogglesClientVersion,
     "uk.gov.hmrc"                  %% s"sca-wrapper-$playVersion"                   % hmrcScaWrapperVersion,
     "uk.gov.hmrc"                  %% s"tax-year"                                   % "4.0.0",
