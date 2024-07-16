@@ -277,8 +277,8 @@ class   UpdateRelationshipController @Inject()(
 
     val pf: PartialFunction[Throwable, Result] = {
         case _: NoPrimaryRecordError => request.headers.get("Referer") match {
-          case Some(referrer) if referrer.contains(appConfig.gdsStartUrl)    => Redirect(controllers.routes.TransferController.transfer())
-          case Some(referrer) if referrer.contains(appConfig.gdsContinueUrl) => Redirect(controllers.routes.TransferController.transfer())
+          case Some(referrer) if referrer.contains(appConfig.gdsStartUrl)    => Redirect(controllers.transfer.routes.TransferAllowanceController.transfer())
+          case Some(referrer) if referrer.contains(appConfig.gdsContinueUrl) => Redirect(controllers.transfer.routes.TransferAllowanceController.transfer())
           case _                                                             => Redirect(controllers.routes.HowItWorksController.howItWorks())
         }
         case t: CacheRelationshipAlreadyUpdated => handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))

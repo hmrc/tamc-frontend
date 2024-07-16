@@ -163,7 +163,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val result = controller.history()(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
       }
 
       "there is no active (primary) record for a govuk user who is currently logging in" in {
@@ -175,7 +175,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val result = controller.history()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
       }
     }
 

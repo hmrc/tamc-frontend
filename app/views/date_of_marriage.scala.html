@@ -37,7 +37,7 @@ request: AuthenticatedUserRequest[_])
 @main(
     pageTitle = viewHelpers.formErrorPrefix(marriageForm, messages("title.date-of-marriage")),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.routes.TransferController.transfer().url)
+    backLinkHref = Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
 ){
 
   @errorSummary(marriageForm, Some("dateOfMarriage.day"))

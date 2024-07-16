@@ -43,7 +43,7 @@ class TransferController @Inject() (
   timeService: TimeService,
   appConfig: ApplicationConfig,
   cc: MessagesControllerComponents,
-  transferV: views.html.multiyear.transfer.transfer,
+//  transferV: views.html.multiyear.transfer.transfer,
   dateOfMarriageV: views.html.date_of_marriage,
   previousYearsV: views.html.multiyear.transfer.previous_years,
   eligibleYearsV: views.html.multiyear.transfer.eligible_years,
@@ -61,24 +61,24 @@ class TransferController @Inject() (
   relationshipCannotCreate: views.html.errors.relationship_cannot_create,
   recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
   tryLater: views.html.errors.try_later,
-  recipientDetailsForm: RecipientDetailsForm,
+//  recipientDetailsForm: RecipientDetailsForm,
   dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
-
-  def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
-    Ok(
-      transferV(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
-    )
-  }
-
-  def transferAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
-      recipientData =>
-        cachingService.put[RecipientDetailsFormInput](appConfig.CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
-          Redirect(controllers.routes.TransferController.dateOfMarriage())
-        }
-    )
-  }
+//
+//  def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
+//    Ok(
+//      transferV(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
+//    )
+//  }
+//
+//  def transferAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest().fold(
+//      formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
+//      recipientData =>
+//        cachingService.put[RecipientDetailsFormInput](appConfig.CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
+//          Redirect(controllers.routes.TransferController.dateOfMarriage())
+//        }
+//    )
+//  }
 
   def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))

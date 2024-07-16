@@ -76,7 +76,7 @@ request: AuthenticatedUserRequest[_])
             <dt class="govuk-summary-list_key">@Html(messages("generic.name"))</dt>
             <dd class="govuk-summary-list_value" id="recipient-name">@data.recipientFirstName @data.recipientLastName</dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.transfer()"
+                <a href="@controllers.transfer.routes.TransferAllowanceController.transfer()"
                 data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details" aria-label="@Html(messages("pages.form.aria-label"))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("generic.name"))</span>

@@ -14,8 +14,8 @@ GET         /benefit-calculator-pta             controllers.EligibilityCalculato
 POST        /benefit-calculator-pta             controllers.EligibilityCalculatorController.ptaCalculatorAction()
 
 # Transfer Allowance
-GET         /transfer-allowance                 controllers.TransferController.transfer()
-POST        /transfer-allowance                 controllers.TransferController.transferAction()
+GET         /transfer-allowance                 controllers.transfer.TransferAllowanceController.transfer()
+POST        /transfer-allowance                 controllers.transfer.TransferAllowanceController.transferAction()
 GET         /date-of-marriage                   controllers.TransferController.dateOfMarriage()
 GET         /date-of-marriage-en                controllers.TransferController.dateOfMarriageWithEn()
 GET         /date-of-marriage-cy                controllers.TransferController.dateOfMarriageWithCy()

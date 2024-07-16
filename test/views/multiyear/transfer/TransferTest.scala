@@ -18,6 +18,7 @@ package views.multiyear.transfer
 
 import org.apache.pekko.util.Timeout
 import controllers.TransferController
+import controllers.transfer.TransferAllowanceController
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
@@ -55,6 +56,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   lazy val transferForm: RecipientDetailsForm = instanceOf[RecipientDetailsForm]
   implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
+  val transferAllowanceController: TransferAllowanceController = app.injector.instanceOf[TransferAllowanceController]
   val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
@@ -99,7 +101,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "transferor-email" -> "example@example.com"
       )
 
-      val result = transferController.transferAction()(request)
+      val result = transferAllowanceController.transferAction()(request)
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
       document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
@@ -108,7 +110,7 @@ class TransferTest extends BaseTest with NinoGenerator {
     }
 
     "display form error message (request body missing form data)" in {
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -125,7 +127,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -141,7 +143,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -157,7 +159,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -173,7 +175,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -189,7 +191,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -205,7 +207,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -220,7 +222,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -236,7 +238,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -252,7 +254,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -268,7 +270,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -284,7 +286,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -300,7 +302,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -317,7 +319,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -334,7 +336,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "last-name" -> "bar",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -350,7 +352,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "X",
         "nino" -> Ninos.nino1
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -367,7 +369,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "last-name" -> "bar",
         "gender" -> "M"
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -383,7 +385,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> ""
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -399,7 +401,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> "ZZ"
       )
-      val result = transferController.transferAction(request)
+      val result = transferAllowanceController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -434,7 +436,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       error.size() shouldBe 1
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The year must be a number between 1900 and ${localDate.getYear}"
-      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.routes.TransferController.transfer().url
+      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.transfer.routes.TransferAllowanceController.transfer().url
     }
 
     "display form error message (date of marriage is after today’s date)" in {
