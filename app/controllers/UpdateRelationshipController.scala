@@ -62,17 +62,17 @@ class   UpdateRelationshipController @Inject()(
   confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl,
   appConfig: ApplicationConfig)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
-    implicit request =>
-      updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
-        updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
-          val viewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
-            relationshipRecords.hasMarriageAllowanceBeenCancelled,
-            relationshipRecords.loggedInUserInfo)
-          Ok(historySummary(viewModel))
-        }
-      } recover handleError
-  }
+//  def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
+//    implicit request =>
+//      updateRelationshipService.retrieveRelationshipRecords(request.nino) flatMap { relationshipRecords =>
+//        updateRelationshipService.saveRelationshipRecords(relationshipRecords) map { _ =>
+//          val viewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
+//            relationshipRecords.hasMarriageAllowanceBeenCancelled,
+//            relationshipRecords.loggedInUserInfo)
+//          Ok(historySummary(viewModel))
+//        }
+//      } recover handleError
+//  }
 
   def decision: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
@@ -265,33 +265,5 @@ class   UpdateRelationshipController @Inject()(
       } yield {
         Ok(finished())
       }) recover handleError
-  }
-
-  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
-    val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
-
-    def handle(throwable: Throwable, logger: (String, Throwable) => Unit, result: Result): Result = {
-      logger(message, throwable)
-      result
-    }
-
-    val pf: PartialFunction[Throwable, Result] = {
-        case _: NoPrimaryRecordError => request.headers.get("Referer") match {
-          case Some(referrer) if referrer.contains(appConfig.gdsStartUrl)    => Redirect(controllers.routes.TransferController.transfer())
-          case Some(referrer) if referrer.contains(appConfig.gdsContinueUrl) => Redirect(controllers.routes.TransferController.transfer())
-          case _                                                             => Redirect(controllers.routes.HowItWorksController.howItWorks())
-        }
-        case t: CacheRelationshipAlreadyUpdated => handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.finishUpdate()))
-        case t: CacheMissingUpdateRecord => handle(t, warn, InternalServerError(tryLater()))
-        case t: CacheUpdateRequestNotSent => handle(t, warn, InternalServerError(tryLater()))
-        case t: CannotUpdateRelationship => handle(t, warn, InternalServerError(tryLater()))
-        case t: MultipleActiveRecordError => handle(t, warn, InternalServerError(tryLater()))
-        case t: CitizenNotFound => handle(t, warn, InternalServerError(citizenNotFound()))
-        case t: BadFetchRequest => handle(t, warn, InternalServerError(tryLater()))
-        case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
-        case t: RecipientNotFound => handle(t, warn, Ok(recipientNotFound()))
-        case t => handle(t, error, InternalServerError(tryLater()))
-      }
-    pf
   }
 }
