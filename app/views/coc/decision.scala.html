@@ -39,7 +39,7 @@ pageTitle = viewHelpers.formErrorPrefix(decisionForm, messages("pages.decision.t
 
      @h1("pages.decision.title")
 
-    @form(action = routes.UpdateRelationshipController.submitDecision(), args = (Symbol("id") -> "check-relationship-form")) {
+    @form(action = UpdateRelationship.routes.ChooseController.submitDecision(), args = (Symbol("id") -> "check-relationship-form")) {
 
         @inputRadios(
             form = decisionForm,

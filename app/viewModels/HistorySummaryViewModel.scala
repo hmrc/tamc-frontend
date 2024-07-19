@@ -63,7 +63,7 @@ class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig
     val button = HistorySummaryButton(
       "checkOrUpdateMarriageAllowance",
       messages("pages.history.active.button"),
-      controllers.routes.UpdateRelationshipController.decision().url
+      controllers.UpdateRelationship.routes.ChooseController.decision().url
     )
 
     (paragraphContent, button)
@@ -83,7 +83,7 @@ class HistorySummaryViewModelImpl @Inject()(applicationConfig: ApplicationConfig
     }
 
     val button = HistorySummaryButton("checkMarriageAllowance", messages("pages.history.historic.button"),
-      controllers.routes.UpdateRelationshipController.claims().url)
+      controllers.UpdateRelationship.routes.ClaimsController.claims().url)
 
     (paragraphContent, button)
   }

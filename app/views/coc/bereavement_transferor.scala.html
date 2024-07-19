@@ -34,7 +34,7 @@ request: AuthenticatedUserRequest[_])
 
 @main(
 pageTitle = Messages("title.bereavement"),
-backLinkHref = Some(controllers.routes.UpdateRelationshipController.history().url)
+backLinkHref = Some(controllers.UpdateRelationship.routes.HistoryController.history().url)
 ) {
     
     @h1("change.status.bereavement.sorry", elmId = Some("bereavement-transferor"))

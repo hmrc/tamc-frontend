@@ -46,7 +46,7 @@ pageTitle = messages("title.confirm-transferor")
     <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
     </ul>
 
-    @form(action = routes.UpdateRelationshipController.submitConfirmUpdate()) {
+    @form(action = UpdateRelationship.routes.ConfirmChangeController.submitConfirmUpdate()) {
         @button(msg = "pages.confirm.cancel.continue.button", attrs = Map("data-journey-click" -> "marriage-allowance:link:confirm_cancellation"))
     }
 

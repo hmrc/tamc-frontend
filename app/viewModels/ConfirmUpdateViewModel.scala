@@ -31,7 +31,7 @@ class ConfirmUpdateViewModelImpl@Inject()(languageUtilsImpl: LanguageUtilsImpl) 
   def apply(updateAnswers: ConfirmationUpdateAnswers)(implicit messages: Messages): ConfirmUpdateViewModel = {
 
     val nameRow = SummaryRow(messages("pages.confirm.cancel.your-name"), "change-link-name", "change name", updateAnswers.loggedInUserInfo.name.flatMap(_.fullName).getOrElse(""), None, 1)
-    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), "change-link-email" ,"change email", updateAnswers.email, Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), 3)
+    val emailRow = SummaryRow(messages("pages.confirm.cancel.email"), "change-link-email" ,"change email", updateAnswers.email, Some(controllers.UpdateRelationship.routes.ConfirmEmailController.confirmEmail().url), 3)
     val defaultRows = List(nameRow, emailRow)
     val endDate = languageUtilsImpl().ukDateTransformer(updateAnswers.maEndingDates.marriageAllowanceEndDate)
     val effectiveDate = languageUtilsImpl().ukDateTransformer(updateAnswers.maEndingDates.personalAllowanceEffectiveDate)
@@ -39,7 +39,7 @@ class ConfirmUpdateViewModelImpl@Inject()(languageUtilsImpl: LanguageUtilsImpl) 
     def createRows(defaultRows: List[SummaryRow])(implicit messages: Messages): List[SummaryRow] = {
       updateAnswers.divorceDate.fold(defaultRows){ divorceDate =>
         val formattedDate = languageUtilsImpl().ukDateTransformer(divorceDate)
-        SummaryRow(messages("pages.divorce.title"), "change-link-date", "change date", formattedDate, Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2) :: defaultRows
+        SummaryRow(messages("pages.divorce.title"), "change-link-date", "change date", formattedDate, Some(controllers.UpdateRelationship.routes.DivorceController.divorceEnterYear().url), 2) :: defaultRows
       }
     }
 
@@ -47,4 +47,3 @@ class ConfirmUpdateViewModelImpl@Inject()(languageUtilsImpl: LanguageUtilsImpl) 
   }
 
 }
-

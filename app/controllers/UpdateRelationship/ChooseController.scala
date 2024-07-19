@@ -16,6 +16,51 @@
 
 package controllers.UpdateRelationship
 
-class ChooseController {
+import com.google.inject.Inject
+import controllers.BaseController
+import controllers.auth.StandardAuthJourney
+import forms.coc.CheckClaimOrCancelDecisionForm
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.UpdateRelationshipService
+import utils.LoggerHelper
+
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
+
+class ChooseController @Inject()(authenticate: StandardAuthJourney,
+                                 updateRelationshipService: UpdateRelationshipService,
+                                 cc: MessagesControllerComponents,
+                                 decisionV: views.html.coc.decision)
+                                (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+
+
+  def decision: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
+    implicit request =>
+      updateRelationshipService.getCheckClaimOrCancelDecision map { claimOrCancelDecision =>
+        Ok(decisionV(CheckClaimOrCancelDecisionForm.form().fill(claimOrCancelDecision)))
+      } recover {
+        case NonFatal(_) => Ok(decisionV(CheckClaimOrCancelDecisionForm.form()))
+      }
+  }
+
+  def submitDecision: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
+    implicit request =>
+
+      CheckClaimOrCancelDecisionForm.form().bindFromRequest().fold(
+        formWithErrors => {
+          Future.successful(BadRequest(decisionV(formWithErrors)))
+        }, {
+          case Some(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) =>
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim) map { _ =>
+              Redirect(controllers.UpdateRelationship.routes.ClaimsController.claims())
+            }
+          case Some(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) =>
+            updateRelationshipService.saveCheckClaimOrCancelDecision(CheckClaimOrCancelDecisionForm.StopMarriageAllowance) map { _ =>
+              Redirect(controllers.UpdateRelationship.routes.MakeChangesController.makeChange())
+            }
+          case _ =>
+            Future.successful(Redirect(controllers.UpdateRelationship.routes.ChooseController.decision()))
+        })
+  }
 
 }

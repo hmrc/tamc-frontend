@@ -22,27 +22,29 @@ import controllers.auth.StandardAuthJourney
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
 import utils.{UpdateRelationshipErrorHandler, LoggerHelper}
+import viewModels.ConfirmUpdateViewModelImpl
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
-class StopAllowanceController @Inject()(authenticate: StandardAuthJourney,
+class ConfirmChangeController @Inject()(authenticate: StandardAuthJourney,
                                         updateRelationshipService: UpdateRelationshipService,
                                         cc: MessagesControllerComponents,
-                                        stopAllowanceV: views.html.coc.stopAllowance,
-                                        cancelV: views.html.coc.cancel,
+                                        confirmUpdateV: views.html.coc.confirmUpdate,
+                                        confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl,
                                         errorHandler: UpdateRelationshipErrorHandler)
                                        (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  def stopAllowance: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
+  def confirmUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
-      Future.successful(Ok(stopAllowanceV()))
+      updateRelationshipService.getConfirmationUpdateAnswers map { confirmationUpdateAnswers =>
+        Ok(confirmUpdateV(confirmUpdateViewModelImpl(confirmationUpdateAnswers)))
+      } recover errorHandler.handleError
   }
 
-  def cancel: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
+  def submitConfirmUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
-      val cancelDates = updateRelationshipService.getMAEndingDatesForCancellation
-      updateRelationshipService.saveMarriageAllowanceEndingDates(cancelDates) map { _ =>
-        Ok(cancelV(cancelDates))
+      updateRelationshipService.updateRelationship(request.nino) map {
+        _ => Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate())
       } recover errorHandler.handleError
   }
 

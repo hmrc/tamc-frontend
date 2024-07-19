@@ -22,23 +22,22 @@ import controllers.auth.StandardAuthJourney
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
 import utils.{UpdateRelationshipErrorHandler, LoggerHelper}
-import viewModels.ClaimsViewModelImpl
 
 import scala.concurrent.ExecutionContext
 
-class ClaimsController @Inject()(authenticate: StandardAuthJourney,
-                                 updateRelationshipService: UpdateRelationshipService,
-                                 cc: MessagesControllerComponents,
-                                 claimsV: views.html.coc.claims,
-                                 claimsViewModelImpl: ClaimsViewModelImpl,
-                                 errorHandler: UpdateRelationshipErrorHandler)
-                                (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+class FinishedChangeController @Inject()(authenticate: StandardAuthJourney,
+                                         updateRelationshipService: UpdateRelationshipService,
+                                         cc: MessagesControllerComponents,
+                                         finished: views.html.coc.finished,
+                                         errorHandler: UpdateRelationshipErrorHandler)
+                                        (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  def claims: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
+  def finishUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
-      (updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
-        val viewModel = claimsViewModelImpl(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
-        Ok(claimsV(viewModel))
+      (for {
+        _ <- updateRelationshipService.removeCache
+      } yield {
+        Ok(finished())
       }) recover errorHandler.handleError
   }
 

@@ -21,19 +21,18 @@ import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
-import utils.LoggerHelper
+import utils.{UpdateRelationshipErrorHandler, LoggerHelper}
 import viewModels.HistorySummaryViewModelImpl
 
 import scala.concurrent.ExecutionContext
 
-class HistoryController @Inject()(
-                                   authenticate: StandardAuthJourney,
-                                   updateRelationshipService: UpdateRelationshipService,
-                                   cc: MessagesControllerComponents,
-                                   historySummary: views.html.coc.history_summary,
-                                   historySummaryViewModelImpl: HistorySummaryViewModelImpl,
-                                   errorHandler: ErrorHandlerHelper
-                                 )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+class HistoryController @Inject()(authenticate: StandardAuthJourney,
+                                  updateRelationshipService: UpdateRelationshipService,
+                                  cc: MessagesControllerComponents,
+                                  historySummary: views.html.coc.history_summary,
+                                  historySummaryViewModelImpl: HistorySummaryViewModelImpl,
+                                  errorHandler: UpdateRelationshipErrorHandler)
+                                 (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def history(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
