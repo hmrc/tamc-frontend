@@ -69,44 +69,44 @@ class TransferControllerTest extends ControllerBaseTest {
 
   when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
-
-  "transfer" should {
-    "return success" in {
-      val result = controller.transfer()(request)
-      status(result) shouldBe OK
-    }
-  }
-
-  "transferAction" should {
-    "return bad request" when {
-      "an invalid form is submitted" in {
-        val recipientDetails: RecipientDetailsFormInput =
-          RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
-          .thenReturn(recipientDetails)
-        val result = controller.transferAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "redirect the user" when {
-      "a valid form is submitted" in {
-        val recipientDetails: RecipientDetailsFormInput =
-          RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-          "name"      -> "Test",
-          "last-name" -> "User",
-          "gender"    -> "M",
-          "nino"      -> Ninos.nino2
-        )
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
-          .thenReturn(recipientDetails)
-        val result = controller.transferAction()(request)
-        status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      }
-    }
-  }
+//
+//  "transfer" should {
+//    "return success" in {
+//      val result = controller.transfer()(request)
+//      status(result) shouldBe OK
+//    }
+//  }
+//
+//  "transferAction" should {
+//    "return bad request" when {
+//      "an invalid form is submitted" in {
+//        val recipientDetails: RecipientDetailsFormInput =
+//          RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
+//        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
+//          .thenReturn(recipientDetails)
+//        val result = controller.transferAction()(request)
+//        status(result) shouldBe BAD_REQUEST
+//      }
+//    }
+//
+//    "redirect the user" when {
+//      "a valid form is submitted" in {
+//        val recipientDetails: RecipientDetailsFormInput =
+//          RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
+//        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+//          "name"      -> "Test",
+//          "last-name" -> "User",
+//          "gender"    -> "M",
+//          "nino"      -> Ninos.nino2
+//        )
+//        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
+//          .thenReturn(recipientDetails)
+//        val result = controller.transferAction()(request)
+//        status(result)           shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
+//      }
+//    }
+//  }
 
   "dateOfMarriage" should {
     "return success" in {

@@ -16,7 +16,6 @@
 
 package controllers.transfer
 
-import config.ApplicationConfig
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.RecipientDetailsForm
@@ -24,6 +23,7 @@ import models._
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{CachingService, TimeService}
 import utils.LoggerHelper
+import services.CacheService._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,7 +32,6 @@ class TransferAllowanceController @Inject()(
   authenticate: StandardAuthJourney,
   cachingService: CachingService,
   timeService: TimeService,
-  appConfig: ApplicationConfig,
   cc: MessagesControllerComponents,
   transferV: views.html.multiyear.transfer.transfer,
   recipientDetailsForm: RecipientDetailsForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
@@ -47,7 +46,7 @@ class TransferAllowanceController @Inject()(
     recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
-        cachingService.put[RecipientDetailsFormInput](appConfig.CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
+        cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
           Redirect(controllers.routes.TransferController.dateOfMarriage())
         }
     )

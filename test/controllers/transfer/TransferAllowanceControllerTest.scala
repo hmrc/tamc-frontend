@@ -36,7 +36,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
-
+import services.CacheService._
 import java.time.LocalDate
 
 class TransferAllowanceControllerTest extends ControllerBaseTest {
@@ -77,7 +77,7 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
@@ -93,7 +93,7 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
           "gender"    -> "M",
           "nino"      -> Ninos.nino2
         )
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(applicationConfig.CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any(), any(), any()))
+        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(recipientDetails)
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
