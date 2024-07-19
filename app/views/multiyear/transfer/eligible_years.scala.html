@@ -52,7 +52,7 @@ request: AuthenticatedUserRequest[_])
 @main(
     pageTitle = viewHelpers.formErrorPrefix(form, Messages("title.eligible-years")),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.routes.TransferController.dateOfMarriage().url)
+    backLinkHref = Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
 ){
 
 @errorSummary(form, Some("applyForCurrentYear-true"))

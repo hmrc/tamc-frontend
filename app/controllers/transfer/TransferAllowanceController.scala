@@ -47,7 +47,7 @@ class TransferAllowanceController @Inject()(
       formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
       recipientData =>
         cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
-          Redirect(controllers.routes.TransferController.dateOfMarriage())
+          Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())
         }
     )
   }

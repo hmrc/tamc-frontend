@@ -19,6 +19,7 @@ package views.multiyear.transfer
 import org.apache.pekko.util.Timeout
 import controllers.TransferController
 import controllers.transfer.TransferAllowanceController
+import controllers.transfer.DateOfMarriageController
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
@@ -57,6 +58,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
   val transferAllowanceController: TransferAllowanceController = app.injector.instanceOf[TransferAllowanceController]
+  val dateOfMarriageController: DateOfMarriageController = app.injector.instanceOf[DateOfMarriageController]
   val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
@@ -420,7 +422,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "dateOfMarriage.month" -> "01",
         "dateOfMarriage.year" -> "1899"
       )
-      val result = transferController.dateOfMarriageAction(request)
+      val result = dateOfMarriageController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -446,7 +448,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "dateOfMarriage.month" -> "01",
         "dateOfMarriage.year" -> s"${localDate.getYear}"
       )
-      val result = transferController.dateOfMarriageAction(request)
+      val result = dateOfMarriageController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -468,7 +470,7 @@ class TransferTest extends BaseTest with NinoGenerator {
         "dateOfMarriage.month" -> "",
         "dateOfMarriage.year" -> ""
       )
-      val result = transferController.dateOfMarriageAction(request)
+      val result = dateOfMarriageController.dateOfMarriageAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))

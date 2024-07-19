@@ -80,35 +80,35 @@ class TransferController @Inject() (
 //        }
 //    )
 //  }
-
-  def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
-    Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
-  }
-
-  def dateOfMarriageWithCy: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
-    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
-  }
-
-  def dateOfMarriageWithEn: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
-    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
-  }
-
-  def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async{ implicit request =>
-    dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
-      marriageData => {
-        cachingService.put[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE, marriageData)
-
-        registrationService.getRecipientDetailsFormData() flatMap {
-          case RecipientDetailsFormInput(name, lastName, gender, nino) =>
-            val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
-            registrationService.isRecipientEligible(request.nino, dataToSend) map { _ =>
-              Redirect(controllers.routes.TransferController.eligibleYears())
-            }
-        }
-      }
-    ) recover handleError
-  }
+//
+//  def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
+//    Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
+//  }
+//
+//  def dateOfMarriageWithCy: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
+//    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("cy"))
+//  }
+//
+//  def dateOfMarriageWithEn: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
+//    Redirect(controllers.routes.TransferController.dateOfMarriage()).withLang(Lang("en"))
+//  }
+//
+//  def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async{ implicit request =>
+//    dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest().fold(
+//      formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
+//      marriageData => {
+//        cachingService.put[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE, marriageData)
+//
+//        registrationService.getRecipientDetailsFormData() flatMap {
+//          case RecipientDetailsFormInput(name, lastName, gender, nino) =>
+//            val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
+//            registrationService.isRecipientEligible(request.nino, dataToSend) map { _ =>
+//              Redirect(controllers.routes.TransferController.eligibleYears())
+//            }
+//        }
+//      }
+//    ) recover handleError
+//  }
 
   def eligibleYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {

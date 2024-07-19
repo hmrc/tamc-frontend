@@ -96,7 +96,7 @@ request: AuthenticatedUserRequest[_])
             <dt class="govuk-summary-list_key">@Html(messages("pages.confirm.date.of.marriage"))</dt>
             <dd class="govuk-summary-list_value" id="marriage-date">@languageUtilsImpl().ukDateTransformer(data.dateOfMarriage.dateOfMarriage) </dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@{controllers.routes.TransferController.dateOfMarriage()}"
+                <a href="@{controllers.transfer.routes.DateOfMarriageController.dateOfMarriage()}"
                 data-journey-click="marriage-allowance:click:edit-marriage-date" id="edit-marriage-date" aria-label="@Html(messages("pages.form.marriage-date.aria-label"))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("pages.confirm.date.of.marriage"))</span>

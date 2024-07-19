@@ -38,7 +38,7 @@ request: AuthenticatedUserRequest[_])
     if(currentYearAvailable) {
         controllers.routes.TransferController.eligibleYears().url
     } else {
-        controllers.routes.TransferController.dateOfMarriage().url
+        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
     }
 }
 

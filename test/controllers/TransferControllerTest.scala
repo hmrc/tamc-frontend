@@ -107,71 +107,71 @@ class TransferControllerTest extends ControllerBaseTest {
 //      }
 //    }
 //  }
-
-  "dateOfMarriage" should {
-    "return success" in {
-      val result = controller.dateOfMarriage()(request)
-      status(result) shouldBe OK
-    }
-  }
-
-  "dateOfMarriageWithCy" should {
-    "redirect to dateOfMarriage, with a welsh language setting" in {
-      val result = await(controller.dateOfMarriageWithCy()(request))
-      status(result)               shouldBe SEE_OTHER
-      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      result.newCookies.head.name  shouldBe "PLAY_LANG"
-      result.newCookies.head.value shouldBe "cy"
-    }
-  }
-
-  "dateOfMarriageWithEn" should {
-    "redirect to dateOfMarriage, with an english language setting" in {
-      val result = await(controller.dateOfMarriageWithEn()(request))
-      status(result)               shouldBe SEE_OTHER
-      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
-      result.newCookies.head.name  shouldBe "PLAY_LANG"
-      result.newCookies.head.value shouldBe "en"
-    }
-  }
-
-  "dateOfMarriageAction" should {
-    "return bad request" when {
-      "an invalid form is submitted" in {
-        val result = controller.dateOfMarriageAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "redirect the user" when {
-      "a valid form is submitted" in {
-        val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-          "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
-          "dateOfMarriage.month" -> s"0${dateOfMarriageInput.dateOfMarriage.getMonthValue.toString}",
-          "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
-        )
-        val registrationFormInput =
-          RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
-
-        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
-          .thenReturn(dateOfMarriageInput)
-
-        when(mockTransferService.getRecipientDetailsFormData()(any(), any(), any()))
-          .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
-        when(
-          mockTransferService.isRecipientEligible(
-            ArgumentMatchers.eq(Nino(Ninos.nino1)),
-            ArgumentMatchers.eq(registrationFormInput)
-          )(any(), any(), any())
-        )
-          .thenReturn(true)
-        val result = controller.dateOfMarriageAction()(request)
-        status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.eligibleYears().url)
-      }
-    }
-  }
+//
+//  "dateOfMarriage" should {
+//    "return success" in {
+//      val result = controller.dateOfMarriage()(request)
+//      status(result) shouldBe OK
+//    }
+//  }
+//
+//  "dateOfMarriageWithCy" should {
+//    "redirect to dateOfMarriage, with a welsh language setting" in {
+//      val result = await(controller.dateOfMarriageWithCy()(request))
+//      status(result)               shouldBe SEE_OTHER
+//      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
+//      result.newCookies.head.name  shouldBe "PLAY_LANG"
+//      result.newCookies.head.value shouldBe "cy"
+//    }
+//  }
+//
+//  "dateOfMarriageWithEn" should {
+//    "redirect to dateOfMarriage, with an english language setting" in {
+//      val result = await(controller.dateOfMarriageWithEn()(request))
+//      status(result)               shouldBe SEE_OTHER
+//      redirectLocation(result)     shouldBe Some(controllers.routes.TransferController.dateOfMarriage().url)
+//      result.newCookies.head.name  shouldBe "PLAY_LANG"
+//      result.newCookies.head.value shouldBe "en"
+//    }
+//  }
+//
+//  "dateOfMarriageAction" should {
+//    "return bad request" when {
+//      "an invalid form is submitted" in {
+//        val result = controller.dateOfMarriageAction()(request)
+//        status(result) shouldBe BAD_REQUEST
+//      }
+//    }
+//
+//    "redirect the user" when {
+//      "a valid form is submitted" in {
+//        val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
+//        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+//          "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
+//          "dateOfMarriage.month" -> s"0${dateOfMarriageInput.dateOfMarriage.getMonthValue.toString}",
+//          "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
+//        )
+//        val registrationFormInput =
+//          RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
+//
+//        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
+//          .thenReturn(dateOfMarriageInput)
+//
+//        when(mockTransferService.getRecipientDetailsFormData()(any(), any(), any()))
+//          .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
+//        when(
+//          mockTransferService.isRecipientEligible(
+//            ArgumentMatchers.eq(Nino(Ninos.nino1)),
+//            ArgumentMatchers.eq(registrationFormInput)
+//          )(any(), any(), any())
+//        )
+//          .thenReturn(true)
+//        val result = controller.dateOfMarriageAction()(request)
+//        status(result)           shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.eligibleYears().url)
+//      }
+//    }
+//  }
 
   "eligibleYears" should {
     "return a success" when {
