@@ -17,7 +17,6 @@
 package views.multiyear.transfer
 
 import org.apache.pekko.util.Timeout
-import controllers.TransferController
 import controllers.transfer.{ConfirmController, ConfirmEmailController, DateOfMarriageController, EligibleYearsController, ExtraYearsController, FinishedController, TransferAllowanceController}
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
@@ -63,7 +62,6 @@ class TransferTest extends BaseTest with NinoGenerator {
   val confirmEmailController: ConfirmEmailController = app.injector.instanceOf[ConfirmEmailController]
   val confirmController: ConfirmController = app.injector.instanceOf[ConfirmController]
   val finishedController: FinishedController = app.injector.instanceOf[FinishedController]
-  val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
 
