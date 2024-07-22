@@ -18,8 +18,7 @@ package views.multiyear.transfer
 
 import org.apache.pekko.util.Timeout
 import controllers.TransferController
-import controllers.transfer.TransferAllowanceController
-import controllers.transfer.DateOfMarriageController
+import controllers.transfer.{DateOfMarriageController, EligibleYearsController, TransferAllowanceController}
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
@@ -59,6 +58,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   val mockTransferService: TransferService = mock[TransferService]
   val transferAllowanceController: TransferAllowanceController = app.injector.instanceOf[TransferAllowanceController]
   val dateOfMarriageController: DateOfMarriageController = app.injector.instanceOf[DateOfMarriageController]
+  val eligibleYearsController: EligibleYearsController = app.injector.instanceOf[EligibleYearsController]
   val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
@@ -525,13 +525,13 @@ class TransferTest extends BaseTest with NinoGenerator {
       )
         .thenReturn(Nil)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
-      val result = transferController.eligibleYearsAction(request)
+      val result = eligibleYearsController.eligibleYearsAction(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("firstNameOnly").text() shouldBe "foo"
       document.getElementById("marriageDate").text() shouldBe "10 April 2011"
-      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.routes.TransferController.eligibleYears().url
+      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.transfer.routes.EligibleYearsController.eligibleYears().url
     }
 
     "display form error message (no year choice made )" in {
@@ -565,7 +565,7 @@ class TransferTest extends BaseTest with NinoGenerator {
       document.getElementById("register-form").toString should include("/marriage-allowance-application/confirm-your-email")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("transferor-email-error").text() shouldBe "Error: Enter your email address"
-      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.routes.TransferController.eligibleYears().url
+      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.transfer.routes.EligibleYearsController.eligibleYears().url
     }
 
     "display form error message (transferor email is empty)" in {

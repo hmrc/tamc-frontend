@@ -77,7 +77,7 @@ request: AuthenticatedUserRequest[_])
         </li>
     </ul>
 
-    @formCSRF(action = routes.TransferController.eligibleYearsAction(), args = (Symbol("id") -> "current-year-form")) {
+    @formCSRF(action = transfer.routes.EligibleYearsController.eligibleYearsAction(), args = (Symbol("id") -> "current-year-form")) {
     <div id="apply-For-CurrentYear">
         @h3("pages.eligibleyear.doyou.want")
 

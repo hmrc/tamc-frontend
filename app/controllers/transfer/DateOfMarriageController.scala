@@ -24,20 +24,20 @@ import play.api.i18n.Lang
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService._
 import services.{CachingService, TimeService, TransferService}
-import utils.LoggerHelper
+import utils.{LoggerHelper, TransferErrorHandler}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class DateOfMarriageController @Inject()(
-  errorHandlerHelper: ErrorHandlerHelper,
-  authenticate: StandardAuthJourney,
-  registrationService: TransferService,
-  cachingService: CachingService,
-  timeService: TimeService,
-  cc: MessagesControllerComponents,
-  dateOfMarriageV: views.html.date_of_marriage,
-  dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                          errorHandler: TransferErrorHandler,
+                                          authenticate: StandardAuthJourney,
+                                          registrationService: TransferService,
+                                          cachingService: CachingService,
+                                          timeService: TimeService,
+                                          cc: MessagesControllerComponents,
+                                          dateOfMarriageV: views.html.date_of_marriage,
+                                          dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
@@ -61,10 +61,10 @@ class DateOfMarriageController @Inject()(
           case RecipientDetailsFormInput(name, lastName, gender, nino) =>
             val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
             registrationService.isRecipientEligible(request.nino, dataToSend) map { _ =>
-              Redirect(controllers.routes.TransferController.eligibleYears())
+              Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
             }
         }
       }
-    ) recover errorHandlerHelper.handleError
+    ) recover errorHandler.handleError
   }
 }

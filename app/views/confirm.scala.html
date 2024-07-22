@@ -124,7 +124,7 @@ request: AuthenticatedUserRequest[_])
                     </dd>
                 }
             <dd class="govuk-summary-list_actions">
-                <a id="change-@taxYear.year" href="@routes.TransferController.eligibleYears()" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
+                <a id="change-@taxYear.year" href="@transfer.routes.EligibleYearsController.eligibleYears()" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))</span>
                 </a>

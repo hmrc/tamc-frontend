@@ -36,7 +36,7 @@ request: AuthenticatedUserRequest[_])
 
 @backLink = @{
     if(currentYearAvailable) {
-        controllers.routes.TransferController.eligibleYears().url
+        controllers.transfer.routes.EligibleYearsController.eligibleYears().url
     } else {
         controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
     }

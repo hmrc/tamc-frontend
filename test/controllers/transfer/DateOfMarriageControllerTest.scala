@@ -127,7 +127,7 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
           .thenReturn(true)
         val result = controller.dateOfMarriageAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.eligibleYears().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
       }
     }
   }
