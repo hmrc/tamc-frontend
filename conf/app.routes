@@ -28,7 +28,7 @@ GET         /confirm-your-email                 controllers.transfer.ConfirmEmai
 POST        /confirm-your-email                 controllers.transfer.ConfirmEmailController.confirmYourEmailAction()
 GET         /confirm                            controllers.transfer.ConfirmController.confirm()
 POST        /confirm                            controllers.transfer.ConfirmController.confirmAction()
-GET         /finished                           controllers.TransferController.finished()
+GET         /finished                           controllers.transfer.FinishedController.finished()
 GET         /you-cannot-use-this-service        controllers.TransferController.cannotUseService()
 
 #Change of Circumstances

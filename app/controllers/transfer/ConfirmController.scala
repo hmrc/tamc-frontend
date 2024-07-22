@@ -41,7 +41,7 @@ class ConfirmController @Inject()(
 
   def confirmAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.createRelationship(request.nino) map { _ =>
-      Redirect(controllers.routes.TransferController.finished())
+      Redirect(controllers.transfer.routes.FinishedController.finished())
     } recover errorHandler.handleError
   }
 }

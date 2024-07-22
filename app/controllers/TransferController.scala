@@ -238,13 +238,13 @@ class TransferController @Inject() (
 //      Redirect(controllers.routes.TransferController.finished())
 //    } recover handleError
 //  }
-
-  def finished: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getFinishedData(request.nino) map { case NotificationRecord(email) =>
-      cachingService.clear()
-      Ok(finishedV(transferorEmail = email))
-    } recover handleError
-  }
+//
+//  def finished: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    registrationService.getFinishedData(request.nino) map { case NotificationRecord(email) =>
+//      cachingService.clear()
+//      Ok(finishedV(transferorEmail = email))
+//    } recover handleError
+//  }
 
   def cannotUseService: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(transfererDeceased())

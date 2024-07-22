@@ -491,37 +491,37 @@ class TransferControllerTest extends ControllerBaseTest {
 //      }
 //    }
 //  }
-
-  "finished" should {
-    "return success" when {
-      "A notification record is returned and cache is called" in {
-        reset(mockCachingService)
-        verify(mockCachingService, times(0)).clear()(any())
-
-        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
-          .thenReturn(notificationRecord)
-
-        val result = controller.finished()(request)
-        status(result) shouldBe OK
-
-        verify(mockCachingService, times(1)).clear()(any())
-      }
-    }
-
-    "return error" when {
-      "error is thrown" in {
-        reset(mockCachingService)
-        verify(mockCachingService, times(0)).clear()(any())
-
-        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
-          .thenThrow(new IllegalArgumentException("123"))
-
-        controller.finished()(request)
-
-        verify(mockCachingService, times(0)).clear()(any())
-      }
-    }
-  }
+//
+//  "finished" should {
+//    "return success" when {
+//      "A notification record is returned and cache is called" in {
+//        reset(mockCachingService)
+//        verify(mockCachingService, times(0)).clear()(any())
+//
+//        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+//          .thenReturn(notificationRecord)
+//
+//        val result = controller.finished()(request)
+//        status(result) shouldBe OK
+//
+//        verify(mockCachingService, times(1)).clear()(any())
+//      }
+//    }
+//
+//    "return error" when {
+//      "error is thrown" in {
+//        reset(mockCachingService)
+//        verify(mockCachingService, times(0)).clear()(any())
+//
+//        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+//          .thenThrow(new IllegalArgumentException("123"))
+//
+//        controller.finished()(request)
+//
+//        verify(mockCachingService, times(0)).clear()(any())
+//      }
+//    }
+//  }
 
   "cannotUseService" should {
     "return success when call cannotUseService" in {

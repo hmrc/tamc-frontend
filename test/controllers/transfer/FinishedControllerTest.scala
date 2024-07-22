@@ -29,14 +29,13 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
-import test_utils.data.ConfirmationModelData
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import java.time.LocalDate
 
-class ConfirmControllerTest extends ControllerBaseTest {
+class FinishedControllerTest extends ControllerBaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
   val mockTransferService: TransferService = mock[TransferService]
@@ -56,32 +55,39 @@ class ConfirmControllerTest extends ControllerBaseTest {
     )
     .build()
 
-  def controller: ConfirmController =
-    app.injector.instanceOf[ConfirmController]
+  def controller: FinishedController =
+    app.injector.instanceOf[FinishedController]
 
   when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
 
-  "confirm" should {
+  "finished" should {
     "return success" when {
-      "successful future is returned from transfer service" in {
-        when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
-          .thenReturn(ConfirmationModelData.confirmationModelData)
-        val result = controller.confirm()(request)
+      "A notification record is returned and cache is called" in {
+        reset(mockCachingService)
+        verify(mockCachingService, times(0)).clear()(any())
+
+        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+          .thenReturn(notificationRecord)
+
+        val result = controller.finished()(request)
         status(result) shouldBe OK
+
+        verify(mockCachingService, times(1)).clear()(any())
       }
     }
-  }
 
-  "confirmAction" should {
-    "redirect" when {
-      "a user is permanently authenticated" in {
-        when(mockTransferService.createRelationship(any())(any(), any(), any(), any()))
-          .thenReturn(notificationRecord)
-        val result = controller.confirmAction()(request)
-        status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.FinishedController.finished().url)
-        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any(), any())
+    "return error" when {
+      "error is thrown" in {
+        reset(mockCachingService)
+        verify(mockCachingService, times(0)).clear()(any())
+
+        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+          .thenThrow(new IllegalArgumentException("123"))
+
+        controller.finished()(request)
+
+        verify(mockCachingService, times(0)).clear()(any())
       }
     }
   }

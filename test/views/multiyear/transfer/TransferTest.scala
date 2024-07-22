@@ -18,7 +18,7 @@ package views.multiyear.transfer
 
 import org.apache.pekko.util.Timeout
 import controllers.TransferController
-import controllers.transfer.{ConfirmController, ConfirmEmailController, DateOfMarriageController, EligibleYearsController, ExtraYearsController, TransferAllowanceController}
+import controllers.transfer.{ConfirmController, ConfirmEmailController, DateOfMarriageController, EligibleYearsController, ExtraYearsController, FinishedController, TransferAllowanceController}
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
@@ -62,6 +62,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   val extraYearsController: ExtraYearsController = app.injector.instanceOf[ExtraYearsController]
   val confirmEmailController: ConfirmEmailController = app.injector.instanceOf[ConfirmEmailController]
   val confirmController: ConfirmController = app.injector.instanceOf[ConfirmController]
+  val finishedController: FinishedController = app.injector.instanceOf[FinishedController]
   val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
@@ -654,7 +655,7 @@ class TransferTest extends BaseTest with NinoGenerator {
     "successfully authenticate the user and have finished page and content" in {
       when(mockTransferService.getFinishedData(any())(any(), any(), any()))
         .thenReturn(NotificationRecord(EmailAddress("example@example.com")))
-      val result = transferController.finished(request)
+      val result = finishedController.finished(request)
 
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
