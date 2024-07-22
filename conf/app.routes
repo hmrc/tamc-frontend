@@ -26,8 +26,8 @@ GET         /previous-years                     controllers.transfer.PreviousYea
 POST        /extra-years                        controllers.transfer.ExtraYearsController.extraYearsAction()
 GET         /confirm-your-email                 controllers.transfer.ConfirmEmailController.confirmYourEmail()
 POST        /confirm-your-email                 controllers.transfer.ConfirmEmailController.confirmYourEmailAction()
-GET         /confirm                            controllers.TransferController.confirm()
-POST        /confirm                            controllers.TransferController.confirmAction()
+GET         /confirm                            controllers.transfer.ConfirmController.confirm()
+POST        /confirm                            controllers.transfer.ConfirmController.confirmAction()
 GET         /finished                           controllers.TransferController.finished()
 GET         /you-cannot-use-this-service        controllers.TransferController.cannotUseService()
 

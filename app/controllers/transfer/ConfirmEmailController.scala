@@ -50,7 +50,7 @@ class ConfirmEmailController @Inject()(
       formWithErrors => Future.successful(BadRequest(email(formWithErrors))),
       transferorEmail =>
         registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map { _ =>
-          Redirect(controllers.routes.TransferController.confirm())
+          Redirect(controllers.transfer.routes.ConfirmController.confirm())
         }
     ) recover errorHandler.handleError
   }

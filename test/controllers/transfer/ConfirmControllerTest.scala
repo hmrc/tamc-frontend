@@ -21,23 +21,22 @@ import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
 import models._
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
+import test_utils.data.ConfirmationModelData
 import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import java.time.LocalDate
 
-class ConfirmEmailControllerTest extends ControllerBaseTest {
+class ConfirmControllerTest extends ControllerBaseTest {
 
   val currentTaxYear: Int = time.TaxYear.current.startYear
   val mockTransferService: TransferService = mock[TransferService]
@@ -57,48 +56,32 @@ class ConfirmEmailControllerTest extends ControllerBaseTest {
     )
     .build()
 
-  def controller: ConfirmEmailController =
-    app.injector.instanceOf[ConfirmEmailController]
+  def controller: ConfirmController =
+    app.injector.instanceOf[ConfirmController]
 
   when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
 
-  "confirmYourEmail" should {
-    "return a success" when {
-      "an email is recovered from the cache" in {
-        val email = "test@test.com"
-        when(mockCachingService.get[NotificationRecord](any())(any()))
-          .thenReturn(Some(NotificationRecord(EmailAddress(email))))
-        val result = controller.confirmYourEmail()(request)
-        status(result) shouldBe OK
-      }
-
-      "no email is recovered from the cache" in {
-        when(mockCachingService.get[NotificationRecord](any())(any()))
-          .thenReturn(None)
-        val result = controller.confirmYourEmail()(request)
+  "confirm" should {
+    "return success" when {
+      "successful future is returned from transfer service" in {
+        when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
+          .thenReturn(ConfirmationModelData.confirmationModelData)
+        val result = controller.confirm()(request)
         status(result) shouldBe OK
       }
     }
   }
 
-  "confirmYourEmailAction" should {
-    "return bad request" when {
-      "an invalid form is submitted" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "not an email")
-        val result = controller.confirmYourEmailAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
+  "confirmAction" should {
     "redirect" when {
-      "a valid form is submitted" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "test@test.com")
-        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any(), any()))
+      "a user is permanently authenticated" in {
+        when(mockTransferService.createRelationship(any())(any(), any(), any(), any()))
           .thenReturn(notificationRecord)
-        val result = controller.confirmYourEmailAction()(request)
+        val result = controller.confirmAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmController.confirm().url)
+        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
+        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any(), any())
       }
     }
   }

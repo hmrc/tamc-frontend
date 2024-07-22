@@ -467,30 +467,30 @@ class TransferControllerTest extends ControllerBaseTest {
 //      }
 //    }
 //  }
-
-  "confirm" should {
-    "return success" when {
-      "successful future is returned from transfer service" in {
-        when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
-          .thenReturn(ConfirmationModelData.confirmationModelData)
-        val result = controller.confirm()(request)
-        status(result) shouldBe OK
-      }
-    }
-  }
-
-  "confirmAction" should {
-    "redirect" when {
-      "a user is permanently authenticated" in {
-        when(mockTransferService.createRelationship(any())(any(), any(), any(), any()))
-          .thenReturn(notificationRecord)
-        val result = controller.confirmAction()(request)
-        status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
-        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any(), any())
-      }
-    }
-  }
+//
+//  "confirm" should {
+//    "return success" when {
+//      "successful future is returned from transfer service" in {
+//        when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
+//          .thenReturn(ConfirmationModelData.confirmationModelData)
+//        val result = controller.confirm()(request)
+//        status(result) shouldBe OK
+//      }
+//    }
+//  }
+//
+//  "confirmAction" should {
+//    "redirect" when {
+//      "a user is permanently authenticated" in {
+//        when(mockTransferService.createRelationship(any())(any(), any(), any(), any()))
+//          .thenReturn(notificationRecord)
+//        val result = controller.confirmAction()(request)
+//        status(result)           shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.finished().url)
+//        verify(mockTransferService, times(1)).createRelationship(any())(any(), any(), any(), any())
+//      }
+//    }
+//  }
 
   "finished" should {
     "return success" when {

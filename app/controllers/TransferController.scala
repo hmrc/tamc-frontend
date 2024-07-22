@@ -226,18 +226,18 @@ class TransferController @Inject() (
 //        }
 //    ) recover handleError
 //  }
-
-  def confirm: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getConfirmationData(request.nino) map { data =>
-      Ok(confirmV(data = data))
-    } recover handleError
-  }
-
-  def confirmAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.createRelationship(request.nino) map { _ =>
-      Redirect(controllers.routes.TransferController.finished())
-    } recover handleError
-  }
+//
+//  def confirm: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    registrationService.getConfirmationData(request.nino) map { data =>
+//      Ok(confirmV(data = data))
+//    } recover handleError
+//  }
+//
+//  def confirmAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    registrationService.createRelationship(request.nino) map { _ =>
+//      Redirect(controllers.routes.TransferController.finished())
+//    } recover handleError
+//  }
 
   def finished: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getFinishedData(request.nino) map { case NotificationRecord(email) =>

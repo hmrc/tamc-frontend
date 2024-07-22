@@ -135,7 +135,7 @@ request: AuthenticatedUserRequest[_])
 
     @govukInsetText(InsetText(id = Some("warning-message"), content = Text(messages("pages.confirm.warning"))))
 
-    @form(action = routes.TransferController.confirmAction(), args = (Symbol("id") -> "create-form")) {
+    @form(action = transfer.routes.ConfirmController.confirmAction(), args = (Symbol("id") -> "create-form")) {
         @button(msg = "pages.confirm.button", id = "create", attrs = Map("data-journey-click" -> "marriage-allowance:button:application_confirm"))
     }
 }
