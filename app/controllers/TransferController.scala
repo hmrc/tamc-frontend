@@ -173,41 +173,41 @@ class TransferController @Inject() (
 //        Ok(singleYearSelect(earlierYearsForm(), registrationInput, previousYears))
 //    } recover handleError
 //  }
-
-  def extraYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    def toTaxYears(years: List[Int]): List[TaxYear] =
-      years.map(year => TaxYear(year, None))
-
-    registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
-      case CurrentAndPreviousYearsEligibility(_, extraYears, registrationInput, availableYears) =>
-        earlierYearsForm(extraYears.map(_.year)).bindFromRequest().fold(
-          hasErrors =>
-            Future {
-              BadRequest(
-                singleYearSelect(
-                  hasErrors.copy(errors =
-                    Seq(FormError("selectedYear", List("pages.form.field-required.applyForHistoricYears"), List()))
-                  ),
-                  registrationInput,
-                  extraYears
-                )
-              )
-            },
-          taxYears =>
-            registrationService
-              .updateSelectedYears(availableYears, taxYears.selectedYear, taxYears.yearAvailableForSelection)
-              .map { _ =>
-                if (taxYears.furtherYears.isEmpty) {
-                  Redirect(controllers.routes.TransferController.confirmYourEmail())
-                } else {
-                  Ok(
-                    singleYearSelect(earlierYearsForm(), registrationInput, toTaxYears(taxYears.furtherYears))
-                  )
-                }
-              }
-        )
-    } recover handleError
-  }
+//
+//  def extraYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    def toTaxYears(years: List[Int]): List[TaxYear] =
+//      years.map(year => TaxYear(year, None))
+//
+//    registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
+//      case CurrentAndPreviousYearsEligibility(_, extraYears, registrationInput, availableYears) =>
+//        earlierYearsForm(extraYears.map(_.year)).bindFromRequest().fold(
+//          hasErrors =>
+//            Future {
+//              BadRequest(
+//                singleYearSelect(
+//                  hasErrors.copy(errors =
+//                    Seq(FormError("selectedYear", List("pages.form.field-required.applyForHistoricYears"), List()))
+//                  ),
+//                  registrationInput,
+//                  extraYears
+//                )
+//              )
+//            },
+//          taxYears =>
+//            registrationService
+//              .updateSelectedYears(availableYears, taxYears.selectedYear, taxYears.yearAvailableForSelection)
+//              .map { _ =>
+//                if (taxYears.furtherYears.isEmpty) {
+//                  Redirect(controllers.routes.TransferController.confirmYourEmail())
+//                } else {
+//                  Ok(
+//                    singleYearSelect(earlierYearsForm(), registrationInput, toTaxYears(taxYears.furtherYears))
+//                  )
+//                }
+//              }
+//        )
+//    } recover handleError
+//  }
 
   def confirmYourEmail: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     cachingService.get[NotificationRecord](CACHE_NOTIFICATION_RECORD) map {

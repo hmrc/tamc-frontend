@@ -350,83 +350,83 @@ class TransferControllerTest extends ControllerBaseTest {
 //      }
 //    }
 //  }
-
-  "extraYearsAction" should {
-    "return bad request" when {
-      "an invalid form is submitted" in {
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
-          .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
-            )
-          )
-        val result = controller.extraYearsAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "return success" when {
-      "furtherYears is not empty" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-          "selectedYear"              -> "2015",
-          "furtherYears"              -> "2014,2013",
-          "yearAvailableForSelection" -> "2014"
-        )
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
-          .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
-            )
-          )
-        when(
-          mockTransferService.updateSelectedYears(
-            ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
-            ArgumentMatchers.eq(2015),
-            ArgumentMatchers.eq(Some(2014))
-          )(any(), any(), any())
-        )
-          .thenReturn(Nil)
-        val result = controller.extraYearsAction()(request)
-        status(result) shouldBe OK
-      }
-    }
-
-    "redirect" when {
-      "further years is empty" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-          "selectedYear"              -> "2015",
-          "furtherYears"              -> "",
-          "yearAvailableForSelection" -> "2014"
-        )
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
-          .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
-            )
-          )
-        when(
-          mockTransferService.updateSelectedYears(
-            ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
-            ArgumentMatchers.eq(2015),
-            ArgumentMatchers.eq(Some(2014))
-          )(any(), any(), any())
-        )
-          .thenReturn(Nil)
-        val result = controller.extraYearsAction()(request)
-        status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
-      }
-    }
-  }
+//
+//  "extraYearsAction" should {
+//    "return bad request" when {
+//      "an invalid form is submitted" in {
+//        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+//          .thenReturn(
+//            CurrentAndPreviousYearsEligibility(
+//              false,
+//              List(TaxYear(2015)),
+//              RecipientRecordData.recipientRecord.data,
+//              RecipientRecordData.recipientRecord.availableTaxYears
+//            )
+//          )
+//        val result = controller.extraYearsAction()(request)
+//        status(result) shouldBe BAD_REQUEST
+//      }
+//    }
+//
+//    "return success" when {
+//      "furtherYears is not empty" in {
+//        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+//          "selectedYear"              -> "2015",
+//          "furtherYears"              -> "2014,2013",
+//          "yearAvailableForSelection" -> "2014"
+//        )
+//        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+//          .thenReturn(
+//            CurrentAndPreviousYearsEligibility(
+//              false,
+//              List(TaxYear(2015)),
+//              RecipientRecordData.recipientRecord.data,
+//              RecipientRecordData.recipientRecord.availableTaxYears
+//            )
+//          )
+//        when(
+//          mockTransferService.updateSelectedYears(
+//            ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
+//            ArgumentMatchers.eq(2015),
+//            ArgumentMatchers.eq(Some(2014))
+//          )(any(), any(), any())
+//        )
+//          .thenReturn(Nil)
+//        val result = controller.extraYearsAction()(request)
+//        status(result) shouldBe OK
+//      }
+//    }
+//
+//    "redirect" when {
+//      "further years is empty" in {
+//        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+//          "selectedYear"              -> "2015",
+//          "furtherYears"              -> "",
+//          "yearAvailableForSelection" -> "2014"
+//        )
+//        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+//          .thenReturn(
+//            CurrentAndPreviousYearsEligibility(
+//              false,
+//              List(TaxYear(2015)),
+//              RecipientRecordData.recipientRecord.data,
+//              RecipientRecordData.recipientRecord.availableTaxYears
+//            )
+//          )
+//        when(
+//          mockTransferService.updateSelectedYears(
+//            ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
+//            ArgumentMatchers.eq(2015),
+//            ArgumentMatchers.eq(Some(2014))
+//          )(any(), any(), any())
+//        )
+//          .thenReturn(Nil)
+//        val result = controller.extraYearsAction()(request)
+//        status(result)           shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
+//      }
+//    }
+//  }
 
   "confirmYourEmail" should {
     "return a success" when {
