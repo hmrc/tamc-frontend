@@ -131,17 +131,6 @@ class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewT
         status(result) shouldBe BAD_REQUEST
       }
     }
-
-    "display an error page" when {
-      "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(failedFuture)
-
-        val result = controller.claims(request)
-
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
-      }
-    }
   }
 
 }

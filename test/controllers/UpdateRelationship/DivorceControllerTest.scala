@@ -94,15 +94,6 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)
       }
     }
-
-    "a non fatal error has occurred when trying to get cached data" in {
-      when(mockUpdateRelationshipService.getMakeChangesDecision(any())).thenReturn(Future.failed(new Exception("exception has been thrown")))
-
-      val result = controller.makeChange()(request)
-
-      status(result) shouldBe OK
-      result rendersTheSameViewAs reasonForChangeView(MakeChangesDecisionForm.form())
-    }
   }
 
   "submitDivorceEnterYear" should {

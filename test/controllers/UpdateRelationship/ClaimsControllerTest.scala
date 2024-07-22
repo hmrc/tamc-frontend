@@ -52,7 +52,6 @@ class ClaimsControllerTest extends ControllerBaseTest with ControllerViewTestHel
 
   lazy val controller: ClaimsController = app.injector.instanceOf[ClaimsController]
 
-  val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
   val tryLaterView: try_later = inject[views.html.errors.try_later]
   val claimsView: claims = inject[views.html.coc.claims]
 
@@ -63,6 +62,7 @@ class ClaimsControllerTest extends ControllerBaseTest with ControllerViewTestHel
 
   "claims" should {
     "display the claims page" in {
+      val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
       val relationshipRecords = relationshipRecordsHelper.createRelationshipRecords()
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
 

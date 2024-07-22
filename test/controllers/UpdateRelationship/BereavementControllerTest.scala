@@ -50,7 +50,6 @@ class BereavementControllerTest extends ControllerBaseTest with ControllerViewTe
 
   lazy val controller: BereavementController = app.injector.instanceOf[BereavementController]
 
-  val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
   val tryLaterView: try_later = inject[views.html.errors.try_later]
   val bereavementView: bereavement = inject[views.html.coc.bereavement]
 
@@ -62,6 +61,7 @@ class BereavementControllerTest extends ControllerBaseTest with ControllerViewTe
   "bereavement" should {
     "display the bereavement page" when {
       "there is data returned from the cache" in {
+        val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
         val relationshipRecords = relationshipRecordsHelper.createRelationshipRecords()
         when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
         val result = controller.bereavement(request)

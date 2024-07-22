@@ -31,6 +31,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import services._
+import utils.RequestBuilder.buildFakePostRequest
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 import views.html.coc.decision
 
@@ -130,7 +131,7 @@ class ChooseControllerTest extends ControllerBaseTest with ControllerViewTestHel
     }
 
     "return a bad request" when {
-      "the form submission has a blank value" in {
+      "the form submission has a blank value POST method" in {
         val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> "").withMethod("POST")
         val result = controller.submitDecision(request)
         status(result) shouldBe BAD_REQUEST
