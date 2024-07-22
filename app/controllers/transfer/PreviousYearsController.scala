@@ -20,7 +20,7 @@ import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.EarlierYearForm.earlierYearsForm
 import models._
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 import services.TransferService
 import utils.{LoggerHelper, TransferErrorHandler}
