@@ -333,23 +333,23 @@ class TransferControllerTest extends ControllerBaseTest {
 //    }
 //  }
 
-  "previousYears" should {
-    "return success" when {
-      "a successful call to transfer service is made" in {
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
-          .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
-            )
-          )
-        val result = controller.previousYears()(request)
-        status(result) shouldBe OK
-      }
-    }
-  }
+//  "previousYears" should {
+//    "return success" when {
+//      "a successful call to transfer service is made" in {
+//        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+//          .thenReturn(
+//            CurrentAndPreviousYearsEligibility(
+//              false,
+//              List(TaxYear(2015)),
+//              RecipientRecordData.recipientRecord.data,
+//              RecipientRecordData.recipientRecord.availableTaxYears
+//            )
+//          )
+//        val result = controller.previousYears()(request)
+//        status(result) shouldBe OK
+//      }
+//    }
+//  }
 
   "extraYearsAction" should {
     "return bad request" when {

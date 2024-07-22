@@ -166,13 +166,13 @@ class TransferController @Inject() (
 //        )
 //    } recover handleError
 //  }
-
-  def previousYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getCurrentAndPreviousYearsEligibility.map {
-      case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
-        Ok(singleYearSelect(earlierYearsForm(), registrationInput, previousYears))
-    } recover handleError
-  }
+//
+//  def previousYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    registrationService.getCurrentAndPreviousYearsEligibility.map {
+//      case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
+//        Ok(singleYearSelect(earlierYearsForm(), registrationInput, previousYears))
+//    } recover handleError
+//  }
 
   def extraYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     def toTaxYears(years: List[Int]): List[TaxYear] =

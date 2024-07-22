@@ -52,6 +52,6 @@ request: AuthenticatedUserRequest[_])
 
     @p(HtmlContent(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage))))
 
-    @button(msg = "generic.continue", href = Some(controllers.routes.TransferController.previousYears().url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
+    @button(msg = "generic.continue", href = Some(controllers.transfer.routes.PreviousYearsController.previousYears().url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
 
 }

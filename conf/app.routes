@@ -22,7 +22,7 @@ GET         /date-of-marriage-cy                controllers.transfer.DateOfMarri
 POST        /date-of-marriage                   controllers.transfer.DateOfMarriageController.dateOfMarriageAction()
 GET         /eligible-years                     controllers.transfer.EligibleYearsController.eligibleYears()
 POST        /eligible-years                     controllers.transfer.EligibleYearsController.eligibleYearsAction()
-GET         /previous-years                     controllers.TransferController.previousYears()
+GET         /previous-years                     controllers.transfer.PreviousYearsController.previousYears()
 POST        /extra-years                        controllers.TransferController.extraYearsAction()
 GET         /confirm-your-email                 controllers.TransferController.confirmYourEmail()
 POST        /confirm-your-email                 controllers.TransferController.confirmYourEmailAction()
