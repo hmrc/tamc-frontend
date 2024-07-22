@@ -208,24 +208,24 @@ class TransferController @Inject() (
 //        )
 //    } recover handleError
 //  }
-
-  def confirmYourEmail: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    cachingService.get[NotificationRecord](CACHE_NOTIFICATION_RECORD) map {
-      case Some(NotificationRecord(transferorEmail)) =>
-        Ok(email(emailForm.fill(transferorEmail)))
-      case None => Ok(email(emailForm))
-    }
-  }
-
-  def confirmYourEmailAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    emailForm.bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(email(formWithErrors))),
-      transferorEmail =>
-        registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map { _ =>
-          Redirect(controllers.routes.TransferController.confirm())
-        }
-    ) recover handleError
-  }
+//
+//  def confirmYourEmail: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    cachingService.get[NotificationRecord](CACHE_NOTIFICATION_RECORD) map {
+//      case Some(NotificationRecord(transferorEmail)) =>
+//        Ok(email(emailForm.fill(transferorEmail)))
+//      case None => Ok(email(emailForm))
+//    }
+//  }
+//
+//  def confirmYourEmailAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+//    emailForm.bindFromRequest().fold(
+//      formWithErrors => Future.successful(BadRequest(email(formWithErrors))),
+//      transferorEmail =>
+//        registrationService.upsertTransferorNotification(NotificationRecord(transferorEmail)) map { _ =>
+//          Redirect(controllers.routes.TransferController.confirm())
+//        }
+//    ) recover handleError
+//  }
 
   def confirm: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getConfirmationData(request.nino) map { data =>
@@ -278,7 +278,7 @@ class TransferController @Inject() (
         case t: CacheMissingRecipient =>
           handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
         case t: CacheMissingEmail =>
-          handle(t, warn, Redirect(controllers.routes.TransferController.confirmYourEmail()))
+          handle(t, warn, Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail()))
         case t: CacheRelationshipAlreadyCreated =>
           handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
         case t: CacheCreateRequestNotSent =>

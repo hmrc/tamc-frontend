@@ -37,7 +37,8 @@ class DateOfMarriageController @Inject()(
                                           timeService: TimeService,
                                           cc: MessagesControllerComponents,
                                           dateOfMarriageV: views.html.date_of_marriage,
-                                          dateOfMarriageForm: DateOfMarriageForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                          dateOfMarriageForm: DateOfMarriageForm)
+                                        (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))

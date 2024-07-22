@@ -28,12 +28,13 @@ import utils.{LoggerHelper, TransferErrorHandler}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ExtraYearsController @Inject()( errorHandler: TransferErrorHandler,
+class ExtraYearsController @Inject()(
+                                      errorHandler: TransferErrorHandler,
                                       authenticate: StandardAuthJourney,
                                       registrationService: TransferService,
                                       cc: MessagesControllerComponents,
                                       singleYearSelect: views.html.multiyear.transfer.single_year_select)
-                                     (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                    (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def extraYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     def toTaxYears(years: List[Int]): List[TaxYear] =
@@ -59,7 +60,7 @@ class ExtraYearsController @Inject()( errorHandler: TransferErrorHandler,
               .updateSelectedYears(availableYears, taxYears.selectedYear, taxYears.yearAvailableForSelection)
               .map { _ =>
                 if (taxYears.furtherYears.isEmpty) {
-                  Redirect(controllers.routes.TransferController.confirmYourEmail())
+                  Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail())
                 } else {
                   Ok(
                     singleYearSelect(earlierYearsForm(), registrationInput, toTaxYears(taxYears.furtherYears))

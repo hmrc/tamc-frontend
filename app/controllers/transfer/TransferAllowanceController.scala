@@ -29,12 +29,13 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferAllowanceController @Inject()(
-  authenticate: StandardAuthJourney,
-  cachingService: CachingService,
-  timeService: TimeService,
-  cc: MessagesControllerComponents,
-  transferV: views.html.multiyear.transfer.transfer,
-  recipientDetailsForm: RecipientDetailsForm)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                             authenticate: StandardAuthJourney,
+                                             cachingService: CachingService,
+                                             timeService: TimeService,
+                                             cc: MessagesControllerComponents,
+                                             transferV: views.html.multiyear.transfer.transfer,
+                                             recipientDetailsForm: RecipientDetailsForm)
+                                           (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(

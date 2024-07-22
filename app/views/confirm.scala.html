@@ -43,7 +43,7 @@ request: AuthenticatedUserRequest[_])
 @main(
     pageTitle = Messages("title.confirm"),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.routes.TransferController.confirmYourEmail().url)
+    backLinkHref = Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)
 ){
 
     @h1("pages.confirm.html.h1", elmId = Some("confirm-page"))
@@ -61,7 +61,7 @@ request: AuthenticatedUserRequest[_])
             <dt class="govuk-summary-list_key" id="email-label">@Html(messages("generic.email"))</dt>
             <dd class="govuk-summary-list_value" id="transferor-email">@data.transferorEmail</dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.routes.TransferController.confirmYourEmail()" aria-label="@Html(messages("pages.confirm.change.email"))"
+                <a href="@controllers.transfer.routes.ConfirmEmailController.confirmYourEmail()" aria-label="@Html(messages("pages.confirm.change.email"))"
                 data-journey-click="marriage-allowance:click:edit-email" id="edit-email">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("generic.email"))</span>

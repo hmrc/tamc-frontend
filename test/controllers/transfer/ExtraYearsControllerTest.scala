@@ -136,7 +136,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)
       }
     }
   }

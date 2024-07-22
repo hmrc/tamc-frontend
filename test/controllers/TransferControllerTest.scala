@@ -427,46 +427,46 @@ class TransferControllerTest extends ControllerBaseTest {
 //      }
 //    }
 //  }
-
-  "confirmYourEmail" should {
-    "return a success" when {
-      "an email is recovered from the cache" in {
-        val email = "test@test.com"
-        when(mockCachingService.get[NotificationRecord](any())(any()))
-          .thenReturn(Some(NotificationRecord(EmailAddress(email))))
-        val result = controller.confirmYourEmail()(request)
-        status(result) shouldBe OK
-      }
-
-      "no email is recovered from the cache" in {
-        when(mockCachingService.get[NotificationRecord](any())(any()))
-          .thenReturn(None)
-        val result = controller.confirmYourEmail()(request)
-        status(result) shouldBe OK
-      }
-    }
-  }
-
-  "confirmYourEmailAction" should {
-    "return bad request" when {
-      "an invalid form is submitted" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "not an email")
-        val result = controller.confirmYourEmailAction()(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "redirect" when {
-      "a valid form is submitted" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "test@test.com")
-        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any(), any()))
-          .thenReturn(notificationRecord)
-        val result = controller.confirmYourEmailAction()(request)
-        status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirm().url)
-      }
-    }
-  }
+//
+//  "confirmYourEmail" should {
+//    "return a success" when {
+//      "an email is recovered from the cache" in {
+//        val email = "test@test.com"
+//        when(mockCachingService.get[NotificationRecord](any())(any()))
+//          .thenReturn(Some(NotificationRecord(EmailAddress(email))))
+//        val result = controller.confirmYourEmail()(request)
+//        status(result) shouldBe OK
+//      }
+//
+//      "no email is recovered from the cache" in {
+//        when(mockCachingService.get[NotificationRecord](any())(any()))
+//          .thenReturn(None)
+//        val result = controller.confirmYourEmail()(request)
+//        status(result) shouldBe OK
+//      }
+//    }
+//  }
+//
+//  "confirmYourEmailAction" should {
+//    "return bad request" when {
+//      "an invalid form is submitted" in {
+//        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "not an email")
+//        val result = controller.confirmYourEmailAction()(request)
+//        status(result) shouldBe BAD_REQUEST
+//      }
+//    }
+//
+//    "redirect" when {
+//      "a valid form is submitted" in {
+//        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "test@test.com")
+//        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any(), any()))
+//          .thenReturn(notificationRecord)
+//        val result = controller.confirmYourEmailAction()(request)
+//        status(result)           shouldBe SEE_OTHER
+//        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirm().url)
+//      }
+//    }
+//  }
 
   "confirm" should {
     "return success" when {

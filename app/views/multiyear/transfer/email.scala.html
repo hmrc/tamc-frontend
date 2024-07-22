@@ -41,7 +41,7 @@ request: AuthenticatedUserRequest[_])
     backLinkHref = Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
 ){
 
-    @form(action = routes.TransferController.confirmYourEmailAction(), args = (Symbol("id") -> "register-form")) {
+    @form(action = transfer.routes.ConfirmEmailController.confirmYourEmailAction(), args = (Symbol("id") -> "register-form")) {
         @errorSummary(recipientForm)
 
         @h1("pages.form.field.your-confirmation")

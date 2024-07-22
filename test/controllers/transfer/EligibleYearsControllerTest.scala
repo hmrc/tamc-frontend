@@ -183,7 +183,7 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)
       }
 
       "extra years is empty, current year is available but applyForCurrentYear is true" in {
@@ -201,7 +201,7 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
           .thenReturn(List(currentTaxYear))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)
       }
     }
 

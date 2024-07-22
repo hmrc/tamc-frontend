@@ -35,7 +35,8 @@ class EligibleYearsController @Inject()(
                                          timeService: TimeService,
                                          cc: MessagesControllerComponents,
                                          previousYearsV: views.html.multiyear.transfer.previous_years,
-                                         eligibleYearsV: views.html.multiyear.transfer.eligible_years)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                         eligibleYearsV: views.html.multiyear.transfer.eligible_years)
+                                       (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def eligibleYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {
@@ -86,7 +87,7 @@ class EligibleYearsController @Inject()(
               } else if (previousYears.nonEmpty) {
                 Ok(previousYearsV(registrationInput, previousYears, currentYearAvailable))
               } else {
-                Redirect(controllers.routes.TransferController.confirmYourEmail())
+                Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail())
               }
             }
           }

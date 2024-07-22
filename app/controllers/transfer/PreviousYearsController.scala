@@ -29,11 +29,12 @@ import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class PreviousYearsController @Inject()(
-  errorHandler: TransferErrorHandler,
-  authenticate: StandardAuthJourney,
-  registrationService: TransferService,
-  cc: MessagesControllerComponents,
-  singleYearSelect: views.html.multiyear.transfer.single_year_select)(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                         errorHandler: TransferErrorHandler,
+                                         authenticate: StandardAuthJourney,
+                                         registrationService: TransferService,
+                                         cc: MessagesControllerComponents,
+                                         singleYearSelect: views.html.multiyear.transfer.single_year_select)
+                                       (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def previousYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.map {

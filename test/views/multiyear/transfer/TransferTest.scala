@@ -18,7 +18,7 @@ package views.multiyear.transfer
 
 import org.apache.pekko.util.Timeout
 import controllers.TransferController
-import controllers.transfer.{DateOfMarriageController, EligibleYearsController, ExtraYearsController, TransferAllowanceController}
+import controllers.transfer.{ConfirmEmailController, DateOfMarriageController, EligibleYearsController, ExtraYearsController, TransferAllowanceController}
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import forms.RecipientDetailsForm
@@ -60,6 +60,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   val dateOfMarriageController: DateOfMarriageController = app.injector.instanceOf[DateOfMarriageController]
   val eligibleYearsController: EligibleYearsController = app.injector.instanceOf[EligibleYearsController]
   val extraYearsController: ExtraYearsController = app.injector.instanceOf[ExtraYearsController]
+  val confirmEmailController: ConfirmEmailController = app.injector.instanceOf[ConfirmEmailController]
   val transferController: TransferController = app.injector.instanceOf[TransferController]
 
   implicit val duration: Timeout = 20 seconds
@@ -559,7 +560,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
   "Calling Confirm email page with error in email field" should {
     "display form error message (transferor email missing from request)" in {
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -571,7 +572,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (transferor email is empty)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "")
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -582,7 +583,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (transferor email contains only spaces)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "  ")
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -593,7 +594,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (transferor email contains more than 100 characters)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> s"${"a" * 90}@bbbb.ccccc")
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -604,7 +605,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (transferor email is invalid)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "example")
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -615,7 +616,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (transferor email has consequent dots)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "ex..ample@example.com")
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -626,7 +627,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (transferor email has symbols). Please note, this email actually is valid" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "check[example.com")
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
@@ -637,7 +638,7 @@ class TransferTest extends BaseTest with NinoGenerator {
 
     "display form error message (transferor email does not include TLD)" in {
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "transferor-email" -> "example@example")
-      val result = transferController.confirmYourEmailAction(request)
+      val result = confirmEmailController.confirmYourEmailAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
