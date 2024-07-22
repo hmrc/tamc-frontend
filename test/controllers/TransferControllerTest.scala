@@ -522,59 +522,59 @@ class TransferControllerTest extends ControllerBaseTest {
 //      }
 //    }
 //  }
-
-  "cannotUseService" should {
-    "return success when call cannotUseService" in {
-      val result = controller.cannotUseService(request)
-      status(result) shouldBe OK
-    }
-  }
-
-  "handleError" should {
-    val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
-      request,
-      Some(ConfidenceLevel.L200),
-      isSA = false,
-      Some("GovernmentGateway"),
-      Nino(TestData.Ninos.nino1)
-    )
-    "redirect" when {
-      val data = List(
-        (new CacheMissingTransferor, "/marriage-allowance-application/history"),
-        (new CacheMissingRecipient, "/marriage-allowance-application/history"),
-        (new CacheMissingEmail, "/marriage-allowance-application/confirm-your-email"),
-        (new CacheRelationshipAlreadyCreated, "/marriage-allowance-application/history"),
-        (new CacheCreateRequestNotSent, "/marriage-allowance-application/history"),
-        (new RelationshipMightBeCreated, "/marriage-allowance-application/history"),
-        (new TransferorDeceased, "/marriage-allowance-application/you-cannot-use-this-service"),
-        (new RecipientDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
-      )
-      for ((error, redirectUrl) <- data)
-        s"a $error has been thrown" in {
-          val result = controller.handleError(authRequest)(error)
-          status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(redirectUrl)
-        }
-    }
-
-    "handle an error" when {
-      val data = List(
-        (new TransferorNotFound, OK, "transferor.not.found"),
-        (new RecipientNotFound, OK, "recipient.not.found.para1"),
-        (new CacheRecipientInRelationship, INTERNAL_SERVER_ERROR, "recipient.has.relationship.para1"),
-        (new CannotCreateRelationship, INTERNAL_SERVER_ERROR, "create.relationship.failure"),
-        (new NoTaxYearsAvailable, OK, "transferor.no-eligible-years"),
-        (new NoTaxYearsForTransferor, OK, ""),
-        (new CacheTransferorInRelationship, OK, "transferor.has.relationship"),
-        (new NoTaxYearsSelected, OK, "pages.noyears.h1"),
-        (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.heading")
-      )
-      for ((error, responseStatus, message) <- data)
-        s"an $error has been thrown" in {
-          val result = controller.handleError(authRequest)(error)
-          status(result) shouldBe responseStatus
-        }
-    }
-  }
+//
+//  "cannotUseService" should {
+//    "return success when call cannotUseService" in {
+//      val result = controller.cannotUseService(request)
+//      status(result) shouldBe OK
+//    }
+//  }
+//
+//  "handleError" should {
+//    val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
+//      request,
+//      Some(ConfidenceLevel.L200),
+//      isSA = false,
+//      Some("GovernmentGateway"),
+//      Nino(TestData.Ninos.nino1)
+//    )
+//    "redirect" when {
+//      val data = List(
+//        (new CacheMissingTransferor, "/marriage-allowance-application/history"),
+//        (new CacheMissingRecipient, "/marriage-allowance-application/history"),
+//        (new CacheMissingEmail, "/marriage-allowance-application/confirm-your-email"),
+//        (new CacheRelationshipAlreadyCreated, "/marriage-allowance-application/history"),
+//        (new CacheCreateRequestNotSent, "/marriage-allowance-application/history"),
+//        (new RelationshipMightBeCreated, "/marriage-allowance-application/history"),
+//        (new TransferorDeceased, "/marriage-allowance-application/you-cannot-use-this-service"),
+//        (new RecipientDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
+//      )
+//      for ((error, redirectUrl) <- data)
+//        s"a $error has been thrown" in {
+//          val result = controller.handleError(authRequest)(error)
+//          status(result)           shouldBe SEE_OTHER
+//          redirectLocation(result) shouldBe Some(redirectUrl)
+//        }
+//    }
+//
+//    "handle an error" when {
+//      val data = List(
+//        (new TransferorNotFound, OK, "transferor.not.found"),
+//        (new RecipientNotFound, OK, "recipient.not.found.para1"),
+//        (new CacheRecipientInRelationship, INTERNAL_SERVER_ERROR, "recipient.has.relationship.para1"),
+//        (new CannotCreateRelationship, INTERNAL_SERVER_ERROR, "create.relationship.failure"),
+//        (new NoTaxYearsAvailable, OK, "transferor.no-eligible-years"),
+//        (new NoTaxYearsForTransferor, OK, ""),
+//        (new CacheTransferorInRelationship, OK, "transferor.has.relationship"),
+//        (new NoTaxYearsSelected, OK, "pages.noyears.h1"),
+//        (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.heading")
+//      )
+//      for ((error, responseStatus, message) <- data)
+//        s"an $error has been thrown" in {
+//          val result = controller.handleError(authRequest)(error)
+//          status(result) shouldBe responseStatus
+//        }
+//    }
+//  }
 
 }

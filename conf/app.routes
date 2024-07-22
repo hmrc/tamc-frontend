@@ -29,7 +29,7 @@ POST        /confirm-your-email                 controllers.transfer.ConfirmEmai
 GET         /confirm                            controllers.transfer.ConfirmController.confirm()
 POST        /confirm                            controllers.transfer.ConfirmController.confirmAction()
 GET         /finished                           controllers.transfer.FinishedController.finished()
-GET         /you-cannot-use-this-service        controllers.TransferController.cannotUseService()
+GET         /you-cannot-use-this-service        controllers.transfer.CannotUseServiceController.cannotUseService()
 
 #Change of Circumstances
 GET         /history                            controllers.UpdateRelationshipController.history()

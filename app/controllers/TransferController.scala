@@ -245,54 +245,54 @@ class TransferController @Inject() (
 //      Ok(finishedV(transferorEmail = email))
 //    } recover handleError
 //  }
-
-  def cannotUseService: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
-    Ok(transfererDeceased())
-  }
-
-  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
-      def message(throwable: Throwable): String  =
-        s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils
-          .getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"
-
-      def handle(throwable: Throwable, logger: String => Unit, result: Result): Result = {
-        logger(message(throwable))
-        result
-      }
-
-      def handleWithException(ex: Throwable, view: Html): Result = {
-        error(ex.getMessage(), ex)
-        InternalServerError(view)
-      }
-
-    val pf: PartialFunction[Throwable, Result] = {
-        case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
-        case t: RecipientNotFound  => handle(t, warn, Ok(recipientNotFound()))
-        case t: TransferorDeceased =>
-          handle(t, warn, Redirect(controllers.routes.TransferController.cannotUseService()))
-        case t: RecipientDeceased =>
-          handle(t, warn, Redirect(controllers.routes.TransferController.cannotUseService()))
-        case t: CacheMissingTransferor =>
-          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-        case t: CacheTransferorInRelationship => handle(t, warn, Ok(transferorStatus()))
-        case t: CacheMissingRecipient =>
-          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-        case t: CacheMissingEmail =>
-          handle(t, warn, Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail()))
-        case t: CacheRelationshipAlreadyCreated =>
-          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-        case t: CacheCreateRequestNotSent =>
-          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-        case t: NoTaxYearsSelected      => handle(t, info, Ok(noYearSelected()))
-        case t: NoTaxYearsAvailable     => handle(t, info, Ok(noEligibleYears()))
-        case t: NoTaxYearsForTransferor => handle(t, info, Ok(noTaxYearTransferor()))
-        case t: RelationshipMightBeCreated =>
-          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
-        case ex: CannotCreateRelationship => handleWithException(ex, relationshipCannotCreate())
-        case ex: CacheRecipientInRelationship =>
-          handleWithException(ex, recipientRelationshipExists())
-        case ex => handleWithException(ex, tryLater())
-    }
-    pf
-  }
+//
+//  def cannotUseService: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
+//    Ok(transfererDeceased())
+//  }
+//
+//  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
+//      def message(throwable: Throwable): String  =
+//        s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils
+//          .getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"
+//
+//      def handle(throwable: Throwable, logger: String => Unit, result: Result): Result = {
+//        logger(message(throwable))
+//        result
+//      }
+//
+//      def handleWithException(ex: Throwable, view: Html): Result = {
+//        error(ex.getMessage(), ex)
+//        InternalServerError(view)
+//      }
+//
+//    val pf: PartialFunction[Throwable, Result] = {
+//        case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
+//        case t: RecipientNotFound  => handle(t, warn, Ok(recipientNotFound()))
+//        case t: TransferorDeceased =>
+//          handle(t, warn, Redirect(controllers.routes.TransferController.cannotUseService()))
+//        case t: RecipientDeceased =>
+//          handle(t, warn, Redirect(controllers.routes.TransferController.cannotUseService()))
+//        case t: CacheMissingTransferor =>
+//          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+//        case t: CacheTransferorInRelationship => handle(t, warn, Ok(transferorStatus()))
+//        case t: CacheMissingRecipient =>
+//          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+//        case t: CacheMissingEmail =>
+//          handle(t, warn, Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail()))
+//        case t: CacheRelationshipAlreadyCreated =>
+//          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+//        case t: CacheCreateRequestNotSent =>
+//          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+//        case t: NoTaxYearsSelected      => handle(t, info, Ok(noYearSelected()))
+//        case t: NoTaxYearsAvailable     => handle(t, info, Ok(noEligibleYears()))
+//        case t: NoTaxYearsForTransferor => handle(t, info, Ok(noTaxYearTransferor()))
+//        case t: RelationshipMightBeCreated =>
+//          handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+//        case ex: CannotCreateRelationship => handleWithException(ex, relationshipCannotCreate())
+//        case ex: CacheRecipientInRelationship =>
+//          handleWithException(ex, recipientRelationshipExists())
+//        case ex => handleWithException(ex, tryLater())
+//    }
+//    pf
+//  }
 }
