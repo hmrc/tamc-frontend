@@ -16,6 +16,50 @@
 
 package views.UpdateRelationship
 
-class ClaimsContentTest {
+import models.DesRelationshipEndReason.Default
+import models.auth.AuthenticatedUserRequest
+import models.{DesRelationshipEndReason, RelationshipRecord, Transferor}
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.domain.Nino
+import utils.{BaseTest, NinoGenerator}
+import views.html.coc.claims
+
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+
+class ClaimsContentTest extends BaseTest with Injecting with NinoGenerator {
+
+  val view: claims = inject[claims]
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  lazy val nino: String = generateNino().nino
+  override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+
+  val now: LocalDate = LocalDate.now()
+  val dateInputPattern = "yyyyMMdd"
+
+  def createRelationshipRecord(creationTimeStamp: LocalDate = LocalDate.now.minusDays(1),
+                               participant1StartDate: LocalDate = LocalDate.now.minusDays(1),
+                               relationshipEndReason: Option[DesRelationshipEndReason] = Some(Default),
+                               participant1EndDate: Option[LocalDate] = None,
+                               otherParticipantUpdateTimestamp: LocalDate = LocalDate.now.minusDays(1)): RelationshipRecord = {
+    RelationshipRecord(
+      Transferor.value,
+      creationTimeStamp.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+      participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
+      relationshipEndReason,
+      participant1EndDate.map(_.format(DateTimeFormatter.ofPattern(dateInputPattern))),
+      otherParticipantInstanceIdentifier = "1",
+      otherParticipantUpdateTimestamp.format(DateTimeFormatter.ofPattern(dateInputPattern)))
+  }
+
+  "Claims view page" should {
+    "Display claim page heading" in {
+      val primaryActiveRecord = createRelationshipRecord()
+      //val document = Jsoup.parse(view(ClaimsViewModel(primaryActiveRecord, Seq.empty[RelationshipRecord])))
+
+    }
+  }
 
 }

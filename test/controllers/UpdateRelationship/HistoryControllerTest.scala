@@ -20,12 +20,7 @@ import controllers.ControllerViewTestHelper
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import errors._
-import forms.EmailForm.emailForm
-import forms.coc._
 import helpers.FakePertaxAuthAction
-import models._
-import models.auth.AuthenticatedUserRequest
-import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
@@ -37,18 +32,12 @@ import play.api.mvc.{AnyContent, Request}
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import services._
-import test_utils._
-import uk.gov.hmrc.auth.core.ConfidenceLevel
-import uk.gov.hmrc.domain.{Generator, Nino}
-import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.http.HttpResponse
-import utils.RequestBuilder._
 import utils.{ControllerBaseTest, CreateRelationshipRecordsHelper, MockAuthenticatedAction}
 import viewModels._
+import views.html.coc.history_summary
+import views.html.errors.{citizen_not_found, transferor_not_found, try_later}
 
-import java.time.LocalDate
 import scala.concurrent.Future
-import scala.util.Random
 
 class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
@@ -65,11 +54,10 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
 
   lazy val controller: HistoryController = app.injector.instanceOf[HistoryController]
 
-  val tryLaterView = inject[views.html.errors.try_later]
-  val historySummaryView = inject[views.html.coc.history_summary]
-  val transferNotFoundView = inject[views.html.errors.transferor_not_found]
-  val citizenNotFoundView = inject[views.html.errors.citizen_not_found]
-  val decisionView = inject[views.html.coc.decision]
+  val tryLaterView: try_later = inject[views.html.errors.try_later]
+  val historySummaryView: history_summary = inject[views.html.coc.history_summary]
+  val transferNotFoundView: transferor_not_found = inject[views.html.errors.transferor_not_found]
+  val citizenNotFoundView: citizen_not_found = inject[views.html.errors.citizen_not_found]
 
   override def beforeEach(): Unit = {
     super.beforeEach()

@@ -36,7 +36,7 @@ import services._
 import utils.RequestBuilder._
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 import viewModels._
-import views.html.coc.{divorce_end_explanation, divorce_select_year, reason_for_change}
+import views.html.coc.{divorce_end_explanation, divorce_select_year}
 import views.html.errors.try_later
 
 import java.time.LocalDate
@@ -62,7 +62,6 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
   lazy val controller: DivorceController = app.injector.instanceOf[DivorceController]
 
   val tryLaterView: try_later = inject[views.html.errors.try_later]
-  val reasonForChangeView: reason_for_change = inject[views.html.coc.reason_for_change]
   val divorceSelectYearView: divorce_select_year = inject[views.html.coc.divorce_select_year]
   val divorceEndExplanationView: divorce_end_explanation = inject[views.html.coc.divorce_end_explanation]
 
@@ -73,7 +72,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
   }
 
   "divorceEnterYear" should {
-    "display the enter a divorce year page" when {
+    "display the enter a divorce year page with a status of OK" when {
       "there is data in the cache" in {
         val divorceDateInThePast = LocalDate.now().minusDays(1)
         when(mockUpdateRelationshipService.getDivorceDate(any())).thenReturn(Future.successful(Some(divorceDateInThePast)))
@@ -88,7 +87,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         when(mockUpdateRelationshipService.getDivorceDate(any()))
           .thenReturn(Future.successful(None))
 
-        val result = controller.divorceEnterYear(request)
+        val result = controller.divorceEnterYear()(request)
 
         status(result) shouldBe OK
         result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)

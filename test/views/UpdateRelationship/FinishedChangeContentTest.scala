@@ -16,6 +16,42 @@
 
 package views.UpdateRelationship
 
-class FinishedChangeContentTest {
+import models.auth.AuthenticatedUserRequest
+import org.jsoup.Jsoup
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.domain.Nino
+import utils.{BaseTest, NinoGenerator}
+import views.html.coc.finished
+
+import java.util.Locale
+
+class FinishedChangeContentTest extends BaseTest with Injecting with NinoGenerator {
+
+  val view: finished = inject[finished]
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  lazy val nino: String = generateNino().nino
+  override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+
+  "Finished change" should {
+    "Display correct page heading" in {
+      val pageHeading = Jsoup.parse(view().toString()).getElementById("pageHeading").text()
+
+      pageHeading shouldBe "Marriage Allowance cancelled"
+    }
+
+    "Display finished change content" in{
+      val content = Jsoup.parse(view().toString()).getElementsByTag("p").eachText().toArray
+
+      val expectedContent = Array(
+        "You will receive an email acknowledging your cancellation within 24 hours.",
+        "If you do not receive it, please check your spam or junk folder.",
+        "You do not need to contact us.",
+        "Beta This is a new service – your feedback will help us to improve it."
+      )
+
+      content shouldBe expectedContent
+    }
+  }
 
 }

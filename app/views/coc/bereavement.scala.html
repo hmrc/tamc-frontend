@@ -38,7 +38,7 @@ pageTitle = messages("pages.bereavement.title")
   @h1("pages.bereavement.title", elmId = Some("bereavement"))
 
     @p(HtmlContent( messages("general.helpline.enquiries.link.pretext") + 
-                    link(link = applicationConfig.generalEnquiriesLink, messageKey = "general.helpline.enquiries.link", inParagraph = true) +
+                    link(link = applicationConfig.generalEnquiriesLink, id=Some("helpline"), messageKey = "general.helpline.enquiries.link", inParagraph = true) +
                     messages("pages.bereavement.enquiries.link.paragraph")
     ))
 

@@ -33,6 +33,7 @@ import play.api.test.{FakeRequest, Injecting}
 import services._
 import utils.RequestBuilder._
 import utils.{ControllerBaseTest, CreateRelationshipRecordsHelper, MockAuthenticatedAction}
+import views.html.coc.reason_for_change
 
 import scala.concurrent.Future
 
@@ -52,7 +53,7 @@ class MakeChangesControllerTest extends ControllerBaseTest with ControllerViewTe
   lazy val controller: MakeChangesController = app.injector.instanceOf[MakeChangesController]
 
   val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
-  val reasonForChangeView = inject[views.html.coc.reason_for_change]
+  val reasonForChangeView: reason_for_change = inject[views.html.coc.reason_for_change]
 
   override def beforeEach(): Unit = {
     super.beforeEach()

@@ -16,6 +16,21 @@
 
 package views.UpdateRelationship
 
-class ConfirmChangeContentTest {
+import models.auth.AuthenticatedUserRequest
+import org.jsoup.Jsoup
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.domain.Nino
+import utils.{BaseTest, NinoGenerator}
+import views.html.coc.confirmUpdate
+
+import java.util.Locale
+
+class ConfirmChangeContentTest extends BaseTest with Injecting with NinoGenerator {
+
+  val view: confirmUpdate = inject[confirmUpdate]
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  lazy val nino: String = generateNino().nino
+  override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
 }

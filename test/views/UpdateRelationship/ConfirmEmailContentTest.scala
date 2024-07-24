@@ -16,6 +16,47 @@
 
 package views.UpdateRelationship
 
-class ConfirmEmailContentTest {
+import forms.EmailForm
+import models.auth.AuthenticatedUserRequest
+import org.jsoup.Jsoup
+import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
+import play.api.test.{FakeRequest, Injecting}
+import uk.gov.hmrc.domain.Nino
+import utils.{BaseTest, NinoGenerator}
+import views.html.coc.email
+
+import java.util.Locale
+
+class ConfirmEmailContentTest extends BaseTest with Injecting with NinoGenerator {
+
+  val view: email = inject[email]
+  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  lazy val nino: String = generateNino().nino
+  override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+
+  "Change of circumstances confirm email page" should {
+    "Display correct heading" in {
+      val pageHeading = Jsoup.parse(view(EmailForm.emailForm).toString()).getElementById("pageHeading").text()
+
+      pageHeading shouldBe "Confirmation email"
+    }
+
+    "Display correct page content" in {
+      val content = Jsoup.parse(view(EmailForm.emailForm).toString()).getElementsByTag("p").eachText().toArray()
+
+      val expectedContent = Array(
+        "We will email confirmation that you have cancelled your Marriage Allowance within 24 hours.",
+        "We will not share your email with anyone else.",
+        "Beta This is a new service – your feedback will help us to improve it.")
+
+      content shouldBe expectedContent
+    }
+
+    "Display email text input with label" in {
+      val labelContent = Jsoup.parse(view(EmailForm.emailForm).toString()).getElementsByClass("govuk-label").text()
+
+      labelContent shouldBe "Your email address "
+    }
+  }
 
 }

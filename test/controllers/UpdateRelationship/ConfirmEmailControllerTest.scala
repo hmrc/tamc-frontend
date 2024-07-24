@@ -20,7 +20,6 @@ import controllers.ControllerViewTestHelper
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import forms.EmailForm.emailForm
-import forms.coc._
 import helpers.FakePertaxAuthAction
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
@@ -32,29 +31,16 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.Injecting
 import services._
-import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.emailaddress.EmailAddress
 import utils.RequestBuilder._
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
-import viewModels._
 import views.html.coc.email
-import views.html.errors.try_later
 
 import scala.concurrent.Future
 
 class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
-  val generatedNino: Nino = new Generator().nextNino
-  val mockTransferService: TransferService = mock[TransferService]
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
-
-  val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
-  val divorceSelectYearForm: DivorceSelectYearForm = instanceOf[DivorceSelectYearForm]
-  val divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl = instanceOf[DivorceEndExplanationViewModelImpl]
-  val confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl = instanceOf[ConfirmUpdateViewModelImpl]
-  val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
 
   val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
@@ -68,7 +54,6 @@ class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewT
 
   lazy val controller: ConfirmEmailController = app.injector.instanceOf[ConfirmEmailController]
 
-  val tryLaterView: try_later = inject[views.html.errors.try_later]
   val emailView: email = inject[views.html.coc.email]
 
   override def beforeEach(): Unit = {

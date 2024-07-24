@@ -31,7 +31,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, Injecting}
 import services._
-import utils.RequestBuilder.buildFakePostRequest
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 import views.html.coc.decision
 
