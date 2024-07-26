@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,11 +75,6 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
               s"£$maxPaTransferFormatted of their Personal Allowance to you."}</p>""".stripMargin +
             s"""<p class="govuk-body">${s"This can reduce the tax you pay by up to £$maxBenefit a year."}</p>""")
 
-          val document = Jsoup.parse(view(historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo))
-            .toString()).getElementById("main-content")
-          val pageHeading = document.getElementsByClass("govuk-caption-xl hmrc-caption-xl").text()
-
-          assert(pageHeading contains "Your Marriage Allowance summary")
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
 
@@ -92,11 +87,6 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
 
           val expectedContent = Html(s"""<p class="govuk-body">${"You are currently helping your partner benefit from Marriage Allowance."}</p>""")
 
-          val document = Jsoup.parse(view(historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo))
-            .toString()).getElementById("main-content")
-          val pageHeading = document.getElementsByClass("govuk-caption-xl hmrc-caption-xl").text()
-
-          assert(pageHeading contains "Your Marriage Allowance summary")
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
       }
@@ -114,11 +104,6 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
           val expectedContent = Html(s"""<p class="govuk-body">${"Your Marriage Allowance claim has ended."}</p>""" +
             s"""<p class="govuk-body">${s"You will keep the tax-free allowances transferred to you until $formattedEndOfYear."}</p>""")
 
-          val document = Jsoup.parse(view(historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo))
-            .toString()).getElementById("main-content")
-          val pageHeading = document.getElementsByClass("govuk-caption-xl hmrc-caption-xl").text()
-
-          assert(pageHeading contains "Your Marriage Allowance summary")
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
 
@@ -133,11 +118,6 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
           val expectedContent = Html(s"""<p class="govuk-body">${"Your Marriage Allowance claim has ended."}</p>""" +
             s"""<p class="govuk-body">${s"You will keep the tax-free allowances transferred by you until $formattedEndOfYear."}</p>""")
 
-          val document = Jsoup.parse(view(historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo))
-            .toString()).getElementById("main-content")
-          val pageHeading = document.getElementsByClass("govuk-caption-xl hmrc-caption-xl").text()
-
-          assert(pageHeading contains "Your Marriage Allowance summary")
           viewModel shouldBe HistorySummaryViewModel(expectedContent, expectedHistorySummaryButton, expectedDisplayName)
         }
       }

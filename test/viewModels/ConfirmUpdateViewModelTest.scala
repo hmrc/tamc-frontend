@@ -84,4 +84,5 @@ class ConfirmUpdateViewModelTest extends BaseTest {
       nameRow.head.userAnswer shouldBe ""
     }
   }
+
 }

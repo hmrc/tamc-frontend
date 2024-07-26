@@ -47,25 +47,21 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
     "Display all recipient text" in {
       val content = Jsoup.parse(view(Recipient).toString()).getElementsByTag("p").eachText().toArray()
 
-      val expected = Array(
+      content shouldBe Array(
         "You can contact the Income Tax general enquiries helpline to tell us about a bereavement.",
         "You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.",
         "Beta This is a new service – your feedback will help us to improve it."
       )
-
-      content shouldBe expected
     }
 
     "Display all transferor text" in {
       val content = Jsoup.parse(view(Transferor).toString()).getElementsByTag("p").eachText().toArray()
 
-      val expected = Array(
+      content shouldBe Array(
         "You can contact the Income Tax general enquiries helpline to tell us about a bereavement.",
         "If your partner dies after you have transferred some of your Personal Allowance to them:",
         "Beta This is a new service – your feedback will help us to improve it."
       )
-
-      content shouldBe expected
     }
 
     "recipient bullet list" in {
@@ -77,21 +73,17 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
     "transferor bullet list" in {
       val bulletList = Jsoup.parse(view(Transferor).toString()).getElementById("main-content").getElementsByTag("li").eachText().toArray()
 
-      val expected = Array(
+      bulletList shouldBe Array(
         "their estate will be treated as having the extra Personal Allowance you transferred to them",
         "your Personal Allowance will go back to the normal amount at the end of the tax year (5 April)"
       )
-
-      bulletList shouldBe expected
     }
 
     "Display contact helpline link" in {
       val linkText = Jsoup.parse(view(Transferor).toString()).getElementById("main-content").getElementById("helpline").text()
       val linkHref = Jsoup.parse(view(Transferor).toString()).getElementById("main-content").getElementsByClass("govuk-link").attr("href")
 
-      val expectedLinkText = "contact the Income Tax general enquiries helpline"
-
-      linkText shouldBe expectedLinkText
+      linkText shouldBe "contact the Income Tax general enquiries helpline"
       linkHref shouldBe
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
     }

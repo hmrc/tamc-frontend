@@ -43,14 +43,12 @@ class FinishedChangeContentTest extends BaseTest with Injecting with NinoGenerat
     "Display finished change content" in{
       val content = Jsoup.parse(view().toString()).getElementsByTag("p").eachText().toArray
 
-      val expectedContent = Array(
+      content shouldBe Array(
         "You will receive an email acknowledging your cancellation within 24 hours.",
         "If you do not receive it, please check your spam or junk folder.",
         "You do not need to contact us.",
         "Beta This is a new service – your feedback will help us to improve it."
       )
-
-      content shouldBe expectedContent
     }
   }
 

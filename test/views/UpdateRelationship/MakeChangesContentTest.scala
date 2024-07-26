@@ -48,13 +48,11 @@ class MakeChangesContentTest extends BaseTest with Injecting with NinoGenerator 
         .eachText()
         .toArray()
 
-      lazy val expectedRadioButtons = Array(
+      radioButtons shouldBe Array(
         "Do not need Marriage Allowance any more",
         "Divorce, end of civil partnership or legally separated",
         "Bereavement"
       )
-
-      radioButtons shouldBe expectedRadioButtons
     }
 
     "Display continue button" in {

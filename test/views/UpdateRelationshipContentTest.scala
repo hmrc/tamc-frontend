@@ -494,6 +494,7 @@
 //
 //      header shouldBe expectedHeader
 //      para shouldBe expectedParas
+//      para shouldBe expectedParas
 //      list shouldBe expectedList
 //      tableHeadings.size shouldBe 2
 //      tableHeadings shouldBe expectedTableHeadings

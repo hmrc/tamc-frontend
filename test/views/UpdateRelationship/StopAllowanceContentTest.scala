@@ -81,15 +81,14 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
         .eachText()
         .toArray()
 
-      val expected = Array(
+
+      content shouldBe Array(
         s"We will cancel your Marriage Allowance, but it will remain in place until 5 April " +
           s"${TaxYear.current.finishes.getYear}, the end of the current tax year.",
         s"Your Personal Allowance will not include any Marriage Allowance from 6 April " +
           s"${TaxYear.current.next.starts.getYear}, the start of the new tax year.",
         "Beta This is a new service – your feedback will help us to improve it."
       )
-
-      content shouldBe expected
     }
 
     "Display continue button" in {
