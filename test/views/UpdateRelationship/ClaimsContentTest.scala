@@ -18,7 +18,7 @@ package views.UpdateRelationship
 
 import models.DesRelationshipEndReason.Default
 import models.auth.AuthenticatedUserRequest
-import models.{DesRelationshipEndReason, RelationshipRecord, Transferor}
+import models.{RelationshipRecord, Transferor}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
@@ -43,22 +43,17 @@ class ClaimsContentTest extends BaseTest with Injecting with NinoGenerator {
 
   val now: LocalDate = LocalDate.now()
   val dateInputPattern = "yyyyMMdd"
-  val doc: Document = Jsoup.parse(view(claimsViewModelImpl(createRelationshipRecord(), Seq.empty[RelationshipRecord])).toString())
 
-  def createRelationshipRecord(creationTimeStamp: LocalDate = LocalDate.now.minusDays(1),
-                               participant1StartDate: LocalDate = LocalDate.now.minusDays(1),
-                               relationshipEndReason: Option[DesRelationshipEndReason] = Some(Default),
-                               participant1EndDate: Option[LocalDate] = None,
-                               otherParticipantUpdateTimestamp: LocalDate = LocalDate.now.minusDays(1)): RelationshipRecord = {
-    RelationshipRecord(
-      Transferor.value,
-      creationTimeStamp.format(DateTimeFormatter.ofPattern(dateInputPattern)),
-      participant1StartDate.format(DateTimeFormatter.ofPattern(dateInputPattern)),
-      relationshipEndReason,
-      participant1EndDate.map(_.format(DateTimeFormatter.ofPattern(dateInputPattern))),
-      otherParticipantInstanceIdentifier = "1",
-      otherParticipantUpdateTimestamp.format(DateTimeFormatter.ofPattern(dateInputPattern)))
-  }
+  val relationshipRecord: RelationshipRecord = RelationshipRecord(
+    Transferor.value,
+    LocalDate.now.minusDays(1).format(DateTimeFormatter.ofPattern(dateInputPattern)),
+    LocalDate.now.minusDays(1).format(DateTimeFormatter.ofPattern(dateInputPattern)),
+    Some(Default),
+    None,
+    otherParticipantInstanceIdentifier = "1",
+    LocalDate.now.minusDays(1).format(DateTimeFormatter.ofPattern(dateInputPattern)))
+
+  val doc: Document = Jsoup.parse(view(claimsViewModelImpl(relationshipRecord, Seq.empty[RelationshipRecord])).toString())
 
   "Claims view page" should {
     "Display claim page heading" in {

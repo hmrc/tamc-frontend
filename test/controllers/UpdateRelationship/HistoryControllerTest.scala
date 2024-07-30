@@ -39,7 +39,7 @@ import views.html.errors.{citizen_not_found, transferor_not_found, try_later}
 
 import scala.concurrent.Future
 
-class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHelper with CreateRelationshipRecordsHelper with Injecting {
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
@@ -66,8 +66,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
 
   "history" should {
     "display the history summary page with a status of OK" in {
-      val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
-      val relationshipRecords = relationshipRecordsHelper.createRelationshipRecords()
+      val relationshipRecords = createRelationshipRecords()
       val historySummaryViewModel = historySummaryViewModelImpl(relationshipRecords.primaryRecord.role,
         relationshipRecords.hasMarriageAllowanceBeenCancelled,
         relationshipRecords.loggedInUserInfo)

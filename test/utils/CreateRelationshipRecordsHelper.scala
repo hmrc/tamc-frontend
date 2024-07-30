@@ -18,7 +18,7 @@ package utils
 
 import models.{CitizenName, LoggedInUserInfo, RelationshipRecord, RelationshipRecords}
 
-class CreateRelationshipRecordsHelper {
+trait CreateRelationshipRecordsHelper {
 
   def createRelationshipRecords(roleType: String = "Transferor",
                                  nonPrimaryRecords: Seq[RelationshipRecord] = Seq.empty[RelationshipRecord]): RelationshipRecords = {

@@ -48,7 +48,6 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
   val mockTimeService: TimeService = mock[TimeService]
   val divorceSelectYearForm: DivorceSelectYearForm = instanceOf[DivorceSelectYearForm]
   val divorceEndExplanationViewModelImpl: DivorceEndExplanationViewModelImpl = instanceOf[DivorceEndExplanationViewModelImpl]
-  val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(

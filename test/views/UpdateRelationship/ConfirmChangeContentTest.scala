@@ -44,7 +44,6 @@ class ConfirmChangeContentTest extends BaseTest with Injecting with NinoGenerato
   val firstName = "Firstname"
   val surname = "Surname"
   val loggedInUser: LoggedInUserInfo = LoggedInUserInfo(1, "20200304", None, Some(CitizenName(Some(firstName), Some(surname))))
-  val taxYearStartCY: Int = TaxYear.current.startYear
   val maEndingDates: MarriageAllowanceEndingDates = MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)
   val email = "email@email.com"
   val doc: Document = Jsoup.parse(view(confirmUpdateViewModelImpl(ConfirmationUpdateAnswers(

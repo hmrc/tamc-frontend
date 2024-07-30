@@ -37,10 +37,9 @@ import views.html.coc.reason_for_change
 
 import scala.concurrent.Future
 
-class MakeChangesControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+class MakeChangesControllerTest extends ControllerBaseTest with ControllerViewTestHelper with CreateRelationshipRecordsHelper with Injecting {
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
-  val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -52,7 +51,6 @@ class MakeChangesControllerTest extends ControllerBaseTest with ControllerViewTe
 
   lazy val controller: MakeChangesController = app.injector.instanceOf[MakeChangesController]
 
-  val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
   val reasonForChangeView: reason_for_change = inject[views.html.coc.reason_for_change]
 
   override def beforeEach(): Unit = {
@@ -118,8 +116,8 @@ class MakeChangesControllerTest extends ControllerBaseTest with ControllerViewTe
       }
 
       "redirect to the stop allowance page" when {
-        val relationshipRecords = relationshipRecordsHelper.createRelationshipRecords("Recipient")
         "a recipient selects Cancel" in {
+          val relationshipRecords = createRelationshipRecords("Recipient")
           val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> "Cancel")
           when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq("Cancel"))(any()))
             .thenReturn(Future.successful("Cancel"))
@@ -145,8 +143,8 @@ class MakeChangesControllerTest extends ControllerBaseTest with ControllerViewTe
 
     "redirect to the cancel page" when {
       "a transferor selects Do not want Marriage Allowance anymore" in {
-        val userAnswer = "Cancel"
-        val relationshipRecords = relationshipRecordsHelper.createRelationshipRecords()
+        val userAnswer = MakeChangesDecisionForm.Cancel
+        val relationshipRecords = createRelationshipRecords()
         val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
         when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any()))
           .thenReturn(Future.successful(userAnswer))
@@ -162,7 +160,7 @@ class MakeChangesControllerTest extends ControllerBaseTest with ControllerViewTe
 
     "redirect to the bereavement page" when {
       "a user selects the bereavement option" in {
-        val userAnswer = "Bereavement"
+        val userAnswer = MakeChangesDecisionForm.Bereavement
         val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
         when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any()))
           .thenReturn(Future.successful(userAnswer))

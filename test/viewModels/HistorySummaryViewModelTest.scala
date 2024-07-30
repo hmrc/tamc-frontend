@@ -19,7 +19,6 @@ package viewModels
 import config.ApplicationConfig
 import models._
 import models.auth.AuthenticatedUserRequest
-import org.jsoup.Jsoup
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.test.{FakeRequest, Injecting}
 import play.twirl.api.Html
@@ -63,12 +62,10 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
       "marriage allowance has not been cancelled" when {
 
         "the person is a recipient " in {
-          val marriageAllowanceCancelled = false
           val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", "Check or update your Marriage Allowance",
             controllers.UpdateRelationship.routes.ChooseController.decision().url)
 
-          val role = Recipient
-          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(Recipient, hasMarriageAllowanceBeenCancelled = false, loggedInUserInfo)
 
           val expectedContent = Html(
             s"""<p class="govuk-body">${s"Your partner is currently using Marriage Allowance to transfer " +
@@ -79,11 +76,9 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
         }
 
         "The person is a transferor" in {
-          val marriageAllowanceCancelled = false
           val expectedHistorySummaryButton = HistorySummaryButton("checkOrUpdateMarriageAllowance", "Check or update your Marriage Allowance",
             controllers.UpdateRelationship.routes.ChooseController.decision().url)
-          val role = Transferor
-          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(Transferor, hasMarriageAllowanceBeenCancelled = false, loggedInUserInfo)
 
           val expectedContent = Html(s"""<p class="govuk-body">${"You are currently helping your partner benefit from Marriage Allowance."}</p>""")
 
@@ -94,12 +89,10 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
       "The record has cancelled marriage allowance" when {
 
         "the person is a recipient" in {
-          val marriageAllowanceCancelled = true
           val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", "Check your Marriage Allowance claims",
             controllers.UpdateRelationship.routes.ClaimsController.claims().url)
 
-          val role = Recipient
-          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(Recipient, hasMarriageAllowanceBeenCancelled = true, loggedInUserInfo)
 
           val expectedContent = Html(s"""<p class="govuk-body">${"Your Marriage Allowance claim has ended."}</p>""" +
             s"""<p class="govuk-body">${s"You will keep the tax-free allowances transferred to you until $formattedEndOfYear."}</p>""")
@@ -108,12 +101,10 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
         }
 
         "the person is a transferor" in {
-          val marriageAllowanceCancelled = true
           val expectedHistorySummaryButton = HistorySummaryButton("checkMarriageAllowance", "Check your Marriage Allowance claims",
             controllers.UpdateRelationship.routes.ClaimsController.claims().url)
 
-          val role = Transferor
-          val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
+          val viewModel = historySummaryViewModelImpl(Transferor, hasMarriageAllowanceBeenCancelled = true, loggedInUserInfo)
 
           val expectedContent = Html(s"""<p class="govuk-body">${"Your Marriage Allowance claim has ended."}</p>""" +
             s"""<p class="govuk-body">${s"You will keep the tax-free allowances transferred by you until $formattedEndOfYear."}</p>""")
@@ -123,12 +114,10 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
       }
     }
 
-    "There is no citizen name to allow a display name to be created" in  {
-      val marriageAllowanceCancelled = false
-      val role = Transferor
+    "return expected response when there is no citizen name to allow a display name to be created" in  {
       val loggedInUserInfo = LoggedInUserInfo(cid = 1122L, timestamp = LocalDate.now().toString, has_allowance = None, name = None)
 
-      val viewModel = historySummaryViewModelImpl(role, marriageAllowanceCancelled, loggedInUserInfo)
+      val viewModel = historySummaryViewModelImpl(Transferor, hasMarriageAllowanceBeenCancelled = false, loggedInUserInfo)
 
       viewModel.displayName shouldBe ""
     }

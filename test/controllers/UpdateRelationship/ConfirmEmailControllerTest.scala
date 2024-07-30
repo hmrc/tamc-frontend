@@ -42,7 +42,6 @@ class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewT
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
 
-  val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -69,7 +68,7 @@ class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewT
           .thenReturn(Future.successful(Some(email)))
 
         val result = controller.confirmEmail(request)
-        val populatedForm = emailForm.fill(EmailAddress(email))
+        val populatedForm = emailForm.fill(email)
 
         status(result) shouldBe OK
         result rendersTheSameViewAs emailView(populatedForm)

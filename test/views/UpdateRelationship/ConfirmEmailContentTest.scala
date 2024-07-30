@@ -51,7 +51,7 @@ class ConfirmEmailContentTest extends BaseTest with Injecting with NinoGenerator
 
     "Display email text input with label" in {
       doc.getElementsByClass("govuk-label").text() shouldBe "Your email address "
-      doc.getElementsByTag("input").eachAttr("type") contains "text"
+      doc.getElementById("transferor-email").text().length == 1
     }
   }
 

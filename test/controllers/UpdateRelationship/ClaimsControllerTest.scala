@@ -37,7 +37,7 @@ import views.html.errors.try_later
 
 import scala.concurrent.Future
 
-class ClaimsControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+class ClaimsControllerTest extends ControllerBaseTest with ControllerViewTestHelper with CreateRelationshipRecordsHelper with Injecting {
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val claimsViewModelImpl: ClaimsViewModelImpl = instanceOf[ClaimsViewModelImpl]
@@ -62,8 +62,7 @@ class ClaimsControllerTest extends ControllerBaseTest with ControllerViewTestHel
 
   "claims" should {
     "display the claims page" in {
-      val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
-      val relationshipRecords = relationshipRecordsHelper.createRelationshipRecords()
+      val relationshipRecords = createRelationshipRecords()
       when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
 
       val claimsViewModel = claimsViewModelImpl(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)

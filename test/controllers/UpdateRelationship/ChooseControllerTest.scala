@@ -40,7 +40,6 @@ class ChooseControllerTest extends ControllerBaseTest with ControllerViewTestHel
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
 
-  val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(

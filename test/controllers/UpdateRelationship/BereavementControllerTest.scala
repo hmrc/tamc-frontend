@@ -36,7 +36,7 @@ import views.html.errors.try_later
 
 import scala.concurrent.Future
 
-class BereavementControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
+class BereavementControllerTest extends ControllerBaseTest with ControllerViewTestHelper with CreateRelationshipRecordsHelper with Injecting {
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
 
@@ -61,8 +61,7 @@ class BereavementControllerTest extends ControllerBaseTest with ControllerViewTe
   "bereavement" should {
     "display the bereavement page" when {
       "there is data returned from the cache" in {
-        val relationshipRecordsHelper: CreateRelationshipRecordsHelper = inject[CreateRelationshipRecordsHelper]
-        val relationshipRecords = relationshipRecordsHelper.createRelationshipRecords()
+        val relationshipRecords = createRelationshipRecords()
         when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
         val result = controller.bereavement(request)
 

@@ -42,7 +42,6 @@ class ConfirmChangeControllerTest extends ControllerBaseTest with ControllerView
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
   val confirmUpdateViewModelImpl: ConfirmUpdateViewModelImpl = instanceOf[ConfirmUpdateViewModelImpl]
-  val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
