@@ -19,6 +19,7 @@ package views.UpdateRelationship
 import forms.coc._
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
@@ -33,22 +34,16 @@ class MakeChangesContentTest extends BaseTest with Injecting with NinoGenerator 
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   lazy val nino: String = generateNino().nino
+  val doc: Document = Jsoup.parse(view(MakeChangesDecisionForm.form()).toString())
 
   "Make change - get view" should {
 
     "display correct pageHeading" in {
-      val pageHeading = Jsoup.parse(view(MakeChangesDecisionForm.form()).toString()).getElementById("pageHeading").text()
-
-      pageHeading shouldBe "Why do you need to stop your Marriage Allowance?"
+      doc.getElementById("pageHeading").text() shouldBe "Why do you need to stop your Marriage Allowance?"
     }
 
     "show all appropriate radio buttons" in {
-      val radioButtons = Jsoup.parse(view(MakeChangesDecisionForm.form()).toString())
-        .getElementsByClass("govuk-label govuk-radios__label")
-        .eachText()
-        .toArray()
-
-      radioButtons shouldBe Array(
+      doc.getElementsByClass("govuk-label govuk-radios__label").eachText().toArray() shouldBe Array(
         "Do not need Marriage Allowance any more",
         "Divorce, end of civil partnership or legally separated",
         "Bereavement"
@@ -56,15 +51,11 @@ class MakeChangesContentTest extends BaseTest with Injecting with NinoGenerator 
     }
 
     "Display continue button" in {
-      val button = Jsoup.parse(view(MakeChangesDecisionForm.form()).toString()).getElementById("submit").text()
-
-      button shouldBe "Continue"
+      doc.getElementById("submit").text() shouldBe "Continue"
     }
 
     "Display all correct page text" in {
-      val pageText = Jsoup.parse(view(MakeChangesDecisionForm.form()).toString()).getElementsByTag("p").eachText().toArray()
-
-      pageText shouldBe Array("Beta This is a new service – your feedback will help us to improve it.")
+      doc.getElementsByTag("p").eachText().toArray() shouldBe Array("Beta This is a new service – your feedback will help us to improve it.")
     }
   }
 

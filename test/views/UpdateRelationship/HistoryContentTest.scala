@@ -16,21 +16,25 @@
 
 package views.UpdateRelationship
 
+import config.ApplicationConfig
 import models.{CitizenName, LoggedInUserInfo, Recipient, Role, Transferor}
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.time.TaxYear
 import utils.{BaseTest, NinoGenerator}
 import viewModels.HistorySummaryViewModelImpl
 import views.html.coc.history_summary
 
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.util.Locale
 
 class HistoryContentTest extends BaseTest with Injecting with NinoGenerator{
 
+  val appConfig: ApplicationConfig = inject[ApplicationConfig]
   val view: history_summary = inject[history_summary]
   val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
@@ -42,28 +46,35 @@ class HistoryContentTest extends BaseTest with Injecting with NinoGenerator{
     timestamp = LocalDate.now().toString,
     has_allowance = None,
     name = Some(citizenName))
+  val maxBenefitCY: String = NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(TaxYear.current.startYear))
 
-  val userRecord: Seq[(Role, Boolean, Array[String])] = Seq(
-    (Transferor, false, Array("")),
-    (Transferor, true, Array("You are currently helping your partner benefit from Marriage Allowance.")),
-    (Recipient, false, Array("")),
-    (Recipient, true, Array("Your partner is currently using Marriage Allowance to transfer £1,260 of their Personal Allowance to you.",
-                      "This can reduce the tax you pay by up to £252 a year.")
+  val userRecord: Seq[(Role, Boolean, String)] = Seq(
+    (Transferor, true, s"Your Marriage Allowance claim has ended. " +
+      s"You will keep the tax-free allowances transferred by you until 5 April ${TaxYear.current.finishes.getYear}."),
+    (Transferor, false, s"You are currently helping your partner benefit from Marriage Allowance."),
+    (Recipient, true, "Your Marriage Allowance claim has ended. " +
+      s"You will keep the tax-free allowances transferred to you until 5 April ${TaxYear.current.finishes.getYear}."),
+    (Recipient, false, "Your partner is currently using Marriage Allowance to transfer £1,260 of their Personal Allowance to you. " +
+      s"This can reduce the tax you pay by up to £$maxBenefitCY a year.")
     )
-  )
 
   "History page" when {
     userRecord.foreach {
-      case (role, mACancelled, Array("")) =>
-        s"Page Header & caption - are displayed for $mACancelled records when $role checks summary" in {
-          val document = Jsoup.parse(view(historySummaryViewModelImpl(role, mACancelled, loggedInUserInfo)).toString())
+      case (role, mACancelled, content) =>
+        s"Page Header & caption & $content - are displayed for $mACancelled records when $role checks summary" in {
+          val doc = Jsoup.parse(view(historySummaryViewModelImpl(role, mACancelled, loggedInUserInfo)).toString())
 
-          val pageHeading = document.getElementById("pageHeading").text()
-          val caption = document.getElementsByClass("govuk-caption-xl hmrc-caption-xl").text()
-          val content = document.getElementsByTag("p").text()
+          val pageHeading = doc.getElementById("pageHeading").text()
+          val caption = doc.getElementsByClass("govuk-caption-xl hmrc-caption-xl").text()
+          val paragraphs = doc.getElementsByClass("govuk-body").text()
+          val button = doc.getElementsByClass("govuk-button").text()
+
+         if (mACancelled) {
+           button shouldBe "Check your Marriage Allowance claims"
+         } else button shouldBe "Check or update your Marriage Allowance"
 
           pageHeading shouldBe "Test User"
-          content shouldBe "You are currently helping your partner benefit from Marriage Allowance."
+          paragraphs shouldBe content
           caption contains "Your Marriage Allowance summary"
         }
     }

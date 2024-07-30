@@ -46,7 +46,7 @@ class ClaimsViewModelImpl@Inject()(applicationConfig: ApplicationConfig,  langua
 
   private def taxFreeAllowanceLink(implicit messages: Messages): Html = {
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${applicationConfig.taxFreeAllowanceUrl}">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a id="taxFreeAllowanceLink" href="${applicationConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
   }
 

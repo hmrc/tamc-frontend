@@ -18,6 +18,7 @@ package views.UpdateRelationship
 
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
@@ -32,18 +33,15 @@ class FinishedChangeContentTest extends BaseTest with Injecting with NinoGenerat
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+  val doc: Document = Jsoup.parse(view().toString())
 
   "Finished change" should {
     "Display correct page heading" in {
-      val pageHeading = Jsoup.parse(view().toString()).getElementById("pageHeading").text()
-
-      pageHeading shouldBe "Marriage Allowance cancelled"
+      doc.getElementById("pageHeading").text() shouldBe "Marriage Allowance cancelled"
     }
 
     "Display finished change content" in{
-      val content = Jsoup.parse(view().toString()).getElementsByTag("p").eachText().toArray
-
-      content shouldBe Array(
+      doc.getElementsByTag("p").eachText().toArray shouldBe Array(
         "You will receive an email acknowledging your cancellation within 24 hours.",
         "If you do not receive it, please check your spam or junk folder.",
         "You do not need to contact us.",

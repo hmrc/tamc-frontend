@@ -19,6 +19,7 @@ package views.UpdateRelationship
 import forms.EmailForm
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
@@ -33,30 +34,24 @@ class ConfirmEmailContentTest extends BaseTest with Injecting with NinoGenerator
   implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
+  val doc: Document = Jsoup.parse(view(EmailForm.emailForm).toString())
 
   "Change of circumstances confirm email page" should {
     "Display correct heading" in {
-      val pageHeading = Jsoup.parse(view(EmailForm.emailForm).toString()).getElementById("pageHeading").text()
-
-      pageHeading shouldBe "Confirmation email"
+      doc.getElementById("pageHeading").text() shouldBe "Confirmation email"
     }
 
     "Display correct page content" in {
-      val content = Jsoup.parse(view(EmailForm.emailForm).toString()).getElementsByTag("p").eachText().toArray()
-
-      content shouldBe Array(
+      doc.getElementsByTag("p").eachText().toArray() shouldBe Array(
         "We will email confirmation that you have cancelled your Marriage Allowance within 24 hours.",
         "We will not share your email with anyone else.",
-        "Beta This is a new service – your feedback will help us to improve it.")
+        "Beta This is a new service – your feedback will help us to improve it."
+      )
     }
 
     "Display email text input with label" in {
-      val document = Jsoup.parse(view(EmailForm.emailForm).toString())
-      val labelContent = document.getElementsByClass("govuk-label").text()
-      val formInput = document.getElementsByTag("input").eachAttr("type")
-
-      labelContent shouldBe "Your email address "
-      formInput contains "text"
+      doc.getElementsByClass("govuk-label").text() shouldBe "Your email address "
+      doc.getElementsByTag("input").eachAttr("type") contains "text"
     }
   }
 
