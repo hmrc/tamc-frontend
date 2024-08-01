@@ -22,13 +22,11 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import utils.LoggerHelper
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
 class CannotUseServiceController @Inject()(
                                             authenticate: StandardAuthJourney,
                                             cc: MessagesControllerComponents,
-                                            transfererDeceased: views.html.errors.transferer_deceased)
-                                          (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                            transfererDeceased: views.html.errors.transferer_deceased) extends BaseController(cc) with LoggerHelper {
 
   def cannotUseService: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(transfererDeceased())

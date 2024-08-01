@@ -67,7 +67,7 @@ class FinishedControllerTest extends ControllerBaseTest {
         reset(mockCachingService)
         verify(mockCachingService, times(0)).clear()(any())
 
-        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+        when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(notificationRecord)
 
         val result = controller.finished()(request)
@@ -82,7 +82,7 @@ class FinishedControllerTest extends ControllerBaseTest {
         reset(mockCachingService)
         verify(mockCachingService, times(0)).clear()(any())
 
-        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+        when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenThrow(new IllegalArgumentException("123"))
 
         controller.finished()(request)

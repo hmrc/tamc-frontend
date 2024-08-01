@@ -65,7 +65,7 @@ class PreviousYearsControllerTest extends ControllerBaseTest {
   "previousYears" should {
     "return success" when {
       "a successful call to transfer service is made" in {
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,

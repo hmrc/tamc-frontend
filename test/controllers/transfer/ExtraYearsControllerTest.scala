@@ -67,7 +67,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
   "extraYearsAction" should {
     "return bad request" when {
       "an invalid form is submitted" in {
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -88,7 +88,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
           "furtherYears"              -> "2014,2013",
           "yearAvailableForSelection" -> "2014"
         )
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -102,7 +102,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
             ArgumentMatchers.eq(2015),
             ArgumentMatchers.eq(Some(2014))
-          )(any(), any(), any())
+          )(any(), any())
         )
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)
@@ -117,7 +117,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
           "furtherYears"              -> "",
           "yearAvailableForSelection" -> "2014"
         )
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -131,7 +131,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
             ArgumentMatchers.eq(2015),
             ArgumentMatchers.eq(Some(2014))
-          )(any(), any(), any())
+          )(any(), any())
         )
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)

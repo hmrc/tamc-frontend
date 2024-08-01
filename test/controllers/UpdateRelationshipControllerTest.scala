@@ -130,7 +130,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       when(mockUpdateRelationshipService.retrieveRelationshipRecords(any())(any(), any()))
         .thenReturn(Future.successful(relationshipRecords))
 
-      when(mockUpdateRelationshipService.saveRelationshipRecords(ArgumentMatchers.eq(relationshipRecords))(any(), any(), any()))
+      when(mockUpdateRelationshipService.saveRelationshipRecords(ArgumentMatchers.eq(relationshipRecords))(any(), any()))
         .thenReturn(Future.successful(relationshipRecords))
 
       val result = controller.history()(request)
@@ -222,7 +222,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     "display the decision page with cached data" in {
       val cacheData = Some("checkMarriageAllowanceClaim")
       val validFormWithData = CheckClaimOrCancelDecisionForm.form().fill(cacheData)
-      when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any(), any())).thenReturn(Future.successful(cacheData))
+      when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any())).thenReturn(Future.successful(cacheData))
 
       val result = controller.decision(request)
       status(result) shouldBe OK
@@ -233,7 +233,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     "display a decision page without cached data" when {
       "there is no data return from the cache" in {
 
-        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any(), any())).thenReturn(Future.successful(None))
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any())).thenReturn(Future.successful(None))
         val validForm = CheckClaimOrCancelDecisionForm.form()
         val result = controller.decision(request)
         status(result) shouldBe OK
@@ -243,7 +243,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       "a non fatal error has occurred when trying to get cached data" in {
 
-        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any(), any(), any()))
+        when(mockUpdateRelationshipService.getCheckClaimOrCancelDecision(any()))
           .thenReturn(failedFuture)
         val result = controller.decision(request)
         val validForm = CheckClaimOrCancelDecisionForm.form()
@@ -261,7 +261,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val userAnswer = CheckClaimOrCancelDecisionForm.CheckMarriageAllowanceClaim
         val request = FakeRequest().withFormUrlEncodedBody(CheckClaimOrCancelDecisionForm.DecisionChoice -> userAnswer).withMethod("POST")
 
-        when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any(), any()))
+        when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any()))
           .thenReturn(Future.successful(userAnswer))
 
         val result = controller.submitDecision(request)
@@ -282,7 +282,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           CheckClaimOrCancelDecisionForm.DecisionChoice -> userAnswer
         ).withMethod("POST")
 
-        when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any(), any(), any()))
+        when(mockUpdateRelationshipService.saveCheckClaimOrCancelDecision(ArgumentMatchers.eq(userAnswer))(any()))
           .thenReturn(Future.successful(CheckClaimOrCancelDecisionForm.StopMarriageAllowance))
 
         val result = controller.submitDecision(request)
@@ -314,7 +314,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val relationshipRecords = createRelationshipRecords()
 
-      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
 
       val claimsViewModel = claimsViewModelImpl(relationshipRecords.primaryRecord, relationshipRecords.nonPrimaryRecords)
       val result = controller.claims(request)
@@ -325,7 +325,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "there is no cached data found" in {
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any())).thenReturn(Future.failed(CacheMissingRelationshipRecords()))
+        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.failed(CacheMissingRelationshipRecords()))
 
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -339,7 +339,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     "display the make change page" when {
       "there is valid data in the cache" in {
         val userAnswer = "Divorce"
-        when(mockUpdateRelationshipService.getMakeChangesDecision(any(),any(), any())).thenReturn(Future.successful(Some(userAnswer)))
+        when(mockUpdateRelationshipService.getMakeChangesDecision(any())).thenReturn(Future.successful(Some(userAnswer)))
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
@@ -347,7 +347,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
 
       "there is no data in the cache" in {
-        when(mockUpdateRelationshipService.getMakeChangesDecision(any(),any(), any())).thenReturn(Future.successful(None))
+        when(mockUpdateRelationshipService.getMakeChangesDecision(any())).thenReturn(Future.successful(None))
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
@@ -355,7 +355,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
-        when(mockUpdateRelationshipService.getMakeChangesDecision(any(),any(), any())).thenReturn(failedFuture)
+        when(mockUpdateRelationshipService.getMakeChangesDecision(any())).thenReturn(failedFuture)
 
         val result = controller.makeChange()(request)
         status(result) shouldBe OK
@@ -382,7 +382,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
         val userAnswer = MakeChangesDecisionForm.Divorce
         val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-        when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any(), any()))
+        when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any()))
           .thenReturn(Future.successful("Divorce"))
 
         val result = controller.submitMakeChange()(request)
@@ -399,10 +399,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
             val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> "Cancel")
 
-            when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq("Cancel"))(any(), any(), any()))
+            when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq("Cancel"))(any()))
               .thenReturn(Future.successful("Cancel"))
 
-            when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any()))
+            when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
               .thenReturn(Future.successful(relationshipRecords))
 
             val result = controller.submitMakeChange()(request)
@@ -430,10 +430,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           val relationshipRecords = createRelationshipRecords()
           val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any(), any()))
+          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any()))
             .thenReturn(Future.successful(userAnswer))
 
-          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any()))
+          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
             .thenReturn(Future.successful(relationshipRecords))
 
           val result = controller.submitMakeChange()(request)
@@ -450,7 +450,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
           val userAnswer = "Bereavement"
           val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
 
-          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any(), any(), any()))
+          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any()))
             .thenReturn(Future.successful(userAnswer))
 
           val result = controller.submitMakeChange()(request)
@@ -485,7 +485,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       val marriageAllowanceEndingDates = MarriageAllowanceEndingDates(nowDate, nowDate)
 
       when(mockUpdateRelationshipService.getMAEndingDatesForCancelation).thenReturn(Future.successful(marriageAllowanceEndingDates))
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(marriageAllowanceEndingDates))(any(), any(), any())).
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(marriageAllowanceEndingDates))(any())).
         thenReturn(Future.successful(marriageAllowanceEndingDates))
 
       val result = controller.cancel(request)
@@ -496,7 +496,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "there are issues saving data to the cache" in {
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any())).thenReturn(failedFuture)
+        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(failedFuture)
 
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -511,7 +511,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "there is data returned from the cache" in {
 
         val relationshipRecords = createRelationshipRecords()
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any())).thenReturn(Future.successful(relationshipRecords))
+        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.successful(relationshipRecords))
         val result = controller.bereavement(request)
 
         status(result) shouldBe OK
@@ -521,7 +521,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       "display an error page" when {
         "there is no cached data found" in {
-          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any())).thenReturn(Future.failed(CacheMissingRelationshipRecords()))
+          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(Future.failed(CacheMissingRelationshipRecords()))
 
           val result = controller.bereavement(request)
           status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -538,7 +538,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "there is data in the cache" in {
 
         val divorceDateInThePast = LocalDate.now().minusDays(1)
-        when(mockUpdateRelationshipService.getDivorceDate(any(), any(), any())).thenReturn(Future.successful(Some(divorceDateInThePast)))
+        when(mockUpdateRelationshipService.getDivorceDate(any())).thenReturn(Future.successful(Some(divorceDateInThePast)))
 
         val result = controller.divorceEnterYear(request)
         status(result) shouldBe OK
@@ -547,7 +547,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
 
       "there is no data in the cache" in {
-        when(mockUpdateRelationshipService.getDivorceDate(any(), any(), any()))
+        when(mockUpdateRelationshipService.getDivorceDate(any()))
           .thenReturn(Future.successful(None))
 
         val result = controller.divorceEnterYear(request)
@@ -559,7 +559,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     }
 
     "a non fatal error has occurred when trying to get cached data" in {
-      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any(), any())).thenReturn(Future.failed(new Exception("exception has been thrown")))
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any())).thenReturn(Future.failed(new Exception("exception has been thrown")))
 
       val result = controller.makeChange()(request)
       status(result) shouldBe OK
@@ -576,7 +576,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
                                            "dateOfDivorce.month" -> divorceDateInThePast.getMonthValue.toString,
                                            "dateOfDivorce.day" -> divorceDateInThePast.getDayOfMonth.toString)
 
-        when(mockUpdateRelationshipService.saveDivorceDate(ArgumentMatchers.eq(divorceDateInThePast))(any(), any(), any()))
+        when(mockUpdateRelationshipService.saveDivorceDate(ArgumentMatchers.eq(divorceDateInThePast))(any()))
           .thenReturn(Future.successful(divorceDateInThePast))
 
         when(mockTimeService.getCurrentDate)
@@ -607,7 +607,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "there is an issue saving to the cache" in {
-        when(mockUpdateRelationshipService.saveDivorceDate(any())(any(), any(), any())).thenReturn(failedFuture)
+        when(mockUpdateRelationshipService.saveDivorceDate(any())(any())).thenReturn(failedFuture)
 
         val divorceDateInThePast = LocalDate.now().minusDays(1)
 
@@ -636,13 +636,13 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
 
-      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any(), any()))
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((role, divorceDate)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
         .thenReturn(Future.successful(maEndingDates))
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any(), any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any()))
         .thenReturn(Future.successful(maEndingDates))
 
       val viewModel = divorceEndExplanationViewModelImpl(role, divorceDate, maEndingDates)
@@ -658,7 +658,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       "an error occurs retrieving divorce data" in {
 
-        when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any(), any()))
+        when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
           .thenReturn(Future.failed(CacheMissingRelationshipRecords()))
 
         val result = controller.divorceEndExplanation()(request)
@@ -676,13 +676,13 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
         val maEndingDates = MarriageAllowanceEndingDates(maEndingDate, paEffectiveDate)
 
-        when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any(), any()))
+        when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
           .thenReturn(Future.successful((role, divorceDate)))
 
         when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
           .thenReturn(Future.successful(maEndingDates))
 
-        when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any(), any(), any()))
+        when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any()))
           .thenReturn(failedFuture)
 
         val result = controller.divorceEndExplanation()(request)
@@ -698,7 +698,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       "an email is recovered from the cache" in {
         val email = EmailAddress("test@test.com")
 
-        when(mockUpdateRelationshipService.getEmailAddress(any(), any(), any()))
+        when(mockUpdateRelationshipService.getEmailAddress(any()))
           .thenReturn(Future.successful(Some(email)))
 
         val result = controller.confirmEmail(request)
@@ -711,7 +711,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
 
       "no email is recovered from the cache" in {
-        when(mockUpdateRelationshipService.getEmailAddress(any(), any(), any())).thenReturn(Future.successful(None))
+        when(mockUpdateRelationshipService.getEmailAddress(any())).thenReturn(Future.successful(None))
 
         val result = controller.confirmEmail(request)
         status(result) shouldBe OK
@@ -720,7 +720,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
       }
 
       "fail to get data from cache" in {
-        when(mockUpdateRelationshipService.getEmailAddress(any(), any(), any())).thenReturn(failedFuture)
+        when(mockUpdateRelationshipService.getEmailAddress(any())).thenReturn(failedFuture)
 
         val result = controller.confirmEmail(request)
         status(result) shouldBe OK
@@ -735,7 +735,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
     "redirect to the confirmUpdate page" in {
 
       val emailAddress = EmailAddress("example@example.com")
-      when(mockUpdateRelationshipService.saveEmailAddress(ArgumentMatchers.eq(emailAddress))(any(), any(), any())).
+      when(mockUpdateRelationshipService.saveEmailAddress(ArgumentMatchers.eq(emailAddress))(any())).
         thenReturn(Future.successful(emailAddress))
 
       val request = buildFakePostRequest("transferor-email" -> emailAddress)
@@ -756,7 +756,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
     "display an error page" when {
       "an error has occurred whilst accessing the cache" in {
-        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any())).thenReturn(failedFuture)
+        when(mockUpdateRelationshipService.getRelationshipRecords(any(), any())).thenReturn(failedFuture)
 
         val result = controller.claims(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -780,7 +780,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val confirmUpdateAnswers = ConfirmationUpdateAnswers(loggedInUser, Some(divorceDate), emailAddress, maEndingDates)
 
-      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any(), any()))
+      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
           .thenReturn(Future.successful(confirmUpdateAnswers))
 
       val result = controller.confirmUpdate()(request)
@@ -794,7 +794,7 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       "there is an issue accessing the cache" in {
 
-        when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any(), any()))
+        when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
           .thenReturn(failedFuture)
 
         val result = controller.confirmUpdate()(request)
@@ -836,10 +836,10 @@ class UpdateRelationshipControllerTest extends ControllerBaseTest with Controlle
 
       val email = "email@email.com"
 
-      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any(), any()))
+      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
         .thenReturn(Future.successful(EmailAddress(email)))
 
-      when(mockUpdateRelationshipService.removeCache(any(), any(), any()))
+      when(mockUpdateRelationshipService.removeCache(any()))
         .thenReturn(Future.successful(mock[HttpResponse]))
 
       val result = controller.finishUpdate()(request)

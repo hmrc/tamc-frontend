@@ -513,7 +513,7 @@ class TransferTest extends BaseTest with NinoGenerator {
     )
 
     "display dynamic message " in {
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
         .thenReturn(
           CurrentAndPreviousYearsEligibility(
             currentYearAvailable = true,
@@ -523,7 +523,7 @@ class TransferTest extends BaseTest with NinoGenerator {
           )
         )
       when(
-        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any(), any(), any())
+        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any())
       )
         .thenReturn(Nil)
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
@@ -537,7 +537,7 @@ class TransferTest extends BaseTest with NinoGenerator {
     }
 
     "display form error message (no year choice made )" in {
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
         .thenReturn(
           CurrentAndPreviousYearsEligibility(
             currentYearAvailable = true,
@@ -651,7 +651,7 @@ class TransferTest extends BaseTest with NinoGenerator {
   "Calling non-pta finished page" should {
 
     "successfully authenticate the user and have finished page and content" in {
-      when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+      when(mockTransferService.getFinishedData(any())(any(), any()))
         .thenReturn(NotificationRecord(EmailAddress("example@example.com")))
       val result = finishedController.finished(request)
 

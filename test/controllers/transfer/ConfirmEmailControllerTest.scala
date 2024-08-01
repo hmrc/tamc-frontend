@@ -94,7 +94,7 @@ class ConfirmEmailControllerTest extends ControllerBaseTest {
     "redirect" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "test@test.com")
-        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any(), any()))
+        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any()))
           .thenReturn(notificationRecord)
         val result = controller.confirmYourEmailAction()(request)
         status(result)           shouldBe SEE_OTHER

@@ -24,7 +24,6 @@ import play.api.mvc.{MessagesControllerComponents, Result}
 import play.twirl.api.Html
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
 
 class TransferErrorHandler @Inject()(
                                      cc: MessagesControllerComponents,
@@ -36,8 +35,7 @@ class TransferErrorHandler @Inject()(
                                      noTaxYearTransferor: views.html.errors.no_tax_year_transferor,
                                      relationshipCannotCreate: views.html.errors.relationship_cannot_create,
                                      recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
-                                     tryLater: views.html.errors.try_later)
-                                    (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                     tryLater: views.html.errors.try_later) extends BaseController(cc) with LoggerHelper {
 
   def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
     def message(throwable: Throwable): String  =

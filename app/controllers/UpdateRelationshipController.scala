@@ -27,7 +27,6 @@ import models.auth.BaseUserRequest
 import play.api.Configuration
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Request, Result}
 import services._
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.LoggerHelper
 import viewModels._
 
@@ -148,7 +147,7 @@ class   UpdateRelationshipController @Inject()(
         })
   }
 
-  private def noLongerWantMarriageAllowanceRedirect(implicit request: Request[_], hc: HeaderCarrier): Future[Result] = {
+  private def noLongerWantMarriageAllowanceRedirect(implicit request: Request[_]): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if(relationshipRecords.primaryRecord.role == Recipient){
         Redirect(controllers.routes.UpdateRelationshipController.stopAllowance())

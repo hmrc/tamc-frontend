@@ -116,7 +116,7 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
         when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
           .thenReturn(dateOfMarriageInput)
 
-        when(mockTransferService.getRecipientDetailsFormData()(any(), any(), any()))
+        when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
           .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
         when(
           mockTransferService.isRecipientEligible(

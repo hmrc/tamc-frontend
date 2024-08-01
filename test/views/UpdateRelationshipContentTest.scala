@@ -74,7 +74,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       ).toArray
 
       val request = FakeRequest()
-      when(mockUpdateRelationshipService.getMakeChangesDecision(any(), any(), any()))
+      when(mockUpdateRelationshipService.getMakeChangesDecision(any()))
         .thenReturn(Future.successful(None))
 
       val result = controller.makeChange()(request)
@@ -109,7 +109,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     when(mockUpdateRelationshipService.getMAEndingDatesForCancelation)
       .thenReturn(maEndingDates)
 
-    when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
+    when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
       .thenReturn(Future.successful(maEndingDates))
 
     val result: Future[Result] = controller.cancel(request)
@@ -123,7 +123,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
 
   "Bereavement page" when {
     "recipient text" in {
-      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any()))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
             RelationshipRecords(RelationshipRecord(Recipient.value, "", "", None, None, "", ""), Seq(), loggedInUser)
@@ -143,7 +143,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     }
 
     "transferor text" in {
-      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any()))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
             RelationshipRecords(RelationshipRecord(Transferor.value, "", "", None, None, "", ""), Seq(), loggedInUser)
@@ -163,7 +163,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     }
 
     "recipient bullet list" in {
-      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any()))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
             RelationshipRecords(RelationshipRecord(Recipient.value, "", "", None, None, "", ""), Seq(), loggedInUser)
@@ -179,7 +179,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     }
 
     "transferor bullet list" in {
-      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any(), any()))
+      when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
         .thenReturn(
           Future.successful(
             RelationshipRecords(RelationshipRecord(Transferor.value, "", "", None, None, "", ""), Seq(), loggedInUser)
@@ -201,7 +201,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
 
  "Divorce Enter Year Page" when {
    "divorceEnterYear" in {
-     when(mockUpdateRelationshipService.getDivorceDate(any(), any(), any()))
+     when(mockUpdateRelationshipService.getDivorceDate(any()))
        .thenReturn(Future.successful(None))
 
      val result: Future[Result] = controller.divorceEnterYear(request)
@@ -244,13 +244,13 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val endingDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
       val date = TaxYear.current.starts
 
-      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any(), any()))
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((Transferor, date)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
         .thenReturn(endingDates)
 
       val result = controller.divorceEndExplanation(request)
@@ -280,13 +280,13 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val endingDates = MarriageAllowanceEndingDates(LocalDate.of(2017, 4, 5), LocalDate.of(2017, 4, 6))
       val divorceDate  = LocalDate.of(2017, 4, 5)
 
-      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any(), any()))
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((Transferor, divorceDate)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
         .thenReturn(endingDates)
 
       val result =  controller.divorceEndExplanation(request)
@@ -318,13 +318,13 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val endingDates = MarriageAllowanceEndingDates(taxYear.finishes, taxYear.next.starts)
       val divorceDate  = taxYear.starts
 
-      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any(), any()))
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((Recipient, divorceDate)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
         .thenReturn(endingDates)
 
       val result =  controller.divorceEndExplanation(request)
@@ -355,13 +355,13 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
       val endingDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
       val divorceDate = LocalDate.of(year, month, day)
 
-      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any(), any()))
+      when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((Recipient, divorceDate)))
 
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(any(), any()))
         .thenReturn(endingDates)
 
-      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any(), any(), any()))
+      when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(any())(any()))
         .thenReturn(endingDates)
 
       val result =  controller.divorceEndExplanation(request)
@@ -390,7 +390,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
 
   "Confirm Email" in {
 
-    when(mockUpdateRelationshipService.getEmailAddress(any(), any(), any()))
+    when(mockUpdateRelationshipService.getEmailAddress(any()))
       .thenReturn(Future.successful(None))
 
     val expectedHeading = messages("pages.form.field.your-confirmation")
@@ -420,7 +420,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
   "Confirmation Update Page" when {
     "End reason divorce display divorce date row" in {
 
-      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any(), any()))
+      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
         .thenReturn(Future.successful(
           ConfirmationUpdateAnswers(loggedInUser, Some(LocalDate.now()), "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
@@ -453,7 +453,7 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
     }
 
     "display two rows when no DivorceDate is present" in {
-      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any(), any()))
+      when(mockUpdateRelationshipService.getConfirmationUpdateAnswers(any(), any()))
         .thenReturn(Future.successful(
           ConfirmationUpdateAnswers(loggedInUser, None, "email@email.com", MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts))))
 
@@ -489,10 +489,10 @@ class UpdateRelationshipContentTest extends BaseTest with Injecting {
 
     "display the correct content" in {
 
-      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any(), any()))
+      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
         .thenReturn(Future.successful(EmailAddress("email@email.com")))
 
-      when(mockUpdateRelationshipService.removeCache(any(), any(), any()))
+      when(mockUpdateRelationshipService.removeCache(any()))
         .thenReturn(())
 
       val expectedHeading = messages("pages.coc.finish.header")
