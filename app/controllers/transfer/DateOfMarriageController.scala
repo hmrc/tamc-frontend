@@ -20,7 +20,6 @@ import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.DateOfMarriageForm
 import models._
-import play.api.i18n.Lang
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService._
 import services.{CachingService, TimeService, TransferService}
@@ -42,14 +41,6 @@ class DateOfMarriageController @Inject()(
 
   def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
-  }
-
-  def dateOfMarriageWithCy: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
-    Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage()).withLang(Lang("cy"))
-  }
-
-  def dateOfMarriageWithEn: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
-    Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage()).withLang(Lang("en"))
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async{ implicit request =>

@@ -74,26 +74,6 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
     }
   }
 
-  "dateOfMarriageWithCy" should {
-    "redirect to dateOfMarriage, with a welsh language setting" in {
-      val result = await(controller.dateOfMarriageWithCy()(request))
-      status(result)               shouldBe SEE_OTHER
-      redirectLocation(result)     shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
-      result.newCookies.head.name  shouldBe "PLAY_LANG"
-      result.newCookies.head.value shouldBe "cy"
-    }
-  }
-
-  "dateOfMarriageWithEn" should {
-    "redirect to dateOfMarriage, with an english language setting" in {
-      val result = await(controller.dateOfMarriageWithEn()(request))
-      status(result)               shouldBe SEE_OTHER
-      redirectLocation(result)     shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
-      result.newCookies.head.name  shouldBe "PLAY_LANG"
-      result.newCookies.head.value shouldBe "en"
-    }
-  }
-
   "dateOfMarriageAction" should {
     "return bad request" when {
       "an invalid form is submitted" in {
