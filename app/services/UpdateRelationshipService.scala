@@ -180,7 +180,7 @@ class UpdateRelationshipService @Inject()(
   def getConfirmationUpdateAnswers(implicit request: Request[_], ec: ExecutionContext): Future[ConfirmationUpdateAnswers] =
     cachingService.get[ConfirmationUpdateAnswersCacheData](USER_ANSWERS_UPDATE_CONFIRMATION).map(_.getOrElse(throw CacheMapNoFound())).map(ConfirmationUpdateAnswers(_))
 
-  def getMAEndingDatesForCancelation: MarriageAllowanceEndingDates = {
+  def getMAEndingDatesForCancellation: MarriageAllowanceEndingDates = {
     val marriageAllowanceEndDate = endDateForMACeased.endDate
     val personalAllowanceEffectiveDate = endDateForMACeased.personalAllowanceEffectiveDate
 

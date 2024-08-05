@@ -508,9 +508,9 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
     }
 
-    "getMAEndingDatesForCancelation" should {
+    "getMAEndingDatesForCancellation" should {
       "return dates" in {
-        val result = await(service.getMAEndingDatesForCancelation)
+        val result = await(service.getMAEndingDatesForCancellation)
 
         result shouldBe MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)
       }

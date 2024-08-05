@@ -46,7 +46,7 @@ request: AuthenticatedUserRequest[_])
 
     @p(Text(messages("pages.divorce.paragraph1")))
 
-    @form(action = routes.UpdateRelationshipController.submitDivorceEnterYear()) {
+    @form(action = UpdateRelationship.routes.DivorceController.submitDivorceEnterYear()) {
         
         @inputDate(
             fieldName = divorceYearForm.DateOfDivorce,

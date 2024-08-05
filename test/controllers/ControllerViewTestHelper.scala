@@ -36,6 +36,7 @@ trait ControllerViewTestHelper extends UnitSpec {
     AuthenticatedUserRequest(request, None, isSA = true, None, nino)
   }
 
+  implicit val failedFuture: Future[Nothing] = Future.failed(new RuntimeException("test"))
   implicit val partialRetriever: FormPartialRetriever = mock[MockFormPartialRetriever]
 
   implicit class ViewMatcherHelper(result: Future[Result]) {

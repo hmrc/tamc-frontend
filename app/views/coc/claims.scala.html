@@ -30,40 +30,38 @@ govukInsetText: GovukInsetText)
 pageTitle = messages("pages.claims.title")
 ){
 
-    @h1("pages.claims.title")
+  @h1("pages.claims.title")
 
-    <section>
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header">@messages("pages.claims.table.heading.tax-year")</th>
-                    <th class="govuk-table__header">@messages("pages.claims.table.heading.status")</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__header" id="active">
-                        @viewModel.activeRow.dateInterval
-                    </td>
-                    <td class="govuk-table__cell" id="active-reason">@viewModel.activeRow.status</td>
-                </tr>
+  <section>
+      <table class="govuk-table">
+          <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                  <th class="govuk-table__header">@messages("pages.claims.table.heading.tax-year")</th>
+                  <th class="govuk-table__header">@messages("pages.claims.table.heading.status")</th>
+              </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+              <tr class="govuk-table__row">
+                  <td class="govuk-table__header" id="active">
+                      @viewModel.activeRow.dateInterval
+                  </td>
+                  <td class="govuk-table__cell" id="active-reason">@viewModel.activeRow.status</td>
+              </tr>
 
-                @for((row, index) <- viewModel.historicRows.zipWithIndex) {
-                    <tr>
-                        <td class="govuk-table__header" id="line${index}-start">
-                            @row.dateInterval
-                        </td>
-                        <td class="govuk-table__cell" id="line${index}-reason">
-                            @row.status
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </section>
+              @for((row, index) <- viewModel.historicRows.zipWithIndex) {
+                  <tr>
+                      <td class="govuk-table__header" id="line${index}-start">
+                          @row.dateInterval
+                      </td>
+                      <td class="govuk-table__cell" id="line${index}-reason">
+                          @row.status
+                      </td>
+                  </tr>
+              }
+          </tbody>
+      </table>
+  </section>
 
-    @govukInsetText(InsetText(
-                        content = HtmlContent(viewModel.taxFreeAllowanceLink)
-    ))
+  @govukInsetText(InsetText(id = Some("taxFreeAllowance"), content = HtmlContent(viewModel.taxFreeAllowanceLink)))
 
 }
