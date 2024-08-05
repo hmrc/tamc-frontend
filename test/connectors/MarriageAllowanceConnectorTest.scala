@@ -140,7 +140,7 @@ class MarriageAllowanceConnectorTest extends ConnectorBaseTest {
     }
   }
 
-  "updateRelationship" should {
+  "UpdateRelationship" should {
     "return a responce" in {
       val requestUrl = s"/paye/$nino/update-relationship"
       server.stubFor(put(urlPathEqualTo(requestUrl))

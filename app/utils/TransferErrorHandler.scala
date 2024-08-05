@@ -60,21 +60,21 @@ class TransferErrorHandler @Inject()(
       case t: RecipientDeceased =>
         handle(t, warn, Redirect(controllers.transfer.routes.CannotUseServiceController.cannotUseService()))
       case t: CacheMissingTransferor =>
-        handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+        handle(t, warn, Redirect(controllers.UpdateRelationship.routes.HistoryController.history()))
       case t: CacheTransferorInRelationship => handle(t, warn, Ok(transferorStatus()))
       case t: CacheMissingRecipient =>
-        handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+        handle(t, warn, Redirect(controllers.UpdateRelationship.routes.HistoryController.history()))
       case t: CacheMissingEmail =>
         handle(t, warn, Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail()))
       case t: CacheRelationshipAlreadyCreated =>
-        handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+        handle(t, warn, Redirect(controllers.UpdateRelationship.routes.HistoryController.history()))
       case t: CacheCreateRequestNotSent =>
-        handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+        handle(t, warn, Redirect(controllers.UpdateRelationship.routes.HistoryController.history()))
       case t: NoTaxYearsSelected      => handle(t, info, Ok(noYearSelected()))
       case t: NoTaxYearsAvailable     => handle(t, info, Ok(noEligibleYears()))
       case t: NoTaxYearsForTransferor => handle(t, info, Ok(noTaxYearTransferor()))
       case t: RelationshipMightBeCreated =>
-        handle(t, warn, Redirect(controllers.routes.UpdateRelationshipController.history()))
+        handle(t, warn, Redirect(controllers.UpdateRelationship.routes.HistoryController.history()))
       case ex: CannotCreateRelationship => handleWithException(ex, relationshipCannotCreate())
       case ex: CacheRecipientInRelationship =>
         handleWithException(ex, recipientRelationshipExists())
