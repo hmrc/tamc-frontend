@@ -26,7 +26,7 @@ request: BaseUserRequest[_])
 
 @main(
 pageTitle = Messages("title.error"),
-backLinkHref = Some(controllers.routes.UpdateRelationshipController.history().url)
+backLinkHref = Some(controllers.UpdateRelationship.routes.HistoryController.history().url)
 ) {
 @p(Text(messages("transferor.no-eligible-years")), elmId=Some("error"))
 }

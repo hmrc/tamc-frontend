@@ -47,5 +47,5 @@ pageTitle = messages("pages.cancel.title")
     @p(Text(messages("pages.cancel.paragraph1", maDate)))
     @p(Text(messages("pages.cancel.paragraph2", paDate)))
 
-    @button(msg = "generic.continue", href = Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), id = "confirmUpdate")
+    @button(msg = "generic.continue", href = Some(controllers.UpdateRelationship.routes.ConfirmEmailController.confirmEmail().url), id = "confirmUpdate")
 }

@@ -42,5 +42,5 @@ request: AuthenticatedUserRequest[_])
     <li>@{viewModel.bulletStatement._2}</li>
   </ul>
 
-  @button(msg = "generic.continue", href = Some(controllers.routes.UpdateRelationshipController.confirmEmail().url), id = "continue")
+  @button(msg = "generic.continue", href = Some(controllers.UpdateRelationship.routes.ConfirmEmailController.confirmEmail().url), id = "continue")
 }

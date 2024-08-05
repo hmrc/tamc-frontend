@@ -43,10 +43,10 @@ class ClaimsViewModelTest extends BaseTest {
 
   lazy val taxFreeHtml: Html =
     Html(
-      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a href="${applicationConfig.taxFreeAllowanceUrl}">
+      s"""${messages("pages.claims.link.tax.free.allowance.part1")} <a id="taxFreeAllowanceLink" href="${applicationConfig.taxFreeAllowanceUrl}">
          |${messages("pages.claims.link.tax.free.allowance.link.text")}</a>""".stripMargin)
 
-  val now = LocalDate.now()
+  val now: LocalDate = LocalDate.now()
   val dateInputPattern = "yyyyMMdd"
 
 

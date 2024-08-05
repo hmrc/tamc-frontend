@@ -39,7 +39,7 @@ request: AuthenticatedUserRequest[_])
     serviceTitle = "tamc.manage"
 ) {
 
-    @form(action = routes.UpdateRelationshipController.confirmYourEmailActionUpdate(), args = (Symbol("id") -> "register-form")) {
+    @form(action = UpdateRelationship.routes.ConfirmEmailController.confirmYourEmailActionUpdate(), args = (Symbol("id") -> "register-form")) {
 
     @errorSummary(recipientForm)
     

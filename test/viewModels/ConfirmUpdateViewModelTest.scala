@@ -55,7 +55,7 @@ class ConfirmUpdateViewModelTest extends BaseTest {
 
         val divorceDate = transformedDate(LocalDate.now().minusDays(1))
         val divorceDateRow = SummaryRow(messages("pages.divorce.title"), "change-link-date", "change date", divorceDate,
-          Some(controllers.routes.UpdateRelationshipController.divorceEnterYear().url), 2)
+          Some(controllers.UpdateRelationship.routes.DivorceController.divorceEnterYear().url), 2)
 
         val expectedRows = Seq(nameRow, divorceDateRow, emailRow)
         val expectedEndDate = transformedDate(marriageAllowanceEndingDates.marriageAllowanceEndDate)
@@ -84,4 +84,5 @@ class ConfirmUpdateViewModelTest extends BaseTest {
       nameRow.head.userAnswer shouldBe ""
     }
   }
+
 }

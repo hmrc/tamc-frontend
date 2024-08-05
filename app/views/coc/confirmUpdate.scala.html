@@ -41,12 +41,12 @@ pageTitle = messages("title.confirm-transferor")
 
     @p(Text(messages("pages.confirm.cancel.message")))
 
-    <ul class="govuk-list govuk-list--bullet">
+    <ul id="marriageAllowanceEndDates" class="govuk-list govuk-list--bullet">
     <li>@messages("pages.confirm.cancel.message1", viewModel.endDate)</li>
     <li>@messages("pages.confirm.cancel.message2", viewModel.effectiveDate)</li>
     </ul>
 
-    @form(action = routes.UpdateRelationshipController.submitConfirmUpdate()) {
+    @form(action = UpdateRelationship.routes.ConfirmChangeController.submitConfirmUpdate()) {
         @button(msg = "pages.confirm.cancel.continue.button", attrs = Map("data-journey-click" -> "marriage-allowance:link:confirm_cancellation"))
     }
 

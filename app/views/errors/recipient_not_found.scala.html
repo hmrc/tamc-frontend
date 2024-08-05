@@ -38,6 +38,6 @@ disableBackLink = true
     @p(HtmlContent(Messages("recipient.not.found.para2")))
 
     @p(HtmlContent(
-    button(msg = "generic.back", href = Some(controllers.routes.UpdateRelationshipController.history().url))
+    button(msg = "generic.back", href = Some(controllers.UpdateRelationship.routes.HistoryController.history().url))
     ), elmId = Some("get-started"))
 }

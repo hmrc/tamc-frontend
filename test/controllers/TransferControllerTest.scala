@@ -157,7 +157,7 @@ class TransferControllerTest extends ControllerBaseTest {
         when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
           .thenReturn(dateOfMarriageInput)
 
-        when(mockTransferService.getRecipientDetailsFormData()(any(), any(), any()))
+        when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
           .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
         when(
           mockTransferService.isRecipientEligible(
@@ -176,7 +176,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "eligibleYears" should {
     "return a success" when {
       "there are available tax years not including current year" in {
-        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -190,7 +190,7 @@ class TransferControllerTest extends ControllerBaseTest {
       }
 
       "there are available tax years including current year" in {
-        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               true,
@@ -207,7 +207,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
     "throw an exception and recover user to error page" when {
       "available tax years is empty" in {
-        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -226,7 +226,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "return bad request" when {
       "an invalid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "abc")
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -243,7 +243,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "return success" when {
       "extra years is not empty and applyForCurrentYear is true" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "true")
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -252,16 +252,16 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any(), any()))
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any()))
           .thenReturn(List(currentTaxYear))
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any(), any())
+        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any())
       }
 
       "extra years is not empty and applyForCurrentYear is false" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -270,17 +270,17 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())
+        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(Nil))(any())
       }
     }
 
     "redirect the user" when {
       "extra years is empty and current year is unavailable" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -289,7 +289,7 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.routes.TransferController.confirmYourEmail().url)
@@ -297,7 +297,7 @@ class TransferControllerTest extends ControllerBaseTest {
 
       "extra years is empty, current year is available but applyForCurrentYear is true" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "true")
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               true,
@@ -306,7 +306,7 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any(), any(), any()))
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any()))
           .thenReturn(List(currentTaxYear))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
@@ -317,7 +317,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "throw an exception and show an error page" when {
       "extra years is empty, current year is available and applyForCurrentYear is false" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               true,
@@ -326,7 +326,7 @@ class TransferControllerTest extends ControllerBaseTest {
               RecipientRecordData.recipientRecord.availableTaxYears
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any(), any(), any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Nil)
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
       }
@@ -336,7 +336,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "previousYears" should {
     "return success" when {
       "a successful call to transfer service is made" in {
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -354,7 +354,7 @@ class TransferControllerTest extends ControllerBaseTest {
   "extraYearsAction" should {
     "return bad request" when {
       "an invalid form is submitted" in {
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -375,7 +375,7 @@ class TransferControllerTest extends ControllerBaseTest {
           "furtherYears"              -> "2014,2013",
           "yearAvailableForSelection" -> "2014"
         )
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -389,7 +389,7 @@ class TransferControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
             ArgumentMatchers.eq(2015),
             ArgumentMatchers.eq(Some(2014))
-          )(any(), any(), any())
+          )(any(), any())
         )
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)
@@ -404,7 +404,7 @@ class TransferControllerTest extends ControllerBaseTest {
           "furtherYears"              -> "",
           "yearAvailableForSelection" -> "2014"
         )
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any(), any()))
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
             CurrentAndPreviousYearsEligibility(
               false,
@@ -418,7 +418,7 @@ class TransferControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(RecipientRecordData.recipientRecord.availableTaxYears),
             ArgumentMatchers.eq(2015),
             ArgumentMatchers.eq(Some(2014))
-          )(any(), any(), any())
+          )(any(), any())
         )
           .thenReturn(Nil)
         val result = controller.extraYearsAction()(request)
@@ -459,7 +459,7 @@ class TransferControllerTest extends ControllerBaseTest {
     "redirect" when {
       "a valid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("transferor-email" -> "test@test.com")
-        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any(), any(), any()))
+        when(mockTransferService.upsertTransferorNotification(ArgumentMatchers.eq(notificationRecord))(any()))
           .thenReturn(notificationRecord)
         val result = controller.confirmYourEmailAction()(request)
         status(result)           shouldBe SEE_OTHER
@@ -498,7 +498,7 @@ class TransferControllerTest extends ControllerBaseTest {
         reset(mockCachingService)
         verify(mockCachingService, times(0)).clear()(any())
 
-        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+        when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(notificationRecord)
 
         val result = controller.finished()(request)
@@ -513,7 +513,7 @@ class TransferControllerTest extends ControllerBaseTest {
         reset(mockCachingService)
         verify(mockCachingService, times(0)).clear()(any())
 
-        when(mockTransferService.getFinishedData(any())(any(), any(), any()))
+        when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenThrow(new IllegalArgumentException("123"))
 
         controller.finished()(request)

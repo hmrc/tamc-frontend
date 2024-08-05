@@ -35,6 +35,6 @@ link: Link)
     @p(Text(messages("pages.stopAllowance.paragraph1")))
     @p(Text(messages("pages.stopAllowance.paragraph2")))
 
-    @link(link = controllers.routes.UpdateRelationshipController.history().url, messageKey = "claim.summary.link", id= Some("backToSummary"))
+    @link(link = controllers.UpdateRelationship.routes.HistoryController.history().url, messageKey = "claim.summary.link", id= Some("backToSummary"))
 
 }
