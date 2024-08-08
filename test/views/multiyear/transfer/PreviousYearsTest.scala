@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,60 +16,112 @@
 
 package views.multiyear.transfer
 
+import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
+import controllers.auth.PertaxAuthAction
+import controllers.transfer.{EligibleYearsController, ExtraYearsController}
+import helpers.FakePertaxAuthAction
+import models._
 import models.auth.AuthenticatedUserRequest
-import models.{Gender, RegistrationFormInput, TaxYear}
+import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import play.api.Application
+import play.api.http.Status.{BAD_REQUEST, OK}
+import play.api.inject.bind
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
+import play.api.test.Helpers.contentAsString
+import services.TransferService
+import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
-import utils.{BaseTest, NinoGenerator}
-import views.html.multiyear.transfer.previous_years
+import uk.gov.hmrc.time
+import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 
 import java.time.LocalDate
+import scala.concurrent.duration._
+import scala.language.postfixOps
+
 
 class PreviousYearsTest extends BaseTest with NinoGenerator {
 
   lazy val nino: String = generateNino().nino
-  lazy val previousYears = instanceOf[previous_years]
-  lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino(nino), LocalDate.now)
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  val mockTransferService: TransferService = mock[TransferService]
+  val eligibleYearsController: EligibleYearsController = app.injector.instanceOf[EligibleYearsController]
+  val extraYearsController: ExtraYearsController = app.injector.instanceOf[ExtraYearsController]
 
-  "previousYears" should {
-    "return the correct title" in {
+  implicit val duration: Timeout = 20 seconds
 
-      val document = Jsoup.parse(previousYears(registrationForm,
-        List(TaxYear(2022)),
-        true).toString())
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
+    .overrides(
+      bind[TransferService].toInstance(mockTransferService),
+      bind[AuthRetrievals].to[MockAuthenticatedAction],
+      bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
+      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+    )
+    .build()
 
-      val title = document.title()
-      val expected = messages("pages.previousyear.header") + " - " + messages("title.application.pattern")
+  "Calling Previous year page " should {
+    val rcrec = UserRecord(cid = 123456, timestamp = "2015")
+    val rcdata = RegistrationFormInput(
+      name = "foo",
+      lastName = "bar",
+      gender = Gender("M"),
+      nino = Nino(Ninos.ninoWithLOA1),
+      dateOfMarriage = LocalDate.of(2011, 4, 10)
+    )
+    val recrecord = RecipientRecord(
+      record = rcrec,
+      data = rcdata,
+      availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016))
+    )
 
-      title shouldBe expected
+    "display dynamic message " in {
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+        .thenReturn(
+          CurrentAndPreviousYearsEligibility(
+            currentYearAvailable = true,
+            recrecord.availableTaxYears,
+            recrecord.data,
+            recrecord.availableTaxYears
+          )
+        )
+      when(
+        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any())
+      )
+        .thenReturn(Nil)
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
+      val result = eligibleYearsController.eligibleYearsAction(request)
+
+      status(result) shouldBe OK
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("firstNameOnly").text() shouldBe "foo"
+      document.getElementById("marriageDate").text() shouldBe "10 April 2011"
+      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.transfer.routes.EligibleYearsController.eligibleYears().url
     }
 
-    "display 'automatically renew every year' content" in {
+    "display form error message (no year choice made )" in {
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+        .thenReturn(
+          CurrentAndPreviousYearsEligibility(
+            currentYearAvailable = true,
+            recrecord.availableTaxYears,
+            recrecord.data,
+            recrecord.availableTaxYears
+          )
+        )
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "year" -> "List(0)")
+      val result = extraYearsController.extraYearsAction(request)
 
-      val document = Jsoup.parse(previousYears(registrationForm,
-        List(TaxYear(2022)),
-        true).toString())
-
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.previousyear.para")
-
-      paragraphTag should include(expected)
-
-    }
-
-    "display You can apply for earlier tax years h1" in {
-
-      val document = Jsoup.parse(previousYears(registrationForm,
-        List(TaxYear(2022)),
-        true).toString())
-
-      val paragraphTag = document.getElementsByTag("h1").toString
-      val expected = messages("pages.previousyear.header")
-
-      paragraphTag should include(expected)
-
+      status(result) shouldBe BAD_REQUEST
+      val document = Jsoup.parse(contentAsString(result))
+      document.getElementById("heading").text() shouldBe "Confirm the earlier years you want to apply for"
+      document.getElementById("eligible-years-form").toString should include("/marriage-allowance-application/extra-years")
+      document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
+      document.getElementById("selectedYear-error").text() shouldBe "Error: Select yes if you would like to apply for earlier tax years"
     }
   }
 

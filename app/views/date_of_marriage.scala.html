@@ -37,7 +37,7 @@ request: AuthenticatedUserRequest[_])
 @main(
     pageTitle = viewHelpers.formErrorPrefix(marriageForm, messages("title.date-of-marriage")),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.routes.TransferController.transfer().url)
+    backLinkHref = Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
 ){
 
   @errorSummary(marriageForm, Some("dateOfMarriage.day"))
@@ -47,7 +47,7 @@ request: AuthenticatedUserRequest[_])
   @p(HtmlContent(messages("pages.date-of-marriage.para1")))
   @p(HtmlContent(messages("pages.date-of-marriage.para2")))
 
-  @form(action = routes.TransferController.dateOfMarriageAction(), args = (Symbol("id") -> "date-of-marriage-form")) {
+  @form(action = transfer.routes.DateOfMarriageController.dateOfMarriageAction(), args = (Symbol("id") -> "date-of-marriage-form")) {
     @inputDate(
         fieldName = "dateOfMarriage",
         form = marriageForm,
