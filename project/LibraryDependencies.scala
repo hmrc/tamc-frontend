@@ -18,8 +18,8 @@ import sbt.*
 
 object LibraryDependencies {
 
-  private val hmrcMongoFeatureTogglesClientVersion  = "1.4.0"
-  private val hmrcScaWrapperVersion                 = "1.8.0"
+  private val hmrcMongoFeatureTogglesClientVersion  = "1.5.0"
+  private val hmrcScaWrapperVersion                 = "1.9.0"
   private val hmrcBootstrapVersion                  = "8.6.0"
 
   private val playVersion = "play-30"
