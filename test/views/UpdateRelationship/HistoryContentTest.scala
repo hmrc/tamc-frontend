@@ -47,6 +47,7 @@ class HistoryContentTest extends BaseTest with Injecting with NinoGenerator{
     has_allowance = None,
     name = Some(citizenName))
   val maxBenefitCY: String = NumberFormat.getIntegerInstance().format(appConfig.MAX_BENEFIT(TaxYear.current.startYear))
+  val maxAllowanceTransferCY: String = NumberFormat.getIntegerInstance().format(appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(TaxYear.current.startYear))
 
   val userRecord: Seq[(Role, Boolean, String)] = Seq(
     (Transferor, true, "Your Marriage Allowance claim has ended. " +
@@ -54,7 +55,8 @@ class HistoryContentTest extends BaseTest with Injecting with NinoGenerator{
     (Transferor, false, "You are currently helping your partner benefit from Marriage Allowance."),
     (Recipient, true, "Your Marriage Allowance claim has ended. " +
       s"You will keep the tax-free allowances transferred to you until 5 April ${TaxYear.current.finishes.getYear}."),
-    (Recipient, false, "Your partner is currently using Marriage Allowance to transfer £1,260 of their Personal Allowance to you. " +
+    (Recipient, false, s"Your partner is currently using Marriage Allowance to transfer £" +
+      s"$maxAllowanceTransferCY of their Personal Allowance to you. " +
       s"This can reduce the tax you pay by up to £$maxBenefitCY a year.")
     )
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,13 +80,13 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   def MAX_LIMIT_NORTHERN_IRELAND(taxYear: Int = 0): Int = configuration.getOptional[Int]("max-limit-northern-ireland-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(taxYear: Int = 0): Int = configuration.getOptional[Int]("max-allowed-personal-allowance-transfer-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_BENEFIT(taxYear: Int = 0): Int = configuration.getOptional[Int]("max-benefit-" + actualTaxYear(taxYear)).getOrElse(0)
+  def MAX_BENEFIT_SCOT(taxYear: Int = 0): Int =
+    configuration.getOptional[Int](("max-allowed-personal-allowance-transfer-" + actualTaxYear(taxYear)) * 0.19.toInt).getOrElse(0)
 
   def STARTER_RATE_LOWER_TRESHOLD_SCOT(taxYear: Int = 0): Int = configuration.getOptional[Int]("taxbands-starter-rate-lowerthreshold-scotland-" + actualTaxYear(taxYear)).getOrElse(0)
 
   val TRANSFEROR_ALLOWANCE: Int = PERSONAL_ALLOWANCE() - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
   val RECIPIENT_ALLOWANCE: Int = PERSONAL_ALLOWANCE() + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
-  val TAMC_VALID_JOURNEY = "TAMC_VALID_JOURNEY"
-  val SCOTTISH_RESIDENT = "scottish_resident"
 
   val gdsStartUrl: String = loadConfig("tamc.external-urls.start-gds")
   val gdsContinueUrl: String = loadConfig("tamc.external-urls.continue-gds")
