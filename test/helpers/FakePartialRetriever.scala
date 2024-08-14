@@ -19,13 +19,14 @@ package helpers
 import com.google.inject.Inject
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.partials.{FormPartialRetriever, HeaderCarrierForPartialsConverter}
 
 import scala.concurrent.ExecutionContext
 
+
 class FakePartialRetriever @Inject()(
-                                      override val httpGet: HttpClient,
+                                      override val httpClientV2: HttpClientV2,
                                       override val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter
                                     ) extends FormPartialRetriever {
 

@@ -16,17 +16,18 @@
 
 package helpers
 
-import uk.gov.hmrc.http.HttpGet
-import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever}
 import scala.concurrent.duration.Duration
 
 object FakeCachedStaticHtmlPartialRetriever extends CachedStaticHtmlPartialRetriever {
-  override def httpGet: HttpGet = ???
+  override def httpClientV2: HttpClientV2 = ???
+
 
   override def refreshAfter: Duration = ???
 
   override def expireAfter: Duration = ???
 
   override def maximumEntries: Int = ???
+
 }
