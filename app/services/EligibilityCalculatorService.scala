@@ -23,10 +23,10 @@ import uk.gov.hmrc.time.TaxYear
 import utils.{BenefitCalculatorHelper, TaxBandReader}
 
 class EligibilityCalculatorService @Inject()(
-  appConfig: ApplicationConfig,
-  benefitCalculatorHelper: BenefitCalculatorHelper,
-  taxBandReader: TaxBandReader
-) {
+                                              appConfig: ApplicationConfig,
+                                              benefitCalculatorHelper: BenefitCalculatorHelper,
+                                              taxBandReader: TaxBandReader
+                                            ) {
 
   def calculate(transferorIncome: BigDecimal, recipientIncome: BigDecimal, countryOfResidence: Country, taxYear: TaxYear): EligibilityCalculatorResult = {
     val maxBenefitLimit = benefitCalculatorHelper.maxLimit(countryOfResidence)

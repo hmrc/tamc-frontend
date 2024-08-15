@@ -80,10 +80,9 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   def MAX_LIMIT_NORTHERN_IRELAND(taxYear: Int = 0): Int = configuration.getOptional[Int]("max-limit-northern-ireland-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER(taxYear: Int = 0): Int = configuration.getOptional[Int]("max-allowed-personal-allowance-transfer-" + actualTaxYear(taxYear)).getOrElse(0)
   def MAX_BENEFIT(taxYear: Int = 0): Int = configuration.getOptional[Int]("max-benefit-" + actualTaxYear(taxYear)).getOrElse(0)
-  def MAX_BENEFIT_SCOT(taxYear: Int = 0): Int =
-    configuration.getOptional[Int](("max-allowed-personal-allowance-transfer-" + actualTaxYear(taxYear)) * 0.19.toInt).getOrElse(0)
 
   def STARTER_RATE_LOWER_TRESHOLD_SCOT(taxYear: Int = 0): Int = configuration.getOptional[Int]("taxbands-starter-rate-lowerthreshold-scotland-" + actualTaxYear(taxYear)).getOrElse(0)
+  val MAX_BENEFIT_SCOT: Int = (MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.19).toInt
 
   val TRANSFEROR_ALLOWANCE: Int = PERSONAL_ALLOWANCE() - MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
   val RECIPIENT_ALLOWANCE: Int = PERSONAL_ALLOWANCE() + MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()
