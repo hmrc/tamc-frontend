@@ -39,6 +39,7 @@ class EligibilityCalculatorService @Inject()(
 
     val incomeScenarios: Seq[Boolean] = Seq(incorrectRole, bothOverMax, recipientNotEligible, mayNotBenefit, hasMaxBenefit)
 
+//TODO: DDCNL-9296 - Once clarification from the business - hasMaxBenefit > if Scotland residency {band => band.name == "StarterRate"} else "BasicRate"
     incomeScenarios match {
       case Seq(true, _, _, _, _)     => EligibilityCalculatorResult(messageKey = "eligibility.feedback.incorrect-role")
       case Seq(_, true, _, _, _) => EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible",
