@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers.UpdateRelationship
+package utils
 
 import controllers.ControllerViewTestHelper
 import errors._
@@ -25,7 +25,6 @@ import play.api.test.Injecting
 import test_utils._
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
-import utils.{ControllerBaseTest, UpdateRelationshipErrorHandler}
 
 import scala.concurrent.Future
 

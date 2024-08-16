@@ -34,7 +34,7 @@ request: BaseUserRequest[_])
 
 @main(
 pageTitle = Messages("title.other-ways"),
-backLinkHref = Some(controllers.routes.TransferController.eligibleYears().url)
+backLinkHref = Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
 ) {
 
 @h1("pages.noyears.h1", elmId=Some("message"))

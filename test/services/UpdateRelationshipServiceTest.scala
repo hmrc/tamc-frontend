@@ -330,7 +330,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     }
   }
 
-  "updateRelationship" should {
+  "UpdateRelationship" should {
 
     "construct and return the generated UpdateRelationshipRequestHolder" when {
 

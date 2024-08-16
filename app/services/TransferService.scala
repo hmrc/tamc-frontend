@@ -17,7 +17,6 @@
 package services
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors._
@@ -43,8 +42,7 @@ class TransferService @Inject()(
   applicationService: ApplicationService,
   timeService: TimeService,
   languageUtilsImpl: LanguageUtilsImpl,
-  taxYear: SystemTaxYear,
-  appConfig: ApplicationConfig
+  taxYear: SystemTaxYear
 ) extends Logging {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
