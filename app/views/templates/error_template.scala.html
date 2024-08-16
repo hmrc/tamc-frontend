@@ -16,16 +16,17 @@
 
 @import config.ApplicationConfig
 @import includes.{H1, P}
+@import views.Main
 
 @this(
-main: errorTemplate,
+main: Main,
 applicationConfig: ApplicationConfig,
 p: P,
 h1: H1)
 
 @(pageTitle: String, heading: String, message: String)(implicit messages: Messages, request: Request[_])
 
-@main(pageTitle = Some(pageTitle)){
+@main(pageTitle = pageTitle){
 @h1(heading, elmId = Some("errorHeading"))
 
 @p(Text(message), elmId = Some("errorText"))

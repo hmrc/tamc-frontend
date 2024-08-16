@@ -18,23 +18,22 @@ import sbt.*
 
 object LibraryDependencies {
 
-  private val hmrcMongoFeatureTogglesClientVersion  = "1.6.0"
   private val hmrcScaWrapperVersion                 = "1.11.0"
+  private val hmrcMongoVersion      = "2.1.0"
 
   private val playVersion = "play-30"
 
   private val compile: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"                  %% s"sca-wrapper-$playVersion"                   % hmrcScaWrapperVersion,
-    "uk.gov.hmrc"                  %% s"mongo-feature-toggles-client-$playVersion"  % hmrcMongoFeatureTogglesClientVersion,
-    "uk.gov.hmrc"                  %% s"emailaddress-$playVersion"                  % "4.0.0",
-    "uk.gov.hmrc"                  %% s"tax-year"                                   % "4.0.0",
+    "uk.gov.hmrc"                  %% s"sca-wrapper-$playVersion"       % hmrcScaWrapperVersion,
+    "uk.gov.hmrc"                  %% s"emailaddress-$playVersion"      % "4.0.0",
+    "uk.gov.hmrc"                  %% s"tax-year"                       % "4.0.0",
+    "uk.gov.hmrc.mongo"            %% s"hmrc-mongo-$playVersion"        % hmrcMongoVersion,
+    "org.typelevel"                %% "cats-core"                       % "2.12.0"
+
   )
 
   private val test: Seq[ModuleID] = Seq(
-    "uk.gov.hmrc"       %% s"sca-wrapper-test-$playVersion"              % hmrcScaWrapperVersion,
-    "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion"  % hmrcMongoFeatureTogglesClientVersion,
-    "org.scalatestplus" %% "scalacheck-1-17"              % "3.2.18.0",
-
+    "uk.gov.hmrc"                  %% s"sca-wrapper-test-$playVersion"  % hmrcScaWrapperVersion,
   ).map(_ % Test)
 
   def apply(): Seq[ModuleID] = compile ++ test

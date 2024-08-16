@@ -17,13 +17,11 @@
 package views
 
 import com.google.inject.{ImplementedBy, Inject}
-import config.ApplicationConfig
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Request
 import play.twirl.api.{Html, HtmlFormat}
 import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.ServiceURLs
-import uk.gov.hmrc.mongoFeatureToggles.services.FeatureFlagService
 import uk.gov.hmrc.sca.models.BannerConfig
 import uk.gov.hmrc.sca.services.WrapperService
 
@@ -47,8 +45,6 @@ trait Main {
 }
 
 class MainImpl @Inject() (
-                           appConfig: ApplicationConfig,
-                           featureFlagService: FeatureFlagService,
                            wrapperService: WrapperService,
                            additionalStyles: views.html.components.additionalStyles,
                            additionalScripts: views.html.components.additionalScripts
@@ -67,13 +63,9 @@ class MainImpl @Inject() (
                       contentBlock: Html
                     )(implicit BaseUserRequest: Request[_], messages: Messages): HtmlFormat.Appendable = {
 
-    val fullPageTitle =
-    {
-      s"""$pageTitle - ${messages(serviceTitle)}"""
-    }
     wrapperService.standardScaLayout(
       content = contentBlock,
-      pageTitle = Some(fullPageTitle),
+      pageTitle = Some(s"$pageTitle - ${messages(serviceTitle)}"),
       serviceNameKey = Some("tamc.apply"),
       serviceURLs = ServiceURLs(
         signOutUrl = Some(controllers.routes.AuthorisationController.logout().url)

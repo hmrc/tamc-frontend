@@ -29,7 +29,6 @@ class TamcModule extends Module {
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
       bind[CurrentTaxYear].toInstance(TaxYear),
-      bind[TaxBandReader].to[TaxBandReaderImpl],
-      bind[ApplicationStartUp].toSelf.eagerly()
+      bind[TaxBandReader].to[TaxBandReaderImpl]
     )
 }
