@@ -29,6 +29,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
   lazy val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
   lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear()
   val eligibilityCalculatorService: EligibilityCalculatorService = app.injector.instanceOf[EligibilityCalculatorService]
+  lazy val MAX_BENEFIT_SCOT: Int = (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.19).toInt
 
   private def currencyFormatter(limit: Int): String = {
     val formatter = NumberFormat.getCurrencyInstance(Locale.UK)

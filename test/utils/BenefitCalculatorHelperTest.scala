@@ -29,6 +29,7 @@ class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
   val eligibilityCalculatorService: EligibilityCalculatorService = instanceOf[EligibilityCalculatorService]
   lazy val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
   lazy val currentTaxYear: TaxYear = applicationConfig.currentTaxYear()
+  lazy val MAX_BENEFIT_SCOT: Int = (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.19).toInt
 
   def requiredRounding: Int = {
     val adjustmentNeeded: Int = 2
