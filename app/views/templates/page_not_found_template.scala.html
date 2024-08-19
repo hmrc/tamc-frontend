@@ -27,8 +27,7 @@ p: P
 
 @()(implicit messages: Messages, request: Request[_])
 
-@main(pageTitle = messages("title.pattern", messages("global.page.not.found.error.title"))){
-
+@main(pageTitle = messages("global.page.not.found.error.title")){
     @h1("global.page.not.found.error.title")
 
     @p(Text(messages("global.page.not.found.error.check.web.address.correct")))
