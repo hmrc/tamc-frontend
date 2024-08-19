@@ -122,6 +122,5 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
 
   val pertaxAuthBaseUrl = servicesConfig.baseUrl("pertax-auth")
 
-  lazy val internalAuthResourceType: String =
-    servicesConfig.getConfString("internal-auth.resource-type", "ddcn-live-admin-frontend")
+
 }

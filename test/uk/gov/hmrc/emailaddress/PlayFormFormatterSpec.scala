@@ -19,9 +19,7 @@ package uk.gov.hmrc.emailaddress
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.data.FormError
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-
-class PlayFormFormatterSpec extends AnyWordSpec with Matchers with ScalaCheckPropertyChecks {
+class PlayFormFormatterSpec extends AnyWordSpec with Matchers {
 
   val emails: List[String] = EmailAddressGenerators.randomEmailAddresses().distinct
 

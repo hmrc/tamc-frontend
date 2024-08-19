@@ -18,26 +18,26 @@ package connectors
 
 import com.google.inject.Inject
 import config.ApplicationConfig
-import play.api.libs.json.Json
 import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NOT_FOUND}
 import errors.{BadFetchRequest, CitizenNotFound, MarriageAllowanceError, TransferorNotFound}
 import models._
+import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationConfig: ApplicationConfig) {
+class MarriageAllowanceConnector @Inject()(httpClient: HttpClientV2, applicationConfig: ApplicationConfig) {
 
   def marriageAllowanceUrl = applicationConfig.marriageAllowanceUrl
 
   def listRelationship(nino: Nino)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordList] =
+    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecordList] = {
     httpClient
-      .GET[HttpResponse](
-        s"$marriageAllowanceUrl/paye/$nino/list-relationship"
-      )
+      .get(url"$marriageAllowanceUrl/paye/$nino/list-relationship")
+      .execute[HttpResponse]
       .flatMap {
         response =>
           val relationshipRecordWrapper = response.json.as[RelationshipRecordStatusWrapper]
@@ -58,44 +58,47 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClient, applicationCo
       }.recoverWith {
       case t: Throwable => Future.failed(t)
     }
+  }
 
   def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
-                              (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, GetRelationshipResponse]] =
+                              (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, GetRelationshipResponse]] = {
     httpClient
-      .POST[RegistrationFormInput, HttpResponse](
-        s"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship", body = recipientData
-      )
+      .post(url"$marriageAllowanceUrl/paye/$transferorNino/get-recipient-relationship")
+      .withBody(Json.toJson(recipientData))
+      .execute[HttpResponse]
       .map {
         case response if response.status == 200 => Right(response.json.as[GetRelationshipResponse])
         case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
       }.recoverWith {
-          case t: Throwable =>
-            Future.failed(t)
+      case t: Throwable => Future.failed(t)
     }
+  }
 
   def createRelationship(transferorNino: Nino, data: CreateRelationshipRequestHolder)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, Option[CreateRelationshipResponse]]] =
+    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, Option[CreateRelationshipResponse]]] = {
     httpClient
-      .PUT[CreateRelationshipRequestHolder, HttpResponse](
-        s"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/pta", data
-      )
+      .put(url"$marriageAllowanceUrl/paye/$transferorNino/create-multi-year-relationship/pta")
+      .withBody(Json.toJson(data))
+      .execute[HttpResponse]
       .map {
         case response if response.status == 200 => Right(Json.fromJson[CreateRelationshipResponse](response.json).asOpt)
         case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
       }.recoverWith {
-        case t: Throwable => Future.failed(t)
-      }
+      case t: Throwable => Future.failed(t)
+    }
+  }
 
   def updateRelationship(transferorNino: Nino, data: UpdateRelationshipRequestHolder)(
-    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, Option[UpdateRelationshipResponse]]] =
+    implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Either[MarriageAllowanceError, Option[UpdateRelationshipResponse]]] = {
     httpClient
-      .PUT[UpdateRelationshipRequestHolder, HttpResponse](
-        s"$marriageAllowanceUrl/paye/$transferorNino/update-relationship", data
-      )
+      .put(url"$marriageAllowanceUrl/paye/$transferorNino/update-relationship")
+      .withBody(Json.toJson(data))
+      .execute[HttpResponse]
       .map {
         case response if response.status == 200 => Right(Json.fromJson[UpdateRelationshipResponse](response.json).asOpt)
         case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
       }.recoverWith {
-        case t: Throwable => Future.failed(t)
-      }
+      case t: Throwable => Future.failed(t)
+    }
+  }
 }

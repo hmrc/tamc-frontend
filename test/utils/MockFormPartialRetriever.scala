@@ -18,13 +18,13 @@ package utils
 
 import play.api.mvc.RequestHeader
 import play.twirl.api.Html
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.partials.{FormPartialRetrieverImpl, HeaderCarrierForPartialsConverter}
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class MockFormPartialRetriever @Inject()(httpGet: HttpClient, headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter)
+class MockFormPartialRetriever @Inject()(httpGet: HttpClientV2, headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter)
   extends FormPartialRetrieverImpl(httpGet, headerCarrierForPartialsConverter) {
 
   override def getPartialContent(url: String, templateParameters: Map[String, String], errorMessage: Html)

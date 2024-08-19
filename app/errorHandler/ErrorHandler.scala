@@ -18,21 +18,33 @@ package errorHandler
 
 import com.google.inject.Inject
 import play.api.i18n.MessagesApi
-import play.api.mvc.Request
+import play.api.mvc.{Request, RequestHeader}
 import play.twirl.api.Html
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import uk.gov.hmrc.play.partials.HeaderCarrierForPartialsConverter
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class ErrorHandler @Inject()(
-  val messagesApi: MessagesApi,
-  val httpGet: HttpClient,
-  val headerCarrierForPartialsConverter: HeaderCarrierForPartialsConverter,
-  errorTemplate: views.html.templates.error_template,
-  pageNotFoundTemplate: views.html.templates.page_not_found_template) extends FrontendErrorHandler {
+                              override implicit val messagesApi: MessagesApi,
+                              errorTemplate: views.html.templates.error_template,
+                              pageNotFoundTemplate: views.html.templates.page_not_found_template)
+                            (
+                              implicit val ec: ExecutionContext
+                            ) extends FrontendErrorHandler {
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: Request[_]): Html =
-    errorTemplate(pageTitle, heading, message)
+  //FIXME sca-wrapper > 9.0.0 will have some breaking changes, views will be based on RequestHeader instead of Request[_]
+  private def rhToRequest(rh: RequestHeader): Request[_] = Request(rh, "")
 
-  override def notFoundTemplate(implicit request: Request[_]): Html = pageNotFoundTemplate()
+
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader): Future[Html] = {
+    implicit val req: Request[_] = rhToRequest(request)
+    Future.successful(errorTemplate(pageTitle, heading, message))
+  }
+
+  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = {
+    implicit val req: Request[_] =  rhToRequest(request)
+    Future.successful(pageNotFoundTemplate())
+  }
+
+
 }
