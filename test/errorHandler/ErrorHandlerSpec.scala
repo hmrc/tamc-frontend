@@ -54,7 +54,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
       val docHeading = doc.select("#errorHeading").text()
       val docMessage = doc.select("#errorText").text()
 
-      docTitle shouldBe title + " - " + messages("title.pattern")
+      docTitle shouldBe title + " - Marriage Allowance - GOV.UK"
       docHeading shouldBe heading
       docMessage shouldBe message
     }
@@ -66,7 +66,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
       val doc: Document = Jsoup.parse(notFoundTemplate.toString())
 
       val docTitle = doc.title()
-      docTitle should include(messages("title.pattern"))
+      docTitle should include("Marriage Allowance - GOV.UK")
     }
   }
 }
