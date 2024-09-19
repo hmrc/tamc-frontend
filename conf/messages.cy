@@ -127,6 +127,7 @@ radio.yes=Iawn
 radio.no=Na
 tamc.open.in.new.window=(yn agor ffenestr neu dab newydd)
 error.form.error = Gwall:
+outage-page.serviceDisplayName = Gwneud cais am Lwfans Priodasol
 
 #********************************************************************************
 # Titles
