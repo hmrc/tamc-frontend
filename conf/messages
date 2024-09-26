@@ -74,6 +74,7 @@ change.status.relevantDate-REJECT=This will be removed from the start of the tax
 change.status.relevantDate-DIVORCE_CY=This will be removed from the end of the tax year you got divorced ({0}).
 change.status.relevantDate-DIVORCE_PY=This will be removed from start of the tax year ({0}).
 
+coc.end-reason.DEATH=Bereavement
 coc.end-reason.DIVORCE=Divorce or end of civil partnership
 coc.end-reason.INELIGIBLE_PARTICIPANT=Claiming Married Couple’s Allowance
 coc.end-reason.INVALID_PARTICIPANT=Higher earner not eligible for Marriage Allowance
