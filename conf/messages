@@ -580,7 +580,7 @@ pages.coc.finish.para1=You do not need to contact us.
 date.fields.day=Day
 date.fields.month=Month
 date.fields.year=Year
-link.newtab=opens in a new tab
+link.newtab=(opens in a new tab)
 
 #********************************************************************************
 # no years selected page

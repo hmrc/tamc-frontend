@@ -586,7 +586,7 @@ pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
 date.fields.day=Diwrnod
 date.fields.month=Mis
 date.fields.year=Blwyddyn
-link.newtab=yn agor tab newydd
+link.newtab=(yn agor tab newydd)
 
 #********************************************************************************
 # no years selected page
