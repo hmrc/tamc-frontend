@@ -61,7 +61,8 @@
                     classes = "govuk-visually-hidden",
                     isPageHeading = false
                 )),
-                html = html
+                html = html,
+                attributes = Map("id" -> "country")
             ))
 
             @calculatorResultView(calculationResult)
@@ -82,20 +83,19 @@
         items = Seq(RadioItem(
             content = Text(messages("label.england")),
             value = Some("england"),
-            id = Some("country")
-
+            id = Some("country-england")
         ), RadioItem(
             content = Text(messages("label.ni")),
             value = Some("northernireland"),
-            id = Some("country-1")
+            id = Some("country-northernireland")
         ), RadioItem(
             content = Text(messages("label.scotland")),
             value = Some("scotland"),
-            id = Some("country-2")
+            id = Some("country-scotland")
         ), RadioItem(
             content = Text(messages("label.wales")),
             value = Some("wales"),
-            id = Some("country-3")
+            id = Some("country-wales")
         )),
         legendAsHeading = true,
         legendClasses = "govuk-label--s",
