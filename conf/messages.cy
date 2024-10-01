@@ -278,7 +278,7 @@ pages.how-it-works.eligibility-pre1.part2=mae’ch incwm yn llai nag incwm eich 
 pages.how-it-works.eligibility-pre1.part3=mae incwm eich partner yn llai na £{0} yn y flwyddyn dreth bresennol
 pages.how-it-works.eligibility-pre2=Os ydych yn yr Alban, mae’n rhaid i’ch partner dalu’r gyfradd gychwynnol, sylfaenol neu ganolradd, sydd fel arfer yn golygu bod ei incwm rhwng £{0} a £{1}.
 pages.how-it-works.eligibility-pre3.part1=Os ganed un ohonoch cyn 6 Ebrill 1935, efallai y byddwch yn elwa mwy fel pâr drwy wneud cais am
-pages.how-it-works.eligibility-pre3.link-text=Lwfans Pâr Priod.
+pages.how-it-works.eligibility-pre3.link-text=Lwfans Pâr Priod
 pages.how-it-works.eligibility-pre3.part2=Gallwch wneud cais am Lwfans Priodasol o hyd, ond ni allwch gael y ddau lwfans ar yr un pryd.
 
 
@@ -587,6 +587,7 @@ pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
 date.fields.day=Diwrnod
 date.fields.month=Mis
 date.fields.year=Blwyddyn
+link.newtab=(yn agor tab newydd)
 
 #********************************************************************************
 # no years selected page
