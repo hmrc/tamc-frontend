@@ -125,7 +125,7 @@ generic.translation.english=English
 generic.translation.welsh=Cymraeg
 radio.yes=Iawn
 radio.no=Na
-tamc.open.in.new.window=(yn agor ffenestr neu dab newydd)
+tamc.open.in.new.window=(yn agor tab newydd)
 error.form.error = Gwall:
 outage-page.serviceDisplayName = Gwneud cais am Lwfans Priodasol
 
@@ -586,7 +586,6 @@ pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
 date.fields.day=Diwrnod
 date.fields.month=Mis
 date.fields.year=Blwyddyn
-link.newtab=(yn agor tab newydd)
 
 #********************************************************************************
 # no years selected page
