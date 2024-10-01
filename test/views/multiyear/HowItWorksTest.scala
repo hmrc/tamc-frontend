@@ -67,7 +67,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
 
     "display correct lede section" in {
 
-      val line1 = s"Marriage Allowance lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
+      val line1 = s"Marriage Allowance (opens in a new tab) lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
       val line2 = "You can apply for the current year and also backdate your claim for 4 years if you were eligible for Marriage Allowance in those years."
       val line3 = "Marriage Allowance automatically renews at the end of each tax year. You can cancel it, but it will not be stopped until the end of the tax year."
       val line4 = "If your partner has died, you can still make a Marriage Allowance claim as long as the conditions are met. If this applies to you, call HMRC on 0300 200 3300."
@@ -78,7 +78,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       checkTextInElement(line4, Selectors.nthInset(5))
 
       val marriageAllowanceLink = selectFirst(Selectors.nthInlineLink(2))
-      marriageAllowanceLink.text shouldBe "Marriage Allowance"
+      marriageAllowanceLink.text shouldBe "Marriage Allowance (opens in a new tab)"
       marriageAllowanceLink.attr("href") shouldBe "https://www.gov.uk/marriage-allowance"
     }
 
@@ -90,7 +90,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       val line3 = s"your income must be lower than your partner’s and less than £$personalAllowance"
       val line4 = s"your partner’s income must be less than £$maxLimit in the current tax year"
       val line5 = s"If you’re in Scotland, your partner must pay the starter, basic or intermediate rate, which usually means their income is between £$lowerTresholdScotland and £$maxLimitScotland."
-      val line6 = "If one of you was born before 6 April 1935, you might benefit more as a couple by applying for the Married Couple’s Allowance. You can still apply for Marriage Allowance but you cannot receive both allowances at the same time."
+      val line6 = "If one of you was born before 6 April 1935, you might benefit more as a couple by applying for the Married Couple’s Allowance (opens in a new tab). You can still apply for Marriage Allowance but you cannot receive both allowances at the same time."
 
       checkTextInElement(heading, Selectors.nthSubheading(6))
       checkTextInElement(line1, Selectors.nthParagraph(7))
@@ -101,7 +101,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       checkTextInElement(line6, Selectors.nthParagraph(10))
 
       val marriedCouplesAllowanceLink = selectFirst(Selectors.nthInlineLink(10))
-      marriedCouplesAllowanceLink.text shouldBe "applying for the Married Couple’s Allowance."
+      marriedCouplesAllowanceLink.text shouldBe "applying for the Married Couple’s Allowance (opens in a new tab)"
       marriedCouplesAllowanceLink.attr("href") shouldBe "https://www.gov.uk/married-couples-allowance"
     }
 

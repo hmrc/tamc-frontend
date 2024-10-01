@@ -281,7 +281,7 @@ pages.how-it-works.eligibility-pre1.part2=your income must be lower than your pa
 pages.how-it-works.eligibility-pre1.part3=your partner’s income must be less than £{0} in the current tax year
 pages.how-it-works.eligibility-pre2=If you’re in Scotland, your partner must pay the starter, basic or intermediate rate, which usually means their income is between £{0} and £{1}.
 pages.how-it-works.eligibility-pre3.part1=If one of you was born before 6 April 1935, you might benefit more as a couple by
-pages.how-it-works.eligibility-pre3.link-text=applying for the Married Couple’s Allowance.
+pages.how-it-works.eligibility-pre3.link-text=applying for the Married Couple’s Allowance
 pages.how-it-works.eligibility-pre3.part2=You can still apply for Marriage Allowance but you cannot receive both allowances at the same time.
 
 pages.how-it-works.calculate-benefit.heading=Calculate how much you could benefit
@@ -580,6 +580,7 @@ pages.coc.finish.para1=You do not need to contact us.
 date.fields.day=Day
 date.fields.month=Month
 date.fields.year=Year
+link.newtab=(opens in a new tab)
 
 #********************************************************************************
 # no years selected page
