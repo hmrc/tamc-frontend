@@ -125,7 +125,7 @@ generic.translation.welsh=Cymraeg
 radio.yes=Yes
 radio.no=No
 tamc.app-name=tamc-frontend
-tamc.open.in.new.window=(opens in a new window or tab)
+tamc.open.in.new.window=(opens in a new tab)
 error.form.error = Error:
 outage-page.serviceDisplayName = Apply for Marriage Allowance
 
@@ -581,7 +581,6 @@ pages.coc.finish.para1=You do not need to contact us.
 date.fields.day=Day
 date.fields.month=Month
 date.fields.year=Year
-link.newtab=(opens in a new tab)
 
 #********************************************************************************
 # no years selected page
