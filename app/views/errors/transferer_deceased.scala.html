@@ -38,7 +38,7 @@ pageTitle = messages("title.cannot-use-service")
 }
 @transferorLink = {
     @link(link = applicationConfig.contactIncomeTaxHelplineUrl,
-        messageKey = messages("technical.transferor-dead-p1") + messages("tamc.open.in.new.window"),
+        messageKey = messages("technical.transferor-dead-p1"),
         attrTarget = true,
         attrs = Map("data-journey-click" -> s"click - link:${Messages("technical.transferor-dead-p1")}:${Messages("title.pattern", Messages("title.cannot-use-service"))}", "role" -> "button"),
         inParagraph = true)
