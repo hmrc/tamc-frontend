@@ -76,6 +76,7 @@ change.status.relevantDate-REJECT=Caiff hyn ei ddileu o ddechrau’r flwyddyn dr
 change.status.relevantDate-DIVORCE_CY=Caiff hyn ei ddileu o ddiwedd y flwyddyn dreth pan wnaethoch ysgaru ({0}).
 change.status.relevantDate-DIVORCE_PY=Caiff hyn ei ddileu o ddechrau’r flwyddyn dreth ({0}).
 
+coc.end-reason.DEATH=Profedigaeth
 coc.end-reason.DIVORCE=Ysgariad neu ddiwedd partneriaeth sifil
 coc.end-reason.INELIGIBLE_PARTICIPANT=Gwneud Cais am Lwfans P&#226;r Priod
 coc.end-reason.INVALID_PARTICIPANT=Nid yw’r unigolyn &#226;’r cyflog uchaf yn gymwys ar gyfer Lwfans Priodasol
