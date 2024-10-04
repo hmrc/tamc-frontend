@@ -91,6 +91,16 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         status(result) shouldBe OK
         result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)
       }
+
+      "upDateRelationshipService returns a NonFatal error" in {
+        when(mockUpdateRelationshipService.getDivorceDate(any()))
+          .thenReturn(failedFuture)
+
+        val result = controller.divorceEnterYear()(request)
+
+        status(result) shouldBe OK
+        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)
+      }
     }
   }
 
