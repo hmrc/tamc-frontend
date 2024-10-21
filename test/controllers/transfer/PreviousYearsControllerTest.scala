@@ -30,9 +30,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
 import test_utils.data.RecipientRecordData
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockAuthenticatedAction}
+import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
 

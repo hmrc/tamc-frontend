@@ -33,10 +33,10 @@ import play.api.test.Helpers._
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, MockAuthenticatedAction}
+import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 import services.CacheService._
+
 import java.time.LocalDate
 
 class TransferAllowanceControllerTest extends ControllerBaseTest {

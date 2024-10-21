@@ -34,10 +34,9 @@ import test_utils.TestData.{Cids, Ninos}
 import test_utils.data.RecipientRecordData
 import test_utils.data.RecipientRecordData.citizenName
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import utils.BaseTest
+import utils.{BaseTest, EmailAddress}
 import services.CacheService._
 
 import java.time.LocalDate
