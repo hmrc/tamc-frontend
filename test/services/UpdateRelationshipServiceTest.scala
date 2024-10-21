@@ -33,10 +33,10 @@ import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import test_utils.data.RelationshipRecordData._
 import uk.gov.hmrc.domain.{Generator, Nino}
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time.TaxYear
-import utils.{BaseTest, SystemLocalDate}
+import utils.{BaseTest, EmailAddress, SystemLocalDate}
 import services.CacheService._
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.concurrent.Future

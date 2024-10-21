@@ -20,8 +20,7 @@ import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
-import utils.{BaseTest, NinoGenerator}
+import utils.{BaseTest, EmailAddress, NinoGenerator}
 import views.html.finished
 
 class FinishedTest extends BaseTest with NinoGenerator {

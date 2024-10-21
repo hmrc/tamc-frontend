@@ -20,7 +20,7 @@ import config.ApplicationConfig
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.data.FormError
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.dayRange
+import utils.emailAddressFormatters.PlayFormFormatter.dayRange
 import utils.UnitSpec
 
 import java.time.LocalDate

@@ -33,7 +33,6 @@ import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.time
 
 import java.time.LocalDate

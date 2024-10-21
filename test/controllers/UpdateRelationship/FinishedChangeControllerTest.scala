@@ -29,9 +29,8 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.Injecting
 import services._
-import uk.gov.hmrc.emailaddress.EmailAddress
 import uk.gov.hmrc.http.HttpResponse
-import utils.{ControllerBaseTest, MockAuthenticatedAction}
+import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 import views.html.coc.finished
 
 import scala.concurrent.Future

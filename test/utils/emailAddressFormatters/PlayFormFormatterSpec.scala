@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.emailaddress
+package utils.emailAddressFormatters
 
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatest.matchers.should.Matchers
 import play.api.data.FormError
+import utils.EmailAddress
+
 class PlayFormFormatterSpec extends AnyWordSpec with Matchers {
 
   val emails: List[String] = EmailAddressGenerators.randomEmailAddresses().distinct

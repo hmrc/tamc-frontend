@@ -18,7 +18,7 @@ package models
 
 
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
+import utils.EmailAddress
 
 case class ConfirmationModel(
                               transferorFullName: Option[CitizenName],

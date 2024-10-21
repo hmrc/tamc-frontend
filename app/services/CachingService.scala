@@ -22,11 +22,11 @@ import play.api.Configuration
 import play.api.libs.json.{Format, JsResultException}
 import play.api.mvc.Request
 import services.CacheService.CacheKey.{CacheReadKey, CacheReadWriteKey}
-import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.emailaddress.PlayJsonFormats.emailAddressReads
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.{CacheItem, DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
+import utils.EmailAddress
+import utils.emailAddressFormatters.PlayJsonFormats._
 
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit

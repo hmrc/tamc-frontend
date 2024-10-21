@@ -28,12 +28,11 @@ import play.api.i18n.Messages
 import play.api.mvc.Request
 import services.CacheService._
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.emailaddress.PlayJsonFormats._
+import utils.emailAddressFormatters.PlayJsonFormats._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import utils.SystemLocalDate
+import utils.{EmailAddress, SystemLocalDate}
 import views.helpers.LanguageUtilsImpl
 
 import java.time.LocalDate

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package models
+package utils.emailAddressFormatters
 
-import play.api.libs.json.{Json, OFormat}
 import utils.EmailAddress
-import utils.emailAddressFormatters.PlayJsonFormats.emailAddressReads
-import utils.emailAddressFormatters.PlayJsonFormats.emailAddressWrites
 
+object PlayJsonFormats {
+  import play.api.libs.json._
 
-case class UpdateRelationshipNotificationRequest(full_name: String, email: EmailAddress, role: String, welsh: Boolean = false, isRetrospective: Boolean = false)
-
-object UpdateRelationshipNotificationRequest {
-  implicit val formats: OFormat[UpdateRelationshipNotificationRequest] = Json.format[UpdateRelationshipNotificationRequest]
+  implicit val emailAddressReads: Reads[EmailAddress] = new Reads[EmailAddress] {
+    def reads(js: JsValue): JsResult[EmailAddress] = js.validate[String].flatMap {
+      case s if EmailAddress.isValid(s) => JsSuccess(EmailAddress(s))
+      case _ => JsError("not a valid email address")
+    }
+  }
+  implicit val emailAddressWrites: Writes[EmailAddress] = new Writes[EmailAddress] {
+    def writes(e: EmailAddress): JsValue = JsString(e.value)
+  }
 }
-
-
-

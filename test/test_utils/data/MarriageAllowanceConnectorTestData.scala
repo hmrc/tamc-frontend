@@ -19,7 +19,7 @@ package test_utils.data
 
 import models._
 import test_utils.TestData.Cids
-import uk.gov.hmrc.emailaddress.EmailAddress
+import utils.EmailAddress
 
 object MarriageAllowanceConnectorTestData {
 

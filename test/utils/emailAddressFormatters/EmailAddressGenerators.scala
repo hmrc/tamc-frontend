@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.emailaddress
+package utils.emailAddressFormatters
 
 import scala.util.Random
 

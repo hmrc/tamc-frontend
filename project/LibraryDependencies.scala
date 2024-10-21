@@ -18,14 +18,13 @@ import sbt.*
 
 object LibraryDependencies {
 
-  private val hmrcScaWrapperVersion = "1.11.0"
-  private val hmrcMongoVersion      = "2.1.0"
+  private val hmrcScaWrapperVersion = "1.14.0"
+  private val hmrcMongoVersion      = "2.2.0"
   private val playVersion           = "play-30"
 
   private val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"                  %% s"sca-wrapper-$playVersion"       % hmrcScaWrapperVersion,
-    "uk.gov.hmrc"                  %% s"emailaddress-$playVersion"      % "4.0.0",
-    "uk.gov.hmrc"                  %% s"tax-year"                       % "4.0.0",
+    "uk.gov.hmrc"                  %% s"tax-year"                       % "5.0.0",
     "uk.gov.hmrc.mongo"            %% s"hmrc-mongo-$playVersion"        % hmrcMongoVersion,
     "org.typelevel"                %% "cats-core"                       % "2.12.0"
 
@@ -33,6 +32,9 @@ object LibraryDependencies {
 
   private val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"                  %% s"sca-wrapper-test-$playVersion"  % hmrcScaWrapperVersion,
+    "org.scalatestplus"            %% "scalacheck-1-17"                 % "3.2.14.0",
+    "org.scalacheck"               %% "scalacheck"                      % "1.18.1",
+
   ).map(_ % Test)
 
   def apply(): Seq[ModuleID] = compile ++ test

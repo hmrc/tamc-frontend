@@ -17,8 +17,7 @@
 package forms
 
 import play.api.data.FormError
-import uk.gov.hmrc.emailaddress.EmailAddress
-import utils.BaseTest
+import utils.{BaseTest, EmailAddress}
 
 
 class EmailFormTest extends BaseTest {
