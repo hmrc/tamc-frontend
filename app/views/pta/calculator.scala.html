@@ -46,14 +46,11 @@
 
         @h1("pages.calc.header")
 
-        @p(HtmlContent(Messages("pages.calc.skip-it.pre") +
-                link(link = controllers.transfer.routes.TransferAllowanceController.transfer().url,
-                    messageKey = "pages.calc.skip-it",
-                    inParagraph = true)))
-
         @p(Text(Messages("pages.calc.para1")))
 
         @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction(), args = Symbol("id") -> "calculator") {
+
+            @calculatorResultView(calculationResult)
 
             @govukFieldset(Fieldset(
                 legend = Some(Legend(
@@ -64,8 +61,6 @@
                 html = html,
                 attributes = Map("id" -> "country")
             ))
-
-            @calculatorResultView(calculationResult)
 
             @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
 

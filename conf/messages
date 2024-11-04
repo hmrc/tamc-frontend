@@ -179,9 +179,11 @@ hmrc.contact-details-9=Find out about call charges
 # Eligibility Calculator
 #********************************************************************************
 pages.calc.header=Marriage Allowance calculator
-pages.calc.para1=As a couple, find out how much tax you would save if you applied for Marriage Allowance this year.
+pages.calc.para1=Find out how much tax you could save as a couple by applying for Marriage Allowance.
 pages.calc.para2=This calculator does not include any allowances such as Personal Savings Allowance or Dividend Allowance.
 pages.calc.where=Where do you live?
+pages.calc.where.hint=Where you live can affect how much you benefit because of different tax rates
+pages.calc.est.may.differ=This is an estimate and may differ from the final calculation when you apply
 label.england = England
 label.wales = Wales
 label.scotland = Scotland
