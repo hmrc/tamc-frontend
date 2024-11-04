@@ -28,7 +28,7 @@ import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, FormError, Mapping}
 import play.api.i18n.Messages
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.validDateTuple
+import utils.emailAddressFormatters.PlayFormFormatter.validDateTuple
 
 import javax.inject.Inject
 

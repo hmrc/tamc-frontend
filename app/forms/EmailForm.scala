@@ -18,8 +18,8 @@ package forms
 
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
 import play.api.data.{Form, Mapping}
-import uk.gov.hmrc.emailaddress.EmailAddress
-import uk.gov.hmrc.emailaddress.PlayFormFormatter.{emailMaxLength, valueIsPresent}
+import utils.EmailAddress
+import utils.emailAddressFormatters.PlayFormFormatter.{emailMaxLength, valueIsPresent}
 
 import scala.util.{Success, Try}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import play.api.libs.json.{Json, OFormat}
-import utils.EmailAddress
-import utils.emailAddressFormatters.PlayJsonFormats.emailAddressReads
-import utils.emailAddressFormatters.PlayJsonFormats.emailAddressWrites
-
-object NotificationRecord {
-  implicit val formats: OFormat[NotificationRecord] = Json.format[NotificationRecord]
+object StringValue {
+  implicit def stringValueToString(e: StringValue): String = e.value
 }
 
-case class NotificationRecord(transferor_email: EmailAddress)
+trait StringValue {
+  def value: String
+  override def toString: String = value
+}

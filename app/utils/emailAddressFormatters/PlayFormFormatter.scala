@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.emailaddress
+package utils.emailAddressFormatters
 
 import play.api.data.Forms.{of, optional, text, tuple}
 import play.api.data.format.Formatter
 import play.api.data.validation._
 import play.api.data.{FormError, Mapping}
+import utils.EmailAddress
 
 import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
 
@@ -42,7 +43,7 @@ object PlayFormFormatter {
     nonEmptyTrimmer(error = errorRequired)
 
   /**
-   * Defines a maximum length constraint for [[uk.gov.hmrc.emailaddress.EmailAddress]] values
+   * Defines a maximum length constraint for [[EmailAddress]] values
    *
    * @param error error message with default value `"error.maxLength(maxLength)"`
    * @param name  constraint's name with default value `"constraint.maxLength(maxLength)"`

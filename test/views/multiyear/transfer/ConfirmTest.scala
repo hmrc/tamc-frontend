@@ -36,8 +36,7 @@ import play.api.test.Helpers.contentAsString
 import services.TransferService
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
-import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
+import utils.{BaseTest, EmailAddress, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 
 import java.time.LocalDate
 import scala.concurrent.duration._

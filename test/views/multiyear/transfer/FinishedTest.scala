@@ -35,8 +35,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers.contentAsString
 import services.TransferService
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
-import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
+import utils.{BaseTest, EmailAddress, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps

@@ -17,10 +17,11 @@
 package test_utils.data
 
 import models._
+
 import java.time.LocalDate
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.emailaddress.EmailAddress
+import utils.EmailAddress
 
 object ConfirmationModelData {
   val citizenName = Some(CitizenName(Some("Test"), Some("User")))

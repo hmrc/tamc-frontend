@@ -30,7 +30,7 @@ viewHelpers: utils.ViewHelpers,
 errorSummary: ErrorSummary)
 
 @(
-recipientForm: Form[uk.gov.hmrc.emailaddress.EmailAddress],
+recipientForm: Form[utils.EmailAddress],
 name: Option[models.CitizenName] = None)(implicit
 messages: Messages,
 request: AuthenticatedUserRequest[_])
