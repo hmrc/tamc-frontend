@@ -31,11 +31,11 @@
                     case Some(gain) =>  {
                         Html(Messages(result.messageKey, {
                             gain
-                        }))
-                        govukWarningText(WarningText(
-                            iconFallbackText = Some("Warning"),
-                            content = Text(messages("pages.calc.est.may.differ"))
-                        ))
+                        }) + govukWarningText(WarningText(
+                                iconFallbackText = Some("Warning"),
+                                content = Text(messages("pages.calc.est.may.differ")),
+                                classes = "govuk-!-margin-top-2"
+                                )))
                     }
                 }
 
