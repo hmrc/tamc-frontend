@@ -19,7 +19,6 @@ package controllers
 import config.ApplicationConfig
 import controllers.actions.UnauthenticatedActionTransformer
 import models.{EligibilityCalculatorResult, England}
-import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
