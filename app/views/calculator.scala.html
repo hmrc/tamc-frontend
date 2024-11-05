@@ -48,9 +48,11 @@
 
     @h1("pages.calc.header")
 
-    @p(Text(Messages("pages.calc.para1")))
+    @calculatorResultView(calculationResult)
 
-    @govukInsetText(InsetText(content = Text(messages("pages.calc.para2"))))
+    @p(Text(Messages("pages.calc.para2")))
+
+    @p(Text(Messages("pages.calc.para1")))
 
     @form(action = routes.EligibilityCalculatorController.gdsCalculatorAction(), args = Symbol("id") -> "calculator") {
         @govukFieldset(Fieldset(
@@ -61,8 +63,6 @@
             )),
             html = html
         ))
-
-        @calculatorResultView(calculationResult)
 
         @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
     }
@@ -95,6 +95,7 @@
 @inputRadios(
     form = calculatorForm,
     legend = "pages.calc.where",
+    hint = Some(Text(messages("pages.calc.where.hint"))),
     id = Some("country"),
     name = "country",
     items = Seq(RadioItem(

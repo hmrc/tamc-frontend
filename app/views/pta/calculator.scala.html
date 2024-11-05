@@ -46,9 +46,11 @@
 
         @h1("pages.calc.header")
 
-        @p(Text(Messages("pages.calc.para1")))
-
         @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction(), args = Symbol("id") -> "calculator") {
+
+            @if(calculationResult.isEmpty) {
+                @p(Text(Messages("pages.calc.para1")))
+            }
 
             @calculatorResultView(calculationResult)
 
