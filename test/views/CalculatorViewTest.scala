@@ -47,10 +47,6 @@ class CalculatorViewTest extends BaseTest {
 
     "display correct paragraphs" in {
       getContent(
-        id = "does-not-include-savings",
-        expected = "This calculator does not include any allowances such as Personal Savings Allowance or Dividend Allowance."
-      )
-      getContent(
         id = "how-much-tax-you-can-save",
         expected = "Find out how much tax you could save as a couple by applying for Marriage Allowance."
       )
