@@ -50,9 +50,9 @@
 
     @calculatorResultView(calculationResult)
 
-    @p(Text(Messages("pages.calc.para2")))
+    @p(Text(Messages("pages.calc.para2")), elmId = Some("does-not-include-savings"))
 
-    @p(Text(Messages("pages.calc.para1")))
+    @p(Text(Messages("pages.calc.para1")), elmId = Some("how-much-tax-you-can-save"))
 
     @form(action = routes.EligibilityCalculatorController.gdsCalculatorAction(), args = Symbol("id") -> "calculator") {
         @govukFieldset(Fieldset(

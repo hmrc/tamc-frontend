@@ -49,7 +49,7 @@
         @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction(), args = Symbol("id") -> "calculator") {
 
             @if(calculationResult.isEmpty) {
-                @p(Text(Messages("pages.calc.para1")))
+                @p(Text(Messages("pages.calc.para1")), elmId = Some("how-much-tax-you-can-save"))
             }
 
             @calculatorResultView(calculationResult)
