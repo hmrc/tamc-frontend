@@ -67,7 +67,7 @@ class MainViewSpec extends BaseTest with Injecting {
     val profileAndSettingsLink: String = "http://localhost:9232/personal-account/profile-and-settings"
 
     val accessibilityReferrerUrl: String = "%2Fsome-url"
-    val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?newTab=true&service=TAMC&referrerUrl=%2Fsome-url"
+    val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?service=TAMC&referrerUrl=%2Fsome-url"
 
   }
 
