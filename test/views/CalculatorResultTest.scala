@@ -270,6 +270,19 @@ class CalculatorResultTest extends BaseTest {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementById("calculator-result").text() shouldBe "Check the numbers you have entered. Please enter the lower earner’s income followed by the higher earner’s income."
     }
+
+    "retain previously entered values" when {
+      Seq("england", "wales", "scotland", "northernireland").foreach { country =>
+        s"transferor and recipient income are set and country has '$country' selected" in {
+          val request = FakeRequest()
+            .withMethod("POST")
+            .withFormUrlEncodedBody("country" -> country, "transferor-income" -> "25000", "recipient-income" -> "3000")
+          val result = controller.gdsCalculatorAction()(request)
+          val document = Jsoup.parse(contentAsString(result))
+          document.getElementById(s"country-$country").hasAttr("checked") shouldBe true
+        }
+      }
+    }
   }
 
 }
