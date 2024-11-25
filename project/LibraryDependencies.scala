@@ -19,13 +19,11 @@ import sbt.*
 object LibraryDependencies {
 
   private val hmrcScaWrapperVersion = "2.1.0"
-  private val hmrcMongoVersion      = "2.3.0"
   private val playVersion           = "play-30"
 
   private val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% s"sca-wrapper-$playVersion"                  % hmrcScaWrapperVersion,
     "uk.gov.hmrc"       %% s"tax-year"                                  % "5.0.0",
-    "uk.gov.hmrc.mongo" %% s"hmrc-mongo-$playVersion"                   % hmrcMongoVersion,
     "org.typelevel"     %% "cats-core"                                  % "2.12.0",
     "uk.gov.hmrc"       %% s"mongo-feature-toggles-client-$playVersion" % "1.8.0"
   )
