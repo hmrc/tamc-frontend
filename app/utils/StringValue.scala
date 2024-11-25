@@ -16,6 +16,8 @@
 
 package utils
 
+import scala.language.implicitConversions
+
 object StringValue {
   implicit def stringValueToString(e: StringValue): String = e.value
 }

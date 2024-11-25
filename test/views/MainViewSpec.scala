@@ -18,22 +18,23 @@ package views
 
 import models.auth.{BaseUserRequest, UserRequest}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.test.{FakeRequest, Injecting}
-import play.twirl.api.Html
+import play.twirl.api.{Html, HtmlFormat}
 import utils.BaseTest
 
 import java.util.Locale
 
 class MainViewSpec extends BaseTest with Injecting {
 
-  lazy val main = inject[Main]
+  lazy val main: Main = inject[Main]
 
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
-  lazy val pageRender = main.apply("Fake Page Title - Apply for")(Html("<p>Fake body</p>"))
+  lazy val pageRender: HtmlFormat.Appendable = main.apply("Fake Page Title - Apply for")(Html("<p>Fake body</p>"))
 
   implicit val baseUserRequest: BaseUserRequest[_] = UserRequest(FakeRequest("GET", "/some-url"), None, isAuthenticated = true, Some(""), isSA = true)
-  lazy val doc = Jsoup.parse(pageRender.toString())
+  lazy val doc: Document = Jsoup.parse(pageRender.toString())
 
   object CommonValues {
 
@@ -68,7 +69,7 @@ class MainViewSpec extends BaseTest with Injecting {
     val profileAndSettingsLink: String = "http://localhost:9232/personal-account/profile-and-settings"
 
     val accessibilityReferrerUrl: String = "%2Fsome-url"
-    val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?newTab=true&service=TAMC&referrerUrl=%2Fsome-url"
+    val reportTechnicalProblemUrl: String = "http://localhost:9250/contact/report-technical-problem?service=TAMC&referrerUrl=%2Fsome-url"
 
   }
 
