@@ -33,8 +33,16 @@ class CalculatorViewTest extends BaseTest {
 
   val result: Future[Result] = controller.gdsCalculator()(request)
 
-  def getContent(id: String = "calculator", expected: String): Assertion = {
-    Jsoup.parse(contentAsString(result)).getElementById(id).text() should include(expected)
+  def getContent(id: String, expected: String): Assertion = {
+    Jsoup.parse(contentAsString(result)).getElementById(id).text() should be(expected)
+  }
+
+  def getContentByClass(identifier: String, expected: String): Assertion = {
+    Jsoup.parse(contentAsString(result)).getElementById("calculator").getElementsByClass(identifier).text() should be(expected)
+  }
+
+  def getRadioContent(id: String, expected: String): Assertion = {
+    Jsoup.parse(contentAsString(result)).getElementById(id).nextElementSibling().text() should be(expected)
   }
 
   "calculator" should {
@@ -53,20 +61,23 @@ class CalculatorViewTest extends BaseTest {
     }
 
     "display radio button header" in {
-      getContent(expected = "Where do you live?")
-      getContent(expected = "Where you live can affect how much you benefit because of different tax rates.")
+      getContentByClass(identifier = "govuk-fieldset__heading", expected = "Where do you live?")
+      getContentByClass(identifier = "govuk-hint", expected = "Where you live can affect how much you benefit because of different tax rates.")
     }
 
     "display radio buttons" in {
-      getContent(expected = "England")
-      getContent(expected = "Northern Ireland")
-      getContent(expected = "Scotland")
-      getContent(expected = "Wales")
+      getRadioContent(id = "country-england", expected = "England")
+      getRadioContent(id = "country-northernireland", expected = "Northern Ireland")
+      getRadioContent(id = "country-scotland", expected = "Scotland")
+      getRadioContent(id = "country-wales", expected = "Wales")
     }
 
     "display income headers" in {
-      getContent(expected = "Your income (low), before tax is taken off")
-      getContent(expected = "Your partner’s income (high), before tax is taken off")
+
+      val view = Jsoup.parse(contentAsString(result)).getElementsByClass("govuk-label govuk-label--l ")
+
+      view.eq(0).text() should equal("Your income (low), before tax is taken off")
+      view.eq(1).text() should equal("Your partner’s income (high), before tax is taken off")
     }
 
   }
