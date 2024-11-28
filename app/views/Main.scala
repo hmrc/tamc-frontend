@@ -61,7 +61,9 @@ class MainImpl @Inject() (
                       disableBackLink: Boolean
                     )(
                       contentBlock: Html
-                    )(implicit BaseUserRequest: Request[_], messages: Messages): HtmlFormat.Appendable = {
+                    )(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
+
+    val hideAccountMenu = request.session.get("authToken").isEmpty
 
     wrapperService.standardScaLayout(
       content = contentBlock,
@@ -83,7 +85,8 @@ class MainImpl @Inject() (
         showHelpImproveBanner = false
       ),
       optTrustedHelper = None,
+      hideMenuBar = hideAccountMenu,
       fullWidth = false
-    )(messages, BaseUserRequest)
+    )(messages, request)
   }
 }
