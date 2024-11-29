@@ -74,10 +74,10 @@ class CalculatorViewTest extends BaseTest {
 
     "display income headers" in {
 
-      val view = Jsoup.parse(contentAsString(result)).getElementsByClass("govuk-label govuk-label--l ")
+      val label = Jsoup.parse(contentAsString(result)).getElementsByClass("govuk-label govuk-label--l ")
 
-      view.eq(0).text() should equal("Your income (low), before tax is taken off")
-      view.eq(1).text() should equal("Your partner’s income (high), before tax is taken off")
+      label.eq(0).text() should equal("Your income (low), before tax is taken off")
+      label.eq(1).text() should equal("Your partner’s income (high), before tax is taken off")
     }
 
   }
