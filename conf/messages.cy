@@ -181,20 +181,16 @@ hmrc.contact-details-9=Gwybodaeth am gost galwadau
 # Eligibility Calculator
 #********************************************************************************
 pages.calc.header=Cyfrifiannell Lwfans Priodasol
-pages.calc.para1=Fel pâr, darganfyddwch faint o dreth y gallwch ei harbed os gwnaethoch gais am Lwfans Priodasol yn y flwyddyn hon.
-pages.calc.para2=Nid yw’r gyfrifiannell hon yn cynnwys newidiadau i gyfradd yr Alban o Dreth Incwm, na lwfansau eraill megis Lwfans Cynilion Personol neu Lwfans Difidend.
-pages.calc.where=Ble’r ydych yn byw?
-label.england = Lloegr
-label.wales = Cymru
-label.scotland = Yr Alban
+pages.calc.para1=Darganfyddwch faint o dreth y gallwch ei harbed fel cwpl drwy wneud cais am Lwfans Priodasol.
+pages.calc.where=Ble'r ydych yn byw?
+pages.calc.where.hint=Gall ble'r ydych yn byw effeithio ar faint yr ydych yn ei elwa oherwydd cyfraddau treth gwahanol
+pages.calc.est.may.differ=Amcangyfrif yw hwn, ac mae'n bosibl y bydd yn wahanol o'r cyfrifiad terfynol pan fyddwch yn gwneud cais
 label.ni = Gogledd Iwerddon
 pages.form.field.income=Eich incwm (isel), cyn didynnu treth
 pages.form.field.recipient-income=Incwm eich partner (uchel), cyn didynnu treth
 pages.calc.field-helper.income=Dyma ffigur eich incwm cyn didynnu treth.
 pages.calc.field-helper.partners-income=Dyma ffigur ei (h)incwm cyn didynnu treth.
 pages.calc.how-to-apply=Sut i wneud cais
-pages.calc.skip-it.pre=Mae’r cam hwn yn opsiynol.
-pages.calc.skip-it=Ewch heibio
 estimate.tax.saving=Cyfrifo
 eligibility.feedback.gain=Ar sail yr wybodaeth yr ydych wedi’i rhoi i ni, byddech yn elwa o tua <strong>£{0}</strong> y flwyddyn fel p&#226;r.
 eligibility.feedback.loose=Ni fyddwch yn elwa fel pâr fod.

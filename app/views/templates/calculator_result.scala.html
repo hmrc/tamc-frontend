@@ -16,7 +16,10 @@
 
 @import play.twirl.api.Html
 
-@this(govukInsetText: GovukInsetText)
+@this(
+    govukInsetText: GovukInsetText,
+    govukWarningText: GovukWarningText
+)
 
 @(calculationResult: Option[models.EligibilityCalculatorResult] = None)(implicit messages: Messages)
 
@@ -25,9 +28,15 @@
             case Some(result) =>
                 val message = result.monetaryGain match {
                     case None => Html(Messages(result.messageKey, result.messageParam.getOrElse(""), result.messageParam2.getOrElse("")))
-                    case Some(gain) => Html(Messages(result.messageKey, {
-                        gain
-                    }))
+                    case Some(gain) =>  {
+                        Html(Messages(result.messageKey, {
+                            gain
+                        }) + govukWarningText(WarningText(
+                                iconFallbackText = Some("Warning"),
+                                content = Text(messages("pages.calc.est.may.differ")),
+                                classes = "govuk-!-margin-top-2"
+                            )))
+                    }
                 }
 
                 govukInsetText(InsetText(id = Some("calculator-result"), content = HtmlContent(message)))

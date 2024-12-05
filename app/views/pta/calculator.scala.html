@@ -46,14 +46,13 @@
 
         @h1("pages.calc.header")
 
-        @p(HtmlContent(Messages("pages.calc.skip-it.pre") +
-                link(link = controllers.transfer.routes.TransferAllowanceController.transfer().url,
-                    messageKey = "pages.calc.skip-it",
-                    inParagraph = true)))
-
-        @p(Text(Messages("pages.calc.para1")))
-
         @form(action = routes.EligibilityCalculatorController.ptaCalculatorAction(), args = Symbol("id") -> "calculator") {
+
+            @if(calculationResult.isEmpty) {
+                @p(Text(Messages("pages.calc.para1")), elmId = Some("how-much-tax-you-can-save"))
+            }
+
+            @calculatorResultView(calculationResult)
 
             @govukFieldset(Fieldset(
                 legend = Some(Legend(
@@ -64,8 +63,6 @@
                 html = html,
                 attributes = Map("id" -> "country")
             ))
-
-            @calculatorResultView(calculationResult)
 
             @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
 
@@ -78,6 +75,7 @@
     @inputRadios(
         form = calculatorForm,
         legend = "pages.calc.where",
+        hint = Some(Text(messages("pages.calc.where.hint"))),
         id = Some("country"),
         name = "country",
         items = Seq(RadioItem(
@@ -109,7 +107,6 @@
         labelKey = "pages.form.field.income",
         isPageHeading = true,
         classes = Some("govuk-!-width-one-half"),
-        labelClasses = Some("govuk-label--s"),
         prefix = Some(PrefixOrSuffix(content = Text("£")))
     )
 
@@ -120,7 +117,6 @@
         labelKey = "pages.form.field.recipient-income",
         isPageHeading = true,
         classes = Some("govuk-!-width-one-half"),
-        labelClasses = Some("govuk-label--s"),
         prefix = Some(PrefixOrSuffix(content = Text("£")))
     )
     }

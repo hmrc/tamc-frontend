@@ -179,9 +179,10 @@ hmrc.contact-details-9=Find out about call charges
 # Eligibility Calculator
 #********************************************************************************
 pages.calc.header=Marriage Allowance calculator
-pages.calc.para1=As a couple, find out how much tax you would save if you applied for Marriage Allowance this year.
-pages.calc.para2=This calculator does not include any allowances such as Personal Savings Allowance or Dividend Allowance.
+pages.calc.para1=Find out how much tax you could save as a couple by applying for Marriage Allowance.
 pages.calc.where=Where do you live?
+pages.calc.where.hint=Where you live can affect how much you benefit because of different tax rates.
+pages.calc.est.may.differ=This is an estimate and may differ from the final calculation when you apply
 label.england = England
 label.wales = Wales
 label.scotland = Scotland
@@ -191,8 +192,6 @@ pages.form.field.recipient-income=Your partner’s income (high), before tax is 
 pages.calc.field-helper.income=This is your income figure before any tax is deducted.
 pages.calc.field-helper.partners-income=This is their income figure before any tax is deducted.
 pages.calc.how-to-apply=How to apply
-pages.calc.skip-it.pre=This step is optional,
-pages.calc.skip-it=skip it
 estimate.tax.saving=Calculate
 eligibility.feedback.gain=Based on the information you have given us, as a couple you would benefit by around <strong>£{0}</strong> a year.
 eligibility.feedback.loose = You will not benefit as a couple.

@@ -30,7 +30,7 @@
         inputRadios: InputRadios,
         link: Link,
         button: Button,
-        viewHelpers: utils.ViewHelpers,
+        viewHelpers: _root_.utils.ViewHelpers,
         govukInsetText: GovukInsetText
 )
 
@@ -48,9 +48,9 @@
 
     @h1("pages.calc.header")
 
-    @p(Text(Messages("pages.calc.para1")))
+    @calculatorResultView(calculationResult)
 
-    @govukInsetText(InsetText(content = Text(messages("pages.calc.para2"))))
+    @p(Text(Messages("pages.calc.para1")), elmId = Some("how-much-tax-you-can-save"))
 
     @form(action = routes.EligibilityCalculatorController.gdsCalculatorAction(), args = Symbol("id") -> "calculator") {
         @govukFieldset(Fieldset(
@@ -61,8 +61,6 @@
             )),
             html = html
         ))
-
-        @calculatorResultView(calculationResult)
 
         @button(msg = "estimate.tax.saving", id = "calculate", attrs = Map("data-journey-click" -> "marriage-allowance:click:calculate"))
     }
@@ -95,24 +93,29 @@
 @inputRadios(
     form = calculatorForm,
     legend = "pages.calc.where",
+    hint = Some(Text(messages("pages.calc.where.hint"))),
     id = Some("country"),
     name = "country",
     items = Seq(RadioItem(
         content = Text(messages("label.england")),
         value = Some("england"),
-        id = Some("country-england")
+        id = Some("country-england"),
+        checked = calculatorForm("country").value.contains("england")
     ), RadioItem(
         content = Text(messages("label.ni")),
         value = Some("northernireland"),
-        id = Some("country-northernireland")
+        id = Some("country-northernireland"),
+        checked = calculatorForm("country").value.contains("northernireland")
     ), RadioItem(
         content = Text(messages("label.scotland")),
         value = Some("scotland"),
-        id = Some("country-scotland")
+        id = Some("country-scotland"),
+        checked = calculatorForm("country").value.contains("scotland")
     ), RadioItem(
         content = Text(messages("label.wales")),
         value = Some("wales"),
-        id = Some("country-wales")
+        id = Some("country-wales"),
+        checked = calculatorForm("country").value.contains("wales")
     )),
     legendAsHeading = true,
     legendClasses = "govuk-label--s",
@@ -126,7 +129,6 @@
     labelKey = "pages.form.field.income",
     isPageHeading = true,
     classes = Some("govuk-!-width-one-half"),
-    labelClasses = Some("govuk-label--s"),
     prefix = Some(PrefixOrSuffix(content = Text("£")))
 )
 
@@ -137,7 +139,6 @@
     labelKey = "pages.form.field.recipient-income",
     isPageHeading = true,
     classes = Some("govuk-!-width-one-half"),
-    labelClasses = Some("govuk-label--s"),
     prefix = Some(PrefixOrSuffix(content = Text("£")))
 )
 }
