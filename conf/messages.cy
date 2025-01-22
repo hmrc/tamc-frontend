@@ -136,7 +136,10 @@ outage-page.serviceDisplayName = Gwneud cais am Lwfans Priodasol
 title.pattern=Lwfans Priodasol – GOV.UK
 title.application.pattern=Cais am Lwfans Priodasol – GOV.UK
 title.dateOfBirth=Eich dyddiad geni
+title.choose-years=Dewiswch y blynyddoedd yr ydych am wneud cais amdanynt
+title.apply-by-post=Mae’n rhaid i chi wneud cais drwy’r post
 title.eligible-years=Gwneud cais ar gyfer y flwyddyn dreth bresennol
+title.do-not-apply-current-tax-year=Nid ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 title.extra-years=Gwneud cais ar gyfer blynyddoedd treth cynharach
 title.confirm-extra-years=Cadarnhewch eich bod am wneud cais ar gyfer blwyddyn dreth {0}
 title.transfer-in-place=Trosglwyddiad yn barod
@@ -524,6 +527,17 @@ pages.confirm.cancel.email=E-bost
 pages.confirm.cancel.continue.button=Cadarnhau canslo
 pages.confirm.change.email=Newid E-bost
 
+#********************************************************************************
+# Choose tax years page
+#********************************************************************************
+pages.chooseYears.paragraph1=Gwnaethoch roi gwybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil â/ag <span id="firstNameOnly">{0}</span> on <span id=marriageDate class=nowrap>{1}</span>.
+pages.chooseYears.paragraph2=Mae hyn yn golygu y gallwch wneud cais ar gyfer y flwyddyn hon a blynyddoedd blaenorol.
+pages.chooseYears.heading=Pa flynyddoedd treth yr ydych am wneud cais ar eu cyfer?
+pages.chooseYears.currentTaxYear=Y flwyddyn dreth gyfredol, sef {0} ymlaen
+pages.chooseYears.previousTaxYears=Blynyddoedd treth blaenorol cyn {0}
+pages.chooseYears.currentAndPreviousTaxYears=Y flwyddyn dreth bresennol a blynyddoedd treth blaenorol
+pages.chooseYears.error.required=Select which tax years you want to apply for
+pages.chooseYears.error.invalid=Invalid answer
 
 #********************************************************************************
 # eligible year page
@@ -538,6 +552,18 @@ pages.eligibleyear.li3.link.text=nad ydych bellach yn gymwys
 pages.eligibleyear.doyou.want=A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
 pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
 
+#********************************************************************************
+# Apply by post page
+#********************************************************************************
+pages.apply-by-post.paragraph=Mae’ch cais yn cynnwys blwyddyn dreth flaenorol. Ni allwch wneud cais ar gyfer blynyddoedd treth blaenorol ar-lein.
+pages.apply-by-post.link.text=Gwneud cais am Lwfans Priodasol drwy’r post
+
+#********************************************************************************
+# Don't Apply Current Tax Year page
+#********************************************************************************
+pages.do-not-apply-current-tax-year.paragraph=Gallwch wneud y canlynol:
+pages.do-not-apply-current-tax-year.li1.link.text=newid y blynyddoedd yr ydych am wneud cais amdanynt
+pages.do-not-apply-current-tax-year.li2.link.text=dysgu sut mae Lwfans Priodasol yn gweithio
 
 #********************************************************************************
 # multiyear
