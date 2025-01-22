@@ -26,13 +26,9 @@ import java.time.{LocalDate, LocalDateTime}
 class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
 
   lazy val currentYear: Int = LocalDate.now().getYear
-  lazy val nextYear: Int = currentYear + 1
-  lazy val pastYear: Int = currentYear - 1
   lazy val futureDateTime: String = "" + currentTaxYear.finishYear + "0504"
   lazy val pastDateTime: String = "" + currentTaxYear.startYear + "0604"
   lazy val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-  lazy val currentTaxYearEndYear: String = currentTaxYear.finishYear.toString + "0504"
-  lazy val currentTaxYearStartYear: String = currentTaxYear.startYear.toString + "0604"
   lazy val firstTaxYearOfMarriage: Int = 2012
 
   lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
