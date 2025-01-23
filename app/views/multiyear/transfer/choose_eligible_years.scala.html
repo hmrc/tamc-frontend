@@ -43,7 +43,6 @@
     recipientName: String,
     dateOfMarriage: java.time.LocalDate,
     currentTaxYear: java.time.LocalDate
-
 )(
     implicit messages: Messages,
     request: AuthenticatedUserRequest[_]
@@ -70,24 +69,26 @@
     @p(HtmlContent(Messages("pages.chooseYears.paragraph2")))
 
     @h2("pages.chooseYears.heading")
-    @formCSRF(action = transfer.routes.ChooseYearsController.chooseYearsAction(), args = (Symbol("id") -> "choose-year-form")) {
-    @inputRadios(
-        form = form,
-        legend = "pages.chooseYears.heading",
-        id = Some("value"),
-        name = "value",
-        items = ApplyForEligibleYears.options(languageUtilsImpl().ukDateTransformer(currentTaxYear)),
-        fieldSetAttrs = Map("data-inline-error" -> "current-year-error"),
-        legendAsHeading = false,
-        legendClasses = "govuk-visually-hidden"
-    )
 
-    @button(
-        msg = "generic.continue",
-        attrs = Map(
-            "data-journey-click" ->
-            "marriage-allowance:button:chooseyear_continue"
+    @formCSRF(action = transfer.routes.ChooseYearsController.chooseYearsAction(), args = (Symbol("id") -> "choose-year-form")) {
+        @inputRadios(
+            form = form,
+            legend = "pages.chooseYears.heading",
+            id = Some("value"),
+            name = "value",
+            items = ApplyForEligibleYears.options(languageUtilsImpl().ukDateTransformer(currentTaxYear))
+                .map(item => item.copy(checked = form.value.isDefined && form.value == item.value)),
+            fieldSetAttrs = Map("data-inline-error" -> "current-year-error"),
+            legendAsHeading = false,
+            legendClasses = "govuk-visually-hidden"
         )
-    )
+
+        @button(
+            msg = "generic.continue",
+            attrs = Map(
+                "data-journey-click" ->
+                "marriage-allowance:button:chooseyear_continue"
+            )
+        )
     }
 }

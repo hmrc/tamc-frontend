@@ -21,18 +21,21 @@
 @import views.Main
 
 @this(
-main: Main,
-languageUtilsImpl: LanguageUtilsImpl,
-h1: H1,
-p: P,
-button: Button
+    main: Main,
+    languageUtilsImpl: LanguageUtilsImpl,
+    h1: H1,
+    p: P,
+    button: Button
 )
 
-@(input:RegistrationFormInput,
-availableYears:List[TaxYear] = List[TaxYear](),
-currentYearAvailable: Boolean)(
-implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+@(
+    input:RegistrationFormInput,
+    availableYears:List[TaxYear] = List[TaxYear](),
+    currentYearAvailable: Boolean
+)(
+    implicit messages: Messages,
+    request: AuthenticatedUserRequest[_]
+)
 
 @backLink = @{
     if(currentYearAvailable) {
@@ -52,6 +55,6 @@ request: AuthenticatedUserRequest[_])
 
     @p(HtmlContent(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage))))
 
-    @button(msg = "generic.continue", href = Some(controllers.transfer.routes.PreviousYearsController.previousYears().url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
+    @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
 
 }

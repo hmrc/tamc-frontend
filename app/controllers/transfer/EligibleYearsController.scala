@@ -83,11 +83,11 @@ class EligibleYearsController @Inject()(
 
             registrationService.saveSelectedYears(selectedYears) map { _ =>
               if (previousYears.isEmpty && currentYearAvailable && (!success.applyForCurrentYear.contains(true))) {
-                throw new NoTaxYearsSelected
-              } else if (previousYears.nonEmpty) {
-                Ok(previousYearsV(registrationInput, previousYears, currentYearAvailable))
-              } else {
+                Redirect(controllers.transfer.routes.DoNotApplyController.doNotApply())
+              } else if (success.applyForCurrentYear.contains(true)) {
                 Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail())
+              } else {
+                Redirect(controllers.transfer.routes.DoNotApplyController.doNotApply())
               }
             }
           }

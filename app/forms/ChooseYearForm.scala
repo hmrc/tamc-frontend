@@ -18,14 +18,15 @@ package forms
 
 import play.api.data.Form
 import models.ApplyForEligibleYears
-import play.api.data.Forms.{nonEmptyText, single}
+import play.api.data.Forms.single
+import utils.emailAddressFormatters.PlayFormFormatter.valueIsPresent
 
 class ChooseYearForm {
-
   def apply(): Form[String] = Form(
-    single("value" -> nonEmptyText
-        .verifying("pages.chooseYears.error.required", _.nonEmpty)
-        .verifying("pages.chooseYears.error.invalid", answer => valid(answer)))
+    single(
+      "value" -> valueIsPresent("pages.chooseYears.error.required")
+      .verifying("pages.chooseYears.error.invalid", answer => valid(answer))
+    )
   )
 
   def valid(answer: String): Boolean =

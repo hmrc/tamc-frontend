@@ -50,7 +50,8 @@ class ChooseYearsController @Inject()(
         cachingService.get[String](CACHE_CHOOSE_YEARS).map {
           case Some(data) =>
             Ok(chooseYearsView(form.fill(data), registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
-          case None => Ok(chooseYearsView(form, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
+          case None =>
+            Ok(chooseYearsView(form, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
         }
     } recover errorHandler.handleError
   }
@@ -74,7 +75,8 @@ class ChooseYearsController @Inject()(
               case _ =>
                 Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
             }
-          })
+          }
+        )
     } recover errorHandler.handleError
   }
 }
