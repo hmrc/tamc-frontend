@@ -530,15 +530,14 @@ pages.confirm.change.email=Newid E-bost
 #********************************************************************************
 # Choose tax years page
 #********************************************************************************
-pages.chooseYears.paragraph1=Gwnaethoch roi gwybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil â/ag <span id="firstNameOnly">{0}</span> on <span id=marriageDate class=nowrap>{1}</span>.
+pages.chooseYears.paragraph1=Gwnaethoch roi gwybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil â <span id="firstNameOnly">{0}</span> ar <span id=marriageDate class=nowrap>{1}</span>.
 pages.chooseYears.paragraph2=Mae hyn yn golygu y gallwch wneud cais ar gyfer y flwyddyn hon a blynyddoedd blaenorol.
 pages.chooseYears.heading=Pa flynyddoedd treth yr ydych am wneud cais ar eu cyfer?
 pages.chooseYears.currentTaxYear=Y flwyddyn dreth gyfredol, sef {0} ymlaen
 pages.chooseYears.previousTaxYears=Blynyddoedd treth blaenorol cyn {0}
 pages.chooseYears.currentAndPreviousTaxYears=Y flwyddyn dreth bresennol a blynyddoedd treth blaenorol
-pages.chooseYears.error.required=Select which tax years you want to apply for
-pages.chooseYears.error.invalid=Invalid answer
-
+pages.chooseYears.error.required=Dewiswch pa flynyddoedd treth rydych eisiau gwneud cais ar eu cyfer
+pages.chooseYears.error.invalid=Dewiswch pa flynyddoedd treth rydych eisiau gwneud cais ar eu cyfer
 #********************************************************************************
 # eligible year page
 #********************************************************************************
