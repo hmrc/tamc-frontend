@@ -41,17 +41,19 @@
 
     @p(HtmlContent(Messages("pages.do-not-apply-current-tax-year.paragraph")))
 
-    <ul class="govuk-list govuk-list--bullet">
+    <ul class="govuk-list govuk-list--bullet" id="do-not-apply-current-tax-year-list">
         <li>
             @link(
                 link = controllers.transfer.routes.EligibleYearsController.eligibleYears().url,
-                messageKey = "pages.do-not-apply-current-tax-year.li1.link.text"
+                messageKey = "pages.do-not-apply-current-tax-year.li1.link.text",
+                id = Some("change-year-link")
             )
         </li>
         <li>
             @link(
-                link = controllers.routes.HowItWorksController.home().url,
-                messageKey = "pages.do-not-apply-current-tax-year.li2.link.text"
+                link = controllers.routes.HowItWorksController.howItWorks().url,
+                messageKey = "pages.do-not-apply-current-tax-year.li2.link.text",
+                id = Some("how-it-works-link")
             )
         </li>
     </ul>

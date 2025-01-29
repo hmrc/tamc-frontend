@@ -31,7 +31,7 @@ class DoNotApplyController @Inject()(
                                      extends BaseController(cc) with LoggerHelper {
 
 
-  def doNotApply(): Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
+  def doNotApply: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
     implicit request =>
       Ok(doNotApplyView())
   }
