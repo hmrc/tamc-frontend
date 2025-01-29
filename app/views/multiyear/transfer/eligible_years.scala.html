@@ -49,11 +49,18 @@
     implicit messages: Messages,
     request: AuthenticatedUserRequest[_]
 )
+@backLink = @{
+    if(historicYearsAvailable) {
+        controllers.transfer.routes.ChooseYearsController.chooseYears().url
+    } else {
+        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
+    }
+}
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(form, Messages("title.eligible-years")),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
+    backLinkHref = Some(backLink)
 ){
 
 @errorSummary(form, Some("applyForCurrentYear-true"))

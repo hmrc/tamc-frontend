@@ -34,7 +34,6 @@ class EligibleYearsController @Inject()(
                                          registrationService: TransferService,
                                          timeService: TimeService,
                                          cc: MessagesControllerComponents,
-                                         previousYearsV: views.html.multiyear.transfer.previous_years,
                                          eligibleYearsV: views.html.multiyear.transfer.eligible_years)
                                        (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
@@ -42,8 +41,8 @@ class EligibleYearsController @Inject()(
     registrationService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {
       case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
         throw new NoTaxYearsAvailable
-      case CurrentAndPreviousYearsEligibility(false, previousYears, registrationInput, _) if previousYears.nonEmpty =>
-        Ok(previousYearsV(registrationInput, previousYears, currentYearAvailable = false))
+      case CurrentAndPreviousYearsEligibility(false, previousYears, _, _) if previousYears.nonEmpty =>
+        Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
       case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
         Ok(
           eligibleYearsV(

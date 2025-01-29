@@ -554,6 +554,7 @@ pages.eligibleyear.notice=You can apply for earlier years if you continue.
 # Apply by post page
 #********************************************************************************
 pages.apply-by-post.paragraph=Your application includes a previous tax year. You cannot apply for previous tax years online.
+pages.apply-by-post.only.previous.years= You cannot apply for previous tax years online.
 pages.apply-by-post.link.text=Apply for Marriage Allowance by post
 
 #********************************************************************************

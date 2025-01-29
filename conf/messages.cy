@@ -555,6 +555,7 @@ pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os y
 # Apply by post page
 #********************************************************************************
 pages.apply-by-post.paragraph=Mae’ch cais yn cynnwys blwyddyn dreth flaenorol. Ni allwch wneud cais ar gyfer blynyddoedd treth blaenorol ar-lein.
+pages.apply-by-post.only.previous.years=Ni allwch wneud cais ar gyfer blynyddoedd treth blaenorol ar-lein.
 pages.apply-by-post.link.text=Gwneud cais am Lwfans Priodasol drwy’r post
 
 #********************************************************************************
