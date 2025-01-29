@@ -26,10 +26,11 @@ import java.time.{LocalDate, LocalDateTime}
 class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
 
   lazy val currentYear: Int = LocalDate.now().getYear
-  lazy val futureDateTime: String = s"${currentTaxYear.finishYear}0504"
-  lazy val pastDateTime: String = s"${currentTaxYear.startYear}0604"
-  lazy val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-  lazy val firstTaxYearOfMarriage: Int = 2012
+  lazy val nextYear: Int = currentYear + 1
+  lazy val pastYear: Int = currentYear - 1
+  lazy val futureDateTime: String = "" + nextYear + "0101"
+  lazy val pastDateTime: String = "" + pastYear + "0101"
+  val dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd")
 
   lazy val applicationConfig : ApplicationConfig = instanceOf[ApplicationConfig]
   lazy val currentTaxYear: uk.gov.hmrc.time.TaxYear = applicationConfig.currentTaxYear()
@@ -40,6 +41,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
       Recipient.value,
       "56787",
       s"${currentTaxYear.startYear-8}0101",
+      //"20130101",
       Some(DesRelationshipEndReason.Default),
       None,
       "",
@@ -81,8 +83,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
     "return false" when {
 
       "relationship end date is a past date" in {
-        relationshipActiveRecordWithPastValidDate.copy(participant1EndDate =
-          Some(s"${currentTaxYear.startYear}0504")).isActive(localDate) shouldBe false
+        relationshipActiveRecordWithPastValidDate.isActive(localDate) shouldBe false
       }
 
       "relationship end date is today" in {
@@ -99,13 +100,13 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
       "participant endDate is in PastYear" in {
         val relationshipRecord = relationshipActiveRecordWithPastValidDate
 
-        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe (firstTaxYearOfMarriage to currentTaxYear.startYear).toSet
+        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe Set(2014, 2020, 2017, 2015, 2016, 2022, 2012, 2013, 2019, 2021, 2018)
       }
 
       "participant endDate is in FutureYear" in {
         val relationshipRecord = relationshipActiveRecordWithFutureValidDate
 
-        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe (firstTaxYearOfMarriage to currentTaxYear.finishYear).toSet
+        relationshipRecord.overlappingTaxYears(currentTaxYear.startYear) shouldBe Set(2014, 2020, 2024, 2017, 2015, 2023, 2016, 2022, 2012, 2013, 2019, 2021, 2018)
       }
 
       "participant startDate and endDate is in same year" in {
