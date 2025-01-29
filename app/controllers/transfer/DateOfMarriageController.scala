@@ -19,12 +19,14 @@ package controllers.transfer
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.DateOfMarriageForm
-import models._
+import models.{DateOfMarriageFormInput, RecipientDetailsFormInput, RegistrationFormInput}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService._
 import services.{CachingService, TimeService, TransferService}
+import uk.gov.hmrc.time.CurrentTaxYear
 import utils.{LoggerHelper, TransferErrorHandler}
 
+import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,7 +39,9 @@ class DateOfMarriageController @Inject()(
                                           cc: MessagesControllerComponents,
                                           dateOfMarriageV: views.html.date_of_marriage,
                                           dateOfMarriageForm: DateOfMarriageForm)
-                                        (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                        (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper with CurrentTaxYear {
+
+  override def now: () => LocalDate = () => LocalDate.now()
 
   def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
@@ -52,8 +56,12 @@ class DateOfMarriageController @Inject()(
         registrationService.getRecipientDetailsFormData() flatMap {
           case RecipientDetailsFormInput(name, lastName, gender, nino) =>
             val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
-            registrationService.isRecipientEligible(request.nino, dataToSend) map { _ =>
-              Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
+            registrationService.isRecipientEligible(request.nino, dataToSend) map {
+              eligible =>
+                if (eligible && current.contains(dataToSend.dateOfMarriage))
+                  Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
+                else
+                  Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
             }
         }
       }
