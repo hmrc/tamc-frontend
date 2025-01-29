@@ -18,21 +18,28 @@ package controllers.transfer
 
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
+import models.CurrentAndPreviousYearsEligibility
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.TransferService
 import utils.LoggerHelper
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
 class ApplyByPostController @Inject()(
                                        authenticate: StandardAuthJourney,
+                                       transferService: TransferService,
                                        applyByPostView: views.html.multiyear.transfer.apply_by_post,
                                        cc: MessagesControllerComponents
                                      )
-                                     extends BaseController(cc) with LoggerHelper {
+                                     (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
 
-  def applyByPost: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails {
+  def applyByPost: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
-      Ok(applyByPostView())
+      transferService.getCurrentAndPreviousYearsEligibility map {
+        case CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, _, _) =>
+          Ok(applyByPostView(currentYearAvailable, previousYears.nonEmpty))
+      }
   }
 }

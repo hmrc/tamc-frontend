@@ -20,19 +20,27 @@ import controllers.ControllerViewTestHelper
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
+import models.{CurrentAndPreviousYearsEligibility, TaxYear}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.Injecting
+import services.TransferService
+import test_utils.data.RecipientRecordData
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 import views.html.multiyear.transfer.apply_by_post
 
 class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
+  val mockTransferService: TransferService = mock[TransferService]
+
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
+      bind[TransferService].toInstance(mockTransferService),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
@@ -44,10 +52,20 @@ class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTe
 
   "applyByPost" should {
     "display the Apply By Post page" in {
+      val currentYearAvailable = true
+      val previousYears = true
+      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
+        .thenReturn(
+          CurrentAndPreviousYearsEligibility(
+            currentYearAvailable = true,
+            List(TaxYear(2015)),
+            RecipientRecordData.recipientRecord.data,
+            RecipientRecordData.recipientRecord.availableTaxYears
+          ))
       val result = controller.applyByPost(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs applyByPostView()
+      result rendersTheSameViewAs applyByPostView(currentYearAvailable, previousYears)
     }
   }
 

@@ -28,7 +28,10 @@
     appConfig: ApplicationConfig,
 )
 
-@()(
+@(
+    currentYearAvailable: Boolean,
+    previousYears: Boolean
+)(
     implicit messages: Messages,
     request: AuthenticatedUserRequest[_]
 )
@@ -40,10 +43,15 @@
 ){
     @h1("title.apply-by-post")
 
-    @p(HtmlContent(Messages("pages.apply-by-post.paragraph")))
+    @if(previousYears && currentYearAvailable == false) {
+        @p(HtmlContent(Messages("pages.apply-by-post.only.previous.years")))
+    } else {
+        @p(HtmlContent(Messages("pages.apply-by-post.paragraph")))
+    }
 
     @link(
         link = appConfig.applyByPostUrl,
-        messageKey = "pages.apply-by-post.link.text"
+        messageKey = "pages.apply-by-post.link.text",
+        id = Some("apply-by-post-link")
     )
 }
