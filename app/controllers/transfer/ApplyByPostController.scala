@@ -20,7 +20,8 @@ import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import models.CurrentAndPreviousYearsEligibility
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.TransferService
+import services.CacheService.CACHE_CHOOSE_YEARS
+import services.{CachingService, TransferService}
 import utils.LoggerHelper
 
 import javax.inject.Inject
@@ -29,6 +30,7 @@ import scala.concurrent.ExecutionContext
 class ApplyByPostController @Inject()(
                                        authenticate: StandardAuthJourney,
                                        transferService: TransferService,
+                                       cachingService: CachingService,
                                        applyByPostView: views.html.multiyear.transfer.apply_by_post,
                                        cc: MessagesControllerComponents
                                      )
@@ -37,9 +39,12 @@ class ApplyByPostController @Inject()(
 
   def applyByPost: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
     implicit request =>
-      transferService.getCurrentAndPreviousYearsEligibility map {
-        case CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, _, _) =>
-          Ok(applyByPostView(currentYearAvailable, previousYears.nonEmpty))
+      transferService.getCurrentAndPreviousYearsEligibility.flatMap  {
+        case CurrentAndPreviousYearsEligibility(currentYearAvailable, _, _, _) =>
+          cachingService.get[String](CACHE_CHOOSE_YEARS).map {
+            data =>
+              Ok(applyByPostView(data, currentYearAvailable))
+          }
       }
   }
 }

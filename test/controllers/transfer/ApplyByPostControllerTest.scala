@@ -29,14 +29,17 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers._
 import play.api.test.Injecting
-import services.TransferService
+import services.{CachingService, TransferService}
 import test_utils.data.RecipientRecordData
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 import views.html.multiyear.transfer.apply_by_post
 
+import scala.concurrent.Future
+
 class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
   val mockTransferService: TransferService = mock[TransferService]
+  val mockCachingService: CachingService = mock[CachingService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -53,19 +56,24 @@ class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTe
   "applyByPost" should {
     "display the Apply By Post page" in {
       val currentYearAvailable = true
-      val previousYears = true
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
         .thenReturn(
           CurrentAndPreviousYearsEligibility(
             currentYearAvailable = true,
-            List(TaxYear(2015)),
+            List(TaxYear(2014)),
             RecipientRecordData.recipientRecord.data,
             RecipientRecordData.recipientRecord.availableTaxYears
           ))
+
+      val cachedData = Some("previousTaxYears")
+      when(mockCachingService.get[String](any())(any()))
+        .thenReturn(Future.successful(cachedData))
+
       val result = controller.applyByPost(request)
+
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs applyByPostView(currentYearAvailable, previousYears)
+      result rendersTheSameViewAs applyByPostView(cachedData, currentYearAvailable)
     }
   }
 

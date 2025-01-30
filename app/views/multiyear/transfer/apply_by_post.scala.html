@@ -29,24 +29,32 @@
 )
 
 @(
-    currentYearAvailable: Boolean,
-    previousYears: Boolean
+    option: Option[String],
+    currentYearAvailable: Boolean
 )(
     implicit messages: Messages,
     request: AuthenticatedUserRequest[_]
 )
 
+@backLink = @{
+    if(currentYearAvailable) {
+        controllers.transfer.routes.ChooseYearsController.chooseYears().url
+    } else {
+        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
+    }
+}
+
 @main(
     pageTitle = Messages("title.apply-by-post"),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
+    backLinkHref = Some(backLink)
 ){
     @h1("title.apply-by-post")
 
-    @if(previousYears && currentYearAvailable == false) {
-        @p(HtmlContent(Messages("pages.apply-by-post.only.previous.years")))
-    } else {
+    @if(option == Some("currentAndPreviousTaxYears")) {
         @p(HtmlContent(Messages("pages.apply-by-post.paragraph")))
+    } else {
+        @p(HtmlContent(Messages("pages.apply-by-post.only.previous.years")))
     }
 
     @link(
