@@ -18,6 +18,7 @@ package controllers.transfer
 
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
+import errors.NoTaxYearsAvailable
 import forms.ChooseYearForm
 import models.{ApplyForEligibleYears, CurrentAndPreviousYearsEligibility}
 import play.api.data.Form
@@ -46,12 +47,16 @@ class ChooseYearsController @Inject()(
 
   def chooseYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
-      case CurrentAndPreviousYearsEligibility(_, _, registrationInput, _) =>
-        cachingService.get[String](CACHE_CHOOSE_YEARS).map {
-          case Some(data) =>
-            Ok(chooseYearsView(form.fill(data), registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
-          case None =>
-            Ok(chooseYearsView(form, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
+        case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
+          throw new NoTaxYearsAvailable
+        case CurrentAndPreviousYearsEligibility(false, previousYears, _, _) if previousYears.nonEmpty =>
+          Future.successful(Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost()))
+        case CurrentAndPreviousYearsEligibility(_, _, registrationInput, _) =>
+          cachingService.get[String](CACHE_CHOOSE_YEARS).map {
+            case Some(data) =>
+              Ok(chooseYearsView(form.fill(data), registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
+            case None =>
+              Ok(chooseYearsView(form, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
         }
     } recover errorHandler.handleError
   }

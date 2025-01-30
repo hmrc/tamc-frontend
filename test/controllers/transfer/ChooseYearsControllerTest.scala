@@ -87,7 +87,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
   "chooseYears" should {
     "return OK with pre-filled form" when {
       "cached data is available" in {
-        val cachedData = Some("CurrentTaxYear")
+        val cachedData = Some("currentTaxYear")
         when(mockCachingService.get[String](any())(any()))
           .thenReturn(Future.successful(cachedData))
 
@@ -104,6 +104,41 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
         status(result) mustBe OK
       }
     }
+
+    "redirect the user " when {
+      "there are available tax years not including current year" in {
+        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(
+          Future.successful(
+            CurrentAndPreviousYearsEligibility(
+              currentYearAvailable = false,
+              List(TaxYear(2015)),
+              RecipientRecordData.recipientRecord.data,
+              RecipientRecordData.recipientRecord.availableTaxYears
+            )
+          )
+        )
+        val result = controller.chooseYears()(request)
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
+      }
+    }
+
+//    "throw an exception and recover user to error page" when {
+//      "available tax years is empty" in {
+//        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(
+//          Future.successful(
+//            CurrentAndPreviousYearsEligibility(
+//              currentYearAvailable = false,
+//              Nil,
+//              RecipientRecordData.recipientRecord.data,
+//              RecipientRecordData.recipientRecord.availableTaxYears
+//            )
+//          )
+//        )
+//        val result = controller.chooseYears()(request)
+//        status(result) shouldBe OK
+//      }
+//    }
   }
 
   "chooseYearsAction" should {
