@@ -36,6 +36,10 @@ class DoNotApplyTest extends BaseTest with ViewTestUtils with NinoGenerator {
   implicit val doc: Document                                             = Jsoup.parse(doNotApplyView().toString())
 
   "Don't apply current tax year" should {
+    "display correct title" in {
+      doc.title() shouldBe "You don't want to apply for the current tax year onwards - Marriage Allowance - GOV.UK"
+    }
+
     "display correct heading" in {
       doc.getElementsByTag("h1").text() shouldBe "You don't want to apply for the current tax year onwards"
     }
