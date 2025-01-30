@@ -122,23 +122,6 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
       }
     }
-
-//    "throw an exception and recover user to error page" when {
-//      "available tax years is empty" in {
-//        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(
-//          Future.successful(
-//            CurrentAndPreviousYearsEligibility(
-//              currentYearAvailable = false,
-//              Nil,
-//              RecipientRecordData.recipientRecord.data,
-//              RecipientRecordData.recipientRecord.availableTaxYears
-//            )
-//          )
-//        )
-//        val result = controller.chooseYears()(request)
-//        status(result) shouldBe OK
-//      }
-//    }
   }
 
   "chooseYearsAction" should {
