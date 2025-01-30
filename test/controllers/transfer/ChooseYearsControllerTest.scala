@@ -64,24 +64,25 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
   def controller: ChooseYearsController =
     app.injector.instanceOf[ChooseYearsController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
-  when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(time.TaxYear.current.starts)
-  when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(
-    Future.successful(
-      CurrentAndPreviousYearsEligibility(
-        currentYearAvailable = true,
-        List(TaxYear(2015)),
-        RecipientRecordData.recipientRecord.data,
-        RecipientRecordData.recipientRecord.availableTaxYears
-      )
-    )
-  )
-  val recipientNotFoundView: recipient_not_found = inject[views.html.errors.recipient_not_found]
-
   override def beforeEach(): Unit = {
     super.beforeEach()
     reset(mockCachingService)
+    reset(mockTimeService)
+    reset(mockTransferService)
+
+    when(mockTimeService.getCurrentDate).thenReturn(LocalDate.now())
+    when(mockTimeService.getCurrentTaxYear).thenReturn(currentTaxYear)
+    when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(time.TaxYear.current.starts)
+    when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(
+      Future.successful(
+        CurrentAndPreviousYearsEligibility(
+          currentYearAvailable = true,
+          List(TaxYear(2015)),
+          RecipientRecordData.recipientRecord.data,
+          RecipientRecordData.recipientRecord.availableTaxYears
+        )
+      )
+    )
   }
 
   "chooseYears" should {
@@ -128,20 +129,12 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
     "return bad request" when {
       "an empty form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> "")
-
-        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq(""))(any(), any()))
-          .thenReturn(Future.successful(""))
-
         val result = controller.chooseYearsAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
 
       "an invalid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> "invalidOption")
-
-        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq("invalidOption"))(any(), any()))
-          .thenReturn(Future.successful("invalidOption"))
-
         val result = controller.chooseYearsAction()(request)
         status(result) shouldBe BAD_REQUEST
       }

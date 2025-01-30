@@ -34,12 +34,12 @@
 )
 
 @main(
-    pageTitle = Messages("title.do-not-apply-current-tax-year"),
+    pageTitle = messages("title.do-not-apply-current-tax-year"),
     backLinkHref = Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
 ){
     @h1("title.do-not-apply-current-tax-year")
 
-    @p(HtmlContent(Messages("pages.do-not-apply-current-tax-year.paragraph")))
+    @p(HtmlContent(messages("pages.do-not-apply-current-tax-year.paragraph")))
 
     <ul class="govuk-list govuk-list--bullet" id="do-not-apply-current-tax-year-list">
         <li>
@@ -57,5 +57,4 @@
             )
         </li>
     </ul>
-
 }

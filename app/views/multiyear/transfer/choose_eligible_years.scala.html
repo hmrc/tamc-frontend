@@ -59,14 +59,14 @@
     @h1("title.choose-years")
 
     @p(
-        HtmlContent(Messages(
+        HtmlContent(messages(
             "pages.chooseYears.paragraph1",
             recipientName,
             languageUtilsImpl().ukDateTransformer(dateOfMarriage)
         )
     ))
 
-    @p(HtmlContent(Messages("pages.chooseYears.paragraph2")))
+    @p(HtmlContent(messages("pages.chooseYears.paragraph2")))
 
     @h2("pages.chooseYears.heading")
 
@@ -83,11 +83,11 @@
             legendClasses = "govuk-visually-hidden"
         )
 
-        @button(
-            msg = "generic.continue",
-            attrs = Map(
-                "data-journey-click" ->
-                "marriage-allowance:button:chooseyear_continue"
+    @button(
+        msg = "generic.continue",
+        attrs = Map(
+            "data-journey-click" ->
+            "marriage-allowance:button:chooseyear_continue"
             )
         )
     }

@@ -29,7 +29,7 @@
 )
 
 @(
-    option: Option[String],
+    selectedTaxYear: Option[String],
     currentYearAvailable: Boolean
 )(
     implicit messages: Messages,
@@ -45,16 +45,16 @@
 }
 
 @main(
-    pageTitle = Messages("title.apply-by-post"),
+    pageTitle = messages("title.apply-by-post"),
     serviceTitle = "title.application.pattern",
     backLinkHref = Some(backLink)
 ){
     @h1("title.apply-by-post")
 
-    @if(option == Some("currentAndPreviousTaxYears")) {
-        @p(HtmlContent(Messages("pages.apply-by-post.paragraph")))
+    @if(selectedTaxYear == Some("currentAndPreviousTaxYears")) {
+        @p(HtmlContent(messages("pages.apply-by-post.paragraph")))
     } else {
-        @p(HtmlContent(Messages("pages.apply-by-post.only.previous.years")))
+        @p(HtmlContent(messages("pages.apply-by-post.only.previous.years")))
     }
 
     @link(

@@ -55,6 +55,5 @@
 
     @p(HtmlContent(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage))))
 
-    @button(msg = "generic.continue", id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
-
+    @button(msg = "generic.continue", href = Some(controllers.routes.HowItWorksController.home().url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
 }

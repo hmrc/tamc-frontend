@@ -57,13 +57,13 @@ class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTe
     "display the Apply By Post page" in {
       val currentYearAvailable = true
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
-        .thenReturn(
+        .thenReturn(Future.successful(
           CurrentAndPreviousYearsEligibility(
             currentYearAvailable = true,
             List(TaxYear(2014)),
             RecipientRecordData.recipientRecord.data,
             RecipientRecordData.recipientRecord.availableTaxYears
-          ))
+          )))
 
       val cachedData = Some("previousTaxYears")
       when(mockCachingService.get[String](any())(any()))
