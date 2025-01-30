@@ -24,11 +24,10 @@ import models._
 import models.auth.AuthenticatedUserRequest
 import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.Application
-import play.api.http.Status.{BAD_REQUEST, OK}
+import play.api.http.Status.BAD_REQUEST
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.AnyContentAsEmpty
@@ -37,7 +36,6 @@ import play.api.test.Helpers.contentAsString
 import services.TransferService
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.time
 import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 
 import java.time.LocalDate
@@ -78,30 +76,6 @@ class PreviousYearsTest extends BaseTest with NinoGenerator {
       data = rcdata,
       availableTaxYears = List(TaxYear(2014), TaxYear(2015), TaxYear(2016))
     )
-
-    "display dynamic message " in {
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
-        .thenReturn(
-          CurrentAndPreviousYearsEligibility(
-            currentYearAvailable = true,
-            recrecord.availableTaxYears,
-            recrecord.data,
-            recrecord.availableTaxYears
-          )
-        )
-      when(
-        mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(time.TaxYear.current.startYear)))(any())
-      )
-        .thenReturn(Nil)
-      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "applyForCurrentYear" -> "true")
-      val result = eligibleYearsController.eligibleYearsAction(request)
-
-      status(result) shouldBe OK
-      val document = Jsoup.parse(contentAsString(result))
-      document.getElementById("firstNameOnly").text() shouldBe "foo"
-      document.getElementById("marriageDate").text() shouldBe "10 April 2011"
-      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.transfer.routes.EligibleYearsController.eligibleYears().url
-    }
 
     "display form error message (no year choice made )" in {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))

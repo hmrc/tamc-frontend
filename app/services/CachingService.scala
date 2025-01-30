@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ object CacheService {
   val CACHE_RELATION_END_REASON_RECORD: CacheReadWriteKey[EndRelationshipReason] = CacheKey[EndRelationshipReason]("RELATION_END_REASON_RECORD")  // TODO is this key required?
   val CACHE_LOCKED_UPDATE: CacheReadWriteKey[Boolean]                            = CacheKey[Boolean]("LOCKED_UPDATE")                             // TODO is this key required?
   val CACHE_ROLE_RECORD: CacheReadWriteKey[String]                               = CacheKey[String]("ROLE")                                       // TODO is this key required?
+  val CACHE_CHOOSE_YEARS: CacheReadWriteKey[String]                              = CacheKey[String]("CHOOSE_YEARS")
 
   val USER_ANSWERS_CACHE: CacheReadKey[UserAnswersCacheData] = CacheKey[UserAnswersCacheData]((cacheItem: CacheItem) =>
     Some(

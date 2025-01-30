@@ -1,0 +1,60 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.auth.AuthenticatedUserRequest
+@import config.ApplicationConfig
+@import includes.{H1, P, Link}
+
+@import views.Main
+
+@this(
+    main: Main,
+    h1: H1,
+    p: P,
+    link: Link,
+    appConfig: ApplicationConfig,
+)
+
+@()(
+    implicit messages: Messages,
+    request: AuthenticatedUserRequest[_]
+)
+
+@main(
+    pageTitle = messages("title.do-not-apply-current-tax-year"),
+    backLinkHref = Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
+){
+    @h1("title.do-not-apply-current-tax-year")
+
+    @p(HtmlContent(messages("pages.do-not-apply-current-tax-year.paragraph")))
+
+    <ul class="govuk-list govuk-list--bullet" id="do-not-apply-current-tax-year-list">
+        <li>
+            @link(
+                link = controllers.transfer.routes.EligibleYearsController.eligibleYears().url,
+                messageKey = "pages.do-not-apply-current-tax-year.li1.link.text",
+                id = Some("change-year-link")
+            )
+        </li>
+        <li>
+            @link(
+                link = controllers.routes.HowItWorksController.howItWorks().url,
+                messageKey = "pages.do-not-apply-current-tax-year.li2.link.text",
+                id = Some("how-it-works-link")
+            )
+        </li>
+    </ul>
+}

@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package forms
 
-@(msg: String, classes: Option[String] = None, elmId: Option[String] = None)(implicit messages: Messages)
-<header class="hmrc-page-heading govuk-!-margin-top-0">
-<h1 id=@elmId.getOrElse("pageHeading") class="@classes.getOrElse("govuk-heading-xl") govuk-!-margin-bottom-6">@Html(messages(msg))</h1>
-</header>
+import play.api.data.Form
+import models.ApplyForEligibleYears
+import play.api.data.Forms.single
+import utils.emailAddressFormatters.PlayFormFormatter.valueIsPresent
+
+class ChooseYearForm {
+  def apply(): Form[String] = Form(
+    single(
+      "value" -> valueIsPresent("pages.chooseYears.error.required")
+      .verifying("pages.chooseYears.error.invalid", answer => valid(answer))
+    )
+  )
+
+  def valid(answer: String): Boolean =
+    ApplyForEligibleYears.values.map(_.toString).contains(answer)
+
+}
