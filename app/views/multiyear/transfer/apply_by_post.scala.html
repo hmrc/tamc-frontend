@@ -14,23 +14,22 @@
  * limitations under the License.
  *@
 
-@import views.helpers.LanguageUtilsImpl
 @import models.auth.AuthenticatedUserRequest
-@import includes.{H1, P, Button}
+@import config.ApplicationConfig
+@import includes.{H1, P, Link}
 
 @import views.Main
 
 @this(
     main: Main,
-    languageUtilsImpl: LanguageUtilsImpl,
     h1: H1,
     p: P,
-    button: Button
+    link: Link,
+    appConfig: ApplicationConfig,
 )
 
 @(
-    input:RegistrationFormInput,
-    availableYears:List[TaxYear] = List[TaxYear](),
+    selectedTaxYear: Option[String],
     currentYearAvailable: Boolean
 )(
     implicit messages: Messages,
@@ -39,21 +38,28 @@
 
 @backLink = @{
     if(currentYearAvailable) {
-        controllers.transfer.routes.EligibleYearsController.eligibleYears().url
+        controllers.transfer.routes.ChooseYearsController.chooseYears().url
     } else {
         controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
     }
 }
 
 @main(
-    pageTitle = Messages("pages.previousyear.header"),
+    pageTitle = messages("title.apply-by-post"),
     serviceTitle = "title.application.pattern",
     backLinkHref = Some(backLink)
 ){
+    @h1("title.apply-by-post")
 
-    @h1("pages.previousyear.header", elmId = Some("heading"))
+    @if(selectedTaxYear == Some("currentAndPreviousTaxYears")) {
+        @p(HtmlContent(messages("pages.apply-by-post.paragraph")))
+    } else {
+        @p(HtmlContent(messages("pages.apply-by-post.only.previous.years")))
+    }
 
-    @p(HtmlContent(Messages("pages.previousyear.para", input.name, languageUtilsImpl().ukDateTransformer(input.dateOfMarriage))))
-
-    @button(msg = "generic.continue", href = Some(controllers.routes.HowItWorksController.home().url), id = "continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:previousyearlead_continue"))
+    @link(
+        link = appConfig.applyByPostUrl,
+        messageKey = "pages.apply-by-post.link.text",
+        id = Some("apply-by-post-link")
+    )
 }

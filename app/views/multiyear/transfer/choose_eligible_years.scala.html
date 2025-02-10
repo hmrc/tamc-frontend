@@ -1,0 +1,94 @@
+@*
+ * Copyright 2025 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.Html
+@import views.helpers.LanguageUtilsImpl
+@import config.ApplicationConfig
+@import java.text.NumberFormat
+@import models.auth.AuthenticatedUserRequest
+@import models.ApplyForEligibleYears
+@import includes.{H1, H2, P, Button, InputRadios, ErrorSummary}
+
+@import views.Main
+
+@this(
+    main: Main,
+    errorSummary: ErrorSummary,
+    applicationConfig: ApplicationConfig,
+    formCSRF: FormWithCSRF,
+    languageUtilsImpl: LanguageUtilsImpl,
+    h1: H1,
+    h2: H2,
+    p: P,
+    viewHelpers: utils.ViewHelpers,
+    inputRadios: InputRadios,
+    button: Button
+)
+
+@(
+    form: Form[_],
+    recipientName: String,
+    dateOfMarriage: java.time.LocalDate,
+    currentTaxYear: java.time.LocalDate
+)(
+    implicit messages: Messages,
+    request: AuthenticatedUserRequest[_]
+)
+
+@main(
+    pageTitle = messages("title.choose-years"),
+    serviceTitle = "title.application.pattern",
+    backLinkHref = Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
+) {
+
+    @errorSummary(form)
+
+    @h1("title.choose-years")
+
+    @p(
+        HtmlContent(messages(
+            "pages.chooseYears.paragraph1",
+            recipientName,
+            languageUtilsImpl().ukDateTransformer(dateOfMarriage)
+        )
+    ))
+
+    @p(HtmlContent(messages("pages.chooseYears.paragraph2")))
+
+    @h2("pages.chooseYears.heading")
+
+    @formCSRF(action = transfer.routes.ChooseYearsController.chooseYearsAction(), args = (Symbol("id") -> "choose-year-form")) {
+        @inputRadios(
+            form = form,
+            legend = "pages.chooseYears.heading",
+            id = Some("value"),
+            name = "value",
+            items = ApplyForEligibleYears.options(languageUtilsImpl().ukDateTransformer(currentTaxYear))
+                .map(item => item.copy(checked = form.value.isDefined && form.value == item.value)),
+            fieldSetAttrs = Map("data-inline-error" -> "current-year-error"),
+            legendAsHeading = false,
+            legendClasses = "govuk-visually-hidden"
+        )
+
+    @button(
+        msg = "generic.continue",
+        attrs = Map(
+            "data-journey-click" ->
+            "marriage-allowance:button:chooseyear_continue"
+            )
+        )
+    }
+}

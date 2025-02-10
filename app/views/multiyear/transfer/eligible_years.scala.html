@@ -24,35 +24,43 @@
 @import views.Main
 
 @this(
-main: Main,
-errorSummary: ErrorSummary,
-applicationConfig: ApplicationConfig,
-formCSRF: FormWithCSRF,
-languageUtilsImpl: LanguageUtilsImpl,
-h1: H1,
-h2: H2,
-h3: H3,
-p: P,
-link: Link,
-viewHelpers: utils.ViewHelpers,
-inputRadios: InputRadios,
-button: Button)
+    main: Main,
+    errorSummary: ErrorSummary,
+    applicationConfig: ApplicationConfig,
+    formCSRF: FormWithCSRF,
+    languageUtilsImpl: LanguageUtilsImpl,
+    h1: H1,
+    h2: H2,
+    h3: H3,
+    p: P,
+    link: Link,
+    viewHelpers: utils.ViewHelpers,
+    inputRadios: InputRadios,
+    button: Button
+)
 
 @(
-form: Form[models.CurrentYearInput],
-historicYearsAvailable: Boolean,
-recipientName: String,
-dom: Option[java.time.LocalDate],
-cy: Option[java.time.LocalDate]
+    form: Form[models.CurrentYearInput],
+    historicYearsAvailable: Boolean,
+    recipientName: String,
+    dom: Option[java.time.LocalDate],
+    cy: Option[java.time.LocalDate]
 )(
-implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
-
+    implicit messages: Messages,
+    request: AuthenticatedUserRequest[_]
+)
+@backLink = @{
+    if(historicYearsAvailable) {
+        controllers.transfer.routes.ChooseYearsController.chooseYears().url
+    } else {
+        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
+    }
+}
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(form, Messages("title.eligible-years")),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
+    backLinkHref = Some(backLink)
 ){
 
 @errorSummary(form, Some("applyForCurrentYear-true"))
@@ -94,18 +102,11 @@ request: AuthenticatedUserRequest[_])
                             content = Text(messages("radio.no")),
                             value = Some("false"),
                             id = Some("applyForCurrentYear-false")
-                        )),
+                        )).map(item => item.copy(checked = form.value.isDefined && form.value == item.value)),
             fieldSetAttrs = Map("data-inline-error" -> "current-year-error"),
             legendAsHeading = false,
             legendClasses = "govuk-visually-hidden"
         )
-
-        @if(historicYearsAvailable) {
-        <div class="tamc-js-hidden error-inline validation-summary" id="current-year-error">
-            @p(Text(Messages("pages.eligibleyear.notice")))
-        </div>
-        }
-
     </div>
 
     @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:currentyear_continue"))
