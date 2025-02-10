@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,21 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this()
+package models
 
-@(msg: String, classes: Option[String] = None, elmId: Option[String] = None)(implicit messages: Messages)
-<header class="hmrc-page-heading govuk-!-margin-top-0">
-<h1 id=@elmId.getOrElse("pageHeading") class="@classes.getOrElse("govuk-heading-xl") govuk-!-margin-bottom-6">@Html(messages(msg))</h1>
-</header>
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
+
+class WithNameTest extends AnyFreeSpec with Matchers {
+
+  object Foo extends WithName("bar")
+
+  ".toString" - {
+
+    "must return the correct string" in {
+      Foo.toString mustEqual "bar"
+    }
+  }
+}

@@ -25,20 +25,24 @@
 @import views.Main
 
 @this(
-main: Main,
-ninoRendererView: templates.ninoRenderer,
-form: FormWithCSRF,
-applicationConfig: ApplicationConfig,
-languageUtilsImpl: LanguageUtilsImpl,
-h1: H1,
-h2: H2,
-p: P,
-button: Button,
-govukInsetText: GovukInsetText)
+    main: Main,
+    ninoRendererView: templates.ninoRenderer,
+    form: FormWithCSRF,
+    applicationConfig: ApplicationConfig,
+    languageUtilsImpl: LanguageUtilsImpl,
+    h1: H1,
+    h2: H2,
+    p: P,
+    button: Button,
+    govukInsetText: GovukInsetText
+)
 
-@(data: models.ConfirmationModel)(
-implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+@(
+data: models.ConfirmationModel
+)(
+    implicit messages: Messages,
+    request: AuthenticatedUserRequest[_]
+)
 
 @main(
     pageTitle = Messages("title.confirm"),
@@ -124,7 +128,7 @@ request: AuthenticatedUserRequest[_])
                     </dd>
                 }
             <dd class="govuk-summary-list_actions">
-                <a id="change-@taxYear.year" href="@transfer.routes.EligibleYearsController.eligibleYears()" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
+                <a id="change-@taxYear.year" href="@transfer.routes.ChooseYearsController.chooseYears()" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))</span>
                 </a>
@@ -132,8 +136,6 @@ request: AuthenticatedUserRequest[_])
             </div>
         </dl>
     }
-
-    @govukInsetText(InsetText(id = Some("warning-message"), content = Text(messages("pages.confirm.warning"))))
 
     @form(action = transfer.routes.ConfirmController.confirmAction(), args = (Symbol("id") -> "create-form")) {
         @button(msg = "pages.confirm.button", id = "create", attrs = Map("data-journey-click" -> "marriage-allowance:button:application_confirm"))
