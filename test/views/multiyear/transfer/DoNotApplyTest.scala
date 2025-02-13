@@ -62,7 +62,7 @@ class DoNotApplyTest extends BaseTest with ViewTestUtils with NinoGenerator {
         "change the years you want to apply for",
         "find out how Marriage Allowance works"
       )
-      doc.getElementById("change-year-link").attr("href")  shouldBe "/marriage-allowance-application/eligible-years"
+      doc.getElementById("change-year-link").attr("href")  shouldBe "/marriage-allowance-application/choose-years-to-apply-for"
       doc.getElementById("how-it-works-link").attr("href") shouldBe "/marriage-allowance-application/how-it-works"
     }
 
