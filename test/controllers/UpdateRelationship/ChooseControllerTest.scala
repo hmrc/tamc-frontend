@@ -67,7 +67,7 @@ class ChooseControllerTest extends ControllerBaseTest with ControllerViewTestHel
       val result = controller.decision(request)
 
       status(result) shouldBe OK
-      result rendersTheSameViewAs decisionView(validFormWithData)
+      result `rendersTheSameViewAs` decisionView(validFormWithData)
     }
 
     "display a decision page without cached data" when {
@@ -78,7 +78,7 @@ class ChooseControllerTest extends ControllerBaseTest with ControllerViewTestHel
         val result = controller.decision(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs decisionView(validForm)
+        result `rendersTheSameViewAs` decisionView(validForm)
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -89,7 +89,7 @@ class ChooseControllerTest extends ControllerBaseTest with ControllerViewTestHel
         val validForm = CheckClaimOrCancelDecisionForm.form()
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs decisionView(validForm)
+        result `rendersTheSameViewAs` decisionView(validForm)
       }
     }
   }

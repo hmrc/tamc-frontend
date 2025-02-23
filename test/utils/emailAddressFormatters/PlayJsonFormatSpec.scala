@@ -29,7 +29,7 @@ class PlayJsonFormatsSpec extends AnyWordSpec with Matchers {
 
     "work for a valid email address" in {
       val result = JsString("a@b.com").validate[EmailAddress]
-      result shouldBe a [JsSuccess[_]]
+      result shouldBe a [JsSuccess[?]]
       result.get should be (EmailAddress("a@b.com"))
     }
 

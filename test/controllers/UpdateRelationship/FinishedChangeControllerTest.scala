@@ -38,6 +38,7 @@ import scala.concurrent.Future
 class FinishedChangeControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
+  val mockCachingService: CachingService = mock[CachingService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -62,12 +63,12 @@ class FinishedChangeControllerTest extends ControllerBaseTest with ControllerVie
       when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
         .thenReturn(Future.successful(EmailAddress(email)))
       when(mockUpdateRelationshipService.removeCache(any()))
-        .thenReturn(Future.successful(mock[HttpResponse]))
+        .thenReturn(Future.successful(()))
 
       val result = controller.finishUpdate()(request)
 
       status(result) shouldBe OK
-      result rendersTheSameViewAs finishedView()
+      result `rendersTheSameViewAs` finishedView()
     }
   }
 

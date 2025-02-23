@@ -20,20 +20,21 @@ import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{CachingService, TimeService, TransferService}
 import test_utils.data.ConfirmationModelData
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class ConfirmControllerTest extends ControllerBaseTest {
 
@@ -58,14 +59,14 @@ class ConfirmControllerTest extends ControllerBaseTest {
   def controller: ConfirmController =
     app.injector.instanceOf[ConfirmController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "confirm" should {
     "return success" when {
       "successful future is returned from transfer service" in {
         when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
-          .thenReturn(ConfirmationModelData.confirmationModelData)
+          .thenReturn(Future.successful(ConfirmationModelData.confirmationModelData))
         val result = controller.confirm()(request)
         status(result) shouldBe OK
       }
@@ -76,7 +77,7 @@ class ConfirmControllerTest extends ControllerBaseTest {
     "redirect" when {
       "a user is permanently authenticated" in {
         when(mockTransferService.createRelationship(any())(any(), any(), any(), any()))
-          .thenReturn(notificationRecord)
+          .thenReturn(Future.successful(notificationRecord))
         val result = controller.confirmAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.FinishedController.finished().url)

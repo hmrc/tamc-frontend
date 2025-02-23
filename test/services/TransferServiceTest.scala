@@ -57,7 +57,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
   val relationshipRecord: RelationshipRecord = RelationshipRecord("Recipient", "20150531235901", "19960327", None, None, "123456789123", "20150531235901")
 
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId("SessionId")))
-  implicit val request: Request[_] = FakeRequest()
+  implicit val request: Request[?] = FakeRequest()
 
   val appConf: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
@@ -91,18 +91,18 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         val response = GetRelationshipResponse(Some(RecipientRecordData.userRecord), None, ResponseStatus("OK"))
         val recipientRecord = RecipientRecord(RecipientRecordData.userRecord, recipientData, Nil)
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))
-          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
+          .thenReturn(Future.successful(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None))))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
         when(mockTimeService.getTaxYearForDate(recipientData.dateOfMarriage))
           .thenReturn(2020)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(Right(response))
+          .thenReturn(Future.successful(Right(response)))
         when(mockTimeService.getValidYearsApplyMAPreviousYears(any()))
           .thenReturn(Nil)
 
         when(mockCachingService.put(CACHE_RECIPIENT_RECORD, recipientRecord))
-          .thenReturn(recipientRecord)
+          .thenReturn(Future.successful(recipientRecord))
 
         val result = service.isRecipientEligible(nino, recipientData)
         await(result) shouldBe true
@@ -110,47 +110,51 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
     }
 
     "throw an error" when {
+
+
+
+
       "recipient is not returned" in {
         val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:RECIPIENT-NOT-FOUND"))
+        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
+          .thenReturn(Future.successful(Left(response)))
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))
-          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
+          .thenReturn(Future.successful(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None))))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
-        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(Left(response))
 
         intercept[RecipientNotFound](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "transferor deceased" in {
         val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:TRANSFERER-DECEASED"))
+        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
+          .thenReturn(Future.successful(Left(response)))
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))
-          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None)))
+          .thenReturn(Future.successful(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), Some(List(relationshipRecord)), None))))
         when(mockApplicationService.canApplyForMarriageAllowance(any(), any(), any()))
           .thenReturn(true)
-        when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
-          .thenReturn(Left(response))
 
         intercept[TransferorDeceased](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the cache returns no data" in {
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))
-          .thenReturn(None)
+          .thenReturn(Future.successful(None))
 
         intercept[CacheMissingTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the active relationship record is not returned" in {
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))
-          .thenReturn(Some(EligibilityCheckCacheData(None, None, None, Some(List(relationshipRecord)), None)))
+          .thenReturn(Future.successful(Some(EligibilityCheckCacheData(None, None, None, Some(List(relationshipRecord)), None))))
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
 
       "the historic relationship record is not returned" in {
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))
-          .thenReturn(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), None, None)))
+          .thenReturn(Future.successful(Some(EligibilityCheckCacheData(None, None, Some(relationshipRecord), None, None))))
 
         intercept[NoTaxYearsForTransferor](await(service.isRecipientEligible(nino, recipientData)))
       }
@@ -307,7 +311,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         Future.successful(Some(cacheData)),
         Future.successful(Some(cacheData.copy(transferor = Some(userRecord))))
       )
-      when(mockMarriageAllowanceConnector.listRelationship(nino)).thenReturn(recordList)
+      when(mockMarriageAllowanceConnector.listRelationship(nino)).thenReturn(Future.successful(recordList))
       when(mockCachingService.put[UserRecord](
         ArgumentMatchers.eq(CACHE_TRANSFEROR_RECORD),
         ArgumentMatchers.eq(userRecord))(any(), any())).thenReturn(Future.successful(userRecord))

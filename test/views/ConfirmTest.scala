@@ -35,7 +35,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
   lazy val nino = generateNino().nino
   lazy val listOfTaxYears = List(TaxYear(2020))
   lazy val dateOfMarriageForm = DateOfMarriageFormInput(LocalDate.now())
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
   "Confirm" should {
     "return the correct title" in {

@@ -27,14 +27,13 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.inject.{Injector, bind}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.test.Helpers.baseApplicationBuilder.injector
 import services.EligibilityCalculatorService
 import utils.{ControllerBaseTest, MockPermUnauthenticatedAction, MockUnauthenticatedAction}
 
 class EligibilityCalculatorControllerTest extends ControllerBaseTest {
 
   val mockEligibilityCalculatorService: EligibilityCalculatorService = mock[EligibilityCalculatorService]
-  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(

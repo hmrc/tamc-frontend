@@ -32,6 +32,10 @@ object RecipientDetailsFormInput {
 
   implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.localDateReads(pattern), writes(pattern))
   implicit val formats: OFormat[RecipientDetailsFormInput] = Json.format[RecipientDetailsFormInput]
+
+  def unapply(input: RecipientDetailsFormInput): Option[(String, String, Gender, Nino)] = {
+    Some((input.name, input.lastName, input.gender, input.nino))
+  }
 }
 
 case class RecipientDetailsFormInput(name: String, lastName: String, gender: Gender, nino: Nino)

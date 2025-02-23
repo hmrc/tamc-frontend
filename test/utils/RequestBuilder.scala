@@ -21,6 +21,6 @@ import play.api.test.FakeRequest
 object RequestBuilder {
 
   def buildFakePostRequest(formArgs: (String, String)*) =
-    FakeRequest("POST", "").withFormUrlEncodedBody(formArgs: _*)
+    FakeRequest("POST", "").withFormUrlEncodedBody(formArgs*)
 
 }

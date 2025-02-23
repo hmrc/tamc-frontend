@@ -31,7 +31,7 @@ class ViewHelpers @Inject()(
                            ) extends Logging {
 
 
-  def formErrorPrefix(form: Form[_], title: String)(implicit messages: Messages): String =
+  def formErrorPrefix(form: Form[?], title: String)(implicit messages: Messages): String =
     if (form.hasErrors || form.hasGlobalErrors)
       s"${messages("error.form.error")} $title"
     else

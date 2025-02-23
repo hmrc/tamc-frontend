@@ -39,7 +39,7 @@ class HistorySummaryViewModelTest extends BaseTest with Injecting with NinoGener
   val view: history_summary = inject[history_summary]
   val languageUtils: LanguageUtils = EnglishLangaugeUtils
   val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
 
   val currentOfTaxYear: Int = TaxYear.current.currentYear

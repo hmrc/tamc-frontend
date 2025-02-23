@@ -87,7 +87,7 @@ class PertaxAuthActionSpec extends UnitSpec with GuiceOneAppPerSuite with Before
     when(connector.authorise(any())(any())).thenReturn(Future.successful(Left(error)))
   }
 
-  def block: Request[_] => Future[Result] = _ => Future.successful(Ok("Successful"))
+  def block: Request[?] => Future[Result] = _ => Future.successful(Ok("Successful"))
 
   "PertaxAuthAction.filter" when {
 

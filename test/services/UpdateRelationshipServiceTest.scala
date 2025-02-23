@@ -580,7 +580,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     "getRelationshipRecords" should {
       "when RelationshipRecords are present return RelationshipRecords" in {
         when(mockCachingService.get[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS))
-          .thenReturn(Some(RelationshipRecords(recordList, localDate)))
+          .thenReturn(Future.successful(Some(RelationshipRecords(recordList, localDate))))
 
         val result = await(service.getRelationshipRecords)
 

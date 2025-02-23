@@ -30,7 +30,7 @@ import java.util.Locale
 class FinishedChangeContentTest extends BaseTest with Injecting with NinoGenerator {
 
   val view: finished = inject[finished]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   val doc: Document = Jsoup.parse(view().toString())

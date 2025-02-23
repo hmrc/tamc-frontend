@@ -25,7 +25,7 @@ import views.html.errors.no_tax_year_transferor
 class NoTaxYearTransferor extends BaseTest {
 
   lazy val noTaxYearTransferor = instanceOf[no_tax_year_transferor]
-  lazy val baseUserRequest: BaseUserRequest[_] = UserRequest(FakeRequest(), None, true, Some(""), true)
+  lazy val baseUserRequest: BaseUserRequest[?] = UserRequest(FakeRequest(), None, true, Some(""), true)
   override lazy val messages = Helpers.stubMessages()
 
   "noTaxYearTransferor" should {

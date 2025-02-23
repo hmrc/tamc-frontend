@@ -27,7 +27,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
   lazy val nino = generateNino().nino
   lazy val finished = instanceOf[finished]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
   val email = EmailAddress("test@test.com")
 
   "Finished" should {

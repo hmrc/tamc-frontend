@@ -55,7 +55,7 @@ class EmailAddressSpec extends AnyWordSpec with ScalaCheckPropertyChecks with Ma
     }
 
     "throw an exception when the '@' is missing" in {
-      forAll { s: String => whenever(!s.contains("@")) {
+      forAll { (s: String) => whenever(!s.contains("@")) {
         an[IllegalArgumentException] should be thrownBy { EmailAddress(s) }
       }}
     }

@@ -31,7 +31,7 @@ import java.util.Locale
 class MakeChangesContentTest extends BaseTest with Injecting with NinoGenerator {
 
   val view: reason_for_change = inject[reason_for_change]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   lazy val nino: String = generateNino().nino
   val doc: Document = Jsoup.parse(view(MakeChangesDecisionForm.form()).toString())

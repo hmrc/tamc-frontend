@@ -20,20 +20,21 @@ import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{CachingService, TimeService, TransferService}
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class PreviousYearsControllerTest extends ControllerBaseTest {
 
@@ -58,19 +59,21 @@ class PreviousYearsControllerTest extends ControllerBaseTest {
   def controller: PreviousYearsController =
     app.injector.instanceOf[PreviousYearsController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "previousYears" should {
     "return success" when {
       "a successful call to transfer service is made" in {
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         val result = controller.previousYears()(request)

@@ -127,7 +127,7 @@ class ClaimsViewModelTest extends BaseTest {
       val previousClaims2StartDate = previousClaims2CreationDate
       val previousClaims2EndDate = previousClaims2CreationDate.plusMonths(3)
 
-      val previousClaims3CreationDate = now minusYears(3)
+      val previousClaims3CreationDate = now `minusYears`(3)
       val previousClaims3StartDate = previousClaims3CreationDate
       val previousClaims3EndDate = previousClaims3CreationDate.plusMonths(4)
 

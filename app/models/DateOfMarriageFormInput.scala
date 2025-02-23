@@ -31,6 +31,9 @@ object DateOfMarriageFormInput {
 
   implicit val dateFormat: Format[LocalDate] = Format[LocalDate](Reads.localDateReads(pattern), writes(pattern))
   implicit val formats: OFormat[DateOfMarriageFormInput] = Json.format[DateOfMarriageFormInput]
+
+  def unapply(input: DateOfMarriageFormInput): Option[LocalDate] =
+    Some(input.dateOfMarriage)
 }
 
 case class DateOfMarriageFormInput(dateOfMarriage: LocalDate)

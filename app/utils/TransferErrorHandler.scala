@@ -37,7 +37,7 @@ class TransferErrorHandler @Inject()(
                                      recipientRelationshipExists: views.html.errors.recipient_relationship_exists,
                                      tryLater: views.html.errors.try_later) extends BaseController(cc) with LoggerHelper {
 
-  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
+  def handleError(implicit request: BaseUserRequest[?]): PartialFunction[Throwable, Result] = {
     def message(throwable: Throwable): String  =
       s"An exception occurred during processing of URI [${request.uri}] reason [$throwable,${throwable.getMessage}] SID [${utils
         .getSid(request)}] stackTrace [${ExceptionUtils.getStackTrace(throwable)}]"

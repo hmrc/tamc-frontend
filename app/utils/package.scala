@@ -34,10 +34,10 @@ package object utils {
   def areEqual(source: Nino, target: Nino): Boolean =
     normalise(source).nino.take(8) == normalise(target).nino.take(8)
 
-  def getSid(request: Request[_]): String =
+  def getSid(request: Request[?]): String =
     request.session.get(SessionKeys.sessionId).getOrElse("")
 
-  def isScottishResident(request: Request[_]): Boolean =
+  def isScottishResident(request: Request[?]): Boolean =
     request.session.get("scottish_resident").map(_.toBoolean).fold(false)(identity)
 
 }

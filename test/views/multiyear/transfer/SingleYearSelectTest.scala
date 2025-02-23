@@ -33,7 +33,7 @@ class SingleYearSelectTest extends BaseTest with NinoGenerator {
   lazy val singleYearSelect = instanceOf[single_year_select]
   lazy val earlyYearForm = EarlierYearForm.earlierYearsForm()
   lazy val registrationForm = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino(nino), LocalDate.now)
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
   "SingleYearSelect" should {
     "return the correct title" in {

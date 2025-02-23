@@ -60,11 +60,11 @@ class TransferErrorHandlerTest extends ControllerBaseTest {
   def helper: TransferErrorHandler =
     app.injector.instanceOf[TransferErrorHandler]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "handleError" should {
-    val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
+    val authRequest: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(
       request,
       Some(ConfidenceLevel.L200),
       isSA = false,

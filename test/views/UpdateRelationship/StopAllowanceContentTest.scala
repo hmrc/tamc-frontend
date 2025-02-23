@@ -33,7 +33,7 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
 
   val stopAllowanceView: stopAllowance = inject[stopAllowance]
   val cancelView: cancel = inject[cancel]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   val cancelDoc: Document = Jsoup.parse(cancelView(MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)).toString())

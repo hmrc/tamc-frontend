@@ -78,7 +78,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
       val result = controller.history()(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs historySummaryView(historySummaryViewModel)
+      result `rendersTheSameViewAs` historySummaryView(historySummaryViewModel)
     }
   }
 
@@ -127,7 +127,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
 
         val result = controller.history()(request)
         status(result) shouldBe OK
-        result rendersTheSameViewAs transferNotFoundView()
+        result `rendersTheSameViewAs` transferNotFoundView()
       }
 
       "a BadFetchRequest error is returned " in {
@@ -136,7 +136,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
 
         val result = controller.history()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
+        result `rendersTheSameViewAs` tryLaterView()
       }
 
       "a CitizenNotFound error is returned " in {
@@ -145,7 +145,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
 
         val result = controller.history()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs citizenNotFoundView()
+        result `rendersTheSameViewAs` citizenNotFoundView()
       }
 
       "a MultipleActiveRecordError error is returned " in {
@@ -154,7 +154,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
 
         val result = controller.history()(request)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
+        result `rendersTheSameViewAs` tryLaterView()
       }
     }
   }

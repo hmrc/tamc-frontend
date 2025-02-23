@@ -22,3 +22,8 @@ case class EligibilityCalculatorInput(
                                        recipientIncome: BigDecimal
                                      )
 
+object EligibilityCalculatorInput {
+  def unapply(input: EligibilityCalculatorInput): Option[(String, BigDecimal, BigDecimal)] = {
+    Some((input.country, input.transferorIncome, input.recipientIncome))
+  }
+}

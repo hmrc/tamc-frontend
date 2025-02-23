@@ -17,9 +17,9 @@
 package forms
 
 import models.ApplyForEligibleYears
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import play.api.data.Form
 import utils.BaseTest
+import org.scalatest.matchers.must.Matchers.{must, mustBe}
 
 class ChooseYearFormTest extends BaseTest {
 

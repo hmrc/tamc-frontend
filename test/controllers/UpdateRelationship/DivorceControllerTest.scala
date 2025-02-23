@@ -79,7 +79,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         val result = controller.divorceEnterYear(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form.fill(divorceDateInThePast))
+        result `rendersTheSameViewAs` divorceSelectYearView(divorceSelectYearForm.form.fill(divorceDateInThePast))
       }
 
       "there is no data in the cache" in {
@@ -89,7 +89,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         val result = controller.divorceEnterYear()(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)
+        result `rendersTheSameViewAs` divorceSelectYearView(divorceSelectYearForm.form)
       }
 
       "upDateRelationshipService returns a NonFatal error" in {
@@ -99,7 +99,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         val result = controller.divorceEnterYear()(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs divorceSelectYearView(divorceSelectYearForm.form)
+        result `rendersTheSameViewAs` divorceSelectYearView(divorceSelectYearForm.form)
       }
     }
   }
@@ -154,7 +154,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         val result = controller.submitDivorceEnterYear(request)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
+        result `rendersTheSameViewAs` tryLaterView()
       }
     }
   }
@@ -171,7 +171,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
       when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
         .thenReturn(Future.successful((role, divorceDate)))
       when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
-        .thenReturn(Future.successful(maEndingDates))
+        .thenReturn(maEndingDates)
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any()))
         .thenReturn(Future.successful(maEndingDates))
 
@@ -179,7 +179,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
       val result = controller.divorceEndExplanation()(request)
 
       status(result) shouldBe OK
-      result rendersTheSameViewAs divorceEndExplanationView(viewModel)
+      result `rendersTheSameViewAs` divorceEndExplanationView(viewModel)
     }
 
     "display an error page" when {
@@ -190,7 +190,7 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         val result = controller.divorceEndExplanation()(request)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
+        result `rendersTheSameViewAs` tryLaterView()
       }
 
       "an error has occurred whilst saving cache data" in {
@@ -203,14 +203,14 @@ class DivorceControllerTest extends ControllerBaseTest with ControllerViewTestHe
         when(mockUpdateRelationshipService.getDataForDivorceExplanation(any(), any()))
           .thenReturn(Future.successful((role, divorceDate)))
         when(mockUpdateRelationshipService.getMAEndingDatesForDivorce(role, divorceDate))
-          .thenReturn(Future.successful(maEndingDates))
+          .thenReturn(maEndingDates)
         when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(maEndingDates))(any()))
           .thenReturn(failedFuture)
 
         val result = controller.divorceEndExplanation()(request)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
+        result `rendersTheSameViewAs` tryLaterView()
       }
     }
   }

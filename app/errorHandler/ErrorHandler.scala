@@ -27,22 +27,21 @@ import scala.concurrent.{ExecutionContext, Future}
 class ErrorHandler @Inject()(
                               override implicit val messagesApi: MessagesApi,
                               errorTemplate: views.html.templates.error_template,
-                              pageNotFoundTemplate: views.html.templates.page_not_found_template)
-                            (
+                              pageNotFoundTemplate: views.html.templates.page_not_found_template,
                               implicit val ec: ExecutionContext
                             ) extends FrontendErrorHandler {
 
   //FIXME sca-wrapper > 9.0.0 will have some breaking changes, views will be based on RequestHeader instead of Request[_]
-  private def rhToRequest(rh: RequestHeader): Request[_] = Request(rh, "")
+  private def rhToRequest(rh: RequestHeader): Request[?] = Request(rh, "")
 
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader): Future[Html] = {
-    implicit val req: Request[_] = rhToRequest(request)
+    implicit val req: Request[?] = rhToRequest(request)
     Future.successful(errorTemplate(pageTitle, heading, message))
   }
 
   override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = {
-    implicit val req: Request[_] =  rhToRequest(request)
+    implicit val req: Request[?] =  rhToRequest(request)
     Future.successful(pageNotFoundTemplate())
   }
 
