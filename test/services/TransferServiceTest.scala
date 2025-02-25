@@ -18,13 +18,16 @@ package services
 
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
-import errors._
-import models._
+import errors.*
+import models.*
 import org.junit.Assert.{assertEquals, assertTrue}
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, times, verify, when}
+import org.mockito.{ArgumentCaptor, ArgumentMatchers}
+import org.mockito.ArgumentMatchers.{any, anyList, argThat}
+import org.mockito.Mockito.{never, reset, times, verify, when}
+import org.scalatest.concurrent.ScalaFutures.*
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.RecoverMethods.recoverToExceptionIf
+import org.scalatest.matchers.must.Matchers.{mustBe, mustEqual}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -37,10 +40,11 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import utils.{BaseTest, EmailAddress}
-import services.CacheService._
+import services.CacheService.*
+import uk.gov.hmrc.play.audit.model.DataEvent
 
 import java.time.LocalDate
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
@@ -110,8 +114,6 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
     }
 
     "throw an error" when {
-
-
 
 
       "recipient is not returned" in {
@@ -185,15 +187,15 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
   "createRelationship" should {
     "return a notificationRecord" in {
-      val userRecord = UserRecord(11111111L,"timestamp")
+      val userRecord = UserRecord(11111111L, "timestamp")
 
       when(mockCachingService.get[UserAnswersCacheData](ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any()))
         .thenReturn(Future.successful(Some(UserAnswersCacheData(
-            Some(userRecord),
-            Some(RecipientRecord(userRecord, RegistrationFormInput("firstName", "surname", Gender("M"),nino,LocalDate.now))),
-            Some(NotificationRecord(EmailAddress("email@email.com"))), selectedYears = Some(List(2020, 2021))))))
+          Some(userRecord),
+          Some(RecipientRecord(userRecord, RegistrationFormInput("firstName", "surname", Gender("M"), nino, LocalDate.now))),
+          Some(NotificationRecord(EmailAddress("email@email.com"))), selectedYears = Some(List(2020, 2021))))))
 
-      when(mockCachingService.put[Boolean](ArgumentMatchers.eq(CACHE_LOCKED_CREATE), ArgumentMatchers.eq(true))(any(),any())).thenReturn(Future.successful(true))
+      when(mockCachingService.put[Boolean](ArgumentMatchers.eq(CACHE_LOCKED_CREATE), ArgumentMatchers.eq(true))(any(), any())).thenReturn(Future.successful(true))
 
       when(mockAuditConnector.sendEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
 
@@ -208,6 +210,42 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       result shouldBe NotificationRecord(EmailAddress("email@email.com"))
 
     }
+
+    "handle failure and audit when doCreateRelationship fails" in {
+      val userRecord = UserRecord(11111111L, "timestamp")
+
+      when(mockCachingService.get[UserAnswersCacheData](ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any()))
+        .thenReturn(Future.successful(Some(UserAnswersCacheData(
+          Some(userRecord),
+          Some(RecipientRecord(userRecord, RegistrationFormInput("firstName", "surname", Gender("M"), nino, LocalDate.now))),
+          Some(NotificationRecord(EmailAddress("email@email.com"))),
+          selectedYears = Some(List(2020, 2021))
+        ))))
+
+      when(mockCachingService.put[Boolean](ArgumentMatchers.eq(CACHE_LOCKED_CREATE), ArgumentMatchers.eq(true))(any(), any()))
+        .thenReturn(Future.successful(true))
+
+      when(mockMarriageAllowanceConnector.createRelationship(any(), any())(any(), any()))
+        .thenReturn(Future.failed(new RuntimeException("Simulated failure")))
+
+      when(mockAuditConnector.sendEvent(any())(any(), any()))
+        .thenReturn(Future.successful(AuditResult.Success))
+
+      val dataEventCaptor = ArgumentCaptor.forClass(classOf[DataEvent])
+
+      val exception = intercept[RuntimeException] {
+        await(service.createRelationship(nino))
+      }
+
+      exception.getMessage shouldBe "Simulated failure"
+
+      verify(mockAuditConnector, times(2)).sendEvent(dataEventCaptor.capture())(any(), any())
+
+      val capturedEvent = dataEventCaptor.getValue
+      capturedEvent.auditType shouldBe "TxFailed"
+      capturedEvent.detail("error") should include("Simulated failure")
+    }
+
   }
 
   "getFinishedData" should {
@@ -228,7 +266,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
         when(mockCachingService.get(ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any())).thenReturn(Future.successful(Some(cacheData)))
 
-        intercept[CacheCreateRequestNotSent]{
+        intercept[CacheCreateRequestNotSent] {
           await(service.getFinishedData(nino))
         }
       }
@@ -238,7 +276,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
         when(mockCachingService.get(ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any())).thenReturn(Future.successful(Some(cacheData)))
 
-        intercept[CacheCreateRequestNotSent]{
+        intercept[CacheCreateRequestNotSent] {
           await(service.getFinishedData(nino))
         }
       }
@@ -248,7 +286,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
         when(mockCachingService.get(ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any())).thenReturn(Future.successful(Some(cacheData)))
 
-        intercept[CacheCreateRequestNotSent]{
+        intercept[CacheCreateRequestNotSent] {
           await(service.getFinishedData(nino))
         }
       }
@@ -256,7 +294,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       "no cacheData is returned" in {
         when(mockCachingService.get(ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any())).thenReturn(Future.successful(None))
 
-        intercept[CacheCreateRequestNotSent]{
+        intercept[CacheCreateRequestNotSent] {
           await(service.getFinishedData(nino))
         }
       }
@@ -267,12 +305,54 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
     "return a value " in {
       val rdfi = RecipientDetailsFormInput("Jain", "Doe", Gender("F"), nino)
       val recipientRecord = RecipientRecord(mock[UserRecord], mock[RegistrationFormInput], List(TaxYear(2019)))
-      val cacheData = UserAnswersCacheData(None, Some(recipientRecord), Some(NotificationRecord(EmailAddress("email@email.com"))), None, None, Option(rdfi) )
+      val cacheData = UserAnswersCacheData(None, Some(recipientRecord), Some(NotificationRecord(EmailAddress("email@email.com"))), None, None, Option(rdfi))
       when(mockCachingService.get(ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any())).thenReturn(Future.successful(Some(cacheData)))
 
       val result = service.getRecipientDetailsFormData()
       await(result)
       assertTrue(result.nino == nino)
+    }
+  }
+
+  "upsertTransferorNotification" should {
+    "store the NotificationRecord in the cache and log the call" in {
+      val notificationRecord = NotificationRecord(EmailAddress("test@email.com"))
+
+      when(mockCachingService.put[NotificationRecord](
+        ArgumentMatchers.eq(CACHE_NOTIFICATION_RECORD),
+        ArgumentMatchers.eq(notificationRecord)
+      )(any(), any())).thenReturn(Future.successful(notificationRecord))
+
+      implicit val request: Request[?] = mock[Request[?]]
+      val result = await(service.upsertTransferorNotification(notificationRecord))
+
+      result shouldBe notificationRecord
+
+      verify(mockCachingService).put(
+        ArgumentMatchers.eq(CACHE_NOTIFICATION_RECORD),
+        ArgumentMatchers.eq(notificationRecord)
+      )(any(), any())
+    }
+  }
+
+  "deleteSelectionAndGetCurrentAndPreviousYearsEligibility" should {
+    "saveSelectedYears should cache the selected years and return them" in {
+      val selectedYears = List(2020, 2021)
+
+      when(mockCachingService.put[List[Int]](
+        ArgumentMatchers.eq(CACHE_SELECTED_YEARS),
+        ArgumentMatchers.eq(selectedYears)
+      )(any(), any())).thenReturn(Future.successful(selectedYears))
+
+      implicit val request: Request[?] = mock[Request[?]]
+      val result = await(service.saveSelectedYears(selectedYears))
+
+      result shouldBe selectedYears
+
+      verify(mockCachingService).put[List[Int]](
+        ArgumentMatchers.eq(CACHE_SELECTED_YEARS),
+        ArgumentMatchers.eq(selectedYears)
+      )(any(), any())
     }
   }
 
@@ -286,7 +366,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         notification = Some(NotificationRecord(EmailAddress("email@email.com"))),
         selectedYears = Some(List(2021, 2022)),
         recipientDetailsFormData = Option(rdfi),
-        dateOfMarriage = Some( DateOfMarriageFormInput(LocalDate.of(2019, 6, 6))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(LocalDate.of(2019, 6, 6))))
       when(mockCachingService.get(ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any())).thenReturn(Future.successful(Some(cacheData)))
 
       val result = service.getConfirmationData(nino)
@@ -303,7 +383,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
         notification = Some(NotificationRecord(EmailAddress("email@email.com"))),
         selectedYears = Some(List(2021, 2022)),
         recipientDetailsFormData = Option(rdfi),
-        dateOfMarriage = Some( DateOfMarriageFormInput(LocalDate.of(2019, 6, 6))))
+        dateOfMarriage = Some(DateOfMarriageFormInput(LocalDate.of(2019, 6, 6))))
       val recordList = RelationshipRecordList(Seq.empty, Some(LoggedInUserInfo(Cids.cid1, "2015", Some(true), Some(citizenName))))
       val userRecord: UserRecord = UserRecord(Cids.cid1, "2015", None, Some(citizenName))
 
@@ -319,9 +399,55 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       val result = service.getConfirmationData(nino)
       await(result)
       assertEquals(CitizenName(Option("Test"), Option("User")).fullName, result.transferorFullName.get.fullName)
-      verify(mockMarriageAllowanceConnector, times(1)).listRelationship(ArgumentMatchers.eq(nino))(any(),any())
-      verify(mockCachingService, times(1)).put[UserRecord](any(),any())(any(),any())
+      verify(mockMarriageAllowanceConnector, times(1)).listRelationship(ArgumentMatchers.eq(nino))(any(), any())
+      verify(mockCachingService, times(1)).put[UserRecord](any(), any())(any(), any())
       verify(mockCachingService, times(2)).get(ArgumentMatchers.eq(USER_ANSWERS_CACHE))(any())
+    }
+  }
+
+  "validateSelectedYears" should {
+    "throw NoTaxYearsSelected if no selectedYears and yearAvailableForSelection matches the last available tax year" in {
+      val availableTaxYears = List(TaxYear(2020), TaxYear(2021))
+      val selectedYears = List.empty[Int]
+      val yearAvailableForSelection = Some(2021)
+
+      val exception = intercept[NoTaxYearsSelected] {
+        await(service.validateSelectedYears(availableTaxYears, selectedYears, yearAvailableForSelection))
+      }
+
+      exception shouldBe a[NoTaxYearsSelected]
+    }
+
+    "return an empty list if no selectedYears and yearAvailableForSelection is undefined" in {
+      val availableTaxYears = List(TaxYear(2020), TaxYear(2021))
+      val selectedYears = List.empty[Int]
+      val yearAvailableForSelection = None
+
+      val result = await(service.validateSelectedYears(availableTaxYears, selectedYears, yearAvailableForSelection))
+
+      result shouldBe selectedYears
+    }
+
+    "return selectedYears if they are a valid subset of availableTaxYears" in {
+      val availableTaxYears = List(TaxYear(2020), TaxYear(2021), TaxYear(2022))
+      val selectedYears = List(2020, 2022)
+      val yearAvailableForSelection = Some(2021)
+
+      val result = await(service.validateSelectedYears(availableTaxYears, selectedYears, yearAvailableForSelection))
+
+      result shouldBe selectedYears
+    }
+
+    "throw an exception if selectedYears is not a subset of availableTaxYears" in {
+      val availableTaxYears = List(TaxYear(2020), TaxYear(2021))
+      val selectedYears = List(2019, 2022) // Not valid
+      val yearAvailableForSelection = None
+
+      val exception = intercept[IllegalArgumentException] {
+        await(service.validateSelectedYears(availableTaxYears, selectedYears, yearAvailableForSelection))
+      }
+
+      exception.getMessage should include(s"$selectedYears is not a subset of $availableTaxYears")
     }
   }
 }

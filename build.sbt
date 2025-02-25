@@ -21,7 +21,7 @@ ThisBuild / scalaVersion := "3.6.2"
 ThisBuild / scalacOptions ++= Seq(
   "-feature",
   //"-Xfatal-warnings" FIXME switch to HMRCStandardPage template instead of deprecated HmrcLayout
-  "-Wconf:src=routes/.*:is,src=twirl/.*:is",
+  "-Wconf:msg=unused&src=html/.*:s",
   "-source:3.4-migration",
   "-rewrite"
 )

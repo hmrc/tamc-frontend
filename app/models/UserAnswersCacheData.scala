@@ -16,6 +16,8 @@
 
 package models
 
+import play.api.libs.json.{Format, Json}
+
 
 case class UserAnswersCacheData(
                       transferor: Option[UserRecord],
@@ -26,6 +28,11 @@ case class UserAnswersCacheData(
                       recipientDetailsFormData: Option[RecipientDetailsFormInput] = None,
                       dateOfMarriage: Option[DateOfMarriageFormInput] = None)
 
+object UserAnswersCacheData {
+  implicit val formats: Format[UserAnswersCacheData] = Json.format[UserAnswersCacheData]
+}
+
+
 case class EligibilityCheckCacheData(loggedInUserInfo: Option[LoggedInUserInfo] = None,
                                      roleRecord: Option[String] = None,
                                      activeRelationshipRecord: Option[RelationshipRecord] = None,
@@ -34,3 +41,6 @@ case class EligibilityCheckCacheData(loggedInUserInfo: Option[LoggedInUserInfo] 
                                      relationshipEndReasonRecord: Option[EndRelationshipReason] = None,
                                      relationshipUpdated: Option[Boolean] = None)
 
+object EligibilityCheckCacheData {
+  implicit val formats: Format[EligibilityCheckCacheData] = Json.format[EligibilityCheckCacheData]
+}

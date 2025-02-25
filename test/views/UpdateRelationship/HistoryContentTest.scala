@@ -69,9 +69,9 @@ class HistoryContentTest extends BaseTest with Injecting with NinoGenerator{
           val paragraphs = doc.getElementsByClass("govuk-body").text()
           val button = doc.getElementsByClass("govuk-button").text()
 
-         if (mACancelled) {
-           button shouldBe "Check your Marriage Allowance claims"
-         } else button shouldBe "Check or update your Marriage Allowance"
+          if (mACancelled) {
+            button shouldBe "Check your Marriage Allowance claims"
+          } else button shouldBe "Check or update your Marriage Allowance"
 
           pageHeading shouldBe "Test User"
           paragraphs shouldBe content

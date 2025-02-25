@@ -8,5 +8,5 @@ addSbtPlugin("org.playframework" % "sbt-plugin"         % "3.0.6")
 
 addSbtPlugin("io.github.irundaia" % "sbt-sassify"           % "1.5.2")
 addSbtPlugin("org.scalameta"      % "sbt-scalafmt"          % "2.5.2")
-addSbtPlugin("org.scoverage"      % "sbt-scoverage"         % "2.2.1")
+addSbtPlugin("org.scoverage"      % "sbt-scoverage"         % "2.3.1")
 addSbtPlugin("org.scalastyle"    %% "scalastyle-sbt-plugin" % "1.0.0" exclude ("org.scala-lang.modules", "scala-xml_2.12"))
