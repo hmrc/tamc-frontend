@@ -21,7 +21,7 @@ import models.pertaxAuth.PertaxAuthResponseModel
 import org.mockito.Mockito.when
 import org.scalatest.matchers.must.Matchers.mustBe
 import play.api.http.Status.INTERNAL_SERVER_ERROR
-import play.api.libs.json.{JsValue, Json, OFormat}
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.{HttpResponse, UpstreamErrorResponse}
 import utils.BaseTest
 
@@ -38,7 +38,7 @@ class PertaxAuthenticationHttpParserSpec extends BaseTest {
           }
         """
       )
-      
+
       val httpResponse = mock[HttpResponse]
       when(httpResponse.json).thenReturn(validJson)
 

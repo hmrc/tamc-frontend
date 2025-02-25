@@ -28,7 +28,7 @@ h1: H1,
 p: P,
 button: Button)
 
-@(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[_])
+@(cancelDates: MarriageAllowanceEndingDates)(implicit messages: Messages,request: AuthenticatedUserRequest[?])
 
 @maDate = @{
 languageUtilsImpl().ukDateTransformer(cancelDates.marriageAllowanceEndDate)

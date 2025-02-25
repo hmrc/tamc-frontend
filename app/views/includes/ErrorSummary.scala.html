@@ -18,13 +18,13 @@
 
 @this(govukErrorSummary: GovukErrorSummary)
 
-@(form: Form[_], errorFieldName: Option[String] = None)(implicit messages: Messages)
+@(form: Form[?], errorFieldName: Option[String] = None)(implicit messages: Messages)
 
 @if(form.errors.nonEmpty) {
     @defining(form.errors.groupBy(_.key).values.flatMap(_.headOption).map { error =>
         ErrorLink(
         href = Some(s"#${errorFieldName.getOrElse(error.key)}"),
-        content = Text(messages(error.message, error.args:_*))
+        content = Text(messages(error.message, error.args*))
         )
     }) { errorLinks =>
         @govukErrorSummary(new GovukFrontendErrorSummary(

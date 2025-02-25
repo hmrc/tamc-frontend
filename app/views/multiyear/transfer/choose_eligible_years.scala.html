@@ -39,13 +39,13 @@
 )
 
 @(
-    form: Form[_],
+    form: Form[?],
     recipientName: String,
     dateOfMarriage: java.time.LocalDate,
     currentTaxYear: java.time.LocalDate
 )(
     implicit messages: Messages,
-    request: AuthenticatedUserRequest[_]
+    request: AuthenticatedUserRequest[?]
 )
 
 @main(

@@ -36,7 +36,6 @@ import services.{CachingService, TimeService, TransferService}
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction, TransferErrorHandler}
-import views.html.errors.recipient_not_found
 
 import java.time.LocalDate
 import scala.concurrent.Future

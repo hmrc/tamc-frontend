@@ -20,25 +20,25 @@ package models
   import uk.gov.hmrc.govukfrontend.views.Aliases.Text
   import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-  sealed trait ApplyForEligibleYears
+sealed trait ApplyForEligibleYears
 
-  object ApplyForEligibleYears extends Enumerable.Implicits {
-    case object CurrentTaxYear extends WithName("currentTaxYear") with ApplyForEligibleYears
-    case object PreviousTaxYears extends WithName("previousTaxYears") with ApplyForEligibleYears
-    case object CurrentAndPreviousTaxYears extends WithName("currentAndPreviousTaxYears") with ApplyForEligibleYears
-    val values: Seq[ApplyForEligibleYears] =
-      Seq(CurrentTaxYear, PreviousTaxYears, CurrentAndPreviousTaxYears)
+object ApplyForEligibleYears extends Enumerable.Implicits {
+  case object CurrentTaxYear extends WithName("currentTaxYear") with ApplyForEligibleYears
+  case object PreviousTaxYears extends WithName("previousTaxYears") with ApplyForEligibleYears
+  case object CurrentAndPreviousTaxYears extends WithName("currentAndPreviousTaxYears") with ApplyForEligibleYears
+  val values: Seq[ApplyForEligibleYears] =
+    Seq(CurrentTaxYear, PreviousTaxYears, CurrentAndPreviousTaxYears)
 
-    def options(currentTaxYear: String)(implicit messages: Messages): Seq[RadioItem] =
-      values.zipWithIndex.map {
-        case (value, index) =>
-          RadioItem(
-            content = Text(messages(s"pages.chooseYears.${value.toString}", currentTaxYear)),
-            value   = Some(value.toString),
-            id      = Some(s"value_$index")
-          )
-      }
+  def options(currentTaxYear: String)(implicit messages: Messages): Seq[RadioItem] =
+    values.zipWithIndex.map {
+      case (value, index) =>
+        RadioItem(
+          content = Text(messages(s"pages.chooseYears.${value.toString}", currentTaxYear)),
+          value   = Some(value.toString),
+          id      = Some(s"value_$index")
+        )
+    }
 
-    implicit val enumerable: Enumerable[ApplyForEligibleYears] =
-      Enumerable(values.map(v => v.toString -> v)*)
-  }
+  implicit val enumerable: Enumerable[ApplyForEligibleYears] =
+    Enumerable(values.map(v => v.toString -> v)*)
+}

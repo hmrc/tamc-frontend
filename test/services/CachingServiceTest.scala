@@ -18,8 +18,7 @@ package services
 
 import org.mockito.Mockito.when
 import org.scalatest.matchers.must.Matchers.mustBe
-import org.mockito.ArgumentMatchers.{any, eq as meq}
-import play.api.libs.json.{Format, Json, Reads, Writes}
+import play.api.libs.json.{Format, Reads, Writes}
 import play.api.mvc.Request
 import play.api.test.{FakeHeaders, FakeRequest}
 import services.CacheService.CacheKey

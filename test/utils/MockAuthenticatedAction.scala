@@ -19,7 +19,7 @@ package utils
 import com.google.inject.Inject
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import models.auth._
-import play.api.mvc.{BodyParsers, MessagesControllerComponents, Request, Result}
+import play.api.mvc.{BodyParsers, Request, Result}
 import test_utils.TestData
 import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel}
 import uk.gov.hmrc.domain.Nino
@@ -49,10 +49,9 @@ class MockAuthenticatedAction @Inject()(
 
 class MockUnauthenticatedAction @Inject()(
                                            override val authConnector: AuthConnector,
-                                           val cc: MessagesControllerComponents,
                                            parsers: BodyParsers.Default
                                          )
-  extends UnauthenticatedActionTransformer(authConnector, cc, parsers) {
+  extends UnauthenticatedActionTransformer(authConnector, parsers) {
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
     Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = false, authProvider = None))
   }
@@ -60,10 +59,9 @@ class MockUnauthenticatedAction @Inject()(
 
 class MockPermUnauthenticatedAction @Inject()(
                                                override val authConnector: AuthConnector,
-                                               val cc: MessagesControllerComponents,
                                                parsers: BodyParsers.Default
                                              )
-  extends UnauthenticatedActionTransformer(authConnector, cc, parsers) {
+  extends UnauthenticatedActionTransformer(authConnector, parsers) {
   override protected def transform[A](request: Request[A]): Future[UserRequest[A]] = {
     Future.successful(UserRequest(request, None, isSA = false, isAuthenticated = true, authProvider = None))
   }

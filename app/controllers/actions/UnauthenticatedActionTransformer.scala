@@ -29,7 +29,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class UnauthenticatedActionTransformer @Inject()(
                                                   val authConnector: AuthConnector,
-                                                  cc: MessagesControllerComponents,
                                                   val parser: BodyParsers.Default
                                                 )(implicit val executionContext: ExecutionContext)
   extends ActionTransformer[Request, UserRequest]

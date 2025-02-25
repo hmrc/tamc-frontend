@@ -22,12 +22,9 @@ import errors.*
 import models.*
 import org.junit.Assert.{assertEquals, assertTrue}
 import org.mockito.{ArgumentCaptor, ArgumentMatchers}
-import org.mockito.ArgumentMatchers.{any, anyList, argThat}
-import org.mockito.Mockito.{never, reset, times, verify, when}
-import org.scalatest.concurrent.ScalaFutures.*
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.{reset, times, verify, when}
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.RecoverMethods.recoverToExceptionIf
-import org.scalatest.matchers.must.Matchers.{mustBe, mustEqual}
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -44,7 +41,7 @@ import services.CacheService.*
 import uk.gov.hmrc.play.audit.model.DataEvent
 
 import java.time.LocalDate
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 

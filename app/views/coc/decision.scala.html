@@ -29,7 +29,7 @@ button: Button,
 viewHelpers: utils.ViewHelpers,
 errorSummary: ErrorSummary)
 
-@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[_])
+@(decisionForm: Form[Option[String]])(implicit messages: Messages, request: AuthenticatedUserRequest[?])
 
 @main(
 pageTitle = viewHelpers.formErrorPrefix(decisionForm, messages("pages.decision.title"))

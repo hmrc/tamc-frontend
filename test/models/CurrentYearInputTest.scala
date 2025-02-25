@@ -69,6 +69,7 @@ class CurrentYearInputTest extends BaseTest {
       val result = input match {
         case CurrentYearInput(Some(value)) => value
         case CurrentYearInput(None) => false
+        case _: models.CurrentYearInput => false
       }
       result mustBe false
     }

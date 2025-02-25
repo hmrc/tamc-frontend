@@ -32,7 +32,7 @@ inputDate: InputDate)
 
 @(marriageForm: Form[models.DateOfMarriageFormInput])(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(marriageForm, messages("title.date-of-marriage")),

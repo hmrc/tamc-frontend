@@ -32,7 +32,7 @@ viewHelpers: utils.ViewHelpers,
 button: Button)
 
 @(recipientForm: Form[utils.EmailAddress])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(recipientForm, Messages("title.confirm-email")),

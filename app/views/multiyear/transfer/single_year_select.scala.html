@@ -43,7 +43,7 @@ input: RegistrationFormInput,
 availableYears: List[TaxYear] = List[TaxYear]()
 )(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 
 @main(

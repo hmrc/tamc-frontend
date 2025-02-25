@@ -30,7 +30,7 @@ link: Link)
 
 @(transferorEmail: utils.EmailAddress)(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = Messages("title.finished"),

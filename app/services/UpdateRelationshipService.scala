@@ -17,7 +17,6 @@
 package services
 
 import com.google.inject.Inject
-import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
 import errors.ErrorResponseStatus._
 import errors._
@@ -45,7 +44,6 @@ class UpdateRelationshipService @Inject()(
   endDateDivorceCalculator: EndDateDivorceCalculator,
   auditConnector: AuditConnector,
   cachingService: CachingService,
-  appConfig: ApplicationConfig,
   languageUtilsImpl: LanguageUtilsImpl,
   localDate: SystemLocalDate
 ) extends Logging {

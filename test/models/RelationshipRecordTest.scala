@@ -22,8 +22,6 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import utils.{BaseTest, SystemLocalDate}
 
 import java.time.{LocalDate, LocalDateTime}
-import cats.data.Validated
-import cats.implicits.*
 import errors.{MultipleActiveRecordError, NoPrimaryRecordError}
 import org.scalatest.matchers.must.Matchers.mustEqual
 

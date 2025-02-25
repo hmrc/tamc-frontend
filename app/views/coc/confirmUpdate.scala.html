@@ -29,7 +29,7 @@ p: P,
 button: Button)
 
 @(viewModel: ConfirmUpdateViewModel)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
 pageTitle = messages("title.confirm-transferor")
