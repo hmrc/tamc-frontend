@@ -31,7 +31,7 @@ case class RelationshipRecords(primaryRecord: RelationshipRecord, nonPrimaryReco
     primaryRecord.role match {
       case Transferor => RecipientInformation(primaryRecord.otherParticipantInstanceIdentifier, primaryRecord.otherParticipantUpdateTimestamp)
       case Recipient => RecipientInformation(loggedInUserInfo.cid.toString, loggedInUserInfo.timestamp)
-    }
+    }     
   }
 
   def transferorInformation: TransferorInformation = {

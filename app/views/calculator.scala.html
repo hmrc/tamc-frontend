@@ -38,7 +38,7 @@
 @(
         calculatorForm: Form[models.EligibilityCalculatorInput],
         calculationResult: Option[models.EligibilityCalculatorResult] = None
-)(implicit messages: Messages, request: UserRequest[_])
+)(implicit messages: Messages, request: UserRequest[?])
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(calculatorForm, Messages("title.eligibility-criteria")),

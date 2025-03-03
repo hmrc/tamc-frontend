@@ -64,7 +64,7 @@ class StopAllowanceControllerTest extends ControllerBaseTest with ControllerView
       val result = controller.stopAllowance(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs stopAllowanceView()
+      result `rendersTheSameViewAs` stopAllowanceView()
     }
   }
 
@@ -72,14 +72,14 @@ class StopAllowanceControllerTest extends ControllerBaseTest with ControllerView
     "display the cancel page" in {
       val nowDate = LocalDate.now
       val marriageAllowanceEndingDates = MarriageAllowanceEndingDates(nowDate, nowDate)
-      when(mockUpdateRelationshipService.getMAEndingDatesForCancellation).thenReturn(Future.successful(marriageAllowanceEndingDates))
+      when(mockUpdateRelationshipService.getMAEndingDatesForCancellation).thenReturn(marriageAllowanceEndingDates)
       when(mockUpdateRelationshipService.saveMarriageAllowanceEndingDates(ArgumentMatchers.eq(marriageAllowanceEndingDates))(any())).
         thenReturn(Future.successful(marriageAllowanceEndingDates))
 
       val result = controller.cancel(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs cancelView(marriageAllowanceEndingDates)
+      result `rendersTheSameViewAs` cancelView(marriageAllowanceEndingDates)
     }
   }
 

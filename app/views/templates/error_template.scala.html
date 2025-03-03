@@ -24,7 +24,7 @@ applicationConfig: ApplicationConfig,
 p: P,
 h1: H1)
 
-@(pageTitle: String, heading: String, message: String)(implicit messages: Messages, request: Request[_])
+@(pageTitle: String, heading: String, message: String)(implicit messages: Messages, request: Request[?])
 
 @main(pageTitle = pageTitle){
 @h1(heading, elmId = Some("errorHeading"))

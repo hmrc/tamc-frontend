@@ -35,9 +35,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @ImplementedBy(classOf[CachingServiceImpl])
 trait CachingService {
-  def get[T](key: CacheReadKey[T])(implicit request: Request[_]): Future[Option[T]]
-  def put[T](key: CacheReadWriteKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T]
-  def clear()(implicit request: Request[_]): Future[Unit]
+  def get[T](key: CacheReadKey[T])(implicit request: Request[?]): Future[Option[T]]
+  def put[T](key: CacheReadWriteKey[T], value: T)(implicit request: Request[?], format: Format[T]): Future[T]
+  def clear()(implicit request: Request[?]): Future[Unit]
 }
 
 object CacheService {
@@ -149,18 +149,18 @@ class CachingServiceImpl @Inject() (
     )
     with CachingService {
 
-  def get[T](key: CacheReadKey[T])(implicit request: Request[_]): Future[Option[T]] =
+  def get[T](key: CacheReadKey[T])(implicit request: Request[?]): Future[Option[T]] =
     cacheRepo
       .findById(request)
       .map(_.flatMap(key.read))
 
-  def put[T](key: CacheReadWriteKey[T], value: T)(implicit request: Request[_], format: Format[T]): Future[T] =
+  def put[T](key: CacheReadWriteKey[T], value: T)(implicit request: Request[?], format: Format[T]): Future[T] =
     cacheRepo
       .put[T](request)(key.dataKey, value)
       .map(key.read)
       .map(_.getOrElse(throw new RuntimeException(s"Failed to retrieve ${key.dataKey} from cache after saving")))
 
-  def clear()(implicit request: Request[_]): Future[Unit] =
+  def clear()(implicit request: Request[?]): Future[Unit] =
     cacheRepo
       .deleteEntity(request)
 }

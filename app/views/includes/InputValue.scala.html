@@ -19,7 +19,7 @@
 @this(govukInput: GovukInput)
 
 @(
-        form: Form[_],
+        form: Form[?],
         id: String,
         name: String,
         labelKey: String,
@@ -41,13 +41,13 @@
     name,
     classes = classes.fold("")(x => x),
     label = Label(
-        content = Text(messages(labelKey, labelArgs:_*)),
+        content = Text(messages(labelKey, labelArgs*)),
         isPageHeading = isPageHeading,
         classes = if(isPageHeading) "govuk-label--l " + labelClasses.getOrElse("") else labelClasses.getOrElse("")
     ),
     hint = hint.map{hintContent => Hint(content = hintContent)},
     value = form(name).value,
-    errorMessage = form(name).error.map(err => ErrorMessage.errorMessageWithDefaultStringsTranslated(content = Text(messages(err.message, err.args:_*)))),
+    errorMessage = form(name).error.map(err => ErrorMessage.errorMessageWithDefaultStringsTranslated(content = Text(messages(err.message, err.args*)))),
     autocomplete = autocomplete,
     inputmode = inputmode,
     pattern = pattern,

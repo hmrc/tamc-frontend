@@ -23,7 +23,7 @@
 h1: H1,
 p: P)
 
-@()(implicit messages: Messages, request: AuthenticatedUserRequest[_])
+@()(implicit messages: Messages, request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = messages("title.change.complete"),

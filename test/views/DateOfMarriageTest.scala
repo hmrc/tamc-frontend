@@ -32,7 +32,7 @@ class DateOfMarriageTest extends BaseTest with NinoGenerator {
   lazy val dateOfMarriage = instanceOf[date_of_marriage]
   lazy val dateOfMarriageForm = instanceOf[DateOfMarriageForm]
 
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "dateOfMarriage" should {

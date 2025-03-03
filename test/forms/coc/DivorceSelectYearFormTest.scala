@@ -75,7 +75,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite wit
         val form = divorceSelectYearForm.form.bind(formInput)
         val errorMessageKey = extractErrorMessageKey(form.errors)
 
-       errorMessageKey shouldBe "pages.divorce.date.error.max.date"
+        errorMessageKey shouldBe "pages.divorce.date.error.max.date"
 
       }
 
@@ -167,7 +167,7 @@ class DivorceSelectYearFormTest extends UnitSpec with GuiceOneServerPerSuite wit
 
   private def extractErrorMessageKey(errors: Seq[FormError]): String = {
     errors match {
-      case List(FormError(_, List(messageKey), _)) => messageKey
+      case List(FormError(_, List(messageKey), _)) => messageKey.toString
       case _ => throw new RuntimeException("Unable to extract error message key")
     }
   }

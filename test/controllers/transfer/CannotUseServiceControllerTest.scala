@@ -56,8 +56,8 @@ class CannotUseServiceControllerTest extends ControllerBaseTest {
   def controller: CannotUseServiceController =
     app.injector.instanceOf[CannotUseServiceController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "cannotUseService" should {
     "return success when call cannotUseService" in {

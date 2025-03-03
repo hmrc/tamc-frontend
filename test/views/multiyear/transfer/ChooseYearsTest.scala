@@ -46,10 +46,10 @@ class ChooseYearsTest extends BaseTest with NinoGenerator {
 
   implicit val doc: Document = Jsoup.parse(chooseYearsView(form, registrationForm.name,registrationForm.dateOfMarriage, LocalDate.now).toString())
 
-  val dateOfMarriageWithNBSP: String = languageUtilsImpl.apply.ukDateTransformer(registrationForm.dateOfMarriage)
+  val dateOfMarriageWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(registrationForm.dateOfMarriage)
   val dateOfMarriage: String = dateOfMarriageWithNBSP.replace("\u00A0", " ")
 
-  val currentTaxYearWithNBSP: String = languageUtilsImpl.apply.ukDateTransformer(LocalDate.now())
+  val currentTaxYearWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(LocalDate.now())
   val currentTaxYear: String = dateOfMarriageWithNBSP.replace("\u00A0", " ")
 
   "chooseYears" should {

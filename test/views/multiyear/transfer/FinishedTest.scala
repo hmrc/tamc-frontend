@@ -20,7 +20,7 @@ import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import controllers.transfer.FinishedController
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import models.auth.AuthenticatedUserRequest
 import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
@@ -37,7 +37,8 @@ import services.TransferService
 import uk.gov.hmrc.domain.Nino
 import utils.{BaseTest, EmailAddress, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 
-import scala.concurrent.duration._
+import scala.concurrent.Future
+import scala.concurrent.duration.*
 import scala.language.postfixOps
 
 
@@ -63,7 +64,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
     "successfully authenticate the user and have finished page and content" in {
       when(mockTransferService.getFinishedData(any())(any(), any()))
-        .thenReturn(NotificationRecord(EmailAddress("example@example.com")))
+        .thenReturn(Future.successful(NotificationRecord(EmailAddress("example@example.com"))))
       val result = finishedController.finished(request)
 
       status(result) shouldBe OK

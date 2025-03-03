@@ -70,7 +70,7 @@ class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewT
         val populatedForm = emailForm.fill(email)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs emailView(populatedForm)
+        result `rendersTheSameViewAs` emailView(populatedForm)
       }
 
       "no email is recovered from the cache" in {
@@ -79,7 +79,7 @@ class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewT
         val result = controller.confirmEmail(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs emailView(emailForm)
+        result `rendersTheSameViewAs` emailView(emailForm)
       }
 
       "fail to get data from cache" in {
@@ -88,7 +88,7 @@ class ConfirmEmailControllerTest extends ControllerBaseTest with ControllerViewT
         val result = controller.confirmEmail(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs emailView(emailForm)
+        result `rendersTheSameViewAs` emailView(emailForm)
       }
     }
   }

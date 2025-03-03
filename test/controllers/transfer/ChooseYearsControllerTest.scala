@@ -24,7 +24,7 @@ import models.{ApplyForEligibleYears, CurrentAndPreviousYearsEligibility, TaxYea
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.mustBe
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
@@ -36,7 +36,6 @@ import services.{CachingService, TimeService, TransferService}
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, MockAuthenticatedAction, TransferErrorHandler}
-import views.html.errors.recipient_not_found
 
 import java.time.LocalDate
 import scala.concurrent.Future

@@ -33,4 +33,4 @@
 }
 
 
-    <a href="@link" class="govuk-link" @id.map(x => s"id=$x") @if(attrTarget) {target="_blank" rel="noopener noreferrer"} @attrValues>@Html(messages(messageKey, messageArgs:_*)) <span class="govuk-visually-hidden">@hiddenText</span></a>@if(comma){,}@if(fullStop) {.}
+    <a href="@link" class="govuk-link" @id.map(x => s"id=$x") @if(attrTarget) {target="_blank" rel="noopener noreferrer"} @attrValues>@Html(messages(messageKey, messageArgs*)) <span class="govuk-visually-hidden">@hiddenText</span></a>@if(comma){,}@if(fullStop) {.}

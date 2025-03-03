@@ -32,7 +32,7 @@ import java.util.Locale
 
 class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite with Injecting{
 
-  implicit val request: Request[_] = FakeRequest()
+  implicit val request: Request[?] = FakeRequest()
 
   val mockApplicationConfig: ApplicationConfig = mock[ApplicationConfig]
 

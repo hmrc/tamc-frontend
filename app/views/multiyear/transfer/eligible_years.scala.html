@@ -47,7 +47,7 @@
     cy: Option[java.time.LocalDate]
 )(
     implicit messages: Messages,
-    request: AuthenticatedUserRequest[_]
+    request: AuthenticatedUserRequest[?]
 )
 @backLink = @{
     if(historicYearsAvailable) {

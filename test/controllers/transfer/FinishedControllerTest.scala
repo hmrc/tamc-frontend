@@ -20,19 +20,20 @@ import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class FinishedControllerTest extends ControllerBaseTest {
 
@@ -57,8 +58,8 @@ class FinishedControllerTest extends ControllerBaseTest {
   def controller: FinishedController =
     app.injector.instanceOf[FinishedController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "finished" should {
     "return success" when {
@@ -67,7 +68,7 @@ class FinishedControllerTest extends ControllerBaseTest {
         verify(mockCachingService, times(0)).clear()(any())
 
         when(mockTransferService.getFinishedData(any())(any(), any()))
-          .thenReturn(notificationRecord)
+          .thenReturn(Future.successful(notificationRecord))
 
         val result = controller.finished()(request)
         status(result) shouldBe OK

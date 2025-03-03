@@ -25,7 +25,7 @@ import views.html.errors.other_ways
 class OtherWaysTest extends BaseTest {
 
   lazy val otherWays = instanceOf[other_ways]
-  lazy val baseUserRequest: BaseUserRequest[_] = UserRequest(FakeRequest(), None, true, Some(""), true)
+  lazy val baseUserRequest: BaseUserRequest[?] = UserRequest(FakeRequest(), None, true, Some(""), true)
   override lazy val messages = Helpers.stubMessages()
 
 

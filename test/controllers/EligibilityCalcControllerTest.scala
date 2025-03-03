@@ -20,14 +20,13 @@ import config.ApplicationConfig
 import org.jsoup.Jsoup
 import play.api.http.Status.{BAD_REQUEST, OK}
 import play.api.test.FakeRequest
-import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 import utils.BaseTest
 
 //TODO: Update values in test names
 class EligibilityCalcControllerTest extends BaseTest {
 
-  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
   "Check eligibility benefit" should {
 

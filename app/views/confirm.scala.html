@@ -41,7 +41,7 @@
 data: models.ConfirmationModel
 )(
     implicit messages: Messages,
-    request: AuthenticatedUserRequest[_]
+    request: AuthenticatedUserRequest[?]
 )
 
 @main(

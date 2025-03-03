@@ -25,7 +25,7 @@ import views.html.errors.no_year_selected
 class NoYearSelectedTest extends BaseTest {
 
   lazy val noYearSelected = instanceOf[no_year_selected]
-  lazy val baseUserRequest: BaseUserRequest[_] = UserRequest(FakeRequest(), None, true, Some(""), true)
+  lazy val baseUserRequest: BaseUserRequest[?] = UserRequest(FakeRequest(), None, true, Some(""), true)
   override lazy val messages = Helpers.stubMessages()
 
   "noYearsSelected" should {

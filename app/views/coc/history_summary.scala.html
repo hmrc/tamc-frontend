@@ -27,7 +27,7 @@
 )
 
 @(viewModel: HistorySummaryViewModel)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
 pageTitle = messages(messages("title.history")),

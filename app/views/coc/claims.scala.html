@@ -24,7 +24,7 @@
 h1: H1,
 govukInsetText: GovukInsetText)
 
-@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[_])
+@(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[?])
 
 @main(
 pageTitle = messages("pages.claims.title")

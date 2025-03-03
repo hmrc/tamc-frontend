@@ -20,22 +20,23 @@ import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{CachingService, TimeService, TransferService}
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class ExtraYearsControllerTest extends ControllerBaseTest {
 
@@ -60,19 +61,21 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
   def controller: ExtraYearsController =
     app.injector.instanceOf[ExtraYearsController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "extraYearsAction" should {
     "return bad request" when {
       "an invalid form is submitted" in {
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         val result = controller.extraYearsAction()(request)
@@ -89,11 +92,13 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
         )
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         when(
@@ -103,7 +108,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(Some(2014))
           )(any(), any())
         )
-          .thenReturn(Nil)
+          .thenReturn(Future.successful(Nil))
         val result = controller.extraYearsAction()(request)
         status(result) shouldBe OK
       }
@@ -118,11 +123,13 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
         )
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         when(
@@ -132,7 +139,7 @@ class ExtraYearsControllerTest extends ControllerBaseTest {
             ArgumentMatchers.eq(Some(2014))
           )(any(), any())
         )
-          .thenReturn(Nil)
+          .thenReturn(Future.successful(Nil))
         val result = controller.extraYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)

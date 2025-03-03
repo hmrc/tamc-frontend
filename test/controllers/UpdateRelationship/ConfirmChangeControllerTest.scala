@@ -80,7 +80,7 @@ class ConfirmChangeControllerTest extends ControllerBaseTest with ControllerView
       val result = controller.confirmUpdate()(request)
 
       status(result) shouldBe OK
-      result rendersTheSameViewAs confirmUpdateView(confirmUpdateViewModelImpl(confirmUpdateAnswers))
+      result `rendersTheSameViewAs` confirmUpdateView(confirmUpdateViewModelImpl(confirmUpdateAnswers))
     }
 
     "return an InternalServerError" when {
@@ -116,7 +116,7 @@ class ConfirmChangeControllerTest extends ControllerBaseTest with ControllerView
         val result = controller.submitConfirmUpdate(request)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
+        result `rendersTheSameViewAs` tryLaterView()
       }
     }
   }

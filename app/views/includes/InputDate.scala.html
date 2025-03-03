@@ -18,7 +18,7 @@
 
 @this(govukDateInput: GovukDateInput)
 
-@(fieldName: String, form: Form[_], legendKey: String, hint: Option[Content], isPageHeading: Boolean = true, legendClasses: String = "govuk-fieldset__legend--l", fieldSetAttrs: Map[String, String] = Map.empty)(implicit messages: Messages)
+@(fieldName: String, form: Form[?], legendKey: String, hint: Option[Content], isPageHeading: Boolean = true, legendClasses: String = "govuk-fieldset__legend--l", fieldSetAttrs: Map[String, String] = Map.empty)(implicit messages: Messages)
 
 @govukDateInput(DateInput(
     hint = hint.map(hintHtml => Hint(

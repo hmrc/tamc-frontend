@@ -25,7 +25,7 @@ h1: H1,
 p: P
 )
 
-@()(implicit messages: Messages, request: Request[_])
+@()(implicit messages: Messages, request: Request[?])
 
 @main(pageTitle = messages("global.page.not.found.error.title")){
     @h1("global.page.not.found.error.title")

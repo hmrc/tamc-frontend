@@ -39,7 +39,7 @@ trait Main {
            )(
              contentBlock: Html
            )(implicit
-             BaseUserRequest: Request[_],
+             BaseUserRequest: Request[?],
              messages: Messages
            ): HtmlFormat.Appendable
 }
@@ -61,7 +61,7 @@ class MainImpl @Inject() (
                       disableBackLink: Boolean
                     )(
                       contentBlock: Html
-                    )(implicit request: Request[_], messages: Messages): HtmlFormat.Appendable = {
+                    )(implicit request: Request[?], messages: Messages): HtmlFormat.Appendable = {
 
     val hideAccountMenu = request.session.get("authToken").isEmpty
 

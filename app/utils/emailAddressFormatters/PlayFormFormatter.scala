@@ -83,7 +83,7 @@ object PlayFormFormatter {
         missingDayError = missingDayError
       )
       ).transform[(String, String, String)](x =>  (x._1.get.trim, x._2.get.trim, x._3.get.trim), x =>  (Some(x._1), Some(x._2), Some(x._3)))
-      .verifying(nonNumericError, verifyDigits _)
+      .verifying(nonNumericError, verifyDigits)
       .transform[(Int, Int, Int)](x =>  (x._1.toInt, x._2.toInt, x._3.toInt), x =>  (x.toString(), x.toString(), x.toString()))
       .verifying(checkDateRangeValidator(invalidDay = invalidDayError, invalidMonth = invalidMonthError, invalidYear = invalidYearError, yearTodayOrPast = yearTodayOrPast))
       .transform[ZonedDateTime](x => ZonedDateTime.of(x._1, x._2, x._3, 0, 0, 0, 0, ZoneId.systemDefault()),

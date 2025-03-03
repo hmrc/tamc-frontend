@@ -34,7 +34,7 @@ trait TamcViewTest extends UnitSpec with I18nSupport with GuiceOneAppPerSuite wi
   implicit val messagesApi: MessagesApi = app.injector.instanceOf[MessagesApi]
   implicit val partialRetriever: MockFormPartialRetriever = mock[MockFormPartialRetriever]
   implicit val request: Request[AnyContent] = FakeRequest()
-  implicit val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
+  implicit val authRequest: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(
     request,
     Some(ConfidenceLevel.L200),
     isSA = false,

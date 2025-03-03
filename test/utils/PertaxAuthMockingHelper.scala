@@ -27,7 +27,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.utils.UriEncoding
 
 trait PertaxAuthMockingHelper {
-  this: WireMockHelper with GuiceOneAppPerSuite =>
+  this: WireMockHelper & GuiceOneAppPerSuite =>
 
   lazy val config: Map[String, Any] = Map[String, Any](
     "microservice.services.pertax-auth.port" -> server.port()

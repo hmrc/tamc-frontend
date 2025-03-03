@@ -31,7 +31,7 @@ import java.util.Locale
 class BereavementContentTest extends BaseTest with Injecting with NinoGenerator {
 
   val view: bereavement = inject[bereavement]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   val recipientDoc: Document = Jsoup.parse(view(Recipient).toString())
@@ -61,7 +61,7 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
     }
 
     "recipient bullet list" in {
-      recipientDoc.getElementById("main-content").getElementsByTag("li").eachText().toArray() shouldBe Array()
+      recipientDoc.getElementById("main-content").getElementsByTag("li").eachText().toArray() shouldBe Array[String]()
     }
 
     "transferor bullet list" in {

@@ -20,22 +20,23 @@ import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{CachingService, TimeService, TransferService}
 import test_utils.data.RecipientRecordData
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class EligibleYearsControllerTest extends ControllerBaseTest {
 
@@ -60,19 +61,21 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
   def controller: EligibleYearsController =
     app.injector.instanceOf[EligibleYearsController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "eligibleYears" should {
     "return a success" when {
       "there are available tax years including current year" in {
         when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = true,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = true,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(time.TaxYear.current.starts)
@@ -85,11 +88,13 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
       "there are available tax years not including current year" in {
         when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         val result = controller.eligibleYears()(request)
@@ -102,11 +107,13 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
       "available tax years is empty" in {
         when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = false,
-              Nil,
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = false,
+                Nil,
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         val result = controller.eligibleYears()(request)
@@ -121,11 +128,13 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "abc")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         val result = controller.eligibleYearsAction()(request)
@@ -138,15 +147,17 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "true")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any()))
-          .thenReturn(List(currentTaxYear))
+          .thenReturn(Future.successful(List(currentTaxYear)))
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)
@@ -157,14 +168,16 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = false,
+                List(TaxYear(2015)),
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Future.successful(Nil))
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.DoNotApplyController.doNotApply().url)
@@ -175,14 +188,16 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = false,
-              Nil,
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = false,
+                Nil,
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Future.successful(Nil))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.DoNotApplyController.doNotApply().url)
@@ -192,15 +207,17 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "true")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = true,
-              Nil,
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = true,
+                Nil,
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any()))
-          .thenReturn(List(currentTaxYear))
+          .thenReturn(Future.successful(List(currentTaxYear)))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)
@@ -210,14 +227,16 @@ class EligibleYearsControllerTest extends ControllerBaseTest {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("applyForCurrentYear" -> "false")
         when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
           .thenReturn(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = true,
-              Nil,
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = true,
+                Nil,
+                RecipientRecordData.recipientRecord.data,
+                RecipientRecordData.recipientRecord.availableTaxYears
+              )
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Nil)
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Future.successful(Nil))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.DoNotApplyController.doNotApply().url)

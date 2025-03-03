@@ -27,17 +27,17 @@ import views.html.coc.cancel
 
 class CancelTest extends BaseTest with NinoGenerator {
 
-  lazy val cancel = instanceOf[cancel]
+  lazy val cancelling = instanceOf[cancel]
   lazy val nino: String = generateNino().nino
 
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
 
   "cancel" should {
     "return the correct title" in {
 
       val expectedDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
-      val document = Jsoup.parse(cancel(expectedDates).toString)
+      val document = Jsoup.parse(cancelling(expectedDates).toString)
       val title = document.title()
       val expected = messages("pages.cancel.title") + " - " + messages("title.pattern")
 
@@ -47,7 +47,7 @@ class CancelTest extends BaseTest with NinoGenerator {
     "return We will cancel your Marriage Allowance content" in {
 
       val expectedDates = MarriageAllowanceEndingDates(TaxYear.current.previous.finishes, TaxYear.current.starts)
-      val document = Jsoup.parse(cancel(expectedDates).toString)
+      val document = Jsoup.parse(cancelling(expectedDates).toString)
       val paragraphTag = document.getElementsByTag("p").toString
       val expectedPart1 = messages("pages.cancel.paragraph1")
       val expectedPart2 = messages("pages.cancel.paragraph2")

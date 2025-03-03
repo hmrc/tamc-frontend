@@ -24,7 +24,7 @@ h1: H1,
 p: P,
 link: Link)
 
-@()(implicit messages: Messages,request: AuthenticatedUserRequest[_])
+@()(implicit messages: Messages,request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = messages(messages("pages.stopAllowance.title"))

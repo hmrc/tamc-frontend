@@ -19,14 +19,13 @@ package views
 import config.ApplicationConfig
 import org.jsoup.Jsoup
 import play.api.test.FakeRequest
-import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.api.test.Helpers.{contentAsString, defaultAwaitTimeout}
 import utils.BaseTest
 import controllers.EligibilityCalculatorController
 
 class CalculatorResultTest extends BaseTest {
 
-  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
   lazy val controller: EligibilityCalculatorController = app.injector.instanceOf[EligibilityCalculatorController]
 
   "Check eligibility benefit" should {

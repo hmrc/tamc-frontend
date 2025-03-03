@@ -29,7 +29,7 @@ p: P,
 link: Link)
 
 @(role: Role)(implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
 pageTitle = messages("pages.bereavement.title")

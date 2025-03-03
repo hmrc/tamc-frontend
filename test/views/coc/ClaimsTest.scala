@@ -33,7 +33,7 @@ class ClaimsTest extends BaseTest with NinoGenerator {
   lazy val relationshipRecord = RelationshipRecord("Recipient", "creationTimestamp", "20220101", None, None, "otherPaticipant", "otherParticipantupdateTimestamp")
   lazy val relationshipRecord1 = RelationshipRecord("Recipient", "creationTimestamp", "20220101", None, None, "otherPaticipant", "otherParticipantupdateTimestamp")
 
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
   "claims" should {
     "return the correct title" in {

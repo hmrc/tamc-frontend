@@ -17,7 +17,6 @@
 package controllers
 
 import org.jsoup.Jsoup
-import play.api.http.Status.OK
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._

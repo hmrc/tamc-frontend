@@ -69,7 +69,7 @@ class ClaimsControllerTest extends ControllerBaseTest with ControllerViewTestHel
       val result = controller.claims(request)
 
       status(result) shouldBe OK
-      result rendersTheSameViewAs claimsView(claimsViewModel)
+      result `rendersTheSameViewAs` claimsView(claimsViewModel)
     }
 
     "display an error page" when {
@@ -79,7 +79,7 @@ class ClaimsControllerTest extends ControllerBaseTest with ControllerViewTestHel
         val result = controller.claims(request)
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
-        result rendersTheSameViewAs tryLaterView()
+        result `rendersTheSameViewAs` tryLaterView()
       }
     }
   }

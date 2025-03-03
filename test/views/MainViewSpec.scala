@@ -73,7 +73,7 @@ class MainViewSpec extends BaseTest with Injecting {
 
   "if user is authenticated" when {
 
-    implicit val baseUserRequest: BaseUserRequest[_] =
+    implicit val baseUserRequest: BaseUserRequest[?] =
       UserRequest(
         FakeRequest("GET", "/some-url")
           .withSession(SessionKeys.authToken -> "Bearer 1"),
@@ -237,7 +237,7 @@ class MainViewSpec extends BaseTest with Injecting {
 
     "if user is unauthenticated" when {
 
-      implicit val baseUserRequest: BaseUserRequest[_] =
+      implicit val baseUserRequest: BaseUserRequest[?] =
         UserRequest(
           FakeRequest("GET", "/some-url"),
           None,

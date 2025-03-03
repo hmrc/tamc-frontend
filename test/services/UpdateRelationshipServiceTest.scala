@@ -90,7 +90,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
       when(mockMarriageAllowanceConnector.listRelationship(any())(any(), any()))
         .thenReturn(Future.successful(recordList))
 
-     val result = await(service.retrieveRelationshipRecords(nino))
+      val result = await(service.retrieveRelationshipRecords(nino))
 
       result shouldBe RelationshipRecords(activeRecipientRelationshipRecord, Seq(), createLoggedInUserInfo())
     }
@@ -580,7 +580,7 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     "getRelationshipRecords" should {
       "when RelationshipRecords are present return RelationshipRecords" in {
         when(mockCachingService.get[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS))
-          .thenReturn(Some(RelationshipRecords(recordList, localDate)))
+          .thenReturn(Future.successful(Some(RelationshipRecords(recordList, localDate))))
 
         val result = await(service.getRelationshipRecords)
 

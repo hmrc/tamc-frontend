@@ -27,7 +27,7 @@ p: P,
 link: Link)
 
 @()(implicit messages: Messages,
-    request: BaseUserRequest[_])
+    request: BaseUserRequest[?])
 
 @main(
     pageTitle = messages("title.error")

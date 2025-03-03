@@ -20,16 +20,16 @@ import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.CacheService.CACHE_MARRIAGE_DATE
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
@@ -38,6 +38,7 @@ import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class DateOfMarriageControllerTest extends ControllerBaseTest {
 
@@ -62,8 +63,8 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
   def controller: DateOfMarriageController =
     app.injector.instanceOf[DateOfMarriageController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
 
   "dateOfMarriage" should {
@@ -93,17 +94,17 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
         RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
 
       when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
-        .thenReturn(dateOfMarriageInput)
+        .thenReturn(Future.successful(dateOfMarriageInput))
 
       when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
-        .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
+        .thenReturn(Future.successful(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1))))
       when(
         mockTransferService.isRecipientEligible(
           ArgumentMatchers.eq(Nino(Ninos.nino1)),
           ArgumentMatchers.eq(registrationFormInput)
         )(any(), any(), any())
       )
-        .thenReturn(true)
+        .thenReturn(Future.successful(true))
       val result = controller.dateOfMarriageAction()(request)
       status(result)           shouldBe SEE_OTHER
       redirectLocation(result) shouldBe Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
@@ -120,17 +121,17 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
           RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
 
         when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
-          .thenReturn(dateOfMarriageInput)
+          .thenReturn(Future.successful(dateOfMarriageInput))
 
         when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
-          .thenReturn(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1)))
+          .thenReturn(Future.successful(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1))))
         when(
           mockTransferService.isRecipientEligible(
             ArgumentMatchers.eq(Nino(Ninos.nino1)),
             ArgumentMatchers.eq(registrationFormInput)
           )(any(), any(), any())
         )
-          .thenReturn(true)
+          .thenReturn(Future.successful(true))
         val result = controller.dateOfMarriageAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)

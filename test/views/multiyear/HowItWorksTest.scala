@@ -32,7 +32,7 @@ import java.text.NumberFormat
 class HowItWorksTest extends BaseTest with ViewTestUtils {
 
   val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
-  implicit val request: UserRequest[_] = UserRequest(FakeRequest(), None, true, None, false)
+  implicit val request: UserRequest[?] = UserRequest(FakeRequest(), None, true, None, false)
   override implicit lazy val messages: Messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
   lazy val howItWorksView: how_it_works = instanceOf[how_it_works]
   implicit val doc: () => Document = () => Jsoup.parse(howItWorksView().toString())

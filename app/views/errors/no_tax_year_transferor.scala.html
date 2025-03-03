@@ -24,7 +24,7 @@ h1: H1,
 p: P,
 button: Button)
 
-@()(implicit messages: Messages, request: BaseUserRequest[_])
+@()(implicit messages: Messages, request: BaseUserRequest[?])
 
 @main(
 pageTitle = Messages("title.no-tax-years"),

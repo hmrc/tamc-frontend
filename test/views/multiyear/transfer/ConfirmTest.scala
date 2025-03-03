@@ -20,7 +20,7 @@ import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import controllers.transfer.ConfirmController
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import models.auth.AuthenticatedUserRequest
 import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
@@ -39,7 +39,8 @@ import uk.gov.hmrc.domain.Nino
 import utils.{BaseTest, EmailAddress, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 
 import java.time.LocalDate
-import scala.concurrent.duration._
+import scala.concurrent.Future
+import scala.concurrent.duration.*
 import scala.language.postfixOps
 
 
@@ -73,7 +74,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
         DateOfMarriageFormInput(LocalDate.of(2015, 1, 1))
       )
       when(mockTransferService.getConfirmationData(any())(any(), any(), any()))
-        .thenReturn(confirmData)
+        .thenReturn(Future.successful(confirmData))
 
       val result = confirmController.confirm(request)
 

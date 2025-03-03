@@ -16,6 +16,12 @@
 
 package models
 
+import play.api.libs.json.{Json, OFormat}
+
 import java.time.LocalDate
 
 case class ChangeRelationship(role: Option[String], endReason: Option[String], historicActiveRecord: Option[Boolean] = Some(false), creationTimestamp: Option[String] = None, dateOfDivorce: Option[LocalDate] = None)
+
+object ChangeRelationship {
+  implicit val formats: OFormat[ChangeRelationship] = Json.format[ChangeRelationship]
+}

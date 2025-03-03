@@ -33,7 +33,7 @@ class UpdateRelationshipErrorHandlerTest extends ControllerBaseTest with Control
   lazy val updateRelationshipErrorHandler: UpdateRelationshipErrorHandler = app.injector.instanceOf[UpdateRelationshipErrorHandler]
 
   "handleError" should {
-    val authRequest: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(
+    val authRequest: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(
       request,
       Some(ConfidenceLevel.L200),
       isSA = false,

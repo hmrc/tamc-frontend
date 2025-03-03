@@ -33,7 +33,7 @@ errorSummary: ErrorSummary)
 recipientForm: Form[utils.EmailAddress],
 name: Option[models.CitizenName] = None)(implicit
 messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(recipientForm, Messages("title.confirm-email")),

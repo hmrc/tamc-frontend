@@ -17,3 +17,9 @@
 package models
 
 case class CurrentYearInput(applyForCurrentYear: Option[Boolean])
+
+object CurrentYearInput {
+  def unapply(input: CurrentYearInput): Option[Option[Boolean]] = {
+    Some(input.applyForCurrentYear)
+  }
+}

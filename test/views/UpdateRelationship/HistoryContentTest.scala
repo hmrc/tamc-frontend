@@ -37,7 +37,7 @@ class HistoryContentTest extends BaseTest with Injecting with NinoGenerator{
   val appConfig: ApplicationConfig = inject[ApplicationConfig]
   val view: history_summary = inject[history_summary]
   val historySummaryViewModelImpl: HistorySummaryViewModelImpl = instanceOf[HistorySummaryViewModelImpl]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   val citizenName: CitizenName = CitizenName(Some("Test"), Some("User"))
@@ -69,13 +69,13 @@ class HistoryContentTest extends BaseTest with Injecting with NinoGenerator{
           val paragraphs = doc.getElementsByClass("govuk-body").text()
           val button = doc.getElementsByClass("govuk-button").text()
 
-         if (mACancelled) {
-           button shouldBe "Check your Marriage Allowance claims"
-         } else button shouldBe "Check or update your Marriage Allowance"
+          if (mACancelled) {
+            button shouldBe "Check your Marriage Allowance claims"
+          } else button shouldBe "Check or update your Marriage Allowance"
 
           pageHeading shouldBe "Test User"
           paragraphs shouldBe content
-          caption contains "Your Marriage Allowance summary"
+          caption `contains` "Your Marriage Allowance summary"
         }
     }
   }

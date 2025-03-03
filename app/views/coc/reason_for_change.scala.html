@@ -30,7 +30,7 @@ inputRadios: InputRadios,
 button: Button)
 
 @(makeChangesDecisionForm: Form[Option[String]])(implicit messages: Messages,
-request: AuthenticatedUserRequest[_])
+request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(makeChangesDecisionForm, messages("title.make-a-change")),

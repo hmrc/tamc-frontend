@@ -47,7 +47,7 @@ class DoNotApplyControllerTest extends ControllerBaseTest with ControllerViewTes
       val result = controller.doNotApply(request)
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs doNotApplyView()
+      result `rendersTheSameViewAs` doNotApplyView()
     }
   }
 

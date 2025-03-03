@@ -42,7 +42,7 @@ class DivorceContentTest extends BaseTest with Injecting with NinoGenerator {
   val appConfig: ApplicationConfig = inject[ApplicationConfig]
   val timeService: TimeService = inject[TimeService]
   val languageUtilsImpl: LanguageUtilsImpl = inject[LanguageUtilsImpl]
-  implicit val request: AuthenticatedUserRequest[_] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
+  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   lazy val nino: String = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
 
@@ -59,7 +59,7 @@ class DivorceContentTest extends BaseTest with Injecting with NinoGenerator {
 
       heading shouldBe "Date of divorce, end of civil partnership or legal separation"
       formLabel shouldBe Array("Day", "Month", "Year")
-      formInput contains "text"
+      formInput `contains` "text"
       hint shouldBe "For example, 30 6 2019"
       paras shouldBe Array(
         "You need to go to court to be legally separated. You can still get Marriage Allowance if you are separated, but not legally separated.",

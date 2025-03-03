@@ -66,7 +66,7 @@ class BereavementControllerTest extends ControllerBaseTest with ControllerViewTe
         val result = controller.bereavement(request)
 
         status(result) shouldBe OK
-        result rendersTheSameViewAs bereavementView(relationshipRecords.primaryRecord.role)
+        result `rendersTheSameViewAs` bereavementView(relationshipRecords.primaryRecord.role)
       }
 
       "display an error page" when {
@@ -75,7 +75,7 @@ class BereavementControllerTest extends ControllerBaseTest with ControllerViewTe
           val result = controller.bereavement(request)
 
           status(result) shouldBe INTERNAL_SERVER_ERROR
-          result rendersTheSameViewAs tryLaterView()
+          result `rendersTheSameViewAs` tryLaterView()
         }
       }
     }

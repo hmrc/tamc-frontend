@@ -22,7 +22,7 @@
 @this(main: Main, p: P)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[_])
+request: BaseUserRequest[?])
 
 @main(
 pageTitle = Messages("title.error"),

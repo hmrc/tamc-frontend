@@ -73,7 +73,7 @@ class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTe
 
       status(result) shouldBe OK
 
-      result rendersTheSameViewAs applyByPostView(cachedData, currentYearAvailable)
+      result `rendersTheSameViewAs` applyByPostView(cachedData, currentYearAvailable)
     }
   }
 

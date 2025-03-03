@@ -22,6 +22,7 @@ import errors.ErrorResponseStatus.{BAD_REQUEST, CITIZEN_NOT_FOUND, TRANSFEROR_NO
 import errors.{BadFetchRequest, CitizenNotFound, MarriageAllowanceError, TransferorNotFound}
 import models._
 import play.api.libs.json.Json
+import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.client.HttpClientV2

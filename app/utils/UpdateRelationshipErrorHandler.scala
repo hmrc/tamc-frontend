@@ -30,7 +30,7 @@ class UpdateRelationshipErrorHandler @Inject()(cc: MessagesControllerComponents,
                                                recipientNotFound: views.html.errors.recipient_not_found,
                                                appConfig: ApplicationConfig) extends BaseController(cc) with LoggerHelper {
 
-  def handleError(implicit request: BaseUserRequest[_]): PartialFunction[Throwable, Result] = {
+  def handleError(implicit request: BaseUserRequest[?]): PartialFunction[Throwable, Result] = {
     val message: String = s"An exception occurred during processing of URI [${request.uri}] SID [${utils.getSid(request)}]"
 
     def handle(throwable: Throwable, logger: (String, Throwable) => Unit, result: Result): Result = {

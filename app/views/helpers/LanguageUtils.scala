@@ -45,7 +45,7 @@ sealed trait LanguageUtils {
   def ukDateTransformer(date: LocalDate, transformPattern: String = "d MMMM yyyy"): String
   def formPossessive(noun: String): String
 
-  def formPageDataJourney(prefix: String, form: Form[_]): String =
+  def formPageDataJourney(prefix: String, form: Form[?]): String =
     form.hasErrors match {
       case true => s"${prefix}-erroneous(${form.errors.map { x => x.key }.sorted.distinct.mkString(",")})"
       case _ => prefix

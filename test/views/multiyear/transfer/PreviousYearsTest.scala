@@ -20,7 +20,7 @@ import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
 import controllers.transfer.{EligibleYearsController, ExtraYearsController}
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import models.auth.AuthenticatedUserRequest
 import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
@@ -39,7 +39,8 @@ import uk.gov.hmrc.domain.Nino
 import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
 
 import java.time.LocalDate
-import scala.concurrent.duration._
+import scala.concurrent.Future
+import scala.concurrent.duration.*
 import scala.language.postfixOps
 
 
@@ -80,11 +81,13 @@ class PreviousYearsTest extends BaseTest with NinoGenerator {
     "display form error message (no year choice made )" in {
       when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
         .thenReturn(
-          CurrentAndPreviousYearsEligibility(
-            currentYearAvailable = true,
-            recrecord.availableTaxYears,
-            recrecord.data,
-            recrecord.availableTaxYears
+          Future.successful(
+            CurrentAndPreviousYearsEligibility(
+              currentYearAvailable = true,
+              recrecord.availableTaxYears,
+              recrecord.data,
+              recrecord.availableTaxYears
+            )
           )
         )
       val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(data = "year" -> "List(0)")

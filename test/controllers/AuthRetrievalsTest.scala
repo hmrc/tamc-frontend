@@ -26,7 +26,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Results.Ok
 import play.api.mvc._
 import play.api.test.Helpers._
-import play.api.test.Helpers.baseApplicationBuilder.injector
 import play.mvc.Controller
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -43,7 +42,7 @@ class AuthRetrievalsTest extends ControllerBaseTest {
   val mockAuthConnector: AuthConnector = mock[AuthConnector]
   val retrievals: Retrieval[Retrievals] = Retrievals.credentials and Retrievals.nino and Retrievals.confidenceLevel and Retrievals.saUtr
 
-  val applicationConfig: ApplicationConfig = injector().instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig = app.injector.instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(

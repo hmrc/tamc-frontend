@@ -68,7 +68,7 @@ class MakeChangesController @Inject()(authenticate: StandardAuthJourney,
         })
   }
 
-  private def noLongerWantMarriageAllowanceRedirect(implicit request: Request[_]): Future[Result] = {
+  private def noLongerWantMarriageAllowanceRedirect(implicit request: Request[?]): Future[Result] = {
     updateRelationshipService.getRelationshipRecords map { relationshipRecords =>
       if (relationshipRecords.primaryRecord.role == Recipient) {
         Redirect(controllers.UpdateRelationship.routes.StopAllowanceController.stopAllowance())

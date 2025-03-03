@@ -20,24 +20,25 @@ import config.ApplicationConfig
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
+import models.*
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
-import services.CacheService._
+import services.CacheService.*
 
 import java.time.LocalDate
+import scala.concurrent.Future
 
 class TransferAllowanceControllerTest extends ControllerBaseTest {
 
@@ -62,8 +63,8 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
   def controller: TransferAllowanceController =
     app.injector.instanceOf[TransferAllowanceController]
 
-  when(mockTimeService.getCurrentDate) thenReturn LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) thenReturn currentTaxYear
+  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
+  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "transfer" should {
     "return success" in {
@@ -78,7 +79,7 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
         when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
-          .thenReturn(recipientDetails)
+          .thenReturn(Future.successful(recipientDetails))
         val result = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
@@ -94,7 +95,7 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
           "nino"      -> Ninos.nino2
         )
         when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
-          .thenReturn(recipientDetails)
+          .thenReturn(Future.successful(recipientDetails))
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
