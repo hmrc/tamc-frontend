@@ -18,8 +18,8 @@ import sbt.*
 
 object LibraryDependencies {
 
-  private val hmrcScaWrapperVersion = "2.4.0"
-  private val hmrcMongoVersion      = "2.5.0"
+  private val hmrcScaWrapperVersion = "2.6.0"
+  private val hmrcMongoVersion      = "2.6.0"
   private val playVersion           = "play-30"
 
   private val compile: Seq[ModuleID] = Seq(
