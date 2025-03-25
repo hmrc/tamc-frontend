@@ -39,7 +39,7 @@ class UnauthenticatedActionTransformer @Inject()(
     implicit val hc: HeaderCarrier =
       HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
-    authorised(ConfidenceLevel.L200).retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
+    authorised().retrieve(Retrievals.confidenceLevel and Retrievals.saUtr and Retrievals.credentials) {
       case cl ~ saUtr ~ credentials =>
         Future.successful(UserRequest(request, Some(cl), isAuthenticated = true, credentials.map(_.providerType), isSA = saUtr.isDefined))
     } recover {
