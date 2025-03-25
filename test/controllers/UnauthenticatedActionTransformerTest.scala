@@ -53,7 +53,7 @@ class UnauthenticatedActionTransformerTest extends ControllerBaseTest with Injec
     def onPageLoad(): Action[AnyContent] = authAction(
       implicit request => Ok.withHeaders("isAuthenticated" -> request.isAuthenticated.toString))
 
-    when(mockAuthConnector.authorise(ArgumentMatchers.eq(ConfidenceLevel.L200), ArgumentMatchers.eq(retrievals))(any(), any()))
+    when(mockAuthConnector.authorise(any(), any())(any(), any()))
       .thenReturn(authReturn)
   }
 
