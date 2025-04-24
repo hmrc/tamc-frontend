@@ -84,7 +84,7 @@ class RelationshipRecordTest extends BaseTest with GuiceOneAppPerSuite {
 
       "relationship end date is a past date" in {
         relationshipActiveRecordWithPastValidDate.copy(participant1EndDate =
-          Some(s"${currentTaxYear.startYear}0504")).isActive(localDate) shouldBe false
+          Some(s"${currentTaxYear.startYear}0405")).isActive(localDate) shouldBe false
       }
 
       "relationship end date is today" in {
