@@ -17,10 +17,11 @@
 val appName = "tamc-frontend"
 
 ThisBuild / majorVersion := 7
-ThisBuild / scalaVersion := "3.6.2"
+ThisBuild / scalaVersion := "3.6.3"
 ThisBuild / scalacOptions ++= Seq(
   "-feature",
-  //"-Xfatal-warnings" FIXME switch to HMRCStandardPage template instead of deprecated HmrcLayout
+  "-Wconf:msg=Flag.*repeatedly:s",
+  "-Xfatal-warnings",
   "-Wconf:src=routes/.*:s,src=twirl/.*:s"
 )
 
