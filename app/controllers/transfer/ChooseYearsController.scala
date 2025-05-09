@@ -43,7 +43,7 @@ class ChooseYearsController @Inject()(
                                      )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   val form: Form[String] = formProvider()
-  val currentTaxYear: LocalDate = timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
+  def currentTaxYear: LocalDate = timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
 
   def chooseYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
