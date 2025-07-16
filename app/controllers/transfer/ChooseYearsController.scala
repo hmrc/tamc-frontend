@@ -73,8 +73,7 @@ class ChooseYearsController @Inject()(
               case ApplyForEligibleYears.CurrentTaxYear.toString =>
                 Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
 
-              case ApplyForEligibleYears.PreviousTaxYears.toString |
-                   ApplyForEligibleYears.CurrentAndPreviousTaxYears.toString =>
+              case ApplyForEligibleYears.PreviousTaxYears.toString =>
                 Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
 
               case _ =>

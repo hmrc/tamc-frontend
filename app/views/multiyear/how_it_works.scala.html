@@ -45,6 +45,10 @@ disableBackLink = true
 
     @p(HtmlContent(ledeContent))
     @p(Text(messages("pages.how-it-works.lede-pre2")))
+    <ul class="govuk-list govuk-list--bullet">
+      <li>@messages("pages.how-it-works.lede-pre2.part1")</li>
+      <li>@messages("pages.how-it-works.lede-pre2.part2")</li>
+    </ul>
     @p(Text(messages("pages.how-it-works.lede-pre3")))
     @insetText(InsetText(content = Text(messages("pages.how-it-works.lede-pre4"))))
 
@@ -66,6 +70,10 @@ disableBackLink = true
 
     @h2("pages.how-it-works.before-apply.heading")
     @p(Text(messages("pages.how-it-works.before-apply-pre1")))
+    <ul class="govuk-list govuk-list--bullet">
+      <li>@messages("pages.how-it-works.before-apply-part1")</li>
+      <li>@messages("pages.how-it-works.before-apply-part2")</li>
+    </ul>
 
     @p(HtmlContent(button(msg = "generic.start-now",
                         href = Some(controllers.transfer.routes.TransferAllowanceController.transfer().url),
@@ -86,9 +94,12 @@ disableBackLink = true
 }
 
 @calculateEligibilityDetails = {
+  <div class="govuk-body">
+    @h2("pages.how-it-works.eligibility-pre3.h2")
     @messages("pages.how-it-works.eligibility-pre3.part1")
     @link(link = applicationConfig.marriedCoupleAllowanceLink, messageKey = "pages.how-it-works.eligibility-pre3.link-text", attrTarget = true, inParagraph = true, fullStop = true)
     @messages("pages.how-it-works.eligibility-pre3.part2")
+  </div>
 }
 
 @calculateBenefitDetails = {

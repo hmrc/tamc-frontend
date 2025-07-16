@@ -25,9 +25,8 @@ sealed trait ApplyForEligibleYears
 object ApplyForEligibleYears extends Enumerable.Implicits {
   case object CurrentTaxYear extends WithName("currentTaxYear") with ApplyForEligibleYears
   case object PreviousTaxYears extends WithName("previousTaxYears") with ApplyForEligibleYears
-  case object CurrentAndPreviousTaxYears extends WithName("currentAndPreviousTaxYears") with ApplyForEligibleYears
   val values: Seq[ApplyForEligibleYears] =
-    Seq(CurrentTaxYear, PreviousTaxYears, CurrentAndPreviousTaxYears)
+    Seq(CurrentTaxYear, PreviousTaxYears)
 
   def options(currentTaxYear: String)(implicit messages: Messages): Seq[RadioItem] =
     values.zipWithIndex.map {

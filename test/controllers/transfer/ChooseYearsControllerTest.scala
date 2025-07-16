@@ -164,22 +164,10 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
       }
 
-      "currentAndPreviousTaxYears is selected" in {
-        val currentAndPreviousTaxYears = ApplyForEligibleYears.CurrentAndPreviousTaxYears.toString
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> currentAndPreviousTaxYears)
-
-        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq(currentAndPreviousTaxYears))(any(), any()))
-          .thenReturn(Future.successful(currentAndPreviousTaxYears))
-
-        val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
-      }
-
       "there is an unexpected value" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> ApplyForEligibleYears.CurrentAndPreviousTaxYears.toString)
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> ApplyForEligibleYears.PreviousTaxYears.toString)
 
-        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq("currentAndPreviousTaxYears"))(any(), any()))
+        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq("previousTaxYears"))(any(), any()))
           .thenReturn(Future.successful("UnexpectedValue"))
 
         val result = controller.chooseYearsAction()(request)

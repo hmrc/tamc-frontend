@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ import java.time.LocalDate
 
 class DateOfMarriageTest extends BaseTest with NinoGenerator {
 
-  lazy val nino = generateNino().nino
-  lazy val dateOfMarriage = instanceOf[date_of_marriage]
-  lazy val dateOfMarriageForm = instanceOf[DateOfMarriageForm]
+  lazy val nino: String = generateNino().nino
+  lazy val dateOfMarriage: date_of_marriage = instanceOf[date_of_marriage]
+  lazy val dateOfMarriageForm: DateOfMarriageForm = instanceOf[DateOfMarriageForm]
 
   implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
 
@@ -42,7 +42,7 @@ class DateOfMarriageTest extends BaseTest with NinoGenerator {
       val title = document.title()
       val expected = messages("title.date-of-marriage") + " - " + messages("title.application.pattern")
 
-      title shouldBe expected
+      title.shouldBe(expected)
     }
 
     "return the correct h1" in {
@@ -52,27 +52,8 @@ class DateOfMarriageTest extends BaseTest with NinoGenerator {
 
       val expected = messages("pages.date-of-marriage.heading")
 
-      h1Tag should include(expected)
+      h1Tag.should(include(expected))
     }
-
-    "return claim from when Marriage Allowance was first introduced content" in {
-
-      val document = Jsoup.parse(dateOfMarriage(dateOfMarriageForm.dateOfMarriageForm(LocalDate.now)).toString)
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.date-of-marriage.para1")
-
-      paragraphTag should include(expected)
-    }
-
-    "return You can claim for up to 4 previous years content" in {
-
-      val document = Jsoup.parse(dateOfMarriage(dateOfMarriageForm.dateOfMarriageForm(LocalDate.now)).toString)
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.date-of-marriage.para2")
-
-      paragraphTag should include(expected)
-    }
-
 
     "return When did you marry or form a civil partnership h2" in {
 
@@ -80,9 +61,8 @@ class DateOfMarriageTest extends BaseTest with NinoGenerator {
       val paragraphTag = document.getElementsByTag("form").toString
       val expected = messages("pages.date-of-marriage.h2")
 
-      paragraphTag should include(expected)
+      paragraphTag.should(include(expected))
     }
   }
-
 
 }

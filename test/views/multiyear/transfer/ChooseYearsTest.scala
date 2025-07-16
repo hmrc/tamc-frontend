@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,13 +59,10 @@ class ChooseYearsTest extends BaseTest with NinoGenerator {
 
     "display correct headings" in {
       doc.getElementsByTag("h1").text() shouldBe "Choose the years you want to apply for"
-      doc.getElementsByTag("h2").first().text() shouldBe "Which tax years do you want to apply for?"
     }
 
     "display correct text" in {
       doc.getElementsByTag("p").eachText().toArray shouldBe Array(
-        s"You told us you married or formed a civil partnership with ${registrationForm.name} on $dateOfMarriage.",
-        "This means you can apply for this year and previous years.",
         "Beta This is a new service – your feedback will help us to improve it."
       )
     }

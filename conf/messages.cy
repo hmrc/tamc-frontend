@@ -257,8 +257,6 @@ pages.form.field.enter-email=Nodwch gyfeiriad e-bost
 # Date of Marriage
 #********************************************************************************
 pages.date-of-marriage.heading=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
-pages.date-of-marriage.para1=Mae hyn er mwyn sicrhau’n bod yn caniat&#225;u i chi elwa o Lwfans Priodasol am y maint cywir o amser.
-pages.date-of-marriage.para2=Gallwch hawlio ar gyfer hyd at y 4 blynedd blaenorol, yn ogystal ag ar gyfer y flwyddyn dreth bresennol.
 pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda’ch partner?
 #********************************************************************************
 # How it works
@@ -266,7 +264,10 @@ pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifi
 pages.how-it-works.heading=Sut y mae’n gweithio
 pages.how-it-works.lede-pre1.link-text=Mae Lwfans
 pages.how-it-works.lede-pre1=Priodasol yn eich galluogi i drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil os yw’ch incwm yn llai nag incwm eich priod neu bartner sifil. Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{1} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
-pages.how-it-works.lede-pre2=Gallwch wneud cais am y flwyddyn bresennol, a gallwch hefyd ôl-ddyddio’ch cais am 4 blynedd os oeddech yn gymwys i gael Lwfans Priodasol yn y blynyddoedd hynny.
+pages.how-it-works.lede-pre2=Gallwch wneud cais am y canlynol:
+pages.how-it-works.lede-pre2.part1=ar-lein, ar gyfer y flwyddyn bresennol ymlaen
+pages.how-it-works.lede-pre2.part2=drwy’r post, ar gyfer hyd at y 4 blynedd blaenorol er mwyn ôl-ddyddio eich lwfans
+pages.how-it-works.eligibility-pre3.h2=Os oeddech chi, neu’ch partner, wedi’ch geni cyn 6 Ebrill 1935
 pages.how-it-works.lede-pre3=Mae Lwfans Priodasol yn adnewyddu’n awtomatig ar ddiwedd pob blwyddyn dreth. Gallwch ei ganslo, ond ni fydd yn dod i ben tan ddiwedd y flwyddyn treth.
 pages.how-it-works.lede-pre4=Gallwch wneud cais am Lwfans Priodasol os yw’ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Os yw hyn yn berthnasol i chi, ffoniwch Wasanaeth Cwsmeriaid Cymraeg CThEF ar 0300 200 1900.
 
@@ -287,6 +288,8 @@ pages.how-it-works.calculate-benefit-pre1.detail=i weld faint y gallech ei arbed
 
 pages.how-it-works.before-apply.heading=Cyn i chi wneud cais
 pages.how-it-works.before-apply-pre1=Bydd angen rhifau Yswiriant Gwladol eich partner
+pages.how-it-works.before-apply-part1=rhif Yswiriant Gwladol eich partner
+pages.how-it-works.before-apply-part2=dyddiad eich priodas neu ddyddiad ffurfio’r bartneriaeth sifil
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
@@ -530,9 +533,6 @@ pages.confirm.change.email=Newid E-bost
 #********************************************************************************
 # Choose tax years page
 #********************************************************************************
-pages.chooseYears.paragraph1=Gwnaethoch roi gwybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil â <span id="firstNameOnly">{0}</span> ar <span id=marriageDate class=nowrap>{1}</span>.
-pages.chooseYears.paragraph2=Mae hyn yn golygu y gallwch wneud cais ar gyfer y flwyddyn hon a blynyddoedd blaenorol.
-pages.chooseYears.heading=Pa flynyddoedd treth yr ydych am wneud cais ar eu cyfer?
 pages.chooseYears.currentTaxYear=Y flwyddyn dreth gyfredol, sef {0} ymlaen
 pages.chooseYears.previousTaxYears=Blynyddoedd treth blaenorol cyn {0}
 pages.chooseYears.currentAndPreviousTaxYears=Y flwyddyn dreth bresennol a blynyddoedd treth blaenorol
