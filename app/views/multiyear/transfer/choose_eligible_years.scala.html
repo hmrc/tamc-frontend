@@ -69,14 +69,14 @@
         .map { item =>
           CheckboxItem(
             content = item.content,
-            value = item.value,
-            checked = form.data.get("value").exists(_.split(",").contains(item.value)),
+            value   = item.value,
+            checked = form.data.getOrElse("value[]", "").contains(item.value),
             id = item.id
           )
         }
 
       val checkboxesArgs = Checkboxes(
-        name = "value",
+        name = "value[]",
         fieldset = Some(Fieldset(
         legend = Some(Legend(
           content = Text(messages("title.choose-years")),

@@ -29,7 +29,7 @@
 )
 
 @(
-    selectedTaxYear: Option[String],
+    selectedTaxYears: Seq[String],
     currentYearAvailable: Boolean
 )(
     implicit messages: Messages,
@@ -51,7 +51,7 @@
 ){
     @h1("title.apply-by-post")
 
-    @if(selectedTaxYear == Some("currentAndPreviousTaxYears")) {
+    @if(selectedTaxYears == Seq("currentTaxYear", "previousTaxYears")) {
         @p(HtmlContent(messages("pages.apply-by-post.paragraph")))
     } else {
         @p(HtmlContent(messages("pages.apply-by-post.only.previous.years")))
