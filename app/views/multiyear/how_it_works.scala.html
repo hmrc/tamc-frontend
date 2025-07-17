@@ -46,8 +46,8 @@ disableBackLink = true
     @p(HtmlContent(ledeContent))
     @p(Text(messages("pages.how-it-works.lede-pre2")))
     <ul class="govuk-list govuk-list--bullet">
-      <li>@messages("pages.how-it-works.lede-pre2.part1")</li>
-      <li>@messages("pages.how-it-works.lede-pre2.part2")</li>
+      <li id="claim-current-year">@messages("pages.how-it-works.lede-pre2.part1")</li>
+      <li id="claim-previous-year">@messages("pages.how-it-works.lede-pre2.part2")</li>
     </ul>
     @p(Text(messages("pages.how-it-works.lede-pre3")))
     @insetText(InsetText(content = Text(messages("pages.how-it-works.lede-pre4"))))
@@ -55,9 +55,9 @@ disableBackLink = true
     @h2("pages.how-it-works.eligibility.heading")
     @p(Text(messages("pages.how-it-works.eligibility-pre1")))
     <ul class="govuk-list govuk-list--bullet">
-        <li>@messages("pages.how-it-works.eligibility-pre1.part1")</li>
-        <li>@messages("pages.how-it-works.eligibility-pre1.part2",NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))</li>
-        <li>@messages("pages.how-it-works.eligibility-pre1.part3",NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT()))</li>
+        <li id="must-be-married">@messages("pages.how-it-works.eligibility-pre1.part1")</li>
+        <li id="be-lowest-income">@messages("pages.how-it-works.eligibility-pre1.part2",NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))</li>
+        <li id="earn-below-max-threshold">@messages("pages.how-it-works.eligibility-pre1.part3",NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT()))</li>
     </ul>
     @insetText(InsetText(content = Text(messages("pages.how-it-works.eligibility-pre2",
         NumberFormat.getIntegerInstance().format(applicationConfig.STARTER_RATE_LOWER_TRESHOLD_SCOT()),
@@ -71,8 +71,8 @@ disableBackLink = true
     @h2("pages.how-it-works.before-apply.heading")
     @p(Text(messages("pages.how-it-works.before-apply-pre1")))
     <ul class="govuk-list govuk-list--bullet">
-      <li>@messages("pages.how-it-works.before-apply-part1")</li>
-      <li>@messages("pages.how-it-works.before-apply-part2")</li>
+      <li id="need-partner-national-insurance">@messages("pages.how-it-works.before-apply-part1")</li>
+      <li id="need-date-of-marriage">@messages("pages.how-it-works.before-apply-part2")</li>
     </ul>
 
     @p(HtmlContent(button(msg = "generic.start-now",
@@ -94,8 +94,8 @@ disableBackLink = true
 }
 
 @calculateEligibilityDetails = {
-  <div class="govuk-body">
-    @h2("pages.how-it-works.eligibility-pre3.h2")
+  @h2("pages.how-it-works.eligibility-pre3.h2")
+  <div class="govuk-body" id="married-couples-allowance">
     @messages("pages.how-it-works.eligibility-pre3.part1")
     @link(link = applicationConfig.marriedCoupleAllowanceLink, messageKey = "pages.how-it-works.eligibility-pre3.link-text", attrTarget = true, inParagraph = true, fullStop = true)
     @messages("pages.how-it-works.eligibility-pre3.part2")

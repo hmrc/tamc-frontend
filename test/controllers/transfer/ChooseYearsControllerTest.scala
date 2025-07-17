@@ -118,7 +118,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
           )
         )
         val result = controller.chooseYears()(request)
-        status(result) shouldBe SEE_OTHER
+        status(result).shouldBe(SEE_OTHER)
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
       }
     }
@@ -148,7 +148,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
           .thenReturn(Future.successful(currentTaxYear))
 
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
+        status(result).shouldBe(SEE_OTHER)
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
       }
 
@@ -160,7 +160,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
           .thenReturn(Future.successful(previousTaxYears))
 
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
+        status(result).shouldBe(SEE_OTHER)
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
       }
 
@@ -171,7 +171,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
           .thenReturn(Future.successful("UnexpectedValue"))
 
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
+        status(result).shouldBe(SEE_OTHER)
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
       }
       }

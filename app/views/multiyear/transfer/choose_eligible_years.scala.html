@@ -66,15 +66,13 @@
     @{
       val checkboxItems: Seq[CheckboxItem] = ApplyForEligibleYears
         .options(languageUtilsImpl().ukDateTransformer(currentTaxYear))
-        .flatMap { item =>
-          item.value.map { v =>
-            CheckboxItem(
-              content = item.content,
-              value = v,
-              checked = form.data.get("value").exists(_.split(",").contains(v)),
-              id = item.id
-            )
-          }
+        .map { item =>
+          CheckboxItem(
+            content = item.content,
+            value = item.value,
+            checked = form.data.get("value").exists(_.split(",").contains(item.value)),
+            id = item.id
+          )
         }
 
       val checkboxesArgs = Checkboxes(

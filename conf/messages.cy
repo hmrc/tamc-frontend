@@ -287,7 +287,7 @@ pages.how-it-works.calculate-benefit-pre1.link-text=Gallwch ddefnyddio’r cyfri
 pages.how-it-works.calculate-benefit-pre1.detail=i weld faint y gallech ei arbed yn y flwyddyn dreth bresennol. Nid yw hwn yn ffurfio rhan o’r cais.
 
 pages.how-it-works.before-apply.heading=Cyn i chi wneud cais
-pages.how-it-works.before-apply-pre1=Bydd angen rhifau Yswiriant Gwladol eich partner
+pages.how-it-works.before-apply-pre1=Bydd angen y canlynol arnoch:
 pages.how-it-works.before-apply-part1=rhif Yswiriant Gwladol eich partner
 pages.how-it-works.before-apply-part2=dyddiad eich priodas neu ddyddiad ffurfio’r bartneriaeth sifil
 #********************************************************************************
