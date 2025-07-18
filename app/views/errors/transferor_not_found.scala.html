@@ -16,35 +16,35 @@
 
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
-@import includes.{P,Link}
+@import includes.{H1,P,Link}
 
 @import views.Main
 
 @this(
-main: Main,
-applicationConfig: ApplicationConfig,
-p: P,
-link: Link)
+    main: Main,
+    applicationConfig: ApplicationConfig,
+    h1: H1,
+    p: P,
+    link: Link
+)
 
-@()(implicit messages: Messages,
-    request: BaseUserRequest[?])
+@()(
+    implicit messages: Messages,
+    request: BaseUserRequest[?]
+)
 
 @main(
     pageTitle = messages("title.error")
 ) {
 
-    @p(Text(messages("transferor.not.found")), elmId = Some("error"))
+    @h1("transferor.not.found", elmId = Some("error"))
 
-    @p(Text(messages("hmrc.contact-details")), classes = Some("govuk-body govuk-!-font-weight-bold"))
-
-    <ul class="govuk-list">
-        <li>@messages("hmrc.contact-details-2")</li>
-        <li>@messages("hmrc.contact-details-3")</li>
-        <li>@messages("hmrc.contact-details-4")</li>
-        <li>@messages("hmrc.contact-details-5")</li>
-        <li>@messages("hmrc.contact-details-6")</li>
-        <li>@messages("hmrc.contact-details-7")</li>
-        <li>@messages("hmrc.contact-details-8")</li>
-        <li>@link(link = applicationConfig.callChargeUrl, messageKey = "hmrc.contact-details-9", attrTarget = true, inParagraph = true)</li>
-    </ul>
+    @p(
+        HtmlContent(messages("transferor.not.found.para1") +
+        link(
+            link = applicationConfig.incomeTaxEnquiriesUrl,
+            messageKey = "transferor.not.found.para1.link-text",
+            inParagraph = true
+        ))
+    )
 }

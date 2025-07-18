@@ -51,6 +51,7 @@ class ApplicationConfig @Inject()(configuration: Configuration, servicesConfig: 
   lazy val marriageAllowanceGuideUrl: String = loadConfig("tamc.external-urls.marriage-allowance-guide")
   lazy val howItWorksUrl: String = loadConfig("tamc.external-urls.marriage-allowance-how-it-works")
   lazy val applyByPostUrl: String = loadConfig("tamc.external-urls.marriage-allowance-apply-by-post")
+  lazy val incomeTaxEnquiriesUrl: String = loadConfig("tamc.external-urls.income-tax-enquiries")
   lazy val ggSignInHost: String = configuration.getOptional[String]("microservice.bas-gateway-frontend.host").getOrElse("")
   lazy val ggSignInUrl: String = s"$ggSignInHost/bas-gateway/sign-in?continue_url=${encodeQueryStringValue(callbackUrl)}"
 
