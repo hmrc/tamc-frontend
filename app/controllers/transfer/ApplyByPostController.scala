@@ -42,7 +42,7 @@ class ApplyByPostController @Inject()(
       transferService.getCurrentAndPreviousYearsEligibility.flatMap  {
         case CurrentAndPreviousYearsEligibility(currentYearAvailable, _, _, _) =>
           cachingService.get[String](CACHE_CHOOSE_YEARS).map {
-            case Some(csv) => csv.split(",").toSeq
+            case Some(yearOptions) => yearOptions.split(",").toSeq
             case None      => Seq.empty
           }.map { selectedTaxYears =>
           Ok(applyByPostView(selectedTaxYears, currentYearAvailable))
