@@ -262,8 +262,8 @@ pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifi
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=Sut y mae’n gweithio
-pages.how-it-works.lede-pre1.link-text=Mae Lwfans
-pages.how-it-works.lede-pre1=Priodasol yn eich galluogi i drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil os yw’ch incwm yn llai nag incwm eich priod neu bartner sifil. Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{1} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
+pages.how-it-works.lede-pre1.link-text=Mae Lwfans Priodasol
+pages.how-it-works.lede-pre1=yn eich galluogi i drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil os yw’ch incwm yn llai nag incwm eich priod neu bartner sifil. Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{1} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
 pages.how-it-works.lede-pre2=Gallwch wneud cais am y canlynol:
 pages.how-it-works.lede-pre2.part1=ar-lein, ar gyfer y flwyddyn bresennol ymlaen
 pages.how-it-works.lede-pre2.part2=drwy’r post, ar gyfer hyd at y 4 blynedd blaenorol er mwyn ôl-ddyddio eich lwfans

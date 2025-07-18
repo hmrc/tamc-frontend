@@ -71,17 +71,20 @@ class ChooseYearsController @Inject()(
             Future.successful(BadRequest(chooseYearsView(formWithErrors, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear)))
           },
           selectedYears => {
-            // Serialize Seq[String] to CSV string for caching
             val cacheString = selectedYears.mkString(",")
 
-            cachingService.put[String](CACHE_CHOOSE_YEARS, cacheString).map { _ =>
+            cachingService.put[String](CACHE_CHOOSE_YEARS, cacheString).map { (returnedValue: String) =>
               val currentYearStr = ApplyForEligibleYears.CurrentTaxYear.toString
 
-              // Redirect logic
-              if (selectedYears.exists(_ != currentYearStr)) {
-                Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
+              if (returnedValue == cacheString) {
+                if (selectedYears.exists(_ != currentYearStr)) {
+                  Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
+                } else {
+                  Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
+                }
               } else {
-                Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
+                logger.warn(s"Unexpected value returned from cachingService.put: $returnedValue")
+                Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
               }
             }
           }

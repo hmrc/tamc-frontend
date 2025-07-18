@@ -21,7 +21,7 @@ ThisBuild / scalaVersion := "3.6.3"
 ThisBuild / scalacOptions ++= Seq(
   "-feature",
   "-Wconf:msg=Flag.*repeatedly:s",
-//  "-Xfatal-warnings",
+  "-Xfatal-warnings",
   "-Wconf:src=routes/.*:s,src=twirl/.*:s"
 )
 

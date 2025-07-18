@@ -135,26 +135,26 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
       "an invalid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> "invalidOption")
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe BAD_REQUEST
+        status(result).shouldBe(BAD_REQUEST)
       }
     }
 
     "redirect the user" when {
       "currentTaxYear is selected" in {
         val currentTaxYear = ApplyForEligibleYears.CurrentTaxYear.toString
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> currentTaxYear)
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value[]" -> currentTaxYear)
 
         when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq(currentTaxYear))(any(), any()))
           .thenReturn(Future.successful(currentTaxYear))
 
         val result = controller.chooseYearsAction()(request)
         status(result).shouldBe(SEE_OTHER)
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
+        redirectLocation(result).shouldBe(Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url))
       }
 
       "previousTaxYears is selected" in {
         val previousTaxYears = ApplyForEligibleYears.PreviousTaxYears.toString
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> previousTaxYears)
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value[]" -> previousTaxYears)
 
         when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq(previousTaxYears))(any(), any()))
           .thenReturn(Future.successful(previousTaxYears))
@@ -165,7 +165,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
       }
 
       "there is an unexpected value" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> ApplyForEligibleYears.PreviousTaxYears.toString)
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value[0]" -> ApplyForEligibleYears.PreviousTaxYears.toString)
 
         when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq("previousTaxYears"))(any(), any()))
           .thenReturn(Future.successful("UnexpectedValue"))
