@@ -27,7 +27,6 @@ import javax.inject.Inject
 
 class TransferErrorHandler @Inject()(
                                      cc: MessagesControllerComponents,
-                                     transferorNotFound: views.html.errors.transferor_not_found,
                                      recipientNotFound: views.html.errors.recipient_not_found,
                                      transferorStatus: views.html.transferor_status,
                                      noYearSelected: views.html.errors.no_year_selected,
@@ -53,7 +52,7 @@ class TransferErrorHandler @Inject()(
     }
 
     val pf: PartialFunction[Throwable, Result] = {
-      case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
+      case t: TransferorNotFound => handle(t, warn, Redirect(controllers.routes.TransferorNotFoundController.transferorNotFoundError()))
       case t: RecipientNotFound  => handle(t, warn, Ok(recipientNotFound()))
       case t: TransferorDeceased =>
         handle(t, warn, Redirect(controllers.transfer.routes.CannotUseServiceController.cannotUseService()))

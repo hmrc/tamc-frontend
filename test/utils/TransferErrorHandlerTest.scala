@@ -73,6 +73,7 @@ class TransferErrorHandlerTest extends ControllerBaseTest {
     )
     "redirect" when {
       val data = List(
+        (new TransferorNotFound, "/marriage-allowance-application/marriage-allowance-details-missing"),
         (new CacheMissingTransferor, "/marriage-allowance-application/history"),
         (new CacheMissingRecipient, "/marriage-allowance-application/history"),
         (new CacheMissingEmail, "/marriage-allowance-application/confirm-your-email"),
@@ -83,7 +84,7 @@ class TransferErrorHandlerTest extends ControllerBaseTest {
         (new RecipientDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
       )
       for ((error, redirectUrl) <- data)
-        s"a $error has been thrown" in {
+        s"an $error has been thrown" in {
           val result = helper.handleError(authRequest)(error)
           status(result)           shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(redirectUrl)
@@ -92,7 +93,7 @@ class TransferErrorHandlerTest extends ControllerBaseTest {
 
     "handle an error" when {
       val data = List(
-        (new TransferorNotFound, OK, "transferor.not.found"),
+        (new TransferorNotFound, SEE_OTHER, "transferor.not.found"),
         (new RecipientNotFound, OK, "recipient.not.found.para1"),
         (new CacheRecipientInRelationship, INTERNAL_SERVER_ERROR, "recipient.has.relationship.para1"),
         (new CannotCreateRelationship, INTERNAL_SERVER_ERROR, "create.relationship.failure"),

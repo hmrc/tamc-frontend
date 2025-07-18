@@ -30,7 +30,8 @@ import scala.concurrent.Future
 
 class UpdateRelationshipErrorHandlerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
-  lazy val updateRelationshipErrorHandler: UpdateRelationshipErrorHandler = app.injector.instanceOf[UpdateRelationshipErrorHandler]
+  lazy val updateRelationshipErrorHandler: UpdateRelationshipErrorHandler =
+    app.injector.instanceOf[UpdateRelationshipErrorHandler]
 
   "handleError" should {
     val authRequest: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(
@@ -46,44 +47,46 @@ class UpdateRelationshipErrorHandlerTest extends ControllerBaseTest with Control
         (new CacheMissingUpdateRecord, "Sorry, there is a problem with the service"),
         (new CacheUpdateRequestNotSent, "Sorry, there is a problem with the service"),
         (new CannotUpdateRelationship, "Sorry, there is a problem with the service"),
-        (new CitizenNotFound, "Call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call"),
+        (
+          new CitizenNotFound,
+          "Call us to make a change to your Marriage Allowance. Have your National Insurance number ready when you call"
+        ),
         (new BadFetchRequest, "Sorry, there is a problem with the service"),
         (new Exception, "Sorry, there is a problem with the service")
       )
 
-      for ((error, message) <- errors) {
-        s"a $error has been thrown" in {
+      for ((error, message) <- errors)
+        s"$error has been thrown" in {
           val result = Future.successful(updateRelationshipErrorHandler.handleError(authRequest)(error))
           status(result) shouldBe INTERNAL_SERVER_ERROR
           val doc = Jsoup.parse(contentAsString(result))
           doc.getElementById("error").text() shouldBe message
         }
-      }
     }
 
     "return OK" when {
-      val errors = List(
-        (new TransferorNotFound, "We were unable to find a HMRC record for you."),
-        (new RecipientNotFound, "We were unable to find a HMRC record of your partner.")
-      )
-
-      for ((error, message) <- errors) {
-        s"a $error has been thrown" in {
-          val result = Future.successful(updateRelationshipErrorHandler.handleError(authRequest)(error))
-          status(result) shouldBe OK
-          val doc = Jsoup.parse(contentAsString(result))
-          doc.getElementById("error").text() shouldBe message
-        }
+      "errors.RecipientNotFound has been thrown" in {
+        val result = Future.successful(updateRelationshipErrorHandler.handleError(authRequest)(new RecipientNotFound))
+        status(result) shouldBe OK
+        val doc = Jsoup.parse(contentAsString(result))
+        doc.getElementById("error").text() shouldBe "We were unable to find a HMRC record of your partner."
       }
     }
 
     "redirect" when {
-      "a errors.CacheRelationshipAlreadyUpdated exception has been thrown" in {
-        val result = Future.successful(updateRelationshipErrorHandler.handleError(authRequest)(new CacheRelationshipAlreadyUpdated))
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate().url)
-      }
+      val errors = List(
+        (new TransferorNotFound, "/marriage-allowance-application/marriage-allowance-details-missing"),
+        (new CacheRelationshipAlreadyUpdated, "/marriage-allowance-application/finished-change")
+      )
+
+      for ((error, redirectUrl) <- errors)
+        s"an $error has been thrown" in {
+          val result = Future.successful(updateRelationshipErrorHandler.handleError(authRequest)(error))
+          status(result)           shouldBe SEE_OTHER
+          redirectLocation(result) shouldBe Some(redirectUrl)
+        }
     }
+
   }
 
 }
