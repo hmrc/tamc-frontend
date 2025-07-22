@@ -94,7 +94,7 @@ data: models.ConfirmationModel
         </div>
     </dl>
 
-    @h2("pages.confirm.marriage.details")
+    @h2("pages.confirm.application.details")
     <dl class="govuk-summary-list">
         <div class="govuk-summary-list_row">
             <dt class="govuk-summary-list_key">@Html(messages("pages.confirm.date.of.marriage"))</dt>
@@ -113,11 +113,9 @@ data: models.ConfirmationModel
             <div class="govuk-summary-list_row">
                 @if(taxYear.isCurrent) {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
-                    @Html(messages("pages.confirm.current.tax",languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))
+                    @Html(messages("pages.confirm.years.applied"))
                     </dt> 
-                    <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(messages("pages.confirm.current.tax.desc",
-                        languageUtilsImpl().formPossessive(data.recipientFirstName),
-                        data.recipientFirstName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)), data.recipientFirstName))
+                    <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(messages("pages.confirm.years.applied.desc",languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))
                     </dd>
                 } else {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
@@ -135,6 +133,8 @@ data: models.ConfirmationModel
             </dd>
             </div>
         </dl>
+          @h2("pages.confirm.application.now")
+          @p(Text(messages("pages.confirm.application.now.p")))
     }
 
     @form(action = transfer.routes.ConfirmController.confirmAction(), args = (Symbol("id") -> "create-form")) {

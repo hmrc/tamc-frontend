@@ -36,7 +36,8 @@ class FinishedController @Inject()(
                                   )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def finished: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getFinishedData(request.nino) map { case NotificationRecord(email) =>
+    registrationService.getFinishedData(request.nino) map {
+      case NotificationRecord(email) =>
       cachingService.clear()
       Ok(finishedV(transferorEmail = email))
     } recover errorHandler.handleError
