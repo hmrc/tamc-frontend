@@ -16,13 +16,13 @@
 
 @import models.auth.BaseUserRequest
 @import config.ApplicationConfig
-@import includes.{H1,P,Link}
+@import includes.{H1, P, Link}
 
 @import views.Main
 
 @this(
     main: Main,
-    applicationConfig: ApplicationConfig,
+    appConfig: ApplicationConfig,
     h1: H1,
     p: P,
     link: Link
@@ -42,7 +42,11 @@
     @p(
         HtmlContent(messages("transferor.not.found.para1") +
         link(
-            link = applicationConfig.incomeTaxEnquiriesUrl,
+            link = if(messages.lang.code == "cy") {
+                      appConfig.incomeTaxEnquiriesUrlCy
+                   } else {
+                      appConfig.incomeTaxEnquiriesUrl
+                   },
             id = Some("income-tax-enquiries-link"),
             messageKey = "transferor.not.found.para1.link-text",
             inParagraph = true
