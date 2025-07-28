@@ -240,7 +240,7 @@ pages.form.enter-data=Enter your partner’s details
 pages.form.marriage-date.aria-label=Change marriage date
 pages.form.field.name=First name
 pages.form.field.last-name=Last name
-pages.form.field.gender=What is their Sex?
+pages.form.field.gender=What is their sex?
 pages.form.field.gender.male=Male
 pages.form.field.gender.female=Female
 pages.form.field-helper.gender=Sex means as recorded on a birth certificate or Gender Recognition Certificate
@@ -253,7 +253,7 @@ pages.form.field-helper.nino.expand=click to expand
 pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits.
 pages.form.field-helper.dom=For example, 31 3 1980
 pages.form.field.your-confirmation=Confirmation email
-pages.form.field.yourDetails=We will email confirmation of your Marriage Allowance application within 24 hours. We will not share your email with anyone else.
+pages.form.field.yourDetails=We will email confirmation of your Marriage Allowance application. We will not share your email with anyone else.
 pages.form.field.transferor-email=Your email address
 pages.form.field.enter-email=Enter email address
 
