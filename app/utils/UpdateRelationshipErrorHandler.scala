@@ -26,7 +26,6 @@ import play.api.mvc.{MessagesControllerComponents, Result}
 class UpdateRelationshipErrorHandler @Inject()(cc: MessagesControllerComponents,
                                                tryLater: views.html.errors.try_later,
                                                citizenNotFound: views.html.errors.citizen_not_found,
-                                               transferorNotFound: views.html.errors.transferor_not_found,
                                                recipientNotFound: views.html.errors.recipient_not_found,
                                                appConfig: ApplicationConfig) extends BaseController(cc) with LoggerHelper {
 
@@ -51,7 +50,7 @@ class UpdateRelationshipErrorHandler @Inject()(cc: MessagesControllerComponents,
       case t: MultipleActiveRecordError => handle(t, warn, InternalServerError(tryLater()))
       case t: CitizenNotFound => handle(t, warn, InternalServerError(citizenNotFound()))
       case t: BadFetchRequest => handle(t, warn, InternalServerError(tryLater()))
-      case t: TransferorNotFound => handle(t, warn, Ok(transferorNotFound()))
+      case t: TransferorNotFound => handle(t, warn, Redirect(controllers.routes.TransferorNotFoundController.transferorNotFoundError()))
       case t: RecipientNotFound => handle(t, warn, Ok(recipientNotFound()))
       case t => handle(t, error, InternalServerError(tryLater()))
     }
