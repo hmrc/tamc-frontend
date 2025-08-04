@@ -42,7 +42,7 @@ request: AuthenticatedUserRequest[?])
 @main(
     pageTitle = viewHelpers.formErrorPrefix(recipientForm, messages("title.transfer")),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
+    backLinkHref = Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
 ) {
 
     @errorSummary(recipientForm)

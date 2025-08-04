@@ -42,12 +42,12 @@ import scala.concurrent.Future
 
 class TransferAllowanceControllerTest extends ControllerBaseTest {
 
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-  val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
+  val currentTaxYear: Int                    = time.TaxYear.current.startYear
+  val mockTransferService: TransferService   = mock[TransferService]
+  val mockCachingService: CachingService     = mock[CachingService]
+  val mockTimeService: TimeService           = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
-  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig   = instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -78,27 +78,67 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
+        when(
+          mockCachingService.put[RecipientDetailsFormInput](
+            ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS),
+            ArgumentMatchers.eq(recipientDetails)
+          )(any(), any())
+        )
           .thenReturn(Future.successful(recipientDetails))
-        val result = controller.transferAction()(request)
+        val result                                      = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
     "redirect the user" when {
       "a valid form is submitted" in {
+
+        val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
+
         val recipientDetails: RecipientDetailsFormInput =
-          RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-          "name"      -> "Test",
-          "last-name" -> "User",
-          "gender"    -> "M",
-          "nino"      -> Ninos.nino2
+          RecipientDetailsFormInput(
+            "Test",
+            "User",
+            Gender("M"),
+            Nino(Ninos.nino2)
+          )
+
+        val request = FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody(
+            "name"      -> "Test",
+            "last-name" -> "User",
+            "gender"    -> "M",
+            "nino"      -> Ninos.nino2
+          )
+
+        val registrationFormInput: RegistrationFormInput =
+          RegistrationFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2), dateOfMarriageInput.dateOfMarriage)
+
+        when(
+          mockCachingService.put[RecipientDetailsFormInput](
+            ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS),
+            ArgumentMatchers.eq(recipientDetails)
+          )(any(), any())
         )
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(Future.successful(recipientDetails))
+
+        when(mockCachingService.get[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE))(any()))
+          .thenReturn(Future.successful(Some(dateOfMarriageInput)))
+
+        when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
+          .thenReturn(Future.successful(recipientDetails))
+
+        when(
+          mockTransferService.isRecipientEligible(
+            ArgumentMatchers.eq(Nino(Ninos.nino1)),
+            ArgumentMatchers.eq(registrationFormInput)
+          )(any(), any(), any())
+        )
+          .thenReturn(Future.successful(true))
+
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
       }
     }
   }
