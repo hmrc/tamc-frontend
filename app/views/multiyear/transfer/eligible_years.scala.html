@@ -19,96 +19,48 @@
 @import config.ApplicationConfig
 @import java.text.NumberFormat
 @import models.auth.AuthenticatedUserRequest
-@import includes.{H1, H2, H3, P, Link, Button, InputRadios, ErrorSummary}
+@import includes.{H1, P, Link, Button}
 
 @import views.Main
 
 @this(
     main: Main,
-    errorSummary: ErrorSummary,
+    form: FormWithCSRF,
     applicationConfig: ApplicationConfig,
-    formCSRF: FormWithCSRF,
     languageUtilsImpl: LanguageUtilsImpl,
     h1: H1,
-    h2: H2,
-    h3: H3,
     p: P,
     link: Link,
     viewHelpers: utils.ViewHelpers,
-    inputRadios: InputRadios,
     button: Button
 )
 
 @(
-    form: Form[models.CurrentYearInput],
-    historicYearsAvailable: Boolean,
     recipientName: String,
-    dom: Option[java.time.LocalDate],
     cy: Option[java.time.LocalDate]
 )(
     implicit messages: Messages,
     request: AuthenticatedUserRequest[?]
 )
-@backLink = @{
-    if(historicYearsAvailable) {
-        controllers.transfer.routes.ChooseYearsController.chooseYears().url
-    } else {
-        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
-    }
-}
 
 @main(
-    pageTitle = viewHelpers.formErrorPrefix(form, Messages("title.eligible-years")),
+    pageTitle = Messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy.get)),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(backLink)
+    backLinkHref = Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
 ){
+    @h1(Messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy.get)))
 
-@errorSummary(form, Some("applyForCurrentYear-true"))
+    @p(HtmlContent(Messages("pages.eligibleyear.p1", recipientName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT()))))
 
-    @h1("title.eligible-years")
+    @p(HtmlContent(Messages("pages.eligibleyear.p2")))
 
-    @p(HtmlContent(Messages("pages.eligibleyear.toldus",recipientName) + s""" <span id="marriageDate">${languageUtilsImpl().ukDateTransformer(dom.get)}.</span>"""))
-
-    @h2(Messages("pages.eligibleyear.thisyear1") + " " + Messages("pages.eligibleyear.thisyear2",languageUtilsImpl().ukDateTransformer(cy.get)))
-
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@Html(Messages("pages.eligibleyear.li1",recipientName,
-            NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT())))
-        </li>
-        <li>@Html(Messages("pages.eligibleyear.li2",languageUtilsImpl().formPossessive(recipientName)))
-        </li>
-        <li>@Html(Messages("pages.eligibleyear.li3",recipientName)) 
-            @link(  link = "https://www.gov.uk/marriage-allowance-guide/if-your-circumstances-change", 
-                    messageKey = Messages("pages.eligibleyear.li3.link.text"),
-                    attrTarget = true,
-                    inParagraph = true)
-        </li>
+    <ul class="govuk-list govuk-list--bullet" id="renewal-conditions">
+        <li>@Html(Messages("pages.eligibleyear.li1",recipientName))</li>
+        <li>@Html(Messages("pages.eligibleyear.li2"))</li>
     </ul>
 
-    @formCSRF(action = transfer.routes.EligibleYearsController.eligibleYearsAction(), args = (Symbol("id") -> "current-year-form")) {
-    <div id="apply-For-CurrentYear">
-        @h3("pages.eligibleyear.doyou.want")
+    @form(action = transfer.routes.EligibleYearsController.eligibleYearsAction(), args = (Symbol("id") -> "eligible-year")) {
+        @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:currentyear_continue"))
+    }
 
-        @inputRadios(
-            form = form,
-            legend = "pages.eligibleyear.doyou.want",
-            id = Some("applyForCurrentYear"),
-            name = "applyForCurrentYear",
-            items = Seq(RadioItem(
-                            content = Text(messages("radio.yes")),
-                            value = Some("true"),
-                            id = Some("applyForCurrentYear-true")
-                        ), RadioItem(
-                            content = Text(messages("radio.no")),
-                            value = Some("false"),
-                            id = Some("applyForCurrentYear-false")
-                        )).map(item => item.copy(checked = form.value.isDefined && form.value == item.value)),
-            fieldSetAttrs = Map("data-inline-error" -> "current-year-error"),
-            legendAsHeading = false,
-            legendClasses = "govuk-visually-hidden"
-        )
-    </div>
-
-    @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:currentyear_continue"))
-}
 }

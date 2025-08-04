@@ -554,6 +554,15 @@ pages.eligibleyear.doyou.want=A ydych am wneud cais ar gyfer y flwyddyn dreth br
 pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
 
 #********************************************************************************
+# eligible year page NEW
+#********************************************************************************
+title.eligible-years-new=Rydych yn gwneud cais ar gyfer y flwyddyn dreth bresennol ymlaen, o {0}
+pages.eligibleyear.p1=Bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn.
+pages.eligibleyear.p2=Mae Lwfans Priodasol yn adnewyddu pob blwyddyn oni bai bod y canlynol yn wir:
+pages.eligibleyear.li1.new=rydych chi neu {0} yn ei ganslo
+pages.eligibleyear.li2.new=nid ydych yn gymwys mwyach
+
+#********************************************************************************
 # Apply by post page
 #********************************************************************************
 pages.apply-by-post.paragraph=Mae’ch cais yn cynnwys blwyddyn dreth flaenorol. Ni allwch wneud cais ar gyfer blynyddoedd treth blaenorol ar-lein.

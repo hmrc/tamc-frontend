@@ -137,7 +137,7 @@ title.application.pattern=Marriage Allowance application - GOV.UK
 title.dateOfBirth=Were you and your partner born after 5 April 1935?
 title.choose-years=Choose the years you want to apply for
 title.apply-by-post=You must apply by post
-title.eligible-years=Apply for the current tax year
+title.eligible-years=You are applying for the current tax year onwards, from {0}
 title.do-not-apply-current-tax-year=You don''t want to apply for the current tax year onwards
 title.extra-years=Apply for earlier tax years
 title.confirm-extra-years=Confirm you want to apply for the {0} tax year
@@ -542,15 +542,10 @@ pages.chooseYears.error.invalid=Select which tax years you want to apply for
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-pages.eligibleyear.toldus=You have told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
-pages.eligibleyear.thisyear1=This current tax year
-pages.eligibleyear.thisyear2={0} onwards
-pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
-pages.eligibleyear.li2=we will adjust {0} tax code to include this extra allowance
-pages.eligibleyear.li3=it will automatically renew every year until you or {0} cancel it or are
-pages.eligibleyear.li3.link.text=no longer eligible
-pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
-pages.eligibleyear.notice=You can apply for earlier years if you continue.
+pages.eligibleyear.p1={0} will pay up to £{1} less tax each year
+pages.eligibleyear.p2=Marriage Allowance renews each year unless:
+pages.eligibleyear.li1=you or {0} cancel it
+pages.eligibleyear.li2=you are no longer eligible
 
 #********************************************************************************
 # Apply by post page

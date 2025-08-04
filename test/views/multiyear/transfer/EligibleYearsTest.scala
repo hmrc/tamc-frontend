@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,81 +16,72 @@
 
 package views.multiyear.transfer
 
-import utils.{BaseTest, NinoGenerator}
-import views.html.multiyear.transfer.eligible_years
-import forms.CurrentYearForm
-import models.CurrentYearInput
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
-import play.api.data.Form
-import play.api.mvc.AnyContentAsEmpty
+import org.jsoup.nodes.Document
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContent, AnyContentAsEmpty, Request}
 import play.api.test.FakeRequest
+import play.i18n.MessagesApi
 import uk.gov.hmrc.domain.Nino
+import utils.{BaseTest, NinoGenerator}
+import views.helpers.LanguageUtilsImpl
+import views.html.multiyear.transfer.eligible_years
 
 import java.time.LocalDate
 
 class EligibleYearsTest extends BaseTest with NinoGenerator {
 
-  val nino: String = generateNino().nino
-  val eligibleYears: eligible_years = instanceOf[eligible_years]
-  val eligibleYearsForm: Form[CurrentYearInput] = CurrentYearForm.currentYearForm()
-  implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  val nino: String                                                       = generateNino().nino
+  lazy val recipient: String                                             = "firstName"
+  val eligibleYears: eligible_years                                      = instanceOf[eligible_years]
+  implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] =
+    AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
+  override implicit lazy val messages: Messages                          =
+    instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  val languageUtilsImpl: LanguageUtilsImpl                               = instanceOf[LanguageUtilsImpl]
 
+  implicit val doc: Document = Jsoup.parse(eligibleYears(recipient, Some(LocalDate.now)).toString())
+
+  val currentTaxYearWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(LocalDate.now())
+  val currentTaxYear: String         = currentTaxYearWithNBSP.replace("\u00A0", " ")
 
   "EligibleYears" should {
-    "return correct title on the lower earner page" in {
-
-      val document = Jsoup.parse(eligibleYears(eligibleYearsForm, true, "testName", Some(LocalDate.now), Some(LocalDate.now)).toString)
-      val title = document.getElementsByTag("main").toString
-      val expected = messages("title.eligible-years")
+    "return correct title" in {
+      val title    = doc.title()
+      val expected =
+        s"You are applying for the current tax year onwards, from $currentTaxYear - Marriage Allowance application - GOV.UK"
 
       title should include(expected)
     }
 
-    "display 'told us you married or formed a civil partnership' content" in {
-
-      val document = Jsoup.parse(eligibleYears(eligibleYearsForm, true, "testName", Some(LocalDate.now), Some(LocalDate.now)).toString)
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.eligibleyear.toldus")
-
-      paragraphTag should include(expected)
-
+    "display correct heading" in {
+      doc
+        .getElementsByTag("h1")
+        .text() shouldBe s"You are applying for the current tax year onwards, from $currentTaxYear"
     }
 
-    "display 'This current tax year' content" in {
-
-      val document = Jsoup.parse(eligibleYears(eligibleYearsForm, true, "testName", Some(LocalDate.now), Some(LocalDate.now)).toString)
-      val paragraphTag = document.getElementsByTag("h2").toString
-      val expectedThisYearOne = messages("pages.eligibleyear.thisyear1")
-      val expectedThisYearTwo = messages("pages.eligibleyear.thisyear2", LocalDate.now.toString)
-
-      paragraphTag should include(expectedThisYearOne)
-      paragraphTag should include(expectedThisYearTwo)
-
+    "display correct text" in {
+      doc.getElementsByTag("p").eachText().toArray shouldBe Array(
+        s"$recipient will pay up to £252 less tax each year",
+        "Marriage Allowance renews each year unless:",
+        "Beta This is a new service – your feedback will help us to improve it."
+      )
     }
 
-    "display 'automatically renew every year' content" in {
+    "display correct bullet list content" in {
+      val bulletList = doc.select("#renewal-conditions > li")
+      val listItem1  = s"you or $recipient cancel it"
+      val listItem2  = "you are no longer eligible"
 
-      val document = Jsoup.parse(eligibleYears(eligibleYearsForm, true, "testName", Some(LocalDate.now), Some(LocalDate.now)).toString)
-      val paragraphTag = document.getElementsByTag("Html").toString
-      val expected = messages("pages.eligibleyear.li3")
-
-      paragraphTag should include(expected)
-
+      bulletList.get(0).text() should include(listItem1)
+      bulletList.get(1).text() should include(listItem2)
     }
 
-    "display will pay up to £ less tax each year content" in {
-
-      val document = Jsoup.parse(eligibleYears(eligibleYearsForm, true, "testName", Some(LocalDate.now), Some(LocalDate.now)).toString)
-      val paragraphTag = document.getElementsByTag("Html").toString
-      val expectedpayLessTax = messages("pages.eligibleyear.li1")
-      val expectedAutomaticallyRenewEachYear = messages("pages.eligibleyear.li2")
-
-      paragraphTag should include(expectedpayLessTax)
-      paragraphTag should include(expectedAutomaticallyRenewEachYear)
-
+    "display continue button" in {
+      doc.getElementsByClass("govuk-button").text() shouldBe "Continue"
     }
+
   }
-
 
 }
