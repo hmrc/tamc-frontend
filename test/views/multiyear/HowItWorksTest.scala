@@ -107,13 +107,13 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
     "display correct calculate section" in {
 
       val heading = "Calculate how much you could benefit"
-      val line1 = "Use the calculator to see how much you could save in the current tax year. This does not form part of the application."
+      val line1 = "Use the Marriage Allowance calculator to see how much you could save in the current tax year. This does not form part of the application."
 
       checkTextInElement(heading, Selectors.nthSubheading(15))
       checkTextInElement(line1, Selectors.nthParagraph(16))
 
       val calculatorLink = selectFirst(Selectors.nthInlineLink(16))
-      calculatorLink.text.shouldBe("Use the calculator")
+      calculatorLink.text.shouldBe("Use the Marriage Allowance calculator")
       calculatorLink.attr("href") shouldBe "/marriage-allowance-application/benefit-calculator-pta"
     }
 
