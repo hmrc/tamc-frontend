@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
 
       val startNow = selectFirst(Selectors.startNow)
       startNow.text shouldBe "Apply now"
-      startNow.attr("href") shouldBe "/marriage-allowance-application/transfer-allowance"
+      startNow.attr("href") shouldBe "/marriage-allowance-application/date-of-marriage"
     }
   }
 }

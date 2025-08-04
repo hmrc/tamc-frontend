@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ class HowItWorksController @Inject()(
 
   def howItWorks: Action[AnyContent] = unauthenticatedAction {
     implicit request => request.headers.get("Referer") match {
-      case Some(referrer) if referrer.contains(appConfig.gdsStartUrl) => Redirect (controllers.transfer.routes.TransferAllowanceController.transfer())
-      case Some(referrer) if referrer.contains(appConfig.gdsContinueUrl) => Redirect (controllers.transfer.routes.TransferAllowanceController.transfer())
+      case Some(referrer) if referrer.contains(appConfig.gdsStartUrl) => Redirect (controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())
+      case Some(referrer) if referrer.contains(appConfig.gdsContinueUrl) => Redirect (controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())
       case _ => Ok(howItWorksView())
     }
   }

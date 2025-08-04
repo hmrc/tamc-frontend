@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class ChooseYearsTest extends BaseTest with NinoGenerator {
   val dateOfMarriage: String = dateOfMarriageWithNBSP.replace("\u00A0", " ")
 
   val currentTaxYearWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(LocalDate.now())
-  val currentTaxYear: String = dateOfMarriageWithNBSP.replace("\u00A0", " ")
+  val currentTaxYear: String = currentTaxYearWithNBSP.replace("\u00A0", " ")
 
   "chooseYears" should {
     "display correct title" in {
