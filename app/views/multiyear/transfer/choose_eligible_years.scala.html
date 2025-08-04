@@ -76,7 +76,7 @@
         }
 
       val checkboxesArgs = Checkboxes(
-        name = "value",
+        name = "value[]",
         fieldset = Some(Fieldset(
         legend = Some(Legend(
           content = Text(messages("title.choose-years")),
@@ -84,9 +84,7 @@
           isPageHeading = false
         ))
       )),
-      hint = Some(Hint(
-        content = Text(messages("pages.form.field-helper.chooseYears")),
-      )),
+      hint = Some(Hint(content = Text(messages("pages.form.field-helper.chooseYears")))),
       items = checkboxItems,
       attributes = Map("data-inline-error" -> "current-year-error"),
       errorMessage = form.error("value").map(e => ErrorMessage(content = Text(messages("pages.chooseYears.error.required"))))
