@@ -18,7 +18,7 @@ package controllers.transfer
 
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
-import models._
+import models.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{CachingService, TransferService}
 import utils.{LoggerHelper, TransferErrorHandler}
@@ -36,10 +36,13 @@ class FinishedController @Inject()(
                                   )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
   def finished: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getFinishedData(request.nino) map {
-      case NotificationRecord(email) =>
-      cachingService.clear()
-      Ok(finishedV(transferorEmail = email))
-    } recover errorHandler.handleError
+    registrationService.getRecipientDetailsFormData().flatMap { details =>
+      registrationService.getFinishedData(request.nino).flatMap {
+        case NotificationRecord(email) =>
+          cachingService.clear().map { _ =>
+            Ok(finishedV(transferorEmail = email, name = details.name))
+          }
+      }.recover(errorHandler.handleError)
+    }.recover(errorHandler.handleError)
   }
 }

@@ -29,11 +29,12 @@ class FinishedTest extends BaseTest with NinoGenerator {
   lazy val finished = instanceOf[finished]
   implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
   val email = EmailAddress("test@test.com")
+  val name = "Alex"
 
   "Finished" should {
     "return the correct title" in {
 
-      val document = Jsoup.parse(finished(email).toString())
+      val document = Jsoup.parse(finished(email, name).toString())
       val title = document.title()
       val expected = messages("title.finished") + " - " + messages("title.application.pattern")
 
@@ -42,7 +43,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
     "display you will receive an email content" in {
 
-      val document = Jsoup.parse(finished(email).toString())
+      val document = Jsoup.parse(finished(email, name).toString())
       val paragraphTag = document.getElementsByTag("p").toString
       val expectedYouWillReceiveAnEmail = messages("pages.finished.para1.email1")
       val expectedFromEmail = messages("pages.finished.para1.email2")
@@ -54,7 +55,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
     "display check your junk content" in {
 
-      val document = Jsoup.parse(finished(email).toString())
+      val document = Jsoup.parse(finished(email, name).toString())
       val paragraphTag = document.getElementsByTag("p").toString
       val expected = messages("pages.finished.para2")
 
@@ -64,7 +65,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
     "display the correct What happens next h2" in {
 
-      val document = Jsoup.parse(finished(email).toString())
+      val document = Jsoup.parse(finished(email, name).toString())
       val paragraphTag = document.getElementsByTag("h2").toString
       val expected = messages("pages.finished.now")
 
@@ -74,7 +75,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
     "display the correct HMRC will now process your Marriage Allowance content" in {
 
-      val document = Jsoup.parse(finished(email).toString())
+      val document = Jsoup.parse(finished(email, name).toString())
       val paragraphTag = document.getElementsByTag("p").toString
       val expected = messages("pages.finished.para4")
 
@@ -84,16 +85,16 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
     "display ou can check your current Marriage Allowance content" in {
 
-      val document = Jsoup.parse(finished(email).toString())
+      val document = Jsoup.parse(finished(email, name).toString())
       val paragraphTag = document.getElementsByTag("p").toString
 
-      val expectedYouCan = messages("pages.finished.check-link-para1")
-      val expectedCheckYourMarriageAllowance = messages("pages.finished.check-link.text")
-      val expectedAtAnyTime = messages("pages.finished.check-link-para2")
+      val expectedHMRCWillReview = messages("pages.finished.para4")
+      val expectedName = messages(s"pages.finished.para4.2", name)
+      val expectedWillRenewUnless = messages("pages.finished.para5")
 
-      paragraphTag should include(expectedYouCan)
-      paragraphTag should include(expectedCheckYourMarriageAllowance)
-      paragraphTag should include(expectedAtAnyTime)
+      paragraphTag should include(expectedHMRCWillReview)
+      paragraphTag should include(expectedName)
+      paragraphTag should include(expectedWillRenewUnless)
 
     }
 

@@ -65,11 +65,11 @@ class ConfirmTest extends BaseTest with NinoGenerator {
       h2Tag should include(expected)
     }
 
-    "display Your Marriage Allowance details h2" in {
+    "display Application details h2" in {
 
       val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "firstName", "lastName", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val h2Tag = document.getElementsByTag("h2").toString
-      val expected = messages("pages.confirm.marriage.details")
+      val expected = messages("pages.confirm.application.details")
 
       h2Tag should include(expected)
     }

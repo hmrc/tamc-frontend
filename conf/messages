@@ -221,13 +221,13 @@ eligibility.check.header=Your eligibility
 pages.finished.complete=Marriage Allowance application complete
 pages.finished.para1.email1=A confirmation email will be sent to {0}
 pages.finished.para1.email2=from noreply@tax.service.gov.uk within 24 hours.
-pages.finished.para2=If you cannot find it in your inbox, please check your spam or junk folder.
+pages.finished.para2=Marriage Allowance renews each year unless you or {0} cancel it, or you are no longer eligible.If you cannot find it in your inbox, please check your spam or junk folder.
 pages.finished.now=What happens next
-pages.finished.para4=HMRC will now process your Marriage Allowance application. Please check the email we have sent you for full details on how you will receive Marriage Allowance.
-pages.finished.back-pta=Back to Personal Tax Account
-pages.finished.check-link-para1=You can
-pages.finished.check-link-para2=at any time through your personal tax account.
-pages.finished.check-link.text=check your current Marriage Allowance and make changes
+pages.finished.para4=HMRC will review your application. If you are eligible, HMRC will change your and {0}’s tax codes to save
+pages.finished.para4.2={0} up to £252.
+pages.finished.para5=Marriage Allowance renews each year unless you or {0} cancel it, or you are no longer eligible.
+pages.finished.para6=Your confirmation email has full details on how you will receive Marriage Allowance.
+pages.finished.back-pta=Return to Personal Tax Account
 pages.finished.hidden-warning=Warning
 
 #********************************************************************************
@@ -586,11 +586,10 @@ pages.confirm.higher.earner=Your partner’s details (high income)
 pages.confirm.years.applied=Years applied for
 pages.confirm.years.applied.desc=You are applying for Marriage Allowance for the current tax year onwards, from {0}.
 pages.confirm.current.tax.aria-label=tax year: {0}
-pages.confirm.current.tax.desc=HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
 pages.confirm.previous.tax=Previous tax year: <span class=nowrap>{0}</span> to <span class=nowrap>{1}</span>
 pages.confirm.previous.tax.desc=HMRC will check the details you have supplied before sending {0} a cheque by post for up to £{1}.
 pages.confirm.warning=Check the details you have entered and make sure they are correct.
-pages.confirm.button=Confirm your application
+pages.confirm.button=Send your application
 pages.confirm.application.details=Application details
 pages.confirm.application.now=Now confirm your application
 pages.confirm.application.now.p=By sending your application you are confirming that, to the best of your knowledge, the details you are providing are correct.
