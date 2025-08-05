@@ -127,7 +127,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
 
         val result = controller.history()(request)
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.routes.TransferorNotFoundController.transferorNotFoundError().url)
+        redirectLocation(result) shouldBe Some(controllers.errors.routes.TransferorNotFoundController.transferorNotFoundError().url)
       }
 
       "a BadFetchRequest error is returned " in {
