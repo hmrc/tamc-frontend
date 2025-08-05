@@ -15,29 +15,38 @@
  *@
 
 @import models.auth.BaseUserRequest
-@import includes.{P, Button}
+@import includes.{H1, P, Link}
 
 @import views.Main
 
 @this(
-main: Main,
-p: P,
-button: Button
+    main: Main,
+    h1: H1,
+    p: P,
+    link: Link
 )
 
-@()(implicit messages: Messages,
-request: BaseUserRequest[?])
+@()(
+    implicit messages: Messages,
+    request: BaseUserRequest[?]
+)
 
 @main(
-pageTitle = Messages("title.error"),
-disableBackLink = true
-) {
+    pageTitle = Messages("title.error"),
+    disableBackLink = true
+){
+    @h1("recipient.not.found", elmId = Some("error"))
 
-    @p(HtmlContent(Messages("recipient.not.found.para1")), elmId=Some("error"))
+    @p(HtmlContent(recipientNotFoundContent))
 
-    @p(HtmlContent(Messages("recipient.not.found.para2")))
+}
 
-    @p(HtmlContent(
-    button(msg = "generic.back", href = Some(controllers.UpdateRelationship.routes.HistoryController.history().url))
-    ), elmId = Some("get-started"))
+@recipientNotFoundContent = {
+    @link(
+        link = controllers.transfer.routes.TransferAllowanceController.transfer().url,
+        messageKey = "recipient.not.found.para1.link-text",
+        inParagraph = true,
+        id=Some("partner-details-link")
+    )
+    @messages("recipient.not.found.para1")
 }
