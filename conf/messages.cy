@@ -249,6 +249,7 @@ pages.form.field-helper.nino-where=Ble i ddod o hyd i’w rif Yswiriant Gwladol
 pages.form.field-helper.nino.expand=cliciwch i ehangu
 pages.form.field-helper.nino-found=Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.
 pages.form.field-helper.dom=Er enghraifft, 31 3 1980
+pages.form.field-helper.chooseYears=Dewiswch bob un sy’n berthnasol
 pages.form.field.your-confirmation=E-bost i gadarnhau
 pages.form.field.yourDetails=Byddwn yn e-bostio cadarnhad o’ch cais am Lwfans Priodasol cyn pen 24 awr. Ni fyddwn yn rhannu’ch cyfeiriad e-bost gydag unrhyw un arall.
 pages.form.field.transferor-email=Eich cyfeiriad e-bost
