@@ -22,17 +22,15 @@ import forms.RecipientDetailsForm
 import models.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService.*
-import services.{CachingService, TimeService, TransferService}
-import utils.{LoggerHelper, TransferErrorHandler}
+import services.{CachingService, TimeService}
+import utils.LoggerHelper
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferAllowanceController @Inject() (
-                                              errorHandler: TransferErrorHandler,
                                               authenticate: StandardAuthJourney,
                                               cachingService: CachingService,
-                                              registrationService: TransferService,
                                               timeService: TimeService,
                                               cc: MessagesControllerComponents,
                                               transferV: views.html.multiyear.transfer.transfer,
@@ -54,22 +52,9 @@ class TransferAllowanceController @Inject() (
       .fold(
         formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
         recipientData =>
-          for {
-            _ <- cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData)
-            marriage <- cachingService.get[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE)
-            recipient <- registrationService.getRecipientDetailsFormData()
-
-            dataToSend = new RegistrationFormInput(
-              recipient.name,
-              recipient.lastName,
-              recipient.gender,
-              recipient.nino,
-              marriage.get.dateOfMarriage
-            )
-            _ <- registrationService.isRecipientEligible(request.nino, dataToSend)
-          } yield {
-            Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
+          cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
+            Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())
           }
-      ) recover errorHandler.handleError
+      )
   }
 }

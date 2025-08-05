@@ -19,10 +19,10 @@ package controllers.transfer
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.DateOfMarriageForm
-import models.DateOfMarriageFormInput
+import models.{DateOfMarriageFormInput, RecipientDetailsFormInput, RegistrationFormInput}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.CacheService._
-import services.{CachingService, TimeService}
+import services.CacheService.*
+import services.{CachingService, TimeService, TransferService}
 import uk.gov.hmrc.time.CurrentTaxYear
 import utils.{LoggerHelper, TransferErrorHandler}
 
@@ -30,15 +30,19 @@ import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DateOfMarriageController @Inject()(
-                                          errorHandler: TransferErrorHandler,
-                                          authenticate: StandardAuthJourney,
-                                          cachingService: CachingService,
-                                          timeService: TimeService,
-                                          cc: MessagesControllerComponents,
-                                          dateOfMarriageV: views.html.date_of_marriage,
-                                          dateOfMarriageForm: DateOfMarriageForm)
-                                        (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper with CurrentTaxYear {
+class DateOfMarriageController @Inject() (
+                                            errorHandler: TransferErrorHandler,
+                                            authenticate: StandardAuthJourney,
+                                            cachingService: CachingService,
+                                            registrationService: TransferService,
+                                            timeService: TimeService,
+                                            cc: MessagesControllerComponents,
+                                            dateOfMarriageV: views.html.date_of_marriage,
+                                            dateOfMarriageForm: DateOfMarriageForm
+                                          )(implicit ec: ExecutionContext)
+  extends BaseController(cc)
+    with LoggerHelper
+    with CurrentTaxYear {
 
   override def now: () => LocalDate = () => LocalDate.now()
 
@@ -46,17 +50,26 @@ class DateOfMarriageController @Inject()(
     Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
   }
 
-  def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate).bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
-      marriageData => {
-        cachingService.put[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE, marriageData)
-        if (current.contains(marriageData.dateOfMarriage))
-          Future.successful(Redirect(controllers.transfer.routes.TransferAllowanceController.transfer()))
-        else
-          Future.successful(Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears()))
-      }
-    ) recover errorHandler.handleError
+  def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
+    implicit request =>
+      dateOfMarriageForm
+        .dateOfMarriageForm(today = timeService.getCurrentDate)
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
+          marriageData => {
+            cachingService.put[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE, marriageData)
+            registrationService.getRecipientDetailsFormData() flatMap {
+              case RecipientDetailsFormInput(name, lastName, gender, nino) =>
+                val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)
+                registrationService.isRecipientEligible(request.nino, dataToSend) map { eligible =>
+                  if (eligible && current.contains(dataToSend.dateOfMarriage))
+                    Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
+                  else
+                    Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
+                }
+            }
+          }
+        ) recover errorHandler.handleError
   }
-
 }

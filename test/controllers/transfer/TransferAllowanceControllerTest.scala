@@ -30,12 +30,12 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import services.CacheService.*
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
-import services.CacheService.*
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -91,17 +91,9 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
     }
     "redirect the user" when {
       "a valid form is submitted" in {
-
-        val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
-
         val recipientDetails: RecipientDetailsFormInput =
-          RecipientDetailsFormInput(
-            "Test",
-            "User",
-            Gender("M"),
-            Nino(Ninos.nino2)
-          )
-
+          RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
+          
         val request = FakeRequest()
           .withMethod("POST")
           .withFormUrlEncodedBody(
@@ -110,35 +102,17 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
             "gender"    -> "M",
             "nino"      -> Ninos.nino2
           )
-
-        val registrationFormInput: RegistrationFormInput =
-          RegistrationFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2), dateOfMarriageInput.dateOfMarriage)
-
-        when(
-          mockCachingService.put[RecipientDetailsFormInput](
-            ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS),
-            ArgumentMatchers.eq(recipientDetails)
-          )(any(), any())
-        )
+        
+        when(mockCachingService.put[RecipientDetailsFormInput]
+          (ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS),
+            ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(Future.successful(recipientDetails))
-
-        when(mockCachingService.get[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE))(any()))
-          .thenReturn(Future.successful(Some(dateOfMarriageInput)))
-
-        when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
-          .thenReturn(Future.successful(recipientDetails))
-
-        when(
-          mockTransferService.isRecipientEligible(
-            ArgumentMatchers.eq(Nino(Ninos.nino1)),
-            ArgumentMatchers.eq(registrationFormInput)
-          )(any(), any(), any())
-        )
-          .thenReturn(Future.successful(true))
-
+        
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
+        )
+
       }
     }
   }

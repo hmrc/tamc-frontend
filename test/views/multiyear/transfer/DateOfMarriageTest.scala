@@ -82,7 +82,7 @@ class DateOfMarriageTest extends BaseTest with NinoGenerator {
       error.size() shouldBe 1
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("dateOfMarriage-error").text shouldBe s"Error: The year must be a number between 1900 and ${localDate.getYear}"
-      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.routes.HowItWorksController.howItWorks().url
+      document.getElementsByClass("govuk-back-link").attr("href") shouldBe controllers.transfer.routes.TransferAllowanceController.transfer().url
     }
 
     "display form error message (date of marriage is after today’s date)" in {
