@@ -47,7 +47,8 @@ class HowItWorksControllerTest extends ControllerBaseTest {
 
       val result = await(howItWorksController.howItWorks()(request))
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)    }
+      redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
+    }
 
     "redirect a currently signing in Govuk user to Transfer Allowance page" in {
       val request: Request[AnyContent] = FakeRequest("GET", "/marriage-allowance-application/how-it-works")
@@ -55,7 +56,8 @@ class HowItWorksControllerTest extends ControllerBaseTest {
 
       val result = await(howItWorksController.howItWorks()(request))
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)    }
+      redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
+    }
   }
 
   "home" should {
