@@ -18,6 +18,7 @@ package controllers
 
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
+import controllers.errors.TransferorNotFoundController
 import helpers.FakePertaxAuthAction
 import play.api.Application
 import play.api.i18n.MessagesApi
