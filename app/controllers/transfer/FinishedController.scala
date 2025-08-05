@@ -39,9 +39,10 @@ class FinishedController @Inject()(
     registrationService.getRecipientDetailsFormData().flatMap { details =>
       registrationService.getFinishedData(request.nino).flatMap {
         case NotificationRecord(email) =>
-          cachingService.clear().map { _ =>
-            Ok(finishedV(transferorEmail = email, name = details.name))
-          }
+            val cache = cachingService.clear()
+            cache.map { _ =>
+              Ok(finishedV(transferorEmail = email, name = details.name))
+            }
       }.recover(errorHandler.handleError)
     }.recover(errorHandler.handleError)
   }

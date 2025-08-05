@@ -25,11 +25,13 @@ import models.auth.AuthenticatedUserRequest
 import org.apache.pekko.util.Timeout
 import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{verify, when}
+import org.mockito.Mockito.when
 import play.api.Application
 import play.api.http.Status.OK
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
+
+import scala.concurrent.ExecutionContext
 import play.api.test.Helpers.contentAsString
 import play.api.test.{FakeRequest, Helpers}
 import services.TransferService
@@ -44,7 +46,6 @@ import scala.language.postfixOps
 class FinishedTest extends BaseTest with NinoGenerator {
 
   lazy val nino: String = generateNino().nino
-  implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
   implicit val duration: Timeout = 20 seconds
 
@@ -59,22 +60,21 @@ class FinishedTest extends BaseTest with NinoGenerator {
 
   val finishedController: FinishedController = app.injector.instanceOf[FinishedController]
 
+  when(mockTransferService.getRecipientDetailsFormData()(any[AuthenticatedUserRequest[?]], any[ExecutionContext]))
+    .thenReturn(Future.successful(RecipientDetailsFormInput("Alex", "Smith", Gender("M"), Nino(nino))))
+
+  when(mockTransferService.getFinishedData(any())(any(), any()))
+    .thenReturn(Future.successful(NotificationRecord(EmailAddress("example@example.com"))))
 
   "Calling non-pta finished page" should {
 
     "successfully authenticate the user and have finished page and content" in {
-      when(mockTransferService.getRecipientDetailsFormData())
-        .thenReturn(Future.successful(RecipientDetailsFormInput("Alex", "Smith", Gender("M"), Nino(nino))))
 
-      when(mockTransferService.getFinishedData(any())(any(), any()))
-        .thenReturn(Future.successful(NotificationRecord(EmailAddress("example@example.com"))))
-      val result = finishedController.finished(FakeRequest())
-
-
+      val result = finishedController.finished()(FakeRequest())
+      
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
-      verify(mockTransferService).getRecipientDetailsFormData()
       document.title() shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
       document.getElementById("govuk-box").text shouldBe "Marriage Allowance application complete"
       document
