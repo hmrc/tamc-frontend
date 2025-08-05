@@ -83,7 +83,7 @@ class ChooseYearsController @Inject()(
                   Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
                 }
               } else {
-                logger.warn(s"Unexpected value returned from cachingService.put: $returnedValue")
+                logger.warn(s"[chooseYearsAction] - Unexpected value returned from cachingService.put: $returnedValue")
                 Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
               }
             }
