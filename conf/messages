@@ -542,7 +542,7 @@ pages.chooseYears.error.invalid=Select which tax years you want to apply for
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-pages.eligibleyear.p1={0} will pay up to £{1} less tax each year
+pages.eligibleyear.p1={0} will pay up to £{1} less tax each year.
 pages.eligibleyear.p2=Marriage Allowance renews each year unless:
 pages.eligibleyear.li1=you or {0} cancel it
 pages.eligibleyear.li2=you are no longer eligible

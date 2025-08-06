@@ -36,6 +36,7 @@
 )
 
 @(
+    historicYearsAvailable: Boolean,
     recipientName: String,
     cy: Option[java.time.LocalDate]
 )(
@@ -43,10 +44,18 @@
     request: AuthenticatedUserRequest[?]
 )
 
+@backLink = @{
+    if(historicYearsAvailable) {
+        controllers.transfer.routes.ChooseYearsController.chooseYears().url
+    } else {
+        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
+    }
+}
+
 @main(
     pageTitle = Messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy.get)),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
+    backLinkHref = Some(backLink)
 ){
     @h1(Messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy.get)))
 

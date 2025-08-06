@@ -44,9 +44,10 @@ class EligibleYearsController @Inject()(
         throw new NoTaxYearsAvailable
       case CurrentAndPreviousYearsEligibility(false, previousYears, _, _) if previousYears.nonEmpty =>
         Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
-      case CurrentAndPreviousYearsEligibility(_, _, registrationInput, _) =>
+      case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
         Ok(
           eligibleYearsV(
+            previousYears.nonEmpty,
             registrationInput.name,
             Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))
           )
