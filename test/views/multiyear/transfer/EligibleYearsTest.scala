@@ -69,7 +69,7 @@ class EligibleYearsTest extends BaseTest with NinoGenerator {
 
     "display correct text" in {
       doc.getElementsByTag("p").eachText().toArray shouldBe Array(
-        s"$recipient will pay up to £$maxBenefit less tax each year",
+        s"$recipient will pay up to £$maxBenefit less tax each year.",
         "Marriage Allowance renews each year unless:",
         "Beta This is a new service – your feedback will help us to improve it."
       )
