@@ -150,7 +150,7 @@ title.no-tax-years=No tax years available
 title.confirm-transferor=Confirm cancellation
 title.confirm-recipient=Confirm removal of a previous claim
 title.confirm-update=Confirm Update
-title.confirm=Check your answers before sending application
+title.confirm=Check your details and confirm
 title.eligibility-criteria=Eligibility Criteria
 title.how-it-works=Apply for Marriage Allowance
 title.other-ways=Other Ways to apply
@@ -206,7 +206,7 @@ max-benefit={0}
 #********************************************************************************
 # Confirmation Message
 #********************************************************************************
-pages.confirm.html.h1=Check your details and confirm the application
+pages.confirm.html.h1=Check your answers before sending your application
 pages.confirm.html.check-details=Check the details you have entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,050 of your Personal Allowance to them.
 
 
