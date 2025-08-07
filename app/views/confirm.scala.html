@@ -108,6 +108,7 @@ data: models.ConfirmationModel
             </dd>
         </div>
     </dl>
+
     @for(taxYear <- data.availableYears) {
         <dl class="govuk-summary-list">
             <div class="govuk-summary-list_row">
@@ -125,12 +126,17 @@ data: models.ConfirmationModel
                         Messages("max-benefit", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)))))
                     </dd>
                 }
-            <dd class="govuk-summary-list_actions">
-                <a id="change-@taxYear.year" href="@transfer.routes.ChooseYearsController.chooseYears()" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
-                <span aria-hidden="true">@Html(messages("generic.change"))</span>
-                <span class="govuk-visually-hidden">@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))</span>
-                </a>
-            </dd>
+                @if(data.dateOfMarriage.dateOfMarriage.isBefore(TaxYear.current.starts)) {
+                <dd class="govuk-summary-list_actions">
+                        <a id="change-@taxYear.year" href="@transfer.routes.ChooseYearsController.chooseYears()" aria-label="@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))">
+                        <span aria-hidden="true">@Html(messages("generic.change"))</span>
+                        <span class="govuk-visually-hidden">@Html(messages("pages.confirm.current.tax.aria-label", languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)))</span>
+                        </a>
+                    </dd>
+                } else {
+                    <dd class="govuk-summary-list_actions">
+                    </dd>
+                }
             </div>
         </dl>
           @h2("pages.confirm.application.now")
