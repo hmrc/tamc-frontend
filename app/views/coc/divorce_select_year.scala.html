@@ -39,7 +39,7 @@ request: AuthenticatedUserRequest[?])
 @main(
     pageTitle = viewHelpers.formErrorPrefix(divorceSelectYearForm, messages("pages.divorce.title")),
     serviceTitle = "tamc.manage") {
-s
+
     @errorSummary(divorceSelectYearForm, Some("dateOfDivorce.day"))
 
     @h1("pages.divorce.title")
