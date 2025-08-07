@@ -67,7 +67,7 @@ class FinishedControllerTest extends ControllerBaseTest with NinoGenerator {
 
   "finished" should {
     "return success" when {
-      "A notification record is returned and cache is called" in {
+      "A notification record is returned" in {
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(Future.successful(notificationRecord))
 

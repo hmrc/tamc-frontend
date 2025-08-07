@@ -55,10 +55,10 @@ request: AuthenticatedUserRequest[?])
 @h2("pages.finished.now")
 
 @p(HtmlContent(
-    messages("pages.finished.para4", {name}) + " " +
-    messages("pages.finished.para4.2", {name}, {NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(TaxYear.current.startYear))})), elmId = Some("paragraph-3"))
+    messages("pages.finished.para4", name) + " " +
+    messages("pages.finished.para4.2", name, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(TaxYear.current.startYear)))), elmId = Some("paragraph-3"))
 
-@p(HtmlContent(messages("pages.finished.para5", {name})), elmId = Some("paragraph-4"))
+@p(HtmlContent(messages("pages.finished.para5", name)), elmId = Some("paragraph-4"))
 
 @p(Text(messages("pages.finished.para6")), elmId = Some("paragraph-5"))
 
