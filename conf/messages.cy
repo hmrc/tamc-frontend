@@ -205,7 +205,7 @@ max-benefit={0}
 #********************************************************************************
 # Confirmation Message
 #********************************************************************************
-pages.confirm.html.h1=Gwirio’ch manylion a chadarnhau’r cais
+pages.confirm.html.h1=Gwiriwch eich atebion cyn anfon eich cais
 pages.confirm.html.check-details=Dylech wirio’r manylion yr ydych wedi’i rhoi, a chadarnhau mai’r unigolyn hwn yw’ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,050 o’ch Lwfans Personol iddo/iddi.
 
 #********************************************************************************
