@@ -17,6 +17,9 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 @import includes.{H2, P, Link}
+@import java.text.NumberFormat
+@import uk.gov.hmrc.time.TaxYear
+
 
 @import views.Main
 
@@ -53,7 +56,7 @@ request: AuthenticatedUserRequest[?])
 
 @p(HtmlContent(
     messages("pages.finished.para4", {name}) + " " +
-    messages("pages.finished.para4.2", {name})), elmId = Some("paragraph-3"))
+    messages("pages.finished.para4.2", {name}, {NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(TaxYear.current.startYear))})), elmId = Some("paragraph-3"))
 
 @p(HtmlContent(messages("pages.finished.para5", {name})), elmId = Some("paragraph-4"))
 
