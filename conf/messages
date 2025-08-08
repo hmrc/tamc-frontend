@@ -586,7 +586,7 @@ pages.confirm.higher.earner=Your partner’s details (high income)
 pages.confirm.years.applied=Years applied for
 pages.confirm.years.applied.desc=You are applying for Marriage Allowance for the current tax year onwards, from {0}.
 pages.confirm.current.tax.aria-label=tax year: {0}
-pages.confirm.previous.tax=Previous tax year: <span class=nowrap>{0}</span> to <span class=nowrap>{1}</span>
+pages.confirm.previous.tax=Previous tax year: {0} to {1}
 pages.confirm.previous.tax.desc=HMRC will check the details you have supplied before sending {0} a cheque by post for up to £{1}.
 pages.confirm.warning=Check the details you have entered and make sure they are correct.
 pages.confirm.button=Send your application

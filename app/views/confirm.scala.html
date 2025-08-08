@@ -120,7 +120,9 @@ data: models.ConfirmationModel
                     </dd>
                 } else {
                     <dt class="govuk-summary-list_key" id="year-@taxYear.year">
-                    @Html(messages("pages.confirm.previous.tax",languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts), languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).finishes)))
+                        @Html(messages("pages.confirm.previous.tax",
+                        s"<span class='nowrap'>${languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).starts)}</span>",
+                        s"<span class='nowrap'>${languageUtilsImpl().ukDateTransformer(TaxYear(taxYear.year).finishes)}</span>"))
                     </dt>
                     <dd class="govuk-summary-list_value" id="outcome-@taxYear.year">@Html(messages("pages.confirm.previous.tax.desc", data.recipientFirstName,
                         Messages("max-benefit", NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(taxYear.year)))))

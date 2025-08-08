@@ -16,27 +16,36 @@
 
 package views
 
+import config.ApplicationConfig
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
+import play.api.i18n.Messages
+import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
+import play.i18n.MessagesApi
 import uk.gov.hmrc.domain.Nino
 import utils.{BaseTest, EmailAddress, NinoGenerator}
 import views.html.finished
 
+import java.text.NumberFormat
+
 class FinishedTest extends BaseTest with NinoGenerator {
 
+  lazy val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
   lazy val nino = generateNino().nino
   lazy val finished = instanceOf[finished]
   implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
-  val email = EmailAddress("test@test.com")
-  val name = "Alex"
+  override implicit lazy val messages: Messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  lazy val email = EmailAddress("test@test.com")
+  lazy val name = "Alex"
+  lazy val maxBenefit = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT())
 
   "Finished" should {
     "return the correct title" in {
 
-      val document = Jsoup.parse(finished(email, name).toString())
+      val document = Jsoup.parse(finished(email, name).toString)
       val title = document.title()
-      val expected = messages("title.finished") + " - " + messages("title.application.pattern")
+      val expected = "Application confirmed - Marriage Allowance application - GOV.UK"
 
       title shouldBe expected
     }
@@ -44,57 +53,57 @@ class FinishedTest extends BaseTest with NinoGenerator {
     "display you will receive an email content" in {
 
       val document = Jsoup.parse(finished(email, name).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expectedYouWillReceiveAnEmail = messages("pages.finished.para1.email1")
-      val expectedFromEmail = messages("pages.finished.para1.email2")
+      val paragraph = document.getElementById("paragraph-1").toString
+      val expectedPart1 = "A confirmation email will be sent to"
+      val expectedEmail = "test@test.com"
+      val expectedPart2 = "from noreply@tax.service.gov.uk within 24 hours"
 
-      paragraphTag should include(expectedYouWillReceiveAnEmail)
-      paragraphTag should include(expectedFromEmail)
+      paragraph should include(expectedPart1)
+      paragraph should include(expectedEmail)
+      paragraph should include(expectedPart2)
 
     }
 
     "display check your junk content" in {
 
       val document = Jsoup.parse(finished(email, name).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.finished.para2")
+      val paragraph = document.getElementById("paragraph-2").toString
+      val expected = "If you cannot find it in your inbox, please check your spam or junk folder."
 
-      paragraphTag should include(expected)
+      paragraph should include(expected)
 
     }
 
     "display the correct What happens next h2" in {
 
-      val document = Jsoup.parse(finished(email, name).toString())
-      val paragraphTag = document.getElementsByTag("h2").toString
-      val expected = messages("pages.finished.now")
 
-      paragraphTag should include(expected)
+      val document = Jsoup.parse(finished(email, name).toString())
+      val paragraph = document.getElementsByTag("h2").toString
+      val expected = "What happens next"
+
+      paragraph should include(expected)
 
     }
 
-    "display the correct HMRC will now process your Marriage Allowance content" in {
+    "display the correct HMRC will now review your Marriage Allowance content" in {
 
       val document = Jsoup.parse(finished(email, name).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
-      val expected = messages("pages.finished.para4")
+      val paragraph = document.getElementById("paragraph-3").toString
+      val expected =
+        s"HMRC will review your application. If you are eligible, HMRC will change your and Alex’s tax codes to save Alex up to £$maxBenefit"
 
-      paragraphTag should include(expected)
+      paragraph should include(expected)
 
     }
 
-    "display ou can check your current Marriage Allowance content" in {
+    "display that Marriage Allowance renews automatically" in {
 
       val document = Jsoup.parse(finished(email, name).toString())
-      val paragraphTag = document.getElementsByTag("p").toString
+      val paragraph = document.getElementById("paragraph-4").toString
 
-      val expectedHMRCWillReview = messages("pages.finished.para4")
-      val expectedName = messages(s"pages.finished.para4.2", name)
-      val expectedWillRenewUnless = messages("pages.finished.para5")
+      val expected = "Marriage Allowance renews each year unless you or Alex cancel it, or you are no longer eligible."
 
-      paragraphTag should include(expectedHMRCWillReview)
-      paragraphTag should include(expectedName)
-      paragraphTag should include(expectedWillRenewUnless)
+      paragraph should include(expected)
 
     }
 
