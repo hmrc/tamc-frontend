@@ -587,7 +587,7 @@ pages.confirm.higher.earner=Manylion eich partner (incwm uchel)
 pages.confirm.years.applied=Blynyddoedd y gwnaethpwyd cais amdanynt
 pages.confirm.years.applied.desc=Rydych yn gwneud cais am Lwfans Priodasol ar gyfer y flwyddyn dreth bresennol ymlaen, o {0}
 pages.confirm.current.tax.aria-label=Newid blwyddyn dreth: {0}
-pages.confirm.previous.tax=Blwyddyn dreth flaenorol: <span class=nowrap>{0}</span> i <span class=nowrap>{1}</span>
+pages.confirm.previous.tax=Blwyddyn dreth flaenorol: {0} i {1}
 pages.confirm.previous.tax.desc=Bydd CThEM yn gwirio’r manylion yr ydych wedi’u rhoi cyn anfon siec at {0} drwy’r post am hyd at £{1}.
 pages.confirm.warning=Gwiriwch y manylion yr ydych wedi’u nodi a gwnewch yn siŵr eu bod yn gywir.
 pages.confirm.button=Anfon eich cais
