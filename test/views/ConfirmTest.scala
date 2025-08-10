@@ -45,11 +45,10 @@ class ConfirmTest extends BaseTest with NinoGenerator {
   lazy val dateOfMarriageForm = DateOfMarriageFormInput(LocalDate.now())
   implicit val request: AuthenticatedUserRequest[?] = AuthenticatedUserRequest(FakeRequest(), None, true, None, Nino(nino))
   override implicit lazy val messages: Messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+  lazy val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
 
   "Confirm" should {
     "return the correct title" in {
-
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val title = document.title()
       val expected = "Check your details and confirm - Marriage Allowance application - GOV.UK"
 
@@ -57,9 +56,6 @@ class ConfirmTest extends BaseTest with NinoGenerator {
     }
 
     "display Your details (low income) h2" in {
-
-      val document =
-        Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val h2Tag: String = document.getElementsByTag("h2").toString
       val expected: String = "Your details (low income)"
 
@@ -67,8 +63,6 @@ class ConfirmTest extends BaseTest with NinoGenerator {
     }
 
     "display Your partner’s details (high income) h2" in {
-
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val h2Tag: String = document.getElementsByTag("h2").toString
       val expected: String = "Your partner’s details (high income)"
 
@@ -76,8 +70,6 @@ class ConfirmTest extends BaseTest with NinoGenerator {
     }
 
     "display Application details h2" in {
-
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val h2Tag: String = document.getElementsByTag("h2").toString
       val expected: String = messages("pages.confirm.application.details")
 
@@ -85,8 +77,6 @@ class ConfirmTest extends BaseTest with NinoGenerator {
     }
 
     "display HMRC will check the details you have supplied content" in {
-
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val paragraph: String = document.getElementById("outcome-2020").toString
       val expected: String = s"HMRC will check the details you have supplied before sending Alex a cheque by post for up to £$maxBenefit."
 
@@ -94,8 +84,6 @@ class ConfirmTest extends BaseTest with NinoGenerator {
     }
 
     "display Date of marriage or civil partnership content" in {
-
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val paragraphTag = document.getElementsByTag("dt").toString
       val expected = "Date of marriage or civil partnership"
 
@@ -103,15 +91,10 @@ class ConfirmTest extends BaseTest with NinoGenerator {
     }
 
     "display Previous tax year content" in {
-
-      val document = Jsoup.parse(confirm(confirmationModel(Some(citizenName), emailAddress, "Alex", "Smith", Nino(nino), listOfTaxYears, dateOfMarriageForm)).toString())
       val paragraphTag = document.getElementById("year-2020").text()
       val expected = "Previous tax year: 6 April 2020 to 5 April 2021"
 
       paragraphTag should include(expected)
     }
-
-
   }
-
 }

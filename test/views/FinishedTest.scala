@@ -39,11 +39,10 @@ class FinishedTest extends BaseTest with NinoGenerator {
   lazy val email = EmailAddress("test@test.com")
   lazy val name = "Alex"
   lazy val maxBenefit = NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT())
+  lazy val document = Jsoup.parse(finished(email, name).toString())
 
   "Finished" should {
     "return the correct title" in {
-
-      val document = Jsoup.parse(finished(email, name).toString)
       val title = document.title()
       val expected = "Application confirmed - Marriage Allowance application - GOV.UK"
 
@@ -51,8 +50,6 @@ class FinishedTest extends BaseTest with NinoGenerator {
     }
 
     "display you will receive an email content" in {
-
-      val document = Jsoup.parse(finished(email, name).toString())
       val paragraph = document.getElementById("paragraph-1").toString
       val expectedPart1 = "A confirmation email will be sent to"
       val expectedEmail = "test@test.com"
@@ -65,8 +62,6 @@ class FinishedTest extends BaseTest with NinoGenerator {
     }
 
     "display check your junk content" in {
-
-      val document = Jsoup.parse(finished(email, name).toString())
       val paragraph = document.getElementById("paragraph-2").toString
       val expected = "If you cannot find it in your inbox, please check your spam or junk folder."
 
@@ -75,9 +70,6 @@ class FinishedTest extends BaseTest with NinoGenerator {
     }
 
     "display the correct What happens next h2" in {
-
-
-      val document = Jsoup.parse(finished(email, name).toString())
       val paragraph = document.getElementsByTag("h2").toString
       val expected = "What happens next"
 
@@ -86,8 +78,6 @@ class FinishedTest extends BaseTest with NinoGenerator {
     }
 
     "display the correct HMRC will now review your Marriage Allowance content" in {
-
-      val document = Jsoup.parse(finished(email, name).toString())
       val paragraph = document.getElementById("paragraph-3").toString
       val expected =
         s"HMRC will review your application. If you are eligible, HMRC will change your and Alex’s tax codes to save Alex up to £$maxBenefit"
@@ -97,10 +87,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
     }
 
     "display that Marriage Allowance renews automatically" in {
-
-      val document = Jsoup.parse(finished(email, name).toString())
       val paragraph = document.getElementById("paragraph-4").toString
-
       val expected = "Marriage Allowance renews each year unless you or Alex cancel it, or you are no longer eligible."
 
       paragraph should include(expected)
