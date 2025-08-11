@@ -50,7 +50,7 @@ class ConfirmTest extends BaseTest with NinoGenerator {
   "Confirm" should {
     "return the correct title" in {
       val title = document.title()
-      val expected = "Check your details and confirm - Marriage Allowance application - GOV.UK"
+      val expected = "Check your answers before sending your application - Marriage Allowance application - GOV.UK"
 
       title shouldBe expected
     }
