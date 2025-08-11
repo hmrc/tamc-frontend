@@ -36,7 +36,7 @@ class NoTransferorFoundTest extends BaseTest {
 
   "Transferor Not Found" should {
     "display the correct title" in {
-      doc.title() shouldBe "Error - Marriage Allowance - GOV.UK"
+      doc.title() shouldBe "Error: We cannot find your Marriage Allowance details - Marriage Allowance - GOV.UK"
     }
 
     "display correct heading" in {
