@@ -227,7 +227,7 @@ pages.finished.para4=HMRC will review your application. If you are eligible, HMR
 pages.finished.para4.2={0} up to £{1}.
 pages.finished.para5=Marriage Allowance renews each year unless you or {0} cancel it, or you are no longer eligible.
 pages.finished.para6=Your confirmation email has full details on how you will receive Marriage Allowance.
-pages.finished.back-pta=Return to Personal Tax Account
+pages.finished.back-pta=Return to personal tax account
 pages.finished.hidden-warning=Warning
 
 #********************************************************************************
