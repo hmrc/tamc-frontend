@@ -17,6 +17,9 @@
 @import config.ApplicationConfig
 @import models.auth.AuthenticatedUserRequest
 @import includes.{H2, P, Link}
+@import java.text.NumberFormat
+@import uk.gov.hmrc.time.TaxYear
+
 
 @import views.Main
 
@@ -28,7 +31,7 @@ h2: H2,
 p: P,
 link: Link)
 
-@(transferorEmail: utils.EmailAddress)(
+@(transferorEmail: utils.EmailAddress, name: String)(
 implicit messages: Messages,
 request: AuthenticatedUserRequest[?])
 
@@ -38,26 +41,34 @@ request: AuthenticatedUserRequest[?])
 ){
 
 @govukPanel(Panel(
-    title = Text(messages("pages.finished.successful")),
+    title = Text(messages("pages.finished.complete")),
     attributes = Map("id" -> "govuk-box")
   ))
 
-@p(Text(messages("pages.finished.para1.email1", transferorEmail) + " " + messages("pages.finished.para1.email2")), elmId=Some("paragraph-1"))
+@p(HtmlContent(
+    messages("pages.finished.para1.email1",
+    <span class="govuk-!-font-weight-bold">{transferorEmail}</span>) + " " +
+    messages("pages.finished.para1.email2")), elmId=Some("paragraph-1"))
 
-@p(Text(messages("pages.finished.para2")), elmId = Some("paragraph-2"))
+@p(HtmlContent(messages("pages.finished.para2", name)), elmId = Some("paragraph-2"))
 
 @h2("pages.finished.now")
 
-@p(Text(messages("pages.finished.para4")), elmId = Some("paragraph-3"))
+@p(HtmlContent(
+    messages("pages.finished.para4", name) + " " +
+    messages("pages.finished.para4.2", name, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT(TaxYear.current.startYear)))), elmId = Some("paragraph-3"))
 
-@p(HtmlContent(messages("pages.finished.check-link-para1") + 
-                link(
-                    link = applicationConfig.ptaFinishedUrl, 
-                    messageKey = "pages.finished.check-link.text",
-                    id = Some("pta-link"),
-                    attrs = Map("data-journey-click" -> "link - click:Marriage Allowance application successful:check your current Marriage Allowance and make changes"),
-                    inParagraph = true
-                ) + messages("pages.finished.check-link-para2")), elmId = Some("paragraph-5")
+@p(HtmlContent(messages("pages.finished.para5", name)), elmId = Some("paragraph-4"))
+
+@p(Text(messages("pages.finished.para6")), elmId = Some("paragraph-5"))
+
+@p(HtmlContent(link(
+        link = applicationConfig.ptaFinishedUrl,
+        messageKey = "pages.finished.back-pta",
+        id = Some("pta-link"),
+        attrs = Map("data-journey-click" -> "link - click:Marriage Allowance application complete:check your current Marriage Allowance and make changes"),
+        inParagraph = false
+     )), elmId = Some("paragraph-5")
 )
 
 }

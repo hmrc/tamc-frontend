@@ -21,6 +21,7 @@ import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
 import models.*
+import models.auth.AuthenticatedUserRequest
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import play.api.Application
@@ -28,18 +29,19 @@ import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.*
-import services.{CachingService, TimeService, TransferService}
+import services.{TimeService, TransferService}
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.time
-import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
+import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction, NinoGenerator}
 
 import java.time.LocalDate
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class FinishedControllerTest extends ControllerBaseTest {
+class FinishedControllerTest extends ControllerBaseTest with NinoGenerator {
 
+  lazy val nino: String = generateNino().nino
   val currentTaxYear: Int = time.TaxYear.current.startYear
   val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
   val mockTimeService: TimeService = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
   val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
@@ -47,7 +49,6 @@ class FinishedControllerTest extends ControllerBaseTest {
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[TransferService].toInstance(mockTransferService),
-      bind[CachingService].toInstance(mockCachingService),
       bind[TimeService].toInstance(mockTimeService),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[MessagesApi].toInstance(stubMessagesApi()),
@@ -61,33 +62,27 @@ class FinishedControllerTest extends ControllerBaseTest {
   when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
+  when(mockTransferService.getRecipientDetailsFormData()(any[AuthenticatedUserRequest[?]], any[ExecutionContext]))
+    .thenReturn(Future.successful(RecipientDetailsFormInput("Alex", "Smith", Gender("M"), Nino(nino))))
+
   "finished" should {
     "return success" when {
-      "A notification record is returned and cache is called" in {
-        reset(mockCachingService)
-        verify(mockCachingService, times(0)).clear()(any())
-
+      "A notification record is returned" in {
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenReturn(Future.successful(notificationRecord))
 
         val result = controller.finished()(request)
         status(result) shouldBe OK
-
-        verify(mockCachingService, times(1)).clear()(any())
       }
     }
 
     "return error" when {
       "error is thrown" in {
-        reset(mockCachingService)
-        verify(mockCachingService, times(0)).clear()(any())
-
         when(mockTransferService.getFinishedData(any())(any(), any()))
           .thenThrow(new IllegalArgumentException("123"))
 
-        controller.finished()(request)
-
-        verify(mockCachingService, times(0)).clear()(any())
+        val result = controller.finished()(request)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
   }
