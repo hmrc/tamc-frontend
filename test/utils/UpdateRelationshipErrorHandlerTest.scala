@@ -64,18 +64,10 @@ class UpdateRelationshipErrorHandlerTest extends ControllerBaseTest with Control
         }
     }
 
-    "return OK" when {
-      "errors.RecipientNotFound has been thrown" in {
-        val result = Future.successful(updateRelationshipErrorHandler.handleError(authRequest)(new RecipientNotFound))
-        status(result) shouldBe OK
-        val doc = Jsoup.parse(contentAsString(result))
-        doc.getElementById("error").text() shouldBe "We were unable to find a HMRC record of your partner."
-      }
-    }
-
     "redirect" when {
       val errors = List(
         (new TransferorNotFound, "/marriage-allowance-application/marriage-allowance-details-missing"),
+        (new RecipientNotFound, "/marriage-allowance-application/partners-details-missing"),
         (new CacheRelationshipAlreadyUpdated, "/marriage-allowance-application/finished-change")
       )
 

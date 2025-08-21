@@ -56,7 +56,8 @@ POST        /confirm-email                       controllers.UpdateRelationship.
 GET         /                                    controllers.HowItWorksController.home()
 GET         /how-it-works                        controllers.HowItWorksController.howItWorks()
 
-GET         /marriage-allowance-details-missing  controllers.TransferorNotFoundController.transferorNotFoundError()
+GET         /marriage-allowance-details-missing  controllers.errors.TransferorNotFoundController.transferorNotFoundError()
+GET         /partners-details-missing            controllers.errors.RecipientNotFoundController.recipientNotFoundError()
 
 #Welsh Translation
 GET         /lang/enGb                           controllers.LanguageController.enGb()

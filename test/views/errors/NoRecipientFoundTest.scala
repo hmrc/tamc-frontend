@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,37 +24,38 @@ import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
 import play.i18n.MessagesApi
 import utils.BaseTest
-import views.html.errors.transferor_not_found
+import views.html.errors.recipient_not_found
 
-class NoTransferorFound extends BaseTest {
+class NoRecipientFoundTest extends BaseTest {
 
-  implicit val request: UserRequest[?]                  = UserRequest(FakeRequest(), None, true, None, false)
-  override implicit lazy val messages: Messages         = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
-  lazy val transferorNotFoundView: transferor_not_found = instanceOf[transferor_not_found]
+  implicit val request: UserRequest[?]                = UserRequest(FakeRequest(), None, true, None, false)
+  override implicit lazy val messages: Messages       = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
+    
+  lazy val recipientNotFoundView: recipient_not_found = instanceOf[recipient_not_found]
 
-  implicit val doc: Document = Jsoup.parse(transferorNotFoundView()(messages, request).toString())
+  implicit val doc: Document = Jsoup.parse(recipientNotFoundView()(messages, request).toString())
 
-  "Transferor Not Found" should {
+  "Recipient Not Found" should {
     "display the correct title" in {
-      doc.title() shouldBe "Error - Marriage Allowance - GOV.UK"
+      doc.title() shouldBe "Error: We cannot find your partner’s HMRC details - Marriage Allowance - GOV.UK"
     }
 
     "display correct heading" in {
-      doc.getElementsByTag("h1").text() shouldBe "We cannot find your Marriage Allowance details"
+      doc.getElementsByTag("h1").text() shouldBe "We cannot find your partner’s HMRC details"
     }
 
     "display correct text" in {
       doc.getElementsByTag("p").eachText().toArray shouldBe Array(
-        "If you need to make a change to your Marriage Allowance, contact HMRC Income Tax general enquiries.",
+        "Check your partner’s information is correct and update your application.",
         "Beta This is a new service – your feedback will help us to improve it."
       )
     }
 
     "display correct link" in {
-      doc.getElementById("income-tax-enquiries-link").text() shouldBe "contact HMRC Income Tax general enquiries."
+      doc.getElementById("partner-details-link").text() shouldBe "Check your partner’s information is correct"
       doc
-        .getElementById("income-tax-enquiries-link")
-        .attr("href")                                        shouldBe "https://www.gov.uk/find-hmrc-contacts/income-tax-enquiries"
+        .getElementById("partner-details-link")
+        .attr("href")                                   shouldBe "/marriage-allowance-application/transfer-allowance"
     }
 
   }

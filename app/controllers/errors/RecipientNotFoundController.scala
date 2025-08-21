@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.errors
 
+import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 
 import javax.inject.Inject
 
-class TransferorNotFoundController @Inject() (
-                                               authenticate: StandardAuthJourney,
-                                               cc: MessagesControllerComponents,
-                                               transferorNotFound: views.html.errors.transferor_not_found
-                                             ) extends BaseController(cc) {
+class RecipientNotFoundController @Inject() (
+                                              authenticate: StandardAuthJourney,
+                                              cc: MessagesControllerComponents,
+                                              recipientNotFound: views.html.errors.recipient_not_found
+                                            ) extends BaseController(cc) {
 
-  def transferorNotFoundError: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
-      Ok(transferorNotFound())
+  def recipientNotFoundError: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
+    Ok(recipientNotFound())
   }
 }

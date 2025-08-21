@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.errors
 
+import controllers.ControllerViewTestHelper
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
