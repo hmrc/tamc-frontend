@@ -23,16 +23,18 @@ import org.scalatest.matchers.must.Matchers.{must, mustBe}
 
 class ChooseYearFormTest extends BaseTest {
 
-  val form: Form[String] = new ChooseYearForm().apply()
+  val form: Form[Seq[String]] = new ChooseYearForm().apply()
 
   "ChooseYearForm" should {
-    "bind a valid option" in {
-      ApplyForEligibleYears.values.foreach { validOption =>
-        val data      = Map("value" -> validOption.toString)
-        val boundForm = form.bind(data)
-        boundForm.errors mustBe empty
-        boundForm.value mustBe Some(validOption.toString)
-      }
+    "bind all valid options" in {
+      val allOptions = ApplyForEligibleYears.values.map(_.toString)
+      val data: Map[String, String] = allOptions.zipWithIndex.map {
+        case (value, index) => s"value[$index]" -> value
+      }.toMap
+
+      val boundForm = form.bind(data)
+      boundForm.errors.mustBe(empty)
+      boundForm.value.mustBe(Some(allOptions))
     }
 
     "fail to bind, with an empty value" in {
@@ -44,7 +46,7 @@ class ChooseYearFormTest extends BaseTest {
     }
 
     "fail to bind, with an invalid value" in {
-      val data = Map("value" -> "invalidOption")
+      val data = Map("value[0]" -> "invalidOption")
 
       val boundForm = form.bind(data)
       boundForm.errors must have length 1

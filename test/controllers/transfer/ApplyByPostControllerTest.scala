@@ -65,13 +65,13 @@ class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTe
             RecipientRecordData.recipientRecord.availableTaxYears
           )))
 
-      val cachedData = Some("previousTaxYears")
+      val cachedData = Seq("previousTaxYears")
       when(mockCachingService.get[String](any())(any()))
         .thenReturn(Future.successful(cachedData))
 
       val result = controller.applyByPost(request)
 
-      status(result) shouldBe OK
+      status(result).shouldBe(OK)
 
       result `rendersTheSameViewAs` applyByPostView(cachedData, currentYearAvailable)
     }

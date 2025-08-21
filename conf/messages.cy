@@ -251,6 +251,7 @@ pages.form.field-helper.nino-where=Ble i ddod o hyd i’w rif Yswiriant Gwladol
 pages.form.field-helper.nino.expand=cliciwch i ehangu
 pages.form.field-helper.nino-found=Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.
 pages.form.field-helper.dom=Er enghraifft, 31 3 1980
+pages.form.field-helper.chooseYears=Dewiswch bob un sy’n berthnasol
 pages.form.field.your-confirmation=E-bost i gadarnhau
 pages.form.field.yourDetails=Byddwn yn anfon e-bostio cadarnhad atoch ynghylch eich cais am Lwfans Priodasol. Ni fyddwn yn rhannu’ch e-bost gydag unrhyw un arall.
 pages.form.field.transferor-email=Eich cyfeiriad e-bost
@@ -259,16 +260,17 @@ pages.form.field.enter-email=Nodwch gyfeiriad e-bost
 # Date of Marriage
 #********************************************************************************
 pages.date-of-marriage.heading=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
-pages.date-of-marriage.para1=Mae hyn er mwyn sicrhau’n bod yn caniat&#225;u i chi elwa o Lwfans Priodasol am y maint cywir o amser.
-pages.date-of-marriage.para2=Gallwch hawlio ar gyfer hyd at y 4 blynedd blaenorol, yn ogystal ag ar gyfer y flwyddyn dreth bresennol.
 pages.date-of-marriage.h2=Pryd y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda’ch partner?
 #********************************************************************************
 # How it works
 #********************************************************************************
 pages.how-it-works.heading=Sut y mae’n gweithio
-pages.how-it-works.lede-pre1.link-text=Mae Lwfans
-pages.how-it-works.lede-pre1=Priodasol yn eich galluogi i drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil os yw’ch incwm yn llai nag incwm eich priod neu bartner sifil. Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{1} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
-pages.how-it-works.lede-pre2=Gallwch wneud cais am y flwyddyn bresennol, a gallwch hefyd ôl-ddyddio’ch cais am 4 blynedd os oeddech yn gymwys i gael Lwfans Priodasol yn y blynyddoedd hynny.
+pages.how-it-works.lede-pre1.link-text=Mae Lwfans Priodasol
+pages.how-it-works.lede-pre1=yn eich galluogi i drosglwyddo £{0} o’ch Lwfans Personol i’ch priod neu bartner sifil os yw’ch incwm yn llai nag incwm eich priod neu bartner sifil. Gall hyn ostwng treth eich priod neu bartner sifil hyd at £{1} y flwyddyn dreth hon (6 Ebrill i 5 Ebrill y flwyddyn nesaf).
+pages.how-it-works.lede-pre2=Gallwch wneud cais am y canlynol:
+pages.how-it-works.lede-pre2.part1=ar-lein, ar gyfer y flwyddyn bresennol ymlaen
+pages.how-it-works.lede-pre2.part2=drwy’r post, ar gyfer hyd at y 4 blynedd blaenorol er mwyn ôl-ddyddio eich lwfans
+pages.how-it-works.eligibility-pre3.h2=Os oeddech chi, neu’ch partner, wedi’ch geni cyn 6 Ebrill 1935
 pages.how-it-works.lede-pre3=Mae Lwfans Priodasol yn adnewyddu’n awtomatig ar ddiwedd pob blwyddyn dreth. Gallwch ei ganslo, ond ni fydd yn dod i ben tan ddiwedd y flwyddyn treth.
 pages.how-it-works.lede-pre4=Gallwch wneud cais am Lwfans Priodasol os yw’ch partner wedi marw, cyn belled â bod yr amodau’n cael eu bodloni. Os yw hyn yn berthnasol i chi, ffoniwch Wasanaeth Cwsmeriaid Cymraeg CThEF ar 0300 200 1900.
 
@@ -277,7 +279,7 @@ pages.how-it-works.eligibility-pre1=I fod yn gymwys i gael Lwfans Priodasol, mae
 pages.how-it-works.eligibility-pre1.part1=rydych yn briod neu mewn partneriaeth sifil
 pages.how-it-works.eligibility-pre1.part2=mae’ch incwm yn llai nag incwm eich partner, ac yn is na £{0}
 pages.how-it-works.eligibility-pre1.part3=mae incwm eich partner yn llai na £{0} yn y flwyddyn dreth bresennol
-pages.how-it-works.eligibility-pre2=Os ydych yn yr Alban, mae’n rhaid i’ch partner dalu’r gyfradd gychwynnol, sylfaenol neu ganolradd, sydd fel arfer yn golygu bod ei incwm rhwng £{0} a £{1}.
+pages.how-it-works.eligibility-pre2=Os ydych yn byw yn yr Alban, mae’n rhaid i’ch partner dalu’r gyfradd gychwynnol, sylfaenol neu ganolradd, sydd fel arfer yn golygu bod ei incwm rhwng £{0} a £{1}.
 pages.how-it-works.eligibility-pre3.part1=Os ganed un ohonoch cyn 6 Ebrill 1935, efallai y byddwch yn elwa mwy fel pâr drwy wneud cais am
 pages.how-it-works.eligibility-pre3.link-text=Lwfans Pâr Priod
 pages.how-it-works.eligibility-pre3.part2=Gallwch wneud cais am Lwfans Priodasol o hyd, ond ni allwch gael y ddau lwfans ar yr un pryd.
@@ -288,7 +290,9 @@ pages.how-it-works.calculate-benefit-pre1.link-text=Gallwch ddefnyddio’r cyfri
 pages.how-it-works.calculate-benefit-pre1.detail=i weld faint y gallech ei arbed yn y flwyddyn dreth bresennol. Nid yw hwn yn ffurfio rhan o’r cais.
 
 pages.how-it-works.before-apply.heading=Cyn i chi wneud cais
-pages.how-it-works.before-apply-pre1=Bydd angen rhifau Yswiriant Gwladol eich partner
+pages.how-it-works.before-apply-pre1=Bydd angen y canlynol arnoch:
+pages.how-it-works.before-apply-part1=rhif Yswiriant Gwladol eich partner
+pages.how-it-works.before-apply-part2=dyddiad eich priodas neu ddyddiad ffurfio’r bartneriaeth sifil
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
@@ -535,9 +539,6 @@ pages.confirm.change.email=Newid E-bost
 #********************************************************************************
 # Choose tax years page
 #********************************************************************************
-pages.chooseYears.paragraph1=Gwnaethoch roi gwybod i ni eich bod wedi priodi neu ffurfio partneriaeth sifil â <span id="firstNameOnly">{0}</span> ar <span id=marriageDate class=nowrap>{1}</span>.
-pages.chooseYears.paragraph2=Mae hyn yn golygu y gallwch wneud cais ar gyfer y flwyddyn hon a blynyddoedd blaenorol.
-pages.chooseYears.heading=Pa flynyddoedd treth yr ydych am wneud cais ar eu cyfer?
 pages.chooseYears.currentTaxYear=Y flwyddyn dreth gyfredol, sef {0} ymlaen
 pages.chooseYears.previousTaxYears=Blynyddoedd treth blaenorol cyn {0}
 pages.chooseYears.currentAndPreviousTaxYears=Y flwyddyn dreth bresennol a blynyddoedd treth blaenorol

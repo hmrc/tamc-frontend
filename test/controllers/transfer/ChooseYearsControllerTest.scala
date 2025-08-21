@@ -118,7 +118,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
           )
         )
         val result = controller.chooseYears()(request)
-        status(result) shouldBe SEE_OTHER
+        status(result).shouldBe(SEE_OTHER)
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
       }
     }
@@ -135,55 +135,43 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
       "an invalid form is submitted" in {
         val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> "invalidOption")
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe BAD_REQUEST
+        status(result).shouldBe(BAD_REQUEST)
       }
     }
 
     "redirect the user" when {
       "currentTaxYear is selected" in {
         val currentTaxYear = ApplyForEligibleYears.CurrentTaxYear.toString
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> currentTaxYear)
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value[]" -> currentTaxYear)
 
         when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq(currentTaxYear))(any(), any()))
           .thenReturn(Future.successful(currentTaxYear))
 
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
+        status(result).shouldBe(SEE_OTHER)
+        redirectLocation(result).shouldBe(Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url))
       }
 
       "previousTaxYears is selected" in {
         val previousTaxYears = ApplyForEligibleYears.PreviousTaxYears.toString
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> previousTaxYears)
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value[]" -> previousTaxYears)
 
         when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq(previousTaxYears))(any(), any()))
           .thenReturn(Future.successful(previousTaxYears))
 
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
-      }
-
-      "currentAndPreviousTaxYears is selected" in {
-        val currentAndPreviousTaxYears = ApplyForEligibleYears.CurrentAndPreviousTaxYears.toString
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> currentAndPreviousTaxYears)
-
-        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq(currentAndPreviousTaxYears))(any(), any()))
-          .thenReturn(Future.successful(currentAndPreviousTaxYears))
-
-        val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
+        status(result).shouldBe(SEE_OTHER)
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
       }
 
       "there is an unexpected value" in {
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value" -> ApplyForEligibleYears.CurrentAndPreviousTaxYears.toString)
+        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("value[0]" -> ApplyForEligibleYears.PreviousTaxYears.toString)
 
-        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq("currentAndPreviousTaxYears"))(any(), any()))
+        when(mockCachingService.put[String](ArgumentMatchers.eq(CACHE_CHOOSE_YEARS), ArgumentMatchers.eq("previousTaxYears"))(any(), any()))
           .thenReturn(Future.successful("UnexpectedValue"))
 
         val result = controller.chooseYearsAction()(request)
-        status(result) shouldBe SEE_OTHER
+        status(result).shouldBe(SEE_OTHER)
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
       }
       }

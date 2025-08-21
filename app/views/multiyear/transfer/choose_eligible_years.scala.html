@@ -21,6 +21,8 @@
 @import models.auth.AuthenticatedUserRequest
 @import models.ApplyForEligibleYears
 @import includes.{H1, H2, P, Button, InputRadios, ErrorSummary}
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukCheckboxes
 
 @import views.Main
 
@@ -35,6 +37,7 @@
     p: P,
     viewHelpers: utils.ViewHelpers,
     inputRadios: InputRadios,
+    govukCheckboxes: GovukCheckboxes,
     button: Button
 )
 
@@ -58,30 +61,37 @@
 
     @h1("title.choose-years")
 
-    @p(
-        HtmlContent(messages(
-            "pages.chooseYears.paragraph1",
-            recipientName,
-            languageUtilsImpl().ukDateTransformer(dateOfMarriage)
-        )
-    ))
-
-    @p(HtmlContent(messages("pages.chooseYears.paragraph2")))
-
-    @h2("pages.chooseYears.heading")
-
     @formCSRF(action = transfer.routes.ChooseYearsController.chooseYearsAction(), args = (Symbol("id") -> "choose-year-form")) {
-        @inputRadios(
-            form = form,
-            legend = "pages.chooseYears.heading",
-            id = Some("value"),
-            name = "value",
-            items = ApplyForEligibleYears.options(languageUtilsImpl().ukDateTransformer(currentTaxYear))
-                .map(item => item.copy(checked = form.value.isDefined && form.value == item.value)),
-            fieldSetAttrs = Map("data-inline-error" -> "current-year-error"),
-            legendAsHeading = false,
-            legendClasses = "govuk-visually-hidden"
-        )
+
+    @{
+      val checkboxItems: Seq[CheckboxItem] = ApplyForEligibleYears
+        .options(languageUtilsImpl().ukDateTransformer(currentTaxYear))
+        .map { item =>
+          CheckboxItem(
+            content = item.content,
+            value   = item.value,
+            checked = form.data.getOrElse("value[]", "").contains(item.value),
+            id = item.id
+          )
+        }
+
+      val checkboxesArgs = Checkboxes(
+        name = "value[]",
+        fieldset = Some(Fieldset(
+        legend = Some(Legend(
+          content = Text(messages("title.choose-years")),
+          classes = "govuk-visually-hidden",
+          isPageHeading = false
+        ))
+      )),
+      hint = Some(Hint(content = Text(messages("pages.form.field-helper.chooseYears")))),
+      items = checkboxItems,
+      attributes = Map("data-inline-error" -> "current-year-error"),
+      errorMessage = form.error("value").map(e => ErrorMessage(content = Text(messages("pages.chooseYears.error.required"))))
+      )
+
+      govukCheckboxes(checkboxesArgs)
+    }
 
     @button(
         msg = "generic.continue",

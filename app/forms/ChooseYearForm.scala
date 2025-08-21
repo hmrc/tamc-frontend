@@ -16,20 +16,19 @@
 
 package forms
 
-import play.api.data.Form
 import models.ApplyForEligibleYears
-import play.api.data.Forms.single
-import utils.emailAddressFormatters.PlayFormFormatter.valueIsPresent
+import play.api.data.*
+import play.api.data.Forms.*
 
 class ChooseYearForm {
-  def apply(): Form[String] = Form(
-    single(
-      "value" -> valueIsPresent("pages.chooseYears.error.required")
-      .verifying("pages.chooseYears.error.invalid", answer => valid(answer))
-    )
+  def apply(): Form[Seq[String]] = Form(
+    mapping(
+      "value" -> seq(text)
+        .verifying("pages.chooseYears.error.required", _.nonEmpty)
+        .verifying("pages.chooseYears.error.invalid", answers => answers.forall(valid))
+    )(identity)(Some(_))
   )
 
   def valid(answer: String): Boolean =
     ApplyForEligibleYears.values.map(_.toString).contains(answer)
-
 }

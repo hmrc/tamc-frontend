@@ -18,23 +18,22 @@ package models
 
   import play.api.i18n.Messages
   import uk.gov.hmrc.govukfrontend.views.Aliases.Text
-  import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
+  import uk.gov.hmrc.govukfrontend.views.viewmodels.checkboxes.CheckboxItem
 
 sealed trait ApplyForEligibleYears
 
 object ApplyForEligibleYears extends Enumerable.Implicits {
   case object CurrentTaxYear extends WithName("currentTaxYear") with ApplyForEligibleYears
   case object PreviousTaxYears extends WithName("previousTaxYears") with ApplyForEligibleYears
-  case object CurrentAndPreviousTaxYears extends WithName("currentAndPreviousTaxYears") with ApplyForEligibleYears
   val values: Seq[ApplyForEligibleYears] =
-    Seq(CurrentTaxYear, PreviousTaxYears, CurrentAndPreviousTaxYears)
+    Seq(CurrentTaxYear, PreviousTaxYears)
 
-  def options(currentTaxYear: String)(implicit messages: Messages): Seq[RadioItem] =
+  def options(currentTaxYear: String)(implicit messages: Messages): Seq[CheckboxItem] =
     values.zipWithIndex.map {
       case (value, index) =>
-        RadioItem(
+        CheckboxItem(
           content = Text(messages(s"pages.chooseYears.${value.toString}", currentTaxYear)),
-          value   = Some(value.toString),
+          value   = value.toString,
           id      = Some(s"value_$index")
         )
     }

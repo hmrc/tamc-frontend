@@ -199,13 +199,13 @@ class TransferService @Inject()(
       Some(RecipientRecord(UserRecord(_, _, _, _), _, _)),
       Some(notification: NotificationRecord),
       _,
-      Some(selectedTaxYears), _, _)) if (selectedTaxYears.size > 0) => Future.successful(cacheData.get)
+      Some(selectedTaxYears), _, _)) if selectedTaxYears.size > 0 => Future.successful(cacheData.get)
       case None => throw CacheMissingTransferor()
       case Some(UserAnswersCacheData(None, _, _, _, _, _, _)) => throw CacheMissingTransferor()
       case Some(UserAnswersCacheData(_, None, _, _, _, _, _)) => throw CacheMissingRecipient()
       case Some(UserAnswersCacheData(_, _, None, _, _, _, _)) => throw CacheMissingEmail()
       case Some(UserAnswersCacheData(_, _, _, _, None, _, _)) => throw NoTaxYearsSelected()
-      case Some(UserAnswersCacheData(_, _, _, _, Some(selectedTaxYears), _, _)) if (selectedTaxYears.isEmpty) => throw NoTaxYearsSelected()
+      case Some(UserAnswersCacheData(_, _, _, _, Some(selectedTaxYears), _, _)) if selectedTaxYears.isEmpty => throw NoTaxYearsSelected()
       case _ => throw BadFetchRequest()
     }
   }

@@ -254,6 +254,7 @@ pages.form.field-helper.nino-where=Where to find their National Insurance number
 pages.form.field-helper.nino.expand=click to expand
 pages.form.field-helper.nino-found=This can be found on their National Insurance card or in official paperwork such as payslips, letters about benefits or tax credits.
 pages.form.field-helper.dom=For example, 31 3 1980
+pages.form.field-helper.chooseYears=Select all that apply
 pages.form.field.your-confirmation=Confirmation email
 pages.form.field.yourDetails=We will email confirmation of your Marriage Allowance application. We will not share your email with anyone else.
 pages.form.field.transferor-email=Your email address
@@ -263,8 +264,6 @@ pages.form.field.enter-email=Enter email address
 # Date of Marriage
 #********************************************************************************
 pages.date-of-marriage.heading=Date of marriage or civil partnership
-pages.date-of-marriage.para1=This is to make sure we allow you to benefit from Marriage Allowance for the correct amount of time.
-pages.date-of-marriage.para2=You can claim for up to 4 previous years as well as the current tax year.
 pages.date-of-marriage.h2=When did you marry or form a civil partnership with your partner?
 
 
@@ -275,7 +274,9 @@ pages.how-it-works.heading=How it works
 
 pages.how-it-works.lede-pre1.link-text=Marriage Allowance
 pages.how-it-works.lede-pre1=lets you transfer £{0} of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £{1} this tax year (6 April to 5 April the next year).
-pages.how-it-works.lede-pre2=You can apply for the current year and also backdate your claim for 4 years if you were eligible for Marriage Allowance in those years.
+pages.how-it-works.lede-pre2=You can apply for:
+pages.how-it-works.lede-pre2.part1=the current year onwards online
+pages.how-it-works.lede-pre2.part2=up to 4 previous years, by post, to have your allowance backdated
 pages.how-it-works.lede-pre3=Marriage Allowance automatically renews at the end of each tax year. You can cancel it, but it will not be stopped until the end of the tax year.
 pages.how-it-works.lede-pre4=If your partner has died, you can still make a Marriage Allowance claim as long as the conditions are met. If this applies to you, call HMRC on 0300 200 3300.
 
@@ -284,17 +285,20 @@ pages.how-it-works.eligibility-pre1=To be eligible for Marriage Allowance:
 pages.how-it-works.eligibility-pre1.part1=you must be married or in a civil partnership
 pages.how-it-works.eligibility-pre1.part2=your income must be lower than your partner’s and less than £{0}
 pages.how-it-works.eligibility-pre1.part3=your partner’s income must be less than £{0} in the current tax year
-pages.how-it-works.eligibility-pre2=If you’re in Scotland, your partner must pay the starter, basic or intermediate rate, which usually means their income is between £{0} and £{1}.
+pages.how-it-works.eligibility-pre2=If you live in Scotland, your partner must pay the starter, basic or intermediate rate, which usually means their income is between £{0} and £{1}.
+pages.how-it-works.eligibility-pre3.h2=If you or your partner were born before 6 April 1935
 pages.how-it-works.eligibility-pre3.part1=If one of you was born before 6 April 1935, you might benefit more as a couple by
 pages.how-it-works.eligibility-pre3.link-text=applying for the Married Couple’s Allowance
 pages.how-it-works.eligibility-pre3.part2=You can still apply for Marriage Allowance but you cannot receive both allowances at the same time.
 
 pages.how-it-works.calculate-benefit.heading=Calculate how much you could benefit
-pages.how-it-works.calculate-benefit-pre1.link-text=Use the calculator
+pages.how-it-works.calculate-benefit-pre1.link-text=Use the Marriage Allowance calculator
 pages.how-it-works.calculate-benefit-pre1=to see how much you could save in the current tax year. This does not form part of the application.
 
 pages.how-it-works.before-apply.heading=Before you apply
-pages.how-it-works.before-apply-pre1=You will need your partner’s national insurance numbers
+pages.how-it-works.before-apply-pre1=You’ll need:
+pages.how-it-works.before-apply-part1=your partner’s National Insurance number
+pages.how-it-works.before-apply-part2=the date of your marriage or civil partnership
 #********************************************************************************
 # Change of Circumstances
 #********************************************************************************
@@ -533,11 +537,8 @@ pages.confirm.change.email=Change Email
 #********************************************************************************
 # Choose tax years page
 #********************************************************************************
-pages.chooseYears.paragraph1=You told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on <span id=marriageDate class=nowrap>{1}</span>.
-pages.chooseYears.paragraph2=This means you can apply for this year and previous years.
-pages.chooseYears.heading=Which tax years do you want to apply for?
-pages.chooseYears.currentTaxYear=Current tax year {0} onwards
-pages.chooseYears.previousTaxYears=Previous tax years before {0}
+pages.chooseYears.currentTaxYear=Current tax year onwards, from {0}
+pages.chooseYears.previousTaxYears=Previous tax years, on or before {0}
 pages.chooseYears.currentAndPreviousTaxYears=Both current and previous tax years
 pages.chooseYears.error.required=Select which tax years you want to apply for
 pages.chooseYears.error.invalid=Select which tax years you want to apply for

@@ -44,9 +44,6 @@ request: AuthenticatedUserRequest[?])
 
   @h1("pages.date-of-marriage.heading")
 
-  @p(HtmlContent(messages("pages.date-of-marriage.para1")))
-  @p(HtmlContent(messages("pages.date-of-marriage.para2")))
-
   @form(action = transfer.routes.DateOfMarriageController.dateOfMarriageAction(), args = (Symbol("id") -> "date-of-marriage-form")) {
     @inputDate(
         fieldName = "dateOfMarriage",
