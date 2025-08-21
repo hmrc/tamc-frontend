@@ -43,8 +43,8 @@ class RecipientNotFoundControllerTest extends ControllerBaseTest with Controller
 
   val recipientNotFoundView: recipient_not_found = inject[views.html.errors.recipient_not_found]
 
-  "transferorNotFoundError" should {
-    "display the Transferor Not Found page" in {
+  "recipientNotFoundError" should {
+    "display the Recipient Not Found page" in {
       val result = controller.recipientNotFoundError(request)
       status(result) shouldBe OK
 
