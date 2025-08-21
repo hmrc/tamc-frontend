@@ -30,24 +30,24 @@ import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
+import services.CacheService.*
 import services.{CachingService, TimeService, TransferService}
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
-import services.CacheService.*
 
 import java.time.LocalDate
 import scala.concurrent.Future
 
 class TransferAllowanceControllerTest extends ControllerBaseTest {
 
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-  val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
+  val currentTaxYear: Int                    = time.TaxYear.current.startYear
+  val mockTransferService: TransferService   = mock[TransferService]
+  val mockCachingService: CachingService     = mock[CachingService]
+  val mockTimeService: TimeService           = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
-  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig   = instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -78,9 +78,14 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
       "an invalid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
+        when(
+          mockCachingService.put[RecipientDetailsFormInput](
+            ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS),
+            ArgumentMatchers.eq(recipientDetails)
+          )(any(), any())
+        )
           .thenReturn(Future.successful(recipientDetails))
-        val result = controller.transferAction()(request)
+        val result                                      = controller.transferAction()(request)
         status(result) shouldBe BAD_REQUEST
       }
     }
@@ -88,17 +93,26 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
       "a valid form is submitted" in {
         val recipientDetails: RecipientDetailsFormInput =
           RecipientDetailsFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2))
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-          "name"      -> "Test",
-          "last-name" -> "User",
-          "gender"    -> "M",
-          "nino"      -> Ninos.nino2
-        )
-        when(mockCachingService.put[RecipientDetailsFormInput](ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS), ArgumentMatchers.eq(recipientDetails))(any(), any()))
+          
+        val request = FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody(
+            "name"      -> "Test",
+            "last-name" -> "User",
+            "gender"    -> "M",
+            "nino"      -> Ninos.nino2
+          )
+        
+        when(mockCachingService.put[RecipientDetailsFormInput]
+          (ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS),
+            ArgumentMatchers.eq(recipientDetails))(any(), any()))
           .thenReturn(Future.successful(recipientDetails))
+        
         val result = controller.transferAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
+        )
+
       }
     }
   }

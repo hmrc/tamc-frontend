@@ -138,7 +138,7 @@ title.application.pattern=Cais am Lwfans Priodasol – GOV.UK
 title.dateOfBirth=Eich dyddiad geni
 title.choose-years=Dewiswch y blynyddoedd yr ydych am wneud cais amdanynt
 title.apply-by-post=Mae’n rhaid i chi wneud cais drwy’r post
-title.eligible-years=Gwneud cais ar gyfer y flwyddyn dreth bresennol
+title.eligible-years=Rydych yn gwneud cais ar gyfer y flwyddyn dreth bresennol ymlaen, o {0}
 title.do-not-apply-current-tax-year=Nid ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 title.extra-years=Gwneud cais ar gyfer blynyddoedd treth cynharach
 title.confirm-extra-years=Cadarnhewch eich bod am wneud cais ar gyfer blwyddyn dreth {0}
@@ -239,7 +239,7 @@ pages.form.details=Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i help
 pages.form.enter-data=Nodwch fanylion eich partner:
 pages.form.field.name=Enw cyntaf
 pages.form.field.last-name=Enw olaf
-pages.form.field.gender=Beth yw ei ryw?
+pages.form.field.gender=Beth yw ei rhyw?
 pages.form.field.gender.male=Gwryw
 pages.form.field.gender.female=Benyw
 pages.form.field-helper.gender=Mae rhyw yn golygu fel y'i cofnodwyd ar dystysgrif geni neu Dystysgrif Cydnabod Rhywedd
@@ -252,7 +252,7 @@ pages.form.field-helper.nino.expand=cliciwch i ehangu
 pages.form.field-helper.nino-found=Mae hwn i’w weld ar gerdyn Yswiriant Gwladol neu ar waith papur swyddogol eich priod neu bartner sifil, megis slipiau cyflog, a llythyrau ynghylch budd-daliadau neu gredydau treth.
 pages.form.field-helper.dom=Er enghraifft, 31 3 1980
 pages.form.field.your-confirmation=E-bost i gadarnhau
-pages.form.field.yourDetails=Byddwn yn e-bostio cadarnhad o’ch cais am Lwfans Priodasol cyn pen 24 awr. Ni fyddwn yn rhannu’ch cyfeiriad e-bost gydag unrhyw un arall.
+pages.form.field.yourDetails=Byddwn yn anfon e-bostio cadarnhad atoch ynghylch eich cais am Lwfans Priodasol. Ni fyddwn yn rhannu’ch e-bost gydag unrhyw un arall.
 pages.form.field.transferor-email=Eich cyfeiriad e-bost
 pages.form.field.enter-email=Nodwch gyfeiriad e-bost
 #********************************************************************************
@@ -543,18 +543,14 @@ pages.chooseYears.previousTaxYears=Blynyddoedd treth blaenorol cyn {0}
 pages.chooseYears.currentAndPreviousTaxYears=Y flwyddyn dreth bresennol a blynyddoedd treth blaenorol
 pages.chooseYears.error.required=Dewiswch pa flynyddoedd treth rydych eisiau gwneud cais ar eu cyfer
 pages.chooseYears.error.invalid=Dewiswch pa flynyddoedd treth rydych eisiau gwneud cais ar eu cyfer
+
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-pages.eligibleyear.toldus=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda <span id="firstNameOnly">{0}</span> ar
-pages.eligibleyear.thisyear1=Yn ystod y flwyddyn dreth bresennol
-pages.eligibleyear.thisyear2={0} ymlaen
-pages.eligibleyear.li1=bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn
-pages.eligibleyear.li2=byddwn yn addasu cod treth {0} i gynnwys y lwfans ychwanegol hwn
-pages.eligibleyear.li3=bydd yn adnewyddu’n awtomatig bob blwyddyn oni bai’ch bod chi neu {0} yn ei ganslo neu
-pages.eligibleyear.li3.link.text=nad ydych bellach yn gymwys
-pages.eligibleyear.doyou.want=A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
-pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
+pages.eligibleyear.p1=Bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn.
+pages.eligibleyear.p2=Mae Lwfans Priodasol yn adnewyddu pob blwyddyn oni bai bod y canlynol yn wir:
+pages.eligibleyear.li1=rydych chi neu {0} yn ei ganslo
+pages.eligibleyear.li2=nid ydych yn gymwys mwyach
 
 #********************************************************************************
 # Apply by post page

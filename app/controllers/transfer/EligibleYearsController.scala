@@ -18,15 +18,14 @@ package controllers.transfer
 
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
-import errors._
-import forms.CurrentYearForm.currentYearForm
-import models._
+import errors.*
+import models.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.{TimeService, TransferService}
 import utils.{LoggerHelper, TransferErrorHandler}
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class EligibleYearsController @Inject()(
                                          errorHandler: TransferErrorHandler,
@@ -35,7 +34,9 @@ class EligibleYearsController @Inject()(
                                          timeService: TimeService,
                                          cc: MessagesControllerComponents,
                                          eligibleYearsV: views.html.multiyear.transfer.eligible_years)
-                                       (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                       (implicit ec: ExecutionContext)
+  extends BaseController(cc)
+    with LoggerHelper {
 
   def eligibleYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {
@@ -46,10 +47,8 @@ class EligibleYearsController @Inject()(
       case CurrentAndPreviousYearsEligibility(_, previousYears, registrationInput, _) =>
         Ok(
           eligibleYearsV(
-            currentYearForm(previousYears.nonEmpty),
             previousYears.nonEmpty,
             registrationInput.name,
-            Some(registrationInput.dateOfMarriage),
             Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))
           )
         )
@@ -59,39 +58,14 @@ class EligibleYearsController @Inject()(
   def eligibleYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
       case CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, registrationInput, _) =>
-        currentYearForm(previousYears.nonEmpty).bindFromRequest().fold(
-          hasErrors =>
-            Future {
-              BadRequest(
-                eligibleYearsV(
-                  hasErrors,
-                  previousYears.nonEmpty,
-                  registrationInput.name,
-                  Some(registrationInput.dateOfMarriage),
-                  Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))
-                )
-              )
-            },
-          success => {
-
-            val selectedYears = if (success.applyForCurrentYear.contains(true)) {
-              List[Int](timeService.getCurrentTaxYear)
-            } else {
-              List[Int]()
-            }
-
-            registrationService.saveSelectedYears(selectedYears) map { _ =>
-              if (previousYears.isEmpty && currentYearAvailable && (!success.applyForCurrentYear.contains(true))) {
-                Redirect(controllers.transfer.routes.DoNotApplyController.doNotApply())
-              } else if (success.applyForCurrentYear.contains(true)) {
-                Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail())
-              } else {
-                Redirect(controllers.transfer.routes.DoNotApplyController.doNotApply())
-              }
-            }
+        if (currentYearAvailable) {
+          val selectedYears: List[Int] = List(timeService.getCurrentTaxYear)
+          registrationService.saveSelectedYears(selectedYears) map { _ =>
+            Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail())
           }
-        )
+        } else {
+          throw new NoTaxYearsAvailable
+        }
     } recover errorHandler.handleError
   }
 }
-
