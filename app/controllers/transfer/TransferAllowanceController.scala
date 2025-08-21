@@ -19,23 +19,25 @@ package controllers.transfer
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.RecipientDetailsForm
-import models._
+import models.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.CacheService.*
 import services.{CachingService, TimeService}
 import utils.LoggerHelper
-import services.CacheService._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TransferAllowanceController @Inject()(
-                                             authenticate: StandardAuthJourney,
-                                             cachingService: CachingService,
-                                             timeService: TimeService,
-                                             cc: MessagesControllerComponents,
-                                             transferV: views.html.multiyear.transfer.transfer,
-                                             recipientDetailsForm: RecipientDetailsForm)
-                                           (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+class TransferAllowanceController @Inject() (
+                                              authenticate: StandardAuthJourney,
+                                              cachingService: CachingService,
+                                              timeService: TimeService,
+                                              cc: MessagesControllerComponents,
+                                              transferV: views.html.multiyear.transfer.transfer,
+                                              recipientDetailsForm: RecipientDetailsForm
+                                            )(implicit ec: ExecutionContext)
+  extends BaseController(cc)
+    with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(
@@ -44,12 +46,15 @@ class TransferAllowanceController @Inject()(
   }
 
   def transferAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino).bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
-      recipientData =>
-        cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
-          Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())
-        }
-    )
+    recipientDetailsForm
+      .recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
+        recipientData =>
+          cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
+            Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())
+          }
+      )
   }
 }

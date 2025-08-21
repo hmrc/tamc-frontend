@@ -137,7 +137,7 @@ title.application.pattern=Marriage Allowance application - GOV.UK
 title.dateOfBirth=Were you and your partner born after 5 April 1935?
 title.choose-years=Choose the years you want to apply for
 title.apply-by-post=You must apply by post
-title.eligible-years=Apply for the current tax year
+title.eligible-years=You are applying for the current tax year onwards, from {0}
 title.do-not-apply-current-tax-year=You don''t want to apply for the current tax year onwards
 title.extra-years=Apply for earlier tax years
 title.confirm-extra-years=Confirm you want to apply for the {0} tax year
@@ -150,13 +150,15 @@ title.no-tax-years=No tax years available
 title.confirm-transferor=Confirm cancellation
 title.confirm-recipient=Confirm removal of a previous claim
 title.confirm-update=Confirm Update
-title.confirm=Check your details and confirm
+title.confirm=Check your answers before sending your application
 title.eligibility-criteria=Eligibility Criteria
 title.how-it-works=Apply for Marriage Allowance
 title.other-ways=Other Ways to apply
 title.change.complete=Marriage Allowance cancelled
 title.change.reason=Cancelling your Marriage Allowance
 title.error=Error
+title.error.transferor.not.found=Error: We cannot find your Marriage Allowance details
+title.error.recipient.not.found=Error: We cannot find your partner’s HMRC details
 title.history=Your Marriage Allowance summary
 title.make-a-change=Why do you need to stop your Marriage Allowance?
 title.date-of-marriage=Date of marriage or civil partnership
@@ -206,7 +208,7 @@ max-benefit={0}
 #********************************************************************************
 # Confirmation Message
 #********************************************************************************
-pages.confirm.html.h1=Check your details and confirm the application
+pages.confirm.html.h1=Check your answers before sending your application
 pages.confirm.html.check-details=Check the details you have entered and confirm that this is the person you are married to or in a civil partnership with. You can then apply to transfer £1,050 of your Personal Allowance to them.
 
 
@@ -218,16 +220,16 @@ eligibility.check.header=Your eligibility
 #********************************************************************************
 # Finished Message
 #********************************************************************************
-pages.finished.successful=Marriage Allowance application successful
-pages.finished.para1.email1=An email with full details acknowledging your application will be sent to you at {0}
+pages.finished.complete=Marriage Allowance application complete
+pages.finished.para1.email1=A confirmation email will be sent to {0}
 pages.finished.para1.email2=from noreply@tax.service.gov.uk within 24 hours.
-pages.finished.para2=If it does not appear in your inbox, please check your spam or junk folder.
+pages.finished.para2=If you cannot find it in your inbox, please check your spam or junk folder.
 pages.finished.now=What happens next
-pages.finished.para4=HMRC will now process your Marriage Allowance application. Please check the email we have sent you for full details on how you will receive Marriage Allowance.
-pages.finished.back-pta=Back to Personal Tax Account
-pages.finished.check-link-para1=You can
-pages.finished.check-link-para2=at any time through your personal tax account.
-pages.finished.check-link.text=check your current Marriage Allowance and make changes
+pages.finished.para4=HMRC will review your application. If you are eligible, HMRC will change your and {0}’s tax codes to save
+pages.finished.para4.2={0} up to £{1}.
+pages.finished.para5=Marriage Allowance renews each year unless you or {0} cancel it, or you are no longer eligible.
+pages.finished.para6=Your confirmation email has full details on how you will receive Marriage Allowance.
+pages.finished.back-pta=Return to personal tax account
 pages.finished.hidden-warning=Warning
 
 #********************************************************************************
@@ -240,7 +242,7 @@ pages.form.enter-data=Enter your partner’s details
 pages.form.marriage-date.aria-label=Change marriage date
 pages.form.field.name=First name
 pages.form.field.last-name=Last name
-pages.form.field.gender=What is their Sex?
+pages.form.field.gender=What is their sex?
 pages.form.field.gender.male=Male
 pages.form.field.gender.female=Female
 pages.form.field-helper.gender=Sex means as recorded on a birth certificate or Gender Recognition Certificate
@@ -254,7 +256,7 @@ pages.form.field-helper.nino-found=This can be found on their National Insurance
 pages.form.field-helper.dom=For example, 31 3 1980
 pages.form.field-helper.chooseYears=Select all that apply
 pages.form.field.your-confirmation=Confirmation email
-pages.form.field.yourDetails=We will email confirmation of your Marriage Allowance application within 24 hours. We will not share your email with anyone else.
+pages.form.field.yourDetails=We will email confirmation of your Marriage Allowance application. We will not share your email with anyone else.
 pages.form.field.transferor-email=Your email address
 pages.form.field.enter-email=Enter email address
 
@@ -368,9 +370,12 @@ pages.errors.timeout-pta.action=Please login to your Personal Tax Account again 
 pages.errors.timeout-pta.back=Back to Personal Tax Account
 pages.form.error.confirm.data=Check your information is correct, in the right place and in the right format.
 pages.form.error.mandatory.data=Check that you have given answers.
-transferor.not.found=We were unable to find a HMRC record for you.
-recipient.not.found.para1=We were unable to find a HMRC record of your partner.
-recipient.not.found.para2=Check with them and confirm the details you supplied.
+transferor.not.found=We cannot find your Marriage Allowance details
+transferor.not.found.para1=If you need to make a change to your Marriage Allowance,
+transferor.not.found.para1.link-text= contact HMRC Income Tax general enquiries.
+recipient.not.found=We cannot find your partner’s HMRC details
+recipient.not.found.para1.link-text=Check your partner’s information is correct
+recipient.not.found.para1=and update your application.
 transferor.no-eligible-years=We were unable to process your Marriage Allowance application.
 transferor.no-previous-years-available=Based on the date of marriage or civil partnership you have provided, you are not eligible for Marriage Allowance.
 recipient.has.relationship.para1=We were unable to process your application.
@@ -541,15 +546,10 @@ pages.chooseYears.error.invalid=Select which tax years you want to apply for
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-pages.eligibleyear.toldus=You have told us you married or formed a civil partnership with <span id="firstNameOnly">{0}</span> on
-pages.eligibleyear.thisyear1=This current tax year
-pages.eligibleyear.thisyear2={0} onwards
-pages.eligibleyear.li1={0} will pay up to £{1} less tax each year
-pages.eligibleyear.li2=we will adjust {0} tax code to include this extra allowance
-pages.eligibleyear.li3=it will automatically renew every year until you or {0} cancel it or are
-pages.eligibleyear.li3.link.text=no longer eligible
-pages.eligibleyear.doyou.want=Do you want to apply for this current tax year onwards?
-pages.eligibleyear.notice=You can apply for earlier years if you continue.
+pages.eligibleyear.p1={0} will pay up to £{1} less tax each year.
+pages.eligibleyear.p2=Marriage Allowance renews each year unless:
+pages.eligibleyear.li1=you or {0} cancel it
+pages.eligibleyear.li2=you are no longer eligible
 
 #********************************************************************************
 # Apply by post page
@@ -584,14 +584,16 @@ pages.previousyear.para=You told us you married or formed a civil partnership wi
 #********************************************************************************
 pages.confirm.lower.earner=Your details (low income)
 pages.confirm.higher.earner=Your partner’s details (high income)
-pages.confirm.current.tax=Current tax year: <span class=nowrap>{0}</span> onwards
+pages.confirm.years.applied=Years applied for
+pages.confirm.years.applied.desc=You are applying for Marriage Allowance for the current tax year onwards, from {0}.
 pages.confirm.current.tax.aria-label=tax year: {0}
-pages.confirm.current.tax.desc=HMRC will change your and {0} tax codes to save {1} up to £{2}. Marriage Allowance will automatically continue until you or {3} cancel it or are no longer eligible as a couple.
-pages.confirm.previous.tax=Previous tax year: <span class=nowrap>{0}</span> to <span class=nowrap>{1}</span>
+pages.confirm.previous.tax=Previous tax year: {0} to {1}
 pages.confirm.previous.tax.desc=HMRC will check the details you have supplied before sending {0} a cheque by post for up to £{1}.
 pages.confirm.warning=Check the details you have entered and make sure they are correct.
-pages.confirm.button=Confirm your application
-pages.confirm.marriage.details=Your Marriage Allowance details
+pages.confirm.button=Send your application
+pages.confirm.application.details=Application details
+pages.confirm.application.now=Now confirm your application
+pages.confirm.application.now.p=By sending your application you are confirming that, to the best of your knowledge, the details you are providing are correct.
 pages.confirm.date.of.marriage=Date of marriage or civil partnership
 
 #********************************************************************************

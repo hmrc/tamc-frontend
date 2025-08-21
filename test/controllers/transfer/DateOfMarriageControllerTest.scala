@@ -42,12 +42,12 @@ import scala.concurrent.Future
 
 class DateOfMarriageControllerTest extends ControllerBaseTest {
 
-  val currentTaxYear: Int = time.TaxYear.current.startYear
-  val mockTransferService: TransferService = mock[TransferService]
-  val mockCachingService: CachingService = mock[CachingService]
-  val mockTimeService: TimeService = mock[TimeService]
+  val currentTaxYear: Int                    = time.TaxYear.current.startYear
+  val mockTransferService: TransferService   = mock[TransferService]
+  val mockCachingService: CachingService     = mock[CachingService]
+  val mockTimeService: TimeService           = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
-  val applicationConfig: ApplicationConfig = instanceOf[ApplicationConfig]
+  val applicationConfig: ApplicationConfig   = instanceOf[ApplicationConfig]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -66,7 +66,6 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
   when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
-
   "dateOfMarriage" should {
     "return success" in {
       val result = controller.dateOfMarriage()(request)
@@ -84,59 +83,76 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
 
     "redirect the user" when {
       "a valid form is submitted" in {
-      val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusYears(2))
-      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-        "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
-        "dateOfMarriage.month" -> s"0${dateOfMarriageInput.dateOfMarriage.getMonthValue.toString}",
-        "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
-      )
-      val registrationFormInput =
-        RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
+        val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusYears(2))
+        val request             = FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody(
+            "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
+            "dateOfMarriage.month" -> s"0${dateOfMarriageInput.dateOfMarriage.getMonthValue.toString}",
+            "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
+          )
 
-      when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
-        .thenReturn(Future.successful(dateOfMarriageInput))
-
-      when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
-        .thenReturn(Future.successful(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1))))
-      when(
-        mockTransferService.isRecipientEligible(
-          ArgumentMatchers.eq(Nino(Ninos.nino1)),
-          ArgumentMatchers.eq(registrationFormInput)
-        )(any(), any(), any())
-      )
-        .thenReturn(Future.successful(true))
-      val result = controller.dateOfMarriageAction()(request)
-      status(result)           shouldBe SEE_OTHER
-      redirectLocation(result) shouldBe Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
-    }
-
-      "the dateOfMarriage is within the current tax year" in {
-        val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
-        val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
-          "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
-          "dateOfMarriage.month" -> s"0${dateOfMarriageInput.dateOfMarriage.getMonthValue.toString}",
-          "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
-        )
         val registrationFormInput =
           RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
 
-        when(mockCachingService.put[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE), ArgumentMatchers.eq(dateOfMarriageInput))(any(), any()))
+        when(
+          mockCachingService.put[DateOfMarriageFormInput](
+            ArgumentMatchers.eq(CACHE_MARRIAGE_DATE),
+            ArgumentMatchers.eq(dateOfMarriageInput)
+          )(any(), any())
+        )
           .thenReturn(Future.successful(dateOfMarriageInput))
 
         when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
           .thenReturn(Future.successful(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1))))
+
         when(
           mockTransferService.isRecipientEligible(
             ArgumentMatchers.eq(Nino(Ninos.nino1)),
             ArgumentMatchers.eq(registrationFormInput)
           )(any(), any(), any())
+        ).thenReturn(Future.successful(true))
+
+        val result = controller.dateOfMarriageAction()(request)
+        status(result)           shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
+      }
+
+      "the dateOfMarriage is within the current tax year" in {
+        val dateOfMarriageInput   = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
+        val request               = FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody(
+            "dateOfMarriage.year"  -> dateOfMarriageInput.dateOfMarriage.getYear.toString,
+            "dateOfMarriage.month" -> s"0${dateOfMarriageInput.dateOfMarriage.getMonthValue.toString}",
+            "dateOfMarriage.day"   -> dateOfMarriageInput.dateOfMarriage.getDayOfMonth.toString
+          )
+        val registrationFormInput =
+          RegistrationFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1), dateOfMarriageInput.dateOfMarriage)
+
+        when(
+          mockCachingService.put[DateOfMarriageFormInput](
+            ArgumentMatchers.eq(CACHE_MARRIAGE_DATE),
+            ArgumentMatchers.eq(dateOfMarriageInput)
+          )(any(), any())
         )
-          .thenReturn(Future.successful(true))
+          .thenReturn(Future.successful(dateOfMarriageInput))
+
+        when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
+          .thenReturn(Future.successful(RecipientDetailsFormInput("Test", "User", Gender("F"), Nino(Ninos.nino1))))
+
+        when(
+          mockTransferService.isRecipientEligible(
+            ArgumentMatchers.eq(Nino(Ninos.nino1)),
+            ArgumentMatchers.eq(registrationFormInput)
+          )(any(), any(), any())
+        ).thenReturn(Future.successful(true))
+
         val result = controller.dateOfMarriageAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url)
       }
-
+      
     }
   }
 }

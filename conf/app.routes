@@ -1,64 +1,67 @@
 # TAMC specific routes
-->          /hmrc-frontend                      hmrcfrontend.Routes
-# Authorisation helpers
-GET         /not-authorised                     controllers.AuthorisationController.notAuthorised()
-GET         /logout                             controllers.AuthorisationController.logout()
-GET         /signed-out                         controllers.AuthorisationController.sessionTimeout()
-
-# GDS journey
-GET         /benefit-calculator                 controllers.EligibilityCalculatorController.gdsCalculator()
-POST        /benefit-calculator                 controllers.EligibilityCalculatorController.gdsCalculatorAction()
-
-# PTA journey
-GET         /benefit-calculator-pta             controllers.EligibilityCalculatorController.ptaCalculator()
-POST        /benefit-calculator-pta             controllers.EligibilityCalculatorController.ptaCalculatorAction()
-
-# Transfer Allowance
-GET         /transfer-allowance                 controllers.transfer.TransferAllowanceController.transfer()
-POST        /transfer-allowance                 controllers.transfer.TransferAllowanceController.transferAction()
-GET         /date-of-marriage                   controllers.transfer.DateOfMarriageController.dateOfMarriage()
-POST        /date-of-marriage                   controllers.transfer.DateOfMarriageController.dateOfMarriageAction()
-GET         /choose-years-to-apply-for          controllers.transfer.ChooseYearsController.chooseYears()
-POST        /choose-years-to-apply-for          controllers.transfer.ChooseYearsController.chooseYearsAction()
-GET         /eligible-years                     controllers.transfer.EligibleYearsController.eligibleYears()
-POST        /eligible-years                     controllers.transfer.EligibleYearsController.eligibleYearsAction()
-GET         /apply-by-post                      controllers.transfer.ApplyByPostController.applyByPost()
-GET         /dont-apply-current-tax-year        controllers.transfer.DoNotApplyController.doNotApply()
-GET         /previous-years                     controllers.HowItWorksController.home()
-POST        /extra-years                        controllers.transfer.ExtraYearsController.extraYearsAction()
-GET         /confirm-your-email                 controllers.transfer.ConfirmEmailController.confirmYourEmail()
-POST        /confirm-your-email                 controllers.transfer.ConfirmEmailController.confirmYourEmailAction()
-GET         /confirm                            controllers.transfer.ConfirmController.confirm()
-POST        /confirm                            controllers.transfer.ConfirmController.confirmAction()
-GET         /finished                           controllers.transfer.FinishedController.finished()
-GET         /you-cannot-use-this-service        controllers.transfer.CannotUseServiceController.cannotUseService()
+->          /hmrc-frontend                       hmrcfrontend.Routes
+# Authorisation helpers 
+GET         /not-authorised                      controllers.AuthorisationController.notAuthorised()
+GET         /logout                              controllers.AuthorisationController.logout()
+GET         /signed-out                          controllers.AuthorisationController.sessionTimeout()
+ 
+# GDS journey 
+GET         /benefit-calculator                  controllers.EligibilityCalculatorController.gdsCalculator()
+POST        /benefit-calculator                  controllers.EligibilityCalculatorController.gdsCalculatorAction()
+ 
+# PTA journey 
+GET         /benefit-calculator-pta              controllers.EligibilityCalculatorController.ptaCalculator()
+POST        /benefit-calculator-pta              controllers.EligibilityCalculatorController.ptaCalculatorAction()
+ 
+# Transfer Allowance 
+GET         /transfer-allowance                  controllers.transfer.TransferAllowanceController.transfer()
+POST        /transfer-allowance                  controllers.transfer.TransferAllowanceController.transferAction()
+GET         /date-of-marriage                    controllers.transfer.DateOfMarriageController.dateOfMarriage()
+POST        /date-of-marriage                    controllers.transfer.DateOfMarriageController.dateOfMarriageAction()
+GET         /choose-years-to-apply-for           controllers.transfer.ChooseYearsController.chooseYears()
+POST        /choose-years-to-apply-for           controllers.transfer.ChooseYearsController.chooseYearsAction()
+GET         /eligible-years                      controllers.transfer.EligibleYearsController.eligibleYears()
+POST        /eligible-years                      controllers.transfer.EligibleYearsController.eligibleYearsAction()
+GET         /apply-by-post                       controllers.transfer.ApplyByPostController.applyByPost()
+GET         /dont-apply-current-tax-year         controllers.transfer.DoNotApplyController.doNotApply()
+GET         /previous-years                      controllers.HowItWorksController.home()
+POST        /extra-years                         controllers.transfer.ExtraYearsController.extraYearsAction()
+GET         /confirm-your-email                  controllers.transfer.ConfirmEmailController.confirmYourEmail()
+POST        /confirm-your-email                  controllers.transfer.ConfirmEmailController.confirmYourEmailAction()
+GET         /confirm                             controllers.transfer.ConfirmController.confirm()
+POST        /confirm                             controllers.transfer.ConfirmController.confirmAction()
+GET         /finished                            controllers.transfer.FinishedController.finished()
+GET         /you-cannot-use-this-service         controllers.transfer.CannotUseServiceController.cannotUseService()
 
 #Change of Circumstances
-GET         /history                            controllers.UpdateRelationship.HistoryController.history()
-GET         /choose                             controllers.UpdateRelationship.ChooseController.decision()
-POST        /choose                             controllers.UpdateRelationship.ChooseController.submitDecision()
-GET         /claims                             controllers.UpdateRelationship.ClaimsController.claims()
-GET         /make-changes                       controllers.UpdateRelationship.MakeChangesController.makeChange()
-POST        /make-changes                       controllers.UpdateRelationship.MakeChangesController.submitMakeChange()
-GET         /stop-allowance                     controllers.UpdateRelationship.StopAllowanceController.stopAllowance()
-GET         /cancel                             controllers.UpdateRelationship.StopAllowanceController.cancel()
-GET         /bereavement                        controllers.UpdateRelationship.BereavementController.bereavement()
-GET         /divorce-enter-year                 controllers.UpdateRelationship.DivorceController.divorceEnterYear()
-POST        /divorce-enter-year                 controllers.UpdateRelationship.DivorceController.submitDivorceEnterYear()
-GET         /divorce-end-explanation            controllers.UpdateRelationship.DivorceController.divorceEndExplanation()
-GET         /confirm-email                      controllers.UpdateRelationship.ConfirmEmailController.confirmEmail()
-GET         /confirm-change                     controllers.UpdateRelationship.ConfirmChangeController.confirmUpdate()
+GET         /history                             controllers.UpdateRelationship.HistoryController.history()
+GET         /choose                              controllers.UpdateRelationship.ChooseController.decision()
+POST        /choose                              controllers.UpdateRelationship.ChooseController.submitDecision()
+GET         /claims                              controllers.UpdateRelationship.ClaimsController.claims()
+GET         /make-changes                        controllers.UpdateRelationship.MakeChangesController.makeChange()
+POST        /make-changes                        controllers.UpdateRelationship.MakeChangesController.submitMakeChange()
+GET         /stop-allowance                      controllers.UpdateRelationship.StopAllowanceController.stopAllowance()
+GET         /cancel                              controllers.UpdateRelationship.StopAllowanceController.cancel()
+GET         /bereavement                         controllers.UpdateRelationship.BereavementController.bereavement()
+GET         /divorce-enter-year                  controllers.UpdateRelationship.DivorceController.divorceEnterYear()
+POST        /divorce-enter-year                  controllers.UpdateRelationship.DivorceController.submitDivorceEnterYear()
+GET         /divorce-end-explanation             controllers.UpdateRelationship.DivorceController.divorceEndExplanation()
+GET         /confirm-email                       controllers.UpdateRelationship.ConfirmEmailController.confirmEmail()
+GET         /confirm-change                      controllers.UpdateRelationship.ConfirmChangeController.confirmUpdate()
 #TO be post to edit
-GET         /confirm-change-action              controllers.UpdateRelationship.ConfirmChangeController.submitConfirmUpdate()
-GET         /finished-change                    controllers.UpdateRelationship.FinishedChangeController.finishUpdate()
-POST        /confirm-email                      controllers.UpdateRelationship.ConfirmEmailController.confirmYourEmailActionUpdate()
+GET         /confirm-change-action               controllers.UpdateRelationship.ConfirmChangeController.submitConfirmUpdate()
+GET         /finished-change                     controllers.UpdateRelationship.FinishedChangeController.finishUpdate()
+POST        /confirm-email                       controllers.UpdateRelationship.ConfirmEmailController.confirmYourEmailActionUpdate()
 
-GET         /                                   controllers.HowItWorksController.home()
-GET         /how-it-works                       controllers.HowItWorksController.howItWorks()
+GET         /                                    controllers.HowItWorksController.home()
+GET         /how-it-works                        controllers.HowItWorksController.howItWorks()
+
+GET         /marriage-allowance-details-missing  controllers.errors.TransferorNotFoundController.transferorNotFoundError()
+GET         /partners-details-missing            controllers.errors.RecipientNotFoundController.recipientNotFoundError()
 
 #Welsh Translation
-GET         /lang/enGb                          controllers.LanguageController.enGb()
-GET         /lang/cyGb                          controllers.LanguageController.cyGb()
+GET         /lang/enGb                           controllers.LanguageController.enGb()
+GET         /lang/cyGb                           controllers.LanguageController.cyGb()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                       controllers.Assets.at(path="/public", file)
+GET         /assets/*file                        controllers.Assets.at(path="/public", file)

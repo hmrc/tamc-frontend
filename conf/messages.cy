@@ -138,7 +138,7 @@ title.application.pattern=Cais am Lwfans Priodasol – GOV.UK
 title.dateOfBirth=Eich dyddiad geni
 title.choose-years=Dewiswch y blynyddoedd yr ydych am wneud cais amdanynt
 title.apply-by-post=Mae’n rhaid i chi wneud cais drwy’r post
-title.eligible-years=Gwneud cais ar gyfer y flwyddyn dreth bresennol
+title.eligible-years=Rydych yn gwneud cais ar gyfer y flwyddyn dreth bresennol ymlaen, o {0}
 title.do-not-apply-current-tax-year=Nid ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen
 title.extra-years=Gwneud cais ar gyfer blynyddoedd treth cynharach
 title.confirm-extra-years=Cadarnhewch eich bod am wneud cais ar gyfer blwyddyn dreth {0}
@@ -152,7 +152,7 @@ title.eligibility=Eich perthynas
 title.confirm-transferor=Cadarnhau canslo
 title.confirm-recipient=Cadarnhau dileu cais blaenorol
 title.confirm-update=Cadarnhau diweddaru
-title.confirm=Gwirio’ch manylion a chadarnhau’r cais
+title.confirm=Gwiriwch eich atebion cyn anfon eich cais
 title.eligibility-criteria=Meini prawf cymhwysedd
 title.how-it-works=Gwneud cais am Lwfans Priodasol
 title.other-ways=Ffyrdd eraill o wneud cais
@@ -160,6 +160,8 @@ title.change.complete=Lwfans Priodasol wedi’i ganslo
 title.change.earnings=Newid mewn incwm
 title.change.reason=Dileu cais blaenorol
 title.error=Gwall
+title.error.transferor.not.found=Gwall: Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol
+title.error.recipient.not.found=Gwall: Ni allwn ddod o hyd i fanylion CThEF eich partner
 title.history=Crynodeb o’ch Lwfans Priodasol
 title.make-a-change=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
 title.date-of-marriage=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
@@ -205,7 +207,7 @@ max-benefit={0}
 #********************************************************************************
 # Confirmation Message
 #********************************************************************************
-pages.confirm.html.h1=Gwirio’ch manylion a chadarnhau’r cais
+pages.confirm.html.h1=Gwiriwch eich atebion cyn anfon eich cais
 pages.confirm.html.check-details=Dylech wirio’r manylion yr ydych wedi’i rhoi, a chadarnhau mai’r unigolyn hwn yw’ch priod neu bartner sifil. Yna, gallwch wneud cais i drosglwyddo £1,050 o’ch Lwfans Personol iddo/iddi.
 
 #********************************************************************************
@@ -216,16 +218,16 @@ eligibility.check.header=A ydych yn gymwys?
 #********************************************************************************
 # Finished Message
 #********************************************************************************
-pages.finished.successful=Cais am Lwfans Priodasol yn llwyddiannus
-pages.finished.para1.email1=Bydd e-bost &#226; manylion llawn yn cael ei anfon atoch yn  {0} i gydnabod eich cais, a hynny
-pages.finished.para1.email2=o noreply@tax.service.gov.uk cyn pen 24 awr.
-pages.finished.para2=Os nad yw’n ymddangos yn eich mewnflwch, edrychwch yn eich ffolder sbam neu sothach.
+pages.finished.complete=Cais am Lwfans Priodasol wedi’i gwblhau
+pages.finished.para1.email1=Bydd e-bost cadarnhau yn cael ei anfon at {0}
+pages.finished.para1.email2=cyn pen 24 awr.
+pages.finished.para2=Os na allwch ddod o hyd i’r e-bost yn eich mewnflwch, gwiriwch eich ffolderi sbam neu sothach.
 pages.finished.now=Yr hyn sy’n digwydd nesaf
-pages.finished.para4=Bydd CThEM yn prosesu’ch cais am Lwfans Priodasol. Gwiriwch yr e-bost yr ydym wedi’i anfon atoch am fanylion llawn ynghylch sut y byddwch yn cael Lwfans Priodasol.
-pages.finished.back-pta=Yn &#244;l i’r Cyfrif Treth Personol
-pages.finished.check-link-para1=Gallwch
-pages.finished.check-link-para2=ar unrhyw bryd drwy’ch cyfrif treth personol.
-pages.finished.check-link.text=wirio’ch Lwfans Priodasol presennol a gwneud newidiadau
+pages.finished.para4=Bydd CThEF yn adolygu’ch cais. Os ydych yn gymwys, bydd CThEF yn newid eich codau treth chi a {0},
+pages.finished.para4.2= er mwyn arbed hyd at £{1} i {0}.
+pages.finished.para5=Mae Lwfans Priodasol yn adnewyddu bob blwyddyn oni bai eich bod chi neu {0} yn ei ganslo, neu os nad ydych yn bellach yn gymwys.
+pages.finished.para6=Mae’r e-bost cadarnhau yn cynnwys yr holl fanylion am sut y byddwch yn cael Lwfans Priodasol.
+pages.finished.back-pta=Yn ôl i’r cyfrif treth personol
 
 #********************************************************************************
 # Registration page - Your spouse details
@@ -237,7 +239,7 @@ pages.form.details=Gan mai chi sydd â’r incwm isaf, gallwch wneud cais i help
 pages.form.enter-data=Nodwch fanylion eich partner:
 pages.form.field.name=Enw cyntaf
 pages.form.field.last-name=Enw olaf
-pages.form.field.gender=Beth yw ei ryw?
+pages.form.field.gender=Beth yw ei rhyw?
 pages.form.field.gender.male=Gwryw
 pages.form.field.gender.female=Benyw
 pages.form.field-helper.gender=Mae rhyw yn golygu fel y'i cofnodwyd ar dystysgrif geni neu Dystysgrif Cydnabod Rhywedd
@@ -251,7 +253,7 @@ pages.form.field-helper.nino-found=Mae hwn i’w weld ar gerdyn Yswiriant Gwlado
 pages.form.field-helper.dom=Er enghraifft, 31 3 1980
 pages.form.field-helper.chooseYears=Dewiswch bob un sy’n berthnasol
 pages.form.field.your-confirmation=E-bost i gadarnhau
-pages.form.field.yourDetails=Byddwn yn e-bostio cadarnhad o’ch cais am Lwfans Priodasol cyn pen 24 awr. Ni fyddwn yn rhannu’ch cyfeiriad e-bost gydag unrhyw un arall.
+pages.form.field.yourDetails=Byddwn yn anfon e-bostio cadarnhad atoch ynghylch eich cais am Lwfans Priodasol. Ni fyddwn yn rhannu’ch e-bost gydag unrhyw un arall.
 pages.form.field.transferor-email=Eich cyfeiriad e-bost
 pages.form.field.enter-email=Nodwch gyfeiriad e-bost
 #********************************************************************************
@@ -373,9 +375,12 @@ pages.errors.timeout-pta.action=Mewngofnodwch i’ch Cyfrif Treth Personol eto i
 pages.errors.timeout-pta.back=Yn &#244;l i’r Cyfrif Treth Personol
 pages.form.error.confirm.data=Gwiriwch fod eich gwybodaeth yn gywir, yn y man cywir ac yn y fformat cywir.
 pages.form.error.mandatory.data=Gwiriwch eich bod wedi rhoi atebion.
-transferor.not.found=Ni allwn ddod o hyd i gofnod CThEM ar eich cyfer.
-recipient.not.found.para1=Nid oeddem yn gallu dod o hyd i gofnod CThEM ar gyfer eich partner.
-recipient.not.found.para2=Gwiriwch gydag ef/hi a chadarnhau’r manylion yr ydych wedi eu rhoi.
+transferor.not.found=Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol
+transferor.not.found.para1=Os oes angen i chi newid eich Lwfans Priodasol,
+transferor.not.found.para1.link-text= cysylltwch ag ymholiadau cyffredinol Treth Incwm CThEF.
+recipient.not.found=Ni allwn ddod o hyd i fanylion CThEF eich partner
+recipient.not.found.para1.link-text=Gwiriwch fod gwybodaeth eich partner yn gywir
+recipient.not.found.para1=a diweddarwch eich cais.
 transferor.no-eligible-years=Nid oeddem yn gallu prosesu’ch cais am Lwfans Priodasol.
 transferor.no-previous-years-available=Yn seiliedig ar ddyddiad y briodas neu ffurfio’r bartneriaeth sifil yr ydych wedi’i roi, nid ydych yn gymwys ar gyfer Lwfans Priodasol.
 recipient.has.relationship.para1=Nid oeddem yn gallu prosesu’ch cais.
@@ -539,18 +544,14 @@ pages.chooseYears.previousTaxYears=Blynyddoedd treth blaenorol cyn {0}
 pages.chooseYears.currentAndPreviousTaxYears=Y flwyddyn dreth bresennol a blynyddoedd treth blaenorol
 pages.chooseYears.error.required=Dewiswch pa flynyddoedd treth rydych eisiau gwneud cais ar eu cyfer
 pages.chooseYears.error.invalid=Dewiswch pa flynyddoedd treth rydych eisiau gwneud cais ar eu cyfer
+
 #********************************************************************************
 # eligible year page
 #********************************************************************************
-pages.eligibleyear.toldus=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneriaeth sifil gyda <span id="firstNameOnly">{0}</span> ar
-pages.eligibleyear.thisyear1=Yn ystod y flwyddyn dreth bresennol
-pages.eligibleyear.thisyear2={0} ymlaen
-pages.eligibleyear.li1=bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn
-pages.eligibleyear.li2=byddwn yn addasu cod treth {0} i gynnwys y lwfans ychwanegol hwn
-pages.eligibleyear.li3=bydd yn adnewyddu’n awtomatig bob blwyddyn oni bai’ch bod chi neu {0} yn ei ganslo neu
-pages.eligibleyear.li3.link.text=nad ydych bellach yn gymwys
-pages.eligibleyear.doyou.want=A ydych am wneud cais ar gyfer y flwyddyn dreth bresennol ymlaen?
-pages.eligibleyear.notice=Gallwch wneud cais ar gyfer blynyddoedd cynharach os ydych yn mynd yn eich blaen.
+pages.eligibleyear.p1=Bydd {0} yn talu hyd at £{1} yn llai o dreth bob blwyddyn.
+pages.eligibleyear.p2=Mae Lwfans Priodasol yn adnewyddu pob blwyddyn oni bai bod y canlynol yn wir:
+pages.eligibleyear.li1=rydych chi neu {0} yn ei ganslo
+pages.eligibleyear.li2=nid ydych yn gymwys mwyach
 
 #********************************************************************************
 # Apply by post page
@@ -585,15 +586,17 @@ pages.previousyear.para=Rhoesoch wybod y gwnaethoch briodi neu ffurfio partneria
 #********************************************************************************
 pages.confirm.lower.earner=Eich manylion (incwm isel)
 pages.confirm.higher.earner=Manylion eich partner (incwm uchel)
-pages.confirm.current.tax=Blwyddyn dreth bresennol: <span class=nowrap>{0}</span> ymlaen
+pages.confirm.years.applied=Blynyddoedd y gwnaethpwyd cais amdanynt
+pages.confirm.years.applied.desc=Rydych yn gwneud cais am Lwfans Priodasol ar gyfer y flwyddyn dreth bresennol ymlaen, o {0}
 pages.confirm.current.tax.aria-label=Newid blwyddyn dreth: {0}
-pages.confirm.current.tax.desc=Bydd CThEM yn newid codau treth chi a {0} er mwyn arbed {1} hyd at £{2}. Bydd eich Lwfans Priodasol yn parhau’n awtomatig oni bai’ch bod chi neu {3} yn ei ganslo, neu nad ydych bellach yn gymwys fel p&#226;r.
-pages.confirm.previous.tax=Blwyddyn dreth flaenorol: <span class=nowrap>{0}</span> i <span class=nowrap>{1}</span>
+pages.confirm.previous.tax=Blwyddyn dreth flaenorol: {0} i {1}
 pages.confirm.previous.tax.desc=Bydd CThEM yn gwirio’r manylion yr ydych wedi’u rhoi cyn anfon siec at {0} drwy’r post am hyd at £{1}.
 pages.confirm.warning=Gwiriwch y manylion yr ydych wedi’u nodi a gwnewch yn siŵr eu bod yn gywir.
-pages.confirm.button=Cadarnhau’ch cais
-pages.confirm.marriage.details=Manylion eich Lwfans Priodasol
+pages.confirm.button=Anfon eich cais
+pages.confirm.application.details=Manylion y cais
 pages.confirm.date.of.marriage=Dyddiad y briodas neu’r dyddiad y ffurfiwyd y bartneriaeth sifil
+pages.confirm.application.now=Cadarnhau eich cais nawr
+pages.confirm.application.now.p=Drwy anfon eich cais, rydych yn cadarnhau, hyd eithaf eich gwybodaeth, bod y manylion yr ydych yn eu darparu’n gywir.
 
 #********************************************************************************
 # change-of-circs-finish-page

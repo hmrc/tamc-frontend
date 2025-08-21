@@ -30,12 +30,13 @@ import play.api.Application
 import play.api.http.Status.OK
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.mvc.AnyContentAsEmpty
-import play.api.test.FakeRequest
+
+import scala.concurrent.ExecutionContext
 import play.api.test.Helpers.contentAsString
+import play.api.test.{FakeRequest, Helpers}
 import services.TransferService
 import uk.gov.hmrc.domain.Nino
-import utils.{BaseTest, EmailAddress, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
+import utils.*
 
 import scala.concurrent.Future
 import scala.concurrent.duration.*
@@ -45,10 +46,7 @@ import scala.language.postfixOps
 class FinishedTest extends BaseTest with NinoGenerator {
 
   lazy val nino: String = generateNino().nino
-  implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
-  val finishedController: FinishedController = app.injector.instanceOf[FinishedController]
-
   implicit val duration: Timeout = 20 seconds
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
@@ -56,26 +54,33 @@ class FinishedTest extends BaseTest with NinoGenerator {
       bind[TransferService].toInstance(mockTransferService),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
       bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction],
-      bind[PertaxAuthAction].to[FakePertaxAuthAction],
+      bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
+
+  val finishedController: FinishedController = app.injector.instanceOf[FinishedController]
+
+  when(mockTransferService.getRecipientDetailsFormData()(any[AuthenticatedUserRequest[?]], any[ExecutionContext]))
+    .thenReturn(Future.successful(RecipientDetailsFormInput("Alex", "Smith", Gender("M"), Nino(nino))))
+
+  when(mockTransferService.getFinishedData(any())(any(), any()))
+    .thenReturn(Future.successful(NotificationRecord(EmailAddress("example@example.com"))))
 
   "Calling non-pta finished page" should {
 
     "successfully authenticate the user and have finished page and content" in {
-      when(mockTransferService.getFinishedData(any())(any(), any()))
-        .thenReturn(Future.successful(NotificationRecord(EmailAddress("example@example.com"))))
-      val result = finishedController.finished(request)
 
+      val result = finishedController.finished()(FakeRequest())
+      
       status(result) shouldBe OK
       val document = Jsoup.parse(contentAsString(result))
 
       document.title() shouldBe "Application confirmed - Marriage Allowance application - GOV.UK"
-      document.getElementById("govuk-box").text shouldBe "Marriage Allowance application successful"
+      document.getElementById("govuk-box").text shouldBe "Marriage Allowance application complete"
       document
         .getElementById("paragraph-1")
-        .text shouldBe "An email with full details acknowledging your application will be " +
-        "sent to you at example@example.com from noreply@tax.service.gov.uk within 24 hours."
+        .text shouldBe "A confirmation email will be sent to " +
+        "example@example.com from noreply@tax.service.gov.uk within 24 hours."
     }
   }
 }
