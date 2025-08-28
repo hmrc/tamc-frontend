@@ -60,7 +60,7 @@ class ApplyByPostTest extends BaseTest with ViewTestUtils with NinoGenerator {
       }
 
       "both current and previous tax years are available" in {
-        val taxYears = Seq("currentTaxYear", "previousTaxYears")
+        val taxYears = Seq("previousTaxYears", "currentTaxYear")
         implicit val doc: Document = Jsoup.parse(applyByPostView(taxYears, currentYearAvailable).toString())
         doc.getElementsByTag("p").eachText().toArray.shouldBe(Array(
           "Your application includes a previous tax year. You cannot apply for previous tax years online.",
