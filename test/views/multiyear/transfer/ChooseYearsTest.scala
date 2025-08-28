@@ -75,9 +75,8 @@ class ChooseYearsTest extends BaseTest with NinoGenerator {
 
     "display correct checkbox items" in {
       doc.getElementsByClass("govuk-checkboxes__item").eachText().toArray shouldBe Array(
-        s"Current tax year onwards, from $currentTaxYearStartDate",
-        s"Previous tax years, on or before $currentTaxYearStartDate")
-
+        s"Previous tax years, on or before $currentTaxYearStartDate",
+        s"Current tax year onwards, from $currentTaxYearStartDate")
     }
 
     "display continue button" in {
