@@ -34,10 +34,9 @@ class ApplyByPostTest extends BaseTest with ViewTestUtils with NinoGenerator {
   override implicit lazy val messages: Messages                          = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
   lazy val applyByPostView: apply_by_post                                = instanceOf[apply_by_post]
 
-  val currentYearAvailable: Boolean                                      = true
   val taxYears: Seq[String] = Seq("currentTaxYear", "PreviousTaxYears")
 
-  implicit val doc: Document                                             = Jsoup.parse(applyByPostView(taxYears, currentYearAvailable).toString())
+  implicit val doc: Document                                             = Jsoup.parse(applyByPostView(taxYears).toString())
 
   "Apply By Post" should {
     "display the correct title" in {
@@ -51,7 +50,7 @@ class ApplyByPostTest extends BaseTest with ViewTestUtils with NinoGenerator {
     "display dynamic text" when {
       "only previous tax years are available" in {
         val taxYears = Seq("previousTaxYears")
-        implicit val doc: Document = Jsoup.parse(applyByPostView(taxYears, false).toString())
+        implicit val doc: Document = Jsoup.parse(applyByPostView(taxYears).toString())
         doc.getElementsByTag("p").eachText().toArray.shouldBe(Array(
           "You cannot apply for previous tax years online.",
           "Apply for Marriage Allowance by post",
@@ -61,7 +60,7 @@ class ApplyByPostTest extends BaseTest with ViewTestUtils with NinoGenerator {
 
       "both current and previous tax years are available" in {
         val taxYears = Seq("currentTaxYear", "previousTaxYears")
-        implicit val doc: Document = Jsoup.parse(applyByPostView(taxYears, currentYearAvailable).toString())
+        implicit val doc: Document = Jsoup.parse(applyByPostView(taxYears).toString())
         doc.getElementsByTag("p").eachText().toArray.shouldBe(Array(
           "Your application includes a previous tax year. You cannot apply for previous tax years online.",
           "Apply for Marriage Allowance by post",
