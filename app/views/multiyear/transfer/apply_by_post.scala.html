@@ -29,25 +29,16 @@
 )
 
 @(
-    selectedTaxYears: Seq[String],
-    currentYearAvailable: Boolean
+    selectedTaxYears: Seq[String]
 )(
     implicit messages: Messages,
     request: AuthenticatedUserRequest[?]
 )
 
-@backLink = @{
-    if(currentYearAvailable) {
-        controllers.transfer.routes.ChooseYearsController.chooseYears().url
-    } else {
-        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
-    }
-}
-
 @main(
     pageTitle = messages("title.apply-by-post"),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(backLink)
+    backLinkHref = Some(controllers.transfer.routes.ChooseYearsController.chooseYears().url)
 ){
     @h1("title.apply-by-post")
 

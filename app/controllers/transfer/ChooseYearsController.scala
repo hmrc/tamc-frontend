@@ -18,13 +18,12 @@ package controllers.transfer
 
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
-import errors.NoTaxYearsAvailable
 import forms.ChooseYearForm
-import models.{ApplyForEligibleYears, CurrentAndPreviousYearsEligibility}
+import models.ApplyForEligibleYears
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService.CACHE_CHOOSE_YEARS
-import services.{CachingService, TimeService, TransferService}
+import services.{CachingService, TimeService}
 import utils.{LoggerHelper, TransferErrorHandler}
 
 import java.time.LocalDate
@@ -34,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class ChooseYearsController @Inject()(
                                          authenticate: StandardAuthJourney,
                                          cachingService: CachingService,
-                                         registrationService: TransferService,
                                          timeService: TimeService,
                                          cc: MessagesControllerComponents,
                                          chooseYearsView: views.html.multiyear.transfer.choose_eligible_years,
@@ -42,54 +40,43 @@ class ChooseYearsController @Inject()(
                                          errorHandler: TransferErrorHandler
                                      )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  val form: Form[Seq[String]] = formProvider()
+  val form: Form[Seq[String]]   = formProvider()
   def currentTaxYear: LocalDate = timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
 
   def chooseYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
-        case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
-          throw new NoTaxYearsAvailable
-        case CurrentAndPreviousYearsEligibility(false, previousYears, _, _) if previousYears.nonEmpty =>
-          Future.successful(Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost()))
-        case CurrentAndPreviousYearsEligibility(_, _, registrationInput, _) =>
-          cachingService.get[String](CACHE_CHOOSE_YEARS).map {
-            case Some(data) =>
-              val selectedYears: Seq[String] = data.split(",").toSeq
-              Ok(chooseYearsView(form.fill(selectedYears), registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
-            case None =>
-              Ok(chooseYearsView(form, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
-          }
-
+    cachingService.get[String](CACHE_CHOOSE_YEARS).map {
+      case Some(data) =>
+        val selectedYears: Seq[String] = data.split(",").toSeq
+        Ok(chooseYearsView(form.fill(selectedYears), currentTaxYear))
+      case None       =>
+        Ok(chooseYearsView(form, currentTaxYear))
     } recover errorHandler.handleError
   }
 
   def chooseYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
-      case CurrentAndPreviousYearsEligibility(_, _, registrationInput, _) =>
-        form.bindFromRequest().fold(
-          formWithErrors => {
-            Future.successful(BadRequest(chooseYearsView(formWithErrors, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear)))
-          },
-          selectedYears => {
-            val cacheString = selectedYears.mkString(",")
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(chooseYearsView(formWithErrors, currentTaxYear))),
+        selectedYears => {
+          val cacheString = selectedYears.mkString(",")
 
-            cachingService.put[String](CACHE_CHOOSE_YEARS, cacheString).map { (returnedValue: String) =>
-              val currentYearStr = ApplyForEligibleYears.CurrentTaxYear.toString
+          cachingService.put[String](CACHE_CHOOSE_YEARS, cacheString).map { (returnedValue: String) =>
+            val currentYearStr = ApplyForEligibleYears.CurrentTaxYear.toString
 
-              if (returnedValue == cacheString) {
-                if (selectedYears.exists(_ != currentYearStr)) {
-                  Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
-                } else {
-                  Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
-                }
+            if (returnedValue == cacheString) {
+              if (selectedYears.exists(_ != currentYearStr)) {
+                Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
               } else {
-                logger.warn(s"[chooseYearsAction] - Unexpected value returned from cachingService.put: $returnedValue")
-                Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
+                Redirect(controllers.transfer.routes.TransferAllowanceController.transfer())
               }
+            } else {
+              logger
+                .warn(s"[chooseYearsAction] - Unexpected value returned from cachingService.put: $returnedValue")
+              Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears())
             }
           }
-        )
-    } recover errorHandler.handleError
+        }
+      ) recover errorHandler.handleError
   }
 }
-

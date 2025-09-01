@@ -22,27 +22,40 @@
 @import views.Main
 
 @this(
-main: Main,
-form: FormWithCSRF,
-languageUtilsImpl: LanguageUtilsImpl,
-h1: H1,
-p: P,
-inputRadios: InputRadios,
-inputValue: InputValue,
-errorSummary: ErrorSummary,
-button: Button,
-details: GovukDetails,
-viewHelpers: utils.ViewHelpers,
-govukWarningText : GovukWarningText)
+    main: Main,
+    form: FormWithCSRF,
+    languageUtilsImpl: LanguageUtilsImpl,
+    h1: H1,
+    p: P,
+    inputRadios: InputRadios,
+    inputValue: InputValue,
+    errorSummary: ErrorSummary,
+    button: Button,
+    details: GovukDetails,
+    viewHelpers: utils.ViewHelpers,
+    govukWarningText : GovukWarningText
+)
 
-@(recipientForm: Form[models.RecipientDetailsFormInput])(
+@(
+    recipientForm: Form[models.RecipientDetailsFormInput],
+    domCurrentTaxYear: Boolean
+)(
 implicit messages: Messages,
-request: AuthenticatedUserRequest[?])
+request: AuthenticatedUserRequest[?]
+)
+
+@backLink = @{
+    if(domCurrentTaxYear) {
+        controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url
+    } else {
+        controllers.transfer.routes.ChooseYearsController.chooseYears().url
+    }
+}
 
 @main(
     pageTitle = viewHelpers.formErrorPrefix(recipientForm, messages("title.transfer")),
     serviceTitle = "title.application.pattern",
-    backLinkHref = Some(controllers.routes.HowItWorksController.howItWorks().url)
+    backLinkHref = Some(backLink)
 ) {
 
     @errorSummary(recipientForm)

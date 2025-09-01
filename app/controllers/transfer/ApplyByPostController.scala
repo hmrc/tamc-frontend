@@ -18,10 +18,9 @@ package controllers.transfer
 
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
-import models.CurrentAndPreviousYearsEligibility
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService.CACHE_CHOOSE_YEARS
-import services.{CachingService, TransferService}
+import services.CachingService
 import utils.LoggerHelper
 
 import javax.inject.Inject
@@ -29,24 +28,21 @@ import scala.concurrent.ExecutionContext
 
 class ApplyByPostController @Inject()(
                                        authenticate: StandardAuthJourney,
-                                       transferService: TransferService,
                                        cachingService: CachingService,
                                        applyByPostView: views.html.multiyear.transfer.apply_by_post,
                                        cc: MessagesControllerComponents
                                      )
                                      (implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-
-  def applyByPost: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
-    implicit request =>
-      transferService.getCurrentAndPreviousYearsEligibility.flatMap  {
-        case CurrentAndPreviousYearsEligibility(currentYearAvailable, _, _, _) =>
-          cachingService.get[String](CACHE_CHOOSE_YEARS).map {
-            case Some(yearOptions) => yearOptions.split(",").toSeq
-            case None      => Seq.empty
-          }.map { selectedTaxYears =>
-          Ok(applyByPostView(selectedTaxYears, currentYearAvailable))
-          }
+  def applyByPost: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+    cachingService
+      .get[String](CACHE_CHOOSE_YEARS)
+      .map {
+        case Some(yearOptions) => yearOptions.split(",").toSeq
+        case None              => Seq.empty
+      }
+      .map { selectedTaxYears =>
+        Ok(applyByPostView(selectedTaxYears))
       }
   }
 }
