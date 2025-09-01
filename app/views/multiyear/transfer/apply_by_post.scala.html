@@ -42,7 +42,7 @@
 ){
     @h1("title.apply-by-post")
 
-    @if(selectedTaxYears == Seq("currentTaxYear", "previousTaxYears")) {
+    @if(selectedTaxYears == Seq("previousTaxYears", "currentTaxYear")) {
         @p(HtmlContent(messages("pages.apply-by-post.paragraph")))
     } else {
         @p(HtmlContent(messages("pages.apply-by-post.only.previous.years")))

@@ -26,7 +26,7 @@ object ApplyForEligibleYears extends Enumerable.Implicits {
   case object CurrentTaxYear extends WithName("currentTaxYear") with ApplyForEligibleYears
   case object PreviousTaxYears extends WithName("previousTaxYears") with ApplyForEligibleYears
   val values: Seq[ApplyForEligibleYears] =
-    Seq(CurrentTaxYear, PreviousTaxYears)
+    Seq(PreviousTaxYears, CurrentTaxYear)
 
   def options(currentTaxYear: String)(implicit messages: Messages): Seq[CheckboxItem] =
     values.zipWithIndex.map {
