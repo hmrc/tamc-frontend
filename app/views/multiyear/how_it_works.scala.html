@@ -43,19 +43,19 @@
     disableBackLink = true
 ){
 
-    @h1("generic.ma.apply")
+    @h1("generic.ma.apply", elmId=Some("heading"))
 
-    @p(HtmlContent(ledeContent))
-    @p(Text(messages("pages.how-it-works.lede-pre2")))
+    @p(HtmlContent(ledeContent), elmId=Some("para-1"))
+    @p(Text(messages("pages.how-it-works.lede-pre2")), elmId=Some("para-2"))
     <ul class="govuk-list govuk-list--bullet">
       <li id="claim-current-year">@messages("pages.how-it-works.lede-pre2.part1")</li>
       <li id="claim-previous-year">@messages("pages.how-it-works.lede-pre2.part2")</li>
     </ul>
-    @p(Text(messages("pages.how-it-works.lede-pre3")))
-    @insetText(InsetText(content = Text(messages("pages.how-it-works.lede-pre4"))))
+    @p(Text(messages("pages.how-it-works.lede-pre3")), elmId=Some("para-3"))
+    @insetText(InsetText(content = Text(messages("pages.how-it-works.lede-pre4")), id=Some("para-4")))
 
-    @h2("pages.how-it-works.eligibility.heading")
-    @p(Text(messages("pages.how-it-works.eligibility-pre1")))
+    @h2("pages.how-it-works.eligibility.heading", elmId=Some("heading-eligibility"))
+    @p(Text(messages("pages.how-it-works.eligibility-pre1")), elmId=Some("para-5"))
     <ul class="govuk-list govuk-list--bullet">
         <li id="must-be-married">@messages("pages.how-it-works.eligibility-pre1.part1")</li>
         <li id="be-lowest-income">@messages("pages.how-it-works.eligibility-pre1.part2",NumberFormat.getIntegerInstance().format(applicationConfig.PERSONAL_ALLOWANCE()))</li>
@@ -64,14 +64,14 @@
     @insetText(InsetText(content = Text(messages("pages.how-it-works.eligibility-pre2",
         NumberFormat.getIntegerInstance().format(applicationConfig.STARTER_RATE_LOWER_TRESHOLD_SCOT()),
         NumberFormat.getIntegerInstance().format(applicationConfig.MAX_LIMIT_SCOT())
-    ))))
+    )), id=Some("para-6")))
     @p(HtmlContent(calculateEligibilityDetails))
 
-    @h2("pages.how-it-works.calculate-benefit.heading")
-    @p(HtmlContent(calculateBenefitDetails))
+    @h2("pages.how-it-works.calculate-benefit.heading", elmId=Some("calculate-heading"))
+    @p(HtmlContent(calculateBenefitDetails), elmId=Some("para-7"))
 
-    @h2("pages.how-it-works.before-apply.heading")
-    @p(Text(messages("pages.how-it-works.before-apply-pre1")))
+    @h2("pages.how-it-works.before-apply.heading", elmId=Some("heading-before-apply"))
+    @p(Text(messages("pages.how-it-works.before-apply-pre1")), elmId=Some("para-8"))
     <ul class="govuk-list govuk-list--bullet">
       <li id="need-partner-national-insurance">@messages("pages.how-it-works.before-apply-part1")</li>
       <li id="need-date-of-marriage">@messages("pages.how-it-works.before-apply-part2")</li>
@@ -92,6 +92,7 @@
       link = applicationConfig.marriageAllowanceGuideUrl,
       messageKey = "pages.how-it-works.lede-pre1.link-text",
       attrTarget = false,
+      id = Some("marriage-allowance-link"),
       inParagraph = true
     )
     @messages("pages.how-it-works.lede-pre1",
@@ -101,7 +102,7 @@
 }
 
 @calculateEligibilityDetails = {
-  @h2("pages.how-it-works.eligibility-pre3.h2")
+  @h2("pages.how-it-works.eligibility-pre3.h2", elmId = Some("heading-2"))
   <div class="govuk-body" id="married-couples-allowance">
     @messages("pages.how-it-works.eligibility-pre3.part1")
     @link(
