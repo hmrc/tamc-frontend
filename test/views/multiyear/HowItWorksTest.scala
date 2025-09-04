@@ -55,7 +55,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       val expectedDocTitle = "Apply for Marriage Allowance - Marriage Allowance - GOV.UK"
       val expectedPageTitle = "Apply for Marriage Allowance"
 
-      shouldHaveText("pageHeading", expectedPageTitle)
+      shouldHaveText("heading", expectedPageTitle)
       doc().title().shouldBe(expectedDocTitle)
     }
 
