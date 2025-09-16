@@ -21,9 +21,9 @@ pages.form.field.last-name.error.required=Enter your partner’s last name
 pages.form.field.last-name.error.pattern=Your partner’s last name must only include letters a to z and hyphens
 pages.form.field.last-name.error.maxLength=Your partner’s last name must be {0} characters or less
 
-pages.form.field-required.gender=Select your partner’s gender
-pages.form.field.gender.error.required=Select your partner’s gender
-pages.form.field.gender.error.invalid=Select your partner’s gender
+pages.form.field-required.gender=Select your partner’s sex
+pages.form.field.gender.error.required=Select your partner’s sex
+pages.form.field.gender.error.invalid=Select your partner’s sex
 
 pages.form.field-required.nino=Enter your partner’s National Insurance number
 pages.form.field.nino.error.required=Enter your partner’s National Insurance number
