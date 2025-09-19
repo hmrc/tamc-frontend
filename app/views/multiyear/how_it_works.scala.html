@@ -86,7 +86,12 @@ disableBackLink = true
 }
 
 @ledeContent = {
-    @link(link = applicationConfig.marriageAllowanceGuideUrl, messageKey = "pages.how-it-works.lede-pre1.link-text", attrTarget = true, inParagraph = true)
+    @link(
+      link = applicationConfig.marriageAllowanceGuideUrl,
+      messageKey = "pages.how-it-works.lede-pre1.link-text",
+      attrTarget = false,
+      inParagraph = true
+    )
     @messages("pages.how-it-works.lede-pre1",
         NumberFormat.getIntegerInstance().format(applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER()),
         NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT())
@@ -97,7 +102,13 @@ disableBackLink = true
   @h2("pages.how-it-works.eligibility-pre3.h2")
   <div class="govuk-body" id="married-couples-allowance">
     @messages("pages.how-it-works.eligibility-pre3.part1")
-    @link(link = applicationConfig.marriedCoupleAllowanceLink, messageKey = "pages.how-it-works.eligibility-pre3.link-text", attrTarget = true, inParagraph = true, fullStop = true)
+    @link(
+      link = applicationConfig.marriedCoupleAllowanceLink,
+      messageKey = "pages.how-it-works.eligibility-pre3.link-text",
+      attrTarget = false,
+      inParagraph = true,
+      fullStop = true
+    )
     @messages("pages.how-it-works.eligibility-pre3.part2")
   </div>
 }
