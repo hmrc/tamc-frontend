@@ -100,7 +100,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       checkTextInElement(headingMCA, Selectors.nthSubheading(12))
 
       doc().getElementById("married-couples-allowance").text.shouldBe("If one of you was born before 6 April 1935, " +
-        "you might benefit more as a couple by applying for the Married Couple’s Allowance . " +
+        "you might benefit more as a couple by applying for the Married Couple’s Allowance. " +
         "You can still apply for Marriage Allowance but you cannot receive both allowances at the same time.")
     }
 
