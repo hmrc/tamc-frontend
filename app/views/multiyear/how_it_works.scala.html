@@ -23,22 +23,24 @@
 @import views.Main
 
 @this(
-main: Main,
-applicationConfig: ApplicationConfig,
-languageUtilsImpl: LanguageUtilsImpl,
-h1: H1,
-h2: H2,
-p: P,
-link: Link,
-button: Button,
-insetText: GovukInsetText)
+    main: Main,
+    applicationConfig: ApplicationConfig,
+    languageUtilsImpl: LanguageUtilsImpl,
+    h1: H1,
+    h2: H2,
+    p: P,
+    link: Link,
+    button: Button,
+    insetText: GovukInsetText
+)
 
 @()(implicit messages: Messages,
-request: UserRequest[?])
+    request: UserRequest[?]
+)
 
 @main(
-pageTitle = Messages("title.how-it-works"),
-disableBackLink = true
+    pageTitle = Messages("title.how-it-works"),
+    disableBackLink = true
 ){
 
     @h1("generic.ma.apply")
