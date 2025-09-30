@@ -30,16 +30,16 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferAllowanceController @Inject() (
-                                              errorHandler: TransferErrorHandler,
-                                              authenticate: StandardAuthJourney,
-                                              cachingService: CachingService,
-                                              registrationService: TransferService,
-                                              timeService: TimeService,
-                                              cc: MessagesControllerComponents,
-                                              transferV: views.html.multiyear.transfer.transfer,
-                                              recipientDetailsForm: RecipientDetailsForm
-                                            )(implicit ec: ExecutionContext)
-  extends BaseController(cc)
+  errorHandler: TransferErrorHandler,
+  authenticate: StandardAuthJourney,
+  cachingService: CachingService,
+  registrationService: TransferService,
+  timeService: TimeService,
+  cc: MessagesControllerComponents,
+  transferV: views.html.multiyear.transfer.transfer,
+  recipientDetailsForm: RecipientDetailsForm
+)(implicit ec: ExecutionContext)
+    extends BaseController(cc)
     with LoggerHelper {
 
   private def marriageDateInCurrentTaxYear()(implicit request: Request[?]): Future[Boolean] =
@@ -67,16 +67,20 @@ class TransferAllowanceController @Inject() (
           formWithErrors => Future.successful(BadRequest(transferV(formWithErrors, domCurrentTaxYear))),
           recipientData =>
             for {
-              _         <- cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData)
-              marriage  <- cachingService.get[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE)
-              recipient <- registrationService.getRecipientDetailsFormData()
+              _           <- cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData)
+              marriageOpt <- cachingService.get[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE)
+              marriage    <- marriageOpt match {
+                               case Some(dom) => Future.successful(dom)
+                               case None      => Future.failed(new RuntimeException("Failed to retrieve marriage date"))
+                             }
+              recipient   <- registrationService.getRecipientDetailsFormData()
 
               dataToSend = new RegistrationFormInput(
                 recipient.name,
                 recipient.lastName,
                 recipient.gender,
                 recipient.nino,
-                marriage.get.dateOfMarriage
+                marriage.dateOfMarriage
               )
               _         <- registrationService.isRecipientEligible(request.nino, dataToSend)
             } yield Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
