@@ -60,7 +60,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
     }
 
     "display correct lede section" in {
-      val line1 = s"Marriage Allowance (opens in a new tab) lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
+      val line1 = s"Marriage Allowance(opens in a new tab) lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
       val line2 = "You can apply for:"
       val line3 = "Marriage Allowance automatically renews at the end of each tax year. You can cancel it, but it will not be stopped until the end of the tax year."
       val line4 = "If your partner has died, you can still make a Marriage Allowance claim as long as the conditions are met. If this applies to you, call HMRC on 0300 200 3300."
@@ -73,7 +73,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       shouldHaveText("para-3", line3)
       shouldHaveText("para-4", line4)
 
-      shouldHaveText("marriage-allowance-link", "Marriage Allowance (opens in a new tab)")
+      shouldHaveText("marriage-allowance-link", "Marriage Allowance(opens in a new tab)")
       doc().getElementById("marriage-allowance-link").attr("href") shouldBe "https://www.gov.uk/marriage-allowance"
     }
 
@@ -96,7 +96,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       shouldHaveText(
         "married-couples-allowance",
         "If one of you was born before 6 April 1935, " +
-          "you might benefit more as a couple by applying for the Married Couple’s Allowance (opens in a new tab). " +
+          "you might benefit more as a couple by applying for the Married Couple’s Allowance(opens in a new tab). " +
           "You can still apply for Marriage Allowance but you cannot receive both allowances at the same time."
       )
     }
