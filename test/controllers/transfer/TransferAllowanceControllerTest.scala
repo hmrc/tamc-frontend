@@ -97,6 +97,60 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
       }
     }
 
+    "throw exception" when {
+      "Date of Marriage is not retrieved from cache" in {
+        val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
+
+        val recipientDetails: RecipientDetailsFormInput =
+          RecipientDetailsFormInput(
+            "Test",
+            "User",
+            Gender("M"),
+            Nino(Ninos.nino2)
+          )
+
+        val request = FakeRequest()
+          .withMethod("POST")
+          .withFormUrlEncodedBody(
+            "name" -> "Test",
+            "last-name" -> "User",
+            "gender" -> "M",
+            "nino" -> Ninos.nino2
+          )
+
+        val registrationFormInput: RegistrationFormInput =
+          RegistrationFormInput("Test", "User", Gender("M"), Nino(Ninos.nino2), dateOfMarriageInput.dateOfMarriage)
+
+        when(
+          mockCachingService.put[RecipientDetailsFormInput](
+            ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS),
+            ArgumentMatchers.eq(recipientDetails)
+          )(any(), any())
+        )
+          .thenReturn(Future.successful(recipientDetails))
+
+        when(mockCachingService.get[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE))(any()))
+          .thenReturn(Future.failed(new RuntimeException("Failed to retrieve marriage date")))
+
+        when(mockTransferService.getRecipientDetailsFormData()(any(), any()))
+          .thenReturn(Future.successful(recipientDetails))
+
+        when(
+          mockTransferService.isRecipientEligible(
+            ArgumentMatchers.eq(Nino(Ninos.nino1)),
+            ArgumentMatchers.eq(registrationFormInput)
+          )(any(), any(), any())
+        )
+          .thenReturn(Future.successful(true))
+
+        val exception = intercept[RuntimeException] {
+          await(controller.transferAction()(request))
+        }
+
+        exception.getMessage shouldBe "Failed to retrieve marriage date"
+      }
+    }
+
     "redirect the user" when {
       "a valid form is submitted" in {
         val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
