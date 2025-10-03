@@ -67,7 +67,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
 
     "display correct lede section" in {
 
-      val line1 = s"Marriage Allowance (opens in a new tab) lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
+      val line1 = s"Marriage Allowance lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
       val line2 = "You can apply for:"
       doc().getElementById("claim-current-year").text().shouldBe("the current year onwards online")
       doc().getElementById("claim-previous-year").text().shouldBe("up to 4 previous years, by post, to have your allowance backdated")
@@ -80,7 +80,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       checkTextInElement(line4, Selectors.nthInset(6))
 
       val marriageAllowanceLink = selectFirst(Selectors.nthInlineLink(2))
-      marriageAllowanceLink.text.shouldBe("Marriage Allowance (opens in a new tab)")
+      marriageAllowanceLink.text.shouldBe("Marriage Allowance")
       marriageAllowanceLink.attr("href") shouldBe "https://www.gov.uk/marriage-allowance"
     }
 
@@ -100,7 +100,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       checkTextInElement(headingMCA, Selectors.nthSubheading(12))
 
       doc().getElementById("married-couples-allowance").text.shouldBe("If one of you was born before 6 April 1935, " +
-        "you might benefit more as a couple by applying for the Married Couple’s Allowance (opens in a new tab). " +
+        "you might benefit more as a couple by applying for the Married Couple’s Allowance. " +
         "You can still apply for Marriage Allowance but you cannot receive both allowances at the same time.")
     }
 

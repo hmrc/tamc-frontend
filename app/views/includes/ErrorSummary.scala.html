@@ -21,15 +21,22 @@
 @(form: Form[?], errorFieldName: Option[String] = None)(implicit messages: Messages)
 
 @if(form.errors.nonEmpty) {
-    @defining(form.errors.groupBy(_.key).values.flatMap(_.headOption).map { error =>
-        ErrorLink(
-        href = Some(s"#${errorFieldName.getOrElse(error.key)}"),
-        content = Text(messages(error.message, error.args*))
-        )
-    }) { errorLinks =>
+@defining(
+    form.errors
+        .groupBy(_.key)
+        .toSeq
+        .sortBy { case (key, _) => form.errors.indexWhere(_.key == key) }
+        .flatMap { case (_, errors) => errors.headOption }
+        .map { error =>
+            ErrorLink(
+                href = Some(s"#${errorFieldName.getOrElse(error.key)}"),
+                content = Text(messages(error.message, error.args*))
+            )
+        }
+    ) { errorLinks =>
         @govukErrorSummary(new GovukFrontendErrorSummary(
-        errorList = errorLinks.toSeq,
-        title = Text(messages("error.summary.title"))
+            errorList = errorLinks.toSeq,
+            title = Text(messages("error.summary.title"))
         ))
     }
 }

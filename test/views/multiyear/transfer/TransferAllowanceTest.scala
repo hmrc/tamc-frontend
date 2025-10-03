@@ -334,7 +334,7 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
-      document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s gender"
+      document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s sex"
     }
 
     "display form error message (gender code is invalid)" in {
@@ -350,7 +350,7 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
       val document = Jsoup.parse(contentAsString(result))
       document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
-      document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s gender"
+      document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s sex"
     }
   }
 
