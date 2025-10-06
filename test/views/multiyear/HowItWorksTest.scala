@@ -60,7 +60,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
     }
 
     "display correct lede section" in {
-      val line1 = s"Marriage Allowance(opens in a new tab) lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
+      val line1 = s"Marriage Allowance lets you transfer £$maxAllowedTransfer of your Personal Allowance to your husband, wife or civil partner if your income is lower than theirs. This can reduce their tax by up to £$maxBenefit this tax year (6 April to 5 April the next year)."
       val line2 = "You can apply for:"
       val line3 = "Marriage Allowance automatically renews at the end of each tax year. You can cancel it, but it will not be stopped until the end of the tax year."
       val line4 = "If your partner has died, you can still make a Marriage Allowance claim as long as the conditions are met. If this applies to you, call HMRC on 0300 200 3300."
@@ -68,12 +68,12 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       shouldHaveText("claim-current-year", "the current year onwards online")
       shouldHaveText("claim-previous-year", "up to 4 previous years, by post, to have your allowance backdated")
 
-      shouldHaveText("para-1", line1)
-      shouldHaveText("para-2", line2)
-      shouldHaveText("para-3", line3)
-      shouldHaveText("para-4", line4)
+      shouldHaveText("para-transfer", line1)
+      shouldHaveText("para-apply", line2)
+      shouldHaveText("para-renew", line3)
+      shouldHaveText("para-partner", line4)
 
-      shouldHaveText("marriage-allowance-link", "Marriage Allowance(opens in a new tab)")
+      shouldHaveText("marriage-allowance-link", "Marriage Allowance")
       doc().getElementById("marriage-allowance-link").attr("href") shouldBe "https://www.gov.uk/marriage-allowance"
     }
 
@@ -89,9 +89,9 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       shouldHaveText("earn-below-max-threshold", s"your partner’s income must be less than £$maxLimit in the current tax year")
 
       shouldHaveText("heading-eligibility", heading)
-      shouldHaveText("para-5", line1)
-      shouldHaveText("para-6", line2)
-      shouldHaveText("heading-2", headingMCA)
+      shouldHaveText("para-eligible", line1)
+      shouldHaveText("para-scotland", line2)
+      shouldHaveText("heading-you-partner", headingMCA)
 
       shouldHaveText(
         "married-couples-allowance",
@@ -107,7 +107,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       val line1 = "Use the Marriage Allowance calculator to see how much you could save in the current tax year. This does not form part of the application."
 
       shouldHaveText("calculate-heading", heading)
-      shouldHaveText("para-7", line1)
+      shouldHaveText("para-calculate", line1)
 
       shouldHaveText("calculator", "Use the Marriage Allowance calculator")
       doc().getElementById("calculator").attr("href") shouldBe "/marriage-allowance-application/benefit-calculator-pta"
@@ -123,7 +123,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       shouldHaveText("need-date-of-marriage", "the date of your marriage or civil partnership")
 
       shouldHaveText("heading-before-apply", heading)
-      shouldHaveText("para-8", line1)
+      shouldHaveText("para-you-need", line1)
     }
 
     "display a start-now button" in {
