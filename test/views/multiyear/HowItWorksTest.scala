@@ -96,7 +96,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
       shouldHaveText(
         "married-couples-allowance",
         "If one of you was born before 6 April 1935, " +
-          "you might benefit more as a couple by applying for the Married Couple’s Allowance(opens in a new tab). " +
+          "you might benefit more as a couple by applying for the Married Couple’s Allowance. " +
           "You can still apply for Marriage Allowance but you cannot receive both allowances at the same time."
       )
     }
