@@ -28,20 +28,20 @@ import utils.LoggerHelper
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TransferAllowanceController @Inject() (
-                                              authenticate: StandardAuthJourney,
-                                              cachingService: CachingService,
-                                              timeService: TimeService,
-                                              cc: MessagesControllerComponents,
-                                              transferV: views.html.multiyear.transfer.transfer,
-                                              recipientDetailsForm: RecipientDetailsForm
+class PartnersDetailsController @Inject()(
+                                           authenticate: StandardAuthJourney,
+                                           cachingService: CachingService,
+                                           timeService: TimeService,
+                                           cc: MessagesControllerComponents,
+                                           partnersDetailsView: views.html.multiyear.transfer.partners_details,
+                                           recipientDetailsForm: RecipientDetailsForm
                                             )(implicit ec: ExecutionContext)
   extends BaseController(cc)
     with LoggerHelper {
 
   def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
     Ok(
-      transferV(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
+      partnersDetailsView(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
     )
   }
 
@@ -50,7 +50,7 @@ class TransferAllowanceController @Inject() (
       .recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(transferV(formWithErrors))),
+        formWithErrors => Future.successful(BadRequest(partnersDetailsView(formWithErrors))),
         recipientData =>
           cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
             Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())

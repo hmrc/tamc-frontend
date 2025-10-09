@@ -55,7 +55,7 @@ class NoRecipientFoundTest extends BaseTest {
       doc.getElementById("partner-details-link").text() shouldBe "Check your partner’s information is correct"
       doc
         .getElementById("partner-details-link")
-        .attr("href")                                   shouldBe "/marriage-allowance-application/transfer-allowance"
+        .attr("href")                                   shouldBe "/marriage-allowance-application/partners-details"
     }
 
   }
