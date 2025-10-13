@@ -129,7 +129,7 @@ class HowItWorksTest extends BaseTest with ViewTestUtils {
     "display a start-now button" in {
 
       shouldHaveText("start-now", "Apply now")
-      doc().getElementById("start-now").attr("href").shouldBe("/marriage-allowance-application/transfer-allowance")
+      doc().getElementById("start-now").attr("href").shouldBe("/marriage-allowance-application/partners-details")
     }
   }
 }

@@ -104,7 +104,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
         val result = controller.history()(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.PartnersDetailsController.transfer().url)
       }
 
       "there is no active (primary) record for a govuk user who is currently logging in" in {
@@ -116,7 +116,7 @@ class HistoryControllerTest extends ControllerBaseTest with ControllerViewTestHe
         val result = controller.history()(request)
 
         status(result) shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.PartnersDetailsController.transfer().url)
       }
     }
 
