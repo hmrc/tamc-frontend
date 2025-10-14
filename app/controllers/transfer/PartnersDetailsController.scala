@@ -29,14 +29,14 @@ import utils.{LoggerHelper, TransferErrorHandler}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TransferAllowanceController @Inject() (
+class PartnersDetailsController @Inject() (
   errorHandler: TransferErrorHandler,
   authenticate: StandardAuthJourney,
   cachingService: CachingService,
   registrationService: TransferService,
   timeService: TimeService,
   cc: MessagesControllerComponents,
-  transferV: views.html.multiyear.transfer.transfer,
+  partnersDetailsView: views.html.multiyear.transfer.partners_details,
   recipientDetailsForm: RecipientDetailsForm
 )(implicit ec: ExecutionContext)
     extends BaseController(cc)
@@ -50,7 +50,7 @@ class TransferAllowanceController @Inject() (
   def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     marriageDateInCurrentTaxYear().map { domCurrentTaxYear =>
       Ok(
-        transferV(
+        partnersDetailsView(
           recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino),
           domCurrentTaxYear
         )
@@ -64,7 +64,7 @@ class TransferAllowanceController @Inject() (
         .recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(transferV(formWithErrors, domCurrentTaxYear))),
+          formWithErrors => Future.successful(BadRequest(partnersDetailsView(formWithErrors, domCurrentTaxYear))),
           recipientData =>
             for {
               _           <- cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData)

@@ -40,7 +40,7 @@ import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 import java.time.LocalDate
 import scala.concurrent.Future
 
-class TransferAllowanceControllerTest extends ControllerBaseTest {
+class PartnersDetailsControllerTest extends ControllerBaseTest {
 
   val currentTaxYear: Int                    = time.TaxYear.current.startYear
   val mockTransferService: TransferService   = mock[TransferService]
@@ -60,8 +60,8 @@ class TransferAllowanceControllerTest extends ControllerBaseTest {
     )
     .build()
 
-  def controller: TransferAllowanceController =
-    app.injector.instanceOf[TransferAllowanceController]
+  def controller: PartnersDetailsController =
+    app.injector.instanceOf[PartnersDetailsController]
 
   when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
   when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear

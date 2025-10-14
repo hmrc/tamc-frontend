@@ -80,7 +80,7 @@ data: models.ConfirmationModel
             <dt class="govuk-summary-list_key" id="partner-name-label">@Html(messages("generic.name"))</dt>
             <dd class="govuk-summary-list_value" id="recipient-name">@data.recipientFirstName @data.recipientLastName</dd>
             <dd class="govuk-summary-list_actions">
-                <a href="@controllers.transfer.routes.TransferAllowanceController.transfer()"
+                <a href="@controllers.transfer.routes.PartnersDetailsController.transfer()"
                 data-journey-click="marriage-allowance:click:edit-partner-details" id="edit-partner-details" aria-label="@Html(messages("pages.form.aria-label"))">
                 <span aria-hidden="true">@Html(messages("generic.change"))</span>
                 <span class="govuk-visually-hidden">@Html(messages("generic.name"))</span>

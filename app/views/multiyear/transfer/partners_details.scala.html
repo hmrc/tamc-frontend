@@ -64,7 +64,7 @@ request: AuthenticatedUserRequest[?]
 
     @p(HtmlContent(Messages("pages.form.details")))
 
-    @form(action = transfer.routes.TransferAllowanceController.transferAction(), args = (Symbol("id") -> "register-form")) {
+    @form(action = transfer.routes.PartnersDetailsController.transferAction(), args = (Symbol("id") -> "register-form")) {
         <fieldset class="govuk-fieldset">
             @inputValue(
                 form = recipientForm,

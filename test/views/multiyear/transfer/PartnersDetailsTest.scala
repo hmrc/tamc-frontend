@@ -18,7 +18,7 @@ package views.multiyear.transfer
 
 import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
 import controllers.auth.PertaxAuthAction
-import controllers.transfer.TransferAllowanceController
+import controllers.transfer.PartnersDetailsController
 import forms.RecipientDetailsForm
 import helpers.FakePertaxAuthAction
 import models.auth.AuthenticatedUserRequest
@@ -35,21 +35,21 @@ import services.TransferService
 import test_utils.TestData.Ninos
 import uk.gov.hmrc.domain.Nino
 import utils.{BaseTest, MockAuthenticatedAction, MockUnauthenticatedAction, NinoGenerator}
-import views.html.multiyear.transfer.transfer
+import views.html.multiyear.transfer.partners_details
 
 import java.time.LocalDate
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
 
-class TransferAllowanceTest extends BaseTest with NinoGenerator {
+class PartnersDetailsTest extends BaseTest with NinoGenerator {
 
   lazy val nino: String = generateNino().nino
-  lazy val transferView: transfer = instanceOf[transfer]
+  lazy val partnersDetailsView: partners_details = instanceOf[partners_details]
   lazy val transferForm: RecipientDetailsForm = instanceOf[RecipientDetailsForm]
   implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   val mockTransferService: TransferService = mock[TransferService]
-  val transferAllowanceController: TransferAllowanceController = app.injector.instanceOf[TransferAllowanceController]
+  val partnersDetailsController: PartnersDetailsController = app.injector.instanceOf[PartnersDetailsController]
 
   implicit val duration: Timeout = 20 seconds
 
@@ -66,7 +66,7 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
   "Transfer page" should {
     "display the correct page title of transfer page" in {
 
-      val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino)), true).toString())
+      val document = Jsoup.parse(partnersDetailsView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino)), true).toString())
       val title = document.title()
       val expected = messages("title.transfer") + " - " + messages("title.application.pattern")
 
@@ -75,7 +75,7 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
 
     "display lower income content" in {
 
-      val document = Jsoup.parse(transferView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino)), true).toString())
+      val document = Jsoup.parse(partnersDetailsView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino)), true).toString())
       val paragraphTag = document.getElementsByTag("p").toString
       val expected = messages("pages.form.details")
 
@@ -93,20 +93,20 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "transferor-email" -> "example@example.com"
       )
 
-      val result = transferAllowanceController.transferAction()(request)
+      val result = partnersDetailsController.transferAction()(request)
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
 
     "display form error message (request body missing form data)" in {
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("nino-error").text() shouldBe "Error: Enter your partner’s National Insurance number"
     }
@@ -119,11 +119,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
@@ -135,11 +135,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
@@ -151,11 +151,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Enter your partner’s first name"
     }
@@ -167,11 +167,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Your partner’s first name must be 35 characters or less"
     }
@@ -183,11 +183,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
     }
@@ -199,11 +199,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("name-error").text() shouldBe "Error: Your partner’s first name must only include letters a to z and hyphens"
     }
@@ -214,11 +214,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("last-name-error").text() shouldBe "Error: Enter your partner’s last name"
     }
@@ -230,11 +230,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("last-name-error").text() shouldBe "Error: Enter your partner’s last name"
     }
@@ -246,11 +246,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("last-name-error").text() shouldBe "Error: Enter your partner’s last name"
     }
@@ -262,11 +262,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("last-name-error").text() shouldBe "Error: Your partner’s last name must be 35 characters or less"
     }
@@ -278,11 +278,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("last-name-error").text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
     }
@@ -294,11 +294,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("last-name-error").text() shouldBe "Error: Your partner’s last name must only include letters a to z and hyphens"
 
@@ -311,11 +311,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("nino-error").text() shouldBe "Error: You cannot enter your own details"
     }
@@ -328,11 +328,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "last-name" -> "bar",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s sex"
     }
@@ -344,11 +344,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "X",
         "nino" -> Ninos.nino1
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("gender-error").text() shouldBe "Error: Select your partner’s sex"
     }
@@ -361,11 +361,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "last-name" -> "bar",
         "gender" -> "M"
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("nino-error").text shouldBe "Error: Enter your partner’s National Insurance number"
     }
@@ -377,11 +377,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> ""
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("nino-error").text shouldBe "Error: Enter your partner’s National Insurance number"
     }
@@ -393,11 +393,11 @@ class TransferAllowanceTest extends BaseTest with NinoGenerator {
         "gender" -> "M",
         "nino" -> "ZZ"
       )
-      val result = transferAllowanceController.transferAction(request)
+      val result = partnersDetailsController.transferAction(request)
 
       status(result) shouldBe BAD_REQUEST
       val document = Jsoup.parse(contentAsString(result))
-      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/transfer-allowance")
+      document.getElementsByAttribute("action").toString should include("/marriage-allowance-application/partners-details")
       document.getElementsByClass("govuk-error-summary__title").text shouldBe "There is a problem"
       document.getElementById("nino-error").text shouldBe "Error: Enter a real National Insurance number"
     }
