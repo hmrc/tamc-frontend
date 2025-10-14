@@ -44,7 +44,7 @@ class EligibleYearsTest extends BaseTest with NinoGenerator {
     instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
   val languageUtilsImpl: LanguageUtilsImpl                               = instanceOf[LanguageUtilsImpl]
 
-  implicit val doc: Document = Jsoup.parse(eligibleYears(true, recipient, Some(LocalDate.now)).toString())
+  implicit val doc: Document = Jsoup.parse(eligibleYears(recipient, Some(LocalDate.now)).toString())
 
   val currentTaxYearWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(LocalDate.now())
   val currentTaxYearDate: String     = currentTaxYearWithNBSP.replace("\u00A0", " ")

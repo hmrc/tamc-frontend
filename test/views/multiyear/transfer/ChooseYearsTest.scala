@@ -19,7 +19,7 @@ package views.multiyear.transfer
 import config.ApplicationConfig
 import forms.ChooseYearForm
 import models.auth.AuthenticatedUserRequest
-import models.{Gender, RegistrationFormInput}
+import models.DateOfMarriageFormInput
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import play.api.data.Form
@@ -41,7 +41,7 @@ class ChooseYearsTest extends BaseTest with NinoGenerator {
   lazy val nino: String = generateNino().nino
 
   val form: Form[Seq[String]] = new ChooseYearForm().apply()
-  lazy val registrationForm: RegistrationFormInput = RegistrationFormInput("firstName", "lastName", Gender("M"), Nino(nino), currentTaxYearDate)
+  lazy val dateOfMarriageForm: DateOfMarriageFormInput = DateOfMarriageFormInput(currentTaxYearDate)
   implicit val request: AuthenticatedUserRequest[AnyContentAsEmpty.type] = AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
   override implicit lazy val messages: Messages = instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
   val languageUtilsImpl: LanguageUtilsImpl = instanceOf[LanguageUtilsImpl]
@@ -50,9 +50,9 @@ class ChooseYearsTest extends BaseTest with NinoGenerator {
   val currentTaxYear: TaxYear = TaxYear.current
   val currentTaxYearDate: LocalDate = currentTaxYear.starts
 
-  implicit val doc: Document = Jsoup.parse(chooseYearsView(form, registrationForm.name,registrationForm.dateOfMarriage, currentTaxYearDate).toString())
+  implicit val doc: Document = Jsoup.parse(chooseYearsView(form, currentTaxYearDate).toString())
 
-  val dateOfMarriageWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(registrationForm.dateOfMarriage)
+  val dateOfMarriageWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(dateOfMarriageForm.dateOfMarriage)
   val dateOfMarriage: String = dateOfMarriageWithNBSP.replace("\u00A0", " ")
 
   val currentTaxYearWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(currentTaxYearDate)

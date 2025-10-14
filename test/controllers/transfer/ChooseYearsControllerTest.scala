@@ -104,25 +104,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
         status(result) mustBe OK
       }
     }
-
-    "redirect the user " when {
-      "there are available tax years not including current year" in {
-        when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any())).thenReturn(
-          Future.successful(
-            CurrentAndPreviousYearsEligibility(
-              currentYearAvailable = false,
-              List(TaxYear(2015)),
-              RecipientRecordData.recipientRecord.data,
-              RecipientRecordData.recipientRecord.availableTaxYears
-            )
-          )
-        )
-        val result = controller.chooseYears()(request)
-        status(result).shouldBe(SEE_OTHER)
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ApplyByPostController.applyByPost().url)
-      }
     }
-  }
 
   "chooseYearsAction" should {
     "return bad request" when {
@@ -149,7 +131,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
 
         val result = controller.chooseYearsAction()(request)
         status(result).shouldBe(SEE_OTHER)
-        redirectLocation(result).shouldBe(Some(controllers.transfer.routes.EligibleYearsController.eligibleYears().url))
+        redirectLocation(result).shouldBe(Some(controllers.transfer.routes.PartnersDetailsController.transfer().url))
       }
 
       "previousTaxYears is selected" in {
