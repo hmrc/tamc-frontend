@@ -46,15 +46,17 @@ class TransferService @Inject()(
 ) extends Logging {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
-    Future {
-      auditConnector.sendEvent(event)
+    Option(auditConnector.sendEvent(event)) match {
+      case Some(futureAudit) => futureAudit.map(_ => ())
+      case None              => Future.successful(())
     }
+
 
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
                          (implicit request: Request[?], hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     checkRecipientEligible(transferorNino, recipientData).map(eligible => eligible) recoverWith {
       case error =>
-        handleAudit(RecipientFailureEvent(transferorNino, error))
+        handleAudit(RecipientFailureEvent(transferorNino, error)).flatMap(_ => Future.failed(error))
         Future.failed(error)
     }
 
@@ -87,7 +89,7 @@ class TransferService @Inject()(
   def createRelationship(transferorNino: Nino)(implicit request: Request[?], hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
     doCreateRelationship(transferorNino)(request, hc, messages, ec) recover {
       case error =>
-        handleAudit(CreateRelationshipCacheFailureEvent(error))
+        handleAudit(CreateRelationshipCacheFailureEvent(error)).flatMap(_ => Future.failed(error))
         throw error
     }
   }
@@ -295,7 +297,7 @@ class TransferService @Inject()(
         }
     } recover {
       case error =>
-        handleAudit(CreateRelationshipFailureEvent(data, error))
+        handleAudit(CreateRelationshipFailureEvent(data, error)).flatMap(_ => Future.failed(error))
         throw error
     }
   }
