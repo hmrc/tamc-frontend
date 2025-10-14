@@ -123,7 +123,7 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
 
         val result = controller.dateOfMarriageAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(controllers.transfer.routes.TransferAllowanceController.transfer().url)
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.PartnersDetailsController.transfer().url)
       }
       
     }

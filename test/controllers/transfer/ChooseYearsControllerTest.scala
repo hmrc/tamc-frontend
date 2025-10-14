@@ -131,7 +131,7 @@ class ChooseYearsControllerTest extends ControllerBaseTest with ControllerViewTe
 
         val result = controller.chooseYearsAction()(request)
         status(result).shouldBe(SEE_OTHER)
-        redirectLocation(result).shouldBe(Some(controllers.transfer.routes.TransferAllowanceController.transfer().url))
+        redirectLocation(result).shouldBe(Some(controllers.transfer.routes.PartnersDetailsController.transfer().url))
       }
 
       "previousTaxYears is selected" in {

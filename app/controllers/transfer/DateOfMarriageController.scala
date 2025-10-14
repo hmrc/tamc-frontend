@@ -59,7 +59,7 @@ class DateOfMarriageController @Inject() (
           marriageData => {
             cachingService.put[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE, marriageData)
             if (current.contains(marriageData.dateOfMarriage))
-              Future.successful(Redirect(controllers.transfer.routes.TransferAllowanceController.transfer()))
+              Future.successful(Redirect(controllers.transfer.routes.PartnersDetailsController.transfer()))
             else
               Future.successful(Redirect(controllers.transfer.routes.ChooseYearsController.chooseYears()))
           }

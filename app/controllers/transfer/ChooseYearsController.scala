@@ -68,7 +68,7 @@ class ChooseYearsController @Inject()(
               if (selectedYears.exists(_ != currentYearStr)) {
                 Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost())
               } else {
-                Redirect(controllers.transfer.routes.TransferAllowanceController.transfer())
+                Redirect(controllers.transfer.routes.PartnersDetailsController.transfer())
               }
             } else {
               logger
