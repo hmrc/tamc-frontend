@@ -20,17 +20,15 @@ import controllers.ControllerViewTestHelper
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models.{CurrentAndPreviousYearsEligibility, TaxYear}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.Injecting
 import services.{CachingService, TransferService}
-import test_utils.data.RecipientRecordData
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
 import views.html.multiyear.transfer.apply_by_post
 
@@ -55,16 +53,6 @@ class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTe
 
   "applyByPost" should {
     "display the Apply By Post page" in {
-      val currentYearAvailable = true
-      when(mockTransferService.getCurrentAndPreviousYearsEligibility(any(), any()))
-        .thenReturn(Future.successful(
-          CurrentAndPreviousYearsEligibility(
-            currentYearAvailable = true,
-            List(TaxYear(2014)),
-            RecipientRecordData.recipientRecord.data,
-            RecipientRecordData.recipientRecord.availableTaxYears
-          )))
-
       val cachedData = Seq("previousTaxYears")
       when(mockCachingService.get[String](any())(any()))
         .thenReturn(Future.successful(cachedData))
@@ -73,7 +61,7 @@ class ApplyByPostControllerTest extends ControllerBaseTest with ControllerViewTe
 
       status(result).shouldBe(OK)
 
-      result `rendersTheSameViewAs` applyByPostView(cachedData, currentYearAvailable)
+      result `rendersTheSameViewAs` applyByPostView(cachedData)
     }
   }
 

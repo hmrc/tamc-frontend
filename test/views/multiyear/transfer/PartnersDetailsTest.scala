@@ -66,7 +66,7 @@ class PartnersDetailsTest extends BaseTest with NinoGenerator {
   "Transfer page" should {
     "display the correct page title of transfer page" in {
 
-      val document = Jsoup.parse(partnersDetailsView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino))).toString())
+      val document = Jsoup.parse(partnersDetailsView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino)), true).toString())
       val title = document.title()
       val expected = messages("title.transfer") + " - " + messages("title.application.pattern")
 
@@ -75,7 +75,7 @@ class PartnersDetailsTest extends BaseTest with NinoGenerator {
 
     "display lower income content" in {
 
-      val document = Jsoup.parse(partnersDetailsView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino))).toString())
+      val document = Jsoup.parse(partnersDetailsView(transferForm.recipientDetailsForm(LocalDate.now, Nino(nino)), true).toString())
       val paragraphTag = document.getElementsByTag("p").toString
       val expected = messages("pages.form.details")
 
