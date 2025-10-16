@@ -65,15 +65,15 @@ class PartnersDetailsController @Inject()(
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(partnersDetailsView(formWithErrors, domCurrentTaxYear))),
-          recipientData =>
+          recipientData  =>
             for {
-              _ <- cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData)
+              _           <- cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData)
               marriageOpt <- cachingService.get[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE)
-              marriage <- marriageOpt match {
+              marriage    <- marriageOpt match {
                 case Some(dom) => Future.successful(dom)
                 case None => Future.failed(new RuntimeException("Failed to retrieve marriage date"))
               }
-              recipient <- registrationService.getRecipientDetailsFormData()
+              recipient   <- registrationService.getRecipientDetailsFormData()
 
               dataToSend = new RegistrationFormInput(
                 recipient.name,
@@ -82,7 +82,7 @@ class PartnersDetailsController @Inject()(
                 recipient.nino,
                 marriage.dateOfMarriage
               )
-              _ <- registrationService.isRecipientEligible(request.nino, dataToSend)
+              _           <- registrationService.isRecipientEligible(request.nino, dataToSend)
             } yield Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
         ) recover errorHandler.handleError
     }
