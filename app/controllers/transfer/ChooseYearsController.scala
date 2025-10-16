@@ -42,26 +42,42 @@ class ChooseYearsController @Inject()(
                                          errorHandler: TransferErrorHandler
                                      )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  val form: Form[Seq[String]] = formProvider()
-  def currentTaxYear: LocalDate = timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
+  private val form: Form[Seq[String]] = formProvider()
+  private def currentTaxYear: LocalDate =
+    timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
 
-  def chooseYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
+  def chooseYears: Action[AnyContent] =
+    authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+      registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
         case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
           throw new NoTaxYearsAvailable
         case CurrentAndPreviousYearsEligibility(false, previousYears, _, _) if previousYears.nonEmpty =>
           Future.successful(Redirect(controllers.transfer.routes.ApplyByPostController.applyByPost()))
         case CurrentAndPreviousYearsEligibility(_, _, registrationInput, _) =>
-          cachingService.get[String](CACHE_CHOOSE_YEARS).map {
-            case Some(data) =>
-              val selectedYears: Seq[String] = data.split(",").toSeq
-              Ok(chooseYearsView(form.fill(selectedYears), registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
+          cachingService.get(CACHE_CHOOSE_YEARS).map {
+            case Some(cachedString) =>
+              val selectedYears = cachedString.split(",").toSeq
+              val filledForm = form.fill(selectedYears)
+              Ok(
+                chooseYearsView(
+                  filledForm,
+                  registrationInput.name,
+                  registrationInput.dateOfMarriage,
+                  currentTaxYear
+                )
+              )
             case None =>
-              Ok(chooseYearsView(form, registrationInput.name, registrationInput.dateOfMarriage, currentTaxYear))
+              Ok(
+                chooseYearsView(
+                  form,
+                  registrationInput.name,
+                  registrationInput.dateOfMarriage,
+                  currentTaxYear
+                )
+              )
           }
-
-    } recover errorHandler.handleError
-  }
+      } recover errorHandler.handleError
+    }
 
   def chooseYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
@@ -73,7 +89,7 @@ class ChooseYearsController @Inject()(
           selectedYears => {
             val cacheString = selectedYears.mkString(",")
 
-            cachingService.put[String](CACHE_CHOOSE_YEARS, cacheString).map { (returnedValue: String) =>
+            cachingService.put(CACHE_CHOOSE_YEARS, cacheString).map { (returnedValue: String) =>
               val currentYearStr = ApplyForEligibleYears.CurrentTaxYear.toString
 
               if (returnedValue == cacheString) {

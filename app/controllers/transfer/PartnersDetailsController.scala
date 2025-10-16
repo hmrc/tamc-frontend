@@ -39,10 +39,14 @@ class PartnersDetailsController @Inject()(
   extends BaseController(cc)
     with LoggerHelper {
 
-  def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
-    Ok(
-      partnersDetailsView(recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino))
-    )
+  def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+    val form = recipientDetailsForm.recipientDetailsForm(timeService.getCurrentDate, request.nino)
+    cachingService.get(CACHE_RECIPIENT_DETAILS).map {
+      case Some(savedData) =>
+        Ok(partnersDetailsView(form.fill(savedData)))
+      case None =>
+        Ok(partnersDetailsView(form))
+    }
   }
 
   def transferAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
@@ -52,7 +56,7 @@ class PartnersDetailsController @Inject()(
       .fold(
         formWithErrors => Future.successful(BadRequest(partnersDetailsView(formWithErrors))),
         recipientData =>
-          cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
+          cachingService.put(CACHE_RECIPIENT_DETAILS, recipientData).map { _ =>
             Redirect(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage())
           }
       )

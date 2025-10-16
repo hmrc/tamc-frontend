@@ -20,6 +20,7 @@ import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.DateOfMarriageForm
 import models.{DateOfMarriageFormInput, RecipientDetailsFormInput, RegistrationFormInput}
+import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService.*
 import services.{CachingService, TimeService, TransferService}
@@ -46,8 +47,22 @@ class DateOfMarriageController @Inject() (
 
   override def now: () => LocalDate = () => LocalDate.now()
 
-  def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
-    Ok(dateOfMarriageV(marriageForm = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)))
+  def dateOfMarriage: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+    val form: Form[DateOfMarriageFormInput] = dateOfMarriageForm.dateOfMarriageForm(today = timeService.getCurrentDate)
+    cachingService.get(CACHE_MARRIAGE_DATE).map {
+      case Some(savedData) =>
+        val date = savedData.dateOfMarriage
+        val filledForm = form.bind(
+          Map(
+            "dateOfMarriage.day" -> date.getDayOfMonth.toString,
+            "dateOfMarriage.month" -> date.getMonthValue.toString,
+            "dateOfMarriage.year" -> date.getYear.toString,
+          )
+        )
+        Ok(dateOfMarriageV(filledForm))
+
+      case None => Ok(dateOfMarriageV(form))
+    }
   }
 
   def dateOfMarriageAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async {
@@ -58,7 +73,7 @@ class DateOfMarriageController @Inject() (
         .fold(
           formWithErrors => Future.successful(BadRequest(dateOfMarriageV(formWithErrors))),
           marriageData => {
-            cachingService.put[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE, marriageData)
+            cachingService.put(CACHE_MARRIAGE_DATE, marriageData)
             registrationService.getRecipientDetailsFormData() flatMap {
               case RecipientDetailsFormInput(name, lastName, gender, nino) =>
                 val dataToSend = new RegistrationFormInput(name, lastName, gender, nino, marriageData.dateOfMarriage)

@@ -70,7 +70,7 @@
           CheckboxItem(
             content = item.content,
             value   = item.value,
-            checked = form.data.getOrElse("value[]", "").contains(item.value),
+            checked = form.value.collect { case seq: Seq[String] => seq.contains(item.value) }.getOrElse(false),
             id = item.id
           )
         }
