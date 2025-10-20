@@ -85,15 +85,19 @@ request: AuthenticatedUserRequest[?]
                 legend = "pages.form.field.gender",
                 id = Some("gender"),
                 name = "gender",
-                items = Seq(RadioItem(
+                items = Seq(
+                            RadioItem(
                                 content = Text(messages("pages.form.field.gender.male")),
                                 value = Some(Gender("M").gender),
-                                    id = Some("gender")
-                                ), RadioItem(
-                                    content = Text(messages("pages.form.field.gender.female")),
-                                    value = Some(Gender("F").gender),
-                                    id = Some("gender-f")
-                                )),
+                                id = Some("gender"),
+                                checked = recipientForm("gender").value.contains("M")
+                            ),
+                            RadioItem(
+                                content = Text(messages("pages.form.field.gender.female")),
+                                value = Some(Gender("F").gender),
+                                id = Some("gender-f"),
+                                checked = recipientForm("gender").value.contains("F")
+                            )),
                 legendAsHeading = false,
                     legendClasses = "govuk-label",
                     hint = Some(Text(messages("pages.form.field-helper.gender")))

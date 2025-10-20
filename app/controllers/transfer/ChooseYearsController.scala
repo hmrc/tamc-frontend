@@ -31,24 +31,26 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChooseYearsController @Inject()(
-                                         authenticate: StandardAuthJourney,
-                                         cachingService: CachingService,
-                                         timeService: TimeService,
-                                         cc: MessagesControllerComponents,
-                                         chooseYearsView: views.html.multiyear.transfer.choose_eligible_years,
-                                         formProvider: ChooseYearForm,
-                                         errorHandler: TransferErrorHandler
+                                       authenticate: StandardAuthJourney,
+                                       cachingService: CachingService,
+                                       timeService: TimeService,
+                                       cc: MessagesControllerComponents,
+                                       chooseYearsView: views.html.multiyear.transfer.choose_eligible_years,
+                                       formProvider: ChooseYearForm,
+                                       errorHandler: TransferErrorHandler
                                      )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
 
-  val form: Form[Seq[String]]   = formProvider()
-  def currentTaxYear: LocalDate = timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
+  private val form: Form[Seq[String]] = formProvider()
+
+  private def currentTaxYear: LocalDate =
+    timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
 
   def chooseYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     cachingService.get[String](CACHE_CHOOSE_YEARS).map {
       case Some(data) =>
         val selectedYears: Seq[String] = data.split(",").toSeq
         Ok(chooseYearsView(form.fill(selectedYears), currentTaxYear))
-      case None       =>
+      case None =>
         Ok(chooseYearsView(form, currentTaxYear))
     } recover errorHandler.handleError
   }
@@ -61,7 +63,7 @@ class ChooseYearsController @Inject()(
         selectedYears => {
           val cacheString = selectedYears.mkString(",")
 
-          cachingService.put[String](CACHE_CHOOSE_YEARS, cacheString).map { (returnedValue: String) =>
+          cachingService.put(CACHE_CHOOSE_YEARS, cacheString).map { (returnedValue: String) =>
             val currentYearStr = ApplyForEligibleYears.CurrentTaxYear.toString
 
             if (returnedValue == cacheString) {

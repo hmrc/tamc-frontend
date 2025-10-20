@@ -29,17 +29,17 @@ import utils.{LoggerHelper, TransferErrorHandler}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PartnersDetailsController @Inject() (
-  errorHandler: TransferErrorHandler,
-  authenticate: StandardAuthJourney,
-  cachingService: CachingService,
-  registrationService: TransferService,
-  timeService: TimeService,
-  cc: MessagesControllerComponents,
-  partnersDetailsView: views.html.multiyear.transfer.partners_details,
-  recipientDetailsForm: RecipientDetailsForm
-)(implicit ec: ExecutionContext)
-    extends BaseController(cc)
+class PartnersDetailsController @Inject()(
+                                           errorHandler: TransferErrorHandler,
+                                           authenticate: StandardAuthJourney,
+                                           cachingService: CachingService,
+                                           registrationService: TransferService,
+                                           timeService: TimeService,
+                                           cc: MessagesControllerComponents,
+                                           partnersDetailsView: views.html.multiyear.transfer.partners_details,
+                                           recipientDetailsForm: RecipientDetailsForm
+                                         )(implicit ec: ExecutionContext)
+  extends BaseController(cc)
     with LoggerHelper {
 
   private def marriageDateInCurrentTaxYear()(implicit request: Request[?]): Future[Boolean] =
@@ -48,13 +48,13 @@ class PartnersDetailsController @Inject() (
     }
 
   def transfer: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    marriageDateInCurrentTaxYear().map { domCurrentTaxYear =>
-      Ok(
-        partnersDetailsView(
-          recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino),
-          domCurrentTaxYear
-        )
-      )
+    val form = recipientDetailsForm.recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)
+    for {
+      domCurrentTaxYear <- marriageDateInCurrentTaxYear()
+      cachedRecipient   <- cachingService.get[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS)
+    } yield {
+      val filledForm = cachedRecipient.map(form.fill).getOrElse(form)
+      Ok(partnersDetailsView(filledForm, domCurrentTaxYear))
     }
   }
 
@@ -65,14 +65,14 @@ class PartnersDetailsController @Inject() (
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(partnersDetailsView(formWithErrors, domCurrentTaxYear))),
-          recipientData =>
+          recipientData  =>
             for {
               _           <- cachingService.put[RecipientDetailsFormInput](CACHE_RECIPIENT_DETAILS, recipientData)
               marriageOpt <- cachingService.get[DateOfMarriageFormInput](CACHE_MARRIAGE_DATE)
               marriage    <- marriageOpt match {
-                               case Some(dom) => Future.successful(dom)
-                               case None      => Future.failed(new RuntimeException("Failed to retrieve marriage date"))
-                             }
+                case Some(dom) => Future.successful(dom)
+                case None => Future.failed(new RuntimeException("Failed to retrieve marriage date"))
+              }
               recipient   <- registrationService.getRecipientDetailsFormData()
 
               dataToSend = new RegistrationFormInput(
@@ -82,7 +82,7 @@ class PartnersDetailsController @Inject() (
                 recipient.nino,
                 marriage.dateOfMarriage
               )
-              _         <- registrationService.isRecipientEligible(request.nino, dataToSend)
+              _           <- registrationService.isRecipientEligible(request.nino, dataToSend)
             } yield Redirect(controllers.transfer.routes.EligibleYearsController.eligibleYears())
         ) recover errorHandler.handleError
     }
