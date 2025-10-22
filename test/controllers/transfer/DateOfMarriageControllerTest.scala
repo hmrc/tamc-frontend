@@ -143,4 +143,14 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
       
     }
   }
+
+  "redirectFromTransferAllowance" should {
+    "redirect to the date of marriage page" in {
+      val result = controller.redirectFromTransferAllowance()(FakeRequest(GET, "/transfer-allowance"))
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
+    }
+  }
+
 }

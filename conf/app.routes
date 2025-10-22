@@ -12,12 +12,16 @@ POST        /benefit-calculator                  controllers.EligibilityCalculat
 # PTA journey 
 GET         /benefit-calculator-pta              controllers.EligibilityCalculatorController.ptaCalculator()
 POST        /benefit-calculator-pta              controllers.EligibilityCalculatorController.ptaCalculatorAction()
- 
+
+
+#old transfer allowance link
+GET         /transfer-allowance                  controllers.transfer.DateOfMarriageController.redirectFromTransferAllowance()
+
 # Transfer Allowance 
-GET         /partners-details                    controllers.transfer.PartnersDetailsController.transfer()
-POST        /partners-details                    controllers.transfer.PartnersDetailsController.transferAction()
 GET         /date-of-marriage                    controllers.transfer.DateOfMarriageController.dateOfMarriage()
 POST        /date-of-marriage                    controllers.transfer.DateOfMarriageController.dateOfMarriageAction()
+GET         /partners-details                    controllers.transfer.PartnersDetailsController.transfer()
+POST        /partners-details                    controllers.transfer.PartnersDetailsController.transferAction()
 GET         /choose-years-to-apply-for           controllers.transfer.ChooseYearsController.chooseYears()
 POST        /choose-years-to-apply-for           controllers.transfer.ChooseYearsController.chooseYearsAction()
 GET         /eligible-years                      controllers.transfer.EligibleYearsController.eligibleYears()
