@@ -80,4 +80,9 @@ class DateOfMarriageController @Inject() (
           }
         ) recover errorHandler.handleError
   }
+  
+  def redirectFromTransferAllowance: Action[AnyContent] = Action {
+    Redirect(routes.DateOfMarriageController.dateOfMarriage())
+  }
+
 }
