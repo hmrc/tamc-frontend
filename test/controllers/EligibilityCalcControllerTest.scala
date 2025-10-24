@@ -31,7 +31,11 @@ class EligibilityCalcControllerTest extends BaseTest {
   "Check eligibility benefit" should {
 
     "return 200 if form is submitted with no errors" in {
-      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody("country" -> "england", "transferor-income" -> "0", "recipient-income" -> "13000")
+      val request = FakeRequest().withMethod("POST").withFormUrlEncodedBody(
+        "country" -> "england",
+        "transferor-income" -> "0",
+        "recipient-income" -> (applicationConfig.RECIPIENT_ALLOWANCE + 500).toString
+      )
       val result = controller.gdsCalculatorAction()(request)
       status(result) shouldBe OK
     }
