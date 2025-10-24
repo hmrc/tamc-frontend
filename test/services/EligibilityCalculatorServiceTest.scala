@@ -237,7 +237,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(231.0))
         }
 
-        ///TODO SCOTTISH RATES - To be made dynamic needs to calculate the rate of Scottish income at their 20% bracket to establish how much of £252 they are entitled to
+        //TODO SCOTTISH RATES - To be made dynamic needs to calculate the rate of Scottish income at their 20% bracket to establish how much of £252 they are entitled to
         "The higher earner has income that is taxable within 20% bracket and the lower earners income is below transferor allowance" in {
           val incomes = List(
             (14000, 9000, 252),
