@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,28 +31,30 @@ class EligibilityCalculatorService @Inject()(
   def calculate(transferorIncome: BigDecimal, recipientIncome: BigDecimal, countryOfResidence: Country, taxYear: TaxYear): EligibilityCalculatorResult = {
     val maxBenefitLimit = benefitCalculatorHelper.maxLimit(countryOfResidence)
 
+    val incorrectRole = transferorIncome > recipientIncome
+    val bothOverMax = transferorIncome > maxBenefitLimit && recipientIncome > maxBenefitLimit
+    val recipientNotEligible = recipientIncome > maxBenefitLimit || recipientIncome <= appConfig.PERSONAL_ALLOWANCE()
+    val mayNotBenefit = transferorIncome > appConfig.PERSONAL_ALLOWANCE()
     val hasMaxBenefit = transferorIncome < appConfig.TRANSFEROR_ALLOWANCE && recipientIncome > appConfig.RECIPIENT_ALLOWANCE
-    val recipientNotEligible = recipientIncome > maxBenefitLimit || recipientIncome < appConfig.PERSONAL_ALLOWANCE()
-    val bothOverMaxLimit = transferorIncome > maxBenefitLimit && recipientIncome > maxBenefitLimit
 
-    if (transferorIncome > recipientIncome)
-      EligibilityCalculatorResult("eligibility.feedback.incorrect-role")
-    else if (bothOverMaxLimit)
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible",
+    val incomeScenarios: Seq[Boolean] = Seq(incorrectRole, bothOverMax, recipientNotEligible, mayNotBenefit, hasMaxBenefit)
+
+    //TODO SCOTTISH RATES: - conversations to be had with potential clarification from the business - hasMaxBenefit > if Scotland residency {band => band.name == "StarterRate"} else "BasicRate" 
+    // This rate is also determined by the level of income in Scottish tax payers. 
+    // It is necessary to calculate if they are 20% tax payers and therefore entitled to the standard max benefit (Currently £252, vs £239) - this currently may not be working as expected
+    incomeScenarios match {
+      case Seq(true, _, _, _, _) => EligibilityCalculatorResult(messageKey = "eligibility.feedback.incorrect-role")
+      case Seq(_, true, _, _, _) => EligibilityCalculatorResult(messageKey = "eligibility.feedback.transferor-not-eligible",
         messageParam = Some(benefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "ML")))
-    else if (recipientNotEligible)
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
+      case Seq(_, _, true, _, _) => EligibilityCalculatorResult(messageKey = "eligibility.feedback.recipient-not-eligible",
         messageParam = Some(benefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "PA")),
         messageParam2 = Some(benefitCalculatorHelper.setCurrencyFormat(countryOfResidence, "ML")))
-    else if (transferorIncome > appConfig.PERSONAL_ALLOWANCE()) {
-      val paFormat = benefitCalculatorHelper.currencyFormatter(appConfig.PERSONAL_ALLOWANCE())
-      EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple", messageParam = Some(paFormat))
-    } else if (hasMaxBenefit) {
-      val basicRate = getCountryTaxBands(countryOfResidence, taxYear).find(band => band.name == "BasicRate").head.rate
-      val maxBenefit = (appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate).ceil.toInt
-      EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(maxBenefit))
-    } else {
-      partialEligibilityScenario(transferorIncome, recipientIncome, getCountryTaxBands(countryOfResidence, taxYear))
+      case Seq(_, _, _, true, _) => val paFormat = benefitCalculatorHelper.currencyFormatter(appConfig.PERSONAL_ALLOWANCE())
+        EligibilityCalculatorResult("eligibility.check.unlike-benefit-as-couple", messageParam = Some(paFormat))
+      case Seq(_, _, _, _, true) => val basicRate = getCountryTaxBands(countryOfResidence, taxYear).find(band => band.name == "BasicRate").head.rate
+        val maxBenefit = (appConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * basicRate).ceil.toInt
+        EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(maxBenefit))
+      case _ => partialEligibilityScenario(transferorIncome, recipientIncome, getCountryTaxBands(countryOfResidence, taxYear))
     }
   }
 

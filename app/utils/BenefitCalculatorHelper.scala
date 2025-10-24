@@ -20,7 +20,7 @@ import config.ApplicationConfig
 
 import java.text.NumberFormat
 import java.util.Locale
-import models._
+import models.*
 
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class BenefitCalculatorHelper@Inject()(applicationConfig: ApplicationConfig) {
 
     Math.min(benefitsFromBandedIncome, maxBenefit.toInt)
   }
-
+  
   private def dividedIncome(relevantTaxBands: List[TaxBand], incomeLessPersonalAllowance: BigDecimal): Map[String, BigDecimal] = {
     relevantTaxBands.map {
       band =>
