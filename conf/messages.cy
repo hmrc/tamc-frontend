@@ -187,10 +187,13 @@ hmrc.contact-details-9=Gwybodaeth am gost galwadau
 #********************************************************************************
 pages.calc.header=Cyfrifiannell Lwfans Priodasol
 pages.calc.para1=Darganfyddwch faint o dreth y gallwch ei harbed fel cwpl drwy wneud cais am Lwfans Priodasol.
-pages.calc.where=Ble'r ydych yn byw?
-pages.calc.where.hint=Gall ble'r ydych yn byw effeithio ar faint yr ydych yn ei elwa oherwydd cyfraddau treth gwahanol
+pages.calc.where=Ble''r ydych yn byw?
+pages.calc.where.hint=Gall ble''r ydych yn byw effeithio ar faint yr ydych yn ei elwa oherwydd cyfraddau treth gwahanol
 pages.calc.est.may.differ=Amcangyfrif yw hwn, ac mae'n bosibl y bydd yn wahanol o'r cyfrifiad terfynol pan fyddwch yn gwneud cais
 label.ni = Gogledd Iwerddon
+label.england= Lloegr
+label.scotland= yr Alban
+label.wales= Cymru
 pages.form.field.income=Eich incwm (isel), cyn didynnu treth
 pages.form.field.recipient-income=Incwm eich partner (uchel), cyn didynnu treth
 pages.calc.field-helper.income=Dyma ffigur eich incwm cyn didynnu treth.
