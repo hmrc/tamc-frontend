@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,19 +36,28 @@ class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
     "calculateTotalBenefitAcrossBands" must {
 
       "return the correct total benefit for an English tax payer" in {
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() * 2 - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)
+        ) shouldBe applicationConfig.MAX_BENEFIT()
 
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)) shouldBe 116
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() + (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.5) - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)
+        ) shouldBe (applicationConfig.MAX_BENEFIT() * 0.5).floor.toInt
 
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)) shouldBe 216
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() + (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.8) - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(England, currentTaxYear)
+        ) shouldBe (applicationConfig.MAX_BENEFIT() * 0.8).floor.toInt
       }
 
+      //TODO SCOTTISH RATES - to make dynamic - further discussions required due to income level affecting entitlement of £239 OR £252 (Current year figures)
       "return the correct total benefit for a Scottish tax payer" in {
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() * 2 - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear)
+        ) shouldBe applicationConfig.MAX_BENEFIT()
 
         benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
           eligibilityCalculatorService.getCountryTaxBands(Scotland, currentTaxYear)) shouldBe 110
@@ -82,27 +91,38 @@ class BenefitCalculatorHelperTest extends BaseTest with GuiceOneAppPerSuite {
       }
 
       "return the correct total benefit for a Welsh tax payer" in {
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() * 2 - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)
+        ) shouldBe applicationConfig.MAX_BENEFIT()
 
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)) shouldBe 116
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() + (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.5) - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)
+        ) shouldBe (applicationConfig.MAX_BENEFIT() * 0.5).floor.toInt
 
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)) shouldBe 216
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() + (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.8) - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(Wales, currentTaxYear)
+        ) shouldBe (applicationConfig.MAX_BENEFIT() * 0.8).floor.toInt
       }
 
       "return the correct total benefit for a Northern Irish tax payer" in {
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(30650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)) shouldBe applicationConfig.MAX_BENEFIT()
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() * 2 - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)
+        ) shouldBe applicationConfig.MAX_BENEFIT()
 
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13150 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)) shouldBe 116
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() + (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.5) - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)
+        ) shouldBe (applicationConfig.MAX_BENEFIT() * 0.5).floor.toInt
 
-        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(13650 - applicationConfig.PERSONAL_ALLOWANCE(),
-          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)) shouldBe 216
+        benefitCalculatorHelper.calculateTotalBenefitAcrossBands(
+          applicationConfig.PERSONAL_ALLOWANCE() + (applicationConfig.MAX_ALLOWED_PERSONAL_ALLOWANCE_TRANSFER() * 0.8) - applicationConfig.PERSONAL_ALLOWANCE(),
+          eligibilityCalculatorService.getCountryTaxBands(NorthernIreland, currentTaxYear)
+        ) shouldBe (applicationConfig.MAX_BENEFIT() * 0.8).floor.toInt
       }
-
     }
 
     "getCountryTaxBandsFromFile is called" must {
