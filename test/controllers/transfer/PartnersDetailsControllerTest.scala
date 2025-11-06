@@ -67,10 +67,20 @@ class PartnersDetailsControllerTest extends ControllerBaseTest {
   when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "transfer" should {
-    "return success" in {
+    "return success when there is data in the cache" in {
       val dateOfMarriageInput = DateOfMarriageFormInput(LocalDate.now().minusDays(1))
       when(mockCachingService.get[DateOfMarriageFormInput](ArgumentMatchers.eq(CACHE_MARRIAGE_DATE))(any()))
         .thenReturn(Future.successful(Some(dateOfMarriageInput)))
+      val recipientDetails = RecipientDetailsFormInput("Firstname", "Lastname", Gender("M"), Nino("AB123456A"))
+      when(mockCachingService.get[RecipientDetailsFormInput](
+        ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS))(any())).thenReturn(Future.successful(Some(recipientDetails)))
+
+      val result = controller.transfer()(request)
+      status(result) shouldBe OK
+    }
+    "return success when no data in cache" in {
+      when(mockCachingService.get[RecipientDetailsFormInput](
+        ArgumentMatchers.eq(CACHE_RECIPIENT_DETAILS))(any())).thenReturn(Future.successful(None))
 
       val result = controller.transfer()(request)
       status(result) shouldBe OK

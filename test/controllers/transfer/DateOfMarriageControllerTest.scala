@@ -37,6 +37,7 @@ import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 
 import java.time.LocalDate
 import scala.concurrent.Future
+import scala.reflect.ClassTag
 
 class DateOfMarriageControllerTest extends ControllerBaseTest {
 
@@ -46,6 +47,8 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
   val mockTimeService: TimeService           = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
   val applicationConfig: ApplicationConfig   = instanceOf[ApplicationConfig]
+
+
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
@@ -65,11 +68,23 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
   when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
 
   "dateOfMarriage" should {
-    "return success" in {
+    "return success when no data in the cache" in {
+      when(mockCachingService.get[DateOfMarriageFormInput](
+        ArgumentMatchers.eq(CACHE_MARRIAGE_DATE))(any())).thenReturn(Future.successful(None))
+
       val result = controller.dateOfMarriage()(request)
       status(result) shouldBe OK
     }
-  }
+
+    "return success when data in the cache" in {
+      val savedFormInput = DateOfMarriageFormInput(LocalDate.of(2018, 6, 1))
+      when(mockCachingService.get[DateOfMarriageFormInput](
+        ArgumentMatchers.eq(CACHE_MARRIAGE_DATE))(any())).thenReturn(Future.successful(Some(savedFormInput)))
+
+      val result = controller.dateOfMarriage()(request)
+      status(result) shouldBe OK
+    }
+}
 
   "dateOfMarriageAction" should {
     "return bad request" when {
@@ -128,4 +143,14 @@ class DateOfMarriageControllerTest extends ControllerBaseTest {
       
     }
   }
+
+  "redirectFromTransferAllowance" should {
+    "redirect to the date of marriage page" in {
+      val result = controller.redirectFromTransferAllowance()(FakeRequest(GET, "/transfer-allowance"))
+
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result) shouldBe Some(controllers.transfer.routes.DateOfMarriageController.dateOfMarriage().url)
+    }
+  }
+
 }
