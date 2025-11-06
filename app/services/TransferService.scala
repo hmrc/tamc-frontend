@@ -36,14 +36,14 @@ import views.helpers.LanguageUtilsImpl
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferService @Inject()(
-                                 marriageAllowanceConnector: MarriageAllowanceConnector,
-                                 auditConnector: AuditConnector,
-                                 cachingService: CachingService,
-                                 applicationService: ApplicationService,
-                                 timeService: TimeService,
-                                 languageUtilsImpl: LanguageUtilsImpl,
-                                 taxYear: SystemTaxYear
-                               ) extends Logging {
+   marriageAllowanceConnector: MarriageAllowanceConnector,
+   auditConnector: AuditConnector,
+   cachingService: CachingService,
+   applicationService: ApplicationService,
+   timeService: TimeService,
+   languageUtilsImpl: LanguageUtilsImpl,
+   taxYear: SystemTaxYear
+  ) extends Logging {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
     Future {
