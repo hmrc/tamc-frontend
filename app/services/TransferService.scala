@@ -36,27 +36,25 @@ import views.helpers.LanguageUtilsImpl
 import scala.concurrent.{ExecutionContext, Future}
 
 class TransferService @Inject()(
-  marriageAllowanceConnector: MarriageAllowanceConnector,
-  auditConnector: AuditConnector,
-  cachingService: CachingService,
-  applicationService: ApplicationService,
-  timeService: TimeService,
-  languageUtilsImpl: LanguageUtilsImpl,
-  taxYear: SystemTaxYear
-) extends Logging {
+                                 marriageAllowanceConnector: MarriageAllowanceConnector,
+                                 auditConnector: AuditConnector,
+                                 cachingService: CachingService,
+                                 applicationService: ApplicationService,
+                                 timeService: TimeService,
+                                 languageUtilsImpl: LanguageUtilsImpl,
+                                 taxYear: SystemTaxYear
+                               ) extends Logging {
 
   private def handleAudit(event: DataEvent)(implicit headerCarrier: HeaderCarrier, ec: ExecutionContext): Future[Unit] =
-    Option(auditConnector.sendEvent(event)) match {
-      case Some(futureAudit) => futureAudit.map(_ => ())
-      case None              => Future.successful(())
+    Future {
+      auditConnector.sendEvent(event)
     }
-
 
   def isRecipientEligible(transferorNino: Nino, recipientData: RegistrationFormInput)
                          (implicit request: Request[?], hc: HeaderCarrier, ec: ExecutionContext): Future[Boolean] =
     checkRecipientEligible(transferorNino, recipientData).map(eligible => eligible) recoverWith {
       case error =>
-        handleAudit(RecipientFailureEvent(transferorNino, error)).flatMap(_ => Future.failed(error))
+        handleAudit(RecipientFailureEvent(transferorNino, error))
         Future.failed(error)
     }
 
@@ -89,7 +87,7 @@ class TransferService @Inject()(
   def createRelationship(transferorNino: Nino)(implicit request: Request[?], hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
     doCreateRelationship(transferorNino)(request, hc, messages, ec) recover {
       case error =>
-        handleAudit(CreateRelationshipCacheFailureEvent(error)).flatMap(_ => Future.failed(error))
+        handleAudit(CreateRelationshipCacheFailureEvent(error))
         throw error
     }
   }
@@ -297,7 +295,7 @@ class TransferService @Inject()(
         }
     } recover {
       case error =>
-        handleAudit(CreateRelationshipFailureEvent(data, error)).flatMap(_ => Future.failed(error))
+        handleAudit(CreateRelationshipFailureEvent(data, error))
         throw error
     }
   }
