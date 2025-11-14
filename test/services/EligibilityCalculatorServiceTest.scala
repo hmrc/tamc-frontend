@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
         "The higher earners income is taxed at the higher rate tax band" in {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT() + 1
-          val lowerEarnerIncome = 9000
+          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(
@@ -54,7 +54,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
         "The lower earners income is above personal allowance" in {
 
-          val higherEarnerIncome = 30000
+          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 5000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
@@ -65,7 +65,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
         "Both higher earners income is taxed at higher rate and lower earners income is above personal allowance" in {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT() + 1
-          val lowerEarnerIncome = 12000
+          val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
             EligibilityCalculatorResult(
@@ -120,20 +120,37 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(1))
         }
 
-        "The higher earners income is above recipient allowance and the lower earners income is above transferor allowance" in {
-          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 40
-          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
+        "The higher earners income is below recipient allowance and the lower earners income is above transferor allowance" in {
+          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 600
+          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 300
+
+          val partialBenefitLoss: Double = (
+            ((applicationConfig.RECIPIENT_ALLOWANCE - higherEarnerIncome) + (lowerEarnerIncome - applicationConfig.TRANSFEROR_ALLOWANCE)).toDouble / 5
+            ).floor
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - partialBenefitLoss))
         }
 
-        "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
-          val higherEarnerIncome = 14000
-          val lowerEarnerIncome = 9000
+        "The higher earners income is just below recipient allowance and the lower earners income is just below transfer allowance" in {
+          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
+          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
+
+          val partialBenefitGain: Double = (
+            (higherEarnerIncome - applicationConfig.PERSONAL_ALLOWANCE()).toDouble / 5
+            ).floor
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(252.0))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(partialBenefitGain))
+        }
+
+        "The higher earners income is much higher than recipient allowance and the lower earners income is much lower than transferor allowance" in {
+          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 10000
+          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 5000
+
+
+          eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, England, currentTaxYear) shouldBe
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT()))
         }
       }
     }
@@ -143,7 +160,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
         "The higher earners income is taxed at the higher rate tax band" in {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_SCOT() + 1
-          val lowerEarnerIncome = 9000
+          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(
               messageKey = "eligibility.feedback.recipient-not-eligible",
@@ -154,7 +171,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
         "The lower earners income is above personal allowance" in {
 
-          val higherEarnerIncome = 30000
+          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 10000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple",
@@ -193,6 +210,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
         }
       }
 
+      //TODO SCOTTISH RATES - To be made dynamic - further discussions required due to income level affecting entitlement of £239 OR £252 (Current year figures)
       "Inform the user they are eligible for partial Marriage Allowance benefit" when {
         "The higher earners income is just below recipient allowance and the lower earners income is exactly transferor allowance" in {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
@@ -202,6 +220,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(239.0))
         }
 
+        //TODO SCOTTISH RATES - to make dynamic - further discussions required due to income level affecting entitlement of £239 OR £252 (Current year figures)
         "The higher earners income is just below recipient allowance and the lower earners income is just above transferor allowance" in {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 1
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
@@ -209,7 +228,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Scotland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(239.0))
         }
-
+        //TODO SCOTTISH RATES - to make dynamic - further discussions required due to income level affecting entitlement of £239 OR £252 (Current year figures)
         "The higher earners income is above recipient allowance and the lower earners income is above transferor allowance" in {
           val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE - 40
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
@@ -218,8 +237,8 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(231.0))
         }
 
-        //TODO Making dynamic... to discuss, remove TODO after discussion
-        "The higher earners income is above recipient allowance and the lower earners income is below transferor allowance" in {
+        //TODO SCOTTISH RATES - To be made dynamic needs to calculate the rate of Scottish income at their 20% bracket to establish how much of £252 they are entitled to
+        "The higher earner has income that is taxable within 20% bracket and the lower earners income is below transferor allowance" in {
           val incomes = List(
             (14000, 9000, 252),
             (14000, 11000, 252),
@@ -239,7 +258,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
         "The higher earners income is taxed at the higher rate tax band" in {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_WALES() + 1
-          val lowerEarnerIncome = 9000
+          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
             EligibilityCalculatorResult(
               messageKey = "eligibility.feedback.recipient-not-eligible",
@@ -250,7 +269,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
         "The lower earners income is above personal allowance" in {
 
-          val higherEarnerIncome = 30000
+          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 10000
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
             EligibilityCalculatorResult(messageKey = "eligibility.check.unlike-benefit-as-couple",
@@ -309,7 +328,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
             val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
             eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, Wales, currentTaxYear) shouldBe
-              EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
+              EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 8))
           }
         }
       }
@@ -320,7 +339,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
         "The higher earners income is taxed at the higher rate tax band" in {
 
           val higherEarnerIncome = applicationConfig.MAX_LIMIT_NORTHERN_IRELAND() + 1
-          val lowerEarnerIncome = 9000
+          val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE - 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(
               messageKey = "eligibility.feedback.recipient-not-eligible",
@@ -331,7 +350,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
 
         "The lower earners income is above personal allowance" in {
 
-          val higherEarnerIncome = 30000
+          val higherEarnerIncome = applicationConfig.RECIPIENT_ALLOWANCE + 1
           val lowerEarnerIncome = applicationConfig.PERSONAL_ALLOWANCE() + 1
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
             EligibilityCalculatorResult(
@@ -393,7 +412,7 @@ class EligibilityCalculatorServiceTest extends BaseTest {
           val lowerEarnerIncome = applicationConfig.TRANSFEROR_ALLOWANCE + 1
 
           eligibilityCalculatorService.calculate(lowerEarnerIncome, higherEarnerIncome, NorthernIreland, currentTaxYear) shouldBe
-            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(244.0))
+            EligibilityCalculatorResult(messageKey = "eligibility.feedback.gain", Some(applicationConfig.MAX_BENEFIT() - 8))
         }
       }
     }
