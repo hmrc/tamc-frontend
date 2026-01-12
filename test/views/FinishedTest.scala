@@ -80,7 +80,7 @@ class FinishedTest extends BaseTest with NinoGenerator {
     "display the correct HMRC will now review your Marriage Allowance content" in {
       val paragraph = document.getElementById("paragraph-3").toString
       val expected =
-        s"HMRC will review your application. If you are eligible, HMRC will change your and Alex’s tax codes to save Alex up to £$maxBenefit"
+        s"HMRC will review your application. If you are eligible, HMRC will change your tax code and Alex’s tax code to save Alex up to £$maxBenefit"
 
       paragraph should include(expected)
 
