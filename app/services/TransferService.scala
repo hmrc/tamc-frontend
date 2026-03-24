@@ -85,7 +85,6 @@ class TransferService @Inject()(
     }
 
   def createRelationship(transferorNino: Nino)(implicit request: Request[?], hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
-    println("createRelationship has been called. LINE 102")
     doCreateRelationship(transferorNino)(request, hc, messages, ec) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
@@ -113,7 +112,6 @@ class TransferService @Inject()(
     }
 
   private def doCreateRelationship(transferorNino: Nino)(implicit request: Request[?], hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
-    println("doCreateRelationship has been called. LINE 115")
     for {
       userAnswersCachedData <- getUserAnswersCachedData
       validated <- validateCompleteCache(userAnswersCachedData)
@@ -237,15 +235,12 @@ class TransferService @Inject()(
 
   private def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
                                       (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] = {
-    println("Transfer Service LINE 240\n\n\n\n")
     marriageAllowanceConnector
       .getRecipientRelationship(transferorNino, recipientData)
       .flatMap {
         case Right(getRelationshipResponse) =>
-          println("Transfer Service LINE 245\n\n\n\n")
           getRelationshipResponse match {
             case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) =>
-              println(s"Transfer Service LINE 248\n\n\n\n")
               Future.successful((recipientRecord, availableYears))
             case _ => Future.failed(RecipientNotFound())
           }
