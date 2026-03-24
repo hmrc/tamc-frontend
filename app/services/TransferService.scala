@@ -85,6 +85,7 @@ class TransferService @Inject()(
     }
 
   def createRelationship(transferorNino: Nino)(implicit request: Request[?], hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
+    println("createRelationship has been called. LINE 102")
     doCreateRelationship(transferorNino)(request, hc, messages, ec) recover {
       case error =>
         handleAudit(CreateRelationshipCacheFailureEvent(error))
@@ -112,6 +113,7 @@ class TransferService @Inject()(
     }
 
   private def doCreateRelationship(transferorNino: Nino)(implicit request: Request[?], hc: HeaderCarrier, messages: Messages, ec: ExecutionContext): Future[NotificationRecord] = {
+    println("doCreateRelationship has been called. LINE 115")
     for {
       userAnswersCachedData <- getUserAnswersCachedData
       validated <- validateCompleteCache(userAnswersCachedData)
@@ -234,23 +236,33 @@ class TransferService @Inject()(
       None
 
   private def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
-                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] =
+                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] = {
+    println("Transfer Service LINE 240\n\n\n\n")
     marriageAllowanceConnector
       .getRecipientRelationship(transferorNino, recipientData)
       .flatMap {
         case Right(getRelationshipResponse) =>
+          println("Transfer Service LINE 245\n\n\n\n")
           getRelationshipResponse match {
             case GetRelationshipResponse(Some(recipientRecord), availableYears, ResponseStatus("OK")) =>
+              println(s"Transfer Service LINE 248\n\n\n\n")
               Future.successful((recipientRecord, availableYears))
             case _ => Future.failed(RecipientNotFound())
           }
         case Left(error) =>
-          error.status.status_code match {
-            case TRANSFEROR_DECEASED => Future.failed(TransferorDeceased())
-            case RECIPIENT_NOT_FOUND => Future.failed(RecipientNotFound())
+          (error.status, error.statusCode, error.message) match {
+            case (Some(responseStatus), _, _) =>
+              responseStatus.status_code match {
+                case TRANSFEROR_DECEASED => Future.failed(TransferorDeceased())
+                case RECIPIENT_NOT_FOUND => Future.failed(RecipientNotFound())
+                case _ => Future.failed(OtherError(error))
+              }
+            case (_, Some(statusCode), Some(message)) if statusCode == 400 && message.contains("Participant is deceased") =>
+              Future.failed(TransferorDeceased())
             case _ => Future.failed(OtherError(error))
           }
       }
+  }
 
   def deleteSelectionAndGetCurrentAndPreviousYearsEligibility(implicit request: Request[?], ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     for {
@@ -287,10 +299,16 @@ class TransferService @Inject()(
           case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
       case Left(error) =>
-        error.status.status_code match {
-          case CANNOT_CREATE_RELATIONSHIP => throw CannotCreateRelationship()
-          case RELATION_MIGHT_BE_CREATED => throw RelationshipMightBeCreated()
-          case RECIPIENT_DECEASED => throw RecipientDeceased()
+        (error.status, error.statusCode, error.message) match {
+          case (Some(responseStatus), _, _) =>
+            responseStatus.status_code match {
+              case CANNOT_CREATE_RELATIONSHIP => throw CannotCreateRelationship()
+              case RELATION_MIGHT_BE_CREATED => throw RelationshipMightBeCreated()
+              case RECIPIENT_DECEASED => throw RecipientDeceased()
+              case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
+            }
+          case (_, Some(statusCode), Some(message)) if statusCode == 400 && message.contains("Participant is deceased") =>
+            throw TransferorDeceased()
           case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
     } recover {

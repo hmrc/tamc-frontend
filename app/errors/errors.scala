@@ -19,7 +19,11 @@ package errors
 import models.ResponseStatus
 import play.api.libs.json.{Json, OFormat}
 
-case class MarriageAllowanceError(status: ResponseStatus)
+case class MarriageAllowanceError(
+                                   status: Option[ResponseStatus],
+                                   statusCode: Option[Int],
+                                   message: Option[String]
+                                 )
 object MarriageAllowanceError {
   implicit val format: OFormat[MarriageAllowanceError] = Json.format[MarriageAllowanceError]
 }

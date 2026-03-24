@@ -59,6 +59,7 @@ class PartnersDetailsController @Inject()(
   }
 
   def transferAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+    println("do i hit here?!?!£\n\n\n\n\n")
     marriageDateInCurrentTaxYear().flatMap { domCurrentTaxYear =>
       recipientDetailsForm
         .recipientDetailsForm(today = timeService.getCurrentDate, transferorNino = request.nino)

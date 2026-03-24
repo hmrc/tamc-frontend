@@ -114,7 +114,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
 
 
       "recipient is not returned" in {
-        val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:RECIPIENT-NOT-FOUND"))
+        val response = MarriageAllowanceError(Some(ResponseStatus("TAMC:ERROR:RECIPIENT-NOT-FOUND")), None, None)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(Future.successful(Left(response)))
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))
@@ -126,7 +126,7 @@ class TransferServiceTest extends BaseTest with BeforeAndAfterEach {
       }
 
       "transferor deceased" in {
-        val response = MarriageAllowanceError(ResponseStatus("TAMC:ERROR:TRANSFERER-DECEASED"))
+        val response = MarriageAllowanceError(Some(ResponseStatus("TAMC:ERROR:TRANSFERER-DECEASED")), None, None)
         when(mockMarriageAllowanceConnector.getRecipientRelationship(nino, recipientData))
           .thenReturn(Future.successful(Left(response)))
         when(mockCachingService.get[EligibilityCheckCacheData](ArgumentMatchers.eq(USER_ANSWERS_ELIGIBILITY_CHECK))(any()))

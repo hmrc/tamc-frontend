@@ -81,7 +81,6 @@ class TransferErrorHandlerTest extends ControllerBaseTest {
         (new CacheRelationshipAlreadyCreated, "/marriage-allowance-application/history"),
         (new CacheCreateRequestNotSent, "/marriage-allowance-application/history"),
         (new RelationshipMightBeCreated, "/marriage-allowance-application/history"),
-        (new TransferorDeceased, "/marriage-allowance-application/you-cannot-use-this-service"),
         (new RecipientDeceased, "/marriage-allowance-application/you-cannot-use-this-service")
       )
       for ((error, redirectUrl) <- data)
@@ -102,7 +101,8 @@ class TransferErrorHandlerTest extends ControllerBaseTest {
         (new NoTaxYearsForTransferor, OK, ""),
         (new CacheTransferorInRelationship, OK, "transferor.has.relationship"),
         (new NoTaxYearsSelected, OK, "pages.noyears.h1"),
-        (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.heading")
+        (new Exception, INTERNAL_SERVER_ERROR, "technical.issue.heading"),
+        (new TransferorDeceased, INTERNAL_SERVER_ERROR, "title.cannot-use-service"),
       )
       for ((error, responseStatus, message) <- data)
         s"an $error has been thrown" in {
