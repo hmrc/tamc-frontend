@@ -26,9 +26,9 @@ import javax.inject.Inject
 class CannotUseServiceController @Inject()(
                                             authenticate: StandardAuthJourney,
                                             cc: MessagesControllerComponents,
-                                            transfererDeceased: views.html.errors.transferer_deceased) extends BaseController(cc) with LoggerHelper {
+                                            transferorDeceased: views.html.errors.transferor_deceased) extends BaseController(cc) with LoggerHelper {
 
   def cannotUseService: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails { implicit request =>
-    Ok(transfererDeceased())
+    Ok(transferorDeceased())
   }
 }
