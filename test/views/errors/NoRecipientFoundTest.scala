@@ -47,7 +47,7 @@ class NoRecipientFoundTest extends BaseTest {
     "display correct text" in {
       doc.getElementsByTag("p").eachText().toArray shouldBe Array(
         "Check your partner’s information is correct and update your application.",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 
