@@ -55,7 +55,7 @@ class MakeChangesContentTest extends BaseTest with Injecting with NinoGenerator 
     }
 
     "Display all correct page text" in {
-      doc.getElementsByTag("p").eachText().toArray() shouldBe Array("Beta This is a new service – your feedback will help us to improve it.")
+      doc.getElementsByTag("p").eachText().toArray() shouldBe Array("Beta This is a new service. Help us improve it and give your feedback (opens in new tab).")
     }
   }
 

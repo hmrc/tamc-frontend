@@ -49,7 +49,7 @@ class DoNotApplyTest extends BaseTest with ViewTestUtils with NinoGenerator {
         "You can:",
         "change the years you want to apply for",
         "find out how Marriage Allowance works",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 

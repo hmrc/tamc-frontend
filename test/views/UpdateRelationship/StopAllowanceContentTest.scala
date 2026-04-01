@@ -49,7 +49,7 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
         "As your partner is transferring their allowances to you, they will need to stop the claim.",
         "Your partner can do this from the Marriage Allowance section of their personal tax account.",
         "Back to your Marriage Allowance claim summary",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 
@@ -70,7 +70,7 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
           s"${TaxYear.current.finishes.getYear}, the end of the current tax year.",
         s"Your Personal Allowance will not include any Marriage Allowance from 6 April " +
           s"${TaxYear.current.next.starts.getYear}, the start of the new tax year.",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 

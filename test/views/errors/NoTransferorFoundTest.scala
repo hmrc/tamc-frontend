@@ -46,7 +46,7 @@ class NoTransferorFoundTest extends BaseTest {
     "display correct text" in {
       doc.getElementsByTag("p").eachText().toArray shouldBe Array(
         "If you need to make a change to your Marriage Allowance, contact HMRC Income Tax general enquiries.",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 
