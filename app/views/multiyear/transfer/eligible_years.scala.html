@@ -37,29 +37,29 @@
 
 @(
     recipientName: String,
-    cy: Option[java.time.LocalDate]
+    cy: java.time.LocalDate
 )(
     implicit messages: Messages,
     request: AuthenticatedUserRequest[?]
 )
 
 @main(
-    pageTitle = Messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy.get)),
+    pageTitle = messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy)),
     serviceTitle = "title.application.pattern",
     backLinkHref = Some(controllers.transfer.routes.PartnersDetailsController.transfer().url)
 ){
-    @h1(Messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy.get)))
+    @h1(messages("title.eligible-years", languageUtilsImpl().ukDateTransformer(cy)))
 
-    @p(HtmlContent(Messages("pages.eligibleyear.p1", recipientName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT()))))
+    @p(HtmlContent(messages("pages.eligibleyear.p1", recipientName, NumberFormat.getIntegerInstance().format(applicationConfig.MAX_BENEFIT()))))
 
-    @p(HtmlContent(Messages("pages.eligibleyear.p2")))
+    @p(HtmlContent(messages("pages.eligibleyear.p2")))
 
     <ul class="govuk-list govuk-list--bullet" id="renewal-conditions">
-        <li>@Html(Messages("pages.eligibleyear.li1",recipientName))</li>
-        <li>@Html(Messages("pages.eligibleyear.li2"))</li>
+        <li>@Html(messages("pages.eligibleyear.li1",recipientName))</li>
+        <li>@Html(messages("pages.eligibleyear.li2"))</li>
     </ul>
 
-    @form(action = transfer.routes.EligibleYearsController.eligibleYearsAction(), args = (Symbol("id") -> "eligible-year")) {
+    @form(action = transfer.routes.EligibleYearsController.eligibleYearsAction(), args = Symbol("id") -> "eligible-year") {
         @button(msg = "generic.continue", attrs = Map("data-journey-click" -> "marriage-allowance:button:currentyear_continue"))
     }
 
