@@ -45,7 +45,7 @@ class FinishedChangeContentTest extends BaseTest with Injecting with NinoGenerat
         "You will receive an email acknowledging your cancellation within 24 hours.",
         "If you do not receive it, please check your spam or junk folder.",
         "You do not need to contact us.",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
   }

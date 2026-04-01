@@ -54,7 +54,7 @@ class ApplyByPostTest extends BaseTest with ViewTestUtils with NinoGenerator {
         doc.getElementsByTag("p").eachText().toArray.shouldBe(Array(
           "You cannot apply for previous tax years online.",
           "Apply for Marriage Allowance by post",
-          "Beta This is a new service – your feedback will help us to improve it."
+          "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
         ))
       }
 
@@ -64,7 +64,7 @@ class ApplyByPostTest extends BaseTest with ViewTestUtils with NinoGenerator {
         doc.getElementsByTag("p").eachText().toArray.shouldBe(Array(
           "Your application includes a previous tax year. You cannot apply for previous tax years online.",
           "Apply for Marriage Allowance by post",
-          "Beta This is a new service – your feedback will help us to improve it."
+          "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
         ))
       }
     }

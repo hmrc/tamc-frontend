@@ -48,7 +48,7 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
       recipientDoc.getElementsByTag("p").eachText().toArray() shouldBe Array(
         "You can contact the Income Tax general enquiries helpline to tell us about a bereavement.",
         "You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 
@@ -56,7 +56,7 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
       transferorDoc.getElementsByTag("p").eachText().toArray() shouldBe Array(
         "You can contact the Income Tax general enquiries helpline to tell us about a bereavement.",
         "If your partner dies after you have transferred some of your Personal Allowance to them:",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 

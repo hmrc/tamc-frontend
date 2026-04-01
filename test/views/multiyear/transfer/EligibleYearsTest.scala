@@ -44,7 +44,7 @@ class EligibleYearsTest extends BaseTest with NinoGenerator {
     instanceOf[MessagesApi].asScala.preferred(FakeRequest(): Request[AnyContent])
   val languageUtilsImpl: LanguageUtilsImpl                               = instanceOf[LanguageUtilsImpl]
 
-  implicit val doc: Document = Jsoup.parse(eligibleYears(recipient, Some(LocalDate.now)).toString())
+  implicit val doc: Document = Jsoup.parse(eligibleYears(recipient, LocalDate.now).toString())
 
   val currentTaxYearWithNBSP: String = languageUtilsImpl.apply().ukDateTransformer(LocalDate.now())
   val currentTaxYearDate: String     = currentTaxYearWithNBSP.replace("\u00A0", " ")
@@ -71,7 +71,7 @@ class EligibleYearsTest extends BaseTest with NinoGenerator {
       doc.getElementsByTag("p").eachText().toArray shouldBe Array(
         s"$recipient will pay up to £$maxBenefit less tax each year.",
         "Marriage Allowance renews each year unless:",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 

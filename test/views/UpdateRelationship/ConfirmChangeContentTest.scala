@@ -57,7 +57,7 @@ class ConfirmChangeContentTest extends BaseTest with Injecting with NinoGenerato
     "Display correct paragraph text" in {
       doc.getElementsByTag("p").eachText().toArray shouldBe Array(
         "You have asked us to cancel your Marriage Allowance. This means:",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 

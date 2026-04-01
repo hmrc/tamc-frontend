@@ -23,12 +23,15 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.time.{CurrentTaxYear, TaxYear}
 import utils.{TaxBandReader, TaxBandReaderImpl}
 
+import java.time.Clock
+
 class TamcModule extends Module {
 
   override def bindings(environment: Environment, configuration: Configuration): Seq[Binding[?]] =
     Seq(
       bind[AuthConnector].to[TamcAuthConnector],
       bind[CurrentTaxYear].toInstance(TaxYear),
-      bind[TaxBandReader].to[TaxBandReaderImpl]
+      bind[TaxBandReader].to[TaxBandReaderImpl],
+      bind[Clock].toInstance(Clock.systemUTC())
     )
 }

@@ -63,7 +63,7 @@ class DivorceContentTest extends BaseTest with Injecting with NinoGenerator {
       hint shouldBe "For example, 30 6 2019"
       paras shouldBe Array(
         "You need to go to court to be legally separated. You can still get Marriage Allowance if you are separated, but not legally separated.",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
   }
@@ -83,7 +83,7 @@ class DivorceContentTest extends BaseTest with Injecting with NinoGenerator {
       paras shouldBe Array(
         s"You have told us you divorced, ended your civil partnership or were legally separated on 23 July ${TaxYear.current.startYear}.",
         "As this date falls within the current tax year:",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
       bullets shouldBe Array(
         s"your Marriage Allowance will be cancelled from 5 April ${TaxYear.current.previous.finishYear}",
@@ -106,7 +106,7 @@ class DivorceContentTest extends BaseTest with Injecting with NinoGenerator {
       paras shouldBe Array(
         s"You have told us you divorced, ended your civil partnership or were legally separated on 23 July $previousTaxStartYear.",
         "As this date falls within a previous tax year:",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
       bullets shouldBe Array(
         s"your Marriage Allowance will be cancelled from 5 April ${LocalDate.of(previousTaxStartYear, 4, 5).getYear}",
@@ -129,7 +129,7 @@ class DivorceContentTest extends BaseTest with Injecting with NinoGenerator {
       paras shouldBe Array(
         s"You have told us you divorced, ended your civil partnership or were legally separated on 6 April ${divorceDate.getYear}.",
         "As this date falls within the current tax year:",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
       bullets shouldBe Array(
         s"your Marriage Allowance will be cancelled from 5 April ${taxYear.finishYear}, the end of the current tax year",
@@ -151,7 +151,7 @@ class DivorceContentTest extends BaseTest with Injecting with NinoGenerator {
       paras shouldBe Array(
         s"You have told us you divorced, ended your civil partnership or were legally separated on 23 July ${divorceDate.getYear}.",
         "As this date falls within a previous tax year:",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
       bullets shouldBe Array(
         s"your Marriage Allowance will be cancelled from 5 April ${TaxYear.current.previous.finishYear}",

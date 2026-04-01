@@ -17,23 +17,22 @@
 package services
 
 import config.ApplicationConfig
+import uk.gov.hmrc.time.TaxYear
+import utils.SystemTaxYear
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import uk.gov.hmrc.time.TaxYear
-import utils.{SystemLocalDate, SystemTaxYear}
-
 import javax.inject.Inject
 
 //TODO[DDCNL-3479] look into making this a util or deleting. It Is Not a Service!
 
-class TimeService@Inject()(applicationConfig: ApplicationConfig, taxYear: SystemTaxYear, date: SystemLocalDate) {
+class TimeService@Inject()(applicationConfig: ApplicationConfig, taxYear: SystemTaxYear) {
 
   def isFutureDate(date: LocalDate): Boolean =
     date.isAfter(getCurrentDate)
 
   def getCurrentDate: LocalDate =
-    date.now()
+    LocalDate.now()
 
   def getCurrentTaxYear: Int =
     taxYear.current().startYear
@@ -45,7 +44,7 @@ class TimeService@Inject()(applicationConfig: ApplicationConfig, taxYear: System
     TaxYear.firstDayOfTaxYear(year)
 
   def getPreviousYearDate: LocalDate =
-    date.now().minusYears(1)
+    LocalDate.now().minusYears(1)
 
   def parseDateWithFormat(date: String, format: String = "yyyyMMdd"): LocalDate =
     LocalDate.parse(date, DateTimeFormatter.ofPattern(format))

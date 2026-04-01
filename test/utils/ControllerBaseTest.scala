@@ -16,24 +16,10 @@
 
 package utils
 
-import controllers.actions.{AuthRetrievals, UnauthenticatedActionTransformer}
-import play.api.Application
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 trait ControllerBaseTest extends BaseTest {
 
   implicit val request: Request[AnyContent] = FakeRequest()
-
-  override def fakeApplication(): Application = new GuiceApplicationBuilder()
-    .overrides(bind[AuthRetrievals].to[MockAuthenticatedAction])
-    .overrides(bind[UnauthenticatedActionTransformer].to[MockUnauthenticatedAction])
-    .overrides(bind[FormPartialRetriever].to[MockFormPartialRetriever]
-    ).configure(
-      "metrics.jvm" -> false
-    ).build()
-
 }
