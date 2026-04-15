@@ -22,30 +22,30 @@ import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
 import models.*
+import org.jsoup.Jsoup
+import org.jsoup.select.Elements
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.*
 import play.api.Application
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.Helpers.*
-import play.api.test.Injecting
-import services.{CachingService, TimeService, TransferService}
+import play.api.test.{FakeRequest, Injecting}
+import services.{CachingService, TransferService}
 import test_utils.data.RecipientRecordData
-import uk.gov.hmrc.time
 import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
 import views.html.errors.no_eligible_years
 
-import java.time.LocalDate
+import java.time.{Clock, Instant, ZoneOffset}
 import scala.concurrent.Future
 
 class EligibleYearsControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
-  val currentTaxYear: Int                    = time.TaxYear.current.startYear
+  val mockClock: Clock                       = mock[Clock]
   val mockTransferService: TransferService   = mock[TransferService]
   val mockCachingService: CachingService     = mock[CachingService]
-  val mockTimeService: TimeService           = mock[TimeService]
   val notificationRecord: NotificationRecord = NotificationRecord(EmailAddress("test@test.com"))
   val applicationConfig: ApplicationConfig   = instanceOf[ApplicationConfig]
 
@@ -53,9 +53,8 @@ class EligibleYearsControllerTest extends ControllerBaseTest with ControllerView
     .overrides(
       bind[TransferService].toInstance(mockTransferService),
       bind[CachingService].toInstance(mockCachingService),
-      bind[TimeService].toInstance(mockTimeService),
+      bind[Clock].toInstance(mockClock),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
-      bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
@@ -63,10 +62,14 @@ class EligibleYearsControllerTest extends ControllerBaseTest with ControllerView
   def controller: EligibleYearsController =
     app.injector.instanceOf[EligibleYearsController]
 
-  when(mockTimeService.getCurrentDate) `thenReturn` LocalDate.now()
-  when(mockTimeService.getCurrentTaxYear) `thenReturn` currentTaxYear
+  override def beforeEach(): Unit = {
+    reset(mockClock)
 
-  val noTaxYearAvailableView: no_eligible_years = inject[views.html.errors.no_eligible_years]
+    when(mockClock.instant()).thenReturn(Instant.parse("2016-04-05T00:00:00.000Z"))
+    when(mockClock.getZone).thenReturn(ZoneOffset.UTC)
+  }
+
+  def noTaxYearAvailableView: no_eligible_years = inject[views.html.errors.no_eligible_years]
 
   "eligibleYears" should {
     "return a success" when {
@@ -76,15 +79,56 @@ class EligibleYearsControllerTest extends ControllerBaseTest with ControllerView
             Future.successful(
               CurrentAndPreviousYearsEligibility(
                 currentYearAvailable = true,
-                List(TaxYear(2015)),
-                RecipientRecordData.recipientRecord.data,
-                RecipientRecordData.recipientRecord.availableTaxYears
+                previousYears = List(TaxYear(2015)),
+                registrationInput = RecipientRecordData.recipientRecord.data,
+                availableTaxYears = RecipientRecordData.recipientRecord.availableTaxYears
               )
             )
           )
-        when(mockTimeService.getStartDateForTaxYear(any())).thenReturn(time.TaxYear.current.starts)
         val result = controller.eligibleYears()(request)
         status(result) shouldBe OK
+
+        val h1: Elements = Jsoup.parse(contentAsString(result)).getElementsByTag("h1")
+
+        h1.eq(0).text() shouldBe "You are applying for the current tax year onwards, from 6 April 2015"
+      }
+
+      "there are available tax years including current year for TY 23/24" in {
+        when(mockClock.instant()).thenReturn(Instant.parse("2024-04-05T23:59:59.999Z"))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
+          .thenReturn(
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = true,
+                previousYears = List(TaxYear(2023)),
+                registrationInput = RecipientRecordData.recipientRecord.data,
+                availableTaxYears = RecipientRecordData.recipientRecord.availableTaxYears
+              )
+            )
+          )
+        val result = controller.eligibleYears()(request)
+        val h1: Elements = Jsoup.parse(contentAsString(result)).getElementsByTag("h1")
+
+        h1.eq(0).text() shouldBe "You are applying for the current tax year onwards, from 6 April 2023"
+      }
+
+      "there are available tax years including current year for TY 24/25" in {
+        when(mockClock.instant()).thenReturn(Instant.parse("2024-04-06T00:00:00.000Z"))
+        when(mockTransferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility(any(), any()))
+          .thenReturn(
+            Future.successful(
+              CurrentAndPreviousYearsEligibility(
+                currentYearAvailable = true,
+                previousYears = List(TaxYear(2023)),
+                registrationInput = RecipientRecordData.recipientRecord.data,
+                availableTaxYears = RecipientRecordData.recipientRecord.availableTaxYears
+              )
+            )
+          )
+        val result = controller.eligibleYears()(request)
+        val h1: Elements = Jsoup.parse(contentAsString(result)).getElementsByTag("h1")
+
+        h1.eq(0).text() shouldBe "You are applying for the current tax year onwards, from 6 April 2024"
       }
     }
 
@@ -140,15 +184,13 @@ class EligibleYearsControllerTest extends ControllerBaseTest with ControllerView
               )
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any()))
-          .thenReturn(Future.successful(List(currentTaxYear)))
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(2015)))(any()))
+          .thenReturn(Future.successful(List(2015)))
 
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(
-          controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url
-        )
-        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any())
+        redirectLocation(result) shouldBe Some(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail().url)
+        verify(mockTransferService, times(1)).saveSelectedYears(ArgumentMatchers.eq(List(2015)))(any())
       }
 
       "extra years is not empty and current year is unavailable" in {
@@ -164,9 +206,10 @@ class EligibleYearsControllerTest extends ControllerBaseTest with ControllerView
             )
           )
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Future.successful(Nil))
+        def messages: Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        result `rendersTheSameViewAs` noTaxYearAvailableView()
+        result `rendersTheSameViewAs` noTaxYearAvailableView()(messages, authRequest)
       }
 
       "extra years is empty and current year is available" in {
@@ -181,8 +224,8 @@ class EligibleYearsControllerTest extends ControllerBaseTest with ControllerView
               )
             )
           )
-        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(currentTaxYear)))(any()))
-          .thenReturn(Future.successful(List(currentTaxYear)))
+        when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(List(2015)))(any()))
+          .thenReturn(Future.successful(List(2015)))
         val result = controller.eligibleYearsAction()(request)
         status(result)           shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(
@@ -203,11 +246,11 @@ class EligibleYearsControllerTest extends ControllerBaseTest with ControllerView
             )
           )
         when(mockTransferService.saveSelectedYears(ArgumentMatchers.eq(Nil))(any())).thenReturn(Future.successful(Nil))
+        def messages: Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
         val result = controller.eligibleYearsAction()(request)
         status(result) shouldBe OK
-        result `rendersTheSameViewAs` noTaxYearAvailableView()
+        result `rendersTheSameViewAs` noTaxYearAvailableView()(messages, authRequest)
       }
-
     }
   }
 }

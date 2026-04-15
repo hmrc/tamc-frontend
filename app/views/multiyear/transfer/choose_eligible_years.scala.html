@@ -59,44 +59,37 @@
 
     @h1("title.choose-years")
 
-    @formCSRF(action = transfer.routes.ChooseYearsController.chooseYearsAction(), args = (Symbol("id") -> "choose-year-form")) {
+    @formCSRF(action = transfer.routes.ChooseYearsController.chooseYearsAction(), args = Symbol("id") -> "choose-year-form") {
 
-    @{
-      val checkboxItems: Seq[CheckboxItem] = ApplyForEligibleYears
-        .options(languageUtilsImpl().ukDateTransformer(currentTaxYear))
-        .map { item =>
-          CheckboxItem(
-            content = item.content,
-            value   = item.value,
-            checked = form.value.collect { case seq: Seq[String] => seq.contains(item.value) }.getOrElse(false),
-            id = item.id
-          )
-        }
-
-      val checkboxesArgs = Checkboxes(
-        name = "value[]",
-        fieldset = Some(Fieldset(
-        legend = Some(Legend(
-          content = Text(messages("title.choose-years")),
-          classes = "govuk-visually-hidden",
-          isPageHeading = false
-        ))
-      )),
-      hint = Some(Hint(content = Text(messages("pages.form.field-helper.chooseYears")))),
-      items = checkboxItems,
-      attributes = Map("data-inline-error" -> "current-year-error"),
-      errorMessage = form.error("value").map(e => ErrorMessage(content = Text(messages("pages.chooseYears.error.required"))))
-      )
-
-      govukCheckboxes(checkboxesArgs)
-    }
-
-    @button(
-        msg = "generic.continue",
-        attrs = Map(
-            "data-journey-click" ->
-            "marriage-allowance:button:chooseyear_continue"
+        @govukCheckboxes(
+            Checkboxes(
+                name = "value[]",
+                fieldset = Some(Fieldset(
+                    legend = Some(Legend(
+                        content = Text(messages("title.choose-years")),
+                        classes = "govuk-visually-hidden",
+                        isPageHeading = false
+                    ))
+                )),
+                hint = Some(Hint(content = Text(messages("pages.form.field-helper.chooseYears")))),
+                items = ApplyForEligibleYears.options(languageUtilsImpl().ukDateTransformer(currentTaxYear)).map { item =>
+                    CheckboxItem(
+                        content = item.content,
+                        value   = item.value,
+                        checked = form.value.collect { case seq: Seq[String] => seq.contains(item.value) }.getOrElse(false),
+                        id      = item.id
+                    )
+                },
+                attributes = Map("data-inline-error" -> "current-year-error"),
+                errorMessage = form.error("value").map { _ =>
+                    ErrorMessage(content = Text(messages("pages.chooseYears.error.required")))
+                }
             )
+        )
+
+        @button(
+            msg = "generic.continue",
+            attrs = Map("data-journey-click" -> "marriage-allowance:button:chooseyear_continue")
         )
     }
 }

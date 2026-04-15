@@ -18,38 +18,41 @@ package services
 
 import com.google.inject.Inject
 import connectors.MarriageAllowanceConnector
-import errors.ErrorResponseStatus._
-import errors._
+import errors.*
+import errors.ErrorResponseStatus.*
 import events.{UpdateRelationshipFailureEvent, UpdateRelationshipSuccessEvent}
-import models._
+import models.*
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Request
-import services.CacheService._
+import services.CacheService.*
 import uk.gov.hmrc.domain.Nino
-import utils.emailAddressFormatters.PlayJsonFormats._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.model.DataEvent
-import utils.{EmailAddress, SystemLocalDate}
+import uk.gov.hmrc.time.CurrentTaxYear
+import utils.EmailAddress
+import utils.emailAddressFormatters.PlayJsonFormats.*
 import views.helpers.LanguageUtilsImpl
 
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.{Clock, LocalDate}
 import scala.concurrent.{ExecutionContext, Future}
 
 class UpdateRelationshipService @Inject()(
   marriageAllowanceConnector: MarriageAllowanceConnector,
-  endDateForMACeased: EndDateForMACeased,
   endDateDivorceCalculator: EndDateDivorceCalculator,
   auditConnector: AuditConnector,
   cachingService: CachingService,
   languageUtilsImpl: LanguageUtilsImpl,
-  localDate: SystemLocalDate
-) extends Logging {
+  clock: Clock
+) extends Logging
+  with CurrentTaxYear {
 
+  override def now: () => LocalDate = () => LocalDate.now(clock)
+  
   def retrieveRelationshipRecords(nino: Nino)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[RelationshipRecords] =
-    marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_, localDate.now()))
+    marriageAllowanceConnector.listRelationship(nino) map (RelationshipRecords(_, now()))
 
 
   def saveRelationshipRecords(relationshipRecords: RelationshipRecords)(implicit request: Request[?], ec: ExecutionContext): Future[RelationshipRecords] = {
@@ -178,8 +181,8 @@ class UpdateRelationshipService @Inject()(
     cachingService.get[ConfirmationUpdateAnswersCacheData](USER_ANSWERS_UPDATE_CONFIRMATION).map(_.getOrElse(throw CacheMapNoFound())).map(ConfirmationUpdateAnswers(_))
 
   def getMAEndingDatesForCancellation: MarriageAllowanceEndingDates = {
-    val marriageAllowanceEndDate = endDateForMACeased.endDate
-    val personalAllowanceEffectiveDate = endDateForMACeased.personalAllowanceEffectiveDate
+    val marriageAllowanceEndDate = current.finishes
+    val personalAllowanceEffectiveDate = current.next.starts
 
     MarriageAllowanceEndingDates(marriageAllowanceEndDate, personalAllowanceEffectiveDate)
   }

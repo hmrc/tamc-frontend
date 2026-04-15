@@ -45,7 +45,7 @@ class ConfirmEmailContentTest extends BaseTest with Injecting with NinoGenerator
       doc.getElementsByTag("p").eachText().toArray() shouldBe Array(
         "We will email confirmation that you have cancelled your Marriage Allowance within 24 hours.",
         "We will not share your email with anyone else.",
-        "Beta This is a new service – your feedback will help us to improve it."
+        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 
