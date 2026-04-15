@@ -23,27 +23,32 @@ import models.ApplyForEligibleYears
 import play.api.data.Form
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.CacheService.CACHE_CHOOSE_YEARS
-import services.{CachingService, TimeService}
+import services.CachingService
+import uk.gov.hmrc.time.CurrentTaxYear
 import utils.{LoggerHelper, TransferErrorHandler}
 
-import java.time.LocalDate
+import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ChooseYearsController @Inject()(
                                        authenticate: StandardAuthJourney,
                                        cachingService: CachingService,
-                                       timeService: TimeService,
                                        cc: MessagesControllerComponents,
                                        chooseYearsView: views.html.multiyear.transfer.choose_eligible_years,
                                        formProvider: ChooseYearForm,
-                                       errorHandler: TransferErrorHandler
-                                     )(implicit ec: ExecutionContext) extends BaseController(cc) with LoggerHelper {
+                                       errorHandler: TransferErrorHandler,
+                                       clock: Clock
+                                     )(implicit ec: ExecutionContext)
+  extends BaseController(cc)
+    with LoggerHelper
+    with CurrentTaxYear {
+
+  override def now: () => LocalDate = () => LocalDate.now(clock)
 
   private val form: Form[Seq[String]] = formProvider()
 
-  private def currentTaxYear: LocalDate =
-    timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear)
+  private def currentTaxYear: LocalDate = current.starts
 
   def chooseYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     cachingService.get[String](CACHE_CHOOSE_YEARS).map {
@@ -59,7 +64,8 @@ class ChooseYearsController @Inject()(
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(chooseYearsView(formWithErrors, currentTaxYear))),
+        formWithErrors =>
+          Future.successful(BadRequest(chooseYearsView(formWithErrors, currentTaxYear))),
         selectedYears => {
           val cacheString = selectedYears.mkString(",")
 

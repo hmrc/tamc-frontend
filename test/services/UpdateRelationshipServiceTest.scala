@@ -18,27 +18,27 @@ package services
 
 import config.ApplicationConfig
 import connectors.MarriageAllowanceConnector
-import errors.ErrorResponseStatus._
-import errors._
+import errors.*
+import errors.ErrorResponseStatus.*
 import forms.coc.CheckClaimOrCancelDecisionForm
-import models._
+import models.*
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.*
+import org.mockito.Mockito.*
 import org.scalatest.BeforeAndAfterEach
 import play.api.Application
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContent, Request}
 import play.api.test.FakeRequest
-import test_utils.data.RelationshipRecordData._
+import services.CacheService.*
+import test_utils.data.RelationshipRecordData.*
 import uk.gov.hmrc.domain.{Generator, Nino}
 import uk.gov.hmrc.time.TaxYear
 import utils.{BaseTest, EmailAddress, SystemLocalDate}
-import services.CacheService._
 
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.{Clock, Instant, LocalDate, ZoneOffset}
 import scala.concurrent.Future
 
 class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
@@ -68,10 +68,12 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
   val mockMarriageAllowanceConnector: MarriageAllowanceConnector = mock[MarriageAllowanceConnector]
   val mockCachingService: CachingService = mock[CachingService]
+  val mockClock: Clock = mock[Clock]
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[MarriageAllowanceConnector].toInstance(mockMarriageAllowanceConnector),
-      bind[CachingService].toInstance(mockCachingService)
+      bind[CachingService].toInstance(mockCachingService),
+      bind[Clock].toInstance(mockClock)
     ).build()
 
   val service: UpdateRelationshipService = instanceOf[UpdateRelationshipService]
@@ -83,10 +85,14 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     super.beforeEach()
     reset(mockCachingService)
     reset(mockMarriageAllowanceConnector)
+    reset(mockClock)
+
+    when(mockClock.instant()).thenReturn(Instant.now())
+    when(mockClock.getZone).thenReturn(ZoneOffset.UTC)
   }
 
   "retrieveRelationshipRecords" should {
-    "retrive RealtionshipRecord" in {
+    "retrieve RelationshipRecord" in {
       when(mockMarriageAllowanceConnector.listRelationship(any())(any(), any()))
         .thenReturn(Future.successful(recordList))
 

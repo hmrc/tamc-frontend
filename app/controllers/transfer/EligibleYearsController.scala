@@ -21,25 +21,30 @@ import controllers.auth.StandardAuthJourney
 import errors.*
 import models.*
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import services.{TimeService, TransferService}
+import services.TransferService
+import uk.gov.hmrc.time.CurrentTaxYear
 import utils.{LoggerHelper, TransferErrorHandler}
 
+import java.time.{Clock, LocalDate}
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class EligibleYearsController @Inject()(
                                          errorHandler: TransferErrorHandler,
                                          authenticate: StandardAuthJourney,
-                                         registrationService: TransferService,
-                                         timeService: TimeService,
+                                         transferService: TransferService,
+                                         clock: Clock,
                                          cc: MessagesControllerComponents,
-                                         eligibleYearsV: views.html.multiyear.transfer.eligible_years)
-                                       (implicit ec: ExecutionContext)
+                                         eligibleYearsV: views.html.multiyear.transfer.eligible_years
+                                       )(implicit ec: ExecutionContext)
   extends BaseController(cc)
-    with LoggerHelper {
+    with LoggerHelper
+    with CurrentTaxYear {
+
+  override def now: () => LocalDate = () => LocalDate.now(clock)
 
   def eligibleYears: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {
+    transferService.deleteSelectionAndGetCurrentAndPreviousYearsEligibility map {
       case CurrentAndPreviousYearsEligibility(false, Nil, _, _) =>
         throw new NoTaxYearsAvailable
       case CurrentAndPreviousYearsEligibility(false, previousYears, _, _) if previousYears.nonEmpty =>
@@ -48,18 +53,18 @@ class EligibleYearsController @Inject()(
         Ok(
           eligibleYearsV(
             registrationInput.name,
-            Some(timeService.getStartDateForTaxYear(timeService.getCurrentTaxYear))
+            current.starts
           )
         )
     } recover errorHandler.handleError
   }
 
   def eligibleYearsAction: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    registrationService.getCurrentAndPreviousYearsEligibility.flatMap {
+    transferService.getCurrentAndPreviousYearsEligibility.flatMap {
       case CurrentAndPreviousYearsEligibility(currentYearAvailable, previousYears, registrationInput, _) =>
         if (currentYearAvailable) {
-          val selectedYears: List[Int] = List(timeService.getCurrentTaxYear)
-          registrationService.saveSelectedYears(selectedYears) map { _ =>
+          val selectedYears: List[Int] = List(current.starts.getYear)
+          transferService.saveSelectedYears(selectedYears) map { _ =>
             Redirect(controllers.transfer.routes.ConfirmEmailController.confirmYourEmail())
           }
         } else {

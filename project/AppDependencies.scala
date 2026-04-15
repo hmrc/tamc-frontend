@@ -16,7 +16,7 @@
 
 import sbt.*
 
-object LibraryDependencies {
+object AppDependencies {
 
   private val hmrcScaWrapperVersion = "4.14.0"
   private val hmrcMongoVersion      = "2.12.0"

@@ -37,7 +37,7 @@ val root: Project = Project(appName, file("."))
   .settings(
     CodeCoverageSettings(),
     PlayKeys.playDefaultPort := 9900,
-    libraryDependencies ++= LibraryDependencies(),
+    libraryDependencies ++= AppDependencies(),
   )
 
 addCommandAlias("runLocal", "run -Dplay.http.router=testOnlyDoNotUseInAppConf.Routes")
