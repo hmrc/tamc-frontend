@@ -14,33 +14,34 @@
  * limitations under the License.
  *@
 
-@import models.auth.BaseUserRequest
 @import config.ApplicationConfig
-@import includes.{H1, P, Link}
-
+@import includes.{H1, Link, P}
+@import models.auth.BaseUserRequest
 @import views.Main
 
 @this(
-main: Main,
-applicationConfig: ApplicationConfig,
-h1: H1,
-p: P,
-link: Link)
+        main: Main,
+        applicationConfig: ApplicationConfig,
+        h1: H1,
+        p: P,
+        link: Link)
 
 @()(implicit messages: Messages,
-request: BaseUserRequest[?])
+        request: BaseUserRequest[?])
 
 @main(
-pageTitle = messages("title.cannot-use-service")
+    pageTitle = messages("title.cannot-use-service")
 ) {
-    @h1("title.cannot-use-service", elmId=Some("error"))
+    @h1("title.cannot-use-service", elmId = Some("error"))
     @p(HtmlContent(transferorLink))
 }
 @transferorLink = {
-    @link(link = applicationConfig.contactIncomeTaxHelplineUrl,
-        messageKey = messages("technical.transferor-dead-p1"),
-        attrTarget = true,
-        attrs = Map("data-journey-click" -> s"click - link:${Messages("technical.transferor-dead-p1")}:${Messages("title.pattern", Messages("title.cannot-use-service"))}", "role" -> "button"),
-        inParagraph = true)
-    messages("technical.transferor-dead-p2")
+@link(link = applicationConfig.contactIncomeTaxHelplineUrl,
+    messageKey = messages("technical.transferor-dead-p1"),
+    attrTarget = true,
+    attrs = Map("data-journey-click" -> s"click - link:${Messages("technical.transferor-dead-p1")}:${Messages("title.pattern", Messages("title.cannot-use-service"))}", "role" -> "button"),
+    inParagraph = true)
+
+@messages("technical.transferor-dead-p2")
+
 }

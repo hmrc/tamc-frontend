@@ -83,7 +83,8 @@ class MarriageAllowanceConnector @Inject()(httpClient: HttpClientV2, application
       .execute[HttpResponse]
       .map {
         case response if response.status == 200 => Right(Json.fromJson[CreateRelationshipResponse](response.json).asOpt)
-        case errorResponse => Left(errorResponse.json.as[MarriageAllowanceError])
+        case errorResponse =>
+          Left(errorResponse.json.as[MarriageAllowanceError])
       }.recoverWith {
       case t: Throwable => Future.failed(t)
     }

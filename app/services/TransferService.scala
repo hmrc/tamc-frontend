@@ -234,7 +234,7 @@ class TransferService @Inject()(
       None
 
   private def getRecipientRelationship(transferorNino: Nino, recipientData: RegistrationFormInput)
-                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] =
+                                      (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[(UserRecord, Option[List[TaxYear]])] = {
     marriageAllowanceConnector
       .getRecipientRelationship(transferorNino, recipientData)
       .flatMap {
@@ -245,12 +245,19 @@ class TransferService @Inject()(
             case _ => Future.failed(RecipientNotFound())
           }
         case Left(error) =>
-          error.status.status_code match {
-            case TRANSFEROR_DECEASED => Future.failed(TransferorDeceased())
-            case RECIPIENT_NOT_FOUND => Future.failed(RecipientNotFound())
+          (error.status, error.statusCode, error.message) match {
+            case (Some(responseStatus), _, _) =>
+              responseStatus.status_code match {
+                case TRANSFEROR_DECEASED => Future.failed(TransferorDeceased())
+                case RECIPIENT_NOT_FOUND => Future.failed(RecipientNotFound())
+                case _ => Future.failed(OtherError(error))
+              }
+            case (_, Some(statusCode), Some(message)) if statusCode == 400 && message.contains("Participant is deceased") =>
+              Future.failed(TransferorDeceased())
             case _ => Future.failed(OtherError(error))
           }
       }
+  }
 
   def deleteSelectionAndGetCurrentAndPreviousYearsEligibility(implicit request: Request[?], ec: ExecutionContext): Future[CurrentAndPreviousYearsEligibility] =
     for {
@@ -287,10 +294,16 @@ class TransferService @Inject()(
           case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
       case Left(error) =>
-        error.status.status_code match {
-          case CANNOT_CREATE_RELATIONSHIP => throw CannotCreateRelationship()
-          case RELATION_MIGHT_BE_CREATED => throw RelationshipMightBeCreated()
-          case RECIPIENT_DECEASED => throw RecipientDeceased()
+        (error.status, error.statusCode, error.message) match {
+          case (Some(responseStatus), _, _) =>
+            responseStatus.status_code match {
+              case CANNOT_CREATE_RELATIONSHIP => throw CannotCreateRelationship()
+              case RELATION_MIGHT_BE_CREATED => throw RelationshipMightBeCreated()
+              case RECIPIENT_DECEASED => throw RecipientDeceased()
+              case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
+            }
+          case (_, Some(statusCode), Some(message)) if statusCode == 400 && message.contains("Participant is deceased") =>
+            throw TransferorDeceased()
           case _ => throw new UnsupportedOperationException("Unable to send create relationship request")
         }
     } recover {
