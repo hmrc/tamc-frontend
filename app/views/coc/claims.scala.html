@@ -16,13 +16,15 @@
 
 @import models.auth.AuthenticatedUserRequest
 @import viewModels.ClaimsViewModel
-@import includes.H1
+@import includes.{H1, H2, P}
 
 @import views.Main
 
 @this(main: Main,
 h1: H1,
-govukInsetText: GovukInsetText)
+govukInsetText: GovukInsetText,
+p: P,
+h2: H2)
 
 @(viewModel: ClaimsViewModel)(implicit messages: Messages, request: AuthenticatedUserRequest[?])
 
@@ -64,4 +66,6 @@ pageTitle = messages("pages.claims.title")
 
   @govukInsetText(InsetText(id = Some("taxFreeAllowance"), content = HtmlContent(viewModel.taxFreeAllowanceLink)))
 
+  @h2(messages("pages.claims.active.till.ty.end.title"))
+  @p(Text(messages("pages.claims.active.till.ty.end")))
 }
