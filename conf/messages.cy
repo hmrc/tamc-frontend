@@ -461,6 +461,8 @@ pages.claims.table.heading.tax-year=Blwyddyn dreth
 pages.claims.table.heading.status=Statws
 pages.claims.link.tax.free.allowance.part1=Gallwch weld
 pages.claims.link.tax.free.allowance.link.text=y lwfans a drosglwyddwyd yn eich swm rhydd o dreth.
+pages.claims.active.till.ty.end.title=Os yw’ch Lwfans Priodasol sydd wedi’i ganslo yn dal i ymddangos fel petai’n actif
+pages.claims.active.till.ty.end=Os byddwch yn canslo’ch Lwfans Priodasol oherwydd newid i incwm, bydd yn dal i ymddangos fel petai’n actif hyd at ddiwedd y flwyddyn dreth (5 Ebrill). Yna, fe fydd yn ymddangos fel wedi’i ganslo.
 
 
 #********************************************************************************

@@ -456,6 +456,8 @@ pages.claims.table.heading.tax-year=Tax year
 pages.claims.table.heading.status=Status
 pages.claims.link.tax.free.allowance.part1=You can
 pages.claims.link.tax.free.allowance.link.text=see the transferred allowance in your tax-free amount.
+pages.claims.active.till.ty.end.title=If your cancelled Marriage Allowance still shows as active
+pages.claims.active.till.ty.end=If you cancel your Marriage Allowance because of a change in income, it will continue to show as active until the end of the tax year (5 April). It will then show as cancelled.
 
 
 #********************************************************************************
