@@ -64,6 +64,14 @@ GET         /how-it-works                        controllers.HowItWorksControlle
 GET         /marriage-allowance-details-missing  controllers.errors.TransferorNotFoundController.transferorNotFoundError()
 GET         /partners-details-missing            controllers.errors.RecipientNotFoundController.recipientNotFoundError()
 
+GET         /lower-earner                        controllers.transfer.LowerEarnerController.isLowerEarner()
+POST        /lower-earner                        controllers.transfer.LowerEarnerController.isLowerEarnerAction()
+GET         /partner-needs-apply                 controllers.transfer.LowerEarnerController.partnerMustApply()
+
+GET         /your-total-income                   controllers.transfer.YourTotalIncomeController.yourTotalIncome()
+POST        /your-total-income                   controllers.transfer.YourTotalIncomeController.yourTotalIncomeAction()
+GET         /income-less-than                    controllers.transfer.YourTotalIncomeController.invalidIncome()
+
 #Welsh Translation
 GET         /lang/enGb                           controllers.LanguageController.enGb()
 GET         /lang/cyGb                           controllers.LanguageController.cyGb()

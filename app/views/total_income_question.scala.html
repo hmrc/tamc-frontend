@@ -1,0 +1,83 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import play.twirl.api.Html
+@import models.auth.AuthenticatedUserRequest
+@import includes.{H1, P, Button, InputRadios, ErrorSummary}
+
+@import views.Main
+
+@this(
+        main: Main,
+        errorSummary: ErrorSummary,
+        formCSRF: FormWithCSRF,
+        h1: H1,
+        p: P,
+        viewHelpers: utils.ViewHelpers,
+        inputRadios: InputRadios,
+        button: Button
+)
+
+@(
+        form: Form[?]
+)(
+        implicit messages: Messages,
+        request: AuthenticatedUserRequest[?]
+)
+
+@main(
+    pageTitle = messages("yourTotalIncome.title"),
+    serviceTitle = "title.application.pattern"
+) {
+
+    @errorSummary(form, Some("yourTotalIncome-yes"))
+
+    @h1("yourTotalIncome.heading")
+    @p(Text(messages("yourTotalIncome.p1")))
+    @p(Text(messages("yourTotalIncome.p2")))
+
+    @formCSRF(action = transfer.routes.YourTotalIncomeController.yourTotalIncomeAction(), args = Symbol("id") -> "choose-year-form") {
+
+        @inputRadios(
+            form = form,
+            legend = "yourTotalIncome.legend",
+            legendAsHeading = false,
+            legendClasses = "govuk-fieldset__legend--m",
+            id = Some("yourTotalIncome"),
+            fieldSetAttrs = Map("id" -> "yourTotalIncome"),
+            name = "yourTotalIncome",
+            items = Seq(
+                RadioItem(
+                    content = Text(messages("radio.yes")),
+                    value = Some("true"),
+                    id = Some("yourTotalIncome-yes"),
+                    checked = form("yourTotalIncome").value.contains("true")
+                ),
+                RadioItem(
+                    content = Text(messages("radio.no")),
+                    value = Some("false"),
+                    id = Some("yourTotalIncome-no"),
+                    checked = form("yourTotalIncome").value.contains("false")
+                )
+            )
+        )
+
+        @button(
+            msg = "generic.continue",
+            attrs = Map("data-journey-click" -> "marriage-allowance:button:yourTotalIncome-continue")
+        )
+    }
+}

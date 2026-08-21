@@ -73,6 +73,8 @@ object CacheService {
   val CACHE_ROLE_RECORD: CacheReadWriteKey[String]                               = CacheKey[String]("ROLE") // TODO is this key required?
   val CACHE_CHOOSE_YEARS: CacheReadWriteKey[String]                              = CacheKey[String]("CHOOSE_YEARS")
   val CACHE_KEEP_ALIVE: CacheReadWriteKey[Long]                                  = CacheKey[Long]("KEEP_ALIVE")
+  val CACHE_IS_LOWER_EARNER: CacheReadWriteKey[Boolean]                          = CacheKey[Boolean]("IS_LOWER_EARNER")
+  val CACHE_TOTAL_INCOME: CacheReadWriteKey[Boolean]                             = CacheKey[Boolean]("TOTAL_INCOME")
 
   val USER_ANSWERS_CACHE: CacheReadKey[UserAnswersCacheData] = CacheKey[UserAnswersCacheData]((cacheItem: CacheItem) =>
     Some(

@@ -652,3 +652,39 @@ global.page.not.found.error.contact.link=https://www.gov.uk/government/organisat
 #*************************************************************
 betaBanner.message=This is a new service ‐ your {0} will help us to improve it.
 betaBanner.linkText=feedback
+
+#*************************************************************
+# Lower Earner Question Page
+#*************************************************************
+lowerEarner.title=Are you the lower earner?
+lowerEarner.heading=Are you the lower earner?
+lowerEarner.error.required=Select Yes if you are the lower earner
+
+#*************************************************************
+# Your total income question page
+#*************************************************************
+yourTotalIncome.title=Your total income
+yourTotalIncome.heading=Your total income
+yourTotalIncome.error.required=Select Yes if your total income is less than £12,570 a year
+yourTotalIncome.p1=This is the total income you get before Income Tax and National Insurance is taken off.
+yourTotalIncome.p2=Include employment, pensions, taxable state benefits, rental profits, savings, dividends and trusts.
+yourTotalIncome.legend=Is your total income less than £12,570 a year?
+
+#*************************************************************
+# Invalid income page
+#*************************************************************
+invalidIncome.title=Your income must be less than £12,570 to apply
+invalidIncome.heading=Your income must be less than £12,570 to apply
+invalidIncome.p1=To benefit from Marriage Allowance as a couple, your income must be less than your Personal Allowance of £12,570.
+invalidIncome.p2=If your income changes you can use the {0} to work out how much you could save as a couple.
+invalidIncome.linkText=Marriage Allowance calculator
+
+#*************************************************************
+# Partner needs to apply page
+#*************************************************************
+partnerMustApply.title=Your partner needs to apply for Marriage Allowance
+partnerMustApply.heading=Your partner needs to apply for Marriage Allowance
+partnerMustApply.p1=If you are not the lower earner, your partner needs to apply if they qualify.
+partnerMustApply.p2=They can apply to transfer some of their Personal Allowance to you.
+partnerMustApply.p3=To do this, your partner can sign in to or set up their personal tax account, or {0}.
+partnerMustApply.linkText=apply for Marriage Allowance by post
