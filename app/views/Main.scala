@@ -71,7 +71,13 @@ class MainImpl @Inject() (
       serviceURLs = ServiceURLs(
         signOutUrl = Some(controllers.routes.AuthorisationController.logout().url)
       ),
-      backLinkConfig = if (disableBackLink) None else backLinkHref.map(BackLinkConfig.UrlBack.apply),
+      backLinkConfig =
+        if (disableBackLink) None
+        else
+          backLinkHref match {
+            case Some(link) => Some(BackLinkConfig.UrlBack.apply(link))
+            case None       => Some(BackLinkConfig.JsBack)
+          },
       scripts = Seq(additionalScripts(scripts)),
       styleSheets = Seq(
         additionalStyles()
