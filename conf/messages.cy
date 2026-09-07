@@ -413,8 +413,8 @@ technical.transferor-dead-p2=os bydd angen i chi drafod eich cais am Lwfans Prio
 # Cancel Journey
 #********************************************************************************
 claim.summary.link=Yn ôl i’r crynodeb o’ch hawliad am Lwfans Priodasol
-general.helpline.enquiries.link.pretext=Gallwch gysylltu
-general.helpline.enquiries.link=â Gwasanaeth Cwsmeriaid Cymraeg CThEM
+general.helpline.enquiries.link=Cysylltwch â CThEF
+general.helpline.enquiries.link.posttext=i roi gwybod i ni am brofedigaeth.
 
 #********************************************************************************
 # history page
@@ -439,9 +439,8 @@ pages.history.button.remove=Dileu lwfans
 # bereavement page
 #********************************************************************************
 pages.bereavement.title=Mae’n ddrwg gennym am eich colled
-pages.bereavement.enquiries.link.paragraph=i roi gwybod i ni am brofedigaeth.
 pages.bereavement.recipient.paragraph=Byddwch yn cadw’r Lwfans Priodasol y trosglwyddodd eich partner i chi tan ddiwedd y flwyddyn dreth.
-pages.bereavement.transferor.paragraph=Os bydd eich partner yn marw ar ôl i chi drosglwyddo rhywfaint o’ch Lwfans Personol iddo:
+pages.bereavement.transferor.paragraph=Os bu farw eich partner ar ôl i chi drosglwyddo rhywfaint o’ch Lwfans Personol iddynt:
 pages.bereavement.transferor.point1=ystyrir bod ei ystâd yn cynnwys y Lwfans Personol ychwanegol y gwnaethoch drosglwyddo iddo
 pages.bereavement.transferor.point2=bydd eich Lwfans Personol yn dychwelyd i’r swm arferol ar ddiwedd y flwyddyn dreth (5 Ebrill)
 

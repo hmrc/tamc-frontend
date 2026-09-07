@@ -47,7 +47,7 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
 
     "Display all recipient text" in {
       recipientDoc.getElementsByTag("p").eachText().toArray() shouldBe Array(
-        "You can contact the Income Tax general enquiries helpline to tell us about a bereavement.",
+        "Contact HMRC to tell us about a bereavement.",
         "You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.",
         "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
@@ -55,8 +55,8 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
 
     "Display all transferor text" in {
       transferorDoc.getElementsByTag("p").eachText().toArray() shouldBe Array(
-        "You can contact the Income Tax general enquiries helpline to tell us about a bereavement.",
-        "If your partner dies after you have transferred some of your Personal Allowance to them:",
+        "Contact HMRC to tell us about a bereavement.",
+        "If your partner died after you transferred some of your Personal Allowance to them:",
         "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
@@ -76,7 +76,7 @@ class BereavementContentTest extends BaseTest with Injecting with NinoGenerator 
       transferorDoc
         .getElementById("main-content")
         .getElementById("helpline")
-        .text() shouldBe "contact the Income Tax general enquiries helpline"
+        .text() shouldBe "Contact HMRC"
 
       recipientDoc.getElementById("main-content").getElementsByClass("govuk-link").attr("href") shouldBe
         "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"

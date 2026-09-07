@@ -408,8 +408,8 @@ technical.transferor-dead-p2=if you need to discuss your Marriage Allowance appl
 # Cancel Journey
 #********************************************************************************
 claim.summary.link=Back to your Marriage Allowance claim summary
-general.helpline.enquiries.link.pretext=You can
-general.helpline.enquiries.link=contact the Income Tax general enquiries helpline
+general.helpline.enquiries.link=Contact HMRC
+general.helpline.enquiries.link.posttext=to tell us about a bereavement.
 
 #********************************************************************************
 # history page
@@ -434,9 +434,8 @@ pages.history.button.remove=Remove allowance
 # bereavement page
 #********************************************************************************
 pages.bereavement.title=We are sorry for your loss
-pages.bereavement.enquiries.link.paragraph=to tell us about a bereavement.
 pages.bereavement.recipient.paragraph=You will keep the Marriage Allowance your partner transferred to you until the end of the tax year.
-pages.bereavement.transferor.paragraph=If your partner dies after you have transferred some of your Personal Allowance to them:
+pages.bereavement.transferor.paragraph=If your partner died after you transferred some of your Personal Allowance to them:
 pages.bereavement.transferor.point1=their estate will be treated as having the extra Personal Allowance you transferred to them
 pages.bereavement.transferor.point2=your Personal Allowance will go back to the normal amount at the end of the tax year (5 April)
 
