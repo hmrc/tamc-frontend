@@ -12,3 +12,4 @@ test-repositories:
   - pertax-performance-tests
   - platform-performance-tests
   - tamc-acceptance-tests
+serviceNowMapping: SNSVC0005678
