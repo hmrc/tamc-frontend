@@ -40,9 +40,9 @@ request: AuthenticatedUserRequest[?])
 
     <div id="ma-user-type" data-user-type="@role.value.toLowerCase" hidden></div>
 
-    @errorSummary(makeChangesDecisionForm, Some("stopMAChoice-cancel"))
+    @errorSummary(makeChangesDecisionForm, Some("stopMAChoice-income-changed"))
 
-    @h1("pages.makeChanges.heading")
+    @h1(s"pages.makeChanges.heading.${role.value.toLowerCase}")
 
     @form(action = controllers.UpdateRelationship.routes.MakeChangesController.submitMakeChange(), args = (Symbol("id") -> "change-relationship-form")) {
       @inputRadios(
@@ -51,21 +51,30 @@ request: AuthenticatedUserRequest[?])
         id = Some(MakeChangesDecisionForm.StopMAChoice),
         name = MakeChangesDecisionForm.StopMAChoice,
         items = Seq(RadioItem(
-                      content = Text(messages("pages.makeChanges.radio.noLongerRequired")),
+                      content = Text(messages("pages.makeChanges.radio.incomeChanged")),
                       value = Some(MakeChangesDecisionForm.Cancel),
-                      id = Some(MakeChangesDecisionForm.StopMAChoice + "-cancel")
+                      id = Some(MakeChangesDecisionForm.StopMAChoice + "-income-changed")
                     ), RadioItem(
                         content = Text(messages("pages.makeChanges.radio.divorce")),
                         value = Some(MakeChangesDecisionForm.Divorce),
                         id = Some(MakeChangesDecisionForm.StopMAChoice + "-divorce")
                     ), RadioItem(
+                        content = Text(messages("pages.makeChanges.radio.wrongSetup")),
+                        value = Some(MakeChangesDecisionForm.Cancel),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-wrong-setup")
+                    ), RadioItem(
                         content = Text(messages("pages.makeChanges.radio.bereavement")),
                         value = Some(MakeChangesDecisionForm.Bereavement),
                         id = Some(MakeChangesDecisionForm.StopMAChoice + "-bereavement")
+                    ), RadioItem(
+                        content = if(role == Transferor) Text(messages("pages.makeChanges.radio.noLongerRequired")) else Text(messages("pages.makeChanges.radio.anotherReason")),
+                        value = Some(MakeChangesDecisionForm.Cancel),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-another-reason")
                     )
                 ),
         legendAsHeading = false,
-        legendClasses = "govuk-visually-hidden"
+        legendClasses = "govuk-visually-hidden",
+        inline = false
       )
 
       @button(msg = "generic.continue")

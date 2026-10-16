@@ -79,7 +79,10 @@ class MakeChangesControllerTest
         val result = controller.makeChange()(request)
 
         status(result) shouldBe OK
-        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form().fill(Some(userAnswer)), role)
+        result `rendersTheSameViewAs` reasonForChangeView(
+          MakeChangesDecisionForm.form(role).fill(Some(userAnswer)),
+          role
+        )
       }
 
       "there is no data in the cache" in {
@@ -88,7 +91,7 @@ class MakeChangesControllerTest
         val result = controller.makeChange()(request)
 
         status(result) shouldBe OK
-        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(), role)
+        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(role), role)
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -97,7 +100,7 @@ class MakeChangesControllerTest
         val result = controller.makeChange()(request)
 
         status(result) shouldBe OK
-        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(), role)
+        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(role), role)
       }
     }
   }

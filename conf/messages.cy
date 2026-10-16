@@ -475,11 +475,16 @@ pages.decision.error.mandatory.value=Dewiswch os ydych am wirio’ch hawliad am 
 #********************************************************************************
 # Make Changes page
 #********************************************************************************
-pages.makeChanges.heading=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
-pages.makeChanges.radio.divorce=Ysgaru, dod â phartneriaeth sifil i ben neu wahanu’n gyfreithiol
-pages.makeChanges.radio.noLongerRequired=Ddim angen Lwfans Priodasol mwyach
-pages.makeChanges.radio.bereavement=Profedigaeth
-pages.makeChanges.error.mandatory.value=Dewiswch y rheswm yr ydych am ddod â’ch Lwfans Priodasol i ben
+pages.makeChanges.heading.transferor=Beth yw’ch rheswm dros ganslo’ch trosglwyddiad Lwfans Priodasol?
+pages.makeChanges.heading.recipient=Beth yw’ch rheswm dros ganslo’ch Lwfans Priodasol?
+pages.makeChanges.radio.incomeChanged=Mae fy incwm, neu incwm fy mhartner, wedi newid
+pages.makeChanges.radio.divorce=Rwyf wedi ysgaru, wedi gwahanu’n gyfreithiol, neu mae fy mhartneriaeth sifil wedi dod i ben
+pages.makeChanges.radio.wrongSetup=Cafodd y trosglwyddiad ei drefnu gan y person anghywir
+pages.makeChanges.radio.bereavement=Mae fy mhartner wedi marw
+pages.makeChanges.radio.noLongerRequired=Nid wyf am drosglwyddo’r lwfans i fy mhartner bellach
+pages.makeChanges.radio.anotherReason=Rheswm arall
+pages.makeChanges.error.mandatory.value.transferor=Dewiswch y rheswm dros ganslo’ch trosglwyddiad Lwfans Priodasol
+pages.makeChanges.error.mandatory.value.recipient=Dewiswch y rheswm dros ganslo’ch Lwfans Priodasol
 
 
 #********************************************************************************
