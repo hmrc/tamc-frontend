@@ -40,8 +40,8 @@ class MakeChangesControllerISpec extends IntegrationSpec {
 
       val doc = contentAsString(result)
 
-      doc must include("Why do you need to stop your Marriage Allowance?")
-      doc must include("Divorce, end of civil partnership or legally separated")
+      doc must include("Why do you want to cancel your Marriage Allowance?")
+      doc must include("I have divorced, legally separated or my civil partnership has ended")
     }
 
     "redirect to the divorce page when Divorce is selected" in {

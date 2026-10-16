@@ -46,7 +46,7 @@ class ContentChecksSpec extends IntegrationSpec {
       case "history"                 => ExpectedData("Your Marriage Allowance summary")
       case "choose"                  => ExpectedData("What do you want to do?")
       case "claims"                  => ExpectedData("Your Marriage Allowance claims")
-      case "make-changes"            => ExpectedData("Why do you need to stop your Marriage Allowance?")
+      case "make-changes"            => ExpectedData("Why do you want to cancel your Marriage Allowance?")
       case "cancel"                  => ExpectedData("We will cancel your Marriage Allowance")
       case "divorce-enter-year"      => ExpectedData("Date of divorce, end of civil partnership or legal separation")
       case "bereavement"             => ExpectedData("We are sorry for your loss")
