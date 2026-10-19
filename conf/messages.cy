@@ -163,7 +163,8 @@ title.error=Gwall
 title.error.transferor.not.found=Gwall: Ni allwn ddod o hyd i fanylion eich Lwfans Priodasol
 title.error.recipient.not.found=Gwall: Ni allwn ddod o hyd i fanylion CThEF eich partner
 title.history=Crynodeb o’ch Lwfans Priodasol
-title.make-a-change=Pam y mae angen i chi ddod â’ch Lwfans Priodasol i ben?
+title.make-a-change.recipient=Beth yw’ch rheswm dros ganslo’ch Lwfans Priodasol?
+title.make-a-change.transferor=Beth yw’ch rheswm dros ganslo’ch trosglwyddiad Lwfans Priodasol?
 title.date-of-marriage=Dyddiad y briodas neu ffurfio’r bartneriaeth sifil
 title.cannot-use-service=Ni allwch ddefnyddio’r gwasanaeth hwn
 #********************************************************************************

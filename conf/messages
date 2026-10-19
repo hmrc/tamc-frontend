@@ -160,7 +160,8 @@ title.error=Error
 title.error.transferor.not.found=Error: We cannot find your Marriage Allowance details
 title.error.recipient.not.found=Error: We cannot find your partner’s HMRC details
 title.history=Your Marriage Allowance summary
-title.make-a-change=Why do you want to cancel your Marriage Allowance?
+title.make-a-change.recipient=Why do you want to cancel your Marriage Allowance?
+title.make-a-change.transferor=Why do you want to cancel your Marriage Allowance transfer?
 title.date-of-marriage=Date of marriage or civil partnership
 title.cannot-use-service=You cannot use this service
 

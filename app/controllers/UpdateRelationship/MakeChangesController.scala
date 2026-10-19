@@ -66,8 +66,18 @@ class MakeChangesController @Inject() (
                 Redirect(controllers.UpdateRelationship.routes.DivorceController.divorceEnterYear())
               }
 
-            case Some(MakeChangesDecisionForm.Cancel) =>
-              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Cancel) flatMap { _ =>
+            case Some(MakeChangesDecisionForm.WrongSetup) =>
+              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.WrongSetup) flatMap { _ =>
+                noLongerWantMarriageAllowanceRedirect
+              }
+
+            case Some(MakeChangesDecisionForm.IncomeChange) =>
+              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.IncomeChange) flatMap { _ =>
+                noLongerWantMarriageAllowanceRedirect
+              }
+
+            case Some(MakeChangesDecisionForm.AnotherReason) =>
+              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.AnotherReason) flatMap { _ =>
                 noLongerWantMarriageAllowanceRedirect
               }
 

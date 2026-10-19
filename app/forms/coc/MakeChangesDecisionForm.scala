@@ -24,9 +24,11 @@ object MakeChangesDecisionForm {
 
   val StopMAChoice = "stopMAChoice"
 
-  val Divorce     = "Divorce"
-  val Cancel      = "Cancel"
-  val Bereavement = "Bereavement"
+  val Divorce       = "Divorce"
+  val WrongSetup    = "WrongSetup"
+  val Bereavement   = "Bereavement"
+  val IncomeChange  = "IncomeChange"
+  val AnotherReason = "AnotherReason"
 
   def form(role: Role): Form[Option[String]] = Form[Option[String]](
     single(

@@ -26,7 +26,9 @@ class MakeChangesDecisionFormTest extends BaseTest {
     val decisions = Seq(
       MakeChangesDecisionForm.Divorce,
       MakeChangesDecisionForm.Bereavement,
-      MakeChangesDecisionForm.Cancel
+      MakeChangesDecisionForm.IncomeChange,
+      MakeChangesDecisionForm.WrongSetup,
+      MakeChangesDecisionForm.AnotherReason
     )
 
     decisions.foreach { decision =>
