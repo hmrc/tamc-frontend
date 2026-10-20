@@ -408,7 +408,12 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
 
       "different marriage allowance end reasons are provided" when {
 
-        val endReasonsWithEnumerations = Seq(("Divorce", "Divorce/Separation"), ("Cancel", "Cancelled by Transferor"))
+        val endReasonsWithEnumerations = Seq(
+          ("Divorce", "Divorce/Separation"),
+          ("IncomeChange", "Cancelled by Transferor"),
+          ("AnotherReason", "Cancelled by Transferor"),
+          ("WrongSetup", "Cancelled by Transferor")
+        )
 
         endReasonsWithEnumerations foreach { case (reason, enumeration) =>
           val cacheData = UpdateRelationshipCacheData(

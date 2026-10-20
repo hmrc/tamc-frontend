@@ -40,7 +40,7 @@ request: AuthenticatedUserRequest[?])
 
     <div id="ma-user-type" data-user-type="@role.value.toLowerCase" hidden></div>
 
-    @errorSummary(makeChangesDecisionForm, Some("stopMAChoice-income-changed"))
+    @errorSummary(makeChangesDecisionForm, Some(MakeChangesDecisionForm.StopMAChoice + "-" + MakeChangesDecisionForm.IncomeChange.toLowerCase))
 
     @h1(s"pages.makeChanges.heading.${role.value.toLowerCase}")
 

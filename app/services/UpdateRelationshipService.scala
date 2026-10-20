@@ -159,9 +159,11 @@ class UpdateRelationshipService @Inject() (
 
       val endDateFormatted = endDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
       val desEnumeration   = relationshipEndReason match {
-        case "Divorce" => "Divorce/Separation"
-        case "Cancel"  => "Cancelled by Transferor"
-        case _         => throw DesEnumerationNotFound()
+        case "Divorce"       => "Divorce/Separation"
+        case "WrongSetup"    => "Cancelled by Transferor"
+        case "IncomeChange"  => "Cancelled by Transferor"
+        case "AnotherReason" => "Cancelled by Transferor"
+        case _               => throw DesEnumerationNotFound()
       }
 
       RelationshipInformation(creationTimeStamp, desEnumeration, endDateFormatted)
