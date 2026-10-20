@@ -163,6 +163,7 @@ class UpdateRelationshipService @Inject() (
         case "WrongSetup"    => "Cancelled by Transferor"
         case "IncomeChange"  => "Cancelled by Transferor"
         case "AnotherReason" => "Cancelled by Transferor"
+        case "Cancel"        => "Cancelled by Transferor" // TODO can remove this Cancel option after deployment of DDCNL-12474
         case _               => throw DesEnumerationNotFound()
       }
 
