@@ -40,8 +40,8 @@ class MakeChangesControllerISpec extends IntegrationSpec {
 
       val doc = contentAsString(result)
 
-      doc must include("Why do you need to stop your Marriage Allowance?")
-      doc must include("Divorce, end of civil partnership or legally separated")
+      doc must include("Why do you want to cancel your Marriage Allowance?")
+      doc must include("I have divorced, legally separated or my civil partnership has ended")
     }
 
     "redirect to the divorce page when Divorce is selected" in {
@@ -58,45 +58,47 @@ class MakeChangesControllerISpec extends IntegrationSpec {
         controllers.UpdateRelationship.routes.DivorceController.divorceEnterYear().url
       )
     }
+    Seq(MakeChangesDecisionForm.IncomeChange, MakeChangesDecisionForm.WrongSetup, MakeChangesDecisionForm.AnotherReason)
+      .foreach { answer =>
+        s"redirect to the stop allowance page when $answer is selected by Recipient" in {
+          when(mockCachingService.put[String](eqTo(CACHE_MAKE_CHANGES_DECISION), any())(any(), any()))
+            .thenReturn(Future.successful("Cancel"))
 
-    "redirect to the stop allowance page when Cancel is selected by Recipient" in {
-      when(mockCachingService.put[String](eqTo(CACHE_MAKE_CHANGES_DECISION), any())(any(), any()))
-        .thenReturn(Future.successful("Cancel"))
+          val fakeRequest = request("/make-changes", POST)
+            .withFormUrlEncodedBody(MakeChangesDecisionForm.StopMAChoice -> answer)
 
-      val fakeRequest = request("/make-changes", POST)
-        .withFormUrlEncodedBody(MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.Cancel)
+          val result = route(app, fakeRequest).value
 
-      val result = route(app, fakeRequest).value
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(
+            controllers.UpdateRelationship.routes.StopAllowanceController.stopAllowance().url
+          )
+        }
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
-        controllers.UpdateRelationship.routes.StopAllowanceController.stopAllowance().url
-      )
-    }
+        s"redirect to the cancel page when $answer is selected by Transferor" in {
+          val transferorRelationshipRecords = relationshipRecords.copy(
+            primaryRecord = relationshipRecords.primaryRecord.copy(
+              participant = Transferor.value
+            )
+          )
 
-    "redirect to the cancel page when Cancel is selected by Transferor" in {
-      val transferorRelationshipRecords = relationshipRecords.copy(
-        primaryRecord = relationshipRecords.primaryRecord.copy(
-          participant = Transferor.value
-        )
-      )
+          when(mockCachingService.get[RelationshipRecords](eqTo(CACHE_RELATIONSHIP_RECORDS))(any()))
+            .thenReturn(Future.successful(Some(transferorRelationshipRecords)))
 
-      when(mockCachingService.get[RelationshipRecords](eqTo(CACHE_RELATIONSHIP_RECORDS))(any()))
-        .thenReturn(Future.successful(Some(transferorRelationshipRecords)))
+          when(mockCachingService.put[String](eqTo(CACHE_MAKE_CHANGES_DECISION), any())(any(), any()))
+            .thenReturn(Future.successful(answer))
 
-      when(mockCachingService.put[String](eqTo(CACHE_MAKE_CHANGES_DECISION), any())(any(), any()))
-        .thenReturn(Future.successful("Cancel"))
+          val fakeRequest = request("/make-changes", POST)
+            .withFormUrlEncodedBody(MakeChangesDecisionForm.StopMAChoice -> answer)
 
-      val fakeRequest = request("/make-changes", POST)
-        .withFormUrlEncodedBody(MakeChangesDecisionForm.StopMAChoice -> MakeChangesDecisionForm.Cancel)
+          val result = route(app, fakeRequest).value
 
-      val result = route(app, fakeRequest).value
-
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(
-        controllers.UpdateRelationship.routes.StopAllowanceController.cancel().url
-      )
-    }
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(
+            controllers.UpdateRelationship.routes.StopAllowanceController.cancel().url
+          )
+        }
+      }
 
     "redirect to the bereavement page when Bereavement is selected" in {
       when(mockCachingService.put[String](eqTo(CACHE_MAKE_CHANGES_DECISION), any())(any(), any()))

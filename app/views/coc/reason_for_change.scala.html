@@ -34,15 +34,15 @@ button: Button)
 request: AuthenticatedUserRequest[?])
 
 @main(
-    pageTitle = viewHelpers.formErrorPrefix(makeChangesDecisionForm, messages("title.make-a-change")),
+    pageTitle = viewHelpers.formErrorPrefix(makeChangesDecisionForm, messages(s"title.make-a-change.${role.value.toLowerCase}")),
     serviceTitle = "tamc.manage"
 ){
 
     <div id="ma-user-type" data-user-type="@role.value.toLowerCase" hidden></div>
 
-    @errorSummary(makeChangesDecisionForm, Some("stopMAChoice-cancel"))
+    @errorSummary(makeChangesDecisionForm, Some(MakeChangesDecisionForm.StopMAChoice + "-" + MakeChangesDecisionForm.IncomeChange.toLowerCase))
 
-    @h1("pages.makeChanges.heading")
+    @h1(s"pages.makeChanges.heading.${role.value.toLowerCase}")
 
     @form(action = controllers.UpdateRelationship.routes.MakeChangesController.submitMakeChange(), args = (Symbol("id") -> "change-relationship-form")) {
       @inputRadios(
@@ -51,21 +51,35 @@ request: AuthenticatedUserRequest[?])
         id = Some(MakeChangesDecisionForm.StopMAChoice),
         name = MakeChangesDecisionForm.StopMAChoice,
         items = Seq(RadioItem(
-                      content = Text(messages("pages.makeChanges.radio.noLongerRequired")),
-                      value = Some(MakeChangesDecisionForm.Cancel),
-                      id = Some(MakeChangesDecisionForm.StopMAChoice + "-cancel")
+                      content = Text(messages("pages.makeChanges.radio.incomeChanged")),
+                      value = Some(MakeChangesDecisionForm.IncomeChange),
+                      id = Some(MakeChangesDecisionForm.StopMAChoice + "-" + MakeChangesDecisionForm.IncomeChange.toLowerCase),
+                      checked = makeChangesDecisionForm("stopMAChoice").value.contains(MakeChangesDecisionForm.IncomeChange)
                     ), RadioItem(
                         content = Text(messages("pages.makeChanges.radio.divorce")),
                         value = Some(MakeChangesDecisionForm.Divorce),
-                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-divorce")
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-" + MakeChangesDecisionForm.Divorce.toLowerCase),
+                        checked = makeChangesDecisionForm("stopMAChoice").value.contains(MakeChangesDecisionForm.Divorce)
+                    ), RadioItem(
+                        content = Text(messages("pages.makeChanges.radio.wrongSetup")),
+                        value = Some(MakeChangesDecisionForm.WrongSetup),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-" + MakeChangesDecisionForm.WrongSetup.toLowerCase),
+                        checked = makeChangesDecisionForm("stopMAChoice").value.contains(MakeChangesDecisionForm.WrongSetup)
                     ), RadioItem(
                         content = Text(messages("pages.makeChanges.radio.bereavement")),
                         value = Some(MakeChangesDecisionForm.Bereavement),
-                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-bereavement")
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-" + MakeChangesDecisionForm.Bereavement.toLowerCase),
+                        checked = makeChangesDecisionForm("stopMAChoice").value.contains(MakeChangesDecisionForm.Bereavement)
+                    ), RadioItem(
+                        content = if(role == Transferor) Text(messages("pages.makeChanges.radio.noLongerRequired")) else Text(messages("pages.makeChanges.radio.anotherReason")),
+                        value = Some(MakeChangesDecisionForm.AnotherReason),
+                        id = Some(MakeChangesDecisionForm.StopMAChoice + "-" + MakeChangesDecisionForm.AnotherReason.toLowerCase),
+                        checked = makeChangesDecisionForm("stopMAChoice").value.contains(MakeChangesDecisionForm.AnotherReason)
                     )
                 ),
         legendAsHeading = false,
-        legendClasses = "govuk-visually-hidden"
+        legendClasses = "govuk-visually-hidden",
+        inline = false
       )
 
       @button(msg = "generic.continue")

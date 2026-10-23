@@ -22,6 +22,7 @@ import controllers.auth.PertaxAuthAction
 import forms.coc.*
 import helpers.FakePertaxAuthAction
 import models.{RelationshipRecords, Role}
+import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.*
 import org.mockito.Mockito.*
@@ -71,15 +72,29 @@ class MakeChangesControllerTest
 
   "makeChange" should {
     "display the make change page" when {
-      "there is valid data in the cache" in {
-        val userAnswer = "Divorce"
-        when(mockUpdateRelationshipService.getMakeChangesDecision(any()))
-          .thenReturn(Future.successful(Some(userAnswer)))
+      Seq(
+        MakeChangesDecisionForm.Divorce,
+        MakeChangesDecisionForm.Bereavement,
+        MakeChangesDecisionForm.IncomeChange,
+        MakeChangesDecisionForm.WrongSetup,
+        MakeChangesDecisionForm.AnotherReason
+      ).foreach { answer =>
+        s"there is valid data in the cache for $answer answer should be checked" in {
+          when(mockUpdateRelationshipService.getMakeChangesDecision(any()))
+            .thenReturn(Future.successful(Some(answer)))
 
-        val result = controller.makeChange()(request)
+          val result = controller.makeChange()(request)
 
-        status(result) shouldBe OK
-        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form().fill(Some(userAnswer)), role)
+          status(result)        shouldBe OK
+          result `rendersTheSameViewAs` reasonForChangeView(
+            MakeChangesDecisionForm.form(role).fill(Some(answer)),
+            role
+          )
+          Jsoup
+            .parse(contentAsString(result))
+            .getElementById(s"stopMAChoice-${answer.toLowerCase}")
+            .hasAttr("checked") shouldBe true
+        }
       }
 
       "there is no data in the cache" in {
@@ -88,7 +103,7 @@ class MakeChangesControllerTest
         val result = controller.makeChange()(request)
 
         status(result) shouldBe OK
-        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(), role)
+        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(role), role)
       }
 
       "a non fatal error has occurred when trying to get cached data" in {
@@ -97,7 +112,7 @@ class MakeChangesControllerTest
         val result = controller.makeChange()(request)
 
         status(result) shouldBe OK
-        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(), role)
+        result `rendersTheSameViewAs` reasonForChangeView(MakeChangesDecisionForm.form(role), role)
       }
     }
   }
@@ -129,24 +144,6 @@ class MakeChangesControllerTest
         )
       }
 
-      "redirect to the stop allowance page" when {
-        "a recipient selects Cancel" in {
-          val relationshipRecords = createRelationshipRecords("Recipient")
-          val request             = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> "Cancel")
-          when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq("Cancel"))(any()))
-            .thenReturn(Future.successful("Cancel"))
-          when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
-            .thenReturn(Future.successful(relationshipRecords))
-
-          val result = controller.submitMakeChange()(request)
-
-          status(result)           shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(
-            controllers.UpdateRelationship.routes.StopAllowanceController.stopAllowance().url
-          )
-        }
-      }
-
       "redirect to the make change page" when {
         "there is an unexpected error" in {
           val request =
@@ -160,21 +157,38 @@ class MakeChangesControllerTest
       }
     }
 
-    "redirect to the cancel page" when {
-      "a transferor selects Do not want Marriage Allowance anymore" in {
-        val userAnswer = MakeChangesDecisionForm.Cancel
-        val request    = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> userAnswer)
-        when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(userAnswer))(any()))
-          .thenReturn(Future.successful(userAnswer))
+    Seq(MakeChangesDecisionForm.IncomeChange, MakeChangesDecisionForm.WrongSetup, MakeChangesDecisionForm.AnotherReason)
+      .foreach { answer =>
+        "redirect to the cancel page" when {
+          s"a transferor selects $answer" in {
+            val request = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> answer)
+            when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(answer))(any()))
+              .thenReturn(Future.successful(answer))
 
-        val result = controller.submitMakeChange()(request)
+            val result = controller.submitMakeChange()(request)
 
-        status(result)           shouldBe SEE_OTHER
-        redirectLocation(result) shouldBe Some(
-          controllers.UpdateRelationship.routes.StopAllowanceController.cancel().url
-        )
+            status(result)           shouldBe SEE_OTHER
+            redirectLocation(result) shouldBe Some(
+              controllers.UpdateRelationship.routes.StopAllowanceController.cancel().url
+            )
+          }
+          s"a recipient selects $answer" in {
+            val relationshipRecords = createRelationshipRecords("Recipient")
+            val request             = buildFakePostRequest(MakeChangesDecisionForm.StopMAChoice -> answer)
+            when(mockUpdateRelationshipService.saveMakeChangeDecision(ArgumentMatchers.eq(answer))(any()))
+              .thenReturn(Future.successful(answer))
+            when(mockUpdateRelationshipService.getRelationshipRecords(any(), any()))
+              .thenReturn(Future.successful(relationshipRecords))
+
+            val result = controller.submitMakeChange()(request)
+
+            status(result)           shouldBe SEE_OTHER
+            redirectLocation(result) shouldBe Some(
+              controllers.UpdateRelationship.routes.StopAllowanceController.stopAllowance().url
+            )
+          }
+        }
       }
-    }
 
     "redirect to the bereavement page" when {
       "a user selects the bereavement option" in {

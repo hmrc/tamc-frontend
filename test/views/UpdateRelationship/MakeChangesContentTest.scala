@@ -17,6 +17,7 @@
 package views.UpdateRelationship
 
 import forms.coc.*
+import models.{Recipient, Role}
 import models.auth.AuthenticatedUserRequest
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -36,35 +37,45 @@ class MakeChangesContentTest extends BaseTest with Injecting with NinoGenerator 
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
   lazy val nino: String                             = generateNino().nino
 
-  private val relationshipRecords = createRelationshipRecords()
-  val doc: Document               =
-    Jsoup.parse(view(MakeChangesDecisionForm.form(), relationshipRecords.primaryRecord.role).toString())
+  private val relationshipRecords                                        = createRelationshipRecords()
+  def doc(role: Role = relationshipRecords.primaryRecord.role): Document =
+    Jsoup.parse(view(MakeChangesDecisionForm.form(role), role).toString())
 
   "Make change - get view" should {
 
-    "display correct pageHeading" in {
-      doc.getElementById("pageHeading").text() shouldBe "Why do you need to stop your Marriage Allowance?"
+    "display correct pageHeading for transferor" in {
+      doc().getElementById("pageHeading").text()          shouldBe "Why do you want to cancel your Marriage Allowance transfer?"
+      doc(Recipient).getElementById("pageHeading").text() shouldBe "Why do you want to cancel your Marriage Allowance?"
     }
 
     "render the hidden user type tag" in {
-      doc.select("#ma-user-type").size()                 shouldBe 1
-      doc.select("#ma-user-type").attr("data-user-type") shouldBe "transferor"
+      doc().select("#ma-user-type").size()                 shouldBe 1
+      doc().select("#ma-user-type").attr("data-user-type") shouldBe "transferor"
     }
 
     "show all appropriate radio buttons" in {
-      doc.getElementsByClass("govuk-label govuk-radios__label").eachText().toArray() shouldBe Array(
-        "Do not need Marriage Allowance any more",
-        "Divorce, end of civil partnership or legally separated",
-        "Bereavement"
+      doc().getElementsByClass("govuk-label govuk-radios__label").eachText().toArray()          shouldBe Array(
+        "My income or my partner’s income has changed",
+        "I have divorced, legally separated or my civil partnership has ended",
+        "The transfer was set up by the wrong person",
+        "My partner has died",
+        "I no longer want to transfer allowance to my partner"
+      )
+      doc(Recipient).getElementsByClass("govuk-label govuk-radios__label").eachText().toArray() shouldBe Array(
+        "My income or my partner’s income has changed",
+        "I have divorced, legally separated or my civil partnership has ended",
+        "The transfer was set up by the wrong person",
+        "My partner has died",
+        "Another reason"
       )
     }
 
     "Display continue button" in {
-      doc.getElementById("submit").text() shouldBe "Continue"
+      doc().getElementById("submit").text() shouldBe "Continue"
     }
 
     "Display all correct page text" in {
-      doc.getElementsByTag("p").eachText().toArray() shouldBe Array(
+      doc().getElementsByTag("p").eachText().toArray() shouldBe Array(
         "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }

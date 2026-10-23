@@ -16,6 +16,7 @@
 
 package forms.coc
 
+import models.{Recipient, Transferor}
 import play.api.data.FormError
 import utils.BaseTest
 
@@ -25,7 +26,9 @@ class MakeChangesDecisionFormTest extends BaseTest {
     val decisions = Seq(
       MakeChangesDecisionForm.Divorce,
       MakeChangesDecisionForm.Bereavement,
-      MakeChangesDecisionForm.Cancel
+      MakeChangesDecisionForm.IncomeChange,
+      MakeChangesDecisionForm.WrongSetup,
+      MakeChangesDecisionForm.AnotherReason
     )
 
     decisions.foreach { decision =>
@@ -34,7 +37,7 @@ class MakeChangesDecisionFormTest extends BaseTest {
           MakeChangesDecisionForm.StopMAChoice -> decision
         )
 
-        val form   = MakeChangesDecisionForm.form().bind(formInput)
+        val form   = MakeChangesDecisionForm.form(Recipient).bind(formInput)
         val errors = form.errors
         val value  = form.data
 
@@ -48,17 +51,28 @@ class MakeChangesDecisionFormTest extends BaseTest {
         MakeChangesDecisionForm.StopMAChoice -> ""
       )
 
-      val form   = MakeChangesDecisionForm.form().bind(formInput)
-      val errors = form.errors
-      val value  = form.data
+      val formRecipient   = MakeChangesDecisionForm.form(Recipient).bind(formInput)
+      val errorsRecipient = formRecipient.errors
+      val valueRecipient  = formRecipient.data
 
-      errors shouldBe Seq(
+      val formTransferor   = MakeChangesDecisionForm.form(Transferor).bind(formInput)
+      val errorsTransferor = formTransferor.errors
+      val valueTransferor  = formTransferor.data
+
+      errorsRecipient  shouldBe Seq(
         FormError(
           MakeChangesDecisionForm.StopMAChoice,
-          Seq("pages.makeChanges.error.mandatory.value")
+          Seq("pages.makeChanges.error.mandatory.value.recipient")
         )
       )
-      value  shouldBe formInput
+      errorsTransferor shouldBe Seq(
+        FormError(
+          MakeChangesDecisionForm.StopMAChoice,
+          Seq("pages.makeChanges.error.mandatory.value.transferor")
+        )
+      )
+      valueRecipient   shouldBe formInput
+      valueTransferor  shouldBe formInput
     }
   }
 }

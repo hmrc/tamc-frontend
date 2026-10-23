@@ -43,10 +43,10 @@ class MakeChangesController @Inject() (
 
       updateRelationshipService.getMakeChangesDecision
         .map { makeChangesData =>
-          Ok(reasonForChange(MakeChangesDecisionForm.form().fill(makeChangesData), role))
+          Ok(reasonForChange(MakeChangesDecisionForm.form(role).fill(makeChangesData), role))
         }
         .recover { case NonFatal(_) =>
-          Ok(reasonForChange(MakeChangesDecisionForm.form(), role))
+          Ok(reasonForChange(MakeChangesDecisionForm.form(role), role))
         }
     }
   }
@@ -56,7 +56,7 @@ class MakeChangesController @Inject() (
       val role: Role = relationshipRecords.primaryRecord.role
 
       MakeChangesDecisionForm
-        .form()
+        .form(role)
         .bindFromRequest()
         .fold(
           formWithErrors => Future.successful(BadRequest(reasonForChange(formWithErrors, role))),
@@ -66,8 +66,18 @@ class MakeChangesController @Inject() (
                 Redirect(controllers.UpdateRelationship.routes.DivorceController.divorceEnterYear())
               }
 
-            case Some(MakeChangesDecisionForm.Cancel) =>
-              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.Cancel) flatMap { _ =>
+            case Some(MakeChangesDecisionForm.WrongSetup) =>
+              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.WrongSetup) flatMap { _ =>
+                noLongerWantMarriageAllowanceRedirect
+              }
+
+            case Some(MakeChangesDecisionForm.IncomeChange) =>
+              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.IncomeChange) flatMap { _ =>
+                noLongerWantMarriageAllowanceRedirect
+              }
+
+            case Some(MakeChangesDecisionForm.AnotherReason) =>
+              updateRelationshipService.saveMakeChangeDecision(MakeChangesDecisionForm.AnotherReason) flatMap { _ =>
                 noLongerWantMarriageAllowanceRedirect
               }
 

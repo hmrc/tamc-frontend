@@ -159,9 +159,12 @@ class UpdateRelationshipService @Inject() (
 
       val endDateFormatted = endDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
       val desEnumeration   = relationshipEndReason match {
-        case "Divorce" => "Divorce/Separation"
-        case "Cancel"  => "Cancelled by Transferor"
-        case _         => throw DesEnumerationNotFound()
+        case "Divorce"       => "Divorce/Separation"
+        case "WrongSetup"    => "Cancelled by Transferor"
+        case "IncomeChange"  => "Cancelled by Transferor"
+        case "AnotherReason" => "Cancelled by Transferor"
+        case "Cancel"        => "Cancelled by Transferor" // TODO can remove this Cancel option after deployment of DDCNL-12474
+        case _               => throw DesEnumerationNotFound()
       }
 
       RelationshipInformation(creationTimeStamp, desEnumeration, endDateFormatted)

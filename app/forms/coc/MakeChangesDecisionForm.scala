@@ -16,6 +16,7 @@
 
 package forms.coc
 
+import models.Role
 import play.api.data.Form
 import play.api.data.Forms.{optional, single, text}
 
@@ -23,11 +24,16 @@ object MakeChangesDecisionForm {
 
   val StopMAChoice = "stopMAChoice"
 
-  val Divorce     = "Divorce"
-  val Cancel      = "Cancel"
-  val Bereavement = "Bereavement"
+  val Divorce       = "Divorce"
+  val WrongSetup    = "WrongSetup"
+  val Bereavement   = "Bereavement"
+  val IncomeChange  = "IncomeChange"
+  val AnotherReason = "AnotherReason"
 
-  def form(): Form[Option[String]] = Form[Option[String]](
-    single(StopMAChoice -> optional(text).verifying("pages.makeChanges.error.mandatory.value", _.isDefined))
+  def form(role: Role): Form[Option[String]] = Form[Option[String]](
+    single(
+      StopMAChoice -> optional(text)
+        .verifying(s"pages.makeChanges.error.mandatory.value.${role.value.toLowerCase}", _.isDefined)
+    )
   )
 }

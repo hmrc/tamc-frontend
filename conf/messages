@@ -160,7 +160,8 @@ title.error=Error
 title.error.transferor.not.found=Error: We cannot find your Marriage Allowance details
 title.error.recipient.not.found=Error: We cannot find your partner’s HMRC details
 title.history=Your Marriage Allowance summary
-title.make-a-change=Why do you need to stop your Marriage Allowance?
+title.make-a-change.recipient=Why do you want to cancel your Marriage Allowance?
+title.make-a-change.transferor=Why do you want to cancel your Marriage Allowance transfer?
 title.date-of-marriage=Date of marriage or civil partnership
 title.cannot-use-service=You cannot use this service
 
@@ -470,11 +471,16 @@ pages.decision.error.mandatory.value=Select if you want to check or stop your ma
 #********************************************************************************
 # Make Changes page
 #********************************************************************************
-pages.makeChanges.heading=Why do you need to stop your Marriage Allowance?
-pages.makeChanges.radio.divorce=Divorce, end of civil partnership or legally separated
-pages.makeChanges.radio.noLongerRequired=Do not need Marriage Allowance any more
-pages.makeChanges.radio.bereavement=Bereavement
-pages.makeChanges.error.mandatory.value=Select the reason you want to stop your marriage allowance
+pages.makeChanges.heading.transferor=Why do you want to cancel your Marriage Allowance transfer?
+pages.makeChanges.heading.recipient=Why do you want to cancel your Marriage Allowance?
+pages.makeChanges.radio.incomeChanged=My income or my partner’s income has changed
+pages.makeChanges.radio.divorce=I have divorced, legally separated or my civil partnership has ended
+pages.makeChanges.radio.wrongSetup=The transfer was set up by the wrong person
+pages.makeChanges.radio.bereavement=My partner has died
+pages.makeChanges.radio.noLongerRequired=I no longer want to transfer allowance to my partner
+pages.makeChanges.radio.anotherReason=Another reason
+pages.makeChanges.error.mandatory.value.transferor=Select the reason you want to cancel your Marriage Allowance transfer
+pages.makeChanges.error.mandatory.value.recipient=Select the reason you want to cancel your Marriage Allowance
 
 
 #********************************************************************************
