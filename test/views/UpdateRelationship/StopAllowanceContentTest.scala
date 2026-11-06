@@ -40,25 +40,65 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
   val cancelDoc: Document                           = Jsoup.parse(
     cancelView(MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)).toString()
   )
-  val stopDoc: Document                             = Jsoup.parse(stopAllowanceView().toString)
+  val stopDoc: Document                             = Jsoup.parse(stopAllowanceView(TaxYear.current.finishes).toString)
+  val welshMessages: MessagesImpl                   = MessagesImpl(Lang("cy"), inject[MessagesApi])
+  val stopDocCy: Document                           =
+    Jsoup.parse(stopAllowanceView(TaxYear.current.finishes)(welshMessages, request).toString)
+  val endYear: Int                                  = TaxYear.current.finishes.getYear
 
   "Display Stop allowance page for a RECIPIENT" should {
     "Display stop allowance page heading" in {
-      stopDoc.getElementById("pageHeading").text() shouldBe "Your partner needs to stop the Marriage Allowance claim"
+      stopDoc.getElementById("pageHeading").text()                      shouldBe "Your partner needs to cancel Marriage Allowance"
+      stopDoc.getElementById("pageHeading").hasClass("govuk-heading-l") shouldBe true
     }
 
     "Show correct stop allowance content" in {
       stopDoc.getElementsByTag("p").eachText().toArray() shouldBe Array(
-        "As your partner is transferring their allowances to you, they will need to stop the claim.",
-        "Your partner can do this from the Marriage Allowance section of their personal tax account.",
-        "Back to your Marriage Allowance claim summary",
+        "To do this they can sign in to or set up a personal tax account or contact HMRC.",
+        s"Your Marriage Allowance will remain in place until 5 April $endYear.",
+        "You can:",
+        "Return to your Marriage Allowance summary",
         "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
       )
     }
 
+    "Display the personal tax account and contact HMRC links" in {
+      stopDoc.getElementById("ptaLink").text()                 shouldBe "sign in to or set up a personal tax account"
+      stopDoc.getElementById("ptaLink").attr("href")           shouldBe "https://www.gov.uk/personal-tax-account"
+      stopDoc.getElementById("contactHmrcLink").text()         shouldBe "contact HMRC"
+      stopDoc.getElementById("contactHmrcLink").attr("href")   shouldBe
+        "https://www.gov.uk/find-hmrc-contacts/income-tax-enquiries"
+      stopDocCy.getElementById("contactHmrcLink").attr("href") shouldBe
+        "https://www.gov.uk/find-hmrc-contacts/treth-incwm-hunanasesiad-a-mwy"
+    }
+
+    "Display the change who benefits section" in {
+      stopDoc.getElementById("changeWhoBenefits").text()               shouldBe "If you want to change who benefits"
+      stopDoc.select("#changeWhoBenefitsList li").eachText().toArray() shouldBe Array(
+        "ask your partner to cancel Marriage Allowance",
+        "apply for Marriage Allowance after 6 April"
+      )
+    }
+
     "Display back to summary page link" in {
-      stopDoc.getElementById("backToSummary").text         shouldBe "Back to your Marriage Allowance claim summary"
+      stopDoc.getElementById("backToSummary").text()       shouldBe "Return to your Marriage Allowance summary"
       stopDoc.getElementById("backToSummary").attr("href") shouldBe "/marriage-allowance-application/history"
+    }
+  }
+
+  "Display Stop allowance page for a RECIPIENT in Welsh" should {
+    "Display the Welsh content" in {
+      stopDocCy.getElementById("pageHeading").text()                     shouldBe "Mae angen i’ch partner ganslo Lwfans Priodasol"
+      stopDocCy.getElementById("partnerNeedsToCancel").text()            shouldBe
+        "I wneud hyn, gall eich partner fewngofnodi i gyfrif treth personol neu sefydlu cyfrif, neu gysylltu â CThEF."
+      stopDocCy.getElementById("remainsInPlace").text()                  shouldBe
+        s"Bydd eich Lwfans Priodasol yn aros yn ei le tan 5 Ebrill $endYear."
+      stopDocCy.getElementById("changeWhoBenefits").text()               shouldBe "Os ydych am newid pwy sy’n cael y budd"
+      stopDocCy.select("#changeWhoBenefitsList li").eachText().toArray() shouldBe Array(
+        "gofynnwch i’ch partner ganslo Lwfans Priodasol",
+        "gwnewch gais am Lwfans Priodasol ar ôl 6 Ebrill"
+      )
+      stopDocCy.getElementById("backToSummary").text()                   shouldBe "Ewch yn ôl i’ch crynodeb o’ch Lwfans Priodasol"
     }
   }
 

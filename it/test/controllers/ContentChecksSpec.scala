@@ -50,7 +50,7 @@ class ContentChecksSpec extends IntegrationSpec {
       case "cancel"                  => ExpectedData("We will cancel your Marriage Allowance")
       case "divorce-enter-year"      => ExpectedData("Date of divorce, end of civil partnership or legal separation")
       case "bereavement"             => ExpectedData("We are sorry for your loss")
-      case "stop-allowance"          => ExpectedData("Your partner needs to stop the Marriage Allowance claim")
+      case "stop-allowance"          => ExpectedData("Your partner needs to cancel Marriage Allowance")
       case "divorce-end-explanation" =>
         ExpectedData("You have told us you divorced, ended your civil partnership or were legally separated")
       case "confirm-email"           =>

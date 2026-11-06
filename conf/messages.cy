@@ -413,7 +413,6 @@ technical.transferor-dead-p2=os bydd angen i chi drafod eich cais am Lwfans Prio
 #********************************************************************************
 # Cancel Journey
 #********************************************************************************
-claim.summary.link=Yn ôl i’r crynodeb o’ch hawliad am Lwfans Priodasol
 general.helpline.enquiries.link=Cysylltwch â CThEF
 general.helpline.enquiries.link.posttext=i roi gwybod i ni am brofedigaeth.
 
@@ -448,9 +447,16 @@ pages.bereavement.transferor.point2=bydd eich Lwfans Personol yn dychwelyd i’r
 #********************************************************************************
 # stop allowance page
 #********************************************************************************
-pages.stopAllowance.title=Mae angen i’ch partner ddod â’r hawliad am Lwfans Priodasol i ben
-pages.stopAllowance.paragraph1=Gan fod eich partner yn trosglwyddo’i lwfansau i chi, bydd angen iddo ddod â’r hawliad i ben.
-pages.stopAllowance.paragraph2=Gall eich partner wneud hyn yn adran Lwfans Priodasol ei Gyfrif Treth Personol.
+pages.stopAllowance.title=Mae angen i’ch partner ganslo Lwfans Priodasol
+pages.stopAllowance.paragraph1=I wneud hyn, gall eich partner {0}, neu {1}.
+pages.stopAllowance.paragraph1.ptaLink=fewngofnodi i gyfrif treth personol neu sefydlu cyfrif
+pages.stopAllowance.paragraph1.contactLink=gysylltu â CThEF
+pages.stopAllowance.paragraph2=Bydd eich Lwfans Priodasol yn aros yn ei le tan {0}.
+pages.stopAllowance.h2=Os ydych am newid pwy sy’n cael y budd
+pages.stopAllowance.youCan=Gallwch wneud y canlynol:
+pages.stopAllowance.bullet1=gofynnwch i’ch partner ganslo Lwfans Priodasol
+pages.stopAllowance.bullet2=gwnewch gais am Lwfans Priodasol ar ôl 6 Ebrill
+pages.stopAllowance.returnLink=Ewch yn ôl i’ch crynodeb o’ch Lwfans Priodasol
 
 
 #********************************************************************************
