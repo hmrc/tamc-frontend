@@ -30,8 +30,11 @@ class StopAllowanceControllerISpec extends IntegrationSpec {
 
       val doc = contentAsString(result)
 
-      doc must include("Your partner needs to stop the Marriage Allowance claim")
-      doc must include("As your partner is transferring their allowances to you, they will need to stop the claim.")
+      doc must include("Your partner needs to cancel Marriage Allowance")
+      doc must include("If you want to change who benefits")
+      doc must include("ask your partner to cancel Marriage Allowance")
+      doc must include("apply for Marriage Allowance after 6 April")
+      doc must include("Return to your Marriage Allowance summary")
     }
 
     "render the cancel page" in {

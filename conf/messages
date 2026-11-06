@@ -408,7 +408,6 @@ technical.transferor-dead-p2=if you need to discuss your Marriage Allowance appl
 #********************************************************************************
 # Cancel Journey
 #********************************************************************************
-claim.summary.link=Back to your Marriage Allowance claim summary
 general.helpline.enquiries.link=Contact HMRC
 general.helpline.enquiries.link.posttext=to tell us about a bereavement.
 
@@ -443,9 +442,16 @@ pages.bereavement.transferor.point2=your Personal Allowance will go back to the 
 #********************************************************************************
 # stop allowance page
 #********************************************************************************
-pages.stopAllowance.title=Your partner needs to stop the Marriage Allowance claim
-pages.stopAllowance.paragraph1=As your partner is transferring their allowances to you, they will need to stop the claim.
-pages.stopAllowance.paragraph2=Your partner can do this from the Marriage Allowance section of their personal tax account.
+pages.stopAllowance.title=Your partner needs to cancel Marriage Allowance
+pages.stopAllowance.paragraph1=To do this they can {0} or {1}.
+pages.stopAllowance.paragraph1.ptaLink=sign in to or set up a personal tax account
+pages.stopAllowance.paragraph1.contactLink=contact HMRC
+pages.stopAllowance.paragraph2=Your Marriage Allowance will remain in place until {0}.
+pages.stopAllowance.h2=If you want to change who benefits
+pages.stopAllowance.youCan=You can:
+pages.stopAllowance.bullet1=ask your partner to cancel Marriage Allowance
+pages.stopAllowance.bullet2=apply for Marriage Allowance after 6 April
+pages.stopAllowance.returnLink=Return to your Marriage Allowance summary
 
 
 #********************************************************************************

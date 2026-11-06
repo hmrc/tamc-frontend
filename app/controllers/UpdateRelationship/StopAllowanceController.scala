@@ -37,7 +37,9 @@ class StopAllowanceController @Inject() (
     with LoggerHelper {
 
   def stopAllowance: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    Future.successful(Ok(stopAllowanceV()))
+    Future.successful(
+      Ok(stopAllowanceV(updateRelationshipService.getMAEndingDatesForCancellation.marriageAllowanceEndDate))
+    )
   }
 
   def cancel: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>

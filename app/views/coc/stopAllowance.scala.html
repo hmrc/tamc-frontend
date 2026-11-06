@@ -14,27 +14,54 @@
  * limitations under the License.
  *@
 
+@import config.ApplicationConfig
+@import includes.{H1, H2, Link, P}
 @import models.auth.AuthenticatedUserRequest
-@import includes.{H1, P, Link}
-
 @import views.Main
+@import views.helpers.LanguageUtilsImpl
+
+@import java.time.LocalDate
 
 @this(main: Main,
+applicationConfig: ApplicationConfig,
+languageUtilsImpl: LanguageUtilsImpl,
 h1: H1,
+h2: H2,
 p: P,
 link: Link)
 
-@()(implicit messages: Messages,request: AuthenticatedUserRequest[?])
+@(marriageAllowanceEndDate: LocalDate)(implicit messages: Messages,request: AuthenticatedUserRequest[?])
+
+@ptaLink = {@link(link = applicationConfig.personalTaxAccountUrl, messageKey = "pages.stopAllowance.paragraph1.ptaLink", id = Some("ptaLink"), inParagraph = true)}
+
+@contactHmrcUrl = @{
+    if(messages.lang.code == "cy") applicationConfig.incomeTaxEnquiriesUrlCy else applicationConfig.incomeTaxEnquiriesUrl
+}
+
+@contactLink = {@link(link = contactHmrcUrl, messageKey = "pages.stopAllowance.paragraph1.contactLink", id = Some("contactHmrcLink"), inParagraph = true)}
+
+@endDate = @{
+    languageUtilsImpl().ukDateTransformer(marriageAllowanceEndDate)
+}
 
 @main(
-    pageTitle = messages(messages("pages.stopAllowance.title"))
+    pageTitle = messages("pages.stopAllowance.title")
 ) {
 
-    @h1("pages.stopAllowance.title")
+    @h1("pages.stopAllowance.title", classes = Some("govuk-heading-l"))
 
-    @p(Text(messages("pages.stopAllowance.paragraph1")))
-    @p(Text(messages("pages.stopAllowance.paragraph2")))
+    @p(HtmlContent(messages("pages.stopAllowance.paragraph1", ptaLink.toString.trim, contactLink.toString.trim)), elmId = Some("partnerNeedsToCancel"))
+    @p(Text(messages("pages.stopAllowance.paragraph2", endDate)), elmId = Some("remainsInPlace"))
 
-    @link(link = controllers.UpdateRelationship.routes.HistoryController.history().url, messageKey = "claim.summary.link", id= Some("backToSummary"))
+    @h2("pages.stopAllowance.h2", elmId = Some("changeWhoBenefits"))
+
+    @p(Text(messages("pages.stopAllowance.youCan")))
+
+    <ul class="govuk-list govuk-list--bullet" id="changeWhoBenefitsList">
+        <li>@messages("pages.stopAllowance.bullet1")</li>
+        <li>@messages("pages.stopAllowance.bullet2")</li>
+    </ul>
+
+    @link(link = controllers.UpdateRelationship.routes.HistoryController.history().url, messageKey = "pages.stopAllowance.returnLink", id = Some("backToSummary"))
 
 }
