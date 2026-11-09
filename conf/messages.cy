@@ -609,10 +609,14 @@ pages.confirm.application.now.p=Drwy anfon eich cais, rydych yn cadarnhau, hyd e
 #********************************************************************************
 # change-of-circs-finish-page
 #********************************************************************************
-pages.coc.finish.header=Lwfans Priodasol wedi’i ganslo
-pages.coc.finish.acknowledgement=Byddwch yn cael e-bost yn cydnabod y canslo cyn pen 24 awr.
-pages.coc.finish.junk=Os na fyddwch yn ei gael, gwiriwch eich ffolder sbam neu’ch ffolder sothach.
-pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
+pages.coc.finish.header=Cais i ganslo’r Lwfans Priodasol wedi’i gyflwyno
+pages.coc.finish.acknowledgement=Byddwn yn anfon e-bost cadarnhau atoch o fewn 24 awr. Os na fyddwch yn ei gael, gwiriwch eich ffolder sbam neu’ch ffolder sothach.
+pages.coc.finish.what.happens.title=Yr hyn sy’n digwydd nesaf
+pages.coc.finish.what.happens.para=Byddwn yn canslo’ch Lwfans Priodasol o {0}. Tan hynny, bydd eich Lwfans Priodasol yn parhau i ymddangos fel ei fod yn actif.
+pages.coc.finish.before.you.go.title=Cyn i chi fynd
+pages.coc.finish.before.you.go.feedback.para=Mae’ch adborth yn ein helpu i wella ein gwasanaeth.
+pages.coc.finish.short.survey.para.link-text=Llenwch arolwg byr
+pages.coc.finish.short.survey.para=i rannu’ch adborth ar y gwasanaeth hwn.
 
 #********************************************************************************
 # misc
