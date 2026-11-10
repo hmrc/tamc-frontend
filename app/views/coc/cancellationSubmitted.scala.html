@@ -1,0 +1,51 @@
+@*
+ * Copyright 2026 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.auth.AuthenticatedUserRequest
+@import includes.{H1, H2, P, Link}
+@import config.ApplicationConfig
+
+@import views.Main
+
+@this(main: Main, h1: H1, h2:H2, p: P, link: Link, appConfig: ApplicationConfig)
+
+@(endDate: String)(implicit messages: Messages, request: AuthenticatedUserRequest[?])
+
+@main(
+    pageTitle = messages("title.change.submitted"),
+    serviceTitle = "tamc.manage") {
+
+    <div class="govuk-panel govuk-panel--confirmation">
+        @h1("pages.coc.cancellation.submitted.header", Some("govuk-panel__title"))
+    </div>
+
+    @p(Text(messages("pages.coc.cancellation.submitted.acknowledgement")))
+    @h2("pages.coc.cancellation.submitted.what.happens.title")
+    @p(Text(messages("pages.coc.cancellation.submitted.what.happens.para", endDate)))
+    @h2("pages.coc.cancellation.submitted.before.you.go.title")
+    @p(Text(messages("pages.coc.cancellation.submitted.before.you.go.feedback.para")))
+    @p(HtmlContent(shortSurveyPara))
+}
+
+@shortSurveyPara = {
+    @link(
+        link = appConfig.exitSurveyUrl,
+        messageKey = "pages.coc.cancellation.submitted.short.survey.link-text",
+        id = Some("take-survey-link"),
+        inParagraph = true
+    )
+    @messages("pages.coc.cancellation.submitted.short.survey.para")
+}

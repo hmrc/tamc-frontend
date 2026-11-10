@@ -157,6 +157,7 @@ title.eligibility-criteria=Meini prawf cymhwysedd
 title.how-it-works=Gwneud cais am Lwfans Priodasol
 title.other-ways=Ffyrdd eraill o wneud cais
 title.change.complete=Lwfans Priodasol wedi’i ganslo
+title.change.submitted=Cais i ganslo’r Lwfans Priodasol wedi’i gyflwyno
 title.change.earnings=Newid mewn incwm
 title.change.reason=Dileu cais blaenorol
 title.error=Gwall
@@ -613,6 +614,18 @@ pages.coc.finish.header=Lwfans Priodasol wedi’i ganslo
 pages.coc.finish.acknowledgement=Byddwch yn cael e-bost yn cydnabod y canslo cyn pen 24 awr.
 pages.coc.finish.junk=Os na fyddwch yn ei gael, gwiriwch eich ffolder sbam neu’ch ffolder sothach.
 pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
+
+#********************************************************************************
+# change-of-circs-cancellation-submitted
+#********************************************************************************
+pages.coc.cancellation.submitted.header=Cais i ganslo’r Lwfans Priodasol wedi’i gyflwyno
+pages.coc.cancellation.submitted.acknowledgement=Byddwn yn anfon e-bost cadarnhau atoch o fewn 24 awr. Os na fyddwch yn ei gael, gwiriwch eich ffolder sbam neu’ch ffolder sothach.
+pages.coc.cancellation.submitted.what.happens.title=Yr hyn sy’n digwydd nesaf
+pages.coc.cancellation.submitted.what.happens.para=Byddwn yn canslo’ch Lwfans Priodasol o {0}. Tan hynny, bydd eich Lwfans Priodasol yn parhau i ymddangos fel ei fod yn actif.
+pages.coc.cancellation.submitted.before.you.go.title=Cyn i chi fynd
+pages.coc.cancellation.submitted.before.you.go.feedback.para=Mae’ch adborth yn ein helpu i wella ein gwasanaeth.
+pages.coc.cancellation.submitted.short.survey.link-text=Llenwch arolwg byr
+pages.coc.cancellation.submitted.short.survey.para=i rannu’ch adborth ar y gwasanaeth hwn.
 
 #********************************************************************************
 # misc

@@ -155,6 +155,7 @@ title.eligibility-criteria=Eligibility Criteria
 title.how-it-works=Apply for Marriage Allowance
 title.other-ways=Other Ways to apply
 title.change.complete=Marriage Allowance cancelled
+title.change.submitted=Marriage Allowance cancellation submitted
 title.change.reason=Cancelling your Marriage Allowance
 title.error=Error
 title.error.transferor.not.found=Error: We cannot find your Marriage Allowance details
@@ -608,6 +609,18 @@ pages.coc.finish.header=Marriage Allowance cancelled
 pages.coc.finish.acknowledgement=You will receive an email acknowledging your cancellation within 24 hours.
 pages.coc.finish.junk=If you do not receive it, please check your spam or junk folder.
 pages.coc.finish.para1=You do not need to contact us.
+
+#********************************************************************************
+# change-of-circs-cancellation-submitted
+#********************************************************************************
+pages.coc.cancellation.submitted.header=Marriage Allowance cancellation submitted
+pages.coc.cancellation.submitted.acknowledgement=We will send you a confirmation email within 24 hours. If you do not receive it, check your spam or junk folder.
+pages.coc.cancellation.submitted.what.happens.title=What happens next
+pages.coc.cancellation.submitted.what.happens.para=We will cancel your Marriage Allowance from {0}. Until then your Marriage Allowance will show as ‘Active’.
+pages.coc.cancellation.submitted.before.you.go.title=Before you go
+pages.coc.cancellation.submitted.before.you.go.feedback.para=Your feedback helps us make our service better.
+pages.coc.cancellation.submitted.short.survey.link-text=Take a short survey
+pages.coc.cancellation.submitted.short.survey.para=to share your feedback on this service.
 
 #********************************************************************************
 # misc
