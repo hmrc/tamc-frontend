@@ -1,5 +1,5 @@
 @*
- * Copyright 2026 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,13 @@
  *@
 
 @import models.auth.AuthenticatedUserRequest
-@import includes.{H1, H2, P, Link}
-@import config.ApplicationConfig
+@import includes.{H1, P}
 
 @import views.Main
 
-@this(main: Main, h1: H1, h2:H2, p: P, link: Link, appConfig: ApplicationConfig)
+@this(main: Main,
+h1: H1,
+p: P)
 
 @()(implicit messages: Messages, request: AuthenticatedUserRequest[?])
 
@@ -33,20 +34,7 @@
   </div>
 
   @p(Text(messages("pages.coc.finish.acknowledgement")))
-  @h2("pages.coc.finish.what.happens.title")
-  @p(Text(messages("pages.coc.finish.what.happens.para", "5 Jan 2027")))
-  @h2("pages.coc.finish.before.you.go.title")
-  @p(Text(messages("pages.coc.finish.before.you.go.feedback.para")))
-  @p(HtmlContent(shortSurveyPara))
+  @p(Text(messages("pages.coc.finish.junk")))
+  @p(Text(messages("pages.coc.finish.para1")))
 
-}
-
-@shortSurveyPara = {
-    @link(
-        link = appConfig.exitSurveyUrl,
-        messageKey = "pages.coc.finish.short.survey.para.link-text",
-        id = Some("take-survey-link"),
-        inParagraph = true
-    )
-    @messages("pages.coc.finish.short.survey.para")
 }
