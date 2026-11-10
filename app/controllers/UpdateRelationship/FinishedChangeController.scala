@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,26 +19,50 @@ package controllers.UpdateRelationship
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
+import errors.CacheMapNoFound
+import forms.coc.MakeChangesDecisionForm
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
 import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
+import views.helpers.LanguageUtilsImpl
+import views.html.coc.cancellationSubmitted
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class FinishedChangeController @Inject() (
   authenticate: StandardAuthJourney,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
   finished: views.html.coc.finished,
+  cancellationSubmitted: views.html.coc.cancellationSubmitted,
+  languageUtilsImpl: LanguageUtilsImpl,
   errorHandler: UpdateRelationshipErrorHandler
 )(implicit ec: ExecutionContext)
     extends BaseController(cc)
     with LoggerHelper {
 
   def finishUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    (for {
-      _ <- updateRelationshipService.removeCache
-    } yield Ok(finished())) recover errorHandler.handleError
+    updateRelationshipService.removeCache
+      .map(_ => Ok(finished()))
+      .recover(errorHandler.handleError)
   }
+
+  def finishIncomeChange: Action[AnyContent] = finishChange(MakeChangesDecisionForm.IncomeChange)
+
+  def finishDivorceChange: Action[AnyContent] = finishChange(MakeChangesDecisionForm.Divorce)
+
+  private def finishChange(cancellationReason: String): Action[AnyContent] =
+    authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
+      updateRelationshipService.getCancellationConfirmation
+        .flatMap {
+          case Some(confirmation) if confirmation.reason == cancellationReason =>
+            val endDate = languageUtilsImpl().ukDateTransformer(confirmation.marriageAllowanceEndDate)
+            updateRelationshipService.removeCache
+              .map(_ => Ok(cancellationSubmitted(endDate)))
+
+          case _ => Future.failed(CacheMapNoFound())
+        }
+        .recover(errorHandler.handleError)
+    }
 
 }

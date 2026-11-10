@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ class UpdateRelationshipService @Inject() (
     hc: HeaderCarrier,
     messages: Messages,
     ec: ExecutionContext
-  ): Future[UpdateRelationshipRequestHolder] = {
+  ): Future[CancellationConfirmation] = {
 
     def updateRelationshipRequestHolder(
       updateRelationshipData: UpdateRelationshipData
@@ -189,7 +189,11 @@ class UpdateRelationshipService @Inject() (
       updateRelationshipRequest    = updateRelationshipRequestHolder(updateRelationshipData)
       postUpdateData              <- sendUpdateRelationship(nino, updateRelationshipRequest)
       _                           <- auditUpdateRelationship(postUpdateData)
-    } yield postUpdateData
+    } yield CancellationConfirmation(
+      reason = updateRelationshipData.endMaReason,
+      marriageAllowanceEndDate = updateRelationshipData.marriageEndDate,
+      role = updateRelationshipData.relationshipRecords.primaryRecord.role.value
+    )
   }
 
   def getUpdateRelationshipCachedData(implicit
@@ -235,6 +239,13 @@ class UpdateRelationshipService @Inject() (
     cachingService
       .get[RelationshipRecords](CACHE_RELATIONSHIP_RECORDS)
       .map(_.getOrElse(throw CacheMissingRelationshipRecords()))
+
+  def saveCancellationConfirmation(confirmation: CancellationConfirmation)(implicit
+    request: Request[?]
+  ): Future[CancellationConfirmation] = cachingService.put(CACHE_CANCELLATION_CONFIRMATION, confirmation)
+
+  def getCancellationConfirmation(implicit request: Request[?]): Future[Option[CancellationConfirmation]] =
+    cachingService.get(CACHE_CANCELLATION_CONFIRMATION)
 
   def removeCache(implicit request: Request[?]): Future[Unit] = cachingService.clear()
 

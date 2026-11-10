@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,15 @@ package controllers.UpdateRelationship
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
+import forms.coc.MakeChangesDecisionForm
+import models.Transferor
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
 import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
 import viewModels.ConfirmUpdateViewModelImpl
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.control.NonFatal
 
 class ConfirmChangeController @Inject() (
   authenticate: StandardAuthJourney,
@@ -44,9 +47,33 @@ class ConfirmChangeController @Inject() (
   }
 
   def submitConfirmUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    updateRelationshipService.updateRelationship(request.nino) map { _ =>
-      Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate())
-    } recover errorHandler.handleError
+    updateRelationshipService
+      .updateRelationship(request.nino)
+      .flatMap { confirmation =>
+        val destination = (confirmation.role, confirmation.reason) match {
+          case (Transferor.value, MakeChangesDecisionForm.IncomeChange) =>
+            Some(controllers.UpdateRelationship.routes.FinishedChangeController.finishIncomeChange())
+
+          case (Transferor.value, MakeChangesDecisionForm.Divorce) =>
+            Some(controllers.UpdateRelationship.routes.FinishedChangeController.finishDivorceChange())
+
+          case _ => None
+        }
+
+        destination match {
+          case Some(call) =>
+            updateRelationshipService
+              .saveCancellationConfirmation(confirmation)
+              .map(_ => Redirect(call))
+              .recover { case NonFatal(_) =>
+                Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate())
+              }
+
+          case None =>
+            Future.successful(Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate()))
+        }
+      }
+      .recover(errorHandler.handleError)
   }
 
 }
