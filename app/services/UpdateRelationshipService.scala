@@ -190,7 +190,6 @@ class UpdateRelationshipService @Inject() (
       postUpdateData              <- sendUpdateRelationship(nino, updateRelationshipRequest)
       _                           <- auditUpdateRelationship(postUpdateData)
     } yield CancellationConfirmation(
-      reason = updateRelationshipData.endMaReason,
       marriageAllowanceEndDate = updateRelationshipData.marriageEndDate
     )
   }

@@ -56,8 +56,6 @@ GET         /confirm-change                      controllers.UpdateRelationship.
 #TO be post to edit
 GET         /confirm-change-action               controllers.UpdateRelationship.ConfirmChangeController.submitConfirmUpdate()
 GET         /finished-change                     controllers.UpdateRelationship.FinishedChangeController.finishUpdate()
-GET         /finished-change-income              controllers.UpdateRelationship.FinishedChangeController.finishIncomeChange()
-GET         /finished-change-divorce             controllers.UpdateRelationship.FinishedChangeController.finishDivorceChange()
 POST        /confirm-email                       controllers.UpdateRelationship.ConfirmEmailController.confirmYourEmailActionUpdate()
 
 GET         /                                    controllers.HowItWorksController.home()

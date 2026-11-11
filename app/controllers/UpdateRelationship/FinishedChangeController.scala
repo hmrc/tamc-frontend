@@ -20,7 +20,6 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import errors.CacheMapNoFound
-import forms.coc.MakeChangesDecisionForm
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
 import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
@@ -33,7 +32,6 @@ class FinishedChangeController @Inject() (
   authenticate: StandardAuthJourney,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
-  finished: views.html.coc.finished,
   cancellationSubmitted: views.html.coc.cancellationSubmitted,
   languageUtilsImpl: LanguageUtilsImpl,
   errorHandler: UpdateRelationshipErrorHandler
@@ -42,27 +40,15 @@ class FinishedChangeController @Inject() (
     with LoggerHelper {
 
   def finishUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    updateRelationshipService.removeCache
-      .map(_ => Ok(finished()))
+    updateRelationshipService.getCancellationConfirmation
+      .flatMap {
+        case Some(confirmation) =>
+          val endDate = languageUtilsImpl().ukDateTransformer(confirmation.marriageAllowanceEndDate)
+          updateRelationshipService.removeCache
+            .map(_ => Ok(cancellationSubmitted(endDate)))
+
+        case None => Future.failed(CacheMapNoFound())
+      }
       .recover(errorHandler.handleError)
   }
-
-  def finishIncomeChange: Action[AnyContent] = finishChange(MakeChangesDecisionForm.IncomeChange)
-
-  def finishDivorceChange: Action[AnyContent] = finishChange(MakeChangesDecisionForm.Divorce)
-
-  private def finishChange(cancellationReason: String): Action[AnyContent] =
-    authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-      updateRelationshipService.getCancellationConfirmation
-        .flatMap {
-          case Some(confirmation) if confirmation.reason == cancellationReason =>
-            val endDate = languageUtilsImpl().ukDateTransformer(confirmation.marriageAllowanceEndDate)
-            updateRelationshipService.removeCache
-              .map(_ => Ok(cancellationSubmitted(endDate)))
-
-          case _ => Future.failed(CacheMapNoFound())
-        }
-        .recover(errorHandler.handleError)
-    }
-
 }

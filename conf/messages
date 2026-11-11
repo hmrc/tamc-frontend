@@ -603,14 +603,6 @@ pages.confirm.application.now.p=By sending your application you are confirming t
 pages.confirm.date.of.marriage=Date of marriage or civil partnership
 
 #********************************************************************************
-# change-of-circs-finish-page
-#********************************************************************************
-pages.coc.finish.header=Marriage Allowance cancelled
-pages.coc.finish.acknowledgement=You will receive an email acknowledging your cancellation within 24 hours.
-pages.coc.finish.junk=If you do not receive it, please check your spam or junk folder.
-pages.coc.finish.para1=You do not need to contact us.
-
-#********************************************************************************
 # change-of-circs-cancellation-submitted
 #********************************************************************************
 pages.coc.cancellation.submitted.header=Marriage Allowance cancellation submitted

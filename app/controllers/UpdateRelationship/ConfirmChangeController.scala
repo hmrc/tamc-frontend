@@ -19,13 +19,12 @@ package controllers.UpdateRelationship
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
-import forms.coc.MakeChangesDecisionForm
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
 import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
 import viewModels.ConfirmUpdateViewModelImpl
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class ConfirmChangeController @Inject() (
   authenticate: StandardAuthJourney,
@@ -48,25 +47,9 @@ class ConfirmChangeController @Inject() (
     updateRelationshipService
       .updateRelationship(request.nino)
       .flatMap { confirmation =>
-        val destination = confirmation.reason match {
-          case MakeChangesDecisionForm.IncomeChange =>
-            Some(controllers.UpdateRelationship.routes.FinishedChangeController.finishIncomeChange())
-
-          case MakeChangesDecisionForm.Divorce =>
-            Some(controllers.UpdateRelationship.routes.FinishedChangeController.finishDivorceChange())
-
-          case _ => None
-        }
-
-        destination match {
-          case Some(call) =>
-            updateRelationshipService
-              .saveCancellationConfirmation(confirmation)
-              .map(_ => Redirect(call))
-
-          case None =>
-            Future.successful(Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate()))
-        }
+        updateRelationshipService
+          .saveCancellationConfirmation(confirmation)
+          .map(_ => Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate()))
       }
       .recover(errorHandler.handleError)
   }

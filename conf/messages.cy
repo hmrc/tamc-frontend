@@ -608,14 +608,6 @@ pages.confirm.application.now=Cadarnhau eich cais nawr
 pages.confirm.application.now.p=Drwy anfon eich cais, rydych yn cadarnhau, hyd eithaf eich gwybodaeth, bod y manylion yr ydych yn eu darparu’n gywir.
 
 #********************************************************************************
-# change-of-circs-finish-page
-#********************************************************************************
-pages.coc.finish.header=Lwfans Priodasol wedi’i ganslo
-pages.coc.finish.acknowledgement=Byddwch yn cael e-bost yn cydnabod y canslo cyn pen 24 awr.
-pages.coc.finish.junk=Os na fyddwch yn ei gael, gwiriwch eich ffolder sbam neu’ch ffolder sothach.
-pages.coc.finish.para1=Nid oes angen i chi gysylltu â ni.
-
-#********************************************************************************
 # change-of-circs-cancellation-submitted
 #********************************************************************************
 pages.coc.cancellation.submitted.header=Cais i ganslo’r Lwfans Priodasol wedi’i gyflwyno
