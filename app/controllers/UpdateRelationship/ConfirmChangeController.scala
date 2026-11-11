@@ -20,7 +20,6 @@ import com.google.inject.Inject
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
 import forms.coc.MakeChangesDecisionForm
-import models.Transferor
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
 import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
@@ -49,11 +48,11 @@ class ConfirmChangeController @Inject() (
     updateRelationshipService
       .updateRelationship(request.nino)
       .flatMap { confirmation =>
-        val destination = (confirmation.role, confirmation.reason) match {
-          case (Transferor.value, MakeChangesDecisionForm.IncomeChange) =>
+        val destination = confirmation.reason match {
+          case MakeChangesDecisionForm.IncomeChange =>
             Some(controllers.UpdateRelationship.routes.FinishedChangeController.finishIncomeChange())
 
-          case (Transferor.value, MakeChangesDecisionForm.Divorce) =>
+          case MakeChangesDecisionForm.Divorce =>
             Some(controllers.UpdateRelationship.routes.FinishedChangeController.finishDivorceChange())
 
           case _ => None

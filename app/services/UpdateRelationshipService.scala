@@ -191,8 +191,7 @@ class UpdateRelationshipService @Inject() (
       _                           <- auditUpdateRelationship(postUpdateData)
     } yield CancellationConfirmation(
       reason = updateRelationshipData.endMaReason,
-      marriageAllowanceEndDate = updateRelationshipData.marriageEndDate,
-      role = updateRelationshipData.relationshipRecords.primaryRecord.role.value
+      marriageAllowanceEndDate = updateRelationshipData.marriageEndDate
     )
   }
 

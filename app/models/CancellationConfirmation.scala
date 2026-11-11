@@ -22,8 +22,7 @@ import java.time.LocalDate
 
 case class CancellationConfirmation(
   reason: String,
-  marriageAllowanceEndDate: LocalDate,
-  role: String
+  marriageAllowanceEndDate: LocalDate
 )
 
 object CancellationConfirmation {
