@@ -27,7 +27,6 @@ import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
 import viewModels.ConfirmUpdateViewModelImpl
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.control.NonFatal
 
 class ConfirmChangeController @Inject() (
   authenticate: StandardAuthJourney,
@@ -65,9 +64,6 @@ class ConfirmChangeController @Inject() (
             updateRelationshipService
               .saveCancellationConfirmation(confirmation)
               .map(_ => Redirect(call))
-              .recover { case NonFatal(_) =>
-                Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate())
-              }
 
           case None =>
             Future.successful(Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate()))
