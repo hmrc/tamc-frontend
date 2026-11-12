@@ -26,7 +26,7 @@ import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
 import views.helpers.LanguageUtilsImpl
 import views.html.coc.cancellationSubmitted
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class FinishedChangeController @Inject() (
   authenticate: StandardAuthJourney,
@@ -41,13 +41,12 @@ class FinishedChangeController @Inject() (
 
   def finishUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
     updateRelationshipService.getCancellationConfirmation
-      .flatMap {
+      .map {
         case Some(confirmation) =>
           val endDate = languageUtilsImpl().ukDateTransformer(confirmation.marriageAllowanceEndDate)
-          updateRelationshipService.removeCache
-            .map(_ => Ok(cancellationSubmitted(endDate)))
+          Ok(cancellationSubmitted(endDate))
 
-        case None => Future.failed(CacheMapNoFound())
+        case None => throw CacheMapNoFound()
       }
       .recover(errorHandler.handleError)
   }

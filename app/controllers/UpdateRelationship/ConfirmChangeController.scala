@@ -44,14 +44,13 @@ class ConfirmChangeController @Inject() (
   }
 
   def submitConfirmUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    updateRelationshipService
-      .updateRelationship(request.nino)
-      .flatMap { confirmation =>
-        updateRelationshipService
-          .saveCancellationConfirmation(confirmation)
-          .map(_ => Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate()))
-      }
-      .recover(errorHandler.handleError)
+    (for {
+      confirmation <- updateRelationshipService.updateRelationship(request.nino)
+      _            <- updateRelationshipService.removeCache
+      _            <- updateRelationshipService.saveCancellationConfirmation(confirmation)
+    } yield Redirect(
+      controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate()
+    )).recover(errorHandler.handleError)
   }
 
 }
