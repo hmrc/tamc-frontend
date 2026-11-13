@@ -26,7 +26,8 @@
 
 @main(
     pageTitle = messages("title.change.submitted"),
-    serviceTitle = "tamc.manage") {
+    serviceTitle = "tamc.manage",
+    disableBackLink = true) {
 
     <div class="govuk-panel govuk-panel--confirmation">
         @* Render the heading inline to avoid the extra bottom margin added by the shared H1 component *@
