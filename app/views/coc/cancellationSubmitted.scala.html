@@ -29,7 +29,10 @@
     serviceTitle = "tamc.manage") {
 
     <div class="govuk-panel govuk-panel--confirmation">
-        @h1("pages.coc.cancellation.submitted.header", Some("govuk-panel__title"))
+        @* Render the heading inline to avoid the extra bottom margin added by the shared H1 component *@
+        <h1 id="pageHeading" class="govuk-panel__title govuk-!-margin-bottom-0">
+            @messages("pages.coc.cancellation.submitted.header")
+        </h1>
     </div>
 
     @p(Text(messages("pages.coc.cancellation.submitted.acknowledgement")))
