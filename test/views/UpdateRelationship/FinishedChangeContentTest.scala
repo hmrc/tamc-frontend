@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,32 +23,45 @@ import play.api.i18n.{Lang, MessagesApi, MessagesImpl}
 import play.api.test.{FakeRequest, Injecting}
 import uk.gov.hmrc.domain.Nino
 import utils.{BaseTest, NinoGenerator}
-import views.html.coc.finished
+import views.html.coc.cancellationSubmitted
 
 import java.util.Locale
 
 class FinishedChangeContentTest extends BaseTest with Injecting with NinoGenerator {
 
-  val view: finished                                = inject[finished]
+  lazy val view: cancellationSubmitted = inject[cancellationSubmitted]
+  lazy val nino: String                = generateNino().nino
+
   implicit val request: AuthenticatedUserRequest[?] =
     AuthenticatedUserRequest(FakeRequest(), None, isSA = true, None, Nino(nino))
-  lazy val nino: String                             = generateNino().nino
   override implicit lazy val messages: MessagesImpl = MessagesImpl(Lang(Locale.getDefault), inject[MessagesApi])
-  val doc: Document                                 = Jsoup.parse(view().toString())
+  private val endDate                               = "5 April 2027"
+  private lazy val doc: Document                    = Jsoup.parse(view(endDate).toString())
 
   "Finished change" should {
     "Display correct page heading" in {
-      doc.getElementById("pageHeading").text() shouldBe "Marriage Allowance cancelled"
+      doc.select("h1#pageHeading").text() shouldBe "Marriage Allowance cancellation submitted"
     }
 
-    "Display finished change content" in {
-      doc.getElementsByTag("p").eachText().toArray shouldBe Array(
-        "You will receive an email acknowledging your cancellation within 24 hours.",
-        "If you do not receive it, please check your spam or junk folder.",
-        "You do not need to contact us.",
-        "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
+    "display the email acknowledgement" in {
+      doc.select("p").eachText() should contain(
+        "We will send you a confirmation email within 24 hours. If you do not receive it, check your spam or junk folder."
       )
     }
-  }
 
+    "display what happens next with the supplied end date" in {
+      doc.select("h2").eachText() should contain("What happens next")
+      doc.select("p").eachText()  should contain(
+        s"We will cancel your Marriage Allowance from $endDate. Until then your Marriage Allowance will show as ‘Active’."
+      )
+    }
+
+    "display the feedback section and survey link" in {
+      doc.select("h2").eachText()                      should contain("Before you go")
+      doc.select("p").eachText()                       should contain("Your feedback helps us make our service better.")
+      doc.select("a#take-survey-link[href]").text()  shouldBe "Take a short survey"
+      doc.select("p:has(a#take-survey-link)").text() shouldBe
+        "Take a short survey to share your feedback on this service."
+    }
+  }
 }

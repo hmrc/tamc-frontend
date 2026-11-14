@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,18 +20,18 @@ import controllers.ControllerViewTestHelper
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import models._
-import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
+import models.*
+import org.mockito.ArgumentMatchers.{any, eq as eqTo}
+import org.mockito.Mockito.*
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.Injecting
-import services._
+import services.*
 import utils.{ControllerBaseTest, MockAuthenticatedAction}
-import viewModels._
+import viewModels.*
 import views.html.coc.confirmUpdate
 import views.html.errors.try_later
 
@@ -99,9 +99,16 @@ class ConfirmChangeControllerTest extends ControllerBaseTest with ControllerView
   }
 
   "submitConfirmUpdate" should {
-    "redirect to the finish update page" in {
+    "clear the journey cache, save the cancellation confirmation and redirect to the finish update page" in {
+      val confirmation = CancellationConfirmation(
+        marriageAllowanceEndDate = LocalDate.of(2027, 4, 5)
+      )
+
       when(mockUpdateRelationshipService.updateRelationship(any())(any(), any(), any(), any()))
-        .thenReturn(Future.successful(mock[UpdateRelationshipRequestHolder]))
+        .thenReturn(Future.successful(confirmation))
+      when(mockUpdateRelationshipService.removeCache(any())).thenReturn(Future.successful(()))
+      when(mockUpdateRelationshipService.saveCancellationConfirmation(eqTo(confirmation))(any()))
+        .thenReturn(Future.successful(confirmation))
 
       val result = controller.submitConfirmUpdate(request)
 
@@ -109,6 +116,9 @@ class ConfirmChangeControllerTest extends ControllerBaseTest with ControllerView
       redirectLocation(result) shouldBe Some(
         controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate().url
       )
+
+      verify(mockUpdateRelationshipService).removeCache(any())
+      verify(mockUpdateRelationshipService).saveCancellationConfirmation(eqTo(confirmation))(any())
     }
 
     "display an error page" when {

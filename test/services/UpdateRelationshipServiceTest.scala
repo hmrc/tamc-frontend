@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -356,12 +356,43 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     }
   }
 
+  "saveCancellationConfirmation" should {
+    "save and return the cancellation confirmation" in {
+      val confirmation = CancellationConfirmation(
+        marriageAllowanceEndDate = LocalDate.of(2027, 4, 5)
+      )
+      when(
+        mockCachingService.put[CancellationConfirmation](
+          ArgumentMatchers.eq(CACHE_CANCELLATION_CONFIRMATION),
+          ArgumentMatchers.eq(confirmation)
+        )(any(), any())
+      ).thenReturn(Future.successful(confirmation))
+
+      val result = await(service.saveCancellationConfirmation(confirmation))
+
+      result shouldBe confirmation
+    }
+  }
+
+  "getCancellationConfirmation" should {
+    "return the cached cancellation confirmation" in {
+      val confirmation = CancellationConfirmation(
+        marriageAllowanceEndDate = LocalDate.of(2027, 4, 5)
+      )
+
+      when(
+        mockCachingService.get[CancellationConfirmation](ArgumentMatchers.eq(CACHE_CANCELLATION_CONFIRMATION))(any())
+      ).thenReturn(Future.successful(Some(confirmation)))
+
+      await(service.getCancellationConfirmation) shouldBe Some(confirmation)
+    }
+  }
+
   "UpdateRelationship" should {
 
-    "construct and return the generated UpdateRelationshipRequestHolder" when {
+    "submit the relationship update and return the cancellation confirmation" when {
 
       "valid data is returned from the cache" in {
-
         val expectedUpdateTimeStamp         = "20150531235901"
         val expectedRecipientInformation    = RecipientInformation(instanceIdentifier.toString, timeStamp)
         val expectedTransferorInformation   = TransferorInformation(expectedUpdateTimeStamp)
@@ -370,44 +401,42 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
           "Divorce/Separation",
           date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         )
-        val expectedName                    = s"$firstName $surname"
 
-        val expectedUpdateRelationshipRequest             = UpdateRelationshipRequest(
-          expectedRecipientInformation,
-          expectedTransferorInformation,
-          expectedRelationshipInformation
-        )
-        val expectedUpdateRelationshipNotificationRequest = UpdateRelationshipNotificationRequest(
-          expectedName,
-          EmailAddress(email),
-          "Recipient",
-          welsh = false,
-          isRetrospective = false
-        )
-
-        val expectedResult = UpdateRelationshipRequestHolder(
-          expectedUpdateRelationshipRequest,
-          expectedUpdateRelationshipNotificationRequest
+        val expectedRequestHolder = UpdateRelationshipRequestHolder(
+          UpdateRelationshipRequest(
+            expectedRecipientInformation,
+            expectedTransferorInformation,
+            expectedRelationshipInformation
+          ),
+          UpdateRelationshipNotificationRequest(
+            s"$firstName $surname",
+            EmailAddress(email),
+            "Recipient",
+            welsh = false,
+            isRetrospective = false
+          )
         )
 
         when(
           mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(
             any()
           )
-        )
-          .thenReturn(Future.successful(Some(createCachedData())))
+        ).thenReturn(Future.successful(Some(createCachedData())))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
           .thenReturn(Future.successful(Right(Some(updateRelationshipResponse))))
 
         val result = await(service.updateRelationship(nino))
 
-        result shouldBe expectedResult
+        result shouldBe CancellationConfirmation(marriageAllowanceEndDate = date)
 
+        verify(mockMarriageAllowanceConnector).updateRelationship(
+          ArgumentMatchers.eq(nino),
+          ArgumentMatchers.eq(expectedRequestHolder)
+        )(any(), any())
       }
 
       "different marriage allowance end reasons are provided" when {
-
         val endReasonsWithEnumerations = Seq(
           ("Divorce", "Divorce/Separation"),
           ("IncomeChange", "Cancelled by Transferor"),
@@ -415,55 +444,60 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
           ("WrongSetup", "Cancelled by Transferor")
         )
 
-        endReasonsWithEnumerations foreach { case (reason, enumeration) =>
-          val cacheData = UpdateRelationshipCacheData(
-            Some(RelationshipRecords(recordList, localDate)),
-            Some(email),
-            Some(reason),
-            Some(date)
-          )
-
+        endReasonsWithEnumerations.foreach { case (reason, enumeration) =>
           s"the reason is $reason" in {
+            val cacheData = UpdateRelationshipCacheData(
+              Some(RelationshipRecords(recordList, localDate)),
+              Some(email),
+              Some(reason),
+              Some(date)
+            )
 
             when(
               mockCachingService.get[UpdateRelationshipCacheData](
                 ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP)
               )(any())
-            )
-              .thenReturn(Future.successful(Some(cacheData)))
+            ).thenReturn(Future.successful(Some(cacheData)))
 
             when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
               .thenReturn(Future.successful(Right(Some(updateRelationshipResponse))))
 
-            val result       = await(service.updateRelationship(nino))
-            val desEndReason = result.request.relationship.relationshipEndReason
+            await(service.updateRelationship(nino))
 
-            desEndReason shouldBe enumeration
+            verify(mockMarriageAllowanceConnector).updateRelationship(
+              ArgumentMatchers.eq(nino),
+              ArgumentMatchers.argThat[UpdateRelationshipRequestHolder](holder =>
+                holder.request.relationship.relationshipEndReason == enumeration
+              )
+            )(any(), any())
           }
         }
       }
 
-      val recordsWithUnknownUser =
-        RelationshipRecordList(Seq(activeRecipientRelationshipRecord), Some(createLoggedInUserInfo(None)))
-
-      "a users name is not known" in {
-
-        val cacheData = createCachedData(recordsWithUnknownUser)
+      "the user's name is unknown" in {
+        val recordsWithUnknownUser = RelationshipRecordList(
+          Seq(activeRecipientRelationshipRecord),
+          Some(createLoggedInUserInfo(None))
+        )
+        val cacheData              = createCachedData(recordsWithUnknownUser)
 
         when(
           mockCachingService.get[UpdateRelationshipCacheData](ArgumentMatchers.eq(USER_ANSWERS_UPDATE_RELATIONSHIP))(
             any()
           )
-        )
-          .thenReturn(Future.successful(Some(cacheData)))
+        ).thenReturn(Future.successful(Some(cacheData)))
 
         when(mockMarriageAllowanceConnector.updateRelationship(any(), any())(any(), any()))
           .thenReturn(Future.successful(Right(Some(updateRelationshipResponse))))
 
-        val result   = await(service.updateRelationship(nino))
-        val userName = result.notification.full_name
+        await(service.updateRelationship(nino))
 
-        userName shouldBe "Unknown"
+        verify(mockMarriageAllowanceConnector).updateRelationship(
+          ArgumentMatchers.eq(nino),
+          ArgumentMatchers.argThat[UpdateRelationshipRequestHolder](holder =>
+            holder.notification.full_name == "Unknown"
+          )
+        )(any(), any())
       }
     }
 
