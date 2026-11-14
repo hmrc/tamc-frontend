@@ -122,6 +122,7 @@ trait IntegrationSpec
   val recipientDetails         = RecipientDetailsFormInput("Firstname", "Lastname", Gender("M"), Nino("AB123456A"))
   val citizenName: CitizenName = CitizenName(Some("Test"), Some("User"))
   val userRecord: UserRecord   = UserRecord(123456789L, "2015", None, Some(citizenName))
+  val cancellationConfirmation = CancellationConfirmation(marriageAllowanceEndDate = LocalDate.of(2027, 4, 5))
 
   val authResponse: String =
     s"""
@@ -165,6 +166,7 @@ trait IntegrationSpec
     stubGet(CACHE_NOTIFICATION_RECORD, NotificationRecord(EmailAddress(email)))
     stubGet(CACHE_EMAIL_ADDRESS, EmailAddress(email))
     stubGet(CACHE_RECIPIENT_DETAILS, recipientDetails)
+    stubGet(CACHE_CANCELLATION_CONFIRMATION, cancellationConfirmation)
   }
 
   private def stubCacheWrites(): Unit = {
