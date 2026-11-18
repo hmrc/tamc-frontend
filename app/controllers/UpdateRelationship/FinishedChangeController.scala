@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,13 @@ package controllers.UpdateRelationship
 import com.google.inject.Inject
 import controllers.BaseController
 import controllers.auth.StandardAuthJourney
+import errors.CacheMapNoFound
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
+import uk.gov.hmrc.time.TaxYear
 import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
+import views.helpers.LanguageUtilsImpl
+import views.html.coc.cancellationSubmitted
 
 import scala.concurrent.ExecutionContext
 
@@ -29,16 +33,25 @@ class FinishedChangeController @Inject() (
   authenticate: StandardAuthJourney,
   updateRelationshipService: UpdateRelationshipService,
   cc: MessagesControllerComponents,
-  finished: views.html.coc.finished,
+  cancellationSubmitted: views.html.coc.cancellationSubmitted,
+  languageUtilsImpl: LanguageUtilsImpl,
   errorHandler: UpdateRelationshipErrorHandler
 )(implicit ec: ExecutionContext)
     extends BaseController(cc)
     with LoggerHelper {
 
   def finishUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    (for {
-      _ <- updateRelationshipService.removeCache
-    } yield Ok(finished())) recover errorHandler.handleError
-  }
+    updateRelationshipService.getCancellationConfirmation
+      .map {
+        case Some(confirmation) =>
+          val marriageAllowanceEndDate = confirmation.marriageAllowanceEndDate
+          val endDate                  = languageUtilsImpl().ukDateTransformer(marriageAllowanceEndDate)
+          val showActiveUntilText      = marriageAllowanceEndDate.isAfter(TaxYear.now())
 
+          Ok(cancellationSubmitted(endDate, showActiveUntilText))
+
+        case None => throw CacheMapNoFound()
+      }
+      .recover(errorHandler.handleError)
+  }
 }

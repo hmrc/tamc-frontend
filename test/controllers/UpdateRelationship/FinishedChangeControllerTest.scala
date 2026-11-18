@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,37 +20,37 @@ import controllers.ControllerViewTestHelper
 import controllers.actions.AuthRetrievals
 import controllers.auth.PertaxAuthAction
 import helpers.FakePertaxAuthAction
-import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers.*
+import org.mockito.Mockito.*
 import play.api.Application
-import play.api.i18n.MessagesApi
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.Injecting
-import services._
-import utils.{ControllerBaseTest, EmailAddress, MockAuthenticatedAction}
-import views.html.coc.finished
+import services.*
+import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import scala.concurrent.Future
+import models.CancellationConfirmation
+import uk.gov.hmrc.time.TaxYear
+
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class FinishedChangeControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
   val mockUpdateRelationshipService: UpdateRelationshipService = mock[UpdateRelationshipService]
-  val mockCachingService: CachingService                       = mock[CachingService]
 
   override def fakeApplication(): Application = GuiceApplicationBuilder()
     .overrides(
       bind[UpdateRelationshipService].toInstance(mockUpdateRelationshipService),
       bind[AuthRetrievals].to[MockAuthenticatedAction],
-      bind[MessagesApi].toInstance(stubMessagesApi()),
       bind[PertaxAuthAction].to[FakePertaxAuthAction]
     )
     .build()
 
-  lazy val controller: FinishedChangeController = app.injector.instanceOf[FinishedChangeController]
-
-  val finishedView: finished = inject[views.html.coc.finished]
+  lazy val controller: FinishedChangeController    = app.injector.instanceOf[FinishedChangeController]
+  private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.UK)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -58,18 +58,63 @@ class FinishedChangeControllerTest extends ControllerBaseTest with ControllerVie
   }
 
   "finishUpdate" should {
-    "return a success" in {
-      val email = "email@email.com"
-      when(mockUpdateRelationshipService.getEmailAddressForConfirmation(any(), any()))
-        .thenReturn(Future.successful(EmailAddress(email)))
-      when(mockUpdateRelationshipService.removeCache(any()))
-        .thenReturn(Future.successful(()))
+    "render the cancellation submission page with Active status message when the end date is in the future" in {
+      val endDate          = TaxYear.current.finishes
+      val formattedEndDate = endDate.format(dateTimeFormatter)
+
+      val confirmation = CancellationConfirmation(
+        marriageAllowanceEndDate = endDate
+      )
+
+      when(mockUpdateRelationshipService.getCancellationConfirmation(any()))
+        .thenReturn(Future.successful(Some(confirmation)))
 
       val result = controller.finishUpdate()(request)
 
       status(result) shouldBe OK
-      result `rendersTheSameViewAs` finishedView()
+
+      val doc = contentAsString(result).replace('\u00A0', ' ')
+
+      doc should include("Marriage Allowance cancellation submitted")
+      doc should include(
+        s"We will cancel your Marriage Allowance from $formattedEndDate. Until then your Marriage Allowance will show as ‘Active’"
+      )
+      doc should include("Before you go")
+      doc should include("Take a short survey")
+    }
+
+    "render the cancellation submission page without Active status message when the end date is in the past" in {
+      val endDate          = TaxYear.current.previous.finishes
+      val formattedEndDate = endDate.format(dateTimeFormatter)
+
+      val confirmation = CancellationConfirmation(
+        marriageAllowanceEndDate = endDate
+      )
+
+      when(mockUpdateRelationshipService.getCancellationConfirmation(any()))
+        .thenReturn(Future.successful(Some(confirmation)))
+
+      val result = controller.finishUpdate()(request)
+
+      status(result) shouldBe OK
+
+      val doc = contentAsString(result).replace('\u00A0', ' ')
+
+      doc should include("Marriage Allowance cancellation submitted")
+      doc should include(s"We will cancel your Marriage Allowance from $formattedEndDate.")
+      doc should include("Before you go")
+      doc should include("Take a short survey")
+
+      doc should not include "Until then your Marriage Allowance will show as ‘Active’."
+    }
+
+    "return an InternalServerError when the cancellation confirmation is missing from cache" in {
+      when(mockUpdateRelationshipService.getCancellationConfirmation(any()))
+        .thenReturn(Future.successful(None))
+
+      val result = controller.finishUpdate()(request)
+
+      status(result) shouldBe INTERNAL_SERVER_ERROR
     }
   }
-
 }

@@ -56,7 +56,7 @@ class ContentChecksSpec extends IntegrationSpec {
       case "confirm-email"           =>
         ExpectedData("We will email confirmation that you have cancelled your Marriage Allowance within 24 hours.")
       case "confirm-change"          => ExpectedData("You have asked us to cancel your Marriage Allowance")
-      case "finished-change"         => ExpectedData("Marriage Allowance cancelled")
+      case "finished-change"         => ExpectedData("Marriage Allowance cancellation submitted")
 
       case "you-cannot-use-this-service" =>
         ExpectedData(
