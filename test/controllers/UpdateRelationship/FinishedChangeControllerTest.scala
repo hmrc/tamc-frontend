@@ -78,5 +78,14 @@ class FinishedChangeControllerTest extends ControllerBaseTest with ControllerVie
       doc should include("Before you go")
       doc should include("Take a short survey")
     }
+
+    "return an InternalServerError when the cancellation confirmation is missing from cache" in {
+      when(mockUpdateRelationshipService.getCancellationConfirmation(any()))
+        .thenReturn(Future.successful(None))
+
+      val result = controller.finishUpdate()(request)
+
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+    }
   }
 }

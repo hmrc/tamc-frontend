@@ -303,6 +303,28 @@ class UpdateRelationshipServiceTest extends BaseTest with BeforeAndAfterEach {
     }
   }
 
+  "getEmailAddressForConfirmation" should {
+    "return EmailAddress when value returned from cache" in {
+      when(mockCachingService.get[EmailAddress](any())(any()))
+        .thenReturn(Future.successful(Some(EmailAddress("email@email.com"))))
+
+      val result = await(service.getEmailAddressForConfirmation)
+
+      result shouldBe EmailAddress("email@email.com")
+    }
+
+    "throw CacheMissingEmail when no value returned from cache" in {
+      when(mockCachingService.get[EmailAddress](any())(any()))
+        .thenReturn(Future.successful(None))
+
+      val result = intercept[CacheMissingEmail] {
+        await(service.getEmailAddressForConfirmation)
+      }
+
+      result shouldBe CacheMissingEmail()
+    }
+  }
+
   "getDataForDivorceExplanation" should {
     "return Role and LocalDate" in {
       val relationshipRecords = RelationshipRecords(recordList, localDate)
