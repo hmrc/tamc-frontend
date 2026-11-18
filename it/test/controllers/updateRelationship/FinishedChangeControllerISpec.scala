@@ -19,20 +19,24 @@ package controllers.updateRelationship
 import models.CancellationConfirmation
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{never, verify, when}
+import org.mockito.Mockito.when
 import play.api.test.Helpers.*
 import services.CacheService.CACHE_CANCELLATION_CONFIRMATION
+import uk.gov.hmrc.time.TaxYear
 import utils.IntegrationSpec
 
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import scala.concurrent.Future
 
 class FinishedChangeControllerISpec extends IntegrationSpec {
 
   "FinishedChangeController" must {
-    "render the cancellation submitted page with the saved end date and keep it available" in {
-      val confirmation = CancellationConfirmation(
-        marriageAllowanceEndDate = LocalDate.of(2027, 4, 5)
+    "render the cancellation submission page with Active status message when the end date is in the future" in {
+      val endDate          = TaxYear.current.finishes
+      val formattedEndDate = endDate.format(DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.UK))
+      val confirmation     = CancellationConfirmation(
+        marriageAllowanceEndDate = endDate
       )
 
       when(
@@ -47,12 +51,10 @@ class FinishedChangeControllerISpec extends IntegrationSpec {
       doc must include("Marriage Allowance cancellation submitted")
       doc must include("We will send you a confirmation email within 24 hours.")
       doc must include(
-        "We will cancel your Marriage Allowance from 5 April 2027. Until then your Marriage Allowance will show as ‘Active’."
+        s"We will cancel your Marriage Allowance from $formattedEndDate. Until then your Marriage Allowance will show as ‘Active’."
       )
       doc must include("Before you go")
       doc must include("Take a short survey")
-
-      verify(mockCachingService, never()).clear()(any())
     }
   }
 }

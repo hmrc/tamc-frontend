@@ -32,9 +32,10 @@ import utils.{ControllerBaseTest, MockAuthenticatedAction}
 
 import scala.concurrent.Future
 import models.CancellationConfirmation
-import views.html.coc.cancellationSubmitted
+import uk.gov.hmrc.time.TaxYear
 
-import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class FinishedChangeControllerTest extends ControllerBaseTest with ControllerViewTestHelper with Injecting {
 
@@ -48,8 +49,8 @@ class FinishedChangeControllerTest extends ControllerBaseTest with ControllerVie
     )
     .build()
 
-  lazy val controller: FinishedChangeController             = app.injector.instanceOf[FinishedChangeController]
-  lazy val cancellationSubmittedView: cancellationSubmitted = inject[cancellationSubmitted]
+  lazy val controller: FinishedChangeController    = app.injector.instanceOf[FinishedChangeController]
+  private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.UK)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -57,9 +58,12 @@ class FinishedChangeControllerTest extends ControllerBaseTest with ControllerVie
   }
 
   "finishUpdate" should {
-    "render the cancellation confirmation with the saved end date" in {
+    "render the cancellation submission page with Active status message when the end date is in the future" in {
+      val endDate          = TaxYear.current.finishes
+      val formattedEndDate = endDate.format(dateTimeFormatter)
+
       val confirmation = CancellationConfirmation(
-        marriageAllowanceEndDate = LocalDate.of(2027, 4, 5)
+        marriageAllowanceEndDate = endDate
       )
 
       when(mockUpdateRelationshipService.getCancellationConfirmation(any()))
@@ -73,10 +77,35 @@ class FinishedChangeControllerTest extends ControllerBaseTest with ControllerVie
 
       doc should include("Marriage Allowance cancellation submitted")
       doc should include(
-        "We will cancel your Marriage Allowance from 5 April 2027. Until then your Marriage Allowance will show as ‘Active’"
+        s"We will cancel your Marriage Allowance from $formattedEndDate. Until then your Marriage Allowance will show as ‘Active’"
       )
       doc should include("Before you go")
       doc should include("Take a short survey")
+    }
+
+    "render the cancellation submission page without Active status message when the end date is in the past" in {
+      val endDate          = TaxYear.current.previous.finishes
+      val formattedEndDate = endDate.format(dateTimeFormatter)
+
+      val confirmation = CancellationConfirmation(
+        marriageAllowanceEndDate = endDate
+      )
+
+      when(mockUpdateRelationshipService.getCancellationConfirmation(any()))
+        .thenReturn(Future.successful(Some(confirmation)))
+
+      val result = controller.finishUpdate()(request)
+
+      status(result) shouldBe OK
+
+      val doc = contentAsString(result).replace('\u00A0', ' ')
+
+      doc should include("Marriage Allowance cancellation submitted")
+      doc should include(s"We will cancel your Marriage Allowance from $formattedEndDate.")
+      doc should include("Before you go")
+      doc should include("Take a short survey")
+
+      doc should not include "Until then your Marriage Allowance will show as ‘Active’."
     }
 
     "return an InternalServerError when the cancellation confirmation is missing from cache" in {

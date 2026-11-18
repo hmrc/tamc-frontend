@@ -22,6 +22,7 @@ import controllers.auth.StandardAuthJourney
 import errors.CacheMapNoFound
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.UpdateRelationshipService
+import uk.gov.hmrc.time.TaxYear
 import utils.{LoggerHelper, UpdateRelationshipErrorHandler}
 import views.helpers.LanguageUtilsImpl
 import views.html.coc.cancellationSubmitted
@@ -43,8 +44,11 @@ class FinishedChangeController @Inject() (
     updateRelationshipService.getCancellationConfirmation
       .map {
         case Some(confirmation) =>
-          val endDate = languageUtilsImpl().ukDateTransformer(confirmation.marriageAllowanceEndDate)
-          Ok(cancellationSubmitted(endDate))
+          val marriageAllowanceEndDate = confirmation.marriageAllowanceEndDate
+          val endDate                  = languageUtilsImpl().ukDateTransformer(marriageAllowanceEndDate)
+          val showActiveUntilText      = marriageAllowanceEndDate.isAfter(TaxYear.now())
+
+          Ok(cancellationSubmitted(endDate, showActiveUntilText))
 
         case None => throw CacheMapNoFound()
       }

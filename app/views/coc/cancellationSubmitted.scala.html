@@ -22,7 +22,7 @@
 
 @this(main: Main, h1: H1, h2:H2, p: P, link: Link, appConfig: ApplicationConfig)
 
-@(endDate: String)(implicit messages: Messages, request: AuthenticatedUserRequest[?])
+@(endDate: String, showActiveUntilText: Boolean)(implicit messages: Messages, request: AuthenticatedUserRequest[?])
 
 @main(
     pageTitle = messages("title.change.submitted"),
@@ -38,7 +38,11 @@
 
     @p(Text(messages("pages.coc.cancellation.submitted.acknowledgement")))
     @h2("pages.coc.cancellation.submitted.what.happens.title")
-    @p(Text(messages("pages.coc.cancellation.submitted.what.happens.para", endDate)))
+    @if(showActiveUntilText) {
+        @p(Text(messages("pages.coc.cancellation.submitted.what.happens.future.para", endDate)))
+    } else {
+        @p(Text(messages("pages.coc.cancellation.submitted.what.happens.para", endDate)))
+    }
     @h2("pages.coc.cancellation.submitted.before.you.go.title")
     @p(Text(messages("pages.coc.cancellation.submitted.before.you.go.feedback.para")))
     @p(HtmlContent(shortSurveyPara))
