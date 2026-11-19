@@ -40,17 +40,18 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   private def loadConfig(key: String) =
     configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  val contactHost                         = configuration.getOptional[String]("tamc.external-urls.contact-frontend").getOrElse("")
-  val contactFrontendService              = configuration.getOptional[String]("microservice.contact-frontend.host").getOrElse("")
-  val contactFormServiceIdentifier        = "TAMC"
-  val pageTitle                           = "Your personal tax account"
-  lazy val betaFeedbackUnauthenticatedUrl =
+  private val contactHost                  = configuration.getOptional[String]("tamc.external-urls.contact-frontend").getOrElse("")
+  val contactFrontendService: String       =
+    configuration.getOptional[String]("microservice.contact-frontend.host").getOrElse("")
+  private val contactFormServiceIdentifier = "TAMC"
+  val pageTitle                            = "Your personal tax account"
+  lazy val betaFeedbackUnauthenticatedUrl  =
     s"$contactHost/beta-feedback-unauthenticated?service=$contactFormServiceIdentifier"
 
-  lazy val loginUrl: String                    = loadConfig("tamc.external-urls.login-url")
+  private lazy val loginUrl: String            = loadConfig("tamc.external-urls.login-url")
   lazy val logoutUrl: String                   = loadConfig("tamc.external-urls.logout-url")
   lazy val callbackUrl: String                 = loadConfig("tamc.external-urls.callback-url")
-  lazy val ivNotAuthorisedUrl: String          = loadConfig("tamc.external-urls.not-authorised-url")
+  private lazy val ivNotAuthorisedUrl: String  = loadConfig("tamc.external-urls.not-authorised-url")
   lazy val callChargeUrl: String               = loadConfig("tamc.external-urls.govuk-call-charges")
   lazy val contactIncomeTaxHelplineUrl: String = loadConfig("tamc.external-urls.contact-income-tax-helpline")
   lazy val marriageAllowanceGuideUrl: String   = loadConfig("tamc.external-urls.marriage-allowance-guide")
@@ -58,18 +59,19 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   lazy val applyByPostUrl: String              = loadConfig("tamc.external-urls.marriage-allowance-apply-by-post")
   lazy val incomeTaxEnquiriesUrl: String       = loadConfig("tamc.external-urls.income-tax-enquiries")
   lazy val incomeTaxEnquiriesUrlCy: String     = loadConfig("tamc.external-urls.income-tax-enquiries-cy")
-  lazy val ggSignInHost: String                =
+  lazy val personalTaxAccountUrl: String       = loadConfig("tamc.external-urls.personal-tax-account")
+  private lazy val ggSignInHost: String        =
     configuration.getOptional[String]("microservice.bas-gateway-frontend.host").getOrElse("")
   lazy val ggSignInUrl: String                 =
     s"$ggSignInHost/bas-gateway/sign-in?continue_url=${encodeQueryStringValue(callbackUrl)}"
 
-  lazy val marriageAllowanceUrl: String = servicesConfig.baseUrl("marriage-allowance")
-  lazy val taiFrontendUrl: String       =
+  lazy val marriageAllowanceUrl: String   = servicesConfig.baseUrl("marriage-allowance")
+  private lazy val taiFrontendUrl: String =
     s"${configuration.getOptional[String]("microservice.tai-frontend.host").getOrElse("")}/check-income-tax"
-  lazy val taxFreeAllowanceUrl          = s"$taiFrontendUrl/tax-free-allowance"
+  lazy val taxFreeAllowanceUrl            = s"$taiFrontendUrl/tax-free-allowance"
 
-  val DEFAULT_VALID_YEARS   = 4
-  val TAMC_VALID_YEARS: Int = configuration
+  private val DEFAULT_VALID_YEARS = 4
+  val TAMC_VALID_YEARS: Int       = configuration
     .getOptional[Int]("tamc-valid-years-prior")
     .getOrElse(DEFAULT_VALID_YEARS)
 
@@ -78,7 +80,7 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   val generalEnquiriesLink       =
     "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
-  def actualTaxYear(taxYear: Int): Int =
+  private def actualTaxYear(taxYear: Int): Int =
     if (taxYear <= 0)
       currentTaxYear().startYear
     else
@@ -117,8 +119,8 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
 
   lazy val webchatId: String = loadConfig("webchat.id")
 
-  val frontendHost: String                                            = loadConfig("tamc-frontend.host")
-  val accessibilityStatementHost: String                              =
+  private val frontendHost: String                                    = loadConfig("tamc-frontend.host")
+  private val accessibilityStatementHost: String                      =
     loadConfig("accessibility-statement.service-path") + "/accessibility-statement"
   def accessibilityStatementUrl(relativeReferrerPath: String): String =
     accessibilityStatementHost + "/marriage-allowance?referrerUrl=" + encodeQueryStringValue(
@@ -144,6 +146,6 @@ class ApplicationConfig @Inject() (configuration: Configuration, servicesConfig:
   private def taxBandKey(taxRate: String, taxBand: String, country: String, taxYear: Int) =
     s"taxbands-$taxRate-$taxBand-$country-$taxYear"
 
-  val pertaxAuthBaseUrl = servicesConfig.baseUrl("pertax-auth")
+  val pertaxAuthBaseUrl: String = servicesConfig.baseUrl("pertax-auth")
 
 }
