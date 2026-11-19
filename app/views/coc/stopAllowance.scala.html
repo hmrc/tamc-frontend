@@ -18,19 +18,15 @@
 @import includes.{H1, H2, Link, P}
 @import models.auth.AuthenticatedUserRequest
 @import views.Main
-@import views.helpers.LanguageUtilsImpl
-
-@import java.time.LocalDate
 
 @this(main: Main,
 applicationConfig: ApplicationConfig,
-languageUtilsImpl: LanguageUtilsImpl,
 h1: H1,
 h2: H2,
 p: P,
 link: Link)
 
-@(marriageAllowanceEndDate: LocalDate)(implicit messages: Messages,request: AuthenticatedUserRequest[?])
+@()(implicit messages: Messages,request: AuthenticatedUserRequest[?])
 
 @ptaLink = {@link(link = applicationConfig.personalTaxAccountUrl, messageKey = "pages.stopAllowance.paragraph1.ptaLink", id = Some("ptaLink"), inParagraph = true)}
 
@@ -40,10 +36,6 @@ link: Link)
 
 @contactLink = {@link(link = contactHmrcUrl, messageKey = "pages.stopAllowance.paragraph1.contactLink", id = Some("contactHmrcLink"), inParagraph = true)}
 
-@endDate = @{
-    languageUtilsImpl().ukDateTransformer(marriageAllowanceEndDate)
-}
-
 @main(
     pageTitle = messages("pages.stopAllowance.title")
 ) {
@@ -51,7 +43,6 @@ link: Link)
     @h1("pages.stopAllowance.title", classes = Some("govuk-heading-l"))
 
     @p(HtmlContent(messages("pages.stopAllowance.paragraph1", ptaLink.toString.trim, contactLink.toString.trim)), elmId = Some("partnerNeedsToCancel"))
-    @p(Text(messages("pages.stopAllowance.paragraph2", endDate)), elmId = Some("remainsInPlace"))
 
     @h2("pages.stopAllowance.h2", elmId = Some("changeWhoBenefits"))
 

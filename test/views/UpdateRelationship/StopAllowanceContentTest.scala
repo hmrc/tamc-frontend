@@ -40,11 +40,10 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
   val cancelDoc: Document                           = Jsoup.parse(
     cancelView(MarriageAllowanceEndingDates(TaxYear.current.finishes, TaxYear.current.next.starts)).toString()
   )
-  val stopDoc: Document                             = Jsoup.parse(stopAllowanceView(TaxYear.current.finishes).toString)
+  val stopDoc: Document                             = Jsoup.parse(stopAllowanceView().toString)
   val welshMessages: MessagesImpl                   = MessagesImpl(Lang("cy"), inject[MessagesApi])
   val stopDocCy: Document                           =
-    Jsoup.parse(stopAllowanceView(TaxYear.current.finishes)(welshMessages, request).toString)
-  val endYear: Int                                  = TaxYear.current.finishes.getYear
+    Jsoup.parse(stopAllowanceView()(welshMessages, request).toString)
 
   "Display Stop allowance page for a RECIPIENT" should {
     "Display stop allowance page heading" in {
@@ -55,7 +54,6 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
     "Show correct stop allowance content" in {
       stopDoc.getElementsByTag("p").eachText().toArray() shouldBe Array(
         "To do this they can sign in to or set up a personal tax account or contact HMRC.",
-        s"Your Marriage Allowance will remain in place until 5 April $endYear.",
         "You can:",
         "Return to your Marriage Allowance summary",
         "Beta This is a new service. Help us improve it and give your feedback (opens in new tab)."
@@ -70,6 +68,11 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
         "https://www.gov.uk/find-hmrc-contacts/income-tax-enquiries"
       stopDocCy.getElementById("contactHmrcLink").attr("href") shouldBe
         "https://www.gov.uk/find-hmrc-contacts/treth-incwm-hunanasesiad-a-mwy"
+    }
+
+    "Not display a Marriage Allowance end date" in {
+      stopDoc.getElementById("remainsInPlace") shouldBe null
+      stopDoc.text()                             should not include "will remain in place until"
     }
 
     "Display the change who benefits section" in {
@@ -91,8 +94,6 @@ class StopAllowanceContentTest extends BaseTest with Injecting with NinoGenerato
       stopDocCy.getElementById("pageHeading").text()                     shouldBe "Mae angen i’ch partner ganslo Lwfans Priodasol"
       stopDocCy.getElementById("partnerNeedsToCancel").text()            shouldBe
         "I wneud hyn, gall eich partner fewngofnodi i gyfrif treth personol neu sefydlu cyfrif, neu gysylltu â CThEF."
-      stopDocCy.getElementById("remainsInPlace").text()                  shouldBe
-        s"Bydd eich Lwfans Priodasol yn aros yn ei le tan 5 Ebrill $endYear."
       stopDocCy.getElementById("changeWhoBenefits").text()               shouldBe "Os ydych am newid pwy sy’n cael y budd"
       stopDocCy.select("#changeWhoBenefitsList li").eachText().toArray() shouldBe Array(
         "gofynnwch i’ch partner ganslo Lwfans Priodasol",

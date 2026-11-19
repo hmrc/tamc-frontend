@@ -62,14 +62,10 @@ class StopAllowanceControllerTest extends ControllerBaseTest with ControllerView
 
   "stopAllowance" should {
     "display the stop allowance page" in {
-      val endDate = LocalDate.of(2027, 4, 5)
-      when(mockUpdateRelationshipService.getMAEndingDatesForCancellation)
-        .thenReturn(MarriageAllowanceEndingDates(endDate, endDate.plusDays(1)))
-
       val result = controller.stopAllowance(request)
       status(result) shouldBe OK
 
-      result `rendersTheSameViewAs` stopAllowanceView(endDate)
+      result `rendersTheSameViewAs` stopAllowanceView()
     }
   }
 

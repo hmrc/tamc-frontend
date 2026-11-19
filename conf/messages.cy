@@ -451,7 +451,6 @@ pages.stopAllowance.title=Mae angen i’ch partner ganslo Lwfans Priodasol
 pages.stopAllowance.paragraph1=I wneud hyn, gall eich partner {0}, neu {1}.
 pages.stopAllowance.paragraph1.ptaLink=fewngofnodi i gyfrif treth personol neu sefydlu cyfrif
 pages.stopAllowance.paragraph1.contactLink=gysylltu â CThEF
-pages.stopAllowance.paragraph2=Bydd eich Lwfans Priodasol yn aros yn ei le tan {0}.
 pages.stopAllowance.h2=Os ydych am newid pwy sy’n cael y budd
 pages.stopAllowance.youCan=Gallwch wneud y canlynol:
 pages.stopAllowance.bullet1=gofynnwch i’ch partner ganslo Lwfans Priodasol

@@ -446,7 +446,6 @@ pages.stopAllowance.title=Your partner needs to cancel Marriage Allowance
 pages.stopAllowance.paragraph1=To do this they can {0} or {1}.
 pages.stopAllowance.paragraph1.ptaLink=sign in to or set up a personal tax account
 pages.stopAllowance.paragraph1.contactLink=contact HMRC
-pages.stopAllowance.paragraph2=Your Marriage Allowance will remain in place until {0}.
 pages.stopAllowance.h2=If you want to change who benefits
 pages.stopAllowance.youCan=You can:
 pages.stopAllowance.bullet1=ask your partner to cancel Marriage Allowance
