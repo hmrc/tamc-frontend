@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,9 +44,13 @@ class ConfirmChangeController @Inject() (
   }
 
   def submitConfirmUpdate: Action[AnyContent] = authenticate.pertaxAuthActionWithUserDetails.async { implicit request =>
-    updateRelationshipService.updateRelationship(request.nino) map { _ =>
-      Redirect(controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate())
-    } recover errorHandler.handleError
+    (for {
+      confirmation <- updateRelationshipService.updateRelationship(request.nino)
+      _            <- updateRelationshipService.removeCache
+      _            <- updateRelationshipService.saveCancellationConfirmation(confirmation)
+    } yield Redirect(
+      controllers.UpdateRelationship.routes.FinishedChangeController.finishUpdate()
+    )).recover(errorHandler.handleError)
   }
 
 }
